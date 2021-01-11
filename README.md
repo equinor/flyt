@@ -23,10 +23,12 @@ Structure of an entity
   type: 'MainActivity',
   text: '',
   roles: [],
-  duration: '',
+  duration: 0, // ms
+ 
   problems: [],
   ideas: [],
   solutions: [],
+  
   parentId: ''
 }
 ```
@@ -49,9 +51,13 @@ Update Project
 Delete Project
 
 ### Project object
+Details WIP
 ```JSON5
 {
   id: '',
+  owner: [],
+  created: date,
+  lastUpdated: date,
   Entities: [] // [{entity},{entity},{entity}],
 }
 ```
