@@ -25,6 +25,7 @@ Structure of an entity
   roles: [],
   duration: '',
   problems: [],
+  ideas: [],
   solutions: [],
   parentId: ''
 }
@@ -68,6 +69,7 @@ body:
   roles: [],
   duration: '',
   problems: [],
+  ideas: [],
   solutions: [],
   parentId: ''
 }
