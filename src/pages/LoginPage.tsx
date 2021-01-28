@@ -4,8 +4,11 @@ import { useLocation } from "react-router";
 import { useHistory } from "react-router-dom";
 import { InteractionType } from "@azure/msal-browser";
 import { loginRequest } from "../config/authConfig";
-import { SignInSignOutButton } from "./UserPage";
 import { Button } from "@equinor/eds-core-react";
+import { SignInSignOutButton } from "../components/SignInSignOutButton";
+import getTenantID from "../utils/getTenantID";
+
+export const tenantSpecificEndpoint = `https://login.microsoftonline.com/${getTenantID()}`;
 
 export function LoginPage() {
   const isAuthenticated = useIsAuthenticated();
@@ -16,6 +19,7 @@ export function LoginPage() {
     InteractionType.Redirect, //mobile doesn't like popup login
     {
       scopes: loginRequest.scopes,
+      authority: tenantSpecificEndpoint,
     }
   );
 

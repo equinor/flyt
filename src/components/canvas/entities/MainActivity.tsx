@@ -2,40 +2,30 @@ import * as PIXI from "pixi.js";
 import { Graphics } from "pixi.js";
 import { truncateText } from "../TruncateText";
 import { ScaleOnHover } from "./ScaleOnHover";
-import { icons } from "../../../assets/icons";
 import { ProblemCircle } from "./ProblemCircle";
 
 interface MainActivityProps {
-  x: number;
-  y: number;
   header?: string;
-  content?: string;
+  text?: string;
+  onPress?: () => void;
 }
 
 export default function MainActivity({
   header = "MainActivity",
-  content = "Choose method",
-  x,
-  y,
+  text = "Choose method",
+  onPress,
 }: MainActivityProps): PIXI.Container {
   const rectangle = new Graphics();
   const color = 0x00c1ff;
   const width = 126;
   rectangle.beginFill(color);
   const height = 136;
-  rectangle.drawRoundedRect(0, 0, width, height, 4);
+  rectangle.drawRect(0, 0, width, height);
   rectangle.endFill();
-
-  const texture = PIXI.Texture.from(icons.add_outline);
-  const iconTime = new PIXI.Sprite(texture);
-  iconTime.anchor.set(0, 0.3);
-
-  iconTime.x = width - 30;
-  iconTime.y = 10;
 
   const rectangleSide = new Graphics();
   rectangleSide.beginFill(0xededed);
-  rectangleSide.drawRoundedRect(0, 0, 71, 136, 4);
+  rectangleSide.drawRect(0, 0, 71, 136);
   rectangleSide.endFill();
   const c1 = ProblemCircle("P1");
   c1.x = rectangleSide.x + 4;
@@ -66,57 +56,69 @@ export default function MainActivity({
     trim: true,
   };
 
-  const headerText = new PIXI.Text(truncateText(header, 18), defaultStyle);
-  headerText.x = paddingLeft;
-  headerText.y = paddingTop;
-  headerText.alpha = 0.4;
-  headerText.resolution = 4;
-
-  const contentText = new PIXI.Text(truncateText(content, 55), defaultStyle);
-  contentText.x = paddingLeft;
-  contentText.y = 28;
-  contentText.resolution = 4;
+  const textElement = new PIXI.Text(
+    truncateText(text || header, 55),
+    defaultStyle
+  );
+  textElement.x = paddingLeft;
+  textElement.y = paddingTop;
+  textElement.alpha = text ? 1 : 0.4; //Hide it if we have text
+  textElement.resolution = 4;
 
   const roleText = new PIXI.Text(truncateText("Role"), defaultStyle);
   roleText.resolution = 4;
-  roleText.y = height - 24;
+  roleText.y = height - 39;
   roleText.x = 12;
 
-  const horizontalLine = new PIXI.Graphics();
-  horizontalLine.lineStyle(2, 0x000000).moveTo(0, 0).lineTo(width, 0);
-  horizontalLine.y = height - 40;
-  horizontalLine.alpha = 0.1;
-
-  const verticalLine = new PIXI.Graphics();
-  verticalLine
-    .lineStyle(2, 0x000000)
-    .moveTo(0, horizontalLine.y)
-    .lineTo(0, height);
-  verticalLine.x = width / 2;
-
-  verticalLine.alpha = 0.1;
+  const rectangleRole = new Graphics();
+  rectangleRole.beginFill(0x000000);
+  rectangleRole.drawRect(0, 0, width, 24);
+  rectangleRole.endFill();
+  rectangleRole.y = roleText.y - roleText.height;
+  rectangleRole.alpha = 0.04;
 
   const timeText = new PIXI.Text(truncateText("1 min"), defaultStyle);
   timeText.resolution = 4;
-  timeText.y = height - 24;
-  timeText.x = width / 2 + width / 8;
+  timeText.y = height - timeText.height - 6;
+  timeText.x = 12;
 
+  const rectangleTime = new Graphics();
+  rectangleTime.beginFill(0x000000);
+  rectangleTime.drawRect(0, 0, width, 24);
+  rectangleTime.endFill();
+  rectangleTime.y = timeText.y - timeText.height;
+  rectangleTime.alpha = 0.1;
+
+  const enableSideContainer = false;
+  const mask = new PIXI.Graphics();
+  mask.beginFill(0x000000);
+  mask.drawRoundedRect(
+    0,
+    0,
+    enableSideContainer ? width + sideContainer.width : width,
+    height,
+    6
+  );
+  rectangleTime.mask = mask;
+  rectangle.mask = mask;
+  sideContainer.mask = mask;
   const container = new PIXI.Container();
+
   container.addChild(
+    mask,
     rectangle,
-    headerText,
-    iconTime,
-    contentText,
+    textElement,
+    rectangleRole,
     roleText,
     timeText,
-    sideContainer,
-    horizontalLine,
-    verticalLine
+    rectangleTime,
+    sideContainer
   );
 
-  container.x = x;
-  container.y = y;
+  if (onPress) {
+    ScaleOnHover(container);
+    container.on("pointerdown", onPress);
+  }
 
-  ScaleOnHover(container);
   return container;
 }

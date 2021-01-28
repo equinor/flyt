@@ -6,8 +6,6 @@ import { icons } from "../../../assets/icons";
 
 export default function Waiting(
   time = "unknown",
-  x = 0,
-  y = 0,
   onPress?: () => void
 ): PIXI.Container {
   // const time = "5 min";
@@ -19,7 +17,7 @@ export default function Waiting(
   const background = new Graphics();
   background.beginFill(color);
   // background.lineStyle(4, 0x00_00_00, 0.1);
-  background.drawRoundedRect(0, 0, width, height, 4);
+  background.drawRoundedRect(0, 0, width, height, 6);
 
   const paddingLeft = 6;
   const paddingTop = 10;
@@ -53,17 +51,22 @@ export default function Waiting(
   textTime.x = paddingLeft + iconTime.x + 20;
   textTime.y = iconTime.y;
   textTime.resolution = 4;
-  // textTime.roundPixels = true;
 
   const container = new PIXI.Container();
   container.addChild(background, text, iconTime, textTime);
-  container.x = x;
-  container.y = y;
+
+  // container.y = 0;
+  const paddingContainer = new Graphics();
+  paddingContainer.beginFill(0x000000);
+  paddingContainer.alpha = 0.1;
+  paddingContainer.drawRect(0, 0, 126, 136);
+
+  const withPadding = new PIXI.Container();
+  withPadding.addChild(paddingContainer, container);
 
   if (onPress) {
     ScaleOnHover(container);
     container.on("pointerdown", onPress);
   }
-
-  return container;
+  return withPadding;
 }

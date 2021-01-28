@@ -9,6 +9,7 @@ import { Button } from "@equinor/eds-core-react";
 import { loginRequest } from "../config/authConfig";
 import { callMsGraph, ProfileData } from "../utils/graph";
 import { AppTopBar } from "../components";
+import { SignInSignOutButton } from "../components/SignInSignOutButton";
 
 function ProfileContent(): JSX.Element {
   const { instance, accounts } = useMsal();
@@ -52,49 +53,15 @@ function ProfileContent(): JSX.Element {
   );
 }
 
-export function UserAuth(): JSX.Element {
-  return (
-    <>
-      <AuthenticatedTemplate>
-        <h1>You are logged in</h1>
-        <ProfileContent />
-      </AuthenticatedTemplate>
-      <UnauthenticatedTemplate>
-        <h1>You are not logged in</h1>
-      </UnauthenticatedTemplate>
-      <hr style={{ opacity: 0.1 }} />
-      <SignInSignOutButton />
-    </>
-  );
-}
-
-export function SignInSignOutButton(): JSX.Element {
-  const { instance } = useMsal();
-  return (
-    <>
-      <AuthenticatedTemplate>
-        <Button variant="outlined" onClick={() => instance.logout()}>
-          Sign Out
-        </Button>
-      </AuthenticatedTemplate>
-      <UnauthenticatedTemplate>
-        <Button
-          variant={"contained"}
-          onClick={() => instance.loginRedirect(loginRequest)}
-        >
-          Sign in
-        </Button>
-      </UnauthenticatedTemplate>
-    </>
-  );
-}
-
 export function UserPage(): JSX.Element {
   return (
     <>
       <AppTopBar />
       <div className={"appear"} style={{ paddingLeft: 40, paddingRight: 40 }}>
-        <UserAuth />
+        <AuthenticatedTemplate>
+          <ProfileContent />
+        </AuthenticatedTemplate>
+        <SignInSignOutButton />
       </div>
     </>
   );

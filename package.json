@@ -2,7 +2,7 @@
   "name": "mad-vsm-web",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://api.statoil.com/app/vsm/dev/api",
+  "proxy": "https://api.statoil.com/app/vsm/dev",
   "dependencies": {
     "@azure/msal-browser": "^2.10.0",
     "@azure/msal-react": "^1.0.0-alpha.3",
@@ -29,7 +29,6 @@
     "prettier": "^2.2.1",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.3",
-    "react-cookie": "^4.0.3",
     "react-device-detect": "^1.15.0",
     "react-dom": "^17.0.1",
     "react-json-view": "^1.20.4",
@@ -47,13 +46,18 @@
     "@testing-library/user-event": "^7.1.2"
   },
   "scripts": {
+    "dev": "chmod +x ./env.sh && ./env.sh && cp env-config.js ./public/ && react-scripts start",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "test": "react-scripts test",
     "lint": "eslint --ext .ts --ext .tsx .",
     "lint-warn": "eslint --ext .ts --ext .tsx . -c .eslintrc.warn.json",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "release-dev": "git tag -a -f DEV && git push origin --tags -f",
+    "release-test": "git tag -a -f TEST && git push origin --tags -f",
+    "release-qa": "git tag -a -f QA && git push origin --tags -f",
+    "release-prod": "git tag -a -f PROD && git push origin --tags -f"
   },
   "eslintConfig": {
     "extends": "react-app"

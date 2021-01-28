@@ -1,19 +1,20 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as PIXI from "pixi.js";
 import { Application } from "pixi.js";
 import { GenericPostit } from "./canvas/GenericPostit";
 import MainActivity from "./canvas/entities/MainActivity";
 import { Viewport } from "pixi-viewport";
 import { isMobile } from "react-device-detect";
-import { vsmObjectTypes } from "../pages/VsmObjectTypes";
+import { vsmObjectTypes } from "../utils/VsmObjectTypes";
 import SubActivity from "./canvas/entities/SubActivity";
 import Waiting from "./canvas/entities/Waiting";
 import { truncateText } from "./canvas/TruncateText";
+import ReactJson from "react-json-view";
 
-function vsmObjectFactory(o: {
-  name: string;
-  vsmObjectType: { name: string; pkObjectType: number };
-}): PIXI.DisplayObject {
+function vsmObjectFactory(
+  o: { name: string; vsmObjectType: { name: string; pkObjectType: number } },
+  onPress: () => void
+): PIXI.DisplayObject {
   const { pkObjectType, name } = o.vsmObjectType;
   switch (pkObjectType) {
     case vsmObjectTypes.process:
@@ -32,13 +33,14 @@ function vsmObjectFactory(o: {
           color: 0x00d889,
           scale: 1,
         },
+        onPress: () => onPress(),
       });
     case vsmObjectTypes.mainActivity:
-      return MainActivity({ x: 0, y: 0, content: name });
+      return MainActivity({ text: name, onPress: () => onPress() });
     case vsmObjectTypes.subActivity:
       return SubActivity({ x: 0, y: 0, content: name });
     case vsmObjectTypes.waiting:
-      return Waiting("3 min", 0, 28, () => console.log("Clicked"));
+      return Waiting("3 min", () => onPress());
     default:
       return GenericPostit({
         header: "ERROR",
@@ -61,6 +63,10 @@ export function VSMCanvas(props: {
 }): JSX.Element {
   const ref = useRef(document.createElement("div"));
 
+  const [selectedObject, setSelectedObject] = useState({
+    name: "",
+  });
+
   useEffect(() => {
     // PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
     // PIXI.settings.ROUND_PIXELS = true;
@@ -76,6 +82,7 @@ export function VSMCanvas(props: {
 
     // add the viewport to the stage
     app.stage.addChild(viewport);
+
     // activate plugins
     if (isMobile) {
       viewport
@@ -84,6 +91,7 @@ export function VSMCanvas(props: {
         .wheel()
         .decelerate({ friction: 0.15 });
     } else viewport.drag().wheel().decelerate({ friction: 0.15 });
+    viewport.on("clicked", () => setSelectedObject({ name: "" }));
 
     // Add app to DOM
     ref.current.appendChild(app.view);
@@ -123,30 +131,39 @@ export function VSMCanvas(props: {
     const rootObject = props.data.objects ? props.data.objects[0] : null;
     const levelOne = new PIXI.Container();
     if (rootObject) {
-      levelOne.addChild(vsmObjectFactory(rootObject));
+      levelOne.addChild(
+        vsmObjectFactory(rootObject, () =>
+          setTimeout(() => setSelectedObject(rootObject), 10)
+        )
+      );
     }
 
     const levelTwo = new PIXI.Container();
+    let nextX = 0;
     rootObject?.childObjects
       .map(
         (o: {
           name: string;
           vsmObjectType: { name: string; pkObjectType: number };
         }) => {
-          return vsmObjectFactory(o);
+          const onPress = () => setTimeout(() => setSelectedObject(o), 10);
+          return vsmObjectFactory(o, onPress);
         }
       )
-      .forEach((c: PIXI.Graphics, i: number) => {
-        c.x = i * 180;
+      .forEach((c: PIXI.Graphics) => {
+        const padding = 10;
+        if (nextX) c.x = nextX;
+        nextX = c.x + c.width + padding * 2;
         return levelTwo.addChild(c);
       });
 
     levelTwo.y = 300;
     levelTwo.x = 150;
-    levelOne.x = levelTwo.width / 2 + levelOne.width / 6; //Todo:Check logic for centre of genericPostit
+    levelOne.x = levelTwo.width / 2 + levelOne.width / 2 + 23.5; //Todo: figure out better logic for centering
     levelOne.y = levelTwo.y - 200;
     viewport.addChild(levelOne, levelTwo);
     console.log(viewport);
+
     return () => {
       app.stop();
       // On unload completely destroy the application and all of it's children
@@ -155,14 +172,15 @@ export function VSMCanvas(props: {
   }, [props.data]);
 
   return (
-    <div
-      style={props.style}
-      // style={{
-      //   display: "flex",
-      //   flex: 1,
-      //   backgroundColor: "blue",
-      // }}
-      ref={ref}
-    />
+    <>
+      <div
+        className={
+          selectedObject.name === "" ? "vsmSideMenu hideToRight" : "vsmSideMenu"
+        }
+      >
+        <ReactJson src={selectedObject} theme={"apathy:inverted"} />
+      </div>
+      <div style={props.style} ref={ref} />
+    </>
   );
 }

@@ -3,7 +3,7 @@ import getApiBaseUrl from "./getApiBaseUrl";
 export async function postData(
   accessToken: string,
   url: string,
-  body: any
+  body: unknown
 ): Promise<any> {
   const headers = new Headers();
   const bearer = `Bearer ${accessToken}`;

@@ -7,6 +7,7 @@ export async function fetchData(
   const headers = new Headers();
   const bearer = `Bearer ${accessToken}`;
   headers.append("Authorization", bearer);
+  headers.append("Access-Control-Allow-Origin", "*");
 
   return fetch(getApiBaseUrl() + url, {
     method: "GET",

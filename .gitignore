@@ -224,3 +224,7 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/react,macos,windows,linux,intellij,vscode
+
+# Temporary env files
+/public/env-config.js
+env-config.js

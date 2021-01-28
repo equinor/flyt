@@ -14,6 +14,7 @@ interface Rectangle {
   };
   header?: string;
   content?: string;
+  onPress?: () => void;
 }
 
 export function GenericPostit({
@@ -27,6 +28,7 @@ export function GenericPostit({
   },
   header: header = "Header",
   content: content = "Content",
+  onPress,
 }: Rectangle) {
   const rectangle = new Graphics();
   rectangle.beginFill(options.color);
@@ -35,7 +37,7 @@ export function GenericPostit({
     0,
     options.width * options.scale,
     options.height * options.scale,
-    4 * options.scale
+    6 * options.scale
   );
   rectangle.endFill();
 
@@ -72,6 +74,10 @@ export function GenericPostit({
   container.x = options.x;
   container.y = options.y;
 
-  ScaleOnHover(container);
+  if (onPress) {
+    ScaleOnHover(container);
+    container.on("pointerdown", onPress);
+  }
+
   return container;
 }

@@ -8,32 +8,32 @@ import {
 } from "./pages";
 import React from "react";
 import { GuardedRoute } from "./utils/GuardedRoute";
-import { NewVSMPage } from "./pages/NewVSMPage";
 import { LoginPage } from "./pages/LoginPage";
 
 export function AppRouter(): JSX.Element {
   return (
     <Router>
       <Switch>
-        <Route path="/redux">
-          <ReduxPage />
-        </Route>
         <Route path="/user">
           <UserPage />
         </Route>
         <Route path="/login">
           <LoginPage />
         </Route>
+        <GuardedRoute path="/vsm" component={VSMPage} />
+        <GuardedRoute path="/overview" component={OverviewPage} />
+        {/*Extras*/}
+        <Route path="/redux">
+          <ReduxPage />
+        </Route>
         <Route path="/rabbits">
           <RabbitsPage />
         </Route>
-        <GuardedRoute path="/vsm" component={VSMPage} />
-        <GuardedRoute path="/new_vsm" component={NewVSMPage} />
-        <GuardedRoute path="/overview" component={OverviewPage} />
-        {/*<GuardedRoute path="/user" component={UserPage} />*/}
-        <Route path="/">
-          <OverviewPage />
-        </Route>
+        {/*Catch all*/}
+        <GuardedRoute path="/" component={OverviewPage} />
+        {/*<Route path="/">*/}
+        {/*  <HomePage />*/}
+        {/*</Route>*/}
       </Switch>
     </Router>
   );

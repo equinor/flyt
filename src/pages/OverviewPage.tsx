@@ -2,23 +2,15 @@ import React, { useEffect, useState } from "react";
 import moment from "moment";
 import { AccountInfo, IPublicClientApplication } from "@azure/msal-browser";
 import { AppTopBar } from "../components";
-import {
-  AuthenticatedTemplate,
-  UnauthenticatedTemplate,
-  useAccount,
-  useMsal,
-} from "@azure/msal-react";
+import { AuthenticatedTemplate, useAccount, useMsal } from "@azure/msal-react";
 import { Button, Icon } from "@equinor/eds-core-react";
-import { Link, useHistory } from "react-router-dom";
 import { VSMCard } from "../components/VSMCard";
 import { apiScopes } from "../config/authConfig";
 import { fetchData } from "../utils/fetchData";
 import { postData } from "../utils/postData";
-import { vsmObjectTypes } from "./VsmObjectTypes";
-import { simpleProcess } from "../utils/processSamples";
-import { UserAuth } from "./UserPage";
-import { useLocation } from "react-router";
-import { useCookies } from "react-cookie";
+import { kitchenSink, simpleProcess } from "../utils/processSamples";
+import { tenantSpecificEndpoint } from "./LoginPage";
+import { useHistory } from "react-router-dom";
 
 interface VSMInterface {
   vsmProjectID: number;
@@ -41,15 +33,22 @@ function LoadingIndicator(props: { isLoading: boolean }) {
   );
 }
 
+export const getSilentRequest = (account: AccountInfo) => ({
+  ...apiScopes,
+  account: account,
+  authority: tenantSpecificEndpoint,
+});
+
 export function OverviewPage(): JSX.Element {
   const { instance, accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
   const [VSMData, setVSMData] = useState([]);
   const [isLoading, setLoading] = useState(true);
+  const history = useHistory();
 
   useEffect(() => {
     getMyValueStreamMaps(
-      "/v1.0/project",
+      "/api/v1.0/project",
       account as AccountInfo,
       instance,
       (response: React.SetStateAction<never[]>) => {
@@ -67,7 +66,7 @@ export function OverviewPage(): JSX.Element {
   ): void {
     if (useAccount) {
       useInstance
-        .acquireTokenSilent({ ...apiScopes, account: useAccount })
+        .acquireTokenSilent(getSilentRequest(useAccount))
         .then(({ accessToken }) => {
           fetchData(accessToken, url).then((response) => {
             if (callback) {
@@ -78,26 +77,26 @@ export function OverviewPage(): JSX.Element {
     }
   }
 
-  function createNewVSM() {
+  function createNewVSM(
+    history:
+      | import("history").History<unknown>
+      | { pathname: string; search: string }[]
+  ) {
     setLoading(true);
     if (account) {
       instance
-        .acquireTokenSilent({ ...apiScopes, account: account })
+        .acquireTokenSilent(getSilentRequest(account))
         .then(({ accessToken }) => {
-          postData(accessToken, `/v1.0/project`, simpleProcess).then(
+          postData(accessToken, `/api/v1.0/project`, simpleProcess).then(
             (response) => {
-              console.log({ response });
               setLoading(false);
-
-              getMyValueStreamMaps(
-                "/v1.0/project",
-                account as AccountInfo,
-                instance,
-                (response: React.SetStateAction<never[]>) => {
-                  setVSMData(response);
-                  setLoading(false);
-                }
-              );
+              const { vsmProjectID } = response;
+              if (vsmProjectID) {
+                history.push({
+                  pathname: "/vsm",
+                  search: `project=${vsmProjectID}`,
+                });
+              }
             }
           );
         });
@@ -110,9 +109,6 @@ export function OverviewPage(): JSX.Element {
       <AppTopBar />
 
       <div className={"appear"} style={{ padding: 24 }}>
-        <UnauthenticatedTemplate>
-          <UserAuth />
-        </UnauthenticatedTemplate>
         <AuthenticatedTemplate>
           <div
             className="noselect"
@@ -126,7 +122,7 @@ export function OverviewPage(): JSX.Element {
             }}
           >
             <h1>My Value Stream Maps</h1>
-            <Button variant={"outlined"} onClick={() => createNewVSM()}>
+            <Button variant={"outlined"} onClick={() => createNewVSM(history)}>
               Create new VSM
               <Icon name="add" title="add" size={16} />
             </Button>
@@ -141,7 +137,7 @@ export function OverviewPage(): JSX.Element {
                   justifyContent: window.innerWidth > 550 ? "unset" : "center",
                 }}
               >
-                {VSMData.length > 0 ? (
+                {VSMData?.length > 0 ? (
                   VSMData.sort((a: VSMInterface, b: VSMInterface) => {
                     if (moment(a.updated).isBefore(moment(b.updated))) return 1;
                     return -1;

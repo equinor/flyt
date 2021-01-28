@@ -1,6 +1,6 @@
 import { AccountInfo, IPublicClientApplication } from "@azure/msal-browser";
 import { apiScopes } from "../config/authConfig";
-import { fetchData } from "../utils/fetchData";
+import { fetchData } from "./fetchData";
 
 export function getData(
   url: string,

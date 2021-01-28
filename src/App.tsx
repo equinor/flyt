@@ -6,7 +6,6 @@ import { msalConfig } from "./config/authConfig";
 import { PublicClientApplication } from "@azure/msal-browser";
 import { AppRouter } from "./AppRouter";
 import { account_circle, add } from "@equinor/eds-icons";
-import { CookiesProvider } from "react-cookie";
 
 Icon.add({ account_circle, add });
 
@@ -15,9 +14,7 @@ export default function App(): JSX.Element {
 
   return (
     <MsalProvider instance={msalInstance}>
-      <CookiesProvider>
-        <AppRouter />
-      </CookiesProvider>
+      <AppRouter />
     </MsalProvider>
   );
 }

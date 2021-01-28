@@ -1,5 +1,5 @@
-import { vsmObjectTypes } from "../pages/VsmObjectTypes";
-import { vsmProcessObject } from "../pages/VsmProcessObject";
+import { vsmObjectTypes } from "./VsmObjectTypes";
+import { vsmProcessObject } from "./VsmProcessObject";
 
 export const simpleProcess = {
   name: "Project name",
@@ -11,6 +11,7 @@ export const simpleProcess = {
       childObjects: [
         { fkObjectType: vsmObjectTypes.supplier, name: "supplier" },
         { fkObjectType: vsmObjectTypes.input, Name: "input" },
+        { fkObjectType: vsmObjectTypes.mainActivity, name: "main activity" },
         { fkObjectType: vsmObjectTypes.output, name: "output" },
         { fkObjectType: vsmObjectTypes.customer, name: "customer" },
       ],

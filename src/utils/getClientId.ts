@@ -1,14 +1,17 @@
-/**
- * Get REACT_APP_CLIENT_ID environment variable
- */
+import { getConfig } from "./getConfig";
+
+export interface IConfig {
+  CLIENT_ID: string;
+}
+
 export default function getClientId(): string {
-  console.log(
-    process.env,
-    process.env.REACT_APP_CLIENT_ID,
-    process.env.REACT_APP_API_BASE_URL,
-    process.env.REACT_APP_API_SCOPE,
-    process.env.REACT_APP_VERSION
-  );
-  if (process.env.REACT_APP_CLIENT_ID) return process.env.REACT_APP_CLIENT_ID;
-  throw new Error("MISSING ENV VAR: REACT_APP_CLIENT_ID");
+  if (process.env.NODE_ENV === "development") {
+    const clientId = process.env.REACT_APP_CLIENT_ID;
+    if (!clientId) {
+      throw Error("REACT_APP_CLIENT_ID missing from environment");
+    }
+    return clientId;
+  } else {
+    return getConfig("REACT_APP_CLIENT_ID");
+  }
 }

@@ -1,9 +1,10 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 import React, { useEffect, useState } from "react";
 import { AppTopBar, VSMCanvas } from "../components";
 import { useLocation } from "react-router";
 import { AccountInfo } from "@azure/msal-browser";
 import { useAccount, useMsal } from "@azure/msal-react";
-import { getData } from "./GetData";
+import { getData } from "../utils/GetData";
 import ReactJson from "react-json-view";
 import { isMobile } from "react-device-detect";
 
@@ -27,7 +28,7 @@ export function VSMPage(): JSX.Element {
     if (project) {
       setLoading(true);
       getData(
-        `/v1.0/project/${project}`,
+        `/api/v1.0/project/${project}`,
         account as AccountInfo,
         instance,
         (response: React.SetStateAction<never[]>) => {
@@ -42,12 +43,11 @@ export function VSMPage(): JSX.Element {
   return (
     <div>
       <AppTopBar style={{ position: "fixed", width: "100%" }} />
-      {/*<VSMSideMenu json={VSMData} />*/}
-      {!isMobile && (
-        <div className={"vsmSideMenu"}>
-          <ReactJson src={VSMData} theme={"apathy:inverted"} />
-        </div>
-      )}
+      {/*{!isMobile && (*/}
+      {/*  <div className={"vsmSideMenu"}>*/}
+      {/*    <ReactJson src={VSMData} theme={"apathy:inverted"} />*/}
+      {/*  </div>*/}
+      {/*)}*/}
       <VSMCanvas data={VSMData} />
     </div>
   );

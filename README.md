@@ -27,33 +27,60 @@ To get up and running:
 
 ## Docker
 
-You can build and start all environments at once by running ``docker-compose build && docker-compose up``.
+```bash
+# Building image
+docker build -t vsm .
 
-| Environment | Running on port |
-|-------------|-----------------|
-| DEV         | 3001            | 
-| TEST        | 3002            |
-| QA          | 3003            |
-| PROD        | 3004            |
 
-Take a look at `docker-compose.yml` for the setup.
+# Running image
+## Dev
+docker run -p 3000:80 --env-file ./environment-variables/DEV.env vsm  
+## Test
+docker run -p 3000:80 --env-file ./environment-variables/TEST.env vsm  
+## QA
+docker run -p 3000:80 --env-file ./environment-variables/QA.env vsm  
+
+docker run -p 3000:80 -e REACT_APP_API_BASE_URL=https://api.statoil.com/app/vsm/qa -e REACT_APP_API_SCOPE=b78f9306-406d-4fa8-98e5-001dcd933ff4/user_impersonation  -e REACT_APP_CLIENT_ID=7fe4fa03-733a-414d-8d32-0a9358b5eeb9 -e REACT_APP_TENANT_ID=3aa4a235-b6e2-48d5-9195-7fcf05b459b0 vsm
+## Prod 
+docker run -p 3000:80 --env-file ./environment-variables/PROD.env vsm  
+```
+
 
 ## Branching and deploying stuff
 We use a simple branching structure.
 Instead of having a `master` and `develop` branch we just use one `main`-branch.
 
-The `main`-branch contains the latest changes. To do a release, we tag a commit. [Read about-releases](https://docs.github.com/en/github/administering-a-repository/about-releases)
+The `main`-branch contains the latest changes.
 
-That gets rid of the "empty Pull requests" for releases that we would get if we needed to do a PR into Master from Develop.
+We use a "sliding tag" for each environment...
+Tag something DEV, TEST, QA or PROD, and it should trigger a new build and release.
+This gets rid of the "empty Pull requests" for releases, which is something we would have if we do a PR into `Master` from `Develop`.
+Also, this gives us more flexibility to release from another branch if we need to do that for some reason.
+ 
+I've added a simple script to automate this:
+ For example; Run `yarn release-dev` to tag DEV and push tags to GitHub.
 
-Also, it gives us more flexibility to release from another branch if we need to do that for some reason.
 
-| Environment | URL  | Who should test what?  | comment                                                                          | 
-|-------------|------|------------------------|----------------------------------------------------------------------------------|
-| DEV         | tbd  | Developer              | Developer is free to use this environment however they want to                   |
-| TEST        | tbd  | Internal testing       | Developer tags what needs to be tested for QA-tester in the team                 |
-| QA          | tbd  | Product owner/customer | When said feature is ready, it gets released into QA so our PO can give feedback |
-| PROD        | tbd  | End-users              | We wait with deploying to prod untill everyone is happy                          |
+| Environment | Release script    | URL                                     | Who should test what?  | Comments                                                                              | 
+|-------------|-------------------|-----------------------------------------|------------------------|---------------------------------------------------------------------------------------|
+| DEV         |Run `yarn release-dev` | https://web-vsm-dev.radix.equinor.com/  | Developer              | Developer is free to use this environment however they want to                        |
+| TEST        |Run `yarn release-test`| https://web-vsm-test.radix.equinor.com/ | Internal testing       | Developer tags what needs to be tested for QA-tester in the team                      |
+| QA          |Run `yarn release-qa`  | https://web-vsm-qa.radix.equinor.com/   | "Product Owner" or Customer | When said feature is ready, it gets released into QA so our PO can give feedback |
+| PROD        |Run `yarn release-prod`| https://web-vsm-prod.radix.equinor.com/ | End-users              | We wait with deploying to prod until everyone is happy                                |
+
+## Runtime environment variables
+
+> When using CRA, the environment variables need to be set when building the image and not at runtime.
+That means that we need to build an image for each environment...
+For more information, take a look at the following issue:
+https://github.com/facebook/create-react-app/issues/2353
+
+To work-around this we are running env.sh that adds our runtime environment variables to the browser-window.
+
+## Cors
+We are running an NGINX proxy for api-requests.
+NGINX is expecting an environment variable called `REAC_APP_API_BASE_URL`.
+Example: `REAC_APP_API_BASE_URL: https://api.statoil.com/app/vsm/dev/api`
 
 # Pixi js Canvas
 ## Making space for stuff
@@ -80,7 +107,6 @@ Structure of an entity
   text: '',
   roles: [],
   duration: 0,
-  // ms
   problems: [],
   ideas: [],
   solutions: [],
@@ -98,6 +124,7 @@ with.
 To update an entity
 
 # API-Endpoints
+See swagger https://vsm-api-dev.azurewebsites.net/swagger/index.html
 
 ## Project
 
@@ -211,7 +238,7 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 ## Just the standard stuff
 ```typescript
-  postData(accessToken, `/v1.0/project`, {
+  postData(accessToken, `/api/v1.0/project`, {
     name: processTitle,
     objects: [
       {
@@ -231,7 +258,7 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 ## Everything but the kitchen sink
 >NB. Actually missing choice. (Waiting on api-support) 
 ```typescript
-          postData(accessToken, `/v1.0/project`, {
+          postData(accessToken, `/api/v1.0/project`, {
   name: processTitle,
   objects: [
     {
@@ -304,3 +331,19 @@ To learn React, check out the [React documentation](https://reactjs.org/).
   ],
 } as vsmProcessObject)
 ```
+
+```text
+
+https://login.microsoftonline.com/statoilsrm.onmicrosoft.com/oauth2/authorize?
+client_id=e6e2f3c4-d6bd-4d71-a00e-be0c16a703da
+&response_type=code
+&redirect_uri=https://www.getpostman.com/oauth2/callback
+&nonce=1234
+&resource=b3e899bf-12af-4f63-8744-d1ef4edc30b5
+&prompt=consent
+```
+
+# NEW NEW Template
+
+Routing
+State management
