@@ -1,0 +1,225 @@
+/*!*To black scroll navigation set overscroll behavior*/
+/*This makes it possible to use two fingers on the trackpad for navigation in our vsm canvas*/
+/**!*/
+/*html, body {*/
+/*    overscroll-behavior-x: none;*/
+/*}*/
+
+.App {
+    text-align: center;
+}
+
+.App-logo {
+    height: 40vmin;
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+        animation: App-logo-float infinite 3s ease-in-out;
+    }
+}
+
+.App-header {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+}
+
+.App-link {
+    color: rgb(112, 76, 182);
+}
+
+@keyframes App-logo-float {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(10px)
+    }
+    100% {
+        transform: translateY(0px)
+    }
+}
+
+
+h1, h2, h3, h4, h5, h6, p {
+    font-family: Equinor, sans-serif;
+}
+
+body {
+    background-color: #F7F7F7;
+}
+
+/*
+Todo: Move card style over to VSMCard.tsx
+Use styledComponents or something instead of css
+*/
+.card {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.14));
+    /* UI Background/Default */
+
+    width: 332px;
+    height: 168px;
+
+    min-width: 332px;
+    max-height: 168px;
+
+    background: #FFFFFF;
+    border-radius: 4px;
+
+    margin-right: 16px;
+    margin-bottom: 16px;
+
+    animation-name: fade-in;
+    animation-duration: 0.5s;
+
+    transition: all .2s ease-in-out;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0px 10px 10px rgba(0, 0, 0, 0.14));
+}
+
+.appear {
+    animation-name: fade-in;
+    animation-duration: 0.5s;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px)
+    }
+}
+
+
+.hidden {
+    opacity: 0;
+    transition: all .4s ease-in-out;
+}
+
+.loading {
+    position: fixed;
+}
+
+@keyframes fade-out {
+    to {
+        opacity: 0;
+    }
+}
+
+.vsmTitle {
+    /* Heading/H6 */
+
+    font-family: Equinor, sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    /* identical to box height, or 150% */
+
+    letter-spacing: 0.2px;
+
+    /* Text + static icons/⚪️/Default */
+
+    color: #3D3D3D;
+}
+
+.vsmLabel {
+    /* Navigation/Label */
+
+    font-family: Equinor, sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    /* identical to box height, or 133% */
+
+    /* Text + static icons/⚪️/Tertiary */
+
+    color: #6F6F6F;
+}
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently
+                                     supported by Chrome, Edge, Opera and Firefox */
+}
+
+.vsmSideMenu {
+    filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.14));
+
+    position: fixed;
+    right: 0;
+    top: 0;
+    padding: 12px;
+    background-color: white;
+
+    height: 100%;
+    width:100%;
+    max-width: 400px;
+
+    overflow: auto;
+
+    animation-name: appearFromRight;
+    animation-duration: 0.5s;
+}
+
+.appearFromRight {
+    animation-name: appearFromRight;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+}
+
+.hideToRight {
+    animation-name: hideToRight;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes appearFromRight {
+    from {
+        right: -100%;
+    }
+}
+
+@keyframes hideToRight {
+
+    to {
+        right: -100%;
+    }
+}
+
+.backgroundCover {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: 0.5;
+}
+
+.center {
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    height: 100vh;
+
+}
+
+.centerText {
+    text-align: center;
+}
