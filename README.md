@@ -1,20 +1,24 @@
 VSM - Value Stream Mapping
 ---
 
-|                   |                    Comment                      |     
-|-------------------|-------------------------------------------------|
-|                   | This is a [React](https://reactjs.org/) project |
-| Package manager   | We use the [Yarn](https://yarnpkg.com/) -package-manager. To get started, run ``yarn && yarn start`` |
-| Canvas tools      | We heavily rely on canvas and use PixiJS to ease development.     |
-| Navigation        | [react-router](https://reactrouter.com/)                          |
-| State management  | [ReduxPage](https://redux.js.org/), together with [ReduxPage Toolkit](https://redux-toolkit.js.org/), and [React ReduxPage](https://react-redux.js.org/) |
-| Testing           | [Testing-Library](https://testing-library.com/)                  |
-| Code-Style        | We use [ESLint](https://eslint.org/) together with [Prettier](https://prettier.io/) for linting and enforcing a consistent code-style.  |   
-| Authentication    | [@azure/msal-react](https://github.com/AzureAD/microsoft-authentication-library-for-js#readme) |
+![Canvas example](./documentation/images/canvasExample.png)
 
 # Links
 
 - [Figma design & prototype](https://www.figma.com/file/IkHwmIQrsT0iR34f5R5UnZ/VSM)
+
+# Tech stack
+
+|                   |                    Comment                      |     
+|-------------------|-------------------------------------------------|
+| Library           | This is a [React](https://reactjs.org/) project |
+| Package manager   | We use the [Yarn](https://yarnpkg.com/) -package-manager. To get started, run ``yarn && yarn start`` |
+| Canvas tools      | We heavily rely on canvas and use PixiJS to ease development.     |
+| Navigation        | [react-router](https://reactrouter.com/)                          |
+| State management  | [Redux](https://redux.js.org/), together with [Redux Toolkit](https://redux-toolkit.js.org/), and [React Redux](https://react-redux.js.org/) |
+| Testing           | [Testing-Library](https://testing-library.com/)                  |
+| Code-Style        | We use [ESLint](https://eslint.org/) together with [Prettier](https://prettier.io/) for linting and enforcing a consistent code-style.  |   
+| Authentication    | [@azure/msal-react](https://github.com/AzureAD/microsoft-authentication-library-for-js#readme) |
 
 # Developing
 
@@ -151,7 +155,7 @@ DELETE ``/entity/{id}``
 # Create-React-App
 
 This project was ejected from [Create React App](https://github.com/facebook/create-react-app), using
-the [ReduxPage](https://redux.js.org/) and [ReduxPage Toolkit](https://redux-toolkit.js.org/) template.
+the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
 
 ## Available Scripts
 
