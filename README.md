@@ -7,23 +7,36 @@ VSM - Value Stream Mapping
 
 - [Figma design & prototype](https://www.figma.com/file/IkHwmIQrsT0iR34f5R5UnZ/VSM)
 
-# Tech stack
+# Tech stack / Features
 
 |                   |                    Comment                      |     
 |-------------------|-------------------------------------------------|
 | Library           | This is a [React](https://reactjs.org/) project |
 | Package manager   | We use the [Yarn](https://yarnpkg.com/) -package-manager. To get started, run ``yarn && yarn start`` |
-| Canvas tools      | We heavily rely on canvas and use PixiJS to ease development.     |
-| Navigation        | [react-router](https://reactrouter.com/)                          |
-| State management  | [Redux](https://redux.js.org/), together with [Redux Toolkit](https://redux-toolkit.js.org/), and [React Redux](https://react-redux.js.org/) |
-| Testing           | [Testing-Library](https://testing-library.com/)                  |
+| Navigation        | [NextJS](https://nextjs.org/)|
+| State management  | [EasyPeasy](https://easy-peasy.now.sh/) persisted global store |
+| Canvas tools      | We heavily rely on canvas and use [PixiJS](https://www.pixijs.com/) to ease development.     |
+| Testing           | TODO: [Testing-Library](https://testing-library.com/)                  |
 | Code-Style        | We use [ESLint](https://eslint.org/) together with [Prettier](https://prettier.io/) for linting and enforcing a consistent code-style.  |   
 | Authentication    | [@azure/msal-react](https://github.com/AzureAD/microsoft-authentication-library-for-js#readme) |
+| Styling           | [Sass](https://sass-lang.com/)|
+| Templates         | |
 
 # Developing
 
 To get up and running:
-`yarn && yarn start`
+`yarn && yarn dev`
+
+## Running different environments  locally
+| Env. | command        |
+|------|:--------------:|
+| Dev  | `yarn use-dev` |
+| Test | `yarn use-test`|
+| QA   | `yarn use-qa`  |
+| PROD |    --TBD--     |
+
+### What it does
+For example: running `yarn use-dev` replaces the root `.env` file with `environment-variables/DEV.env`, then it runs `yarn dev`.
 
 ## Docker
 
@@ -31,20 +44,16 @@ To get up and running:
 # Building image
 docker build -t vsm .
 
-
 # Running image
 ## Dev
-docker run -p 3000:80 --env-file ./environment-variables/DEV.env vsm  
+docker run -p 3000:3000 --env-file ./environment-variables/DEV.env vsm  
 ## Test
-docker run -p 3000:80 --env-file ./environment-variables/TEST.env vsm  
+docker run -p 3000:3000 --env-file ./environment-variables/TEST.env vsm  
 ## QA
-docker run -p 3000:80 --env-file ./environment-variables/QA.env vsm  
-
-docker run -p 3000:80 -e REACT_APP_API_BASE_URL=https://api.statoil.com/app/vsm/qa -e REACT_APP_API_SCOPE=b78f9306-406d-4fa8-98e5-001dcd933ff4/user_impersonation  -e REACT_APP_CLIENT_ID=7fe4fa03-733a-414d-8d32-0a9358b5eeb9 -e REACT_APP_TENANT_ID=3aa4a235-b6e2-48d5-9195-7fcf05b459b0 vsm
+docker run -p 3000:3000 --env-file ./environment-variables/QA.env vsm  
 ## Prod 
-docker run -p 3000:80 --env-file ./environment-variables/PROD.env vsm  
+docker run -p 3000:3000 --env-file ./environment-variables/PROD.env vsm  
 ```
-
 
 ## Branching and deploying stuff
 We use a simple branching structure.
@@ -68,19 +77,35 @@ I've added a simple script to automate this:
 | QA          |Run `yarn release-qa`  | https://web-vsm-qa.radix.equinor.com/   | "Product Owner" or Customer | When said feature is ready, it gets released into QA so our PO can give feedback |
 | PROD        |Run `yarn release-prod`| https://web-vsm-prod.radix.equinor.com/ | End-users              | We wait with deploying to prod until everyone is happy                                |
 
+> **Note:** When running `yarn release-<environment>` we are starting a new build in Radix. If we already have a working build and want to release it to another environment, we may "promote" it to a different environment via the [Radix-console](https://console.radix.equinor.com/applications/vsm).  
+
+## Task tracking
+### Workflow triggers
+| GitHub Events         | Triggers        |  
+|-----------------------|-----------------|
+| Pull request created  |
+| Pull request merged   |
+| Commit created        |
+| Branch created        |
+
 ## Runtime environment variables
 
-> When using CRA, the environment variables need to be set when building the image and not at runtime.
-That means that we need to build an image for each environment...
-For more information, take a look at the following issue:
-https://github.com/facebook/create-react-app/issues/2353
+When using NEXT.JS, the environment variables need to be set when building the image and not at runtime.
+> Generally you'll want to use build-time environment variables to provide your configuration. The reason for this is that runtime configuration adds rendering / initialization overhead and is incompatible with Automatic Static Optimization.
+> 
+> [Read more ...](https://nextjs.org/docs/api-reference/next.config.js/runtime-configuration)
 
-To work-around this we are running env.sh that adds our runtime environment variables to the browser-window.
 
-## Cors
-We are running an NGINX proxy for api-requests.
-NGINX is expecting an environment variable called `REAC_APP_API_BASE_URL`.
-Example: `REAC_APP_API_BASE_URL: https://api.statoil.com/app/vsm/dev/api`
+To work-around this we are disabling "automatic static optimization" at our root level.
+Adding this to `_app.tsx`:
+```javascript
+MyApp.getInitialProps = async (appContext: AppContext) => {
+  const appProps = await App.getInitialProps(appContext);
+
+  return { ...appProps };
+};
+```
+Which disables "automatic static optimization" for all our pages. [Read more ...](https://github.com/vercel/next.js/blob/master/errors/opt-out-auto-static-optimization.md)
 
 # Pixi js Canvas
 ## Making space for stuff
@@ -138,8 +163,8 @@ Details WIP
 {
   id: '',
   owner: [],
-  created: date,
-  lastUpdated: date,
+  created: 'date',
+  lastUpdated: 'date',
   Entities: []
   // [{entity},{entity},{entity}],
 }
@@ -179,86 +204,33 @@ PUT (or PATCH?) ``/entity/{id}``
 
 DELETE ``/entity/{id}``
 
-# Create-React-App
-
-This project was ejected from [Create React App](https://github.com/facebook/create-react-app), using
-the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `yarn start`
-
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more
-information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will
-remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right
-into your project so you have full control over them. All of the commands except `eject` will still work, but they will
-point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you
-shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t
-customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in
-the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-# Post new process - Example request bodys
+# Post new process - Example request bodies
 
 ## Just the standard stuff
 ```typescript
-  postData(accessToken, `/api/v1.0/project`, {
-    name: processTitle,
-    objects: [
-      {
-        parent: 0,
-        name: processTitle,
-        fkObjectType: vsmObjectTypes.process,
-        childObjects: [
-          { fkObjectType: vsmObjectTypes.supplier, name: "supplier" },
-          { fkObjectType: vsmObjectTypes.input, Name: "input" },
-          { fkObjectType: vsmObjectTypes.output, name: "output" },
-          { fkObjectType: vsmObjectTypes.customer, name: "customer" },
-        ],
-      },
-    ],
-  } as vsmProcessObject)
+///POST -> 'api/v1.0/project'
+const payload = {
+  name: processTitle,
+  objects: [
+    {
+      parent: 0,
+      name: processTitle,
+      fkObjectType: vsmObjectTypes.process,
+      childObjects: [
+        { fkObjectType: vsmObjectTypes.supplier, name: "supplier" },
+        { fkObjectType: vsmObjectTypes.input, Name: "input" },
+        { fkObjectType: vsmObjectTypes.output, name: "output" },
+        { fkObjectType: vsmObjectTypes.customer, name: "customer" }
+      ]
+    }
+  ]
+} as vsmProcessObject;
 ```
 ## Everything but the kitchen sink
 >NB. Actually missing choice. (Waiting on api-support) 
 ```typescript
-          postData(accessToken, `/api/v1.0/project`, {
+///POST -> 'api/v1.0/project'
+const payload = {
   name: processTitle,
   objects: [
     {
@@ -274,7 +246,7 @@ To learn React, check out the [React documentation](https://reactjs.org/).
           childObjects: [
             {
               name: "Kaffetrakter",
-              fkObjectType: vsmObjectTypes.subActivity,
+              fkObjectType: vsmObjectTypes.subActivity
             },
             {
               name: "Presskanne",
@@ -282,11 +254,11 @@ To learn React, check out the [React documentation](https://reactjs.org/).
               childObjects: [
                 {
                   name: "Finn presskanne",
-                  fkObjectType: vsmObjectTypes.subActivity,
-                },
-              ],
-            },
-          ],
+                  fkObjectType: vsmObjectTypes.subActivity
+                }
+              ]
+            }
+          ]
         },
         {
           FkObjectType: vsmObjectTypes.mainActivity,
@@ -294,13 +266,13 @@ To learn React, check out the [React documentation](https://reactjs.org/).
           childObjects: [
             {
               name: "Tilsett kaffe til presskanne",
-              fkObjectType: vsmObjectTypes.subActivity,
-            },
-          ],
+              fkObjectType: vsmObjectTypes.subActivity
+            }
+          ]
         },
         {
           FkObjectType: vsmObjectTypes.waiting,
-          Name: "Waiting",
+          Name: "Waiting"
         },
         {
           FkObjectType: vsmObjectTypes.mainActivity,
@@ -316,24 +288,25 @@ To learn React, check out the [React documentation](https://reactjs.org/).
                   childObjects: [
                     {
                       name: "Pour coffee",
-                      fkObjectType: vsmObjectTypes.subActivity,
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
+                      fkObjectType: vsmObjectTypes.subActivity
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
         },
         { fkObjectType: vsmObjectTypes.output, name: "output" },
-        { fkObjectType: vsmObjectTypes.customer, name: "customer" },
-      ],
-    },
-  ],
-} as vsmProcessObject)
+        { fkObjectType: vsmObjectTypes.customer, name: "customer" }
+      ]
+    }
+  ]
+} as vsmProcessObject;
 ```
 
+# Random
+## Manual consent url
 ```text
-
 https://login.microsoftonline.com/statoilsrm.onmicrosoft.com/oauth2/authorize?
 client_id=e6e2f3c4-d6bd-4d71-a00e-be0c16a703da
 &response_type=code
@@ -342,8 +315,3 @@ client_id=e6e2f3c4-d6bd-4d71-a00e-be0c16a703da
 &resource=b3e899bf-12af-4f63-8744-d1ef4edc30b5
 &prompt=consent
 ```
-
-# NEW NEW Template
-
-Routing
-State management

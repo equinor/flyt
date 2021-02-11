@@ -1,0 +1,16 @@
+@import './variables';
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-size: 14px;
+  background-color: #F7F7F7;
+  color: $equinor_GRAY;
+  height: 100%;
+}
+
+// Apply correct font everywhere
+* {
+  font-family: $font !important;
+}
