@@ -10,7 +10,6 @@ import styles from "./VSMCanvas.module.scss";
 import { useStoreDispatch, useStoreState } from "../hooks/storeHooks";
 import { debounce } from "../utils/debounce";
 import { vsmObject } from "../interfaces/VsmObject";
-import { formatCanvasText } from "./canvas/FormatCanvasText";
 
 const defaultObject = {
   name: "",
@@ -151,6 +150,7 @@ export default function VSMCanvas(props: {
     }
   }, [project]);
 
+  const { pkObjectType, name } = selectedObject.vsmObjectType;
   return (
     <>
       <div
@@ -160,7 +160,7 @@ export default function VSMCanvas(props: {
             : styles.vsmSideMenu
         }
       >
-        <h1 className={styles.sideBarHeader}>{selectedObject.vsmObjectType.name}</h1>
+        <h1 className={styles.sideBarHeader}>{name}</h1>
         <div className={styles.sideBarSectionHeader}>
           <p>General Information</p>
         </div>
@@ -183,28 +183,29 @@ export default function VSMCanvas(props: {
           />
         </div>
         <div style={{ display: "flex", paddingTop: 10 }}>
-          {(selectedObject.vsmObjectType.pkObjectType ===
-            vsmObjectTypes.mainActivity ||
-            selectedObject.vsmObjectType.pkObjectType ===
-            vsmObjectTypes.subActivity) && (
-            <>
-              <TextField
-                disabled
-                label={"Role"}
-                variant={"default"}
-                value={selectedObject.role?.toString() ?? "Role"}
-                id={"vsmObjectRole"}
-              />
-              <div style={{ padding: 8 }} />
-              <TextField
-                disabled
-                label={"Time"}
-                value={selectedObject.time?.toString() ?? "1 min"}
-                variant={"default"}
-                id={"vsmObjectTime"}
-              />
-            </>
-          )}
+          {
+            (pkObjectType === vsmObjectTypes.mainActivity
+              || pkObjectType === vsmObjectTypes.subActivity)
+            && (
+              <>
+                <TextField
+                  disabled
+                  label={"Role"}
+                  variant={"default"}
+                  value={selectedObject.role?.toString() ?? "Role"}
+                  id={"vsmObjectRole"}
+                />
+                <div style={{ padding: 8 }} />
+                <TextField
+                  disabled
+                  label={"Time"}
+                  value={selectedObject.time?.toString() ?? "1 min"}
+                  variant={"default"}
+                  id={"vsmObjectTime"}
+                />
+              </>
+            )
+          }
         </div>
         <div className={styles.sideBarSectionHeader}>
           <p>Add problem, idea or question</p>
@@ -224,9 +225,9 @@ export default function VSMCanvas(props: {
         />
 
         {/*Todo: Add accordion */}
-        <div className={styles.sideBarSectionHeader}>
-          <p>Debug section</p>
-        </div>
+        {/*<div className={styles.sideBarSectionHeader}>*/}
+        {/*  <p>Debug section</p>*/}
+        {/*</div>*/}
         {/*NB: ReactJson is really slow, so better to no render it every render*/}
         {/*<ReactJson src={selectedObject} theme={'apathy:inverted'} />*/}
       </div>

@@ -38,6 +38,7 @@ const projectModel: ProjectModel = {
   fetchProject: thunk(async (actions, payload) => {
     const { id } = payload;
     actions.setFetchingProject(true);
+    actions.setErrorProject(null);
     BaseAPIServices
       .get(`/api/v1.0/project/${id}`)
       .then(value => actions.setProject(value.data))

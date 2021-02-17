@@ -36,20 +36,15 @@ export default function Projects(props) {
     setFetching(true);
     BaseAPIServices
       .post("/api/v1.0/project", {
-        "name": "Project name",
         "objects": [{
           "parent": 0,
-          "name": "Process name",
           "fkObjectType": vsmObjectTypes.process,
           "childObjects": [
-            { "fkObjectType": vsmObjectTypes.supplier, "Name": "supplier" },
-            { "fkObjectType": vsmObjectTypes.supplier, "Name": "input" },
-            {
-              "fkObjectType": vsmObjectTypes.mainActivity, "Name": "main activity",
-              "childObjects": [{ "fkObjectType": vsmObjectTypes.subActivity, "Name": "SubActivity" }]
-            },
-            { "fkObjectType": vsmObjectTypes.output, "Name": "Supplier" },
-            { "fkObjectType": vsmObjectTypes.customer, "Name": "Customer" }
+            { "fkObjectType": vsmObjectTypes.supplier },
+            { "fkObjectType": vsmObjectTypes.input },
+            { "fkObjectType": vsmObjectTypes.mainActivity },
+            { "fkObjectType": vsmObjectTypes.output },
+            { "fkObjectType": vsmObjectTypes.customer }
           ]
         }]
       })

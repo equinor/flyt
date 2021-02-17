@@ -1,9 +1,9 @@
-import moment from 'moment';
-import React from 'react';
-import Link from 'next/link';
-import styles from './Card.module.scss';
-import { UserDots } from '../UserDots';
-import { VsmProject } from '../../interfaces/VsmProject';
+import moment from "moment";
+import React from "react";
+import Link from "next/link";
+import styles from "./Card.module.scss";
+import { UserDots } from "../UserDots";
+import { VsmProject } from "../../interfaces/VsmProject";
 
 export function VSMCard(props: { vsm: VsmProject }): JSX.Element {
   const { userIdentity: createdBy } = props.vsm.created;
@@ -15,7 +15,7 @@ export function VSMCard(props: { vsm: VsmProject }): JSX.Element {
         className={styles.card}
       >
         <div style={{ flex: 1, margin: 16 }}>
-          <h1 className={styles.vsmTitle}>{props.vsm.name}</h1>
+          <h1 className={styles.vsmTitle}>{props.vsm.name || "Unnamed project"}</h1>
         </div>
         <div>
           <hr style={{ opacity: 0.1 }} />
