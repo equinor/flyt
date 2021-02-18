@@ -1,7 +1,9 @@
 @import './variables';
+@import url(https://eds-static.equinor.com/font/equinor-font.css);
 
 html,
 body {
+  font-family: Equinor, sans-serif;
   padding: 0;
   margin: 0;
   font-size: 14px;
