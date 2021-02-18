@@ -11,6 +11,8 @@ interface SubActivityProps {
   y: number;
   header?: string;
   content?: string;
+  role?: string;
+  time?: string;
 }
 
 export default function SubActivity({
@@ -18,6 +20,8 @@ export default function SubActivity({
   content = "Choose method",
   x,
   y,
+                                      role,
+                                      time
 }: SubActivityProps): PIXI.Container {
   const rectangle = new Graphics();
   const color = 0xffd800;
@@ -79,18 +83,12 @@ export default function SubActivity({
   contentText.y = 28;
   contentText.resolution = 4;
 
-  const roleText = new PIXI.Text(formatCanvasText("Role"), defaultStyle);
-  // roleText.x = paddingLeft;
-  // roleText.y = 28;
+  const roleText = new PIXI.Text(formatCanvasText(role ?? "",16), defaultStyle);
   roleText.resolution = 4;
   roleText.y = height - 24;
   roleText.x = 12;
-  // roleContainer.width = width / 2;
-  // roleContainer.height = 40;
 
-  const timeText = new PIXI.Text(formatCanvasText("1 min"), defaultStyle);
-  // timeText.x = paddingLeft;
-  // timeText.y = 28;
+  const timeText = new PIXI.Text(formatCanvasText(time ?? "",16), defaultStyle);
   timeText.resolution = 4;
   timeText.y = height - 24;
   timeText.x = width / 2 + 12;

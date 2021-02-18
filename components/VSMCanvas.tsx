@@ -4,12 +4,12 @@ import { Application } from "pixi.js";
 import { Viewport } from "pixi-viewport";
 import { isMobile } from "react-device-detect";
 import { vsmObjectFactory } from "./canvas/VsmObjectFactory";
-import { SingleSelect, TextField } from "@equinor/eds-core-react";
 import { vsmObjectTypes } from "../types/vsmObjectTypes";
 import styles from "./VSMCanvas.module.scss";
 import { useStoreDispatch, useStoreState } from "../hooks/storeHooks";
 import { debounce } from "../utils/debounce";
 import { vsmObject } from "../interfaces/VsmObject";
+import { SingleSelect, TextField } from "@equinor/eds-core-react";
 
 const defaultObject = {
   name: "",
@@ -18,6 +18,131 @@ const defaultObject = {
   time: 0,
   role: ""
 } as vsmObject;
+
+/**
+ * Process specific content stuff
+ * @param props
+ * @constructor
+ */
+function SideBarContent(props: {
+  selectedObject: vsmObject,
+  name: string,
+  pkObjectType: vsmObjectTypes,
+  onChangeName: (event: { target: { value: string } }) => void,
+  onChangeRole: (event: { target: { value: string } }) => void;
+  onChangeTime: (event: { target: { value: string } }) => void;
+}) {
+  switch (props.pkObjectType) {
+    case vsmObjectTypes.process:
+      return <>
+        <div style={{ paddingTop: 8 }}>
+          <TextField
+            label={"Title"}
+            multiline
+            rows={4}
+            variant={"default"}
+            value={props.selectedObject.name}
+            onChange={props.onChangeName}
+            id={"vsmObjectDescription"}
+          />
+        </div>
+      </>;
+    case vsmObjectTypes.supplier:
+    case vsmObjectTypes.input:
+    case vsmObjectTypes.output:
+    case vsmObjectTypes.customer:
+      return <>
+        <div style={{ paddingTop: 8 }}>
+          <TextField
+            label={"Add description"}
+            multiline
+            rows={4}
+            variant={"default"}
+            value={props.selectedObject.name}
+            onChange={props.onChangeName}
+            id={"vsmObjectDescription"}
+          />
+        </div>
+      </>;
+    case vsmObjectTypes.mainActivity:
+    case vsmObjectTypes.subActivity:
+      return <>
+        <div style={{ paddingTop: 8 }}>
+          <TextField
+            label={"Add description"}
+            multiline
+            rows={4}
+            variant={"default"}
+            value={props.selectedObject.name}
+            onChange={props.onChangeName}
+            id={"vsmObjectDescription"}
+          />
+        </div>
+        <div style={{ paddingTop: 12 }}>
+          <TextField
+            label={"Role"}
+            variant={"default"}
+            value={props.selectedObject.role?.toString()}
+            id={"vsmObjectRole"}
+            onChange={props.onChangeRole}
+          />
+          <div style={{ padding: 8 }} />
+          <TextField
+            type={"number"}
+            label={"Duration"}
+            meta={"Minutes"}
+            value={props.selectedObject.time?.toString()}
+            id={"vsmObjectTime"}
+            onChange={props.onChangeTime}
+          />
+        </div>
+        <div className={styles.sideBarSectionHeader}>
+          <p>Add problem, idea or question</p>
+        </div>
+        <SingleSelect
+          disabled
+          items={[
+            "Problem",
+            "Idea",
+            "Question",
+            "Existing Problem",
+            "Existing Idea",
+            "Existing Question"
+          ]}
+          handleSelectedItemChange={() => {
+          }}
+          label="Select type"
+        />
+      </>;
+    case vsmObjectTypes.waiting:
+      return <>
+        <TextField
+          type={"number"}
+          label={"Duration"}
+          meta={"Minutes"}
+          value={props.selectedObject.time?.toString()}
+          id={"vsmObjectTime"}
+          onChange={props.onChangeTime}
+        />
+      </>;
+    case vsmObjectTypes.choice:
+      return <>
+        <div style={{ paddingTop: 8 }}>
+          <TextField
+            label={"Title"}
+            multiline
+            rows={4}
+            variant={"default"}
+            value={props.selectedObject.name}
+            onChange={props.onChangeName}
+            id={"vsmObjectDescription"}
+          />
+        </div>
+      </>;
+    default:
+      return <p>Invalid process type</p>;
+  }
+}
 
 export default function VSMCanvas(props: {
   style?: React.CSSProperties | undefined;
@@ -164,72 +289,34 @@ export default function VSMCanvas(props: {
         <div className={styles.sideBarSectionHeader}>
           <p>General Information</p>
         </div>
-        <div style={{ paddingTop: 8 }}>
-          <TextField
-            label={"Add description"}
-            multiline
-            rows={4}
-            variant={"default"}
-            value={selectedObject.name}
-            onChange={(event: { target: { value: any } }) => {
-              const newName = event.target.value;
-              setSelectedObject({ ...selectedObject, name: newName });
-              debounce(() => {
-                  dispatch.updateVSMObject({ ...selectedObject, name: newName } as vsmObject);
-                }, 1000, "Canvas-UpdateName"
-              )();
-            }}
-            id={"vsmObjectDescription"}
-          />
-        </div>
-        <div style={{ display: "flex", paddingTop: 10 }}>
-          {
-            (pkObjectType === vsmObjectTypes.mainActivity
-              || pkObjectType === vsmObjectTypes.subActivity)
-            && (
-              <>
-                <TextField
-                  disabled
-                  label={"Role"}
-                  variant={"default"}
-                  value={selectedObject.role?.toString() ?? "Role"}
-                  id={"vsmObjectRole"}
-                />
-                <div style={{ padding: 8 }} />
-                <TextField
-                  disabled
-                  label={"Time"}
-                  value={selectedObject.time?.toString() ?? "1 min"}
-                  variant={"default"}
-                  id={"vsmObjectTime"}
-                />
-              </>
-            )
-          }
-        </div>
-        <div className={styles.sideBarSectionHeader}>
-          <p>Add problem, idea or question</p>
-        </div>
-        <SingleSelect
-          disabled
-          items={[
-            "Problem",
-            "Idea",
-            "Question",
-            "Existing Problem",
-            "Existing Idea",
-            "Existing Question"
-          ]}
-          handleSelectedItemChange={(changes) => console.log(changes)}
-          label="Select type"
-        />
-
-        {/*Todo: Add accordion */}
-        {/*<div className={styles.sideBarSectionHeader}>*/}
-        {/*  <p>Debug section</p>*/}
-        {/*</div>*/}
-        {/*NB: ReactJson is really slow, so better to no render it every render*/}
-        {/*<ReactJson src={selectedObject} theme={'apathy:inverted'} />*/}
+        <SideBarContent
+          selectedObject={selectedObject} name={name} pkObjectType={pkObjectType}
+          onChangeName={(event: { target: { value: any } }) => {
+            const name = event.target.value;
+            setSelectedObject({ ...selectedObject, name });
+            debounce(() => {
+                dispatch.updateVSMObject({ ...selectedObject, name } as vsmObject);
+              }, 1000, "Canvas-UpdateName"
+            )();
+          }}
+          onChangeRole={(event) => {
+            console.log(event.target.value);
+            const role = event.target.value;
+            setSelectedObject({ ...selectedObject, role });
+            debounce(() => {
+                dispatch.updateVSMObject({ ...selectedObject, role } as vsmObject);
+              }, 1000, "Canvas-UpdateRole"
+            )();
+          }}
+          onChangeTime={(event) => {
+            console.log(event.target.value);
+            const time = parseInt(event.target.value);
+            setSelectedObject({ ...selectedObject, time });
+            debounce(() => {
+                dispatch.updateVSMObject({ ...selectedObject, time } as vsmObject);
+              }, 1000, "Canvas-UpdateTime"
+            )();
+          }} />
       </div>
       <div style={props.style} ref={ref} />
     </>

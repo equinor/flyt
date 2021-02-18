@@ -8,13 +8,18 @@ interface MainActivityProps {
   header?: string;
   text?: string;
   onPress?: () => void;
+  role?: string,
+  time?: string
 }
 
-export default function MainActivity({
-  header = "MainActivity",
-  text = "Choose method",
-  onPress,
-}: MainActivityProps): PIXI.Container {
+export default function MainActivity(
+  {
+    header = "MainActivity",
+    text = "Choose method",
+    onPress,
+    role,
+    time
+  }: MainActivityProps): PIXI.Container {
   const rectangle = new Graphics();
   const color = 0x00c1ff;
   const width = 126;
@@ -53,7 +58,7 @@ export default function MainActivity({
     wordWrapWidth: width - paddingLeft,
     wordWrap: true,
     breakWords: true,
-    trim: true,
+    trim: true
   };
   const textElement = new PIXI.Text(
     formatCanvasText(text || header, 55),
@@ -64,7 +69,7 @@ export default function MainActivity({
   textElement.alpha = text ? 1 : 0.4; //Hide it if we have text
   textElement.resolution = 4;
 
-  const roleText = new PIXI.Text(formatCanvasText("Role"), defaultStyle);
+  const roleText = new PIXI.Text(formatCanvasText(role ?? "",16), defaultStyle);
   roleText.resolution = 4;
   roleText.y = height - 39;
   roleText.x = 12;
@@ -76,7 +81,7 @@ export default function MainActivity({
   rectangleRole.y = roleText.y - roleText.height;
   rectangleRole.alpha = 0.04;
 
-  const timeText = new PIXI.Text(formatCanvasText("1 min"), defaultStyle);
+  const timeText = new PIXI.Text(formatCanvasText(time ?? "",16), defaultStyle);
   timeText.resolution = 4;
   timeText.y = height - timeText.height - 6;
   timeText.x = 12;

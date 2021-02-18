@@ -15,21 +15,25 @@ interface Rectangle {
   header?: string;
   content?: string;
   onPress?: () => void;
+  hideTitle?: boolean;
 }
 
-export function GenericPostit({
-  options: options = {
-    x: 0,
-    y: 0,
-    width: 126,
-    height: 136,
-    color: 0x00d889,
-    scale: 1,
-  },
-  header: header = "Header",
-  content: content = "Content",
-  onPress,
-}: Rectangle) {
+export function GenericPostit(
+  {
+    options: options = {
+      x: 0,
+      y: 0,
+      width: 126,
+      height: 136,
+      color: 0x00d889,
+      scale: 1
+    },
+    hideTitle: hideTitle = false,
+    header: header = "Header",
+    content: content = "Content",
+    onPress
+  }: Rectangle
+) {
   const rectangle = new Graphics();
   rectangle.beginFill(options.color);
   rectangle.drawRoundedRect(
@@ -54,7 +58,7 @@ export function GenericPostit({
     wordWrapWidth: width - paddingLeft,
     wordWrap: true,
     breakWords: true,
-    trim: true,
+    trim: true
   };
 
   const headerText = new PIXI.Text(formatCanvasText(header, 18), defaultStyle);
@@ -65,11 +69,17 @@ export function GenericPostit({
 
   const contentText = new PIXI.Text(formatCanvasText(content), defaultStyle);
   contentText.x = paddingLeft;
-  contentText.y = 28;
+  contentText.y = hideTitle ? paddingTop : 28;
   contentText.resolution = 4;
 
   const container = new PIXI.Container();
-  container.addChild(rectangle, headerText, contentText);
+  container.addChild(rectangle);
+  if (!hideTitle) {
+    container.addChild(headerText);
+  }
+  if (content) {
+    container.addChild(contentText);
+  }
 
   container.x = options.x;
   container.y = options.y;
