@@ -8,4 +8,5 @@ export enum vsmObjectTypes {
   waiting,
   output,
   customer,
+  choice
 }

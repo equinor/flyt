@@ -23,10 +23,10 @@ export function ScaleOnHover(container: PIXI.Container) {
     if (timer) clearTimeout(timer);
     timer = setInterval(() => {
       if (currentScale + delta <= targetScale) {
-        container.scale.set((currentScale += delta));
+        container?.scale.set((currentScale += delta));
       } else {
         clearTimeout(timer);
-        container.scale.set(targetScale);
+        container?.scale.set(targetScale);
         currentScale = targetScale;
       }
     }, ms);
@@ -37,10 +37,10 @@ export function ScaleOnHover(container: PIXI.Container) {
     if (timer) clearTimeout(timer);
     timer = setInterval(() => {
       if (currentScale + delta > initialScale) {
-        container.scale.set((currentScale -= delta));
+        container?.scale.set((currentScale -= delta));
       } else {
         clearTimeout(timer);
-        container.scale.set(initialScale);
+        container?.scale.set(initialScale);
         currentScale = initialScale;
       }
     }, ms);
