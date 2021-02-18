@@ -76,12 +76,19 @@ const projectModel: ProjectModel = {
   }),
   updateVSMObject: thunk(async (actions, payload) => {
     actions.patchLocalObject(payload);
-    const debounced = debounce(() => {
+    actions.setErrorProject(null);
+    //Todo: Update project title if type is process
+    // debounce(() => {
+    //   return BaseAPIServices
+    //     .patch(`/api/v1.0/VSMObject`, payload)
+    //     .catch(reason => actions.setErrorProject(reason));
+    // }, 1000, 'updateVSMObject')()
+
+     debounce(() => {
       return BaseAPIServices
         .patch(`/api/v1.0/VSMObject`, payload)
         .catch(reason => actions.setErrorProject(reason));
-    }, 1000, 'updateVSMObject');
-    debounced();
+    }, 1000, 'updateVSMObject')()
   }),
 };
 
