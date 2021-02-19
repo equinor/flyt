@@ -4,14 +4,12 @@ import { Application } from "pixi.js";
 import { Viewport } from "pixi-viewport";
 import { isMobile } from "react-device-detect";
 import { vsmObjectFactory } from "./canvas/VsmObjectFactory";
-import { SingleSelect, TextField } from "@equinor/eds-core-react";
-import { vsmObjectTypes } from "../types/vsmObjectTypes";
-import styles from "./VSMCanvas.module.scss";
 import { useStoreDispatch, useStoreState } from "../hooks/storeHooks";
 import { debounce } from "../utils/debounce";
 import { vsmObject } from "../interfaces/VsmObject";
+import { VSMSideBar } from "./VSMSideBar";
 
-const defaultObject = {
+export const defaultObject = {
   name: "",
   vsmObjectType: { name: "", pkObjectType: 0 },
   vsmObjectID: 0,
@@ -73,39 +71,6 @@ export default function VSMCanvas(props: {
       // Start the PixiJS app
       app.start();
 
-      // AddRotatingBunnies(app);
-      // GenericPostit({
-      //   app: app,
-      // });
-
-      const projectName = project.name;
-      //Todo: Add title to stage
-      const defaultStyle = {
-        fontFamily: "Equinor",
-        fontWeight: 500,
-        fontSize: 24,
-        lineHeight: 16,
-        letterSpacing: 0.2,
-        wordWrapWidth: 400,
-        wordWrap: true,
-        breakWords: true,
-        trim: true
-      };
-      //
-      // const projectText = new PIXI.Text(
-      //   formatCanvasText(projectName, 200),
-      //   defaultStyle
-      // );
-      // projectText.alpha = 0.4;
-      // projectText.resolution = 4;
-      // projectText.x = 50 - viewport.x;
-      // projectText.y = 100 - viewport.y;
-      // viewport.on("moved", () => {
-      //   projectText.x = 50 - viewport.x;
-      //   projectText.y = 100 - viewport.y;
-      //   // setViewPortPosition({ x: viewport.x, y: viewport.y }); // Todo: Fix zoom
-      // });
-
       const rootObject = project.objects ? project.objects[0] : null;
       const levelOne = new PIXI.Container();
       if (rootObject) {
@@ -149,88 +114,48 @@ export default function VSMCanvas(props: {
       };
     }
   }, [project]);
+  
+  function updateObjectName() {
+    return (event: { target: { value: any } }) => {
+      const name = event.target.value;
+      setSelectedObject({ ...selectedObject, name });
+      debounce(() => {
+          dispatch.updateVSMObject({ ...selectedObject, name } as vsmObject);
+        }, 1000, "Canvas-UpdateName"
+      )();
+    };
+  }
 
-  const { pkObjectType, name } = selectedObject.vsmObjectType;
+  function updateObjectRole() {
+    return (event) => {
+      const role = event.target.value;
+      setSelectedObject({ ...selectedObject, role });
+      debounce(() => {
+          dispatch.updateVSMObject({ ...selectedObject, role } as vsmObject);
+        }, 1000, "Canvas-UpdateRole"
+      )();
+    };
+  }
+
+  function updateObjectTime() {
+    return (event) => {
+      const time = parseInt(event.target.value);
+      setSelectedObject({ ...selectedObject, time });
+      debounce(() => {
+          dispatch.updateVSMObject({ ...selectedObject, time } as vsmObject);
+        }, 1000, "Canvas-UpdateTime"
+      )();
+    };
+  }
+
   return (
     <>
-      <div
-        className={
-          selectedObject === defaultObject
-            ? styles.hideSideBarToRight
-            : styles.vsmSideMenu
-        }
-      >
-        <h1 className={styles.sideBarHeader}>{name}</h1>
-        <div className={styles.sideBarSectionHeader}>
-          <p>General Information</p>
-        </div>
-        <div style={{ paddingTop: 8 }}>
-          <TextField
-            label={"Add description"}
-            multiline
-            rows={4}
-            variant={"default"}
-            value={selectedObject.name}
-            onChange={(event: { target: { value: any } }) => {
-              const newName = event.target.value;
-              setSelectedObject({ ...selectedObject, name: newName });
-              debounce(() => {
-                  dispatch.updateVSMObject({ ...selectedObject, name: newName } as vsmObject);
-                }, 1000, "Canvas-UpdateName"
-              )();
-            }}
-            id={"vsmObjectDescription"}
-          />
-        </div>
-        <div style={{ display: "flex", paddingTop: 10 }}>
-          {
-            (pkObjectType === vsmObjectTypes.mainActivity
-              || pkObjectType === vsmObjectTypes.subActivity)
-            && (
-              <>
-                <TextField
-                  disabled
-                  label={"Role"}
-                  variant={"default"}
-                  value={selectedObject.role?.toString() ?? "Role"}
-                  id={"vsmObjectRole"}
-                />
-                <div style={{ padding: 8 }} />
-                <TextField
-                  disabled
-                  label={"Time"}
-                  value={selectedObject.time?.toString() ?? "1 min"}
-                  variant={"default"}
-                  id={"vsmObjectTime"}
-                />
-              </>
-            )
-          }
-        </div>
-        <div className={styles.sideBarSectionHeader}>
-          <p>Add problem, idea or question</p>
-        </div>
-        <SingleSelect
-          disabled
-          items={[
-            "Problem",
-            "Idea",
-            "Question",
-            "Existing Problem",
-            "Existing Idea",
-            "Existing Question"
-          ]}
-          handleSelectedItemChange={(changes) => console.log(changes)}
-          label="Select type"
-        />
-
-        {/*Todo: Add accordion */}
-        {/*<div className={styles.sideBarSectionHeader}>*/}
-        {/*  <p>Debug section</p>*/}
-        {/*</div>*/}
-        {/*NB: ReactJson is really slow, so better to no render it every render*/}
-        {/*<ReactJson src={selectedObject} theme={'apathy:inverted'} />*/}
-      </div>
+      <VSMSideBar
+        selectedObject={selectedObject}
+        onChangeName={updateObjectName()}
+        onChangeRole={updateObjectRole()}
+        onChangeTime={updateObjectTime()}
+      />
       <div style={props.style} ref={ref} />
     </>
   );
