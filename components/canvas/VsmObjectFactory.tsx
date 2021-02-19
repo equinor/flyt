@@ -51,11 +51,7 @@ export function vsmObjectFactory(
     case vsmObjectTypes.mainActivity:
       return MainActivity({
         text: o.name,
-        onPress: () => onPress(),
-        role: o.role || "Role?",
-        time: !!o.time && o.time !== 0
-          ? o.time === 1 ? `1 Minute` : `${o.time} Minutes`
-          : "Duration?"
+        onPress: () => onPress()
       });
     case vsmObjectTypes.subActivity:
       return SubActivity({

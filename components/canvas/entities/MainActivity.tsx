@@ -8,17 +8,13 @@ interface MainActivityProps {
   header?: string;
   text?: string;
   onPress?: () => void;
-  role?: string,
-  time?: string
 }
 
 export default function MainActivity(
   {
     header = "MainActivity",
     text = "Choose method",
-    onPress,
-    role,
-    time
+    onPress
   }: MainActivityProps): PIXI.Container {
   const rectangle = new Graphics();
   const color = 0x00c1ff;
@@ -69,41 +65,15 @@ export default function MainActivity(
   textElement.alpha = text ? 1 : 0.4; //Hide it if we have text
   textElement.resolution = 4;
 
-  const roleText = new PIXI.Text(formatCanvasText(role ?? "",16), defaultStyle);
-  roleText.resolution = 4;
-  roleText.y = height - 39;
-  roleText.x = 12;
-
-  const rectangleRole = new Graphics();
-  rectangleRole.beginFill(0x000000);
-  rectangleRole.drawRect(0, 0, width, 24);
-  rectangleRole.endFill();
-  rectangleRole.y = roleText.y - roleText.height;
-  rectangleRole.alpha = 0.04;
-
-  const timeText = new PIXI.Text(formatCanvasText(time ?? "",16), defaultStyle);
-  timeText.resolution = 4;
-  timeText.y = height - timeText.height - 6;
-  timeText.x = 12;
-
-  const rectangleTime = new Graphics();
-  rectangleTime.beginFill(0x000000);
-  rectangleTime.drawRect(0, 0, width, 24);
-  rectangleTime.endFill();
-  rectangleTime.y = timeText.y - timeText.height;
-  rectangleTime.alpha = 0.1;
-
-  const enableSideContainer = false;
   const mask = new PIXI.Graphics();
   mask.beginFill(0x000000);
   mask.drawRoundedRect(
     0,
     0,
-    enableSideContainer ? width + sideContainer.width : width,
+    width,
     height,
     6
   );
-  rectangleTime.mask = mask;
   rectangle.mask = mask;
   sideContainer.mask = mask;
   const container = new PIXI.Container();
@@ -112,10 +82,6 @@ export default function MainActivity(
     mask,
     rectangle,
     textElement,
-    rectangleRole,
-    roleText,
-    timeText,
-    rectangleTime,
     sideContainer
   );
 

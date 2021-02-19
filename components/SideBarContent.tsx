@@ -48,6 +48,19 @@ export function SideBarContent(props: {
         </div>
       </>;
     case vsmObjectTypes.mainActivity:
+      return <>
+        <div style={{ paddingTop: 8 }}>
+          <TextField
+            label={"Add description"}
+            multiline
+            rows={4}
+            variant={"default"}
+            value={props.selectedObject.name}
+            onChange={props.onChangeName}
+            id={"vsmObjectDescription"}
+          />
+        </div>
+      </>;
     case vsmObjectTypes.subActivity:
       return <>
         <div style={{ paddingTop: 8 }}>
