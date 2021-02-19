@@ -1,9 +1,9 @@
-import { Action, action, createStore, persist, Thunk, thunk } from 'easy-peasy';
-import BaseAPIServices from '../services/BaseAPIServices';
-import { VsmProject } from '../interfaces/VsmProject';
-import { vsmObject } from '../interfaces/VsmObject';
-import { original } from 'immer';
-import { debounce } from '../utils/debounce';
+import { Action, action, createStore, persist, Thunk, thunk } from "easy-peasy";
+import BaseAPIServices from "../services/BaseAPIServices";
+import { VsmProject } from "../interfaces/VsmProject";
+import { vsmObject } from "../interfaces/VsmObject";
+import { debounce } from "../utils/debounce";
+import { vsmObjectTypes } from "../types/vsmObjectTypes";
 
 // General pattern Thunk -> Actions -> Set state
 
@@ -77,24 +77,29 @@ const projectModel: ProjectModel = {
   updateVSMObject: thunk(async (actions, payload) => {
     actions.patchLocalObject(payload);
     actions.setErrorProject(null);
-    //Todo: Update project title if type is process
-    // debounce(() => {
-    //   return BaseAPIServices
-    //     .patch(`/api/v1.0/VSMObject`, payload)
-    //     .catch(reason => actions.setErrorProject(reason));
-    // }, 1000, 'updateVSMObject')()
 
-     debounce(() => {
+    // Update project title if type is process
+    const { vsmProjectID, name, vsmObjectType } = payload;
+    if (vsmObjectType.pkObjectType === vsmObjectTypes.process) {
+      debounce(() => {
+        return BaseAPIServices
+          .post(`/api/v1.0/project`, { vsmProjectID, name })
+          .catch(reason => actions.setErrorProject(reason));
+      }, 1000, "updateVSMTitle")();
+    }
+
+    // Send the object-update to api
+    debounce(() => {
       return BaseAPIServices
         .patch(`/api/v1.0/VSMObject`, payload)
         .catch(reason => actions.setErrorProject(reason));
-    }, 1000, 'updateVSMObject')()
-  }),
+    }, 1000, "updateVSMObject")();
+  })
 };
 
 const store = createStore(
   persist(projectModel, {
-    allow: ['project'],
-  }),
+    allow: ["project"]
+  })
 );
 export default store;
