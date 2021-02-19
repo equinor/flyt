@@ -14,7 +14,7 @@ export function VSMCard(props: { vsm: VsmProject }): JSX.Element {
       <div
         className={styles.card}
       >
-        <div style={{ flex: 1, margin: 16 }}>
+        <div className={styles.vsmTitleContainer}>
           <h1 className={styles.vsmTitle}>{props.vsm.name || "Unnamed project"}</h1>
         </div>
         <div>

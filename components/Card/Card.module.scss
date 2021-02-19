@@ -68,6 +68,13 @@ Use styledComponents or something instead of css
     }
 }
 
+.vsmTitleContainer{
+  margin: 8px 16px 16px;
+  flex: 1;
+  overflow:hidden;
+  text-overflow: ellipsis;
+}
+
 .vsmTitle {
     /* Heading/H6 */
 
