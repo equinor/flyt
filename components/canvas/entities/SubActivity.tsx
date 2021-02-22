@@ -1,64 +1,68 @@
-import { GenericPostit } from "../GenericPostit";
-import { Graphics } from "pixi.js";
 import * as PIXI from "pixi.js";
-import { icons } from "../../../assets/icons";
+import { Graphics } from "pixi.js";
 import { formatCanvasText } from "../FormatCanvasText";
-import { ScaleOnHover } from "./ScaleOnHover";
 import { ProblemCircle } from "./ProblemCircle";
+import { clickHandler } from "./ClickHandler";
 
 interface SubActivityProps {
   x: number;
   y: number;
-  header?: string;
-  content?: string;
+  text?: string;
   role?: string;
   time?: string;
+  onPress?: () => void;
+  disableSideContainer?: boolean;
 }
 
 export default function SubActivity({
-  header = "MainActivity",
-  content = "Choose method",
+  text,
   x,
   y,
-                                      role,
-                                      time
+  role,
+  time,
+  onPress,
+  disableSideContainer = true,
 }: SubActivityProps): PIXI.Container {
-  const rectangle = new Graphics();
-  const color = 0xffd800;
+  const header = "Sub- activity";
   const width = 126;
-  rectangle.beginFill(color);
   const height = 136;
-  rectangle.drawRoundedRect(0, 0, width, height, 4);
-  rectangle.endFill();
-
-  const texture = PIXI.Texture.from(icons.add_outline);
-  const iconTime = new PIXI.Sprite(texture);
-  iconTime.anchor.set(0, 0.3);
-
-  iconTime.x = width - 30;
-  iconTime.y = 10;
-
-  const rectangleSide = new Graphics();
-  rectangleSide.beginFill(0xededed);
-  rectangleSide.drawRoundedRect(0, 0, 71, 136, 4);
-  rectangleSide.endFill();
-  // rectangleSide.x = rectangle.width;
-  const c1 = ProblemCircle("P1");
-  c1.x = rectangleSide.x + 4;
-  c1.y = rectangleSide.y + 4;
-  const c2 = ProblemCircle("P2");
-  c2.x = c1.x;
-  c2.y = c1.y + c1.height + 4;
-  const c3 = ProblemCircle("P3");
-  c3.x = c2.x;
-  c3.y = c2.y + c2.height + 4;
-
-  const sideContainer = new PIXI.Container();
-  sideContainer.x = rectangle.width;
-  sideContainer.addChild(rectangleSide, c1, c2, c3);
-
   const paddingLeft = 8;
   const paddingTop = 10;
+
+  function createBaseContainer() {
+    const rectangle = new Graphics();
+    rectangle.beginFill(0xffd800);
+    rectangle.drawRect(0, 0, width, height);
+    rectangle.endFill();
+    return rectangle;
+  }
+
+  const rectangle = createBaseContainer();
+
+  function createSideContainer() {
+    // todo: SideContainer stuff. I started it off for you with some demo content ;)
+    const rectangleSide = new Graphics();
+    rectangleSide.beginFill(0xededed);
+    rectangleSide.drawRect(0, 0, 71, 136);
+    rectangleSide.endFill();
+
+    const c1 = ProblemCircle("P1");
+    c1.x = rectangleSide.x + 4;
+    c1.y = rectangleSide.y + 4;
+    const c2 = ProblemCircle("P2");
+    c2.x = c1.x;
+    c2.y = c1.y + c1.height + 4;
+    const c3 = ProblemCircle("P3");
+    c3.x = c2.x;
+    c3.y = c2.y + c2.height + 4;
+
+    const sideContainer = new PIXI.Container();
+    sideContainer.x = rectangle.width;
+    sideContainer.addChild(rectangleSide, c1, c2, c3);
+    return sideContainer;
+  }
+
+  const sideContainer = createSideContainer();
 
   const defaultStyle = {
     fontFamily: "Equinor",
@@ -72,56 +76,73 @@ export default function SubActivity({
     trim: true,
   };
 
-  const headerText = new PIXI.Text(formatCanvasText(header, 18), defaultStyle);
-  headerText.x = paddingLeft;
-  headerText.y = paddingTop;
-  headerText.alpha = 0.4;
-  headerText.resolution = 4;
+  const textElement = new PIXI.Text(
+    formatCanvasText(text || header, 118),
+    defaultStyle
+  );
+  textElement.x = paddingLeft;
+  textElement.y = paddingTop;
+  textElement.alpha = text ? 1 : 0.4; //Hide it if we have text
+  textElement.resolution = 4;
 
-  const contentText = new PIXI.Text(formatCanvasText(content, 55), defaultStyle);
-  contentText.x = paddingLeft;
-  contentText.y = 28;
-  contentText.resolution = 4;
-
-  const roleText = new PIXI.Text(formatCanvasText(role ?? "",16), defaultStyle);
+  const roleText = new PIXI.Text(
+    formatCanvasText(role ?? "", 16),
+    defaultStyle
+  );
   roleText.resolution = 4;
-  roleText.y = height - 24;
+  roleText.y = height - 40;
   roleText.x = 12;
 
-  const timeText = new PIXI.Text(formatCanvasText(time ?? "",16), defaultStyle);
+  const timeText = new PIXI.Text(
+    formatCanvasText(time ?? "", 16),
+    defaultStyle
+  );
   timeText.resolution = 4;
-  timeText.y = height - 24;
-  timeText.x = width / 2 + 12;
+  timeText.y = height - 18;
+  timeText.x = roleText.x;
 
-  const horizontalLine = new PIXI.Graphics();
-  horizontalLine.lineStyle(2, 0x000000).moveTo(0, 0).lineTo(width, 0);
-  horizontalLine.y = height - 40;
-  horizontalLine.alpha = 0.1;
+  const roleBg = new PIXI.Graphics()
+    .beginFill()
+    .drawRect(0, height - 24 * 2, width, 24);
+  roleBg.alpha = 0.04;
 
-  const verticalLine = new PIXI.Graphics();
-  verticalLine
-    .lineStyle(2, 0x000000)
-    .moveTo(0, horizontalLine.y)
-    .lineTo(0, height);
-  verticalLine.x = width / 2;
-  verticalLine.alpha = 0.1;
+  const timeBg = new PIXI.Graphics()
+    .beginFill()
+    .drawRect(0, height - 24, width, 24);
+  timeBg.alpha = 0.1;
+
+  const mask = new PIXI.Graphics();
+  mask.beginFill(0x000000);
+  mask.drawRoundedRect(
+    0,
+    0,
+    disableSideContainer ? width : width + sideContainer.width,
+    height,
+    6
+  );
+  rectangle.mask = mask;
+  textElement.mask = mask;
+  roleBg.mask = mask;
+  roleText.mask = mask;
+  timeBg.mask = mask;
+  timeText.mask = mask;
+  sideContainer.mask = mask;
 
   const container = new PIXI.Container();
   container.addChild(
+    mask,
     rectangle,
-    headerText,
-    iconTime,
-    contentText,
+    textElement,
+    roleBg,
     roleText,
+    timeBg,
     timeText,
-    sideContainer,
-    horizontalLine,
-    verticalLine
+    sideContainer
   );
 
   container.x = x;
   container.y = y;
 
-  ScaleOnHover(container);
+  if (onPress) clickHandler(container, onPress);
   return container;
 }

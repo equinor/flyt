@@ -1,7 +1,7 @@
 import * as PIXI from "pixi.js";
 import { Graphics } from "pixi.js";
 import { formatCanvasText } from "./FormatCanvasText";
-import { ScaleOnHover } from "./entities/ScaleOnHover";
+import { clickHandler } from "./entities/ClickHandler";
 
 interface Rectangle {
   options?: {
@@ -18,22 +18,20 @@ interface Rectangle {
   hideTitle?: boolean;
 }
 
-export function GenericPostit(
-  {
-    options: options = {
-      x: 0,
-      y: 0,
-      width: 126,
-      height: 136,
-      color: 0x00d889,
-      scale: 1
-    },
-    hideTitle: hideTitle = false,
-    header: header = "Header",
-    content: content = "Content",
-    onPress
-  }: Rectangle
-) {
+export function GenericPostit({
+  options: options = {
+    x: 0,
+    y: 0,
+    width: 126,
+    height: 136,
+    color: 0x00d889,
+    scale: 1,
+  },
+  hideTitle: hideTitle = false,
+  header: header = "Header",
+  content: content = "Content",
+  onPress,
+}: Rectangle) {
   const rectangle = new Graphics();
   rectangle.beginFill(options.color);
   rectangle.drawRoundedRect(
@@ -58,7 +56,7 @@ export function GenericPostit(
     wordWrapWidth: width - paddingLeft,
     wordWrap: true,
     breakWords: true,
-    trim: true
+    trim: true,
   };
 
   const headerText = new PIXI.Text(formatCanvasText(header, 18), defaultStyle);
@@ -84,10 +82,7 @@ export function GenericPostit(
   container.x = options.x;
   container.y = options.y;
 
-  if (onPress) {
-    ScaleOnHover(container);
-    container.on("pointerdown", onPress);
-  }
+  if (onPress) clickHandler(container, onPress);
 
   return container;
 }

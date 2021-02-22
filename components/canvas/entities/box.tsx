@@ -1,7 +1,6 @@
 import * as PIXI from "pixi.js";
 import { Graphics } from "pixi.js";
-import { formatCanvasText } from "../FormatCanvasText";
-import { ScaleOnHover } from "./ScaleOnHover";
+import { clickHandler } from "./ClickHandler";
 
 const icons = {
   time:
@@ -29,10 +28,7 @@ export default function Box(
   container.addChild(background);
   container.x = x;
   container.y = y;
-  ScaleOnHover(container);
-  if (onPress) {
-    container.on("pointerdown", onPress);
-  }
+  if (onPress) clickHandler(container, onPress);
 
   app.stage.addChild(container);
 }

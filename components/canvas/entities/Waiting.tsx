@@ -1,14 +1,13 @@
 import * as PIXI from "pixi.js";
 import { Graphics } from "pixi.js";
 import { formatCanvasText } from "../FormatCanvasText";
-import { ScaleOnHover } from "./ScaleOnHover";
 import { icons } from "../../../assets/icons";
+import { clickHandler } from "./ClickHandler";
 
 export default function Waiting(
   time = "unknown",
   onPress?: () => void
 ): PIXI.Container {
-  // const time = "5 min";
   const header = "Waiting";
   const width = 126;
   const color = 0xff8900;
@@ -16,7 +15,6 @@ export default function Waiting(
 
   const background = new Graphics();
   background.beginFill(color);
-  // background.lineStyle(4, 0x00_00_00, 0.1);
   background.drawRoundedRect(0, 0, width, height, 6);
 
   const paddingLeft = 6;
@@ -55,18 +53,13 @@ export default function Waiting(
   const container = new PIXI.Container();
   container.addChild(background, text, iconTime, textTime);
 
-  // container.y = 0;
   const paddingContainer = new Graphics();
-  paddingContainer.beginFill(0x000000);
-  paddingContainer.alpha = 0.1;
   paddingContainer.drawRect(0, 0, 126, 136);
 
   const withPadding = new PIXI.Container();
   withPadding.addChild(paddingContainer, container);
+  container.y = paddingContainer.y + paddingContainer.height / 4;
 
-  if (onPress) {
-    ScaleOnHover(container);
-    container.on("pointerdown", onPress);
-  }
+  if (onPress) clickHandler(container, onPress);
   return withPadding;
 }

@@ -5,7 +5,6 @@
 //    overscroll-behavior-x: none;
 //}
 
-
 .appear {
   animation-name: fade-in;
   animation-duration: 0.5s;
@@ -14,13 +13,13 @@
 @keyframes fade-in {
   from {
     opacity: 0;
-    transform: translateY(10px)
+    transform: translateY(10px);
   }
 }
 
 .hidden {
   opacity: 0;
-  transition: all .4s ease-in-out;
+  transition: all 0.4s ease-in-out;
 }
 
 .loading {
@@ -47,7 +46,7 @@
 
   /* Text + static icons/⚪️/Default */
 
-  color: #3D3D3D;
+  color: #3d3d3d;
 }
 
 .vsmLabel {
@@ -62,7 +61,7 @@
 
   /* Text + static icons/⚪️/Tertiary */
 
-  color: #6F6F6F;
+  color: #6f6f6f;
 }
 
 .noselect {
@@ -81,17 +80,23 @@
   position: fixed;
   right: 0;
   top: 64px;
-  padding: 12px;
   background-color: white;
 
-  height: 100%;
-  width: 100%;
+  height: 100vh;
+  width: 100vw;
   max-width: 400px;
-
-  overflow: auto;
 
   animation-name: appearFromRight;
   animation-duration: 0.5s;
+}
+
+.letItBreath {
+  margin: 12px;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
 }
 
 .appearFromRight {
@@ -106,14 +111,13 @@
   position: fixed;
   right: 0;
   top: 64px;
-  padding: 12px;
   background-color: white;
 
-  height: 100%;
-  width: 100%;
+  height: 100vh;
+  width: 100vw;
   max-width: 400px;
 
-  overflow: auto;
+  animation-duration: 0.5s;
   /// The animation
   animation-name: hideToRight;
   animation-duration: 0.5s;
@@ -147,7 +151,6 @@
   align-items: center;
 
   height: 100vh;
-
 }
 
 .centerText {
@@ -169,11 +172,12 @@
 
   /* Text + static icons/⚪️/Default */
 
-  color: #3D3D3D;
+  color: #3d3d3d;
 }
 
-.sideBarSectionHeader { /* Heading/H6 */
-  border-bottom: solid 1px #DCDCDC;
+.sideBarSectionHeader {
+  /* Heading/H6 */
+  border-bottom: solid 1px #dcdcdc;
   margin-bottom: 12px;
 }
 
