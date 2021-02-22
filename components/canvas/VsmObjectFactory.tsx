@@ -5,6 +5,7 @@ import MainActivity from "./entities/MainActivity";
 import SubActivity from "./entities/SubActivity";
 import Waiting from "./entities/Waiting";
 import { vsmObject } from "../../interfaces/VsmObject";
+import Choice from "./entities/Choice";
 
 export function vsmObjectFactory(
   o: vsmObject,
@@ -13,9 +14,27 @@ export function vsmObjectFactory(
   const { pkObjectType, name } = o.vsmObjectType;
   switch (pkObjectType) {
     case vsmObjectTypes.text:
-      break;
+      return GenericPostit({
+        header: name,
+        hideTitle: !!o.name,
+        content: o.name,
+        options: {
+          x: 0,
+          y: 0,
+          width: 126,
+          height: 136,
+          color: 0xc4e1e3,
+          scale: 1,
+        },
+        onPress: () => onPress(),
+      });
     case vsmObjectTypes.choice:
-      break;
+      return Choice({
+        x: 0,
+        y: 0,
+        content: o.name,
+        onPress: () => onPress(),
+      });
     case vsmObjectTypes.process:
       return GenericPostit({
         header: name,
@@ -27,9 +46,9 @@ export function vsmObjectFactory(
           width: 126,
           height: 136,
           color: 0x00d889,
-          scale: 1
+          scale: 1,
         },
-        onPress: () => onPress()
+        onPress: () => onPress(),
       });
     case vsmObjectTypes.supplier:
     case vsmObjectTypes.input:
@@ -44,29 +63,38 @@ export function vsmObjectFactory(
           width: 126,
           height: 136,
           color: 0x00d889,
-          scale: 1
+          scale: 1,
         },
-        onPress: () => onPress()
+        onPress: () => onPress(),
       });
     case vsmObjectTypes.mainActivity:
       return MainActivity({
         text: o.name,
-        onPress: () => onPress()
+        onPress: () => onPress(),
       });
     case vsmObjectTypes.subActivity:
       return SubActivity({
-        x: 0, y: 0, content: name,
+        x: 0,
+        y: 0,
+        text: o.name,
         role: o.role || "Role?",
-        time: !!o.time && o.time !== 0
-          ? o.time === 1 ? `1 Minute` : `${o.time} Minutes`
-          : "Duration?"
+        time:
+          !!o.time && o.time !== 0
+            ? o.time === 1
+              ? `1 Minute`
+              : `${o.time} Minutes`
+            : "Duration?",
+        onPress: () => onPress(),
       });
     case vsmObjectTypes.waiting:
       return Waiting(
         !!o.time && o.time !== 0
-          ? o.time === 1 ? `1 Minute` : `${o.time} Minutes`
-          : "?"
-        , () => onPress());
+          ? o.time === 1
+            ? `1 Minute`
+            : `${o.time} Minutes`
+          : "?",
+        () => onPress()
+      );
     default:
       return GenericPostit({
         header: "ERROR",
@@ -77,8 +105,8 @@ export function vsmObjectFactory(
           width: 126,
           height: 136,
           color: 0xff1243,
-          scale: 1
-        }
+          scale: 1,
+        },
       });
   }
 }

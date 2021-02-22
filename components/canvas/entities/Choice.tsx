@@ -2,17 +2,20 @@ import * as PIXI from "pixi.js";
 import { Graphics } from "pixi.js";
 import { formatCanvasText } from "../FormatCanvasText";
 import { ScaleOnHover } from "./ScaleOnHover";
+import { clickHandler } from "./ClickHandler";
 
 interface ChoiceProps {
   x: number;
   y: number;
   content?: string;
+  onPress?: () => void;
 }
 
 export default function Choice({
   x,
   y,
   content: content = "Choice",
+  onPress,
 }: ChoiceProps) {
   const width = 126;
   const height = 126;
@@ -58,7 +61,6 @@ export default function Choice({
 
   container.x = x;
   container.y = y;
-  ScaleOnHover(container);
+  if (onPress) clickHandler(container, onPress);
   return container;
-  // app.stage.addChild(container);
 }
