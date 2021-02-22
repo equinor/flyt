@@ -15,7 +15,7 @@ export default function Waiting(
 
   const background = new Graphics();
   background.beginFill(color);
-  background.drawRoundedRect(0, 0, width, height, 6);
+  background.drawRect(0, 0, width, height);
 
   const paddingLeft = 6;
   const paddingTop = 10;
@@ -26,7 +26,7 @@ export default function Waiting(
     fontSize: 12,
     lineHeight: 16,
     letterSpacing: 0.2,
-    wordWrapWidth: width - paddingLeft,
+    wordWrapWidth: width - paddingLeft - 20,
     wordWrap: true,
     breakWords: true,
     trim: true,
@@ -50,8 +50,14 @@ export default function Waiting(
   textTime.y = iconTime.y;
   textTime.resolution = 4;
 
+  const mask = new PIXI.Graphics();
+  mask.beginFill(color);
+  mask.drawRoundedRect(0, 0, width, height, 6);
+  background.mask = mask;
+  textTime.mask = mask;
+
   const container = new PIXI.Container();
-  container.addChild(background, text, iconTime, textTime);
+  container.addChild(mask, background, text, iconTime, textTime);
 
   const paddingContainer = new Graphics();
   paddingContainer.drawRect(0, 0, 126, 136);
