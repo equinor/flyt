@@ -8,13 +8,13 @@ import { vsmObjectTypes } from "../types/vsmObjectTypes";
 // General pattern Thunk -> Actions -> Set state
 
 export interface ProjectModel {
-  errorProject: object;
+  errorProject: Record<string, unknown>;
   fetchProject: Thunk<ProjectModel, { id: string | string[] | number }>;
   fetchingProject: boolean;
   project: VsmProject;
-  setErrorProject: Action<ProjectModel, object>;
+  setErrorProject: Action<ProjectModel, Record<string, unknown>>;
   setFetchingProject: Action<ProjectModel, boolean>;
-  setProject: Action<ProjectModel, object>;
+  setProject: Action<ProjectModel, VsmProject>;
   updateVSMObject: Thunk<ProjectModel, vsmObject>;
   patchLocalObject: Action<ProjectModel, vsmObject>;
 }
@@ -39,10 +39,9 @@ const projectModel: ProjectModel = {
     const { id } = payload;
     actions.setFetchingProject(true);
     actions.setErrorProject(null);
-    BaseAPIServices
-      .get(`/api/v1.0/project/${id}`)
-      .then(value => actions.setProject(value.data))
-      .catch(reason => actions.setErrorProject(reason))
+    BaseAPIServices.get(`/api/v1.0/project/${id}`)
+      .then((value) => actions.setProject(value.data))
+      .catch((reason) => actions.setErrorProject(reason))
       .finally(() => actions.setFetchingProject(false));
   }),
   patchLocalObject: action((state, payload) => {
@@ -63,16 +62,15 @@ const projectModel: ProjectModel = {
      */
     function patchNodeInTree(node: vsmObject, tree: vsmObject) {
       if (node.vsmObjectID === tree.vsmObjectID) patchNode(tree, node);
-      tree.childObjects.forEach(child => {
+      tree.childObjects.forEach((child) => {
         patchNodeInTree(node, child);
       });
     }
 
-    project.objects.forEach(child => {
+    project.objects.forEach((child) => {
       // We expect only one top level child, but adding a forEach just in case we have multiple...
       patchNodeInTree(payload, child);
     });
-
   }),
   updateVSMObject: thunk(async (actions, payload) => {
     actions.patchLocalObject(payload);
@@ -81,25 +79,35 @@ const projectModel: ProjectModel = {
     // Update project title if type is process
     const { vsmProjectID, name, vsmObjectType } = payload;
     if (vsmObjectType.pkObjectType === vsmObjectTypes.process) {
-      debounce(() => {
-        return BaseAPIServices
-          .post(`/api/v1.0/project`, { vsmProjectID, name })
-          .catch(reason => actions.setErrorProject(reason));
-      }, 1000, "updateVSMTitle")();
+      debounce(
+        () => {
+          return BaseAPIServices.post(`/api/v1.0/project`, {
+            vsmProjectID,
+            name,
+          }).catch((reason) => actions.setErrorProject(reason));
+        },
+        1000,
+        "updateVSMTitle"
+      )();
     }
 
     // Send the object-update to api
-    debounce(() => {
-      return BaseAPIServices
-        .patch(`/api/v1.0/VSMObject`, payload)
-        .catch(reason => actions.setErrorProject(reason));
-    }, 1000, "updateVSMObject")();
-  })
+    debounce(
+      () => {
+        return BaseAPIServices.patch(
+          `/api/v1.0/VSMObject`,
+          payload
+        ).catch((reason) => actions.setErrorProject(reason));
+      },
+      1000,
+      "updateVSMObject"
+    )();
+  }),
 };
 
 const store = createStore(
   persist(projectModel, {
-    allow: ["project"]
+    allow: ["project"],
   })
 );
 export default store;

@@ -1,8 +1,5 @@
-/*
-Todo: Move card style over to VSMCard.tsx
-Use styledComponents or something instead of css
-*/
 .card {
+  @extend .noselect;
   text-decoration: none;
   display: flex;
   flex-direction: column;
@@ -50,15 +47,6 @@ Use styledComponents or something instead of css
     opacity: 0;
     transform: translateY(10px);
   }
-}
-
-.hidden {
-  opacity: 0;
-  transition: all 0.4s ease-in-out;
-}
-
-.loading {
-  position: fixed;
 }
 
 @keyframes fade-out {
@@ -113,81 +101,5 @@ Use styledComponents or something instead of css
   -moz-user-select: none; /* Old versions of Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
   user-select: none;
-  /* Non-prefixed version, currently
-                                     supported by Chrome, Edge, Opera and Firefox */
-}
-
-.appearFromRight {
-  animation-name: appearFromRight;
-  animation-duration: 0.5s;
-  animation-fill-mode: forwards;
-}
-
-@keyframes appearFromRight {
-  from {
-    right: -100%;
-  }
-}
-
-@keyframes hideToRight {
-  to {
-    right: -100%;
-  }
-}
-
-.backgroundCover {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background-color: black;
-  opacity: 0.5;
-}
-
-.center {
-  flex-direction: column;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  height: 100vh;
-}
-
-.centerText {
-  text-align: center;
-}
-
-.sideBarHeader {
-  /* Heading/H2 */
-
-  font-family: Equinor, sans-serif;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 28px;
-  line-height: 40px;
-  /* or 143% */
-
-  display: flex;
-  align-items: center;
-
-  /* Text + static icons/⚪️/Default */
-
-  color: #3d3d3d;
-}
-
-.sideBarSectionHeader {
-  /* Heading/H6 */
-  border-bottom: solid 1px #dcdcdc;
-  margin-bottom: 12px;
-}
-
-.sideBarSectionHeader > p:nth-child(1) {
-  color: #007079;
-  font-family: Equinor, sans-serif;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 24px;
-  /* identical to box height, or 150% */
-
-  letter-spacing: 0.2px;
+  /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
 }

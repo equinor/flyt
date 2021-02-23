@@ -1,4 +1,4 @@
-import PIXI from "pixi.js";
+import PIXI, { Container } from "pixi.js";
 import { vsmObjectTypes } from "../../types/vsmObjectTypes";
 import { GenericPostit } from "./GenericPostit";
 import MainActivity from "./entities/MainActivity";

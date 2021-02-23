@@ -6,6 +6,8 @@ import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import BaseAPIServices from "../../services/BaseAPIServices";
 import dynamic from "next/dynamic";
+import { Layouts } from "../../layouts/LayoutWrapper";
+import Projects from "../index";
 
 const DynamicComponentWithNoSSR = dynamic(
   () => import("../../components/VSMCanvas"),
@@ -16,8 +18,9 @@ function Project() {
   const router = useRouter();
   const { id } = router.query;
 
-  const error = useStoreState(state => state.errorProject);
+  const error = useStoreState((state) => state.errorProject);
   const dispatch = useStoreDispatch();
+  const project = useStoreState((state) => state.project);
 
   useEffect(() => {
     if (id) {
@@ -26,10 +29,9 @@ function Project() {
   }, [id]);
 
   function deleteProject(id) {
-    BaseAPIServices
-      .delete(`/api/v1.0/project/${id}`)
+    BaseAPIServices.delete(`/api/v1.0/project/${id}`)
       .then(() => router.push(`/project`))
-      .catch(reason => console.error(reason))
+      .catch((reason) => console.error(reason))
       .finally(() => console.log("Finished"));
   }
 
@@ -51,16 +53,18 @@ function Project() {
   return (
     <div className={commonStyles.container}>
       <Head>
-        <title>VSM | Project {id}</title>
+        <title>{project?.name || `VSM | Project ${id}`}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
         <DynamicComponentWithNoSSR
-          refreshProject={() => dispatch.fetchProject({ id })} />
+          refreshProject={() => dispatch.fetchProject({ id })}
+        />
       </main>
     </div>
   );
 }
 
 export default Project;
+
 Project.auth = true;
