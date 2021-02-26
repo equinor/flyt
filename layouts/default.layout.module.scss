@@ -1,19 +1,135 @@
-@import '../styles/variables';
+@import "../styles/variables";
 
 .title {
-  font-size: 18px !important;
-  padding: 4px 12px;
   text-align: center;
   border-radius: 4px;
 
-  transition: all .1s ease-in-out;
+  transition: all 0.1s ease-in-out;
 }
 
 .title:hover {
   cursor: pointer;
-  background-color: #DEEDEE;
+  background-color: #deedee;
+}
+
+.scrimHeaderWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: solid 1px #dcdcdc;
+}
+
+.scrimTitle {
+  white-space: nowrap;
+
+  /* Delete VSM */
+
+  //position: absolute;
+  width: 84px;
+  height: 24px;
+
+  /* Heading/H6 */
+
+  font-family: Equinor, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  /* identical to box height, or 150% */
+
+  letter-spacing: 0.2px;
+
+  /* Interactive Primary/⚪️/Resting */
+  color: #007079;
+
+  //border-bottom: solid #DCDCDC;
+}
+
+.spaceBetween {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .topBar {
   filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.12));
+  min-width: 320px;
+}
+
+.center {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.centerButton {
+  display: flex;
+  align-items: center;
+
+  max-width: 50vw;
+}
+
+.projectName {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.scrimWrapper {
+  background-color: white;
+  border-radius: 2px;
+  padding: 24px;
+  max-width: 80vw;
+  max-height: 80vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.scrimContent {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  min-width: 20vw;
+}
+
+@media screen and (max-width: 510px) {
+  .topBar {
+    padding: 0 !important;
+  }
+
+  .homeButtonText {
+    display: none;
+  }
+
+  .homeButton {
+    overflow: hidden;
+    white-space: nowrap;
+    min-width: 40px;
+    padding: 3px;
+  }
+
+  .userCircle {
+    display: none;
+  }
+
+  .centerButton {
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 70vw;
+  }
+}
+
+@media screen and (max-height: 568px) {
+  .scrimWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+}
+
+.deleteButton {
+  align-self: flex-end;
+}
+
+.snackbar {
+  margin: 12px;
 }

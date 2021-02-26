@@ -16,5 +16,5 @@ export function clickHandler(
     container.alpha = 1;
   });
 
-  container.on("pointerdown", onPress);
+  container.on("pointertap", onPress);
 }

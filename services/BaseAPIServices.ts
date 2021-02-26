@@ -3,58 +3,56 @@ import { getAccessToken } from "../auth/msalHelpers";
 import { APIConfigs } from "../Config";
 
 class BaseApiService {
-
-  async get(path: string): Promise<AxiosResponse<any>> {
+  async get(path: string) {
     return axios.get(APIConfigs.url + path, {
       headers: {
-        Authorization: await getAccessToken()
-      }
+        Authorization: await getAccessToken(),
+      },
     });
   }
 
-  async post(path: string, data: object): Promise<AxiosResponse<any>> {
+  async post(path: string, data: unknown) {
     return axios.post(APIConfigs.url + path, data, {
       headers: {
         ContentType: "application/json",
-        Authorization: await getAccessToken()
-      }
+        Authorization: await getAccessToken(),
+      },
     });
   }
 
-  async put(url: string, data: object): Promise<AxiosResponse<any>> {
+  async put(url: string, data: unknown) {
     return axios.put(APIConfigs.url + url, data, {
       headers: {
-        Authorization: await getAccessToken()
-      }
+        Authorization: await getAccessToken(),
+      },
     });
   }
 
-  async patch(path: string, data: object): Promise<AxiosResponse<any>> {
+  async patch(path: string, data: unknown) {
     return axios.patch(APIConfigs.url + path, data, {
       headers: {
-        Authorization: await getAccessToken()
-      }
+        Authorization: await getAccessToken(),
+      },
     });
   }
 
-  async delete(path: string, data?: object): Promise<AxiosResponse<any>> {
+  async delete(path: string, data?: unknown) {
     return axios.delete(APIConfigs.url + path, {
       headers: {
-        Authorization: await getAccessToken()
+        Authorization: await getAccessToken(),
       },
-      data: data ?? null
+      data: data ?? null,
     });
   }
 
-  async uploadFile(path: string, formData: any): Promise<AxiosResponse<any>> {
+  async uploadFile(path: string, formData: unknown) {
     return axios.post(APIConfigs.url + path, formData, {
       headers: {
         Authorization: await getAccessToken(),
-        "content-type": "multipart/form-data"
-      }
+        "content-type": "multipart/form-data",
+      },
     });
   }
-
 }
 
 export default new BaseApiService();

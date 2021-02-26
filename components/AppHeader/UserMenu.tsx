@@ -1,7 +1,7 @@
-import React from 'react';
-import { Button, Menu } from '@equinor/eds-core-react';
-import { useAccount, useMsal } from '@azure/msal-react';
-import { UserDot } from '../UserDot';
+import React from "react";
+import { Button, Menu } from "@equinor/eds-core-react";
+import { useAccount, useMsal } from "@azure/msal-react";
+import { UserDot } from "../UserDot";
 
 const UserMenu: React.FC = () => {
   const { instance, accounts } = useMsal();
@@ -9,9 +9,9 @@ const UserMenu: React.FC = () => {
 
   const [state, setState] = React.useState<{
     buttonEl: HTMLButtonElement;
-    focus: 'first' | 'last';
+    focus: "first" | "last";
   }>({
-    focus: 'first',
+    focus: "first",
     buttonEl: null,
   });
 
@@ -19,7 +19,9 @@ const UserMenu: React.FC = () => {
   const isOpen = Boolean(buttonEl);
 
   const openMenu = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.KeyboardEvent<HTMLButtonElement>,
+    e:
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+      | React.KeyboardEvent<HTMLButtonElement>
   ) => {
     const target = e.target as HTMLButtonElement;
     setState({ ...state, buttonEl: target });
@@ -30,13 +32,13 @@ const UserMenu: React.FC = () => {
   const onKeyPress = (e: React.KeyboardEvent<HTMLButtonElement>) => {
     const { key } = e;
     switch (key) {
-      case 'ArrowDown':
+      case "ArrowDown":
         isOpen ? closeMenu() : openMenu(e);
         break;
-      case 'ArrowUp':
+      case "ArrowUp":
         isOpen ? closeMenu() : openMenu(e);
         break;
-      case 'Escape':
+      case "Escape":
         closeMenu();
         break;
       default:
@@ -47,25 +49,25 @@ const UserMenu: React.FC = () => {
   return (
     <>
       <Button
-        variant='ghost_icon'
-        id='menuButton'
-        aria-controls='menu-on-button'
-        aria-haspopup='true'
+        variant="ghost_icon"
+        id="menuButton"
+        aria-controls="menu-on-button"
+        aria-haspopup="true"
         aria-expanded={Boolean(buttonEl)}
-        onClick={e => (isOpen ? closeMenu() : openMenu(e))}
+        onClick={(e) => (isOpen ? closeMenu() : openMenu(e))}
         onKeyDown={onKeyPress}
       >
-          <UserDot name={account.username} />
+        <UserDot name={account?.username.split("@")[0]} />
       </Button>
       <Menu
-        id='menu-on-button'
-        aria-labelledby='menuButton'
+        id="menu-on-button"
+        aria-labelledby="menuButton"
         focus={focus}
         open={Boolean(buttonEl)}
         anchorEl={buttonEl}
         onClose={closeMenu}
       >
-        <Menu.MenuItem disabled> {account.username} </Menu.MenuItem>
+        <Menu.MenuItem disabled> {account?.username} </Menu.MenuItem>
         <Menu.MenuItem onClick={() => instance.logout()}>Logout </Menu.MenuItem>
       </Menu>
     </>

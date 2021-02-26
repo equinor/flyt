@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as PIXI from "pixi.js";
-import { Application } from "pixi.js";
+import { Application, Container } from "pixi.js";
 import { Viewport } from "pixi-viewport";
 import { isMobile } from "react-device-detect";
 import { vsmObjectFactory } from "./canvas/VsmObjectFactory";
@@ -8,6 +8,7 @@ import { useStoreDispatch, useStoreState } from "../hooks/storeHooks";
 import { debounce } from "../utils/debounce";
 import { vsmObject } from "../interfaces/VsmObject";
 import { VSMSideBar } from "./VSMSideBar";
+import { GenericPostit } from "./canvas/GenericPostit";
 
 export const defaultObject = {
   name: "",
@@ -23,7 +24,7 @@ const app: Application = new Application({
   antialias: true,
 });
 const viewport: Viewport = new Viewport({
-  // interaction: app.renderer.plugins.interaction, //Todo: Do we need this?
+  interaction: app.renderer.plugins.interaction, //Todo: Do we need this? I have no clue 👀
 });
 
 function initCanvas(ref: React.MutableRefObject<HTMLDivElement>) {
@@ -40,6 +41,9 @@ function initCanvas(ref: React.MutableRefObject<HTMLDivElement>) {
 
   // Add app to DOM
   ref.current.appendChild(app.view);
+
+  app?.start();
+
   console.info("Initialized canvas");
 }
 
@@ -50,7 +54,8 @@ function getViewPort() {
 function cleanupApp() {
   // Todo: Fix cleanup of app
   // console.info("Cleaning up app", { app, viewport });
-  // app?.stop();
+  app.stage.removeChildren(); // Just to be sure, remove the current stage children ( memory leak...)
+  app?.stop();
   // On unload completely destroy the application and all of it's children
   // app?.destroy(true, { children: true });
 }
@@ -83,41 +88,60 @@ export default function VSMCanvas(props: {
     }
   }, [project]);
 
+  function createTree(root: vsmObject, depth = 0): Container {
+    const padding = 20;
+    const cardHeight = 136;
+
+    const container = new PIXI.Container();
+    container.addChild(vsmObjectFactory(root, () => setSelectedObject(root)));
+    container.y = cardHeight + padding;
+
+    let nextX = 0;
+    root.childObjects.forEach((child) => {
+      const node = createTree(child, depth + 1);
+      const numberOfSiblings = root.childObjects.length;
+      if (numberOfSiblings === 2) {
+        node.x = nextX - (node.width + padding) / numberOfSiblings;
+      } else if (numberOfSiblings > 2) {
+        node.x = nextX + node.width / 2;
+      } else {
+        node.x = nextX;
+      }
+
+      // Add this group width + padding as the next x location
+      nextX = nextX + node.width + padding;
+      container.addChild(node);
+    });
+
+    return container;
+  }
+
   function addCards(viewport: Viewport) {
     console.info("Adding cards to canvas", { project });
-    const rootObject = project.objects ? project.objects[0] : null;
-    const levelOne = new PIXI.Container();
-    if (rootObject) {
-      levelOne.addChild(
-        vsmObjectFactory(rootObject, () =>
-          setTimeout(() => setSelectedObject(rootObject), 10)
-        )
+    const tree = project;
+    const root = tree.objects ? tree.objects[0] : null;
+    if (!root) {
+      viewport.addChild(
+        GenericPostit({
+          header: "ERROR",
+          content: "Project contains no root object",
+          options: {
+            x: 0,
+            y: 0,
+            width: 126,
+            height: 136,
+            color: 0xff1243,
+            scale: 1,
+          },
+        })
       );
+    } else {
+      viewport.addChild(createTree(root));
     }
-
-    const levelTwo = new PIXI.Container();
-    let nextX = 0;
-    rootObject?.childObjects
-      .map((o: vsmObject) => {
-        const onPress = () => setTimeout(() => setSelectedObject(o), 10);
-        return vsmObjectFactory(o, onPress);
-      })
-      .forEach((c: PIXI.Graphics) => {
-        const padding = 10;
-        if (nextX) c.x = nextX;
-        nextX = c.x + c.width + padding * 2;
-        return levelTwo.addChild(c);
-      });
-
-    levelTwo.y = 300;
-    levelTwo.x = 150;
-    levelOne.x = levelTwo.width / 2 + levelOne.width / 2 + 23.5; //Todo: figure out better logic for centering
-    levelOne.y = levelTwo.y - 200;
-    viewport.addChild(levelOne, levelTwo);
   }
 
   function updateObjectName() {
-    return (event: { target: { value: any } }) => {
+    return (event: { target: { value: string } }) => {
       const name = event.target.value;
       setSelectedObject({ ...selectedObject, name });
       debounce(

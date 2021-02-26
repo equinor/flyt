@@ -1,4 +1,4 @@
-import PIXI from "pixi.js";
+import PIXI, { Container } from "pixi.js";
 import { vsmObjectTypes } from "../../types/vsmObjectTypes";
 import { GenericPostit } from "./GenericPostit";
 import MainActivity from "./entities/MainActivity";
@@ -48,6 +48,7 @@ export function vsmObjectFactory(
           color: 0x00d889,
           scale: 1,
         },
+        hidden: true,
         onPress: () => onPress(),
       });
     case vsmObjectTypes.supplier:
