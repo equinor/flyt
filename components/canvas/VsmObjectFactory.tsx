@@ -48,6 +48,7 @@ export function vsmObjectFactory(
           color: 0x00d889,
           scale: 1,
         },
+        hidden: true,
         onPress: () => onPress(),
       });
     case vsmObjectTypes.supplier:

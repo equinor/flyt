@@ -25,7 +25,7 @@ export function SideBarContent(props: {
               multiline
               rows={4}
               variant={"default"}
-              value={props.selectedObject.name}
+              value={props.selectedObject.name || ""}
               onChange={props.onChangeName}
               id={"vsmObjectDescription"}
             />
@@ -41,7 +41,7 @@ export function SideBarContent(props: {
               multiline
               rows={4}
               variant={"default"}
-              value={props.selectedObject.name}
+              value={props.selectedObject.name || ""}
               onChange={props.onChangeName}
               id={"vsmObjectDescription"}
             />
@@ -58,7 +58,7 @@ export function SideBarContent(props: {
               multiline
               rows={4}
               variant={"default"}
-              value={props.selectedObject.name}
+              value={props.selectedObject.name || ""}
               onChange={props.onChangeName}
               id={"vsmObjectDescription"}
             />
@@ -75,7 +75,7 @@ export function SideBarContent(props: {
               multiline
               rows={4}
               variant={"default"}
-              value={props.selectedObject.name}
+              value={props.selectedObject.name || ""}
               onChange={props.onChangeName}
               id={"vsmObjectDescription"}
             />
@@ -91,7 +91,7 @@ export function SideBarContent(props: {
               multiline
               rows={4}
               variant={"default"}
-              value={props.selectedObject.name}
+              value={props.selectedObject.name || ""}
               onChange={props.onChangeName}
               id={"vsmObjectDescription"}
             />
@@ -107,7 +107,7 @@ export function SideBarContent(props: {
               multiline
               rows={4}
               variant={"default"}
-              value={props.selectedObject.name}
+              value={props.selectedObject.name || ""}
               onChange={props.onChangeName}
               id={"vsmObjectDescription"}
             />
@@ -123,7 +123,7 @@ export function SideBarContent(props: {
               multiline
               rows={4}
               variant={"default"}
-              value={props.selectedObject.name}
+              value={props.selectedObject.name || ""}
               onChange={props.onChangeName}
               id={"vsmObjectDescription"}
             />

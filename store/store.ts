@@ -8,6 +8,8 @@ import { vsmObjectTypes } from "../types/vsmObjectTypes";
 // General pattern Thunk -> Actions -> Set state
 
 export interface ProjectModel {
+  setSnackMessage: Action<ProjectModel, string>;
+  snackMessage: string | null;
   errorProject: Record<string, unknown>;
   fetchProject: Thunk<ProjectModel, { id: string | string[] | number }>;
   fetchingProject: boolean;
@@ -17,6 +19,15 @@ export interface ProjectModel {
   setProject: Action<ProjectModel, VsmProject>;
   updateVSMObject: Thunk<ProjectModel, vsmObject>;
   patchLocalObject: Action<ProjectModel, vsmObject>;
+  setProjectName: Action<ProjectModel, { name: string }>;
+  updateProjectName: Thunk<
+    ProjectModel,
+    {
+      vsmProjectID: number;
+      name: string;
+      rootObjectId: number;
+    }
+  >;
 }
 
 const projectModel: ProjectModel = {
@@ -24,10 +35,14 @@ const projectModel: ProjectModel = {
   fetchingProject: false,
   errorProject: null,
   project: null,
+  snackMessage: null,
 
   //Actions
   setFetchingProject: action((state, payload) => {
     state.fetchingProject = payload;
+  }),
+  setSnackMessage: action((state, payload) => {
+    state.snackMessage = payload;
   }),
   setErrorProject: action((state, payload) => {
     state.errorProject = payload;
@@ -41,7 +56,10 @@ const projectModel: ProjectModel = {
     actions.setErrorProject(null);
     BaseAPIServices.get(`/api/v1.0/project/${id}`)
       .then((value) => actions.setProject(value.data))
-      .catch((reason) => actions.setErrorProject(reason))
+      .catch((reason) => {
+        actions.setSnackMessage(reason);
+        return actions.setErrorProject(reason);
+      })
       .finally(() => actions.setFetchingProject(false));
   }),
   patchLocalObject: action((state, payload) => {
@@ -72,6 +90,42 @@ const projectModel: ProjectModel = {
       patchNodeInTree(payload, child);
     });
   }),
+  updateProjectName: thunk((actions, payload) => {
+    const { vsmProjectID, name, rootObjectId } = payload;
+    actions.setProjectName(payload);
+    debounce(
+      () => {
+        return BaseAPIServices.post(`/api/v1.0/project`, {
+          vsmProjectID,
+          name,
+        })
+          .then(() => actions.setSnackMessage("Saved title"))
+          .catch((reason) => actions.setErrorProject(reason));
+      },
+      1000,
+      "updateVSMTitle"
+    )();
+    if (rootObjectId) {
+      // Update the root object with the name as well
+      debounce(
+        () => {
+          return BaseAPIServices.patch(`/api/v1.0/VSMObject`, {
+            vsmObjectID: rootObjectId,
+            name,
+          }).catch((reason) => actions.setErrorProject(reason));
+        },
+        1000,
+        "updateVSMObject"
+      )();
+    }
+  }),
+  setProjectName: action((state, payload) => {
+    state.project.name = payload.name;
+    //Update our root node ( Null check that we actually have some children)
+    if (state.project.objects?.length > 0) {
+      state.project.objects[0].name = payload.name;
+    }
+  }),
   updateVSMObject: thunk(async (actions, payload) => {
     actions.patchLocalObject(payload);
     actions.setErrorProject(null);
@@ -84,7 +138,12 @@ const projectModel: ProjectModel = {
           return BaseAPIServices.post(`/api/v1.0/project`, {
             vsmProjectID,
             name,
-          }).catch((reason) => actions.setErrorProject(reason));
+          })
+            .then(() => actions.setSnackMessage("Saved title"))
+            .catch((reason) => {
+              actions.setSnackMessage(reason);
+              return actions.setErrorProject(reason);
+            });
         },
         1000,
         "updateVSMTitle"
@@ -94,10 +153,12 @@ const projectModel: ProjectModel = {
     // Send the object-update to api
     debounce(
       () => {
-        return BaseAPIServices.patch(
-          `/api/v1.0/VSMObject`,
-          payload
-        ).catch((reason) => actions.setErrorProject(reason));
+        return BaseAPIServices.patch(`/api/v1.0/VSMObject`, payload)
+          .then(() => actions.setSnackMessage("Saved"))
+          .catch((reason) => {
+            actions.setSnackMessage(reason);
+            return actions.setErrorProject(reason);
+          });
       },
       1000,
       "updateVSMObject"

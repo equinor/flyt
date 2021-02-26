@@ -1,6 +1,12 @@
 import Head from "next/head";
 import { Button, Icon, TopBar, Typography } from "@equinor/eds-core-react";
-import { accessible, account_circle, fullscreen, notifications } from "@equinor/eds-icons";
+import {
+  accessible,
+  account_circle,
+  fullscreen,
+  notifications,
+  edit,
+} from "@equinor/eds-icons";
 import styles from "./default.layout.module.scss";
 import { useIsAuthenticated } from "@azure/msal-react";
 import React from "react";
@@ -13,7 +19,8 @@ const icons = {
   account_circle,
   accessible,
   notifications,
-  fullscreen
+  fullscreen,
+  edit,
 };
 
 Icon.add(icons);
@@ -37,15 +44,11 @@ const DefaultLayout = ({ children }) => {
 
         <TopBar className={styles.topBar}>
           <Link href={"/"}>
-            <Typography className={styles.title} variant={"h4"}>
-              VSM
-            </Typography>
+            <Button variant={"ghost"}>
+              <Icon name="file" title="Home" size={16} />
+              <Typography variant={"h4"}>VSM</Typography>
+            </Button>
           </Link>
-          {/*<TopBar.Actions>*/}
-          {/*  <Button onClick={login} color="primary">*/}
-          {/*    Login*/}
-          {/*  </Button>*/}
-          {/*</TopBar.Actions>*/}
         </TopBar>
 
         {children}
@@ -61,9 +64,10 @@ const DefaultLayout = ({ children }) => {
 
       <TopBar className={styles.topBar}>
         <Link href={"/"}>
-          <Typography className={styles.title} variant={"h4"}>
-            VSM
-          </Typography>
+          <Button variant={"ghost"}>
+            <Icon name="file" title="Home" size={16} />
+            <Typography variant={"h4"}>VSM</Typography>
+          </Button>
         </Link>
         <TopBar.Actions>
           <UserMenu />

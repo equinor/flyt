@@ -8,7 +8,7 @@ import { useStoreDispatch, useStoreState } from "../hooks/storeHooks";
 import { debounce } from "../utils/debounce";
 import { vsmObject } from "../interfaces/VsmObject";
 import { VSMSideBar } from "./VSMSideBar";
-import { contain } from "@hapi/hoek";
+import { GenericPostit } from "./canvas/GenericPostit";
 
 export const defaultObject = {
   name: "",
@@ -59,6 +59,7 @@ function cleanupApp() {
   // On unload completely destroy the application and all of it's children
   // app?.destroy(true, { children: true });
 }
+
 export default function VSMCanvas(props: {
   style?: React.CSSProperties | undefined;
   refreshProject: () => void;
@@ -107,8 +108,7 @@ export default function VSMCanvas(props: {
         node.x = nextX;
       }
 
-      // node.x = nextX + node.width / 10;
-      // // Add this group width + padding as the next x location
+      // Add this group width + padding as the next x location
       nextX = nextX + node.width + padding;
       container.addChild(node);
     });
@@ -120,11 +120,28 @@ export default function VSMCanvas(props: {
     console.info("Adding cards to canvas", { project });
     const tree = project;
     const root = tree.objects ? tree.objects[0] : null;
-    viewport.addChild(createTree(root));
+    if (!root) {
+      viewport.addChild(
+        GenericPostit({
+          header: "ERROR",
+          content: "Project contains no root object",
+          options: {
+            x: 0,
+            y: 0,
+            width: 126,
+            height: 136,
+            color: 0xff1243,
+            scale: 1,
+          },
+        })
+      );
+    } else {
+      viewport.addChild(createTree(root));
+    }
   }
 
   function updateObjectName() {
-    return (event: { target: { value: any } }) => {
+    return (event: { target: { value: string } }) => {
       const name = event.target.value;
       setSelectedObject({ ...selectedObject, name });
       debounce(

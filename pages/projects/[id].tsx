@@ -4,17 +4,15 @@ import Head from "next/head";
 import { Typography } from "@equinor/eds-core-react";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
-import BaseAPIServices from "../../services/BaseAPIServices";
 import dynamic from "next/dynamic";
 import { Layouts } from "../../layouts/LayoutWrapper";
-import Projects from "../index";
 
 const DynamicComponentWithNoSSR = dynamic(
   () => import("../../components/VSMCanvas"),
   { ssr: false }
 );
 
-function Project() {
+export default function Project() {
   const router = useRouter();
   const { id } = router.query;
 
@@ -23,17 +21,8 @@ function Project() {
   const project = useStoreState((state) => state.project);
 
   useEffect(() => {
-    if (id) {
-      dispatch.fetchProject({ id });
-    }
+    if (id) dispatch.fetchProject({ id });
   }, [id]);
-
-  function deleteProject(id) {
-    BaseAPIServices.delete(`/api/v1.0/project/${id}`)
-      .then(() => router.push(`/project`))
-      .catch((reason) => console.error(reason))
-      .finally(() => console.log("Finished"));
-  }
 
   if (error) {
     return (
@@ -65,6 +54,5 @@ function Project() {
   );
 }
 
-export default Project;
-
+Project.layout = Layouts.Canvas;
 Project.auth = true;

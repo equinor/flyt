@@ -16,6 +16,7 @@ interface Rectangle {
   content?: string;
   onPress?: () => void;
   hideTitle?: boolean;
+  hidden?: boolean;
 }
 
 export function GenericPostit({
@@ -30,8 +31,10 @@ export function GenericPostit({
   hideTitle: hideTitle = false,
   header: header = "Header",
   content: content = "Content",
+  hidden: hidden = false,
   onPress,
 }: Rectangle) {
+  if (hidden) return new PIXI.Container();
   const rectangle = new Graphics();
   rectangle.beginFill(options.color);
   rectangle.drawRoundedRect(
