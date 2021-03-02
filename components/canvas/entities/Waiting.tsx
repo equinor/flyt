@@ -6,7 +6,8 @@ import { clickHandler } from "./ClickHandler";
 
 export default function Waiting(
   time = "unknown",
-  onPress?: () => void
+  onPress?: () => void,
+  onHover?: () => void
 ): PIXI.Container {
   const header = "Waiting";
   const width = 126;
@@ -66,6 +67,8 @@ export default function Waiting(
   withPadding.addChild(paddingContainer, container);
   container.y = paddingContainer.y + paddingContainer.height / 4;
 
+  if (onHover) container.on("mouseover", () => onHover());
   if (onPress) clickHandler(container, onPress);
+
   return withPadding;
 }

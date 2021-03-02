@@ -7,12 +7,14 @@ interface MainActivityProps {
   header?: string;
   text?: string;
   onPress?: () => void;
+  onHover?: () => void;
 }
 
 export default function MainActivity({
   header = "MainActivity",
   text = "Choose method",
   onPress,
+  onHover,
 }: MainActivityProps): PIXI.Container {
   const rectangle = new Graphics();
   const color = 0x00c1ff;
@@ -53,6 +55,8 @@ export default function MainActivity({
 
   const container = new PIXI.Container();
   container.addChild(mask, rectangle, textElement);
+
+  if (onHover) container.on("mouseover", () => onHover());
   if (onPress) clickHandler(container, onPress);
 
   return container;

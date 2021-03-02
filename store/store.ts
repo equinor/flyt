@@ -17,6 +17,8 @@ export interface ProjectModel {
   setErrorProject: Action<ProjectModel, Record<string, unknown>>;
   setFetchingProject: Action<ProjectModel, boolean>;
   setProject: Action<ProjectModel, VsmProject>;
+  addObject: Thunk<ProjectModel, { parent: vsmObject; child: vsmObject }>;
+  setAddObject: Action<ProjectModel, vsmObject>;
   updateVSMObject: Thunk<ProjectModel, vsmObject>;
   patchLocalObject: Action<ProjectModel, vsmObject>;
   setProjectName: Action<ProjectModel, { name: string }>;
@@ -71,6 +73,7 @@ const projectModel: ProjectModel = {
       oldObj.name = newObj.name;
       oldObj.role = newObj.role;
       oldObj.time = newObj.time;
+      oldObj.childObjects = newObj.childObjects;
     }
 
     /**
@@ -80,7 +83,7 @@ const projectModel: ProjectModel = {
      */
     function patchNodeInTree(node: vsmObject, tree: vsmObject) {
       if (node.vsmObjectID === tree.vsmObjectID) patchNode(tree, node);
-      tree.childObjects.forEach((child) => {
+      tree.childObjects?.forEach((child) => {
         patchNodeInTree(node, child);
       });
     }
@@ -126,13 +129,22 @@ const projectModel: ProjectModel = {
       state.project.objects[0].name = payload.name;
     }
   }),
+  addObject: thunk(async (actions, payload) => {
+    actions.patchLocalObject({
+      ...payload.parent,
+      childObjects: [...payload.parent.childObjects, payload.child],
+    });
+  }),
   updateVSMObject: thunk(async (actions, payload) => {
     actions.patchLocalObject(payload);
     actions.setErrorProject(null);
 
-    // Update project title if type is process
+    // We store the VSM title in the name-field and in the root-node.
+    // So if the process ( aka the root node ) title is updated, let's update the vsm title as well.
+    // ** Update project title if type is process **
     const { vsmProjectID, name, vsmObjectType } = payload;
     if (vsmObjectType.pkObjectType === vsmObjectTypes.process) {
+      actions.setProjectName(payload);
       debounce(
         () => {
           return BaseAPIServices.post(`/api/v1.0/project`, {

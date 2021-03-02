@@ -5,22 +5,20 @@ import { ProblemCircle } from "./ProblemCircle";
 import { clickHandler } from "./ClickHandler";
 
 interface SubActivityProps {
-  x: number;
-  y: number;
   text?: string;
   role?: string;
   time?: string;
   onPress?: () => void;
+  onHover?: () => void;
   disableSideContainer?: boolean;
 }
 
 export default function SubActivity({
   text,
-  x,
-  y,
   role,
   time,
   onPress,
+  onHover,
   disableSideContainer = true,
 }: SubActivityProps): PIXI.Container {
   const header = "Sub- activity";
@@ -140,9 +138,7 @@ export default function SubActivity({
     sideContainer
   );
 
-  container.x = x;
-  container.y = y;
-
+  if (onHover) container.on("mouseover", () => onHover());
   if (onPress) clickHandler(container, onPress);
   return container;
 }
