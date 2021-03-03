@@ -53,8 +53,8 @@ export default function Choice({
   container.x = container.width / 2;
   container.y = container.height / 2;
 
-  if (onHover) container.on(pointerEvents.mouseover, () => onHover());
-  if (onHoverExit) container.on(pointerEvents.mouseout, () => onHoverExit());
+  if (onHover) container.on(pointerEvents.pointerover, () => onHover());
+  if (onHoverExit) container.on(pointerEvents.pointerout, () => onHoverExit());
   if (onPress) clickHandler(container, onPress);
   return container;
 }

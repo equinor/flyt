@@ -69,8 +69,8 @@ export default function Waiting(
   withPadding.addChild(paddingContainer, container);
   container.y = paddingContainer.y + paddingContainer.height / 4;
 
-  if (onHover) container.on(pointerEvents.mouseover, () => onHover());
-  if (onHoverExit) container.on(pointerEvents.mouseout, () => onHoverExit());
+  if (onHover) container.on(pointerEvents.pointerover, () => onHover());
+  if (onHoverExit) container.on(pointerEvents.pointerout, () => onHoverExit());
   if (onPress) clickHandler(container, onPress);
 
   return withPadding;

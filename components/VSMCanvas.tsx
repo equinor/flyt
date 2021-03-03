@@ -79,8 +79,9 @@ export const pointerEvents = {
   pointerup: "pointerup",
   pointerupoutside: "pointerupoutside",
   pointermove: "pointermove",
-  mouseover: "mouseover",
-  mouseout: "mouseout",
+  pointerover: "pointerover",
+  pointerout: "pointerout",
+  click: "click", // Fired when a pointer device button (usually a mouse left-button) is pressed and released on the display object. DisplayObject's interactive property must be set to true to fire event.
 };
 
 function addToolBox(
@@ -95,8 +96,16 @@ function addToolBox(
   const width = padding * 4;
   const height = 54;
   rectangle.beginFill(0xffffff);
-  rectangle.drawRoundedRect(0, 0, width, height, 8);
+  rectangle.drawRoundedRect(0, 0, width, height, 6);
   rectangle.endFill();
+
+  const rectangleBorder = new Graphics();
+  rectangleBorder.beginFill(0xd6d6d6);
+  rectangleBorder.drawRoundedRect(0, 0, width + 1, height + 1, 6);
+  rectangleBorder.endFill();
+  rectangle.x = 0.5;
+  rectangle.y = 0.5;
+  box.addChild(rectangleBorder);
 
   box.addChild(rectangle);
 
@@ -156,7 +165,7 @@ function addToolBox(
 
   // viewport.addChild(box);
   app.stage.addChild(box);
-  box.y = window.innerHeight - 70 - box.height - 8;
+  box.y = window.innerHeight - 84 - box.height;
   box.x = window.innerWidth / 2 - box.width / 2;
   // mainActivity.visible = false;
   // choiceIcon.visible = false;
@@ -276,8 +285,11 @@ export default function VSMCanvas(props: {
 
     card.interactive = true;
     card
-      .on(pointerEvents.mouseover, () => (card.alpha = 0.2))
-      .on(pointerEvents.mouseout, () => (card.alpha = 1))
+      .on(pointerEvents.pointerover, () => {
+        card.cursor = "pointer";
+        card.alpha = 0.2;
+      })
+      .on(pointerEvents.pointerout, () => (card.alpha = 1))
       .on(pointerEvents.pointerdown, onDragStart)
       .on(pointerEvents.pointerup, onDragEnd)
       .on(pointerEvents.pointerupoutside, onDragEnd)
@@ -384,7 +396,10 @@ export default function VSMCanvas(props: {
       vsmObjectFactory(
         root,
         () => setSelectedObject(root),
-        () => setHoveredObject(root),
+        () => {
+          console.log({ hoveredObject: root });
+          setHoveredObject(root);
+        },
         () => clearHoveredObject()
       )
     );
@@ -392,7 +407,7 @@ export default function VSMCanvas(props: {
     container.y = container.height + padding;
 
     let nextX = 0;
-    root.childObjects?.forEach((child, index) => {
+    root.childObjects?.forEach((child) => {
       // const node = createTree({ ...child, name: index.toString() });
       const node = createTree(child);
       //Todo: Figure out how to render choices

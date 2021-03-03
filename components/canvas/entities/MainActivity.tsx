@@ -59,8 +59,8 @@ export default function MainActivity({
   const container = new PIXI.Container();
   container.addChild(mask, rectangle, textElement);
 
-  if (onHover) container.on(pointerEvents.mouseover, () => onHover());
-  if (onHoverExit) container.on(pointerEvents.mouseout, () => onHoverExit());
+  if (onHover) container.on(pointerEvents.pointerover, () => onHover());
+  if (onHoverExit) container.on(pointerEvents.pointerout, () => onHoverExit());
   if (onPress) clickHandler(container, onPress);
 
   return container;
