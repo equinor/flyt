@@ -2,6 +2,7 @@ import * as PIXI from "pixi.js";
 import { Graphics } from "pixi.js";
 import { formatCanvasText } from "./FormatCanvasText";
 import { clickHandler } from "./entities/ClickHandler";
+import { pointerEvents } from "../VSMCanvas";
 
 interface Rectangle {
   options?: {
@@ -11,6 +12,7 @@ interface Rectangle {
   content?: string;
   onPress?: () => void;
   onHover?: () => void;
+  onHoverExit?: () => void;
   hideTitle?: boolean;
 }
 
@@ -23,6 +25,7 @@ export function GenericPostit({
   content: content = "Content",
   onPress,
   onHover,
+  onHoverExit,
 }: Rectangle) {
   const rectangle = new Graphics();
   const width = 126;
@@ -65,7 +68,8 @@ export function GenericPostit({
   if (content) {
     container.addChild(contentText);
   }
-  if (onHover) container.on("mouseover", () => onHover());
+  if (onHover) container.on(pointerEvents.mouseover, () => onHover());
+  if (onHoverExit) container.on(pointerEvents.mouseout, () => onHoverExit());
   if (onPress) clickHandler(container, onPress);
 
   return container;

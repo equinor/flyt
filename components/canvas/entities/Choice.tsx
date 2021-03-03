@@ -2,14 +2,21 @@ import * as PIXI from "pixi.js";
 import { Graphics } from "pixi.js";
 import { formatCanvasText } from "../FormatCanvasText";
 import { clickHandler } from "./ClickHandler";
+import { pointerEvents } from "../../VSMCanvas";
 
 interface ChoiceProps {
   content?: string;
   onPress?: () => void;
   onHover?: () => void;
+  onHoverExit?: () => void;
 }
 
-export default function Choice({ content, onPress, onHover }: ChoiceProps) {
+export default function Choice({
+  content,
+  onPress,
+  onHover,
+  onHoverExit,
+}: ChoiceProps) {
   const width = 126;
   const color = 0xffd800;
 
@@ -46,7 +53,8 @@ export default function Choice({ content, onPress, onHover }: ChoiceProps) {
   container.x = container.width / 2;
   container.y = container.height / 2;
 
-  if (onHover) container.on("mouseover", () => onHover());
+  if (onHover) container.on(pointerEvents.mouseover, () => onHover());
+  if (onHoverExit) container.on(pointerEvents.mouseout, () => onHoverExit());
   if (onPress) clickHandler(container, onPress);
   return container;
 }

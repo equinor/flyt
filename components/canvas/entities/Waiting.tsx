@@ -3,11 +3,13 @@ import { Graphics } from "pixi.js";
 import { formatCanvasText } from "../FormatCanvasText";
 import { icons } from "../../../assets/icons";
 import { clickHandler } from "./ClickHandler";
+import { pointerEvents } from "../../VSMCanvas";
 
 export default function Waiting(
   time = "unknown",
   onPress?: () => void,
-  onHover?: () => void
+  onHover?: () => void,
+  onHoverExit?: () => void
 ): PIXI.Container {
   const header = "Waiting";
   const width = 126;
@@ -67,7 +69,8 @@ export default function Waiting(
   withPadding.addChild(paddingContainer, container);
   container.y = paddingContainer.y + paddingContainer.height / 4;
 
-  if (onHover) container.on("mouseover", () => onHover());
+  if (onHover) container.on(pointerEvents.mouseover, () => onHover());
+  if (onHoverExit) container.on(pointerEvents.mouseout, () => onHoverExit());
   if (onPress) clickHandler(container, onPress);
 
   return withPadding;

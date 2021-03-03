@@ -8,28 +8,23 @@ import { vsmObjectTypes } from "../types/vsmObjectTypes";
 // General pattern Thunk -> Actions -> Set state
 
 export interface ProjectModel {
-  setSnackMessage: Action<ProjectModel, string>;
-  snackMessage: string | null;
+  addObject: Thunk<ProjectModel, { parent: vsmObject; child: vsmObject }>;
   errorProject: Record<string, unknown>;
   fetchProject: Thunk<ProjectModel, { id: string | string[] | number }>;
   fetchingProject: boolean;
+  patchLocalObject: Action<ProjectModel, vsmObject>;
   project: VsmProject;
   setErrorProject: Action<ProjectModel, Record<string, unknown>>;
   setFetchingProject: Action<ProjectModel, boolean>;
   setProject: Action<ProjectModel, VsmProject>;
-  addObject: Thunk<ProjectModel, { parent: vsmObject; child: vsmObject }>;
-  setAddObject: Action<ProjectModel, vsmObject>;
-  updateVSMObject: Thunk<ProjectModel, vsmObject>;
-  patchLocalObject: Action<ProjectModel, vsmObject>;
   setProjectName: Action<ProjectModel, { name: string }>;
+  setSnackMessage: Action<ProjectModel, string>;
+  snackMessage: string | null;
   updateProjectName: Thunk<
     ProjectModel,
-    {
-      vsmProjectID: number;
-      name: string;
-      rootObjectId: number;
-    }
+    { vsmProjectID: number; name: string; rootObjectId: number }
   >;
+  updateVSMObject: Thunk<ProjectModel, vsmObject>;
 }
 
 const projectModel: ProjectModel = {
@@ -130,10 +125,32 @@ const projectModel: ProjectModel = {
     }
   }),
   addObject: thunk(async (actions, payload) => {
-    actions.patchLocalObject({
-      ...payload.parent,
-      childObjects: [...payload.parent.childObjects, payload.child],
-    });
+    //We need to update the child in the API, but the Parent (with the child) in our local state
+    const apiObject = {
+      ...payload.child,
+      vsmObjectID: 0, // use 0 when it is a new card
+    } as vsmObject;
+
+    //Local temporary card
+    const localObject = {
+      ...payload.child,
+      temporaryId: payload.child.vsmObjectID,
+    } as vsmObject;
+
+    actions.setSnackMessage("Adding new card...");
+    BaseAPIServices.post(`/api/v1.0/VSMObject`, apiObject)
+      .then((response) => {
+        //Api response.data is the newly created child
+        actions.patchLocalObject({
+          ...payload.parent,
+          childObjects: [...payload.parent.childObjects, response.data], // Todo: Sort the siblings in the correct order
+        });
+        return actions.setSnackMessage("Card added!");
+      })
+      .catch((reason) => {
+        actions.setSnackMessage(reason);
+        return actions.setErrorProject(reason);
+      });
   }),
   updateVSMObject: thunk(async (actions, payload) => {
     actions.patchLocalObject(payload);

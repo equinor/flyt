@@ -10,7 +10,8 @@ import Choice from "./entities/Choice";
 export function vsmObjectFactory(
   o: vsmObject,
   onPress: () => void,
-  onHover: () => void
+  onHoverEnter: () => void,
+  onHoverExit: () => void
 ): PIXI.DisplayObject {
   const { pkObjectType, name } = o.vsmObjectType;
   switch (pkObjectType) {
@@ -23,13 +24,15 @@ export function vsmObjectFactory(
           color: 0xc4e1e3,
         },
         onPress: () => onPress(),
-        onHover: () => onHover(),
+        onHover: () => onHoverEnter(),
+        onHoverExit: () => onHoverExit(),
       });
     case vsmObjectTypes.choice:
       return Choice({
         content: o.name,
         onPress: () => onPress(),
-        onHover: () => onHover(),
+        onHover: () => onHoverEnter(),
+        onHoverExit: () => onHoverExit(),
       });
     case vsmObjectTypes.process:
       return new PIXI.Container();
@@ -44,13 +47,15 @@ export function vsmObjectFactory(
           color: 0x00d889,
         },
         onPress: () => onPress(),
-        onHover: () => onHover(),
+        onHover: () => onHoverEnter(),
+        onHoverExit: () => onHoverExit(),
       });
     case vsmObjectTypes.mainActivity:
       return MainActivity({
         text: o.name,
         onPress: () => onPress(),
-        onHover: () => onHover(),
+        onHover: () => onHoverEnter(),
+        onHoverExit: () => onHoverExit(),
       });
     case vsmObjectTypes.subActivity:
       return SubActivity({
@@ -63,7 +68,8 @@ export function vsmObjectFactory(
               : `${o.time} Minutes`
             : "Duration?",
         onPress: () => onPress(),
-        onHover: () => onHover(),
+        onHover: () => onHoverEnter(),
+        onHoverExit: () => onHoverExit(),
       });
     case vsmObjectTypes.waiting:
       return Waiting(
@@ -73,7 +79,8 @@ export function vsmObjectFactory(
             : `${o.time} Minutes`
           : "?",
         () => onPress(),
-        () => onHover()
+        () => onHoverEnter(),
+        () => onHoverExit()
       );
     default:
       return GenericPostit({

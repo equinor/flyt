@@ -34,7 +34,9 @@ export default function Project() {
 
         <main className={commonStyles.main}>
           <Typography variant="h1">Error loading project {id}</Typography>
-          <p>{JSON.stringify(error)}</p>
+          <p>
+            We have some troubles with this VSM. Please try to refresh the page.
+          </p>
         </main>
       </div>
     );

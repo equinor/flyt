@@ -11,6 +11,7 @@ import { VSMSideBar } from "./VSMSideBar";
 import { GenericPostit } from "./canvas/GenericPostit";
 import { vsmObjectTypes } from "../types/vsmObjectTypes";
 import { uid } from "../utils/uuid";
+import style from "./VSMCanvas.module.scss";
 
 export const defaultObject = {
   name: "",
@@ -21,7 +22,9 @@ export const defaultObject = {
 } as vsmObject;
 
 const app: Application = new Application({
-  resizeTo: window,
+  // resizeTo: window,
+  height: window.innerHeight - 70,
+  width: window.innerWidth,
   backgroundColor: 0xf7f7f7,
   antialias: true,
 });
@@ -76,7 +79,89 @@ export const pointerEvents = {
   pointerup: "pointerup",
   pointerupoutside: "pointerupoutside",
   pointermove: "pointermove",
+  mouseover: "mouseover",
+  mouseout: "mouseout",
 };
+
+function addToolBox(
+  draggable: (card: PIXI.Graphics, vsmObjectType: vsmObjectTypes) => void
+) {
+  // const
+  const box = new PIXI.Container();
+
+  const padding = 40;
+  //  Render the drag'n-drop-box
+  const rectangle = new Graphics();
+  const width = padding * 4;
+  const height = 54;
+  rectangle.beginFill(0xffffff);
+  rectangle.drawRoundedRect(0, 0, width, height, 8);
+  rectangle.endFill();
+
+  box.addChild(rectangle);
+
+  // Render the icons
+  const mainActivity = new Graphics();
+  mainActivity.beginFill(0x52c0ff);
+  mainActivity.drawRoundedRect(0, 0, 22, 22, 2);
+  mainActivity.endFill();
+  mainActivity.x = 14;
+  mainActivity.y = rectangle.y + rectangle.height / 2 - mainActivity.height / 2;
+
+  // clickHandler(mainActivity, () => toggleDrag(viewport));
+  draggable(mainActivity, vsmObjectTypes.mainActivity);
+
+  // For mouse-only events
+  // .on('mousedown', onDragStart)
+  box.addChild(mainActivity);
+
+  const subActivity = new Graphics();
+  subActivity.beginFill(0xfdd835);
+  subActivity.drawRoundedRect(0, 0, 22, 22, 2);
+  subActivity.endFill();
+  subActivity.x = mainActivity.x + padding;
+  subActivity.y = rectangle.y + rectangle.height / 2 - subActivity.height / 2;
+  draggable(subActivity, vsmObjectTypes.subActivity);
+  box.addChild(subActivity);
+
+  const choiceIcon = new Graphics();
+  choiceIcon.beginFill(0xfdd835);
+  const hypotenuse = 22;
+  const edge = Math.sqrt(hypotenuse ** 2 / 2);
+  choiceIcon.drawRoundedRect(0, 0, edge, edge, 2);
+  choiceIcon.pivot.x = choiceIcon.width / 2;
+  choiceIcon.pivot.y = choiceIcon.height / 2;
+
+  choiceIcon.y =
+    rectangle.y +
+    rectangle.height / 2 -
+    choiceIcon.height / 2 +
+    choiceIcon.height / 2;
+  choiceIcon.x = subActivity.x + padding + choiceIcon.width / 2;
+  choiceIcon.angle = 45;
+  draggable(choiceIcon, vsmObjectTypes.choice);
+  box.addChild(choiceIcon);
+
+  const waitingIcon = new Graphics();
+  waitingIcon.beginFill(0xff8f00);
+  waitingIcon.drawRoundedRect(0, 0, 22, 12, 2);
+  waitingIcon.endFill();
+  waitingIcon.x = choiceIcon.x - choiceIcon.width + padding;
+  waitingIcon.y = rectangle.y + rectangle.height / 2 - waitingIcon.height / 2;
+  box.addChild(waitingIcon);
+  draggable(waitingIcon, vsmObjectTypes.waiting);
+
+  // box.y = viewport.height + 50;
+  // box.x = 40;
+
+  // viewport.addChild(box);
+  app.stage.addChild(box);
+  box.y = window.innerHeight - 70 - box.height - 8;
+  box.x = window.innerWidth / 2 - box.width / 2;
+  // mainActivity.visible = false;
+  // choiceIcon.visible = false;
+}
+
 let hoveredObject: vsmObject | null = null;
 export default function VSMCanvas(props: {
   style?: React.CSSProperties | undefined;
@@ -84,21 +169,16 @@ export default function VSMCanvas(props: {
 }): JSX.Element {
   const ref = useRef(document.createElement("div"));
   const [selectedObject, setSelectedObject] = useState(defaultObject);
-  // const [hoveredObject, setHoveredObject] = useState(null);
   const dispatch = useStoreDispatch();
   const project = useStoreState((state) => state.project);
-  //
-  // useEffect(() => {
-  //   console.log(!!hoveredObject);
-  // }, [hoveredObject]);
 
   function setHoveredObject(vsmObject: vsmObject) {
     hoveredObject = vsmObject;
   }
 
-  function clearHoveredObject() {
+  const clearHoveredObject = () => {
     hoveredObject = null;
-  }
+  };
 
   function addNewVsmObjectToHoveredCard(vsmObjectType: vsmObjectTypes) {
     if (hoveredObject) {
@@ -196,6 +276,8 @@ export default function VSMCanvas(props: {
 
     card.interactive = true;
     card
+      .on(pointerEvents.mouseover, () => (card.alpha = 0.2))
+      .on(pointerEvents.mouseout, () => (card.alpha = 1))
       .on(pointerEvents.pointerdown, onDragStart)
       .on(pointerEvents.pointerup, onDragEnd)
       .on(pointerEvents.pointerupoutside, onDragEnd)
@@ -223,82 +305,6 @@ export default function VSMCanvas(props: {
       const viewport = getViewPort();
       addCards(viewport);
 
-      // const
-      const box = new PIXI.Container();
-
-      const padding = 40;
-      //  Render the drag'n-drop-box
-      const rectangle = new Graphics();
-      const color = 0xffffff;
-      const width = padding * 4;
-      const height = 54;
-      rectangle.beginFill(color);
-      rectangle.drawRoundedRect(0, 0, width, height, 8);
-      rectangle.endFill();
-
-      box.addChild(rectangle);
-
-      // Render the icons
-      const mainActivity = new Graphics();
-      mainActivity.beginFill(0x52c0ff);
-      mainActivity.drawRoundedRect(0, 0, 22, 22, 2);
-      mainActivity.endFill();
-      mainActivity.x = 14;
-      mainActivity.y =
-        rectangle.y + rectangle.height / 2 - mainActivity.height / 2;
-
-      // clickHandler(mainActivity, () => toggleDrag(viewport));
-      draggable(mainActivity, vsmObjectTypes.mainActivity);
-
-      // For mouse-only events
-      // .on('mousedown', onDragStart)
-      box.addChild(mainActivity);
-
-      const subActivity = new Graphics();
-      subActivity.beginFill(0xfdd835);
-      subActivity.drawRoundedRect(0, 0, 22, 22, 2);
-      subActivity.endFill();
-      subActivity.x = mainActivity.x + padding;
-      subActivity.y =
-        rectangle.y + rectangle.height / 2 - subActivity.height / 2;
-      draggable(subActivity, vsmObjectTypes.subActivity);
-      box.addChild(subActivity);
-
-      const choiceIcon = new Graphics();
-      choiceIcon.beginFill(0xfdd835);
-      const hypotenuse = 22;
-      const edge = Math.sqrt(hypotenuse ** 2 / 2);
-      choiceIcon.drawRoundedRect(0, 0, edge, edge, 2);
-      choiceIcon.pivot.x = choiceIcon.width / 2;
-      choiceIcon.pivot.y = choiceIcon.height / 2;
-
-      choiceIcon.y =
-        rectangle.y +
-        rectangle.height / 2 -
-        choiceIcon.height / 2 +
-        choiceIcon.height / 2;
-      choiceIcon.x = subActivity.x + padding + choiceIcon.width / 2;
-      choiceIcon.angle = 45;
-      draggable(choiceIcon, vsmObjectTypes.choice);
-      box.addChild(choiceIcon);
-
-      const waitingIcon = new Graphics();
-      waitingIcon.beginFill(0xff8f00);
-      waitingIcon.drawRoundedRect(0, 0, 22, 12, 2);
-      waitingIcon.endFill();
-      waitingIcon.x = choiceIcon.x - choiceIcon.width + padding;
-      waitingIcon.y =
-        rectangle.y + rectangle.height / 2 - waitingIcon.height / 2;
-      box.addChild(waitingIcon);
-      draggable(waitingIcon, vsmObjectTypes.waiting);
-      viewport.addChild(box);
-
-      box.y = viewport.height + 50;
-      box.x = 40;
-
-      // mainActivity.visible = false;
-      // choiceIcon.visible = false;
-
       return () => {
         console.info("Clearing canvas");
         viewport.removeChildren();
@@ -306,13 +312,18 @@ export default function VSMCanvas(props: {
     }
   }, [project]);
 
+  useEffect(() => {
+    addToolBox(draggable);
+  }, []);
+
   const newMainActivitySiblingObject = (bigBrother) => ({
     parent: project.objects[0],
     child: {
       vsmObjectID: uid(),
-      bigBrother: bigBrother.vsmObjectID,
+      vsmProjectID: project.vsmProjectID,
+      bigBrother: bigBrother.vsmObjectID, //Let's figure out how this one works. Talk with Peder
       vsmObjectType: { pkObjectType: vsmObjectTypes.mainActivity },
-      // parent: parent.vsmObjectID,
+      parent: project.objects[0].vsmObjectID,
       childObjects: [],
     } as vsmObject,
   });
@@ -320,6 +331,7 @@ export default function VSMCanvas(props: {
     parent: parent,
     child: {
       vsmObjectID: uid(),
+      vsmProjectID: project.vsmProjectID,
       vsmObjectType: { pkObjectType: vsmObjectTypes.subActivity },
       parent: parent.vsmObjectID,
       childObjects: [],
@@ -329,6 +341,7 @@ export default function VSMCanvas(props: {
     parent: parent,
     child: {
       vsmObjectID: uid(),
+      vsmProjectID: project.vsmProjectID,
       vsmObjectType: { pkObjectType: vsmObjectTypes.waiting },
       parent: parent.vsmObjectID,
       childObjects: [],
@@ -341,16 +354,19 @@ export default function VSMCanvas(props: {
       parent: parent,
       child: {
         vsmObjectID: choiceUid,
+        vsmProjectID: project.vsmProjectID,
         vsmObjectType: { pkObjectType: vsmObjectTypes.choice },
         childObjects: [
           {
             vsmObjectID: uid(),
+            vsmProjectID: project.vsmProjectID,
             vsmObjectType: { pkObjectType: vsmObjectTypes.subActivity },
             parent: choiceUid,
             childObjects: [],
           },
           {
             vsmObjectID: uid(),
+            vsmProjectID: project.vsmProjectID,
             vsmObjectType: { pkObjectType: vsmObjectTypes.subActivity },
             parent: choiceUid,
             childObjects: [],
@@ -368,7 +384,8 @@ export default function VSMCanvas(props: {
       vsmObjectFactory(
         root,
         () => setSelectedObject(root),
-        () => setHoveredObject(root)
+        () => setHoveredObject(root),
+        () => clearHoveredObject()
       )
     );
     // container.addChild(getObject(root));
@@ -462,7 +479,7 @@ export default function VSMCanvas(props: {
         onChangeRole={updateObjectRole()}
         onChangeTime={updateObjectTime()}
       />
-      <div style={props.style} ref={ref} />
+      <div className={style.canvasWrapper} ref={ref} />
     </>
   );
 }
