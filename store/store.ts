@@ -68,6 +68,7 @@ const projectModel: ProjectModel = {
       oldObj.name = newObj.name;
       oldObj.role = newObj.role;
       oldObj.time = newObj.time;
+      oldObj.parent = newObj.parent;
       oldObj.childObjects = newObj.childObjects;
     }
 
@@ -132,20 +133,43 @@ const projectModel: ProjectModel = {
     } as vsmObject;
 
     //Local temporary card
-    const localObject = {
-      ...payload.child,
-      temporaryId: payload.child.vsmObjectID,
-    } as vsmObject;
+    // const localObject = {
+    //   ...payload.child,
+    //   temporaryId: payload.child.vsmObjectID,
+    // } as vsmObject;
 
+    //Also,if the parent card have children, we want to adopt it's children
+    //This needs to be done in two steps:
+    // - STEP 1. Add our new object as a sibling
     actions.setSnackMessage("Adding new card...");
     BaseAPIServices.post(`/api/v1.0/VSMObject`, apiObject)
       .then((response) => {
         //Api response.data is the newly created child
+        // LOCAL STEP 1 & STEP 2
         actions.patchLocalObject({
           ...payload.parent,
-          childObjects: [...payload.parent.childObjects, response.data], // Todo: Sort the siblings in the correct order
+          childObjects: [
+            {
+              ...response.data,
+              childObjects: [...payload.parent.childObjects],
+            },
+          ], // Todo: Sort the siblings in the correct order
         });
-        return actions.setSnackMessage("Card added!");
+        actions.setSnackMessage("Card added!");
+        // - STEP 2. Update our siblings to have the new object as a parent
+        if (payload.parent.childObjects.length > 0) {
+          payload.parent.childObjects.forEach((sibling) => {
+            BaseAPIServices.patch(`/api/v1.0/VSMObject`, {
+              ...sibling,
+              parent: response.data.vsmObjectID,
+            })
+              .then(() => actions.setSnackMessage("Updated parent"))
+              .catch((reason) => {
+                actions.setSnackMessage(reason);
+                return actions.setErrorProject(reason);
+              });
+          });
+        }
       })
       .catch((reason) => {
         actions.setSnackMessage(reason);
