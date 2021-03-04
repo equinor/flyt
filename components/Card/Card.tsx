@@ -3,9 +3,9 @@ import React from "react";
 import Link from "next/link";
 import styles from "./Card.module.scss";
 import { UserDots } from "../UserDots";
-import { VsmProject } from "../../interfaces/VsmProject";
+import { vsmProject } from "../../interfaces/VsmProject";
 
-export function VSMCard(props: { vsm: VsmProject }): JSX.Element {
+export function VSMCard(props: { vsm: vsmProject }): JSX.Element {
   const { userIdentity: createdBy } = props.vsm.created;
   return (
     <Link href={`/projects/${props.vsm.vsmProjectID}`}>
@@ -18,13 +18,11 @@ export function VSMCard(props: { vsm: VsmProject }): JSX.Element {
         <div>
           <hr style={{ opacity: 0.1 }} />
           <div className={styles.bottomSection}>
-            {/*Todo: Hide edited if no date*/}
             {!!props.vsm.lastUpdated && (
               <p className={styles.vsmLabel}>
                 Edited {moment(props.vsm.lastUpdated.changeDate).fromNow()}
               </p>
             )}
-            {/*Todo: Show users who are relevant for each VSMCard instead of current user*/}
             {createdBy && <UserDots users={[`${createdBy}`]} />}
           </div>
         </div>

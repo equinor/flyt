@@ -2,7 +2,7 @@ import { vsmObjectTypes } from "../types/vsmObjectTypes";
 import { vsmTaskTypes } from "../types/vsmTaskTypes";
 import { vsmObject } from "./VsmObject";
 
-export interface VsmProject {
+export interface vsmProject {
   vsmProjectID: number;
   name: string;
   created: {

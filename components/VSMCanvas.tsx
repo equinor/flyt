@@ -189,6 +189,11 @@ export default function VSMCanvas(props: {
     hoveredObject = null;
   };
 
+  function deleteVSMObject(vsmObject: vsmObject) {
+    setSelectedObject(defaultObject); // Close the sidebar
+    dispatch.deleteVSMObject(vsmObject);
+  }
+
   function addNewVsmObjectToHoveredCard(vsmObjectType: vsmObjectTypes) {
     if (hoveredObject) {
       const { pkObjectType } = hoveredObject.vsmObjectType;
@@ -302,15 +307,6 @@ export default function VSMCanvas(props: {
     return () => cleanupApp();
   }, []);
 
-  let dragEnabled: boolean;
-  dragEnabled = true;
-
-  function toggleDrag(viewport: Viewport) {
-    if (dragEnabled) viewport.plugins.pause("drag");
-    else viewport.plugins.resume("drag");
-    dragEnabled = !dragEnabled;
-  }
-
   // "Renderer"
   useEffect(() => {
     if (project) {
@@ -330,10 +326,10 @@ export default function VSMCanvas(props: {
 
   const newMainActivitySiblingObject = (bigBrother) => ({
     parent: project.objects[0],
+    leftObjectId: bigBrother.vsmObjectID, //Let's figure out how this one works. Talk with Peder
     child: {
       vsmObjectID: uid(),
       vsmProjectID: project.vsmProjectID,
-      bigBrother: bigBrother.vsmObjectID, //Let's figure out how this one works. Talk with Peder
       vsmObjectType: { pkObjectType: vsmObjectTypes.mainActivity },
       parent: project.objects[0].vsmObjectID,
       childObjects: [],
@@ -493,6 +489,7 @@ export default function VSMCanvas(props: {
         onChangeName={updateObjectName()}
         onChangeRole={updateObjectRole()}
         onChangeTime={updateObjectTime()}
+        onDelete={() => deleteVSMObject(selectedObject)}
       />
       <div className={style.canvasWrapper} ref={ref} />
     </>

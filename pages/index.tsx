@@ -7,7 +7,7 @@ import { account_circle, add } from "@equinor/eds-icons";
 import { VSMCard } from "../components/Card/Card";
 import BaseAPIServices from "../services/BaseAPIServices";
 import { useRouter } from "next/router";
-import { VsmProject } from "../interfaces/VsmProject";
+import { vsmProject } from "../interfaces/VsmProject";
 import styles from "./projects/Projects.module.scss";
 import { projectTemplates } from "../src/assets/projectTemplates";
 
@@ -78,7 +78,7 @@ export default function Projects() {
           ) : (
             <div className={styles.vsmCardContainer}>
               {projects?.length > 0 ? (
-                projects.map((vsm: VsmProject) => (
+                projects.map((vsm: vsmProject) => (
                   <VSMCard key={vsm.vsmProjectID} vsm={vsm} />
                 ))
               ) : (
