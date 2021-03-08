@@ -26,7 +26,6 @@ export function VSMSideBar(props: {
       }
     >
       <div className={styles.letItBreath}>
-        <p>ProjectId: {props.selectedObject.vsmProjectID}</p>
         <div className={styles.actions}>
           <Button
             title={"Close the side-menu"}

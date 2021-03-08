@@ -291,9 +291,7 @@ const projectModel: ProjectModel = {
   }),
 };
 
-const store = createStore(
-  persist(projectModel, {
-    allow: ["project"],
-  })
-);
+const store = createStore(projectModel, {
+  name: "project",
+});
 export default store;

@@ -169,6 +169,7 @@ function addToolBox(
   box.x = window.innerWidth / 2 - box.width / 2;
   // mainActivity.visible = false;
   // choiceIcon.visible = false;
+  return () => app.stage.removeChild(box); //Cleanup method
 }
 
 let hoveredObject: vsmObject | null = null;
@@ -320,25 +321,25 @@ export default function VSMCanvas(props: {
     }
   }, [project]);
 
-  useEffect(() => {
-    addToolBox(draggable);
-  }, []);
+  useEffect(() => addToolBox(draggable), [project]);
 
-  const newMainActivitySiblingObject = (bigBrother) => ({
-    parent: project.objects[0],
-    leftObjectId: bigBrother.vsmObjectID, //Let's figure out how this one works. Talk with Peder
-    child: {
-      vsmObjectID: uid(),
-      vsmProjectID: project.vsmProjectID,
-      vsmObjectType: { pkObjectType: vsmObjectTypes.mainActivity },
-      parent: project.objects[0].vsmObjectID,
-      childObjects: [],
-    } as vsmObject,
-  });
+  function newMainActivitySiblingObject(leftObject) {
+    return {
+      parent: project.objects[0],
+      leftObjectId: leftObject.vsmObjectID,
+      child: {
+        // vsmObjectID: uid(), //Todo: change to temporary (local) objectId so that we can update the view before recieving the actual id from api
+        vsmProjectID: project.vsmProjectID,
+        vsmObjectType: { pkObjectType: vsmObjectTypes.mainActivity },
+        parent: project.objects[0].vsmObjectID,
+        childObjects: [],
+      } as vsmObject,
+    };
+  }
   const newSubActivityObject = (parent) => ({
     parent: parent,
     child: {
-      vsmObjectID: uid(),
+      // vsmObjectID: uid(), //Todo: change to temporary (local) objectId so that we can update the view before recieving the actual id from api
       vsmProjectID: project.vsmProjectID,
       vsmObjectType: { pkObjectType: vsmObjectTypes.subActivity },
       parent: parent.vsmObjectID,
@@ -348,7 +349,7 @@ export default function VSMCanvas(props: {
   const newWaitingObject = (parent) => ({
     parent: parent,
     child: {
-      vsmObjectID: uid(),
+      // vsmObjectID: uid(), //Todo: change to temporary (local) objectId so that we can update the view before recieving the actual id from api
       vsmProjectID: project.vsmProjectID,
       vsmObjectType: { pkObjectType: vsmObjectTypes.waiting },
       parent: parent.vsmObjectID,
@@ -357,23 +358,23 @@ export default function VSMCanvas(props: {
   });
 
   const newChoiceObject = (parent) => {
-    const choiceUid = uid();
+    const choiceUid = uid(); //Todo: change to temporary (local) objectId so that we can update the view before recieving the actual id from api
     return {
       parent: parent,
       child: {
-        vsmObjectID: choiceUid,
+        vsmObjectID: choiceUid, //Todo: change to temporary (local) objectId so that we can update the view before recieving the actual id from api
         vsmProjectID: project.vsmProjectID,
         vsmObjectType: { pkObjectType: vsmObjectTypes.choice },
         childObjects: [
           {
-            vsmObjectID: uid(),
+            // vsmObjectID: uid(),//Todo: change to temporary (local) objectId so that we can update the view before recieving the actual id from api
             vsmProjectID: project.vsmProjectID,
             vsmObjectType: { pkObjectType: vsmObjectTypes.subActivity },
             parent: choiceUid,
             childObjects: [],
           },
           {
-            vsmObjectID: uid(),
+            // vsmObjectID: uid(),//Todo: change to temporary (local) objectId so that we can update the view before recieving the actual id from api
             vsmProjectID: project.vsmProjectID,
             vsmObjectType: { pkObjectType: vsmObjectTypes.subActivity },
             parent: choiceUid,
