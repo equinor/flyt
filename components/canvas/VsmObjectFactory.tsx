@@ -6,6 +6,7 @@ import SubActivity from "./entities/SubActivity";
 import Waiting from "./entities/Waiting";
 import { vsmObject } from "../../interfaces/VsmObject";
 import Choice from "./entities/Choice";
+import { formatDuration } from "../../types/timeDefinitions";
 
 export function vsmObjectFactory(
   o: vsmObject,
@@ -61,23 +62,14 @@ export function vsmObjectFactory(
       return SubActivity({
         text: o.name,
         role: o.role || "Role?",
-        time:
-          !!o.time && o.time !== 0
-            ? o.time === 1
-              ? `1 Minute`
-              : `${o.time} Minutes`
-            : "Duration?",
+        time: formatDuration(o.time, o.timeDefinition),
         onPress: () => onPress(),
         onHover: () => onHoverEnter(),
         onHoverExit: () => onHoverExit(),
       });
     case vsmObjectTypes.waiting:
       return Waiting(
-        !!o.time && o.time !== 0
-          ? o.time === 1
-            ? `1 Minute`
-            : `${o.time} Minutes`
-          : "?",
+        formatDuration(o.time, o.timeDefinition),
         () => onPress(),
         () => onHoverEnter(),
         () => onHoverExit()

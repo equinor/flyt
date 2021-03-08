@@ -9,6 +9,7 @@ export interface vsmObject {
   name: string;
   fkObjectType?: number;
   time: number;
+  timeDefinition: string;
   role: string;
   childObjects?: Array<vsmObject>;
   vsmObjectType?: {

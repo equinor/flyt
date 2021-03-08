@@ -14,6 +14,7 @@ export function VSMSideBar(props: {
   onChangeName: (event: { target: { value: never } }) => void;
   onChangeRole: (event: { target: { value: never } }) => void;
   onChangeTime: (event: { target: { value: never } }) => void;
+  onChangeTimeDefinition: (timeDefinition: string) => void;
   onClose: () => void;
   onDelete: () => void;
 }) {
@@ -53,6 +54,7 @@ export function VSMSideBar(props: {
           onChangeName={props.onChangeName}
           onChangeRole={props.onChangeRole}
           onChangeTime={props.onChangeTime}
+          onChangeTimeDefinition={props.onChangeTimeDefinition}
         />
       </div>
     </div>

@@ -420,7 +420,7 @@ export default function VSMCanvas(props: {
     }
   }
 
-  function updateObjectName() {
+  function onChangeNameHandler() {
     return (event: { target: { value: string } }) => {
       const name = event.target.value;
       setSelectedObject({ ...selectedObject, name });
@@ -434,7 +434,7 @@ export default function VSMCanvas(props: {
     };
   }
 
-  function updateObjectRole() {
+  function onChangeRoleHandler() {
     return (event) => {
       const role = event.target.value;
       setSelectedObject({ ...selectedObject, role });
@@ -448,9 +448,10 @@ export default function VSMCanvas(props: {
     };
   }
 
-  function updateObjectTime() {
+  function onChangeTimeHandler() {
     return (event) => {
-      const time = parseInt(event.target.value);
+      let time = parseInt(event.target.value);
+      if (time < 0) time = 0;
       setSelectedObject({ ...selectedObject, time });
       debounce(
         () => {
@@ -462,15 +463,32 @@ export default function VSMCanvas(props: {
     };
   }
 
+  function onChangeTimeDefinitionHandler() {
+    return (timeDefinition: string) => {
+      setSelectedObject({ ...selectedObject, timeDefinition });
+      debounce(
+        () => {
+          dispatch.updateVSMObject({
+            ...selectedObject,
+            timeDefinition,
+          } as vsmObject);
+        },
+        1000,
+        "Canvas-UpdateTimeDefinition"
+      )();
+    };
+  }
+
   return (
     <>
       <VSMSideBar
         onClose={() => setSelectedObject(defaultObject)}
         selectedObject={selectedObject}
         key={selectedObject.vsmObjectID}
-        onChangeName={updateObjectName()}
-        onChangeRole={updateObjectRole()}
-        onChangeTime={updateObjectTime()}
+        onChangeName={onChangeNameHandler()}
+        onChangeRole={onChangeRoleHandler()}
+        onChangeTime={onChangeTimeHandler()}
+        onChangeTimeDefinition={onChangeTimeDefinitionHandler()}
         onDelete={() => deleteVSMObject(selectedObject)}
       />
       <div className={style.canvasWrapper} ref={ref} />
