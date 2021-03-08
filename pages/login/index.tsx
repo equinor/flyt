@@ -14,13 +14,10 @@ export default function LoginPage() {
 
   let error: AuthError | null;
   if (!error) {
-    ({ error } = useMsalAuthentication(
-      InteractionType.Redirect,
-      {
-        scopes: loginRequest.scopes,
-        authority: msalConfig.auth.authority
-      }
-    ));
+    ({ error } = useMsalAuthentication(InteractionType.Redirect, {
+      scopes: loginRequest.scopes,
+      authority: msalConfig.auth.authority,
+    }));
   }
 
   const redirectUrl = asPath.split("=")[1];
@@ -29,19 +26,30 @@ export default function LoginPage() {
   }, [isAuthenticated]);
 
   if (isAuthenticated) {
-    return (<div className={commonStyles.main}>
-      <Typography variant={"h2"}>You are logged in</Typography>
-      <Link href={"/"}>
-        <Button>Go home</Button>
-      </Link>
-    </div>);
+    return (
+      <div className={commonStyles.main}>
+        <Typography variant={"h2"}>You are logged in</Typography>
+        <Link href={"/"}>
+          <Button>Go home</Button>
+        </Link>
+      </div>
+    );
   }
   if (error)
     return (
       <div className={commonStyles.main}>
         <Typography variant={"h2"}>Failed to login</Typography>
-        <div style={{ margin: 12, textAlign: "center", borderRadius: 4, backgroundColor: "whitesmoke" }}>
-          <h2 style={{ color: "black" }}>Include this message when reporting this error.</h2>
+        <div
+          style={{
+            margin: 12,
+            textAlign: "center",
+            borderRadius: 4,
+            backgroundColor: "whitesmoke",
+          }}
+        >
+          <h2 style={{ color: "black" }}>
+            Include this message when reporting this error.
+          </h2>
           <h3>Error: {error.errorCode}</h3>
           <p> {error.errorMessage}</p>
         </div>

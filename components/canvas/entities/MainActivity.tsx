@@ -2,17 +2,22 @@ import * as PIXI from "pixi.js";
 import { Graphics } from "pixi.js";
 import { formatCanvasText } from "../FormatCanvasText";
 import { clickHandler } from "./ClickHandler";
+import { pointerEvents } from "../../VSMCanvas";
 
 interface MainActivityProps {
   header?: string;
   text?: string;
   onPress?: () => void;
+  onHover?: () => void;
+  onHoverExit?: () => void;
 }
 
 export default function MainActivity({
   header = "MainActivity",
   text = "Choose method",
   onPress,
+  onHover,
+  onHoverExit,
 }: MainActivityProps): PIXI.Container {
   const rectangle = new Graphics();
   const color = 0x00c1ff;
@@ -53,6 +58,9 @@ export default function MainActivity({
 
   const container = new PIXI.Container();
   container.addChild(mask, rectangle, textElement);
+
+  if (onHover) container.on(pointerEvents.pointerover, () => onHover());
+  if (onHoverExit) container.on(pointerEvents.pointerout, () => onHoverExit());
   if (onPress) clickHandler(container, onPress);
 
   return container;

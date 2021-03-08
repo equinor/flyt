@@ -1,4 +1,5 @@
 import PIXI from "pixi.js";
+import { pointerEvents } from "../../VSMCanvas";
 
 export function clickHandler(
   container: PIXI.Container,
@@ -7,14 +8,15 @@ export function clickHandler(
   container.interactive = true;
 
   // Fade out
-  container.on("mouseover", () => {
+  container.on(pointerEvents.pointerover, () => {
     container.alpha = 0.2;
+    container.cursor = "pointer";
   });
 
   // Fade in
-  container.on("mouseout", () => {
+  container.on(pointerEvents.pointerout, () => {
     container.alpha = 1;
   });
 
-  container.on("pointertap", onPress);
+  container.on(pointerEvents.click, onPress);
 }

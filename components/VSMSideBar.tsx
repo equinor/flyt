@@ -5,6 +5,7 @@ import React from "react";
 import { defaultObject } from "./VSMCanvas";
 import { Button, Icon } from "@equinor/eds-core-react";
 import { close, delete_forever } from "@equinor/eds-icons";
+import { canDeleteVSMObject } from "../store/store";
 
 Icon.add({ close, delete_forever });
 
@@ -14,6 +15,7 @@ export function VSMSideBar(props: {
   onChangeRole: (event: { target: { value: never } }) => void;
   onChangeTime: (event: { target: { value: never } }) => void;
   onClose: () => void;
+  onDelete: () => void;
 }) {
   return (
     <div
@@ -34,11 +36,11 @@ export function VSMSideBar(props: {
             <Icon name="close" title="add" size={16} />
           </Button>
           <Button
-            disabled
+            disabled={!canDeleteVSMObject(props.selectedObject)}
             title={"Delete"}
             variant={"ghost_icon"}
             color={"danger"}
-            onClick={props.onClose}
+            onClick={props.onDelete}
           >
             <Icon name="delete_forever" size={16} />
           </Button>

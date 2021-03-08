@@ -3,24 +3,25 @@ import { Graphics } from "pixi.js";
 import { formatCanvasText } from "../FormatCanvasText";
 import { ProblemCircle } from "./ProblemCircle";
 import { clickHandler } from "./ClickHandler";
+import { pointerEvents } from "../../VSMCanvas";
 
 interface SubActivityProps {
-  x: number;
-  y: number;
   text?: string;
   role?: string;
   time?: string;
   onPress?: () => void;
+  onHover?: () => void;
+  onHoverExit?: () => void;
   disableSideContainer?: boolean;
 }
 
 export default function SubActivity({
   text,
-  x,
-  y,
   role,
   time,
   onPress,
+  onHover,
+  onHoverExit,
   disableSideContainer = true,
 }: SubActivityProps): PIXI.Container {
   const header = "Sub- activity";
@@ -140,9 +141,8 @@ export default function SubActivity({
     sideContainer
   );
 
-  container.x = x;
-  container.y = y;
-
+  if (onHover) container.on(pointerEvents.pointerover, () => onHover());
+  if (onHoverExit) container.on(pointerEvents.pointerout, () => onHoverExit());
   if (onPress) clickHandler(container, onPress);
   return container;
 }

@@ -1,4 +1,5 @@
 import PIXI from "pixi.js";
+import { pointerEvents } from "../../VSMCanvas";
 
 export function ScaleOnHover(container: PIXI.Container) {
   console.log(container.width, container.height);
@@ -19,7 +20,7 @@ export function ScaleOnHover(container: PIXI.Container) {
   const ms = 10;
 
   // Scale up
-  container.on("mouseover", () => {
+  container.on(pointerEvents.pointerover, () => {
     if (timer) clearTimeout(timer);
     timer = setInterval(() => {
       if (currentScale + delta <= targetScale) {
@@ -33,7 +34,7 @@ export function ScaleOnHover(container: PIXI.Container) {
   });
 
   // Scale down
-  container.on("mouseout", () => {
+  container.on(pointerEvents.pointerout, () => {
     if (timer) clearTimeout(timer);
     timer = setInterval(() => {
       if (currentScale + delta > initialScale) {
