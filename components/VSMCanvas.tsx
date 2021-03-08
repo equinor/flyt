@@ -36,7 +36,6 @@ const viewport: Viewport = new Viewport({
 function initCanvas(ref: React.MutableRefObject<HTMLDivElement>) {
   // Make sure the app.stage is empty
   app.stage.removeChildren();
-  ////////////////////////////////
   // add the viewport to the stage
   app.stage.addChild(viewport);
 
@@ -46,12 +45,7 @@ function initCanvas(ref: React.MutableRefObject<HTMLDivElement>) {
       .pinch() // This doesn't work that well on desktop.
       .wheel()
       .decelerate({ friction: 0.4 });
-  } else
-    viewport
-      // .pinch() // This doesn't work that well on desktop.
-      .drag()
-      .wheel()
-      .decelerate({ friction: 0.4 });
+  } else viewport.drag().wheel().decelerate({ friction: 0.4 });
 
   // Add app to DOM
   ref.current.appendChild(app.view);
@@ -87,7 +81,6 @@ export const pointerEvents = {
 function addToolBox(
   draggable: (card: PIXI.Graphics, vsmObjectType: vsmObjectTypes) => void
 ) {
-  // const
   const box = new PIXI.Container();
 
   const padding = 40;
@@ -116,12 +109,7 @@ function addToolBox(
   mainActivity.endFill();
   mainActivity.x = 14;
   mainActivity.y = rectangle.y + rectangle.height / 2 - mainActivity.height / 2;
-
-  // clickHandler(mainActivity, () => toggleDrag(viewport));
   draggable(mainActivity, vsmObjectTypes.mainActivity);
-
-  // For mouse-only events
-  // .on('mousedown', onDragStart)
   box.addChild(mainActivity);
 
   const subActivity = new Graphics();
@@ -157,18 +145,13 @@ function addToolBox(
   waitingIcon.endFill();
   waitingIcon.x = choiceIcon.x - choiceIcon.width + padding;
   waitingIcon.y = rectangle.y + rectangle.height / 2 - waitingIcon.height / 2;
-  box.addChild(waitingIcon);
   draggable(waitingIcon, vsmObjectTypes.waiting);
+  box.addChild(waitingIcon);
 
-  // box.y = viewport.height + 50;
-  // box.x = 40;
-
-  // viewport.addChild(box);
   app.stage.addChild(box);
   box.y = window.innerHeight - 84 - box.height;
   box.x = window.innerWidth / 2 - box.width / 2;
-  // mainActivity.visible = false;
-  // choiceIcon.visible = false;
+
   return () => app.stage.removeChild(box); //Cleanup method
 }
 
@@ -400,12 +383,10 @@ export default function VSMCanvas(props: {
         () => clearHoveredObject()
       )
     );
-    // container.addChild(getObject(root));
     container.y = container.height + padding;
 
     let nextX = 0;
     root.childObjects?.forEach((child) => {
-      // const node = createTree({ ...child, name: index.toString() });
       const node = createTree(child);
       //Todo: Figure out how to render choices
       // without any of them crashing
