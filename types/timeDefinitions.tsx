@@ -5,12 +5,6 @@ export const timeDefinitions = [
   { value: "Week", displayName: "Week(s)" },
   { value: "Month", displayName: "Month(s)" },
   { value: "Year", displayName: "Year(s)" },
-  // { value: "m", displayName: "Minute(s)" },
-  // { value: "H", displayName: "Hour(s)" },
-  // { value: "D", displayName: "Day(s)" },
-  // { value: "W", displayName: "Week(s)" },
-  // { value: "M", displayName: "Month(s)" },
-  // { value: "Y", displayName: "Year(s)" },
 ];
 
 export const getTimeDefinitionValues = (): Array<string> =>
@@ -24,13 +18,26 @@ export const getTimeDefinitionDisplayName = (value: string): string => {
   return timeDefinitions.find((item) => item.value === value).displayName;
 };
 
-export const formatDuration = (duration, timeDefinition) => {
-  if (!duration || !timeDefinition) return "-";
-  const unit =
-    `${timeDefinition}`.charAt(0).toUpperCase() + `${timeDefinition}`.slice(1);
-  return !!duration && duration !== 0
-    ? duration === 1
-      ? `1 ${unit}`
-      : `${duration} ${unit}s`
-    : "Duration?";
+/**
+ * Capitalize the first letter and lowercase the rest.
+ * @param s
+ */
+export const capitalizeFirstLetter = (s: string): string =>
+  `${s}`.charAt(0).toUpperCase() + `${s}`.slice(1).toLowerCase();
+
+/**
+ * Format a duration and unit into a human readable format.
+ *
+ * Basically; Adds an 's' to the unit if it should be in plural form.
+ * - 1 minute => 1 minute
+ * - 2 minutes => 2 minutes
+ * - Etc...
+ *
+ * @param duration
+ * @param unit
+ */
+export const formatDuration = (duration: number, unit: string): string => {
+  if (!duration || !unit) return "-";
+  const cUnit = capitalizeFirstLetter(unit);
+  return duration === 1 ? `1 ${cUnit}` : `${duration} ${cUnit}s`;
 };

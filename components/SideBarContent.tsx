@@ -7,7 +7,6 @@ import {
   getTimeDefinitionDisplayName,
   getTimeDefinitionValue,
   getTimeDefinitionValues,
-  timeDefinitions,
 } from "../types/timeDefinitions";
 
 function DurationComponent(props: {
@@ -22,7 +21,6 @@ function DurationComponent(props: {
       <TextField
         label={"Duration"}
         type={"number"}
-        // meta={"Minutes"}
         value={props.selectedObject.time?.toString()}
         id={"vsmObjectTime"}
         onChange={props.onChangeTime}

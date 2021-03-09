@@ -228,7 +228,6 @@ export default function VSMCanvas(props: {
           ) {
             dispatch.addObject(newChoiceObject(hoveredObject));
           }
-
           break;
       }
     }
@@ -319,6 +318,7 @@ export default function VSMCanvas(props: {
       } as vsmObject,
     };
   }
+
   const newSubActivityObject = (parent) => ({
     parent: parent,
     child: {
