@@ -32,6 +32,7 @@ export default function Choice({
   rectangle.angle = 45;
 
   const contentText = new PIXI.Text(formatCanvasText(content || "Choice", 45), {
+    fill: 0x3d3d3d,
     fontFamily: "Equinor",
     fontWeight: 500,
     fontSize: 12,
