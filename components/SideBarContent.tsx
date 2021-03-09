@@ -3,6 +3,43 @@ import { vsmObjectTypes } from "../types/vsmObjectTypes";
 import { SingleSelect, TextField } from "@equinor/eds-core-react";
 import styles from "./VSMCanvas.module.scss";
 import React from "react";
+import {
+  getTimeDefinitionDisplayName,
+  getTimeDefinitionValue,
+  getTimeDefinitionValues,
+} from "../types/timeDefinitions";
+
+function DurationComponent(props: {
+  selectedObject: vsmObject;
+  onChangeName: (event: { target: { value: string } }) => void;
+  onChangeRole: (event: { target: { value: string } }) => void;
+  onChangeTime: (event: { target: { value: string } }) => void;
+  onChangeTimeDefinition: (timeDefinition: string) => void;
+}) {
+  return (
+    <div style={{ display: "flex" }}>
+      <TextField
+        label={"Duration"}
+        type={"number"}
+        value={props.selectedObject.time?.toString()}
+        id={"vsmObjectTime"}
+        onChange={props.onChangeTime}
+      />
+      <div style={{ padding: 8 }} />
+      <SingleSelect
+        items={getTimeDefinitionValues()}
+        handleSelectedItemChange={(i) => {
+          const apiValue = getTimeDefinitionValue(i.selectedItem);
+          props.onChangeTimeDefinition(apiValue);
+        }}
+        initialSelectedItem={getTimeDefinitionDisplayName(
+          props.selectedObject.timeDefinition
+        )}
+        label="Unit"
+      />
+    </div>
+  );
+}
 
 /**
  * Process specific content stuff
@@ -14,6 +51,7 @@ export function SideBarContent(props: {
   onChangeName: (event: { target: { value: string } }) => void;
   onChangeRole: (event: { target: { value: string } }) => void;
   onChangeTime: (event: { target: { value: string } }) => void;
+  onChangeTimeDefinition: (timeDefinition: string) => void;
 }) {
   switch (props.selectedObject.vsmObjectType.pkObjectType) {
     case vsmObjectTypes.process:
@@ -137,14 +175,7 @@ export function SideBarContent(props: {
               onChange={props.onChangeRole}
             />
             <div style={{ padding: 8 }} />
-            <TextField
-              label={"Duration"}
-              type={"number"}
-              meta={"Minutes"}
-              value={props.selectedObject.time?.toString()}
-              id={"vsmObjectTime"}
-              onChange={props.onChangeTime}
-            />
+            <DurationComponent {...props} />
           </div>
           <div className={styles.sideBarSectionHeader}>
             <p>Add problem, idea or question</p>
@@ -159,24 +190,15 @@ export function SideBarContent(props: {
               "Existing Idea",
               "Existing Question",
             ]}
-            handleSelectedItemChange={() => {}}
+            handleSelectedItemChange={() => {
+              console.log("Not yet implemented: changed selected item ");
+            }}
             label="Select type"
           />
         </>
       );
     case vsmObjectTypes.waiting:
-      return (
-        <>
-          <TextField
-            label={"Duration"}
-            type={"number"}
-            meta={"Minutes"}
-            value={props.selectedObject.time?.toString()}
-            id={"vsmObjectTime"}
-            onChange={props.onChangeTime}
-          />
-        </>
-      );
+      return <DurationComponent {...props} />;
     case vsmObjectTypes.choice:
       return (
         <>
