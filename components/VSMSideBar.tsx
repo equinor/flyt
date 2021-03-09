@@ -19,6 +19,7 @@ export function VSMSideBar(props: {
 }) {
   return (
     <div
+      onWheel={(event) => event.stopPropagation()}
       className={
         props.selectedObject === defaultObject
           ? styles.hideSideBarToRight
