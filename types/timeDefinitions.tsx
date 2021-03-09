@@ -1,5 +1,5 @@
 export const timeDefinitions = [
-  { value: "minute", displayName: "Minute(s)" },
+  { value: "Minute", displayName: "Minute(s)" },
   { value: "Hour", displayName: "Hour(s)" },
   { value: "Day", displayName: "Day(s)" },
   { value: "Week", displayName: "Week(s)" },
