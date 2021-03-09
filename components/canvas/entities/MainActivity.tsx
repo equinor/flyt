@@ -31,6 +31,7 @@ export default function MainActivity({
   const paddingTop = 10;
 
   const defaultStyle = {
+    fill: 0x3d3d3d,
     fontFamily: "Equinor",
     fontWeight: 500,
     fontSize: 12,
