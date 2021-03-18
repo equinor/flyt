@@ -3,6 +3,8 @@ import { Graphics } from "pixi.js";
 import { formatCanvasText } from "./FormatCanvasText";
 import { clickHandler } from "./entities/ClickHandler";
 import { pointerEvents } from "../VSMCanvas";
+import { createSideContainer } from "./entities/CreateSideContainer";
+import { taskObject } from "../../interfaces/taskObject";
 
 interface Rectangle {
   options?: {
@@ -14,6 +16,7 @@ interface Rectangle {
   onHover?: () => void;
   onHoverExit?: () => void;
   hideTitle?: boolean;
+  tasks?: taskObject[];
 }
 
 export function GenericPostit({
@@ -26,13 +29,17 @@ export function GenericPostit({
   onPress,
   onHover,
   onHoverExit,
+  tasks,
 }: Rectangle) {
   const rectangle = new Graphics();
   const width = 126;
   const height = 136;
   rectangle.beginFill(options.color);
-  rectangle.drawRoundedRect(0, 0, width, height, 6);
+  rectangle.drawRect(0, 0, width, height);
   rectangle.endFill();
+
+  const sideContainer = createSideContainer(tasks, 4, rectangle.height);
+  sideContainer.x = rectangle.width;
 
   const paddingLeft = 8;
   const paddingTop = 10;
@@ -69,9 +76,28 @@ export function GenericPostit({
   if (content) {
     container.addChild(contentText);
   }
-  if (onHover) container.on(pointerEvents.pointerover, () => onHover());
-  if (onHoverExit) container.on(pointerEvents.pointerout, () => onHoverExit());
-  if (onPress) clickHandler(container, onPress);
 
-  return container;
+  const mask = new PIXI.Graphics();
+  mask.beginFill(0x000000);
+  mask.drawRoundedRect(0, 0, width + sideContainer.width, height, 6);
+  rectangle.mask = mask;
+  contentText.mask = mask;
+  headerText.mask = mask;
+  sideContainer.mask = mask;
+
+  const maskedContainer = new PIXI.Container();
+  maskedContainer.addChild(
+    mask,
+    rectangle,
+    contentText,
+    headerText,
+    sideContainer
+  );
+
+  if (onHover) maskedContainer.on(pointerEvents.pointerover, () => onHover());
+  if (onHoverExit)
+    maskedContainer.on(pointerEvents.pointerout, () => onHoverExit());
+  if (onPress) clickHandler(maskedContainer, onPress);
+
+  return maskedContainer;
 }

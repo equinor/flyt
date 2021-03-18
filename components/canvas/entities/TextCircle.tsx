@@ -1,9 +1,9 @@
 import * as PIXI from "pixi.js";
 import { Graphics } from "pixi.js";
 
-export function ProblemCircle(text = "P?") {
+export function TextCircle(text = "?", color = 0x000000): PIXI.Container {
   const circle = new Graphics();
-  circle.beginFill(0xff0000);
+  circle.beginFill(color);
   circle.drawCircle(0, 0, 13);
   circle.endFill();
   circle.pivot.set(-circle.width / 2, -circle.height / 2);
@@ -20,8 +20,10 @@ export function ProblemCircle(text = "P?") {
     fontColor: "white",
   });
   circleText.resolution = 4;
-  circleText.x = circle.width / 4;
-  circleText.y = circle.height / 4;
+  // Center text
+  circleText.anchor.set(0.5);
+  circleText.y = circle.height / 2;
+  circleText.x = circle.width / 2;
 
   const circleContainer = new PIXI.Container();
   circleContainer.addChild(circle, circleText);
