@@ -17,7 +17,8 @@ export default function Choice({
   onHover,
   onHoverExit,
 }: ChoiceProps) {
-  const width = 126;
+  const defaultCardWidth = 126;
+  const width = defaultCardWidth;
   const color = 0xffd800;
 
   // Create a rectangle and rotate it 45 degrees
@@ -30,6 +31,10 @@ export default function Choice({
   rectangle.pivot.y = rectangle.height / 2;
 
   rectangle.angle = 45;
+
+  const defaultCardHeight = 136;
+  rectangle.x = defaultCardWidth / 2;
+  rectangle.y = defaultCardHeight / 2;
 
   const contentText = new PIXI.Text(formatCanvasText(content || "Choice", 45), {
     fill: 0x3d3d3d,
@@ -48,11 +53,12 @@ export default function Choice({
   contentText.anchor.set(0.5, 0.5);
   contentText.resolution = 4;
 
+  contentText.x = defaultCardWidth / 2;
+  contentText.y = defaultCardHeight / 2;
+
   const container = new PIXI.Container();
 
   container.addChild(rectangle, contentText);
-  container.x = container.width / 2;
-  container.y = container.height / 2;
 
   if (onHover) container.on(pointerEvents.pointerover, () => onHover());
   if (onHoverExit) container.on(pointerEvents.pointerout, () => onHoverExit());
