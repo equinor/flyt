@@ -86,6 +86,8 @@
   width: 100vw;
   max-width: 400px;
 
+  overflow: scroll;
+
   animation-name: appearFromRight;
   animation-duration: 0.5s;
 }

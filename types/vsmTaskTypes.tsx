@@ -1,3 +1,6 @@
 export enum vsmTaskTypes {
- someTaskType=1
+  problem = 1,
+  question,
+  idea,
+  unknown, // <- Not supported by api. Used in sorting and as a default type.
 }

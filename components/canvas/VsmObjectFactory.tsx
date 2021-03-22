@@ -13,7 +13,7 @@ export function vsmObjectFactory(
   onPress: () => void,
   onHoverEnter: () => void,
   onHoverExit: () => void
-): PIXI.DisplayObject {
+): PIXI.Container {
   const { pkObjectType, name } = o.vsmObjectType;
   switch (pkObjectType) {
     case vsmObjectTypes.text:
@@ -27,6 +27,7 @@ export function vsmObjectFactory(
         onPress: () => onPress(),
         onHover: () => onHoverEnter(),
         onHoverExit: () => onHoverExit(),
+        tasks: o.tasks,
       });
     case vsmObjectTypes.choice:
       return Choice({
@@ -50,6 +51,7 @@ export function vsmObjectFactory(
         onPress: () => onPress(),
         onHover: () => onHoverEnter(),
         onHoverExit: () => onHoverExit(),
+        tasks: o.tasks,
       });
     case vsmObjectTypes.mainActivity:
       return MainActivity({
@@ -63,6 +65,7 @@ export function vsmObjectFactory(
         text: o.name,
         role: o.role || "Role?",
         time: formatDuration(o.time, o.timeDefinition),
+        tasks: o.tasks,
         onPress: () => onPress(),
         onHover: () => onHoverEnter(),
         onHoverExit: () => onHoverExit(),
@@ -72,7 +75,8 @@ export function vsmObjectFactory(
         formatDuration(o.time, o.timeDefinition),
         () => onPress(),
         () => onHoverEnter(),
-        () => onHoverExit()
+        () => onHoverExit(),
+        o.tasks
       );
     default:
       return GenericPostit({

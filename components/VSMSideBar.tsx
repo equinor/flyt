@@ -1,30 +1,32 @@
-import { vsmObject } from "../interfaces/VsmObject";
 import styles from "./VSMCanvas.module.scss";
 import { SideBarContent } from "./SideBarContent";
 import React from "react";
-import { defaultObject } from "./VSMCanvas";
 import { Button, Icon } from "@equinor/eds-core-react";
-import { close, delete_forever } from "@equinor/eds-icons";
-import { canDeleteVSMObject } from "../store/store";
+import { close, delete_forever, delete_to_trash } from "@equinor/eds-icons";
+import { taskObject } from "../interfaces/taskObject";
+import { canDeleteVSMObject } from "../utils/CanDeleteVSMObect";
+import { useStoreState } from "../hooks/storeHooks";
 
-Icon.add({ close, delete_forever });
+Icon.add({ close, delete_forever, delete_to_trash });
 
 export function VSMSideBar(props: {
-  selectedObject: vsmObject;
   onChangeName: (event: { target: { value: never } }) => void;
   onChangeRole: (event: { target: { value: never } }) => void;
   onChangeTime: (event: { target: { value: never } }) => void;
   onChangeTimeDefinition: (timeDefinition: string) => void;
+  onAddTask: (task: taskObject) => void;
   onClose: () => void;
   onDelete: () => void;
 }) {
+  const selectedObject = useStoreState((state) => state.selectedObject);
+
+  const nothingSelected = !selectedObject;
+  if (nothingSelected) return <></>;
   return (
     <div
       onWheel={(event) => event.stopPropagation()}
       className={
-        props.selectedObject === defaultObject
-          ? styles.hideSideBarToRight
-          : styles.vsmSideMenu
+        nothingSelected ? styles.hideSideBarToRight : styles.vsmSideMenu
       }
     >
       <div className={styles.letItBreath}>
@@ -38,7 +40,7 @@ export function VSMSideBar(props: {
             <Icon name="close" title="add" size={16} />
           </Button>
           <Button
-            disabled={!canDeleteVSMObject(props.selectedObject)}
+            disabled={!canDeleteVSMObject(selectedObject)}
             title={"Delete"}
             variant={"ghost_icon"}
             color={"danger"}
@@ -48,14 +50,14 @@ export function VSMSideBar(props: {
           </Button>
         </div>
         <h1 className={styles.sideBarHeader}>
-          {props.selectedObject.vsmObjectType.name}
+          {selectedObject?.vsmObjectType.name}
         </h1>
         <SideBarContent
-          selectedObject={props.selectedObject}
           onChangeName={props.onChangeName}
           onChangeRole={props.onChangeRole}
           onChangeTime={props.onChangeTime}
           onChangeTimeDefinition={props.onChangeTimeDefinition}
+          onAddTask={props.onAddTask}
         />
       </div>
     </div>

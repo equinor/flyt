@@ -9,7 +9,7 @@ import BaseAPIServices from "../services/BaseAPIServices";
 import { useRouter } from "next/router";
 import { vsmProject } from "../interfaces/VsmProject";
 import styles from "./projects/Projects.module.scss";
-import { projectTemplates } from "../src/assets/projectTemplates";
+import { projectTemplatesV1 } from "../assets/projectTemplatesV1";
 
 Icon.add({ account_circle, add });
 
@@ -32,7 +32,7 @@ export default function Projects() {
 
   function createNewVSM() {
     setFetching(true);
-    BaseAPIServices.post("/api/v1.0/project", projectTemplates.defaultProject)
+    BaseAPIServices.post("/api/v1.0/project", projectTemplatesV1.defaultProject)
       .then((value) => router.push(`/projects/${value.data.vsmProjectID}`))
       .catch((reason) => setError(reason))
       .finally(() => setFetching(false));

@@ -1,9 +1,10 @@
 import * as PIXI from "pixi.js";
 import { Graphics } from "pixi.js";
 import { formatCanvasText } from "../FormatCanvasText";
-import { ProblemCircle } from "./ProblemCircle";
 import { clickHandler } from "./ClickHandler";
 import { pointerEvents } from "../../VSMCanvas";
+import { taskObject } from "../../../interfaces/taskObject";
+import { createSideContainer } from "./CreateSideContainer";
 
 interface SubActivityProps {
   text?: string;
@@ -13,6 +14,7 @@ interface SubActivityProps {
   onHover?: () => void;
   onHoverExit?: () => void;
   disableSideContainer?: boolean;
+  tasks?: taskObject[];
 }
 
 export default function SubActivity({
@@ -22,7 +24,8 @@ export default function SubActivity({
   onPress,
   onHover,
   onHoverExit,
-  disableSideContainer = true,
+  tasks,
+  disableSideContainer = false,
 }: SubActivityProps): PIXI.Container {
   const header = "Sub- activity";
   const width = 126;
@@ -40,30 +43,8 @@ export default function SubActivity({
 
   const rectangle = createBaseContainer();
 
-  function createSideContainer() {
-    // todo: SideContainer stuff. I started it off for you with some demo content ;)
-    const rectangleSide = new Graphics();
-    rectangleSide.beginFill(0xededed);
-    rectangleSide.drawRect(0, 0, 71, 136);
-    rectangleSide.endFill();
-
-    const c1 = ProblemCircle("P1");
-    c1.x = rectangleSide.x + 4;
-    c1.y = rectangleSide.y + 4;
-    const c2 = ProblemCircle("P2");
-    c2.x = c1.x;
-    c2.y = c1.y + c1.height + 4;
-    const c3 = ProblemCircle("P3");
-    c3.x = c2.x;
-    c3.y = c2.y + c2.height + 4;
-
-    const sideContainer = new PIXI.Container();
-    sideContainer.x = rectangle.width;
-    sideContainer.addChild(rectangleSide, c1, c2, c3);
-    return sideContainer;
-  }
-
-  const sideContainer = createSideContainer();
+  const sideContainer = createSideContainer(tasks, 4, 136);
+  sideContainer.x = rectangle.width;
 
   const defaultStyle = {
     fill: 0x3d3d3d,

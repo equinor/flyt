@@ -1,6 +1,7 @@
 import { vsmObjectTypes } from "../../types/vsmObjectTypes";
 
-export const projectTemplates = {
+export const projectTemplatesV1 = {
+  experimental: {},
   kitchenSink: {
     name: "Welcome to the KitchenSink",
     objects: [
@@ -88,6 +89,41 @@ export const projectTemplates = {
           { fkObjectType: vsmObjectTypes.supplier },
           { fkObjectType: vsmObjectTypes.input },
           { fkObjectType: vsmObjectTypes.mainActivity },
+          { fkObjectType: vsmObjectTypes.output },
+          { fkObjectType: vsmObjectTypes.customer },
+        ],
+      },
+    ],
+  },
+  joshProject: {
+    objects: [
+      {
+        parent: 0,
+        fkObjectType: vsmObjectTypes.process,
+        childObjects: [
+          { fkObjectType: vsmObjectTypes.supplier },
+          { fkObjectType: vsmObjectTypes.input },
+          {
+            fkObjectType: vsmObjectTypes.mainActivity,
+            childObjects: [
+              {
+                fkObjectType: vsmObjectTypes.subActivity,
+                childObjects: [
+                  {
+                    fkObjectType: vsmObjectTypes.choice,
+                    childObjects: [
+                      {
+                        fkObjectType: vsmObjectTypes.waiting,
+                      },
+                      {
+                        fkObjectType: vsmObjectTypes.subActivity,
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
           { fkObjectType: vsmObjectTypes.output },
           { fkObjectType: vsmObjectTypes.customer },
         ],
