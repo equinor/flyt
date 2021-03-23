@@ -1,4 +1,4 @@
-import { vsmObjectTypes } from "../../types/vsmObjectTypes";
+import { vsmObjectTypes } from "../types/vsmObjectTypes";
 
 export const projectTemplatesV1 = {
   experimental: {},
