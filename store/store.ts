@@ -44,6 +44,10 @@ export interface ProjectModel {
   updateVSMObject: Thunk<ProjectModel, vsmObject>;
   addTask: Thunk<ProjectModel, taskObject>;
   updateTask: Thunk<ProjectModel, taskObject>;
+  linkTask: Thunk<
+    ProjectModel,
+    { projectId: number; vsmObjectId: number; taskId: number; task: taskObject }
+  >;
   unlinkTask: Thunk<
     ProjectModel,
     { projectId: number; vsmObjectId: number; taskId: number }
@@ -245,6 +249,27 @@ const projectModel: ProjectModel = {
         actions.setSnackMessage("✅ Unlinked task!");
         // actions.removeTaskFromSelectedObject(response.data);
         actions.removeTaskFromSelectedObject(taskId);
+        //Todo: locally update before api-update?
+        actions.fetchProject({ id: projectId });
+      })
+      .catch((reason) => {
+        actions.setSnackMessage(reason);
+        return actions.setErrorProject(reason);
+      });
+  }),
+  linkTask: thunk(async (actions, payload) => {
+    //Tasks aka. QIP ( Questions Ideas & Problems )
+    actions.setErrorProject(null);
+
+    const { projectId, vsmObjectId, taskId, task } = payload;
+    //Not really deleting, but rather unlinking the task.
+    BaseAPIServices.put(`/api/v1.0/task/link/${vsmObjectId}/${taskId}`, payload)
+      .then(() => {
+        actions.setSnackMessage("✅ Linked task!");
+        // actions.removeTaskFromSelectedObject(response.data);
+        //Todo: a
+        actions.addTaskToSelectedObject(task);
+
         //Todo: locally update before api-update?
         actions.fetchProject({ id: projectId });
       })

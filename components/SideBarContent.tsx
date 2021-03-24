@@ -1,8 +1,14 @@
 import { vsmObject } from "../interfaces/VsmObject";
 import { vsmObjectTypes } from "../types/vsmObjectTypes";
-import { Button, Icon, SingleSelect, TextField } from "@equinor/eds-core-react";
+import {
+  Button,
+  Checkbox,
+  Icon,
+  SingleSelect,
+  TextField,
+} from "@equinor/eds-core-react";
 import styles from "./VSMCanvas.module.scss";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   getTimeDefinitionDisplayName,
   getTimeDefinitionValue,
@@ -16,13 +22,22 @@ import {
   add_circle_filled,
   close,
   delete_forever,
+  arrow_back,
   delete_to_trash,
 } from "@equinor/eds-icons";
 import { CircleButton } from "./CircleButton";
 import { useStoreDispatch, useStoreState } from "../hooks/storeHooks";
 import { debounce } from "../utils/debounce";
+import BaseAPIServices from "../services/BaseAPIServices";
 
-Icon.add({ close, delete_forever, delete_to_trash, add, add_circle_filled });
+Icon.add({
+  close,
+  delete_forever,
+  delete_to_trash,
+  add,
+  add_circle_filled,
+  arrow_back,
+});
 
 function DurationComponent(props: {
   selectedObject: vsmObject;
@@ -87,18 +102,53 @@ export function SideBarContent(props: {
   const [newTask, setNewTask] = useState(null);
   const dispatch = useStoreDispatch();
 
+  const [showExistingTaskSection, setShowExistingTaskSection] = useState(false);
+  const [existingTaskFilter, setExistingTaskFilter] = useState(null);
+
+  const [fetchingTasks, setFetchingTasks] = useState(false);
+  const [fetchingTasksError, setFetchingTasksError] = useState(false);
+
+  const [existingTasks, setExistingTasks] = useState([]);
+
+  useEffect(() => {
+    if (existingTaskFilter) {
+      setFetchingTasks(true);
+      setFetchingTasksError(null);
+      setExistingTasks([]);
+      BaseAPIServices.get(
+        `/api/v1.0/task/list/${selectedObject.vsmProjectID}/${existingTaskFilter}`
+      )
+        .then((value) => setExistingTasks(value.data))
+        .catch((reason) => {
+          setFetchingTasksError(reason);
+        })
+        .finally(() => setFetchingTasks(false));
+    }
+  }, [existingTaskFilter]);
+
   function newTaskIsReady(task: taskObject) {
     return task?.description?.trim().length > 0;
   }
 
-  function clearAndCloseNewTaskSection() {
+  function clearAndCloseAddTaskSection() {
     setShowNewTaskSection(false);
     setNewTask(null);
+    setShowExistingTaskSection(false);
   }
 
   if (showNewTaskSection) {
     return (
       <div className={styles.newTaskSection}>
+        <Button
+          title={"Go back"}
+          variant={"ghost_icon"}
+          color={"primary"}
+          onClick={() => {
+            clearAndCloseAddTaskSection();
+          }}
+        >
+          <Icon name="arrow_back" title="add" size={16} />
+        </Button>
         <div className={styles.sideBarSectionHeader}>
           <p>Add QIP</p>
         </div>
@@ -108,9 +158,9 @@ export function SideBarContent(props: {
             "Problem",
             "Idea",
             "Question",
-            // "Existing Problem", // Todo: "Existing Problem"
-            // "Existing Idea", //Todo: "Existing Idea"
-            // "Existing Question", //Todo: "Existing Question"
+            "Existing Problem",
+            "Existing Idea",
+            "Existing Question",
           ]}
           handleSelectedItemChange={(e) => {
             const t = {
@@ -119,56 +169,145 @@ export function SideBarContent(props: {
               description: newTask?.description ?? "", // Let's not overwrite description if we change the type midways
             } as taskObject;
 
-            if (e.selectedItem === "Problem") {
-              t.fkTaskType = vsmTaskTypes.problem;
-            } else if (e.selectedItem === "Idea") {
-              t.fkTaskType = vsmTaskTypes.idea;
-            } else if (e.selectedItem === "Question") {
-              t.fkTaskType = vsmTaskTypes.question;
+            switch (e.selectedItem) {
+              case "Problem":
+                t.fkTaskType = vsmTaskTypes.problem;
+                setNewTask(t);
+                setShowExistingTaskSection(false);
+                break;
+              case "Idea":
+                t.fkTaskType = vsmTaskTypes.idea;
+                setNewTask(t);
+                setShowExistingTaskSection(false);
+                break;
+              case "Question":
+                t.fkTaskType = vsmTaskTypes.question;
+                setNewTask(t);
+                setShowExistingTaskSection(false);
+                break;
+              case "Existing Problem":
+                setShowExistingTaskSection(true);
+                setExistingTaskFilter(vsmTaskTypes.problem);
+                break;
+              case "Existing Idea":
+                setShowExistingTaskSection(true);
+                setExistingTaskFilter(vsmTaskTypes.idea);
+                break;
+              case "Existing Question":
+                setShowExistingTaskSection(true);
+                setExistingTaskFilter(vsmTaskTypes.question);
+                break;
             }
-            setNewTask(t);
           }}
           label="Select type"
         />
-        {newTask && (
-          <div style={{ paddingTop: 8 }}>
-            <TextField
-              label={"Description"}
-              variant={"default"}
-              value={newTask.description}
-              id={`newTask`}
-              onChange={(event) =>
-                setNewTask({ ...newTask, description: event.target.value })
-              }
-              multiline
-              rows={5}
-            />
+        {showExistingTaskSection && (
+          <div>
+            {fetchingTasksError && (
+              <p>ERROR: {JSON.stringify(fetchingTasksError)}</p>
+            )}
+            {fetchingTasks && (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  padding: 12,
+                }}
+              >
+                <p>Loading...</p>
+              </div>
+            )}
+            {!fetchingTasks && existingTasks.length < 1 && (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <p>{`Couldn't find any for this vsm.`}</p>
+                <p>Try adding one.</p>
+              </div>
+            )}
+            <div>
+              <ul style={{ margin: "0", padding: "0", listStyleType: "none" }}>
+                {existingTasks.map((t: taskObject) => (
+                  <li key={t.vsmTaskID}>
+                    <Checkbox
+                      defaultChecked={tasks.some(
+                        (task) => task?.vsmTaskID === t?.vsmTaskID
+                      )}
+                      label={`${t.vsmTaskID} - ${t.description?.substr(
+                        0,
+                        140
+                      )}`}
+                      onChange={(event) => {
+                        if (event.target.checked) {
+                          console.log("link it!");
+                          dispatch.linkTask({
+                            taskId: t.vsmTaskID,
+                            projectId: selectedObject.vsmProjectID,
+                            vsmObjectId: selectedObject.vsmObjectID,
+                            task: t,
+                          });
+                        } else {
+                          dispatch.unlinkTask({
+                            taskId: t.vsmTaskID,
+                            projectId: selectedObject.vsmProjectID,
+                            vsmObjectId: selectedObject.vsmObjectID,
+                          });
+                          console.log("unlink it");
+                        }
+                      }}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         )}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            paddingTop: 12,
-          }}
-        >
-          <Button
-            style={{ marginRight: 8 }}
-            variant={"outlined"}
-            onClick={() => clearAndCloseNewTaskSection()}
-          >
-            Cancel
-          </Button>
-          <Button
-            disabled={!newTaskIsReady(newTask)}
-            onClick={() => {
-              dispatch.addTask(newTask);
-              clearAndCloseNewTaskSection();
-            }}
-          >
-            Add
-          </Button>
-        </div>
+        {!showExistingTaskSection && newTask && (
+          <>
+            <div style={{ paddingTop: 8 }}>
+              <TextField
+                label={"Description"}
+                variant={"default"}
+                value={newTask.description}
+                id={`newTask`}
+                onChange={(event) =>
+                  setNewTask({ ...newTask, description: event.target.value })
+                }
+                multiline
+                rows={5}
+              />
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                paddingTop: 12,
+              }}
+            >
+              <Button
+                style={{ marginRight: 8 }}
+                variant={"outlined"}
+                onClick={() => clearAndCloseAddTaskSection()}
+              >
+                Cancel
+              </Button>
+              <Button
+                disabled={!newTaskIsReady(newTask)}
+                onClick={() => {
+                  dispatch.addTask(newTask);
+                  clearAndCloseAddTaskSection();
+                }}
+              >
+                Add
+              </Button>
+            </div>
+          </>
+        )}
       </div>
     );
   }
