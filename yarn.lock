@@ -53,17 +53,17 @@
   dependencies:
     cross-fetch "3.0.6"
 
-"@azure/msal-browser@^2.10.0":
-  version "2.11.1"
-  resolved "https://registry.yarnpkg.com/@azure/msal-browser/-/msal-browser-2.11.1.tgz#8f1ffbfaf983d4671af82f8ecd969168933ee23c"
-  integrity sha512-47lg70btdOw5BaA3HtWZVJpvorxFjDVq8Ngt2421x4xnPH8SnHoGZl17iMeSjMlzGwGF0YdQ+/lnUUwR54+z7A==
+"@azure/msal-browser@^2.12.0":
+  version "2.13.0"
+  resolved "https://registry.yarnpkg.com/@azure/msal-browser/-/msal-browser-2.13.0.tgz#04f31167703810019e26943dc6725ef4ec3770b6"
+  integrity sha512-67UOgZoFAUSIWWAUGvH1OS4eDjbP631CcIKNhDdz7gOfNDPgh7zYPO7IqxIoR7eTEz1v2TvqzZg8FPKTaxO3pQ==
   dependencies:
-    "@azure/msal-common" "^4.0.0"
+    "@azure/msal-common" "^4.1.0"
 
-"@azure/msal-common@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@azure/msal-common/-/msal-common-4.0.0.tgz#05e2f5d18f8b2e3cbc907163d50023631b191d5c"
-  integrity sha512-aGIUZgaIyb48m9353oepMsoy8tAan4BM6MvQ9FFybRJdMtTlHkXo7BfGcygVSFJlB2AGnW7HhCKAwCKNEpjzeQ==
+"@azure/msal-common@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@azure/msal-common/-/msal-common-4.1.0.tgz#a8e7f6697b1dd8651e7aea0a290f2b23a0e2df81"
+  integrity sha512-8uzXEQJaESmhBVrxwkjwJREibVvGm/uiS3c6ZC7ttbFtrAJEtssJaPO/GL1I2gMJwogefukMdT7SVjPehSvuhA==
   dependencies:
     debug "^4.1.1"
 
