@@ -119,7 +119,6 @@
   width: 100vw;
   max-width: 400px;
 
-  animation-duration: 0.5s;
   /// The animation
   animation-name: hideToRight;
   animation-duration: 0.5s;
@@ -181,6 +180,7 @@
   /* Heading/H6 */
   border-bottom: solid 1px #dcdcdc;
   margin-bottom: 12px;
+  flex: 1;
 }
 
 .sideBarSectionHeader > p:nth-child(1) {
@@ -193,4 +193,14 @@
   /* identical to box height, or 150% */
 
   letter-spacing: 0.2px;
+}
+
+.headerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.QIPContainer {
+  padding-bottom: 100px;
 }

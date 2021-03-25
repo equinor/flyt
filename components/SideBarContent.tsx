@@ -1,12 +1,6 @@
 import { vsmObject } from "../interfaces/VsmObject";
 import { vsmObjectTypes } from "../types/vsmObjectTypes";
-import {
-  Button,
-  Checkbox,
-  Icon,
-  SingleSelect,
-  TextField,
-} from "@equinor/eds-core-react";
+import { Button, Icon, SingleSelect, TextField } from "@equinor/eds-core-react";
 import styles from "./VSMCanvas.module.scss";
 import React, { useEffect, useState } from "react";
 import {
@@ -20,15 +14,17 @@ import { TaskButton } from "./TaskButton";
 import {
   add,
   add_circle_filled,
+  arrow_back,
   close,
   delete_forever,
-  arrow_back,
   delete_to_trash,
 } from "@equinor/eds-icons";
 import { CircleButton } from "./CircleButton";
 import { useStoreDispatch, useStoreState } from "../hooks/storeHooks";
 import { debounce } from "../utils/debounce";
 import BaseAPIServices from "../services/BaseAPIServices";
+import { SideBarHeader } from "./SideBarHeader";
+import { ExistingTaskSection } from "./ExistingTaskSection";
 
 Icon.add({
   close,
@@ -77,7 +73,9 @@ export const taskSorter = () => (a: taskObject, b: taskObject): number => {
 };
 
 const NewTaskButton = (props: { onClick: () => void }) => (
-  <CircleButton symbol={`+`} onClick={() => props.onClick()} />
+  <div>
+    <CircleButton symbol={`+`} onClick={() => props.onClick()} />
+  </div>
 );
 
 /**
@@ -91,6 +89,8 @@ export function SideBarContent(props: {
   onChangeTime: (event: { target: { value: string } }) => void;
   onChangeTimeDefinition: (timeDefinition: string) => void;
   onAddTask: (task: taskObject) => void;
+  onClose: () => void;
+  onDelete: () => void;
 }) {
   const selectedObject = useStoreState((state) => state.selectedObject);
   const { tasks } = selectedObject;
@@ -104,27 +104,6 @@ export function SideBarContent(props: {
 
   const [showExistingTaskSection, setShowExistingTaskSection] = useState(false);
   const [existingTaskFilter, setExistingTaskFilter] = useState(null);
-
-  const [fetchingTasks, setFetchingTasks] = useState(false);
-  const [fetchingTasksError, setFetchingTasksError] = useState(false);
-
-  const [existingTasks, setExistingTasks] = useState([]);
-
-  useEffect(() => {
-    if (existingTaskFilter) {
-      setFetchingTasks(true);
-      setFetchingTasksError(null);
-      setExistingTasks([]);
-      BaseAPIServices.get(
-        `/api/v1.0/task/list/${selectedObject.vsmProjectID}/${existingTaskFilter}`
-      )
-        .then((value) => setExistingTasks(value.data))
-        .catch((reason) => {
-          setFetchingTasksError(reason);
-        })
-        .finally(() => setFetchingTasks(false));
-    }
-  }, [existingTaskFilter]);
 
   function newTaskIsReady(task: taskObject) {
     return task?.description?.trim().length > 0;
@@ -150,7 +129,7 @@ export function SideBarContent(props: {
           <Icon name="arrow_back" title="add" size={16} />
         </Button>
         <div className={styles.sideBarSectionHeader}>
-          <p>Add QIP</p>
+          <p>Add Questions, Ideas and Problems</p>
         </div>
         <SingleSelect
           autoFocus
@@ -201,72 +180,11 @@ export function SideBarContent(props: {
           }}
           label="Select type"
         />
-        {showExistingTaskSection && (
-          <div>
-            {fetchingTasksError && (
-              <p>ERROR: {JSON.stringify(fetchingTasksError)}</p>
-            )}
-            {fetchingTasks && (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  padding: 12,
-                }}
-              >
-                <p>Loading...</p>
-              </div>
-            )}
-            {!fetchingTasks && existingTasks.length < 1 && (
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <p>{`Couldn't find any for this vsm.`}</p>
-                <p>Try adding one.</p>
-              </div>
-            )}
-            <div>
-              <ul style={{ margin: "0", padding: "0", listStyleType: "none" }}>
-                {existingTasks.map((t: taskObject) => (
-                  <li key={t.vsmTaskID}>
-                    <Checkbox
-                      defaultChecked={tasks.some(
-                        (task) => task?.vsmTaskID === t?.vsmTaskID
-                      )}
-                      label={`${t.vsmTaskID} - ${t.description?.substr(
-                        0,
-                        140
-                      )}`}
-                      onChange={(event) => {
-                        if (event.target.checked) {
-                          console.log("link it!");
-                          dispatch.linkTask({
-                            taskId: t.vsmTaskID,
-                            projectId: selectedObject.vsmProjectID,
-                            vsmObjectId: selectedObject.vsmObjectID,
-                            task: t,
-                          });
-                        } else {
-                          dispatch.unlinkTask({
-                            taskId: t.vsmTaskID,
-                            projectId: selectedObject.vsmProjectID,
-                            vsmObjectId: selectedObject.vsmObjectID,
-                          });
-                          console.log("unlink it");
-                        }
-                      }}
-                    />
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        )}
+        <ExistingTaskSection
+          visible={showExistingTaskSection}
+          selectedObject={selectedObject}
+          existingTaskFilter={existingTaskFilter}
+        />
         {!showExistingTaskSection && newTask && (
           <>
             <div style={{ paddingTop: 8 }}>
@@ -315,9 +233,11 @@ export function SideBarContent(props: {
   const quips = () => {
     // /*############## QUIP-SECTION ###################################*/
     return (
-      <div>
-        <div className={styles.sideBarSectionHeader}>
-          <p>QIP</p>
+      <div className={styles.QIPContainer}>
+        <div className={styles.headerContainer}>
+          <div className={styles.sideBarSectionHeader}>
+            <p>Questions, Ideas and Problems</p>
+          </div>
         </div>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div style={{ display: "flex", flexWrap: "wrap" }}>
@@ -336,50 +256,11 @@ export function SideBarContent(props: {
                 </div>
               );
             })}
-            <NewTaskButton onClick={() => setShowNewTaskSection(true)} />
           </div>
-          <div>
-            {/*Must have the button inside a div for flex size to work correctly... */}
-            <Button
-              title={`Delete selected QIP`}
-              disabled={!selectedTask}
-              variant={"ghost_icon"}
-              color={"danger"}
-              onClick={() => {
-                dispatch.unlinkTask({
-                  projectId: selectedObject.vsmProjectID,
-                  vsmObjectId: selectedObject.vsmObjectID,
-                  taskId: selectedTask.vsmTaskID,
-                });
-                setSelectedTask(null);
-              }}
-            >
-              <Icon name="delete_to_trash" size={16} />
-            </Button>
-          </div>
+          <NewTaskButton onClick={() => setShowNewTaskSection(true)} />
         </div>
-        {!!selectedTask && selectedTask.fkTaskType === vsmTaskTypes.unknown && (
-          <>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                paddingTop: 12,
-              }}
-            >
-              <Button
-                style={{ marginRight: 8 }}
-                variant={"outlined"}
-                onClick={() => setNewTask(null)}
-              >
-                Cancel
-              </Button>
-              <Button onClick={() => props.onAddTask(selectedTask)}>Add</Button>
-            </div>
-          </>
-        )}
         {!!selectedTask && (
-          <div>
+          <div className={styles.headerContainer}>
             <TextField
               label={"Task description"}
               variant={"default"}
@@ -402,6 +283,25 @@ export function SideBarContent(props: {
               multiline
               rows={5}
             />
+            <div>
+              {/*Must have the button inside a div for flex size to work correctly...*/}
+              <Button
+                title={`Delete selected QIP`}
+                disabled={!selectedTask}
+                variant={"ghost_icon"}
+                color={"danger"}
+                onClick={() => {
+                  dispatch.unlinkTask({
+                    projectId: selectedObject.vsmProjectID,
+                    vsmObjectId: selectedObject.vsmObjectID,
+                    taskId: selectedTask.vsmTaskID,
+                  });
+                  setSelectedTask(null);
+                }}
+              >
+                <Icon name="delete_to_trash" size={16} />
+              </Button>
+            </div>
           </div>
         )}
       </div>
@@ -412,6 +312,11 @@ export function SideBarContent(props: {
     case vsmObjectTypes.process:
       return (
         <>
+          <SideBarHeader
+            object={selectedObject}
+            onClose={props.onClose}
+            onDelete={props.onDelete}
+          />
           <div style={{ paddingTop: 8 }}>
             <TextField
               label={"Add title"}
@@ -428,6 +333,11 @@ export function SideBarContent(props: {
     case vsmObjectTypes.supplier:
       return (
         <>
+          <SideBarHeader
+            object={selectedObject}
+            onClose={props.onClose}
+            onDelete={props.onDelete}
+          />
           <div style={{ paddingTop: 8 }}>
             <TextField
               label={"Add supplier(s)"}
@@ -446,6 +356,11 @@ export function SideBarContent(props: {
     case vsmObjectTypes.input:
       return (
         <>
+          <SideBarHeader
+            object={selectedObject}
+            onClose={props.onClose}
+            onDelete={props.onDelete}
+          />
           <div style={{ paddingTop: 8 }}>
             <TextField
               label={"Add input(s)"}
@@ -464,6 +379,11 @@ export function SideBarContent(props: {
     case vsmObjectTypes.output:
       return (
         <>
+          <SideBarHeader
+            object={selectedObject}
+            onClose={props.onClose}
+            onDelete={props.onDelete}
+          />
           <div style={{ paddingTop: 8 }}>
             <TextField
               label={"Add output(s)"}
@@ -481,6 +401,11 @@ export function SideBarContent(props: {
     case vsmObjectTypes.customer:
       return (
         <>
+          <SideBarHeader
+            object={selectedObject}
+            onClose={props.onClose}
+            onDelete={props.onDelete}
+          />
           <div style={{ paddingTop: 8 }}>
             <TextField
               label={"Add customer(s)"}
@@ -498,6 +423,11 @@ export function SideBarContent(props: {
     case vsmObjectTypes.mainActivity:
       return (
         <>
+          <SideBarHeader
+            object={selectedObject}
+            onClose={props.onClose}
+            onDelete={props.onDelete}
+          />
           <div style={{ paddingTop: 8 }}>
             <TextField
               label={"Add description"}
@@ -514,6 +444,11 @@ export function SideBarContent(props: {
     case vsmObjectTypes.subActivity:
       return (
         <>
+          <SideBarHeader
+            object={selectedObject}
+            onClose={props.onClose}
+            onDelete={props.onDelete}
+          />
           <div style={{ paddingTop: 8 }}>
             <TextField
               label={"Add description"}
@@ -549,6 +484,11 @@ export function SideBarContent(props: {
     case vsmObjectTypes.choice:
       return (
         <>
+          <SideBarHeader
+            object={selectedObject}
+            onClose={props.onClose}
+            onDelete={props.onDelete}
+          />
           <div style={{ paddingTop: 8 }}>
             <TextField
               label={"Define choice"}
