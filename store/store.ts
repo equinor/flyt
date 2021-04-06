@@ -48,10 +48,7 @@ export interface ProjectModel {
     ProjectModel,
     { projectId: number; vsmObjectId: number; taskId: number; task: taskObject }
   >;
-  unlinkTask: Thunk<
-    ProjectModel,
-    { projectId: number; vsmObjectId: number; taskId: number }
-  >;
+  unlinkTask: Thunk<ProjectModel, { task: taskObject; object: vsmObject }>;
 }
 
 const projectModel: ProjectModel = {
@@ -239,7 +236,11 @@ const projectModel: ProjectModel = {
     //Tasks aka. QIP ( Questions Ideas & Problems )
     actions.setErrorProject(null);
 
-    const { projectId, vsmObjectId, taskId } = payload;
+    const { object, task } = payload;
+    const { vsmProjectID: projectId, vsmObjectID: vsmObjectId } = object;
+    const { vsmTaskID: taskId } = task;
+
+    // const { projectId, vsmObjectId, taskId } = payload;
     //Not really deleting, but rather unlinking the task.
     BaseAPIServices.delete(
       `/api/v1.0/task/unlink/${vsmObjectId}/${taskId}`,

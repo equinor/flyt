@@ -9,7 +9,7 @@ export function ExistingTaskSection(props: {
   visible: boolean;
   existingTaskFilter;
   selectedObject;
-}) {
+}): JSX.Element {
   if (!props.visible) return <></>;
   const { existingTaskFilter, selectedObject } = props;
   const { tasks } = selectedObject;
@@ -44,11 +44,7 @@ export function ExistingTaskSection(props: {
   }
 
   function unLinkTask(t: taskObject) {
-    dispatch.unlinkTask({
-      taskId: t.vsmTaskID,
-      projectId: selectedObject.vsmProjectID,
-      vsmObjectId: selectedObject.vsmObjectID,
-    });
+    dispatch.unlinkTask({ object: selectedObject, task: t });
   }
 
   return (

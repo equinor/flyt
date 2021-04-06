@@ -1,4 +1,3 @@
-import { taskObject } from "../interfaces/taskObject";
 import styles from "./VSMCanvas.module.scss";
 import { Button, Icon } from "@equinor/eds-core-react";
 import { canDeleteVSMObject } from "../utils/CanDeleteVSMObect";
@@ -9,7 +8,7 @@ export function SideBarHeader(props: {
   object: vsmObject;
   onClose: () => void;
   onDelete: () => void;
-}) {
+}): JSX.Element {
   return (
     <div className={styles.headerContainer}>
       <h1 className={styles.sideBarHeader}>

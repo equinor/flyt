@@ -17,7 +17,7 @@ export function VSMSideBar(props: {
   onAddTask: (task: taskObject) => void;
   onClose: () => void;
   onDelete: () => void;
-}) {
+}): JSX.Element {
   const selectedObject = useStoreState((state) => state.selectedObject);
 
   const nothingSelected = !selectedObject;
@@ -30,8 +30,6 @@ export function VSMSideBar(props: {
       }
     >
       <div className={styles.letItBreath}>
-        {/*{SideBarHeader(selectedObject, props)}*/}
-
         <SideBarContent
           onChangeName={props.onChangeName}
           onChangeRole={props.onChangeRole}

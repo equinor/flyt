@@ -30,31 +30,30 @@
 
 .idea {
   @extend .circle;
-  color: #ff6670;
-  border: solid 1px #ff6670;
+  color: #00977b;
+  border: solid 1px #00977b;
 }
 
 .idea.selected {
   @extend .idea;
   color: white;
-  background-color: #ff6670;
+  background-color: #00977b;
 }
 
 .question {
   @extend .circle;
-  color: #007079;
-  border: solid 1px #007079;
+  color: #ad6200;
+  border: solid 1px #ad6200;
 }
 
 .question.selected {
   @extend .question;
   color: white;
-  background-color: #007079;
+  background-color: #ad6200;
 }
 
 .unknown {
   @extend .circle;
-  //color:#007079;
   border: dashed 1px;
 }
 
