@@ -1,0 +1,26 @@
+.circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 20px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: center;
+
+  overflow: hidden;
+  border: solid 1px #007079;
+  cursor: pointer;
+}
+
+.addButton {
+  @extend .circle;
+  color: white;
+  background-color: #007079;
+  font-size: 40px;
+  font-weight: lighter;
+  line-height: 42px;
+}
+
+.addButton:hover {
+  opacity: 0.2;
+}

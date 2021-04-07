@@ -1,9 +1,12 @@
-import { Action, action, createStore, persist, Thunk, thunk } from "easy-peasy";
+import { Action, action, createStore, Thunk, thunk } from "easy-peasy";
 import BaseAPIServices from "../services/BaseAPIServices";
 import { vsmProject } from "../interfaces/VsmProject";
 import { vsmObject } from "../interfaces/VsmObject";
 import { debounce } from "../utils/debounce";
 import { vsmObjectTypes } from "../types/vsmObjectTypes";
+import { taskObject } from "../interfaces/taskObject";
+import { canDeleteVSMObject } from "../utils/CanDeleteVSMObect";
+import { original } from "immer";
 
 // General pattern Thunk -> Actions -> Set state
 
@@ -13,13 +16,18 @@ export interface ProjectModel {
   fetchingProject: boolean;
   project: vsmProject;
   snackMessage: string | null;
+  selectedObject: vsmObject | null;
   //// ACTIONS ///////////////////
   //someAction: Action<model, payload>;
+  addTaskToSelectedObject: Action<ProjectModel, taskObject>;
+  updateTaskDescriptionInSelectedObject: Action<ProjectModel, taskObject>;
+  removeTaskFromSelectedObject: Action<ProjectModel, number>;
+  setSelectedObject: Action<ProjectModel, vsmObject | null>;
   patchLocalObject: Action<ProjectModel, vsmObject>;
   setErrorProject: Action<ProjectModel, Record<string, unknown>>;
   setFetchingProject: Action<ProjectModel, boolean>;
   setProject: Action<ProjectModel, vsmProject>;
-  setProjectName: Action<ProjectModel, { name: string }>;
+  setProjectName: Action<ProjectModel, { name?: string }>;
   setSnackMessage: Action<ProjectModel, string>;
   //// THUNKS ///////////////////
   //someThunk: Thunk<Model,Payload,Injections,StoreModel,Result>;
@@ -34,35 +42,14 @@ export interface ProjectModel {
     { vsmProjectID: number; name: string; rootObjectId: number }
   >;
   updateVSMObject: Thunk<ProjectModel, vsmObject>;
+  addTask: Thunk<ProjectModel, taskObject>;
+  updateTask: Thunk<ProjectModel, taskObject>;
+  linkTask: Thunk<
+    ProjectModel,
+    { projectId: number; vsmObjectId: number; taskId: number; task: taskObject }
+  >;
+  unlinkTask: Thunk<ProjectModel, { task: taskObject; object: vsmObject }>;
 }
-
-//Todo: Move to a fitting folder
-export const canDeleteVSMObject = (vsmObject: vsmObject): boolean => {
-  switch (vsmObject.vsmObjectType.pkObjectType) {
-    case vsmObjectTypes.process:
-      return false;
-    case vsmObjectTypes.supplier:
-      return false;
-    case vsmObjectTypes.input:
-      return false;
-    case vsmObjectTypes.mainActivity:
-      return true;
-    case vsmObjectTypes.subActivity:
-      return true;
-    case vsmObjectTypes.text:
-      return false;
-    case vsmObjectTypes.waiting:
-      return true;
-    case vsmObjectTypes.output:
-      return false;
-    case vsmObjectTypes.customer:
-      return false;
-    case vsmObjectTypes.choice:
-      return true;
-    default:
-      return false;
-  }
-};
 
 const projectModel: ProjectModel = {
   //State
@@ -70,8 +57,35 @@ const projectModel: ProjectModel = {
   errorProject: null,
   project: null,
   snackMessage: null,
+  selectedObject: null, //Todo: Use this instead local state selectedObject in components/VSMCanvas.tsx
+
+  // selectedObject: computed((state) => {
+  //   const { project, selectedObjectId } = state;
+  //
+  // }),
 
   //Actions
+  addTaskToSelectedObject: action((state, payload) => {
+    const { selectedObject } = state;
+    if (selectedObject) {
+      selectedObject.tasks = [...selectedObject.tasks, payload];
+    }
+  }),
+  updateTaskDescriptionInSelectedObject: action((state, newTask) => {
+    const { selectedObject } = state;
+    if (selectedObject && selectedObject.tasks) {
+      const oldTask = selectedObject.tasks.find(
+        (t) => t.vsmTaskID === newTask.vsmTaskID
+      );
+      if (oldTask) oldTask.description = newTask.description;
+    }
+  }),
+  removeTaskFromSelectedObject: action((state, taskId) => {
+    const { selectedObject } = state;
+    selectedObject.tasks = original(selectedObject.tasks).filter(
+      (t) => t?.vsmTaskID !== taskId
+    );
+  }),
   setFetchingProject: action((state, payload) => {
     state.fetchingProject = payload;
   }),
@@ -83,6 +97,9 @@ const projectModel: ProjectModel = {
   }),
   setProject: action((state, payload: vsmProject) => {
     state.project = payload;
+  }),
+  setSelectedObject: action((state, payload) => {
+    state.selectedObject = payload;
   }),
   fetchProject: thunk(async (actions, payload) => {
     const { id } = payload;
@@ -134,7 +151,7 @@ const projectModel: ProjectModel = {
           vsmProjectID,
           name,
         })
-          .then(() => actions.setSnackMessage("Saved title"))
+          .then(() => actions.setSnackMessage("✅ Saved title"))
           .catch((reason) => actions.setErrorProject(reason));
       },
       1000,
@@ -170,6 +187,7 @@ const projectModel: ProjectModel = {
           // Todo: delete the object locally
           //  Until then, just refresh the whole project
           actions.fetchProject({ id: vsmProjectID });
+          actions.setSelectedObject(null);
           return actions.setSnackMessage("Deleted object");
         })
         .catch((reason) => {
@@ -179,6 +197,87 @@ const projectModel: ProjectModel = {
     } else {
       actions.setSnackMessage("Cannot delete that card");
     }
+  }),
+  addTask: thunk(async (actions, payload) => {
+    //Tasks aka. QIP ( Questions Ideas & Problems )
+    actions.setErrorProject(null);
+    BaseAPIServices.post(`/api/v1.0/task`, payload)
+      .then((response) => {
+        actions.setSnackMessage("✅ Task added!");
+
+        actions.addTaskToSelectedObject(response.data);
+
+        //Todo: locally update before api-update?
+        actions.fetchProject({ id: response.data.fkProject });
+      })
+      .catch((reason) => {
+        actions.setSnackMessage(reason);
+        return actions.setErrorProject(reason);
+      });
+  }),
+  updateTask: thunk(async (actions, payload) => {
+    //Tasks aka. QIP ( Questions Ideas & Problems )
+    actions.setErrorProject(null);
+    BaseAPIServices.post(`/api/v1.0/task`, payload)
+      .then((response) => {
+        actions.setSnackMessage("✅ Task updated!");
+
+        actions.updateTaskDescriptionInSelectedObject(response.data);
+
+        //Todo: locally update before api-update?
+        actions.fetchProject({ id: response.data.fkProject });
+      })
+      .catch((reason) => {
+        actions.setSnackMessage(reason);
+        return actions.setErrorProject(reason);
+      });
+  }),
+  unlinkTask: thunk(async (actions, payload) => {
+    //Tasks aka. QIP ( Questions Ideas & Problems )
+    actions.setErrorProject(null);
+
+    const { object, task } = payload;
+    const { vsmProjectID: projectId, vsmObjectID: vsmObjectId } = object;
+    const { vsmTaskID: taskId } = task;
+
+    // const { projectId, vsmObjectId, taskId } = payload;
+    //Not really deleting, but rather unlinking the task.
+    BaseAPIServices.delete(
+      `/api/v1.0/task/unlink/${vsmObjectId}/${taskId}`,
+      payload
+    )
+      .then(() => {
+        actions.setSnackMessage("✅ Unlinked task!");
+        // actions.removeTaskFromSelectedObject(response.data);
+        actions.removeTaskFromSelectedObject(taskId);
+        //Todo: locally update before api-update?
+        actions.fetchProject({ id: projectId });
+      })
+      .catch((reason) => {
+        actions.setSnackMessage(reason);
+        return actions.setErrorProject(reason);
+      });
+  }),
+  linkTask: thunk(async (actions, payload) => {
+    //Tasks aka. QIP ( Questions Ideas & Problems )
+    actions.setErrorProject(null);
+
+    const { projectId, vsmObjectId, taskId, task } = payload;
+    //Not really deleting, but rather unlinking the task.
+    BaseAPIServices.put(`/api/v1.0/task/link/${vsmObjectId}/${taskId}`, payload)
+      .then(() => {
+        actions.setSnackMessage("✅ Linked task!");
+        // actions.removeTaskFromSelectedObject(response.data);
+        //Todo: a
+        actions.addTaskToSelectedObject(task);
+
+        //Todo: locally update before api-update?
+        actions.fetchProject({ id: projectId });
+      })
+      .catch((reason) => {
+        actions.setSnackMessage(reason);
+        return actions.setErrorProject(reason);
+      });
   }),
   addObject: thunk(async (actions, payload) => {
     //We need to update the child in the API, but the Parent (with the child) in our local state
@@ -264,7 +363,7 @@ const projectModel: ProjectModel = {
             vsmProjectID,
             name,
           })
-            .then(() => actions.setSnackMessage("Saved title"))
+            .then(() => actions.setSnackMessage("✅ Saved title"))
             .catch((reason) => {
               actions.setSnackMessage(reason);
               return actions.setErrorProject(reason);
@@ -279,7 +378,7 @@ const projectModel: ProjectModel = {
     debounce(
       () => {
         return BaseAPIServices.patch(`/api/v1.0/VSMObject`, payload)
-          .then(() => actions.setSnackMessage("Saved"))
+          .then(() => actions.setSnackMessage("✅ Saved"))
           .catch((reason) => {
             actions.setSnackMessage(reason);
             return actions.setErrorProject(reason);

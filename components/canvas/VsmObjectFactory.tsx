@@ -14,6 +14,14 @@ export function vsmObjectFactory(
   onHoverEnter: () => void,
   onHoverExit: () => void
 ): PIXI.Container {
+  if (!o.vsmObjectType)
+    return GenericPostit({
+      header: "ERROR",
+      content: "Missing object type",
+      options: {
+        color: 0xff1243,
+      },
+    });
   const { pkObjectType, name } = o.vsmObjectType;
   switch (pkObjectType) {
     case vsmObjectTypes.text:

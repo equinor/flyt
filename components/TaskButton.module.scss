@@ -1,0 +1,75 @@
+.circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 20px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.circle:hover {
+  opacity: 0.2;
+}
+
+.problem {
+  @extend .circle;
+  color: #eb0000;
+  border: solid 1px #eb0000;
+}
+
+.problem.selected {
+  @extend .problem;
+  background-color: #eb0000;
+  color: white;
+}
+
+.idea {
+  @extend .circle;
+  color: #00977b;
+  border: solid 1px #00977b;
+}
+
+.idea.selected {
+  @extend .idea;
+  color: white;
+  background-color: #00977b;
+}
+
+.question {
+  @extend .circle;
+  color: #ad6200;
+  border: solid 1px #ad6200;
+}
+
+.question.selected {
+  @extend .question;
+  color: white;
+  background-color: #ad6200;
+}
+
+.unknown {
+  @extend .circle;
+  border: dashed 1px;
+}
+
+.unknown.selected {
+  @extend .unknown;
+  //color: white;
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+.draft {
+  opacity: 0.4;
+  border-style: dashed;
+}
+
+.draft.selected {
+  background-color: white;
+  color: black;
+  border: dashed 1px black;
+}

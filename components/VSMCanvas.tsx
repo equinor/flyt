@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import * as PIXI from "pixi.js";
 import { Application, Container, Graphics } from "pixi.js";
 import { Viewport } from "pixi-viewport";
@@ -10,16 +10,7 @@ import { vsmObject } from "../interfaces/VsmObject";
 import { VSMSideBar } from "./VSMSideBar";
 import { GenericPostit } from "./canvas/GenericPostit";
 import { vsmObjectTypes } from "../types/vsmObjectTypes";
-import { uid } from "../utils/uuid";
 import style from "./VSMCanvas.module.scss";
-
-export const defaultObject = {
-  name: "",
-  vsmObjectType: { name: "", pkObjectType: 0 },
-  vsmObjectID: 0,
-  time: 0,
-  role: "",
-} as vsmObject;
 
 const app: Application = new Application({
   // resizeTo: window,
@@ -156,12 +147,9 @@ function addToolBox(
 }
 
 let hoveredObject: vsmObject | null = null;
-export default function VSMCanvas(props: {
-  style?: React.CSSProperties | undefined;
-  refreshProject: () => void;
-}): JSX.Element {
+export default function VSMCanvas(): JSX.Element {
   const ref = useRef(document.createElement("div"));
-  const [selectedObject, setSelectedObject] = useState(defaultObject);
+  const selectedObject = useStoreState((state) => state.selectedObject);
   const dispatch = useStoreDispatch();
   const project = useStoreState((state) => state.project);
 
@@ -173,12 +161,9 @@ export default function VSMCanvas(props: {
     hoveredObject = null;
   };
 
-  function deleteVSMObject(vsmObject: vsmObject) {
-    setSelectedObject(defaultObject); // Close the sidebar
-    dispatch.deleteVSMObject(vsmObject);
-  }
-
   function addNewVsmObjectToHoveredCard(vsmObjectType: vsmObjectTypes) {
+    //Todo: Improve target logic. Instead of using "hoveredObject", do a collision detection etc
+    //  Read up on hitTest -> https://pixijs.download/release/docs/PIXI.InteractionManager.html#hitTest
     if (hoveredObject) {
       const { pkObjectType } = hoveredObject.vsmObjectType;
       switch (vsmObjectType) {
@@ -251,7 +236,6 @@ export default function VSMCanvas(props: {
 
     function onDragEnd() {
       addNewVsmObjectToHoveredCard(vsmObjectType);
-
       this.alpha = 1;
       this.dragging = false;
       //Move the card back to where it started
@@ -266,8 +250,13 @@ export default function VSMCanvas(props: {
     function onDragMove() {
       if (this.dragging) {
         const newPosition = this.data.getLocalPosition(this.parent);
-        this.x = newPosition.x;
-        this.y = newPosition.y;
+        if (vsmObjectType === vsmObjectTypes.choice) {
+          this.x = newPosition.x + 18; // move it slighly away from the pointer, since hoverevent is not triggered if object is between cursor and target
+          this.y = newPosition.y + 18;
+        } else {
+          this.x = newPosition.x + 6;
+          this.y = newPosition.y + 6;
+        }
       }
     }
 
@@ -340,44 +329,38 @@ export default function VSMCanvas(props: {
     } as vsmObject,
   });
 
-  const newChoiceObject = (parent) => {
-    const choiceUid = uid(); //Todo: change to temporary (local) objectId so that we can update the view before recieving the actual id from api
-    return {
-      parent: parent,
-      child: {
-        vsmObjectID: choiceUid, //Todo: change to temporary (local) objectId so that we can update the view before recieving the actual id from api
-        vsmProjectID: project.vsmProjectID,
-        vsmObjectType: { pkObjectType: vsmObjectTypes.choice },
-        childObjects: [
-          {
-            // vsmObjectID: uid(),//Todo: change to temporary (local) objectId so that we can update the view before recieving the actual id from api
-            vsmProjectID: project.vsmProjectID,
-            vsmObjectType: { pkObjectType: vsmObjectTypes.subActivity },
-            parent: choiceUid,
-            childObjects: [],
-          },
-          {
-            // vsmObjectID: uid(),//Todo: change to temporary (local) objectId so that we can update the view before recieving the actual id from api
-            vsmProjectID: project.vsmProjectID,
-            vsmObjectType: { pkObjectType: vsmObjectTypes.subActivity },
-            parent: choiceUid,
-            childObjects: [],
-          },
-        ],
-      } as vsmObject,
-    };
-  };
+  const newChoiceObject = (parent) => ({
+    parent: parent,
+    child: {
+      parent: parent.vsmObjectID,
+      vsmProjectID: project.vsmProjectID,
+      fkObjectType: vsmObjectTypes.choice,
+      childObjects: [
+        {
+          vsmProjectID: project.vsmProjectID,
+          fkObjectType: vsmObjectTypes.subActivity,
+          childObjects: [],
+        },
+        {
+          vsmProjectID: project.vsmProjectID,
+          fkObjectType: vsmObjectTypes.subActivity,
+          childObjects: [],
+        },
+      ],
+      vsmObjectID: 0,
+    } as vsmObject,
+  });
 
-  function createTree(root: vsmObject): Container {
+  function recursiveTree(root: vsmObject): Container {
     const padding = 20;
 
     const container = new PIXI.Container();
     container.addChild(
       vsmObjectFactory(
         root,
-        () => setSelectedObject(root),
+        () => dispatch.setSelectedObject(root),
         () => {
-          console.log({ hoveredObject: root });
+          console.info({ hoveredObject: root });
           setHoveredObject(root);
         },
         () => clearHoveredObject()
@@ -387,7 +370,7 @@ export default function VSMCanvas(props: {
 
     let nextX = 0;
     root.childObjects?.forEach((child) => {
-      const node = createTree(child);
+      const node = recursiveTree(child);
       //Todo: Figure out how to render choices
       // without any of them crashing
       // And it should look like figma sketch
@@ -416,14 +399,14 @@ export default function VSMCanvas(props: {
         })
       );
     } else {
-      viewport.addChild(createTree(root));
+      viewport.addChild(recursiveTree(root));
     }
   }
 
   function onChangeNameHandler() {
     return (event: { target: { value: string } }) => {
       const name = event.target.value;
-      setSelectedObject({ ...selectedObject, name });
+      dispatch.setSelectedObject({ ...selectedObject, name });
       debounce(
         () => {
           dispatch.updateVSMObject({ ...selectedObject, name } as vsmObject);
@@ -437,7 +420,7 @@ export default function VSMCanvas(props: {
   function onChangeRoleHandler() {
     return (event) => {
       const role = event.target.value;
-      setSelectedObject({ ...selectedObject, role });
+      dispatch.setSelectedObject({ ...selectedObject, role });
       debounce(
         () => {
           dispatch.updateVSMObject({ ...selectedObject, role } as vsmObject);
@@ -452,7 +435,7 @@ export default function VSMCanvas(props: {
     return (event) => {
       let time = parseInt(event.target.value);
       if (time < 0) time = 0;
-      setSelectedObject({ ...selectedObject, time });
+      dispatch.setSelectedObject({ ...selectedObject, time });
       debounce(
         () => {
           dispatch.updateVSMObject({ ...selectedObject, time } as vsmObject);
@@ -465,7 +448,7 @@ export default function VSMCanvas(props: {
 
   function onChangeTimeDefinitionHandler() {
     return (timeDefinition: string) => {
-      setSelectedObject({ ...selectedObject, timeDefinition });
+      dispatch.setSelectedObject({ ...selectedObject, timeDefinition });
       debounce(
         () => {
           dispatch.updateVSMObject({
@@ -482,14 +465,13 @@ export default function VSMCanvas(props: {
   return (
     <>
       <VSMSideBar
-        onClose={() => setSelectedObject(defaultObject)}
-        selectedObject={selectedObject}
-        key={selectedObject.vsmObjectID}
+        onClose={() => dispatch.setSelectedObject(null)}
         onChangeName={onChangeNameHandler()}
         onChangeRole={onChangeRoleHandler()}
         onChangeTime={onChangeTimeHandler()}
         onChangeTimeDefinition={onChangeTimeDefinitionHandler()}
-        onDelete={() => deleteVSMObject(selectedObject)}
+        onDelete={() => dispatch.deleteVSMObject(selectedObject)}
+        onAddTask={(task) => dispatch.addTask(task)}
       />
       <div className={style.canvasWrapper} ref={ref} />
     </>

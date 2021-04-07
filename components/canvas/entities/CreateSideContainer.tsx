@@ -1,13 +1,13 @@
 import * as PIXI from "pixi.js";
-import { taskSorter } from "../../SideBarContent";
 import { vsmTaskTypes } from "../../../types/vsmTaskTypes";
 import { TextCircle } from "./TextCircle";
 import { createGrid } from "./CreateGrid";
 import { taskObject } from "../../../interfaces/taskObject";
+import { taskSorter } from "../../../utils/taskSorter";
 
 export function createSideContainer(
   tasks: taskObject[],
-  breakAt: number,
+  breakAt = 4,
   height = 136
 ): PIXI.Container {
   const sideContainer = new PIXI.Container();
@@ -15,11 +15,11 @@ export function createSideContainer(
     const newTasks = tasks.sort(taskSorter()).map((t) => {
       switch (t?.fkTaskType) {
         case vsmTaskTypes.problem:
-          return TextCircle(`P${t.vsmTaskID}`, 0xff0000);
+          return TextCircle(`${t.dsiplayIndex}`, 0xeb0000);
         case vsmTaskTypes.question:
-          return TextCircle(`Q${t.vsmTaskID}`, 0x007079);
+          return TextCircle(`${t.dsiplayIndex}`, 0xad6200);
         case vsmTaskTypes.idea:
-          return TextCircle(`I${t.vsmTaskID}`, 0xff6670);
+          return TextCircle(`${t.dsiplayIndex}`, 0x00977b);
         default:
           return TextCircle(`${t}`);
       }

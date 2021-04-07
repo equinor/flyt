@@ -43,7 +43,7 @@ export default function SubActivity({
 
   const rectangle = createBaseContainer();
 
-  const sideContainer = createSideContainer(tasks);
+  const sideContainer = createSideContainer(tasks, 4, 136);
   sideContainer.x = rectangle.width;
 
   const defaultStyle = {

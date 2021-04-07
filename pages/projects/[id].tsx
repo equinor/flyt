@@ -7,7 +7,6 @@ import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
 import { Layouts } from "../../layouts/LayoutWrapper";
 import { useStoreRehydrated } from "easy-peasy";
-import VSMCanvas from "../../components/VSMCanvas";
 
 const DynamicComponentWithNoSSR = dynamic(
   () => import("../../components/VSMCanvas"),
@@ -51,7 +50,7 @@ export default function Project() {
         </Head>
 
         <main className={commonStyles.main}>
-          <Typography variant="h1">Error loading project {id}</Typography>
+          <Typography variant="h1">{error.message}</Typography>
           <p>
             We have some troubles with this VSM. Please try to refresh the page.
           </p>
@@ -66,9 +65,7 @@ export default function Project() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <DynamicComponentWithNoSSR
-          refreshProject={() => dispatch.fetchProject({ id })}
-        />
+        <DynamicComponentWithNoSSR />
       </main>
     </div>
   );

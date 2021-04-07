@@ -1,0 +1,15 @@
+.taskList {
+  padding: 0;
+  list-style-type: none;
+  margin: 0 0 80px;
+}
+
+.taskList > li {
+  border-bottom: 1px solid #dcdcdc;
+  border-left: 1px solid #dcdcdc;
+  border-right: 1px solid #dcdcdc;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

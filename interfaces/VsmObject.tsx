@@ -1,5 +1,6 @@
 import { vsmObjectTypes } from "../types/vsmObjectTypes";
 import { vsmTaskTypes } from "../types/vsmTaskTypes";
+import { taskObject } from "./taskObject";
 
 export interface vsmObject {
   vsmObjectID?: number;
@@ -19,7 +20,7 @@ export interface vsmObject {
     description?: null;
     hidden?: boolean;
   };
-  tasks?: [];
+  tasks?: taskObject[];
   created?: {
     pkChangeLog: number;
     userIdentity: string;
