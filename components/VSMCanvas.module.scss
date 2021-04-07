@@ -204,3 +204,8 @@
 .QIPContainer {
   padding-bottom: 100px;
 }
+
+.clickable:hover {
+  opacity: 0.5;
+  cursor: pointer;
+}

@@ -33,6 +33,14 @@ export const QIPSection = (props: {
         </div>
       </div>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
+        {selectedObject.tasks.length === 0 && (
+          <p
+            className={styles.clickable}
+            onClick={() => props.onClickNewTask()}
+          >
+            Add Question, Idea or Problem
+          </p>
+        )}
         <div style={{ display: "flex", flexWrap: "wrap" }}>
           {selectedObject.tasks.sort(taskSorter()).map((task: taskObject) => {
             return (

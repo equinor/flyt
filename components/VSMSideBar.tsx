@@ -5,7 +5,6 @@ import { Icon } from "@equinor/eds-core-react";
 import { close, delete_forever, delete_to_trash } from "@equinor/eds-icons";
 import { taskObject } from "../interfaces/taskObject";
 import { useStoreState } from "../hooks/storeHooks";
-import { SideBarHeader } from "./SideBarHeader";
 
 Icon.add({ close, delete_forever, delete_to_trash });
 
