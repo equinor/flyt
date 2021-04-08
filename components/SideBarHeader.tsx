@@ -22,7 +22,7 @@ export function SideBarHeader(props: {
           color={"danger"}
           onClick={props.onDelete}
         >
-          <Icon name="delete_forever" size={16} />
+          <Icon name="delete_forever" size={24} />
         </Button>
         <Button
           title={"Close the side-menu"}
@@ -30,7 +30,7 @@ export function SideBarHeader(props: {
           color={"primary"}
           onClick={props.onClose}
         >
-          <Icon name="close" title="add" size={16} />
+          <Icon name="close" title="add" size={24} />
         </Button>
       </div>
     </div>

@@ -25,6 +25,7 @@ export function EditTaskSection(props: {
       <div>
         {/*Must have the button inside a div for flex size to work correctly...*/}
         <Button
+          style={{ margin: 8 }}
           title={`Delete selected QIP`}
           disabled={!task}
           variant={"ghost_icon"}
@@ -33,7 +34,7 @@ export function EditTaskSection(props: {
             dispatch.unlinkTask({ task: task, object: object });
           }}
         >
-          <Icon name="delete_to_trash" size={16} />
+          <Icon name="delete_to_trash" size={24} />
         </Button>
       </div>
     </div>
