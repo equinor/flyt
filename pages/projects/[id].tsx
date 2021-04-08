@@ -22,7 +22,10 @@ export default function Project() {
   const project = useStoreState((state) => state.project);
   const rehydrated = useStoreRehydrated();
   useEffect(() => {
-    if (id) dispatch.fetchProject({ id });
+    if (id) {
+      dispatch.fetchProject({ id });
+      dispatch.setSelectedObject(null);
+    }
   }, [id]);
 
   if (!rehydrated) {
