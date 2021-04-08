@@ -21,12 +21,12 @@ export function ScaleOnHover(container: PIXI.Container) {
 
   // Scale up
   container.on(pointerEvents.pointerover, () => {
-    if (timer) clearTimeout(timer);
+    if (timer) clearInterval(timer);
     timer = setInterval(() => {
       if (currentScale + delta <= targetScale) {
         container?.scale.set((currentScale += delta));
       } else {
-        clearTimeout(timer);
+        clearInterval(timer);
         container?.scale.set(targetScale);
         currentScale = targetScale;
       }
@@ -35,12 +35,12 @@ export function ScaleOnHover(container: PIXI.Container) {
 
   // Scale down
   container.on(pointerEvents.pointerout, () => {
-    if (timer) clearTimeout(timer);
+    if (timer) clearInterval(timer);
     timer = setInterval(() => {
       if (currentScale + delta > initialScale) {
         container?.scale.set((currentScale -= delta));
       } else {
-        clearTimeout(timer);
+        clearInterval(timer);
         container?.scale.set(initialScale);
         currentScale = initialScale;
       }

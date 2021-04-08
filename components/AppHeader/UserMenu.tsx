@@ -33,15 +33,11 @@ const UserMenu: React.FC = () => {
     const { key } = e;
     switch (key) {
       case "ArrowDown":
-        isOpen ? closeMenu() : openMenu(e);
-        break;
       case "ArrowUp":
         isOpen ? closeMenu() : openMenu(e);
         break;
       case "Escape":
         closeMenu();
-        break;
-      default:
         break;
     }
   };

@@ -90,6 +90,7 @@ const CanvasLayout = ({ children }) => {
     e.preventDefault();
     switch (key) {
       case "ArrowDown":
+      case "Enter":
         isOpen ? closeMenu() : openMenu(e, "first");
         break;
       case "ArrowUp":
@@ -97,11 +98,6 @@ const CanvasLayout = ({ children }) => {
         break;
       case "Escape":
         closeMenu();
-        break;
-      case "Enter":
-        isOpen ? closeMenu() : openMenu(e, "first");
-        break;
-      default:
         break;
     }
   };
