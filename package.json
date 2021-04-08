@@ -31,7 +31,6 @@
     "react": "17.0.1",
     "react-device-detect": "^1.15.0",
     "react-dom": "17.0.1",
-    "react-json-view": "^1.21.3",
     "sass": "^1.32.5",
     "styled-components": "^5.2.1"
   },
