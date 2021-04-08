@@ -39,7 +39,7 @@ export function NewTaskSection(props: { onClose: () => void }): JSX.Element {
           clearAndCloseAddTaskSection();
         }}
       >
-        <Icon name="arrow_back" title="add" size={16} />
+        <Icon name="arrow_back" title="add" size={24} />
       </Button>
       <div className={styles.sideBarSectionHeader}>
         <p>Add Questions, Ideas and Problems</p>

@@ -32,7 +32,18 @@ export const QIPSection = (props: {
           <p>Questions, Ideas and Problems</p>
         </div>
       </div>
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
+
+      {showEditTaskSection && (
+        <EditTaskSection object={selectedObject} task={selectedTask} />
+      )}
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          paddingTop: 12,
+        }}
+      >
         {selectedObject.tasks.length === 0 && (
           <p
             className={styles.clickable}
@@ -61,10 +72,6 @@ export const QIPSection = (props: {
         </div>
         <NewTaskButton onClick={() => props.onClickNewTask()} />
       </div>
-
-      {showEditTaskSection && (
-        <EditTaskSection object={selectedObject} task={selectedTask} />
-      )}
     </div>
   );
 };
