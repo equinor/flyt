@@ -45,7 +45,6 @@ export function vsmObjectFactory(
         onHoverExit: () => onHoverExit(),
       });
     case vsmObjectTypes.process:
-      return new PIXI.Container();
     case vsmObjectTypes.supplier:
     case vsmObjectTypes.input:
     case vsmObjectTypes.output:

@@ -31,7 +31,7 @@ export function TaskButton({
             draft && style.draft
           }`}
         >
-          <p>{task.dsiplayIndex}</p>
+          <p>{task.displayIndex}</p>
         </div>
       );
     case vsmTaskTypes.question:
@@ -41,7 +41,7 @@ export function TaskButton({
             draft && style.draft
           }`}
         >
-          <p>{task.dsiplayIndex}</p>
+          <p>{task.displayIndex}</p>
         </div>
       );
     case vsmTaskTypes.idea:
@@ -51,7 +51,7 @@ export function TaskButton({
             draft && style.draft
           }`}
         >
-          <p>{task.dsiplayIndex}</p>
+          <p>{task.displayIndex}</p>
         </div>
       );
     default:
@@ -61,7 +61,7 @@ export function TaskButton({
             draft && style.draft
           }`}
         >
-          <p>{task.dsiplayIndex}</p>
+          <p>{task.displayIndex}</p>
         </div>
       );
   }

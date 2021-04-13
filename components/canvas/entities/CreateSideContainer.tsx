@@ -15,11 +15,11 @@ export function createSideContainer(
     const newTasks = tasks.sort(taskSorter()).map((t) => {
       switch (t?.fkTaskType) {
         case vsmTaskTypes.problem:
-          return TextCircle(`${t.dsiplayIndex}`, 0xeb0000);
+          return TextCircle(`${t.displayIndex}`, 0xeb0000);
         case vsmTaskTypes.question:
-          return TextCircle(`${t.dsiplayIndex}`, 0xad6200);
+          return TextCircle(`${t.displayIndex}`, 0xad6200);
         case vsmTaskTypes.idea:
-          return TextCircle(`${t.dsiplayIndex}`, 0x00977b);
+          return TextCircle(`${t.displayIndex}`, 0x00977b);
         default:
           return TextCircle(`${t}`);
       }
