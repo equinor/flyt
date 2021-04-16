@@ -348,15 +348,31 @@ export default function VSMCanvas(): JSX.Element {
     // Level > 1 should be rendered vertical
 
     if (level === 0) {
-      //Remember, horizontal first row
+      // Create a container for all our cards
       const container = new PIXI.Container();
-      let nextX = 0;
+
+      // Remember, we don't display the root node...
+      // so let's start laying out our horizontal first row
       root.childObjects?.forEach((child) => {
         const c = recursiveTree(child, level + 1);
-        c.x = nextX;
-        nextX = nextX + c.width + 20;
-        return container.addChild(c);
+        const rectangle = new Graphics()
+          .beginFill(0xaeaeae)
+          .drawRect(0, 0, c.width, c.height)
+          .endFill();
+        const wrapper = new PIXI.Container();
+        wrapper.addChild(rectangle, c);
+        container.addChild(wrapper);
       });
+      // Adjust Layout
+      let last = null;
+      container.children.forEach((child) => {
+        if (last) child.x = last.x + last.width + 10;
+        last = child;
+      });
+
+      container.x = 126;
+      container.y = 60;
+      // Exit, Returning the container with all our cards
       return container;
     }
 
@@ -365,15 +381,31 @@ export default function VSMCanvas(): JSX.Element {
     containerGroup.addChild(createChild(root));
 
     const container = new PIXI.Container();
-    let nextY = containerGroup.height + 20;
+    let nextY = containerGroup.height + 20; // Generic element y position
+    let nextLeftY = nextY; // Left choiceGroup element y position
+    let nextRightY = nextY; // Right choiceGroup element y position
+
     root.childObjects?.forEach((child) => {
-      const c = createChild(child);
+      const c = recursiveTree({ ...child, name: `${level}` }, level + 1);
       c.y = nextY;
       nextY = nextY + c.height + 20;
+      if (child.choiceGroup === "Left") {
+        c.x = 0; //Todo, figure out what this x should be... We get collisions if we have nesting choices
+        c.y = nextLeftY;
+        nextLeftY = nextLeftY + c.height + 20;
+      }
+      if (child.choiceGroup === "Right") {
+        c.x = 160; //Todo, figure out what this x should be... We get collisions if we have nesting choices
+        c.y = nextRightY;
+        nextRightY = nextRightY + c.height + 20;
+      }
       container.addChild(c);
+      // Note, we may iterate over the children and adjust layout after adding it to the container as well...
     });
+    // container.children.forEach((child, i) => {
+    //   child.x = child.x + i * 10;
+    // });
     containerGroup.addChild(container);
-
     return containerGroup;
   }
 

@@ -26,7 +26,7 @@ export function SideBarContent(props: {
     return <NewTaskSection onClose={() => setShowNewTaskSection(false)} />;
 
   return (
-    <>
+    <React.Fragment key={selectedObject.vsmObjectID}>
       <SideBarHeader
         object={selectedObject}
         onClose={props.onClose}
@@ -40,6 +40,6 @@ export function SideBarContent(props: {
         onChangeTime={props.onChangeTime}
         setShowNewTaskSection={setShowNewTaskSection}
       />
-    </>
+    </React.Fragment>
   );
 }
