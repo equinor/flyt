@@ -357,7 +357,7 @@ export default function VSMCanvas(): JSX.Element {
         const debugLayout = false;
         if (debugLayout) wrapper.addChild(rectangle);
         wrapper.addChild(c);
-        c.x = c.width / 2;
+        // c.x = c.width / 2;
         container.addChild(wrapper);
       });
       // Adjust Layout
@@ -386,23 +386,26 @@ export default function VSMCanvas(): JSX.Element {
       const c = recursiveTree(child, level + 1);
       c.y = nextY;
       nextY = nextY + c.height + 20;
+      const tempChild = createChild(child);
       if (child.choiceGroup === "Left") {
-        c.x = -80;
+        c.pivot.set(tempChild.width, 0);
+        c.x = 126 / 2 - 10;
         c.y = nextLeftY;
         nextLeftY = nextLeftY + c.height + 20;
       }
       if (child.choiceGroup === "Right") {
-        c.x = 80;
+        c.pivot.set(0 / 2, 0);
+        c.x = 126 / 2 + 10;
         c.y = nextRightY;
         nextRightY = nextRightY + c.height + 20;
       }
-      if (
-        root.childObjects.some(
-          (e) => e.vsmObjectType.pkObjectType === vsmObjectTypes.choice
-        )
-      ) {
-        c.x = c.x * 2;
-      }
+      // if (
+      //   root.childObjects.some(
+      //     (e) => e.vsmObjectType.pkObjectType === vsmObjectTypes.choice
+      //   )
+      // ) {
+      //   c.x = c.x * 2;
+      // }
       container.addChild(c);
     });
     containerGroup.addChild(container);
