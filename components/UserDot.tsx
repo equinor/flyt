@@ -15,7 +15,11 @@ export function UserDot(props: { name: string }): JSX.Element {
   }
 
   return (
-    <div className={styles.container} style={{ backgroundColor: color }}>
+    <div
+      title={`${props.name}`} //<- hover tooltip
+      className={styles.container}
+      style={{ backgroundColor: color }}
+    >
       <p
         style={{
           fontFamily: "Equinor",
