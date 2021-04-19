@@ -328,12 +328,6 @@ export default function VSMCanvas(): JSX.Element {
   useEffect(() => addToolBox(draggable), [project]);
 
   function createChild(child: vsmObject) {
-    if (child.vsmObjectType.pkObjectType === vsmObjectTypes.choice) {
-      console.info(
-        "Rendering choice\nDisplaying Children of choices are not yet implemented",
-        { children: child.childObjects }
-      );
-    }
     return vsmObjectFactory(
       child,
       () => dispatch.setSelectedObject(child),
@@ -360,7 +354,10 @@ export default function VSMCanvas(): JSX.Element {
           .drawRect(0, 0, c.width, c.height)
           .endFill();
         const wrapper = new PIXI.Container();
-        wrapper.addChild(rectangle, c);
+        const debugLayout = false;
+        if (debugLayout) wrapper.addChild(rectangle);
+        wrapper.addChild(c);
+        c.x = c.width / 2;
         container.addChild(wrapper);
       });
       // Adjust Layout
@@ -386,25 +383,28 @@ export default function VSMCanvas(): JSX.Element {
     let nextRightY = nextY; // Right choiceGroup element y position
 
     root.childObjects?.forEach((child) => {
-      const c = recursiveTree({ ...child, name: `${level}` }, level + 1);
+      const c = recursiveTree(child, level + 1);
       c.y = nextY;
       nextY = nextY + c.height + 20;
       if (child.choiceGroup === "Left") {
-        c.x = 0; //Todo, figure out what this x should be... We get collisions if we have nesting choices
+        c.x = -80;
         c.y = nextLeftY;
         nextLeftY = nextLeftY + c.height + 20;
       }
       if (child.choiceGroup === "Right") {
-        c.x = 160; //Todo, figure out what this x should be... We get collisions if we have nesting choices
+        c.x = 80;
         c.y = nextRightY;
         nextRightY = nextRightY + c.height + 20;
       }
+      if (
+        root.childObjects.some(
+          (e) => e.vsmObjectType.pkObjectType === vsmObjectTypes.choice
+        )
+      ) {
+        c.x = c.x * 2;
+      }
       container.addChild(c);
-      // Note, we may iterate over the children and adjust layout after adding it to the container as well...
     });
-    // container.children.forEach((child, i) => {
-    //   child.x = child.x + i * 10;
-    // });
     containerGroup.addChild(container);
     return containerGroup;
   }
