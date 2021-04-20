@@ -5,7 +5,8 @@ import { taskObject } from "./taskObject";
 export interface vsmObject {
   vsmObjectID?: number;
   vsmProjectID?: number;
-  bigBrother?: number; //Todo: figure out with Peder how this will work. I think it should be leftObjectId
+  leftObjectId?: number;
+  choiceGroup?: "Left" | "Right";
   position?: number;
   parent?: number;
   name?: string;

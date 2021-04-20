@@ -1,5 +1,5 @@
-@import './variables';
-@import url(https://eds-static.equinor.com/font/equinor-font.css);
+@import "./variables";
+@import url("https://eds-static.equinor.com/font/equinor-font.css");
 
 html,
 body {
@@ -7,7 +7,7 @@ body {
   padding: 0;
   margin: 0;
   font-size: 14px;
-  background-color: #F7F7F7;
+  background-color: #f7f7f7;
   color: $equinor_GRAY;
   height: 100%;
 }

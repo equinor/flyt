@@ -11,7 +11,7 @@ export interface taskObject {
   solved?: boolean;
   solvedDate?: string;
   fkProject: number;
-  dsiplayIndex: string; // Todo: fix after this is resolved https://equinor-sds-si.atlassian.net/browse/VSM-67?focusedCommentId=25963
+  displayIndex: string;
   objects?: [
     {
       fkObject: vsmObject["vsmObjectID"];

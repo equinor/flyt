@@ -31,10 +31,7 @@ export interface ProjectModel {
   setSnackMessage: Action<ProjectModel, string>;
   //// THUNKS ///////////////////
   //someThunk: Thunk<Model,Payload,Injections,StoreModel,Result>;
-  addObject: Thunk<
-    ProjectModel,
-    { parent: vsmObject; child: vsmObject; leftObjectId?: number }
-  >;
+  addObject: Thunk<ProjectModel, vsmObject>;
   deleteVSMObject: Thunk<ProjectModel, vsmObject>;
   fetchProject: Thunk<ProjectModel, { id: string | string[] | number }>;
   updateProjectName: Thunk<
@@ -279,73 +276,24 @@ const projectModel: ProjectModel = {
         return actions.setErrorProject(reason);
       });
   }),
-  addObject: thunk(async (actions, payload) => {
-    //We need to update the child in the API, but the Parent (with the child) in our local state
-    const { parent, child, leftObjectId } = payload;
+  addObject: thunk(async (actions, newObject) => {
+    //We need to update the newObject in the API, but the Parent (with the newObject) in our local state
     const apiObject = {
-      ...child,
-      leftObjectId,
-      vsmObjectID: 0, // use 0 when it is a new card
+      ...newObject,
+      vsmObjectID: newObject.vsmObjectID ?? 0, // use 0 when it is a new card
     } as vsmObject;
 
-    //Local temporary card
-    // const localObject = {
-    //   ...payload.child,
-    //   temporaryId: payload.child.vsmObjectID,
-    // } as vsmObject;
-
     actions.setSnackMessage("Adding new card...");
-    //NOTE: if the parent is root, then we don't want to adopt its children.
-    // Since we are adding a card to the top-level... ( this would be a horizontal, not vertical add)
-    const addingCardToTopLevel = parent.parent === 0;
-    if (addingCardToTopLevel) {
-      BaseAPIServices.post(`/api/v1.0/VSMObject`, apiObject)
-        .then((response) => {
-          actions.setSnackMessage("Card added!");
-          //Api response.data is the newly created child
-          // Add this child to the parent
-          //Todo: locally update before api-update?
-          actions.fetchProject({ id: response.data.vsmProjectID });
-        })
-        .catch((reason) => {
-          actions.setSnackMessage(reason);
-          return actions.setErrorProject(reason);
-        });
-    } else {
-      BaseAPIServices.post(`/api/v1.0/VSMObject`, apiObject)
-        .then((response) => {
-          //Api response.data is the newly created child
-          // LOCAL STEP 1 & STEP 2
-          actions.patchLocalObject({
-            ...parent,
-            childObjects: [
-              {
-                ...response.data,
-                childObjects: [...parent.childObjects],
-              },
-            ], // Todo: Sort the siblings in the correct order
-          });
-          actions.setSnackMessage("Card added!");
-          // - STEP 2. Update our siblings to have the new object as a parent
-          if (parent.childObjects.length > 0) {
-            parent.childObjects.forEach((sibling) => {
-              BaseAPIServices.patch(`/api/v1.0/VSMObject`, {
-                ...sibling,
-                parent: response.data.vsmObjectID,
-              })
-                .then(() => actions.setSnackMessage("Updated parent"))
-                .catch((reason) => {
-                  actions.setSnackMessage(reason);
-                  return actions.setErrorProject(reason);
-                });
-            });
-          }
-        })
-        .catch((reason) => {
-          actions.setSnackMessage(reason);
-          return actions.setErrorProject(reason);
-        });
-    }
+    BaseAPIServices.post(`/api/v1.0/VSMObject`, apiObject)
+      .then((response) => {
+        actions.setSnackMessage("Card added!");
+        //Todo: local update with response object instead of fetching the whole project again
+        actions.fetchProject({ id: response.data.vsmProjectID });
+      })
+      .catch((reason) => {
+        actions.setSnackMessage(reason);
+        return actions.setErrorProject(reason);
+      });
   }),
   updateVSMObject: thunk(async (actions, payload) => {
     actions.patchLocalObject(payload);

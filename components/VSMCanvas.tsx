@@ -11,6 +11,7 @@ import { VSMSideBar } from "./VSMSideBar";
 import { GenericPostit } from "./canvas/GenericPostit";
 import { vsmObjectTypes } from "../types/vsmObjectTypes";
 import style from "./VSMCanvas.module.scss";
+import { getVsmTypeName } from "./GetVsmTypeName";
 
 const app: Application = new Application({
   // resizeTo: window,
@@ -147,6 +148,7 @@ function addToolBox(
 }
 
 let hoveredObject: vsmObject | null = null;
+
 export default function VSMCanvas(): JSX.Element {
   const ref = useRef(document.createElement("div"));
   const selectedObject = useStoreState((state) => state.selectedObject);
@@ -161,59 +163,90 @@ export default function VSMCanvas(): JSX.Element {
     hoveredObject = null;
   };
 
-  function addNewVsmObjectToHoveredCard(vsmObjectType: vsmObjectTypes) {
+  function addNewVsmObjectToHoveredCard(dragType: vsmObjectTypes) {
     //Todo: Improve target logic. Instead of using "hoveredObject", do a collision detection etc
     //  Read up on hitTest -> https://pixijs.download/release/docs/PIXI.InteractionManager.html#hitTest
-    if (hoveredObject) {
+    if (!hoveredObject) return;
+
+    const { pkObjectType } = hoveredObject.vsmObjectType;
+    if (dragType === vsmObjectTypes.mainActivity) {
+      //Note: we can only drop a "mainActivity" on "input" or on another "mainActivity".
+      //Parent should be the hoverObject parent
+      //LeftObject should be the hoverObject id
+      if (
+        pkObjectType === vsmObjectTypes.input ||
+        pkObjectType === vsmObjectTypes.mainActivity
+      ) {
+        const mainActivityObject: vsmObject = {
+          vsmProjectID: project.vsmProjectID,
+          fkObjectType: dragType,
+          leftObjectId: hoveredObject?.vsmObjectID,
+          parent: hoveredObject.parent,
+          childObjects: [],
+        };
+        dispatch.addObject(mainActivityObject);
+      } else {
+        dispatch.setSnackMessage(
+          `Cannot add a Main-Activity to a ${hoveredObject.vsmObjectType.name}`
+        );
+      }
+      return;
+    }
+    //Note, All other types need to be dropped on a "mainActivity", "subActivity", "waiting", or a "choice".
+    if (
+      pkObjectType !== vsmObjectTypes.mainActivity &&
+      pkObjectType !== vsmObjectTypes.subActivity &&
+      pkObjectType !== vsmObjectTypes.waiting &&
+      pkObjectType !== vsmObjectTypes.choice
+    ) {
+      dispatch.setSnackMessage(
+        `Cannot add a ${getVsmTypeName(dragType)} to a ${
+          hoveredObject.vsmObjectType.name
+        }`
+      );
+      return;
+    }
+
+    const genericTypeObject: vsmObject = {
+      vsmProjectID: project.vsmProjectID,
+      fkObjectType: dragType,
+      leftObjectId: hoveredObject?.vsmObjectID,
+      choiceGroup: hoveredObject.choiceGroup, // <- Should be in the same "lane" as the hoveredObject
+      parent: getParent(),
+      childObjects: [],
+    };
+    const choiceTypeObject: vsmObject = {
+      vsmProjectID: project.vsmProjectID,
+      fkObjectType: dragType,
+      leftObjectId: hoveredObject?.vsmObjectID,
+      choiceGroup: hoveredObject.choiceGroup, // <- Should be in the same "lane" as the hoveredObject
+      parent: getParent(),
+      childObjects: [
+        {
+          vsmProjectID: project.vsmProjectID,
+          fkObjectType: vsmObjectTypes.subActivity,
+          choiceGroup: "Left",
+          childObjects: [],
+        },
+        {
+          vsmProjectID: project.vsmProjectID,
+          fkObjectType: vsmObjectTypes.subActivity,
+          choiceGroup: "Right",
+          childObjects: [],
+        },
+      ],
+    };
+
+    const newObject =
+      dragType === vsmObjectTypes.choice ? choiceTypeObject : genericTypeObject;
+    dispatch.addObject(newObject);
+
+    function getParent() {
       const { pkObjectType } = hoveredObject.vsmObjectType;
-      switch (vsmObjectType) {
-        case vsmObjectTypes.process:
-          break;
-        case vsmObjectTypes.supplier:
-          break;
-        case vsmObjectTypes.input:
-          break;
-        case vsmObjectTypes.mainActivity:
-          if (
-            pkObjectType === vsmObjectTypes.mainActivity ||
-            pkObjectType === vsmObjectTypes.input
-          ) {
-            dispatch.addObject(newMainActivitySiblingObject(hoveredObject));
-          }
-          break;
-        case vsmObjectTypes.subActivity:
-          if (
-            pkObjectType === vsmObjectTypes.mainActivity ||
-            pkObjectType === vsmObjectTypes.subActivity ||
-            pkObjectType === vsmObjectTypes.waiting
-          ) {
-            dispatch.addObject(newSubActivityObject(hoveredObject));
-          }
-          break;
-        case vsmObjectTypes.text:
-          break;
-        case vsmObjectTypes.waiting:
-          if (
-            pkObjectType === vsmObjectTypes.mainActivity ||
-            pkObjectType === vsmObjectTypes.subActivity ||
-            pkObjectType === vsmObjectTypes.waiting
-          ) {
-            dispatch.addObject(newWaitingObject(hoveredObject));
-          }
-          break;
-        case vsmObjectTypes.output:
-          break;
-        case vsmObjectTypes.customer:
-          break;
-        case vsmObjectTypes.choice:
-          if (
-            pkObjectType === vsmObjectTypes.mainActivity ||
-            pkObjectType === vsmObjectTypes.subActivity ||
-            pkObjectType === vsmObjectTypes.waiting
-          ) {
-            dispatch.addObject(newChoiceObject(hoveredObject));
-          }
-          break;
+      if (pkObjectType === vsmObjectTypes.mainActivity) {
+        return hoveredObject.vsmObjectID;
+      } else {
+        return hoveredObject.parent;
       }
     }
   }
@@ -294,94 +327,81 @@ export default function VSMCanvas(): JSX.Element {
 
   useEffect(() => addToolBox(draggable), [project]);
 
-  function newMainActivitySiblingObject(leftObject) {
-    return {
-      parent: project.objects[0],
-      leftObjectId: leftObject.vsmObjectID,
-      child: {
-        // vsmObjectID: uid(), //Todo: change to temporary (local) objectId so that we can update the view before recieving the actual id from api
-        vsmProjectID: project.vsmProjectID,
-        vsmObjectType: { pkObjectType: vsmObjectTypes.mainActivity },
-        parent: project.objects[0].vsmObjectID,
-        childObjects: [],
-      } as vsmObject,
-    };
+  function createChild(child: vsmObject) {
+    return vsmObjectFactory(
+      child,
+      () => dispatch.setSelectedObject(child),
+      () => setHoveredObject(child),
+      () => clearHoveredObject()
+    );
   }
 
-  const newSubActivityObject = (parent) => ({
-    parent: parent,
-    child: {
-      // vsmObjectID: uid(), //Todo: change to temporary (local) objectId so that we can update the view before recieving the actual id from api
-      vsmProjectID: project.vsmProjectID,
-      vsmObjectType: { pkObjectType: vsmObjectTypes.subActivity },
-      parent: parent.vsmObjectID,
-      childObjects: [],
-    } as vsmObject,
-  });
-  const newWaitingObject = (parent) => ({
-    parent: parent,
-    child: {
-      // vsmObjectID: uid(), //Todo: change to temporary (local) objectId so that we can update the view before recieving the actual id from api
-      vsmProjectID: project.vsmProjectID,
-      vsmObjectType: { pkObjectType: vsmObjectTypes.waiting },
-      parent: parent.vsmObjectID,
-      childObjects: [],
-    } as vsmObject,
-  });
+  function recursiveTree(root: vsmObject, level = 0): Container {
+    // Level 0 contains the root-node and we don't display it.
+    // Level 1 should be rendered horizontal.
+    // Level > 1 should be rendered vertical
 
-  const newChoiceObject = (parent) => ({
-    parent: parent,
-    child: {
-      parent: parent.vsmObjectID,
-      vsmProjectID: project.vsmProjectID,
-      fkObjectType: vsmObjectTypes.choice,
-      childObjects: [
-        {
-          vsmProjectID: project.vsmProjectID,
-          fkObjectType: vsmObjectTypes.subActivity,
-          childObjects: [],
-        },
-        {
-          vsmProjectID: project.vsmProjectID,
-          fkObjectType: vsmObjectTypes.subActivity,
-          childObjects: [],
-        },
-      ],
-      vsmObjectID: 0,
-    } as vsmObject,
-  });
+    if (level === 0) {
+      // Create a container for all our cards
+      const container = new PIXI.Container();
 
-  function recursiveTree(root: vsmObject): Container {
-    const padding = 20;
+      // Remember, we don't display the root node...
+      // so let's start laying out our horizontal first row
+      root.childObjects?.forEach((child) => {
+        const backgroundColor = 0xf7f7f7;
+        const c = recursiveTree(child, level + 1);
+        const rectangle = new Graphics()
+          .beginFill(backgroundColor)
+          .drawRect(0, 0, c.width, c.height)
+          .endFill();
+        const wrapper = new PIXI.Container();
+        wrapper.addChild(rectangle, c);
+        c.x = c.width / 2;
+        container.addChild(wrapper);
+      });
+      // Adjust Layout
+      let last = null;
+      container.children.forEach((child) => {
+        if (last) child.x = last.x + last.width + 10;
+        last = child;
+      });
+
+      container.x = 126;
+      container.y = 60;
+      // Exit, Returning the container with all our cards
+      return container;
+    }
+
+    // Vertical placement for levels > 1
+    const containerGroup = new PIXI.Container();
+    containerGroup.addChild(createChild(root));
 
     const container = new PIXI.Container();
-    container.addChild(
-      vsmObjectFactory(
-        root,
-        () => dispatch.setSelectedObject(root),
-        () => {
-          console.info({ hoveredObject: root });
-          setHoveredObject(root);
-        },
-        () => clearHoveredObject()
-      )
-    );
-    container.y = container.height + padding;
+    let nextY = containerGroup.height + 20; // Generic element y position
+    let nextLeftY = nextY; // Left choiceGroup element y position
+    let nextRightY = nextY; // Right choiceGroup element y position
 
-    let nextX = 0;
     root.childObjects?.forEach((child) => {
-      const node = recursiveTree(child);
-      //Todo: Figure out how to render choices
-      // without any of them crashing
-      // And it should look like figma sketch
-      node.x = nextX;
-
-      // Add this group width + padding as the next x location
-      nextX = nextX + node.width + padding;
-      container.addChild(node);
+      const c = recursiveTree(child, level + 1);
+      c.y = nextY;
+      nextY = nextY + c.height + 20;
+      const tempChild = createChild(child);
+      if (child.choiceGroup === "Left") {
+        c.pivot.set(tempChild.width, 0);
+        c.x = 126 / 2 - 10;
+        c.y = nextLeftY;
+        nextLeftY = nextLeftY + c.height + 20;
+      }
+      if (child.choiceGroup === "Right") {
+        c.pivot.set(0 / 2, 0);
+        c.x = 126 / 2 + 10;
+        c.y = nextRightY;
+        nextRightY = nextRightY + c.height + 20;
+      }
+      container.addChild(c);
     });
-
-    return container;
+    containerGroup.addChild(container);
+    return containerGroup;
   }
 
   function addCards(viewport: Viewport) {
