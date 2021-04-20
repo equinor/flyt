@@ -348,16 +348,15 @@ export default function VSMCanvas(): JSX.Element {
       // Remember, we don't display the root node...
       // so let's start laying out our horizontal first row
       root.childObjects?.forEach((child) => {
+        const backgroundColor = 0xf7f7f7;
         const c = recursiveTree(child, level + 1);
         const rectangle = new Graphics()
-          .beginFill(0xaeaeae)
+          .beginFill(backgroundColor)
           .drawRect(0, 0, c.width, c.height)
           .endFill();
         const wrapper = new PIXI.Container();
-        const debugLayout = false;
-        if (debugLayout) wrapper.addChild(rectangle);
-        wrapper.addChild(c);
-        // c.x = c.width / 2;
+        wrapper.addChild(rectangle, c);
+        c.x = c.width / 2;
         container.addChild(wrapper);
       });
       // Adjust Layout
@@ -399,13 +398,6 @@ export default function VSMCanvas(): JSX.Element {
         c.y = nextRightY;
         nextRightY = nextRightY + c.height + 20;
       }
-      // if (
-      //   root.childObjects.some(
-      //     (e) => e.vsmObjectType.pkObjectType === vsmObjectTypes.choice
-      //   )
-      // ) {
-      //   c.x = c.x * 2;
-      // }
       container.addChild(c);
     });
     containerGroup.addChild(container);
