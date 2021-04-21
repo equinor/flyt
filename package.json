@@ -34,7 +34,7 @@
     "react-dom": "17.0.1",
     "react-json-view": "^1.21.1",
     "sass": "^1.32.5",
-    "styled-components": "^5.2.1"
+    "styled-components": "^5.2.2"
   },
   "devDependencies": {
     "@types/node": "^14.14.22",
