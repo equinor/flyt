@@ -218,6 +218,11 @@ const CanvasLayout = ({ children }) => {
                   Delete VSM
                 </Typography>
               </Menu.Item>
+              <Menu.Item disabled>
+                <Typography group="navigation" variant="menu_title" as="span">
+                  Owner: {project?.created.userIdentity}
+                </Typography>
+              </Menu.Item>
             </Menu>
           </div>
         </div>
