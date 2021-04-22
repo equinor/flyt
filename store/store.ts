@@ -32,6 +32,10 @@ export interface ProjectModel {
   //// THUNKS ///////////////////
   //someThunk: Thunk<Model,Payload,Injections,StoreModel,Result>;
   addObject: Thunk<ProjectModel, vsmObject>;
+  moveVSMObject: Thunk<
+    ProjectModel,
+    { vsmProjectID; vsmObjectID; parent; leftObjectId; choiceGroup }
+  >;
   deleteVSMObject: Thunk<ProjectModel, vsmObject>;
   fetchProject: Thunk<ProjectModel, { id: string | string[] | number }>;
   updateProjectName: Thunk<
@@ -335,6 +339,35 @@ const projectModel: ProjectModel = {
       1000,
       "updateVSMObject"
     )();
+  }),
+  moveVSMObject: thunk(async (actions, newVsmObject) => {
+    actions.setErrorProject(null);
+    actions.setSnackMessage("⏳ Moving card...");
+
+    const {
+      vsmProjectID,
+      vsmObjectID,
+      parent,
+      leftObjectId,
+      choiceGroup,
+    } = newVsmObject;
+
+    // Send the object-update to api
+    return BaseAPIServices.patch(`/api/v1.0/VSMObject`, {
+      vsmProjectID,
+      vsmObjectID,
+      parent,
+      leftObjectId,
+      choiceGroup,
+    })
+      .then(() => {
+        actions.fetchProject({ id: vsmProjectID });
+        actions.setSnackMessage("✅ Moved card!");
+      })
+      .catch((reason) => {
+        actions.setSnackMessage(reason);
+        return actions.setErrorProject(reason);
+      });
   }),
 };
 

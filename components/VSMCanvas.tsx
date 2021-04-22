@@ -148,6 +148,7 @@ function addToolBox(
 }
 
 let hoveredObject: vsmObject | null = null;
+let dragObject: vsmObject | null = null;
 
 export default function VSMCanvas(): JSX.Element {
   const ref = useRef(document.createElement("div"));
@@ -156,12 +157,23 @@ export default function VSMCanvas(): JSX.Element {
   const project = useStoreState((state) => state.project);
 
   function setHoveredObject(vsmObject: vsmObject) {
-    hoveredObject = vsmObject;
+    if (vsmObject !== dragObject) {
+      console.log(
+        "set hovered object",
+        getVsmTypeName(vsmObject.vsmObjectType.pkObjectType),
+        vsmObject.vsmObjectID
+      );
+      hoveredObject = vsmObject;
+    }
   }
 
   const clearHoveredObject = () => {
     hoveredObject = null;
   };
+
+  function setDragObject(vsmObject: vsmObject) {
+    dragObject = vsmObject;
+  }
 
   function addNewVsmObjectToHoveredCard(dragType: vsmObjectTypes) {
     //Todo: Improve target logic. Instead of using "hoveredObject", do a collision detection etc
@@ -251,6 +263,72 @@ export default function VSMCanvas(): JSX.Element {
     }
   }
 
+  function moveExistingVsmObjectToHoveredCard(child: vsmObject) {
+    if (!child) return;
+    const { vsmObjectID, vsmProjectID } = child;
+    const target = hoveredObject;
+
+    const childId = child?.vsmObjectID;
+    const targetId = target?.vsmObjectID;
+
+    //Todo: Improve target logic. Instead of using "movetoObject", do a collision detection etc
+    //  Read up on hitTest -> https://pixijs.download/release/docs/PIXI.InteractionManager.html#hitTest
+    if (!target) return;
+    if (childId === targetId) {
+      //Cannot drop on itself. 👆 - Hack to not trigger on single press
+      return;
+    }
+    const { pkObjectType: hoveredType } = target.vsmObjectType;
+
+    const dragType = child.vsmObjectType.pkObjectType;
+    if (dragType === vsmObjectTypes.mainActivity) {
+      //Note: we can only drop a "mainActivity" on "input" or on another "mainActivity".
+      //Parent should be the target's parent
+      //LeftObject should be the target id
+      if (
+        hoveredType === vsmObjectTypes.input ||
+        hoveredType === vsmObjectTypes.mainActivity
+      ) {
+        dispatch.moveVSMObject({
+          vsmProjectID,
+          vsmObjectID,
+          choiceGroup: target?.choiceGroup,
+          leftObjectId: target?.vsmObjectID,
+          parent: target?.parent,
+        });
+      } else {
+        dispatch.setSnackMessage(
+          `Cannot move a Main-Activity to a ${target.vsmObjectType.name}`
+        );
+        return;
+      }
+    } else if (
+      hoveredType === vsmObjectTypes.mainActivity ||
+      hoveredType === vsmObjectTypes.subActivity ||
+      hoveredType === vsmObjectTypes.waiting ||
+      hoveredType === vsmObjectTypes.choice
+    ) {
+      //Note, All other types need to be dropped on a "mainActivity", "subActivity", "waiting", or a "choice".
+      dispatch.moveVSMObject({
+        vsmProjectID,
+        vsmObjectID,
+        leftObjectId: target?.vsmObjectID,
+        choiceGroup: target?.choiceGroup,
+        parent:
+          target?.vsmObjectType?.pkObjectType === vsmObjectTypes.mainActivity
+            ? target?.vsmObjectID
+            : target?.parent,
+      });
+    } else {
+      dispatch.setSnackMessage(
+        `Cannot move a ${getVsmTypeName(dragType)} to a ${
+          target.vsmObjectType.name
+        }`
+      );
+      return;
+    }
+  }
+
   function draggable(card: PIXI.Graphics, vsmObjectType: vsmObjectTypes) {
     const originalPosition = {
       x: card.position.x,
@@ -284,7 +362,7 @@ export default function VSMCanvas(): JSX.Element {
       if (this.dragging) {
         const newPosition = this.data.getLocalPosition(this.parent);
         if (vsmObjectType === vsmObjectTypes.choice) {
-          this.x = newPosition.x + 18; // move it slighly away from the pointer, since hoverevent is not triggered if object is between cursor and target
+          this.x = newPosition.x + 18; // move it slightly away from the pointer, since hoverEvent is not triggered if object is between cursor and target
           this.y = newPosition.y + 18;
         } else {
           this.x = newPosition.x + 6;
@@ -328,12 +406,72 @@ export default function VSMCanvas(): JSX.Element {
   useEffect(() => addToolBox(draggable), [project]);
 
   function createChild(child: vsmObject) {
-    return vsmObjectFactory(
+    const card = vsmObjectFactory(
       child,
       () => dispatch.setSelectedObject(child),
       () => setHoveredObject(child),
       () => clearHoveredObject()
     );
+
+    const originalPosition = {
+      x: card.position.x,
+      y: card.position.y,
+    };
+
+    function onDragStart(event) {
+      setDragObject(child);
+      viewport.plugins.pause("drag");
+      // store a reference to the data
+      // the reason for this is because of multitouch
+      // we want to track the movement of this particular touch
+      this.data = event.data;
+      this.alpha = 0.5;
+      this.dragging = true;
+    }
+
+    function onDragEnd() {
+      //Todo: Fix bug where when dragging subactivity onto a mainactivity, the mainactivity is suddenly the child object... 🧐
+      moveExistingVsmObjectToHoveredCard(dragObject);
+
+      this.alpha = 1;
+      this.dragging = false;
+      //Move the card back to where it started
+      this.x = originalPosition.x;
+      this.y = originalPosition.y;
+      // set the interaction data to null
+      this.data = null;
+      viewport.plugins.resume("drag");
+      clearHoveredObject();
+    }
+
+    function onDragMove() {
+      if (this.dragging) {
+        const newPosition = this.data.getLocalPosition(this.parent);
+        this.x = newPosition.x + 20;
+        this.y = newPosition.y + 20;
+      }
+    }
+
+    card.interactive = true;
+    const canDragCard: boolean =
+      child.vsmObjectType.pkObjectType === vsmObjectTypes.mainActivity ||
+      child.vsmObjectType.pkObjectType === vsmObjectTypes.subActivity ||
+      child.vsmObjectType.pkObjectType === vsmObjectTypes.choice ||
+      child.vsmObjectType.pkObjectType === vsmObjectTypes.waiting;
+    if (canDragCard) {
+      card
+        .on(pointerEvents.pointerover, () => {
+          card.cursor = "pointer";
+          card.alpha = 0.2;
+        })
+        .on(pointerEvents.pointerout, () => (card.alpha = 1))
+        .on(pointerEvents.pointerdown, onDragStart)
+        .on(pointerEvents.pointerup, onDragEnd)
+        .on(pointerEvents.pointerupoutside, onDragEnd)
+        .on(pointerEvents.pointermove, onDragMove);
+    }
+
+    return card;
   }
 
   function recursiveTree(root: vsmObject, level = 0): Container {
@@ -348,12 +486,10 @@ export default function VSMCanvas(): JSX.Element {
       // Remember, we don't display the root node...
       // so let's start laying out our horizontal first row
       root.childObjects?.forEach((child) => {
-        const backgroundColor = 0xf7f7f7;
         const c = recursiveTree(child, level + 1);
         const rectangle = new Graphics()
-          .beginFill(backgroundColor)
-          .drawRect(0, 0, c.width, c.height)
-          .endFill();
+          // .beginFill(0xcacaca) //<- Comment out for debugging
+          .drawRect(0, 0, c.width, c.height);
         const wrapper = new PIXI.Container();
         wrapper.addChild(rectangle, c);
         c.x = c.width / 2;
