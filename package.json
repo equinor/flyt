@@ -27,7 +27,7 @@
     "easy-peasy": "^5.0.0",
     "moment": "^2.29.1",
     "next": "10.1.1",
-    "pixi-viewport": "^4.21.1",
+    "pixi-viewport": "^4.24.0",
     "pixi.js": "^5.3.8",
     "react": "17.0.2",
     "react-device-detect": "^1.17.0",
