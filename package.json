@@ -1,6 +1,6 @@
 {
   "name": "mad-vsm-web",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "dev": "NODE_OPTIONS='--inspect' next dev",
@@ -25,6 +25,7 @@
     "@typescript-eslint/parser": "^4.16.1",
     "axios": "^0.21.1",
     "easy-peasy": "^5.0.0",
+    "github-release-notes": "^0.17.3",
     "moment": "^2.29.1",
     "next": "10.0.9",
     "pixi-viewport": "^4.21.1",
