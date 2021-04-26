@@ -12,6 +12,7 @@ import { GenericPostit } from "./canvas/GenericPostit";
 import { vsmObjectTypes } from "../types/vsmObjectTypes";
 import style from "./VSMCanvas.module.scss";
 import { getVsmTypeName } from "./GetVsmTypeName";
+import { DeleteVsmObjectDialog } from "./DeleteVsmObjectDialog";
 
 const app: Application = new Application({
   // resizeTo: window,
@@ -155,6 +156,8 @@ export default function VSMCanvas(): JSX.Element {
   const selectedObject = useStoreState((state) => state.selectedObject);
   const dispatch = useStoreDispatch();
   const project = useStoreState((state) => state.project);
+
+  const [visibleDeleteScrim, setVisibleDeleteScrim] = React.useState(false);
 
   function setHoveredObject(vsmObject: vsmObject) {
     if (vsmObject !== dragObject) {
@@ -620,13 +623,20 @@ export default function VSMCanvas(): JSX.Element {
 
   return (
     <>
+      {visibleDeleteScrim && (
+        <DeleteVsmObjectDialog
+          objectToDelete={selectedObject}
+          onClose={() => setVisibleDeleteScrim(false)}
+        />
+      )}
+
       <VSMSideBar
         onClose={() => dispatch.setSelectedObject(null)}
         onChangeName={onChangeNameHandler()}
         onChangeRole={onChangeRoleHandler()}
         onChangeTime={onChangeTimeHandler()}
         onChangeTimeDefinition={onChangeTimeDefinitionHandler()}
-        onDelete={() => dispatch.deleteVSMObject(selectedObject)}
+        onDelete={() => setVisibleDeleteScrim(true)}
         onAddTask={(task) => dispatch.addTask(task)}
       />
       <div className={style.canvasWrapper} ref={ref} />
