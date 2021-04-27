@@ -1,4 +1,4 @@
-export function formatCanvasText(text: string | null, maxLength = 120): string {
+export function formatCanvasText(text: string | null, maxLength = 100): string {
   if (!text) return "";
   let formattedText = text;
   if (text.length > maxLength) {
