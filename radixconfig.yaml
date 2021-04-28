@@ -13,6 +13,9 @@ spec:
     - name: qa
       build:
         from: QA
+    - name: prod
+      build:
+        from: PROD
   components:
     - name: web
       dockerfileName: Dockerfile
@@ -39,3 +42,9 @@ spec:
             AUTHORITY: https://login.microsoftonline.com/statoilsrm.onmicrosoft.com
             CLIENT_ID: 7fe4fa03-733a-414d-8d32-0a9358b5eeb9
             SCOPE: b78f9306-406d-4fa8-98e5-001dcd933ff4/user_impersonation
+        - environment: prod
+          variables:
+            API_BASEURL: https://api.statoil.com/app/vsm/prod
+            AUTHORITY: https://login.microsoftonline.com/statoilsrm.onmicrosoft.com
+            CLIENT_ID: 7b6f1bd7-ecb7-4e9b-b8a4-7a0a0804760d
+            SCOPE: 93cb35f6-8dd4-4dc1-8f44-d2e8dbd4be48/user_impersonation

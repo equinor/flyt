@@ -14,6 +14,7 @@
     "use-dev": "cp environment-variables/DEV.env .env && yarn dev",
     "use-test": "cp environment-variables/TEST.env .env && yarn dev",
     "use-qa": "cp environment-variables/QA.env .env && yarn dev",
+    "use-prod": "cp environment-variables/PROD.env .env && yarn dev",
     "lint": "pretty-quick --staged && lint-staged",
     "postinstall": "husky install"
   },
