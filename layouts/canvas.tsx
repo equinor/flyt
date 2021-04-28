@@ -14,11 +14,11 @@ import styles from "./default.layout.module.scss";
 import { useIsAuthenticated } from "@azure/msal-react";
 import React, { useState } from "react";
 import UserMenu from "../components/AppHeader/UserMenu";
-import Link from "next/link";
 import getConfig from "next/config";
 import { useStoreDispatch, useStoreState } from "../hooks/storeHooks";
 import { useRouter } from "next/router";
 import BaseAPIServices from "../services/BaseAPIServices";
+import { HomeButton } from "./homeButton";
 
 const icons = {
   chevron_down,
@@ -107,19 +107,14 @@ const CanvasLayout = ({ children }) => {
         <Head>
           <title>Authentication Required</title>
           <meta charSet="utf-8" />
+          {/*link manifest.json*/}
+          <link rel="manifest" href="/manifest.json" />
+          {/*this sets the color of url bar */}
+          <meta name="theme-color" content="#F7F7F7" />
         </Head>
 
         <TopBar className={styles.topBar}>
-          <div className={styles.homeButton}>
-            <Link href={"/"}>
-              <Button variant={"ghost"}>
-                <Icon name="file" title="Home" size={16} />
-                <Typography className={styles.homeButtonText} variant={"h4"}>
-                  VSM
-                </Typography>
-              </Button>
-            </Link>
-          </div>
+          <HomeButton />
           <div className={styles.userCircle}>
             <TopBar.Actions>
               <UserMenu />
@@ -159,19 +154,14 @@ const CanvasLayout = ({ children }) => {
       <Head>
         <title>{publicRuntimeConfig.APP_NAME}</title>
         <meta charSet="utf-8" />
+        {/*link manifest.json*/}
+        <link rel="manifest" href="/manifest.json" />
+        {/*this sets the color of url bar */}
+        <meta name="theme-color" content="#F7F7F7" />
       </Head>
 
       <TopBar className={styles.topBar}>
-        <div className={styles.homeButton}>
-          <Link href={"/"}>
-            <Button variant={"ghost"}>
-              <Icon name="file" title="Home" size={16} />
-              <Typography className={styles.homeButtonText} variant={"h4"}>
-                VSM
-              </Typography>
-            </Button>
-          </Link>
-        </div>
+        <HomeButton />
         <div className={styles.center}>
           <div style={{ gridAutoFlow: "row" }} className={styles.centerButton}>
             <div className={styles.centerButton}>

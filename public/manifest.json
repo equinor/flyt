@@ -1,13 +1,13 @@
 {
-  "name": "Value Stream Map",
-  "short_name": "VSM",
+  "name": "Equinor Flyt",
+  "short_name": "Flyt",
   "description": "TBD",
   "lang": "en-US",
   "display": "standalone",
   "theme_color": "#F8D859",
   "background_color": "#FFFFFF",
   "orientation": "any",
-  "start_url": ".",
+  "start_url": "/",
   "icons": [
     {
       "src": "favicon.ico",

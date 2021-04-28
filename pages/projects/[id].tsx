@@ -33,7 +33,7 @@ export default function Project() {
     return (
       <div className={commonStyles.container}>
         <Head>
-          <title>VSM | Project {id}</title>
+          <title>Flyt | Project {id}</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
@@ -48,7 +48,7 @@ export default function Project() {
     return (
       <div className={commonStyles.container}>
         <Head>
-          <title>VSM | Project {id}</title>
+          <title>Flyt | Project {id}</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
@@ -64,7 +64,7 @@ export default function Project() {
   return (
     <div className={commonStyles.container}>
       <Head>
-        <title>{project?.name || `VSM | Project ${id}`}</title>
+        <title>{project?.name || `Flyt | Project ${id}`}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
