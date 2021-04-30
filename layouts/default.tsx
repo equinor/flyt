@@ -1,19 +1,18 @@
 import Head from "next/head";
-import { Button, Icon, TopBar, Typography } from "@equinor/eds-core-react";
+import { Icon, TopBar } from "@equinor/eds-core-react";
 import {
   accessible,
   account_circle,
+  edit,
   fullscreen,
   notifications,
-  edit,
 } from "@equinor/eds-icons";
 import styles from "./default.layout.module.scss";
 import { useIsAuthenticated } from "@azure/msal-react";
 import React from "react";
 import UserMenu from "../components/AppHeader/UserMenu";
-import Link from "next/link";
-import { useRouter } from "next/router";
 import getConfig from "next/config";
+import { HomeButton } from "./homeButton";
 
 const icons = {
   account_circle,
@@ -27,12 +26,7 @@ Icon.add(icons);
 
 const DefaultLayout = ({ children }) => {
   const isAuthenticated = useIsAuthenticated();
-  const router = useRouter();
   const { publicRuntimeConfig } = getConfig();
-
-  const login = () => {
-    router.push("/login");
-  };
 
   if (!isAuthenticated) {
     return (
@@ -40,15 +34,14 @@ const DefaultLayout = ({ children }) => {
         <Head>
           <title>Authentication Required</title>
           <meta charSet="utf-8" />
+          {/*link manifest.json*/}
+          <link rel="manifest" href="/manifest.json" />
+          {/*this sets the color of url bar */}
+          <meta name="theme-color" content="#F7F7F7" />
         </Head>
 
         <TopBar className={styles.topBar}>
-          <Link href={"/"}>
-            <Button variant={"ghost"}>
-              <Icon name="file" title="Home" size={16} />
-              <Typography variant={"h4"}>VSM</Typography>
-            </Button>
-          </Link>
+          <HomeButton />
         </TopBar>
 
         {children}
@@ -60,15 +53,14 @@ const DefaultLayout = ({ children }) => {
       <Head>
         <title>{publicRuntimeConfig.APP_NAME}</title>
         <meta charSet="utf-8" />
+        {/*link manifest.json*/}
+        <link rel="manifest" href="/manifest.json" />
+        {/*this sets the color of url bar */}
+        <meta name="theme-color" content="#F7F7F7" />
       </Head>
 
       <TopBar className={styles.topBar}>
-        <Link href={"/"}>
-          <Button variant={"ghost"}>
-            <Icon name="file" title="Home" size={16} />
-            <Typography variant={"h4"}>VSM</Typography>
-          </Button>
-        </Link>
+        <HomeButton />
         <TopBar.Actions>
           <UserMenu />
         </TopBar.Actions>

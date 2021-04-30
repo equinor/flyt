@@ -42,7 +42,7 @@ export default function Projects() {
     return (
       <div className={commonStyles.container}>
         <Head>
-          <title>VSM | Projects</title>
+          <title>Flyt | Projects</title>
           <link rel="icon" href={"/favicon.ico"} />
         </Head>
 
@@ -56,7 +56,7 @@ export default function Projects() {
   return (
     <div className={commonStyles.container}>
       <Head>
-        <title>VSM | Projects</title>
+        <title>Flyt | Projects</title>
         <link rel={"icon"} href={"/favicon.ico"} />
       </Head>
 
