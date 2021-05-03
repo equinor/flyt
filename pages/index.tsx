@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import commonStyles from "../styles/common.module.scss";
 import Head from "next/head";
-import { Button, Icon, Typography } from "@equinor/eds-core-react";
+import { Button, Icon, Tabs, Typography } from "@equinor/eds-core-react";
 import { Layouts } from "../layouts/LayoutWrapper";
 import { account_circle, add } from "@equinor/eds-icons";
-import { VSMCard } from "../components/Card/Card";
 import BaseAPIServices from "../services/BaseAPIServices";
 import { useRouter } from "next/router";
-import { vsmProject } from "../interfaces/VsmProject";
 import styles from "./projects/Projects.module.scss";
 import { projectTemplatesV1 } from "../assets/projectTemplatesV1";
+import { useAccount, useMsal } from "@azure/msal-react";
+import { ProjectListSection } from "../components/projectListSection";
+
+const { TabList, Tab, TabPanels, TabPanel } = Tabs;
 
 Icon.add({ account_circle, add });
 
@@ -19,6 +21,11 @@ export default function Projects() {
   const [error, setError] = useState(null);
 
   const router = useRouter();
+
+  const { accounts } = useMsal();
+  const account = useAccount(accounts[0] || {});
+
+  const [activeTab, setActiveTab] = useState(0);
 
   useEffect(() => {
     setFetching(true);
@@ -53,6 +60,12 @@ export default function Projects() {
       </div>
     );
 
+  const projectsICanEdit = projects.filter(
+    (p) => p.created.userIdentity !== account?.username.split("@")[0]
+  );
+  const projectsICanView = projects.filter(
+    (p) => p.created.userIdentity === account?.username.split("@")[0]
+  );
   return (
     <div className={commonStyles.container}>
       <Head>
@@ -76,15 +89,61 @@ export default function Projects() {
           {!!fetching ? (
             <Typography variant={"h2"}>Fetching projects... </Typography>
           ) : (
-            <div className={styles.vsmCardContainer}>
-              {projects?.length > 0 ? (
-                projects.map((vsm: vsmProject) => (
-                  <VSMCard key={vsm.vsmProjectID} vsm={vsm} />
-                ))
-              ) : (
-                <p className={commonStyles.appear}>Could not find any VSMs</p>
-              )}
-            </div>
+            <>
+              <Tabs
+                activeTab={activeTab}
+                onChange={(index) => setActiveTab(index)}
+              >
+                <TabList
+                  style={{
+                    justifyContent: "center",
+                    display: "flex",
+                    flexDirection: "row",
+                  }}
+                >
+                  <Tab>Edit</Tab>
+                  <Tab>View</Tab>
+                </TabList>
+                <TabPanels>
+                  <TabPanel>
+                    <p
+                      style={{
+                        paddingBottom: 12,
+                        display: "flex",
+                        justifyContent: "center",
+                        fontStyle: "italic",
+                      }}
+                    >
+                      These are the VSMs you can edit
+                    </p>
+                    <ProjectListSection projects={projectsICanView} />
+                  </TabPanel>
+                  <TabPanel>
+                    <p
+                      style={{
+                        paddingBottom: 12,
+                        display: "flex",
+                        justifyContent: "center",
+                        fontStyle: "italic",
+                      }}
+                    >
+                      These are the VSMs you can view.
+                    </p>
+                    <p
+                      style={{
+                        paddingBottom: 12,
+                        display: "flex",
+                        justifyContent: "center",
+                        fontStyle: "italic",
+                      }}
+                    >
+                      Currently you can only edit VSMs that you have created.
+                    </p>
+                    <ProjectListSection projects={projectsICanEdit} />
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
+            </>
           )}
         </>
       </main>
