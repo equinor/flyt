@@ -9,13 +9,7 @@ import {
   TopBar,
   Typography,
 } from "@equinor/eds-core-react";
-import {
-  chevron_down,
-  close,
-  comment_important,
-  delete_forever,
-  file,
-} from "@equinor/eds-icons";
+import { chevron_down, close, delete_forever } from "@equinor/eds-icons";
 import styles from "./default.layout.module.scss";
 import { useIsAuthenticated } from "@azure/msal-react";
 import React, { useState } from "react";
@@ -30,9 +24,7 @@ import { RightTopBarSection } from "../components/rightTopBarSection";
 const icons = {
   chevron_down,
   close,
-  comment_important,
   delete_forever,
-  file,
 };
 
 Icon.add(icons);

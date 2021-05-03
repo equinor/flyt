@@ -2,8 +2,17 @@ import { Button, Icon, TopBar } from "@equinor/eds-core-react";
 import styles from "../layouts/default.layout.module.scss";
 import UserMenu from "./AppHeader/UserMenu";
 import React from "react";
+import { comment_important } from "@equinor/eds-icons";
 
-export function RightTopBarSection(props: { isAuthenticated: boolean }) {
+const icons = {
+  comment_important,
+};
+
+Icon.add(icons);
+
+export function RightTopBarSection(props: {
+  isAuthenticated: boolean;
+}): JSX.Element {
   return (
     <div
       style={{

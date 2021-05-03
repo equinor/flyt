@@ -1,28 +1,11 @@
 import Head from "next/head";
-import { Icon, TopBar } from "@equinor/eds-core-react";
-import {
-  accessible,
-  account_circle,
-  edit,
-  fullscreen,
-  notifications,
-} from "@equinor/eds-icons";
+import { TopBar } from "@equinor/eds-core-react";
 import styles from "./default.layout.module.scss";
 import { useIsAuthenticated } from "@azure/msal-react";
 import React from "react";
 import getConfig from "next/config";
 import { HomeButton } from "./homeButton";
 import { RightTopBarSection } from "../components/rightTopBarSection";
-
-const icons = {
-  account_circle,
-  accessible,
-  notifications,
-  fullscreen,
-  edit,
-};
-
-Icon.add(icons);
 
 const DefaultLayout = ({ children }) => {
   const isAuthenticated = useIsAuthenticated();
