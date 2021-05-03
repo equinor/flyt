@@ -10,9 +10,9 @@ import {
 import styles from "./default.layout.module.scss";
 import { useIsAuthenticated } from "@azure/msal-react";
 import React from "react";
-import UserMenu from "../components/AppHeader/UserMenu";
 import getConfig from "next/config";
 import { HomeButton } from "./homeButton";
+import { RightTopBarSection } from "../components/rightTopBarSection";
 
 const icons = {
   account_circle,
@@ -42,6 +42,8 @@ const DefaultLayout = ({ children }) => {
 
         <TopBar className={styles.topBar}>
           <HomeButton />
+          <div />
+          <RightTopBarSection isAuthenticated={isAuthenticated} />
         </TopBar>
 
         {children}
@@ -61,9 +63,8 @@ const DefaultLayout = ({ children }) => {
 
       <TopBar className={styles.topBar}>
         <HomeButton />
-        <TopBar.Actions>
-          <UserMenu />
-        </TopBar.Actions>
+        <div />
+        <RightTopBarSection isAuthenticated={isAuthenticated} />
       </TopBar>
 
       {children}
