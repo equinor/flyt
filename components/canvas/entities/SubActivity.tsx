@@ -60,7 +60,7 @@ export default function SubActivity({
   };
 
   const textElement = new PIXI.Text(
-    formatCanvasText(text || header, 118),
+    formatCanvasText(text || header),
     defaultStyle
   );
   textElement.x = paddingLeft;
