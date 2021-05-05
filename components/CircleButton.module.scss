@@ -24,3 +24,14 @@
 .addButton:hover {
   opacity: 0.2;
 }
+
+.addButtonDisabled {
+  @extend .circle;
+  color: white;
+  background-color: #eaeaea;
+  border-color: #eaeaea;
+  font-size: 40px;
+  font-weight: lighter;
+  line-height: 42px;
+  cursor: default;
+}

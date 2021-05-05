@@ -11,7 +11,7 @@ import {
 } from "@equinor/eds-core-react";
 import { chevron_down, close, delete_forever } from "@equinor/eds-icons";
 import styles from "./default.layout.module.scss";
-import { useIsAuthenticated } from "@azure/msal-react";
+import { useAccount, useIsAuthenticated, useMsal } from "@azure/msal-react";
 import React, { useState } from "react";
 import UserMenu from "../components/AppHeader/UserMenu";
 import getConfig from "next/config";
@@ -20,6 +20,7 @@ import { useRouter } from "next/router";
 import BaseAPIServices from "../services/BaseAPIServices";
 import { HomeButton } from "./homeButton";
 import { RightTopBarSection } from "../components/rightTopBarSection";
+import { getUserCanEdit } from "../components/GetUserCanEdit";
 
 const icons = {
   chevron_down,
@@ -40,6 +41,11 @@ const CanvasLayout = ({ children }) => {
   const snackMessage = useStoreState((state) => state.snackMessage);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState(null);
+
+  const { accounts } = useMsal();
+  const account = useAccount(accounts[0] || {});
+  const userCanEdit = getUserCanEdit(account, project);
+  const userCannotEdit = !userCanEdit;
   // Show the title dialog if we don't have a title.
   // useEffect(() => {
   //   if (!projectTitle) {
@@ -189,6 +195,12 @@ const CanvasLayout = ({ children }) => {
               focus={focus}
             >
               <Menu.Item
+                title={`${
+                  userCannotEdit
+                    ? "Only the creator can rename this VSM"
+                    : "Rename the current VSM"
+                }`}
+                disabled={userCannotEdit}
                 onKeyDown={(e) => {
                   if (e.code === "Enter") setVisibleRenameScrim(true);
                 }}
@@ -199,6 +211,12 @@ const CanvasLayout = ({ children }) => {
                 </Typography>
               </Menu.Item>
               <Menu.Item
+                title={`${
+                  userCannotEdit
+                    ? "Only the creator can delete this VSM"
+                    : "Delete the current VSM"
+                }`}
+                disabled={userCannotEdit}
                 onKeyDown={(e) => {
                   if (e.code === "Enter") setVisibleDeleteScrim(true);
                 }}

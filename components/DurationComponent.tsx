@@ -11,10 +11,12 @@ export function DurationComponent(props: {
   selectedObject: vsmObject;
   onChangeTime: (event: { target: { value: string } }) => void;
   onChangeTimeDefinition: (timeDefinition: string) => void;
+  disabled: boolean;
 }): JSX.Element {
   return (
     <div style={{ display: "flex" }}>
       <TextField
+        disabled={props.disabled}
         label={"Duration"}
         type={"number"}
         value={props.selectedObject.time?.toString()}
@@ -23,6 +25,7 @@ export function DurationComponent(props: {
       />
       <div style={{ padding: 8 }} />
       <SingleSelect
+        disabled={props.disabled}
         items={getTimeDefinitionValues()}
         handleSelectedItemChange={(i) => {
           const apiValue = getTimeDefinitionValue(i.selectedItem);

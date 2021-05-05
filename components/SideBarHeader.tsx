@@ -1,5 +1,5 @@
 import styles from "./VSMCanvas.module.scss";
-import { Button, Icon } from "@equinor/eds-core-react";
+import { Button, Icon, Typography } from "@equinor/eds-core-react";
 import { canDeleteVSMObject } from "../utils/CanDeleteVSMObect";
 import React from "react";
 import { vsmObject } from "../interfaces/VsmObject";
@@ -8,15 +8,14 @@ export function SideBarHeader(props: {
   object: vsmObject;
   onClose: () => void;
   onDelete: () => void;
+  canEdit: boolean;
 }): JSX.Element {
   return (
     <div className={styles.headerContainer}>
-      <h1 className={styles.sideBarHeader}>
-        {props.object?.vsmObjectType.name}
-      </h1>
+      <Typography variant={"h2"}>{props.object?.vsmObjectType.name}</Typography>
       <div className={styles.actions}>
         <Button
-          disabled={!canDeleteVSMObject(props.object)}
+          disabled={!canDeleteVSMObject(props.object) || !props.canEdit}
           title={"Delete"}
           variant={"ghost_icon"}
           color={"danger"}

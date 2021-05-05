@@ -13,6 +13,8 @@ import { vsmObjectTypes } from "../types/vsmObjectTypes";
 import style from "./VSMCanvas.module.scss";
 import { getVsmTypeName } from "./GetVsmTypeName";
 import { DeleteVsmObjectDialog } from "./DeleteVsmObjectDialog";
+import { useAccount, useMsal } from "@azure/msal-react";
+import { getUserCanEdit } from "./GetUserCanEdit";
 
 const app: Application = new Application({
   // resizeTo: window,
@@ -158,6 +160,10 @@ export default function VSMCanvas(): JSX.Element {
   const project = useStoreState((state) => state.project);
 
   const [visibleDeleteScrim, setVisibleDeleteScrim] = React.useState(false);
+
+  const { accounts } = useMsal();
+  const account = useAccount(accounts[0] || {});
+  const userCanEdit = getUserCanEdit(account, project);
 
   function setHoveredObject(vsmObject: vsmObject) {
     if (vsmObject !== dragObject) {
@@ -406,7 +412,11 @@ export default function VSMCanvas(): JSX.Element {
     }
   }, [project]);
 
-  useEffect(() => addToolBox(draggable), [project]);
+  useEffect(() => {
+    if (userCanEdit) {
+      return addToolBox(draggable);
+    }
+  }, [project]);
 
   function createChild(child: vsmObject) {
     const card = vsmObjectFactory(
@@ -457,10 +467,12 @@ export default function VSMCanvas(): JSX.Element {
 
     card.interactive = true;
     const canDragCard: boolean =
-      child.vsmObjectType.pkObjectType === vsmObjectTypes.mainActivity ||
-      child.vsmObjectType.pkObjectType === vsmObjectTypes.subActivity ||
-      child.vsmObjectType.pkObjectType === vsmObjectTypes.choice ||
-      child.vsmObjectType.pkObjectType === vsmObjectTypes.waiting;
+      userCanEdit &&
+      (child.vsmObjectType.pkObjectType === vsmObjectTypes.mainActivity ||
+        child.vsmObjectType.pkObjectType === vsmObjectTypes.subActivity ||
+        child.vsmObjectType.pkObjectType === vsmObjectTypes.choice ||
+        child.vsmObjectType.pkObjectType === vsmObjectTypes.waiting);
+
     if (canDragCard) {
       card
         .on(pointerEvents.pointerover, () => {
@@ -638,6 +650,7 @@ export default function VSMCanvas(): JSX.Element {
         onChangeTimeDefinition={onChangeTimeDefinitionHandler()}
         onDelete={() => setVisibleDeleteScrim(true)}
         onAddTask={(task) => dispatch.addTask(task)}
+        canEdit={userCanEdit}
       />
       <div className={style.canvasWrapper} ref={ref} />
     </>
