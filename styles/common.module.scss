@@ -17,6 +17,7 @@
 
   animation-name: fade-in;
   animation-duration: 0.5s;
+  width: 100%;
 }
 
 .appear {
@@ -27,6 +28,6 @@
 @keyframes fade-in {
   from {
     opacity: 0;
-    transform: translateY(10px)
+    transform: translateY(10px);
   }
 }
