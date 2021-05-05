@@ -18,6 +18,7 @@ export function SideBarContent(props: {
   onAddTask: (task: taskObject) => void;
   onClose: () => void;
   onDelete: () => void;
+  canEdit: boolean;
 }): JSX.Element {
   const selectedObject = useStoreState((state) => state.selectedObject);
   const [showNewTaskSection, setShowNewTaskSection] = useState(false);
@@ -31,6 +32,7 @@ export function SideBarContent(props: {
         object={selectedObject}
         onClose={props.onClose}
         onDelete={props.onDelete}
+        canEdit={props.canEdit}
       />
       <SideBarBody
         selectedObject={selectedObject}
@@ -39,6 +41,7 @@ export function SideBarContent(props: {
         onChangeTimeDefinition={props.onChangeTimeDefinition}
         onChangeTime={props.onChangeTime}
         setShowNewTaskSection={setShowNewTaskSection}
+        canEdit={props.canEdit}
       />
     </React.Fragment>
   );

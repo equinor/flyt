@@ -16,6 +16,7 @@ export function VSMSideBar(props: {
   onAddTask: (task: taskObject) => void;
   onClose: () => void;
   onDelete: () => void;
+  canEdit: boolean;
 }): JSX.Element {
   const selectedObject = useStoreState((state) => state.selectedObject);
 
@@ -37,6 +38,7 @@ export function VSMSideBar(props: {
           onAddTask={props.onAddTask}
           onClose={props.onClose}
           onDelete={props.onDelete}
+          canEdit={props.canEdit}
         />
       </div>
     </div>
