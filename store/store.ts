@@ -17,12 +17,15 @@ export interface ProjectModel {
   project: vsmProject;
   snackMessage: string | null;
   selectedObject: vsmObject | null;
+  hoveredObject: vsmObject | null;
   //// ACTIONS ///////////////////
   //someAction: Action<model, payload>;
   addTaskToSelectedObject: Action<ProjectModel, taskObject>;
   updateTaskDescriptionInSelectedObject: Action<ProjectModel, taskObject>;
   removeTaskFromSelectedObject: Action<ProjectModel, number>;
   setSelectedObject: Action<ProjectModel, vsmObject | null>;
+  setHoveredObject: Action<ProjectModel, vsmObject>;
+  clearHoveredObject: Action<ProjectModel>;
   patchLocalObject: Action<ProjectModel, vsmObject>;
   setErrorProject: Action<ProjectModel, Record<string, unknown>>;
   setFetchingProject: Action<ProjectModel, boolean>;
@@ -59,7 +62,7 @@ const projectModel: ProjectModel = {
   project: null,
   snackMessage: null,
   selectedObject: null, //Todo: Use this instead local state selectedObject in components/VSMCanvas.tsx
-
+  hoveredObject: null,
   // selectedObject: computed((state) => {
   //   const { project, selectedObjectId } = state;
   //
@@ -92,6 +95,12 @@ const projectModel: ProjectModel = {
   }),
   setSnackMessage: action((state, payload) => {
     state.snackMessage = payload;
+  }),
+  setHoveredObject: action((state, payload) => {
+    state.hoveredObject = payload;
+  }),
+  clearHoveredObject: action((state) => {
+    state.hoveredObject = null;
   }),
   setErrorProject: action((state, payload) => {
     state.errorProject = payload;

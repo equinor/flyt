@@ -8,7 +8,7 @@ import { vsmProject } from "../../interfaces/VsmProject";
 export function VSMCard(props: { vsm: vsmProject }): JSX.Element {
   const { userIdentity: createdBy } = props.vsm.created;
   return (
-    <Link href={`/projects/${props.vsm.vsmProjectID}`}>
+    <Link href={`/canvas/${props.vsm.vsmProjectID}`}>
       <div className={styles.card}>
         <div className={styles.vsmTitleContainer}>
           <h1 className={styles.vsmTitle}>

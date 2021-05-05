@@ -13,24 +13,31 @@ import { vsmObjectTypes } from "../types/vsmObjectTypes";
 import style from "./VSMCanvas.module.scss";
 import { getVsmTypeName } from "./GetVsmTypeName";
 import { DeleteVsmObjectDialog } from "./DeleteVsmObjectDialog";
+import { addToolBox } from "./AddToolBox";
 
-const app: Application = new Application({
-  // resizeTo: window,
-  height: window.innerHeight - 70,
-  width: window.innerWidth,
-  backgroundColor: 0xf7f7f7,
-  antialias: true,
-});
-
-const viewport: Viewport = new Viewport({
-  interaction: app.renderer.plugins.interaction, // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
-});
+let app: Application = null;
+let viewport: Viewport = null;
 
 function initCanvas(ref: React.MutableRefObject<HTMLDivElement>) {
-  // Make sure the app.stage is empty
-  app.stage.removeChildren();
+  if (!app) {
+    app = new Application({
+      // resizeTo: window,
+      height: window.innerHeight - 70,
+      width: window.innerWidth,
+      backgroundColor: 0xf7f7f7,
+      antialias: true,
+    });
+  }
+  if (!viewport) {
+    viewport = new Viewport({
+      interaction: app.renderer.plugins.interaction, // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
+    });
+  }
+
+  // Make sure the app.stage? is empty
+  app.stage?.removeChildren();
   // add the viewport to the stage
-  app.stage.addChild(viewport);
+  app.stage?.addChild(viewport);
 
   if (isMobile) {
     viewport
@@ -43,7 +50,7 @@ function initCanvas(ref: React.MutableRefObject<HTMLDivElement>) {
   // Add app to DOM
   ref.current.appendChild(app.view);
 
-  app?.start();
+  app.start();
 
   console.info("Initialized canvas");
 }
@@ -53,12 +60,21 @@ function getViewPort() {
 }
 
 function cleanupApp() {
+  // debugger;
+  console.log("app stage", app.stage);
   // Todo: Fix cleanup of app
   // console.info("Cleaning up app", { app, viewport });
-  app.stage.removeChildren(); // Just to be sure, remove the current stage children ( memory leak...)
-  app?.stop();
+  if (app.stage) {
+    console.log("before:", app.stage.children);
+    app.stage.removeChildren();
+    console.log("after:", app.stage.children);
+  }
+  // app.stage?.removeChildren(); // Just to be sure, remove the current stage children ( memory leak...)
+  app.stop();
   // On unload completely destroy the application and all of it's children
-  // app?.destroy(true, { children: true });
+  app.destroy(true, { children: true, texture: true, baseTexture: true });
+
+  // app.destroy(true, { children: true });
 }
 
 export const pointerEvents = {
@@ -70,83 +86,6 @@ export const pointerEvents = {
   pointerout: "pointerout",
   click: "click", // Fired when a pointer device button (usually a mouse left-button) is pressed and released on the display object. DisplayObject's interactive property must be set to true to fire event.
 };
-
-function addToolBox(
-  draggable: (card: PIXI.Graphics, vsmObjectType: vsmObjectTypes) => void
-) {
-  const box = new PIXI.Container();
-
-  const padding = 40;
-  //  Render the drag'n-drop-box
-  const rectangle = new Graphics();
-  const width = padding * 4;
-  const height = 54;
-  rectangle.beginFill(0xffffff);
-  rectangle.drawRoundedRect(0, 0, width, height, 6);
-  rectangle.endFill();
-
-  const rectangleBorder = new Graphics();
-  rectangleBorder.beginFill(0xd6d6d6);
-  rectangleBorder.drawRoundedRect(0, 0, width + 1, height + 1, 6);
-  rectangleBorder.endFill();
-  rectangle.x = 0.5;
-  rectangle.y = 0.5;
-  box.addChild(rectangleBorder);
-
-  box.addChild(rectangle);
-
-  // Render the icons
-  const mainActivity = new Graphics();
-  mainActivity.beginFill(0x52c0ff);
-  mainActivity.drawRoundedRect(0, 0, 22, 22, 2);
-  mainActivity.endFill();
-  mainActivity.x = 14;
-  mainActivity.y = rectangle.y + rectangle.height / 2 - mainActivity.height / 2;
-  draggable(mainActivity, vsmObjectTypes.mainActivity);
-  box.addChild(mainActivity);
-
-  const subActivity = new Graphics();
-  subActivity.beginFill(0xfdd835);
-  subActivity.drawRoundedRect(0, 0, 22, 22, 2);
-  subActivity.endFill();
-  subActivity.x = mainActivity.x + padding;
-  subActivity.y = rectangle.y + rectangle.height / 2 - subActivity.height / 2;
-  draggable(subActivity, vsmObjectTypes.subActivity);
-  box.addChild(subActivity);
-
-  const choiceIcon = new Graphics();
-  choiceIcon.beginFill(0xfdd835);
-  const hypotenuse = 22;
-  const edge = Math.sqrt(hypotenuse ** 2 / 2);
-  choiceIcon.drawRoundedRect(0, 0, edge, edge, 2);
-  choiceIcon.pivot.x = choiceIcon.width / 2;
-  choiceIcon.pivot.y = choiceIcon.height / 2;
-
-  choiceIcon.y =
-    rectangle.y +
-    rectangle.height / 2 -
-    choiceIcon.height / 2 +
-    choiceIcon.height / 2;
-  choiceIcon.x = subActivity.x + padding + choiceIcon.width / 2;
-  choiceIcon.angle = 45;
-  draggable(choiceIcon, vsmObjectTypes.choice);
-  box.addChild(choiceIcon);
-
-  const waitingIcon = new Graphics();
-  waitingIcon.beginFill(0xff8f00);
-  waitingIcon.drawRoundedRect(0, 0, 22, 12, 2);
-  waitingIcon.endFill();
-  waitingIcon.x = choiceIcon.x - choiceIcon.width + padding;
-  waitingIcon.y = rectangle.y + rectangle.height / 2 - waitingIcon.height / 2;
-  draggable(waitingIcon, vsmObjectTypes.waiting);
-  box.addChild(waitingIcon);
-
-  app.stage.addChild(box);
-  box.y = window.innerHeight - 84 - box.height;
-  box.x = window.innerWidth / 2 - box.width / 2;
-
-  return () => app.stage.removeChild(box); //Cleanup method
-}
 
 let hoveredObject: vsmObject | null = null;
 let dragObject: vsmObject | null = null;
@@ -400,13 +339,13 @@ export default function VSMCanvas(): JSX.Element {
       addCards(viewport);
 
       return () => {
-        console.info("Clearing canvas");
+        console.info("Clearing canvas", viewport.children);
         viewport.removeChildren();
       };
     }
   }, [project]);
 
-  useEffect(() => addToolBox(draggable), [project]);
+  useEffect(() => addToolBox(draggable, app), [project]);
 
   function createChild(child: vsmObject) {
     const card = vsmObjectFactory(
