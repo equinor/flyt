@@ -15,6 +15,7 @@ import { getVsmTypeName } from "./GetVsmTypeName";
 import { DeleteVsmObjectDialog } from "./DeleteVsmObjectDialog";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { getUserCanEdit } from "./GetUserCanEdit";
+import { nodeIsInTree } from "./NodeIsInTree";
 
 const app: Application = new Application({
   // resizeTo: window,
@@ -288,8 +289,11 @@ export default function VSMCanvas(): JSX.Element {
       return;
     }
     const { pkObjectType: hoveredType } = target.vsmObjectType;
-
     const dragType = child.vsmObjectType.pkObjectType;
+    if (dragType === vsmObjectTypes.choice && nodeIsInTree(target, child)) {
+      // VSM-80 Should not be able to drop a parent on a child item
+      return;
+    }
     if (dragType === vsmObjectTypes.mainActivity) {
       //Note: we can only drop a "mainActivity" on "input" or on another "mainActivity".
       //Parent should be the target's parent
