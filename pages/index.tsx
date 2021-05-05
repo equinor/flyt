@@ -15,7 +15,8 @@ const { TabList, Tab, TabPanels, TabPanel } = Tabs;
 
 Icon.add({ account_circle, add });
 
-export default function Projects() {
+// eslint-disable-next-line max-lines-per-function
+export default function Projects(): JSX.Element {
   const [projects, setProjects] = useState([]);
   const [fetching, setFetching] = useState(true);
   const [error, setError] = useState(null);
@@ -75,14 +76,10 @@ export default function Projects() {
 
       <main className={commonStyles.main}>
         <div className={styles.header}>
-          <h1>My Value Stream Maps</h1>
-          <Button
-            style={{ marginLeft: 24 }}
-            variant={"outlined"}
-            onClick={() => createNewVSM()}
-          >
+          <Typography variant={"h1"}>My Value Stream Maps</Typography>
+          <Button variant={"outlined"} onClick={() => createNewVSM()}>
             Create new VSM
-            <Icon name="add" title="add" size={16} />
+            <Icon name="add" title="add" />
           </Button>
         </div>
         <>
