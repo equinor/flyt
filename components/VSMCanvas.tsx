@@ -292,6 +292,9 @@ export default function VSMCanvas(): JSX.Element {
     const dragType = child.vsmObjectType.pkObjectType;
     if (dragType === vsmObjectTypes.choice && nodeIsInTree(target, child)) {
       // VSM-80 Should not be able to drop a parent on a child item
+      dispatch.setSnackMessage(
+        `🙅‍♀️ Cannot move a parent to a child-object -> Circular inheritance`
+      );
       return;
     }
     if (dragType === vsmObjectTypes.mainActivity) {
