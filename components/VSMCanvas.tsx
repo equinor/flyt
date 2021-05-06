@@ -145,7 +145,7 @@ function addToolBox(
   box.addChild(waitingIcon);
 
   app.stage.addChild(box);
-  box.y = window.innerHeight - box.height - 40 * 2.5;
+  box.y = window.innerHeight - box.height - 100;
   if (window.innerWidth < 768) {
     box.x = window.innerWidth / 2 - box.width / 2;
   } else {
