@@ -6,6 +6,7 @@ import { taskObject } from "../interfaces/taskObject";
 import { TaskButton } from "./TaskButton";
 import { EditTaskSection } from "./EditTaskSection";
 import { CircleButton } from "./CircleButton";
+import { Typography } from "@equinor/eds-core-react";
 
 const NewTaskButton = (props: { onClick: () => void; disabled: boolean }) => (
   <div>
@@ -17,11 +18,12 @@ const NewTaskButton = (props: { onClick: () => void; disabled: boolean }) => (
   </div>
 );
 
+// eslint-disable-next-line max-lines-per-function
 export const QIPSection = (props: {
   object: vsmObject;
   onClickNewTask: () => void;
   canEdit: boolean;
-}) => {
+}): JSX.Element => {
   const selectedObject = props.object;
   const [selectedTask, setSelectedTask] = useState(null);
 
@@ -32,11 +34,7 @@ export const QIPSection = (props: {
 
   return (
     <div className={styles.QIPContainer}>
-      <div className={styles.headerContainer}>
-        <div className={styles.sideBarSectionHeader}>
-          <p>Questions, Ideas and Problems</p>
-        </div>
-      </div>
+      <Typography variant={"h3"}>Questions, Ideas and Problems</Typography>
 
       {showEditTaskSection && (
         <EditTaskSection
