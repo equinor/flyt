@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { Graphics } from "pixi.js";
+import { Graphics, TextStyle } from "pixi.js";
 import { formatCanvasText } from "./FormatCanvasText";
 import { clickHandler } from "./entities/ClickHandler";
 import { pointerEvents } from "../VSMCanvas";
@@ -47,7 +47,7 @@ export function GenericPostit({
   const defaultStyle = {
     fill: 0x3d3d3d,
     fontFamily: "Equinor",
-    fontWeight: 500,
+    fontWeight: "500",
     fontSize: 12,
     lineHeight: 16,
     letterSpacing: 0.2,
@@ -55,7 +55,7 @@ export function GenericPostit({
     wordWrap: true,
     breakWords: true,
     trim: true,
-  };
+  } as TextStyle;
 
   const headerText = new PIXI.Text(formatCanvasText(header, 18), defaultStyle);
   headerText.x = paddingLeft;

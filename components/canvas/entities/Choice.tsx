@@ -39,7 +39,7 @@ export default function Choice({
   const contentText = new PIXI.Text(formatCanvasText(content || "Choice", 45), {
     fill: 0x3d3d3d,
     fontFamily: "Equinor",
-    fontWeight: 500,
+    fontWeight: "500",
     fontSize: 12,
     lineHeight: 16,
     letterSpacing: 0.2,
