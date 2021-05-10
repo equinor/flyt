@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { Graphics } from "pixi.js";
+import { Graphics, TextStyle } from "pixi.js";
 import { formatCanvasText } from "../FormatCanvasText";
 import { clickHandler } from "./ClickHandler";
 import { pointerEvents } from "../../VSMCanvas";
@@ -33,7 +33,7 @@ export default function MainActivity({
   const defaultStyle = {
     fill: 0x3d3d3d,
     fontFamily: "Equinor",
-    fontWeight: 500,
+    fontWeight: "500",
     fontSize: 12,
     lineHeight: 16,
     letterSpacing: 0.2,
@@ -41,9 +41,9 @@ export default function MainActivity({
     wordWrap: true,
     breakWords: true,
     trim: true,
-  };
+  } as TextStyle;
   const textElement = new PIXI.Text(
-    formatCanvasText(text || header, 118),
+    formatCanvasText(text || header),
     defaultStyle
   );
   textElement.x = paddingLeft;

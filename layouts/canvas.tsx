@@ -9,22 +9,23 @@ import {
   TopBar,
   Typography,
 } from "@equinor/eds-core-react";
-import { chevron_down, close, delete_forever, file } from "@equinor/eds-icons";
+import { chevron_down, close, delete_forever } from "@equinor/eds-icons";
 import styles from "./default.layout.module.scss";
-import { useIsAuthenticated } from "@azure/msal-react";
+import { useAccount, useIsAuthenticated, useMsal } from "@azure/msal-react";
 import React, { useState } from "react";
 import UserMenu from "../components/AppHeader/UserMenu";
-import Link from "next/link";
 import getConfig from "next/config";
 import { useStoreDispatch, useStoreState } from "../hooks/storeHooks";
 import { useRouter } from "next/router";
 import BaseAPIServices from "../services/BaseAPIServices";
+import { HomeButton } from "./homeButton";
+import { RightTopBarSection } from "../components/rightTopBarSection";
+import { getUserCanEdit } from "../components/GetUserCanEdit";
 
 const icons = {
   chevron_down,
-  file,
-  delete_forever,
   close,
+  delete_forever,
 };
 
 Icon.add(icons);
@@ -40,6 +41,11 @@ const CanvasLayout = ({ children }) => {
   const snackMessage = useStoreState((state) => state.snackMessage);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState(null);
+
+  const { accounts } = useMsal();
+  const account = useAccount(accounts[0] || {});
+  const userCanEdit = getUserCanEdit(account, project);
+  const userCannotEdit = !userCanEdit;
   // Show the title dialog if we don't have a title.
   // useEffect(() => {
   //   if (!projectTitle) {
@@ -107,19 +113,14 @@ const CanvasLayout = ({ children }) => {
         <Head>
           <title>Authentication Required</title>
           <meta charSet="utf-8" />
+          {/*link manifest.json*/}
+          <link rel="manifest" href="/manifest.json" />
+          {/*this sets the color of url bar */}
+          <meta name="theme-color" content="#F7F7F7" />
         </Head>
 
         <TopBar className={styles.topBar}>
-          <div className={styles.homeButton}>
-            <Link href={"/"}>
-              <Button variant={"ghost"}>
-                <Icon name="file" title="Home" size={16} />
-                <Typography className={styles.homeButtonText} variant={"h4"}>
-                  VSM
-                </Typography>
-              </Button>
-            </Link>
-          </div>
+          <HomeButton />
           <div className={styles.userCircle}>
             <TopBar.Actions>
               <UserMenu />
@@ -159,19 +160,14 @@ const CanvasLayout = ({ children }) => {
       <Head>
         <title>{publicRuntimeConfig.APP_NAME}</title>
         <meta charSet="utf-8" />
+        {/*link manifest.json*/}
+        <link rel="manifest" href="/manifest.json" />
+        {/*this sets the color of url bar */}
+        <meta name="theme-color" content="#F7F7F7" />
       </Head>
 
       <TopBar className={styles.topBar}>
-        <div className={styles.homeButton}>
-          <Link href={"/"}>
-            <Button variant={"ghost"}>
-              <Icon name="file" title="Home" size={16} />
-              <Typography className={styles.homeButtonText} variant={"h4"}>
-                VSM
-              </Typography>
-            </Button>
-          </Link>
-        </div>
+        <HomeButton />
         <div className={styles.center}>
           <div style={{ gridAutoFlow: "row" }} className={styles.centerButton}>
             <div className={styles.centerButton}>
@@ -199,6 +195,12 @@ const CanvasLayout = ({ children }) => {
               focus={focus}
             >
               <Menu.Item
+                title={`${
+                  userCannotEdit
+                    ? "Only the creator can rename this VSM"
+                    : "Rename the current VSM"
+                }`}
+                disabled={userCannotEdit}
                 onKeyDown={(e) => {
                   if (e.code === "Enter") setVisibleRenameScrim(true);
                 }}
@@ -209,6 +211,12 @@ const CanvasLayout = ({ children }) => {
                 </Typography>
               </Menu.Item>
               <Menu.Item
+                title={`${
+                  userCannotEdit
+                    ? "Only the creator can delete this VSM"
+                    : "Delete the current VSM"
+                }`}
+                disabled={userCannotEdit}
                 onKeyDown={(e) => {
                   if (e.code === "Enter") setVisibleDeleteScrim(true);
                 }}
@@ -227,11 +235,7 @@ const CanvasLayout = ({ children }) => {
           </div>
         </div>
 
-        <div className={styles.userCircle}>
-          <TopBar.Actions>
-            <UserMenu />
-          </TopBar.Actions>
-        </div>
+        <RightTopBarSection isAuthenticated={isAuthenticated} />
       </TopBar>
 
       {children}

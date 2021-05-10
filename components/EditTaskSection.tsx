@@ -14,6 +14,7 @@ Icon.add({
 export function EditTaskSection(props: {
   task: taskObject;
   object: vsmObject;
+  canEdit: boolean;
 }): JSX.Element {
   const { task, object } = props;
   const dispatch = useStoreDispatch();
@@ -21,13 +22,17 @@ export function EditTaskSection(props: {
   return (
     <div className={styles.headerContainer}>
       {/*  Important to have a key so that it triggers a re-render when needed */}
-      <EditTaskTextField key={task.vsmTaskID} task={task} />
+      <EditTaskTextField
+        disabled={!props.canEdit}
+        key={task.vsmTaskID}
+        task={task}
+      />
       <div>
         {/*Must have the button inside a div for flex size to work correctly...*/}
         <Button
           style={{ margin: 8 }}
           title={`Delete selected QIP`}
-          disabled={!task}
+          disabled={!task || !props.canEdit}
           variant={"ghost_icon"}
           color={"danger"}
           onClick={() => {

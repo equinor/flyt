@@ -12,6 +12,7 @@ export function SideBarBody(props: {
   onChangeTime: (event: { target: { value: string } }) => void;
   onChangeTimeDefinition: (timeDefinition: string) => void;
   setShowNewTaskSection: (boolean) => void;
+  canEdit: boolean;
 }): JSX.Element {
   const { selectedObject, setShowNewTaskSection } = props;
 
@@ -19,6 +20,7 @@ export function SideBarBody(props: {
     case vsmObjectTypes.process:
       return (
         <TextField
+          disabled={!props.canEdit}
           label={"Add title"}
           multiline
           rows={4}
@@ -32,6 +34,7 @@ export function SideBarBody(props: {
       return (
         <>
           <TextField
+            disabled={!props.canEdit}
             label={"Add supplier(s)"}
             multiline
             rows={4}
@@ -41,6 +44,7 @@ export function SideBarBody(props: {
             id={"vsmObjectDescription"}
           />
           <QIPSection
+            canEdit={props.canEdit}
             object={selectedObject}
             onClickNewTask={() => setShowNewTaskSection(true)}
           />
@@ -50,6 +54,7 @@ export function SideBarBody(props: {
       return (
         <>
           <TextField
+            disabled={!props.canEdit}
             label={"Add input(s)"}
             multiline
             rows={4}
@@ -59,6 +64,7 @@ export function SideBarBody(props: {
             id={"vsmObjectDescription"}
           />
           <QIPSection
+            canEdit={props.canEdit}
             object={selectedObject}
             onClickNewTask={() => setShowNewTaskSection(true)}
           />
@@ -68,6 +74,7 @@ export function SideBarBody(props: {
       return (
         <>
           <TextField
+            disabled={!props.canEdit}
             label={"Add output(s)"}
             multiline
             rows={4}
@@ -77,6 +84,7 @@ export function SideBarBody(props: {
             id={"vsmObjectDescription"}
           />
           <QIPSection
+            canEdit={props.canEdit}
             object={selectedObject}
             onClickNewTask={() => setShowNewTaskSection(true)}
           />
@@ -86,6 +94,7 @@ export function SideBarBody(props: {
       return (
         <>
           <TextField
+            disabled={!props.canEdit}
             label={"Add customer(s)"}
             multiline
             rows={4}
@@ -95,6 +104,7 @@ export function SideBarBody(props: {
             id={"vsmObjectDescription"}
           />
           <QIPSection
+            canEdit={props.canEdit}
             object={selectedObject}
             onClickNewTask={() => setShowNewTaskSection(true)}
           />
@@ -103,6 +113,7 @@ export function SideBarBody(props: {
     case vsmObjectTypes.mainActivity:
       return (
         <TextField
+          disabled={!props.canEdit}
           label={"Add description"}
           multiline
           rows={4}
@@ -116,6 +127,7 @@ export function SideBarBody(props: {
       return (
         <>
           <TextField
+            disabled={!props.canEdit}
             label={"Add description"}
             multiline
             rows={4}
@@ -126,6 +138,7 @@ export function SideBarBody(props: {
           />
           <div style={{ paddingTop: 12 }}>
             <TextField
+              disabled={!props.canEdit}
               label={"Role(s)"}
               variant={"default"}
               value={selectedObject.role?.toString()}
@@ -134,12 +147,14 @@ export function SideBarBody(props: {
             />
             <div style={{ padding: 8 }} />
             <DurationComponent
+              disabled={!props.canEdit}
               onChangeTime={props.onChangeTime}
               onChangeTimeDefinition={props.onChangeTimeDefinition}
               selectedObject={selectedObject}
             />
           </div>
           <QIPSection
+            canEdit={props.canEdit}
             object={selectedObject}
             onClickNewTask={() => setShowNewTaskSection(true)}
           />
@@ -148,8 +163,13 @@ export function SideBarBody(props: {
     case vsmObjectTypes.waiting:
       return (
         <>
-          <DurationComponent {...props} selectedObject={selectedObject} />
+          <DurationComponent
+            disabled={!props.canEdit}
+            {...props}
+            selectedObject={selectedObject}
+          />
           <QIPSection
+            canEdit={props.canEdit}
             object={selectedObject}
             onClickNewTask={() => setShowNewTaskSection(true)}
           />
@@ -158,6 +178,7 @@ export function SideBarBody(props: {
     case vsmObjectTypes.choice:
       return (
         <TextField
+          disabled={!props.canEdit}
           label={"Define choice"}
           multiline
           rows={4}

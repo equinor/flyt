@@ -12,6 +12,10 @@ import { GenericPostit } from "./canvas/GenericPostit";
 import { vsmObjectTypes } from "../types/vsmObjectTypes";
 import style from "./VSMCanvas.module.scss";
 import { getVsmTypeName } from "./GetVsmTypeName";
+import { DeleteVsmObjectDialog } from "./DeleteVsmObjectDialog";
+import { useAccount, useMsal } from "@azure/msal-react";
+import { getUserCanEdit } from "./GetUserCanEdit";
+import { nodeIsInTree } from "./NodeIsInTree";
 
 const app: Application = new Application({
   // resizeTo: window,
@@ -141,8 +145,12 @@ function addToolBox(
   box.addChild(waitingIcon);
 
   app.stage.addChild(box);
-  box.y = window.innerHeight - 84 - box.height;
-  box.x = window.innerWidth / 2 - box.width / 2;
+  box.y = window.innerHeight - box.height - 100;
+  if (window.innerWidth < 768) {
+    box.x = window.innerWidth / 2 - box.width / 2;
+  } else {
+    box.x = 56;
+  }
 
   return () => app.stage.removeChild(box); //Cleanup method
 }
@@ -155,6 +163,12 @@ export default function VSMCanvas(): JSX.Element {
   const selectedObject = useStoreState((state) => state.selectedObject);
   const dispatch = useStoreDispatch();
   const project = useStoreState((state) => state.project);
+
+  const [visibleDeleteScrim, setVisibleDeleteScrim] = React.useState(false);
+
+  const { accounts } = useMsal();
+  const account = useAccount(accounts[0] || {});
+  const userCanEdit = getUserCanEdit(account, project);
 
   function setHoveredObject(vsmObject: vsmObject) {
     if (vsmObject !== dragObject) {
@@ -279,8 +293,14 @@ export default function VSMCanvas(): JSX.Element {
       return;
     }
     const { pkObjectType: hoveredType } = target.vsmObjectType;
-
     const dragType = child.vsmObjectType.pkObjectType;
+    if (dragType === vsmObjectTypes.choice && nodeIsInTree(target, child)) {
+      // VSM-80 Should not be able to drop a parent on a child item
+      dispatch.setSnackMessage(
+        `🙅‍♀️ Cannot move a parent to a child-object -> Circular inheritance`
+      );
+      return;
+    }
     if (dragType === vsmObjectTypes.mainActivity) {
       //Note: we can only drop a "mainActivity" on "input" or on another "mainActivity".
       //Parent should be the target's parent
@@ -403,7 +423,11 @@ export default function VSMCanvas(): JSX.Element {
     }
   }, [project]);
 
-  useEffect(() => addToolBox(draggable), [project]);
+  useEffect(() => {
+    if (userCanEdit) {
+      return addToolBox(draggable);
+    }
+  }, [project]);
 
   function createChild(child: vsmObject) {
     const card = vsmObjectFactory(
@@ -454,10 +478,12 @@ export default function VSMCanvas(): JSX.Element {
 
     card.interactive = true;
     const canDragCard: boolean =
-      child.vsmObjectType.pkObjectType === vsmObjectTypes.mainActivity ||
-      child.vsmObjectType.pkObjectType === vsmObjectTypes.subActivity ||
-      child.vsmObjectType.pkObjectType === vsmObjectTypes.choice ||
-      child.vsmObjectType.pkObjectType === vsmObjectTypes.waiting;
+      userCanEdit &&
+      (child.vsmObjectType.pkObjectType === vsmObjectTypes.mainActivity ||
+        child.vsmObjectType.pkObjectType === vsmObjectTypes.subActivity ||
+        child.vsmObjectType.pkObjectType === vsmObjectTypes.choice ||
+        child.vsmObjectType.pkObjectType === vsmObjectTypes.waiting);
+
     if (canDragCard) {
       card
         .on(pointerEvents.pointerover, () => {
@@ -620,14 +646,22 @@ export default function VSMCanvas(): JSX.Element {
 
   return (
     <>
+      {visibleDeleteScrim && (
+        <DeleteVsmObjectDialog
+          objectToDelete={selectedObject}
+          onClose={() => setVisibleDeleteScrim(false)}
+        />
+      )}
+
       <VSMSideBar
         onClose={() => dispatch.setSelectedObject(null)}
         onChangeName={onChangeNameHandler()}
         onChangeRole={onChangeRoleHandler()}
         onChangeTime={onChangeTimeHandler()}
         onChangeTimeDefinition={onChangeTimeDefinitionHandler()}
-        onDelete={() => dispatch.deleteVSMObject(selectedObject)}
+        onDelete={() => setVisibleDeleteScrim(true)}
         onAddTask={(task) => dispatch.addTask(task)}
+        canEdit={userCanEdit}
       />
       <div className={style.canvasWrapper} ref={ref} />
     </>
