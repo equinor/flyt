@@ -198,10 +198,14 @@
 .headerContainer {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .QIPContainer {
   padding-bottom: 100px;
+  padding-top: 22px;
+  border-top: solid 1px #dcdcdc;
+  margin-top: 32px;
 }
 
 .clickable:hover {

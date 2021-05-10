@@ -6,17 +6,24 @@ import { taskObject } from "../interfaces/taskObject";
 import { TaskButton } from "./TaskButton";
 import { EditTaskSection } from "./EditTaskSection";
 import { CircleButton } from "./CircleButton";
+import { Typography } from "@equinor/eds-core-react";
 
-const NewTaskButton = (props: { onClick: () => void }) => (
+const NewTaskButton = (props: { onClick: () => void; disabled: boolean }) => (
   <div>
-    <CircleButton symbol={`+`} onClick={() => props.onClick()} />
+    <CircleButton
+      disabled={props.disabled}
+      symbol={`+`}
+      onClick={() => props.onClick()}
+    />
   </div>
 );
 
+// eslint-disable-next-line max-lines-per-function
 export const QIPSection = (props: {
   object: vsmObject;
   onClickNewTask: () => void;
-}) => {
+  canEdit: boolean;
+}): JSX.Element => {
   const selectedObject = props.object;
   const [selectedTask, setSelectedTask] = useState(null);
 
@@ -27,14 +34,14 @@ export const QIPSection = (props: {
 
   return (
     <div className={styles.QIPContainer}>
-      <div className={styles.headerContainer}>
-        <div className={styles.sideBarSectionHeader}>
-          <p>Questions, Ideas and Problems</p>
-        </div>
-      </div>
+      <Typography variant={"h3"}>Questions, Ideas and Problems</Typography>
 
       {showEditTaskSection && (
-        <EditTaskSection object={selectedObject} task={selectedTask} />
+        <EditTaskSection
+          canEdit={props.canEdit}
+          object={selectedObject}
+          task={selectedTask}
+        />
       )}
 
       <div
@@ -46,10 +53,12 @@ export const QIPSection = (props: {
       >
         {selectedObject.tasks.length === 0 && (
           <p
-            className={styles.clickable}
-            onClick={() => props.onClickNewTask()}
+            className={props.canEdit && styles.clickable}
+            onClick={() => props.canEdit && props.onClickNewTask()}
           >
-            Add Question, Idea or Problem
+            {props.canEdit
+              ? "Add Question, Idea or Problem"
+              : "No question, ideas or problems added"}
           </p>
         )}
         <div style={{ display: "flex", flexWrap: "wrap" }}>
@@ -70,7 +79,10 @@ export const QIPSection = (props: {
             );
           })}
         </div>
-        <NewTaskButton onClick={() => props.onClickNewTask()} />
+        <NewTaskButton
+          disabled={!props.canEdit}
+          onClick={() => props.onClickNewTask()}
+        />
       </div>
     </div>
   );

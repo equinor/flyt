@@ -8,10 +8,20 @@ import { getOnChangeNameHandler } from "../pages/canvas/getOnChangeNameHandler";
 import { getOnChangeRoleHandler } from "../pages/canvas/getOnChangeRoleHandler";
 import { getOnChangeTimeHandler } from "../pages/canvas/getOnChangeTimeHandler";
 import { getOnChangeTimeDefinitionHandler } from "../pages/canvas/getOnChangeTimeDefinitionHandler";
+import { taskObject } from "../interfaces/taskObject";
 
 Icon.add({ close, delete_forever, delete_to_trash });
 
-export function VSMSideBar(props: { onDelete: () => void }): JSX.Element {
+export function VSMSideBar(props: {
+  onChangeName: (event: { target: { value: never } }) => void;
+  onChangeRole: (event: { target: { value: never } }) => void;
+  onChangeTime: (event: { target: { value: never } }) => void;
+  onChangeTimeDefinition: (timeDefinition: string) => void;
+  onAddTask: (task: taskObject) => void;
+  onClose: () => void;
+  onDelete: () => void;
+  canEdit: boolean;
+}): JSX.Element {
   const selectedObject = useStoreState((state) => state.selectedObject);
   const dispatch = useStoreDispatch();
 
@@ -36,6 +46,7 @@ export function VSMSideBar(props: { onDelete: () => void }): JSX.Element {
           onAddTask={(task) => dispatch.addTask(task)}
           onClose={() => dispatch.setSelectedObject(null)}
           onDelete={props.onDelete}
+          canEdit={props.canEdit}
         />
       </div>
     </div>

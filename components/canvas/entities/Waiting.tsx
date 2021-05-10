@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { Graphics } from "pixi.js";
+import { Graphics, TextStyle } from "pixi.js";
 import { formatCanvasText } from "../FormatCanvasText";
 import { icons } from "../../../assets/icons";
 import { clickHandler } from "./ClickHandler";
@@ -32,7 +32,7 @@ export default function Waiting(
   const defaultStyle = {
     fill: 0x3d3d3d,
     fontFamily: "Equinor",
-    fontWeight: 500,
+    fontWeight: "500",
     fontSize: 12,
     lineHeight: 16,
     letterSpacing: 0.2,
@@ -40,7 +40,7 @@ export default function Waiting(
     wordWrap: true,
     breakWords: true,
     trim: true,
-  };
+  } as TextStyle;
 
   const text = new PIXI.Text(formatCanvasText(header, 18), defaultStyle);
   text.x = paddingLeft;

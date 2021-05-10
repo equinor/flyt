@@ -13,7 +13,9 @@ import { vsmObjectTypes } from "../types/vsmObjectTypes";
 import style from "./VSMCanvas.module.scss";
 import { getVsmTypeName } from "./GetVsmTypeName";
 import { DeleteVsmObjectDialog } from "./DeleteVsmObjectDialog";
-import { addToolBox } from "./AddToolBox";
+import { useAccount, useMsal } from "@azure/msal-react";
+import { getUserCanEdit } from "./GetUserCanEdit";
+import { nodeIsInTree } from "./NodeIsInTree";
 
 let app: Application = null;
 let viewport: Viewport = null;
@@ -87,6 +89,87 @@ export const pointerEvents = {
   click: "click", // Fired when a pointer device button (usually a mouse left-button) is pressed and released on the display object. DisplayObject's interactive property must be set to true to fire event.
 };
 
+function addToolBox(
+  draggable: (card: PIXI.Graphics, vsmObjectType: vsmObjectTypes) => void
+) {
+  const box = new PIXI.Container();
+
+  const padding = 40;
+  //  Render the drag'n-drop-box
+  const rectangle = new Graphics();
+  const width = padding * 4;
+  const height = 54;
+  rectangle.beginFill(0xffffff);
+  rectangle.drawRoundedRect(0, 0, width, height, 6);
+  rectangle.endFill();
+
+  const rectangleBorder = new Graphics();
+  rectangleBorder.beginFill(0xd6d6d6);
+  rectangleBorder.drawRoundedRect(0, 0, width + 1, height + 1, 6);
+  rectangleBorder.endFill();
+  rectangle.x = 0.5;
+  rectangle.y = 0.5;
+  box.addChild(rectangleBorder);
+
+  box.addChild(rectangle);
+
+  // Render the icons
+  const mainActivity = new Graphics();
+  mainActivity.beginFill(0x52c0ff);
+  mainActivity.drawRoundedRect(0, 0, 22, 22, 2);
+  mainActivity.endFill();
+  mainActivity.x = 14;
+  mainActivity.y = rectangle.y + rectangle.height / 2 - mainActivity.height / 2;
+  draggable(mainActivity, vsmObjectTypes.mainActivity);
+  box.addChild(mainActivity);
+
+  const subActivity = new Graphics();
+  subActivity.beginFill(0xfdd835);
+  subActivity.drawRoundedRect(0, 0, 22, 22, 2);
+  subActivity.endFill();
+  subActivity.x = mainActivity.x + padding;
+  subActivity.y = rectangle.y + rectangle.height / 2 - subActivity.height / 2;
+  draggable(subActivity, vsmObjectTypes.subActivity);
+  box.addChild(subActivity);
+
+  const choiceIcon = new Graphics();
+  choiceIcon.beginFill(0xfdd835);
+  const hypotenuse = 22;
+  const edge = Math.sqrt(hypotenuse ** 2 / 2);
+  choiceIcon.drawRoundedRect(0, 0, edge, edge, 2);
+  choiceIcon.pivot.x = choiceIcon.width / 2;
+  choiceIcon.pivot.y = choiceIcon.height / 2;
+
+  choiceIcon.y =
+    rectangle.y +
+    rectangle.height / 2 -
+    choiceIcon.height / 2 +
+    choiceIcon.height / 2;
+  choiceIcon.x = subActivity.x + padding + choiceIcon.width / 2;
+  choiceIcon.angle = 45;
+  draggable(choiceIcon, vsmObjectTypes.choice);
+  box.addChild(choiceIcon);
+
+  const waitingIcon = new Graphics();
+  waitingIcon.beginFill(0xff8f00);
+  waitingIcon.drawRoundedRect(0, 0, 22, 12, 2);
+  waitingIcon.endFill();
+  waitingIcon.x = choiceIcon.x - choiceIcon.width + padding;
+  waitingIcon.y = rectangle.y + rectangle.height / 2 - waitingIcon.height / 2;
+  draggable(waitingIcon, vsmObjectTypes.waiting);
+  box.addChild(waitingIcon);
+
+  app.stage.addChild(box);
+  box.y = window.innerHeight - box.height - 100;
+  if (window.innerWidth < 768) {
+    box.x = window.innerWidth / 2 - box.width / 2;
+  } else {
+    box.x = 56;
+  }
+
+  return () => app.stage.removeChild(box); //Cleanup method
+}
+
 let hoveredObject: vsmObject | null = null;
 let dragObject: vsmObject | null = null;
 
@@ -97,6 +180,10 @@ export default function VSMCanvas(): JSX.Element {
   const project = useStoreState((state) => state.project);
 
   const [visibleDeleteScrim, setVisibleDeleteScrim] = React.useState(false);
+
+  const { accounts } = useMsal();
+  const account = useAccount(accounts[0] || {});
+  const userCanEdit = getUserCanEdit(account, project);
 
   function setHoveredObject(vsmObject: vsmObject) {
     if (vsmObject !== dragObject) {
@@ -221,8 +308,14 @@ export default function VSMCanvas(): JSX.Element {
       return;
     }
     const { pkObjectType: hoveredType } = target.vsmObjectType;
-
     const dragType = child.vsmObjectType.pkObjectType;
+    if (dragType === vsmObjectTypes.choice && nodeIsInTree(target, child)) {
+      // VSM-80 Should not be able to drop a parent on a child item
+      dispatch.setSnackMessage(
+        `🙅‍♀️ Cannot move a parent to a child-object -> Circular inheritance`
+      );
+      return;
+    }
     if (dragType === vsmObjectTypes.mainActivity) {
       //Note: we can only drop a "mainActivity" on "input" or on another "mainActivity".
       //Parent should be the target's parent
@@ -345,7 +438,11 @@ export default function VSMCanvas(): JSX.Element {
     }
   }, [project]);
 
-  useEffect(() => addToolBox(draggable, app), [project]);
+  useEffect(() => {
+    if (userCanEdit) {
+      return addToolBox(draggable);
+    }
+  }, [project]);
 
   function createChild(child: vsmObject) {
     const card = vsmObjectFactory(
@@ -396,10 +493,12 @@ export default function VSMCanvas(): JSX.Element {
 
     card.interactive = true;
     const canDragCard: boolean =
-      child.vsmObjectType.pkObjectType === vsmObjectTypes.mainActivity ||
-      child.vsmObjectType.pkObjectType === vsmObjectTypes.subActivity ||
-      child.vsmObjectType.pkObjectType === vsmObjectTypes.choice ||
-      child.vsmObjectType.pkObjectType === vsmObjectTypes.waiting;
+      userCanEdit &&
+      (child.vsmObjectType.pkObjectType === vsmObjectTypes.mainActivity ||
+        child.vsmObjectType.pkObjectType === vsmObjectTypes.subActivity ||
+        child.vsmObjectType.pkObjectType === vsmObjectTypes.choice ||
+        child.vsmObjectType.pkObjectType === vsmObjectTypes.waiting);
+
     if (canDragCard) {
       card
         .on(pointerEvents.pointerover, () => {
@@ -577,6 +676,7 @@ export default function VSMCanvas(): JSX.Element {
         onChangeTimeDefinition={onChangeTimeDefinitionHandler()}
         onDelete={() => setVisibleDeleteScrim(true)}
         onAddTask={(task) => dispatch.addTask(task)}
+        canEdit={userCanEdit}
       />
       <div className={style.canvasWrapper} ref={ref} />
     </>
