@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as PIXI from "pixi.js";
 import { Application, Container, Graphics } from "pixi.js";
 import { Viewport } from "pixi-viewport";
@@ -16,6 +16,39 @@ import { DeleteVsmObjectDialog } from "./DeleteVsmObjectDialog";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { getUserCanEdit } from "./GetUserCanEdit";
 import { nodeIsInTree } from "./NodeIsInTree";
+
+// Define general type for useWindowSize hook, which includes width and height
+interface Size {
+  width: number | undefined;
+  height: number | undefined;
+}
+
+function useWindowSize(): Size {
+  // Initialize state with undefined width/height so server and client renders match
+  // Learn more here: https://joshwcomeau.com/react/the-perils-of-rehydration/
+  const [windowSize, setWindowSize] = useState<Size>({
+    width: undefined,
+    height: undefined,
+  });
+  useEffect(() => {
+    // Handler to call on window resize
+    function handleResize() {
+      // Set window width/height to state
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    }
+
+    // Add event listener
+    window.addEventListener("resize", handleResize);
+    // Call handler right away so state gets updated with initial window size
+    handleResize();
+    // Remove event listener on cleanup
+    return () => window.removeEventListener("resize", handleResize);
+  }, []); // Empty array ensures that effect is only run on mount
+  return windowSize;
+}
 
 const app: Application = new Application({
   // resizeTo: window,
@@ -169,6 +202,7 @@ export default function VSMCanvas(): JSX.Element {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
   const userCanEdit = getUserCanEdit(account, project);
+  const windowSize: Size = useWindowSize();
 
   function setHoveredObject(vsmObject: vsmObject) {
     if (vsmObject !== dragObject) {
@@ -404,6 +438,18 @@ export default function VSMCanvas(): JSX.Element {
       .on(pointerEvents.pointermove, onDragMove);
   }
 
+  useEffect(() => {
+    const a = {
+      height: window.innerHeight - 70,
+      width: window.innerWidth,
+    };
+    console.log({ windowSize, a });
+    // app.view.width = a.width;
+    // app.view.height = a.height;
+    // app.resize().width = a.width;
+    // app.height = a.height;
+  }, [windowSize]);
+
   // "Constructor"
   useEffect(() => {
     initCanvas(ref);
@@ -427,7 +473,7 @@ export default function VSMCanvas(): JSX.Element {
     if (userCanEdit) {
       return addToolBox(draggable);
     }
-  }, [project]);
+  }, [project, windowSize]);
 
   function createChild(child: vsmObject) {
     const card = vsmObjectFactory(
