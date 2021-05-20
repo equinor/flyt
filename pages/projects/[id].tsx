@@ -8,6 +8,7 @@ import dynamic from "next/dynamic";
 import { Layouts } from "../../layouts/LayoutWrapper";
 import { useStoreRehydrated } from "easy-peasy";
 import { setUpSignalRConnection } from "../../services/setUpSignalRConnection";
+import { signalRActionTypes } from "../../types/signalRActionTypes";
 
 const DynamicComponentWithNoSSR = dynamic(
   () => import("../../components/VSMCanvas"),
@@ -29,9 +30,23 @@ export default function Project() {
 
       if (typeof id === "string") {
         setUpSignalRConnection(parseInt(id)).then((connection) => {
-          connection.on("UpdateObject", (data) => {
-            console.log("recieved", data);
+          connection.on(signalRActionTypes.UpdateObject, (data) => {
+            console.log("UpdateObject", data);
             dispatch.fetchProject({ id });
+          });
+          connection.on(signalRActionTypes.DeletedObject, (data) => {
+            console.log("DeletedObject", data);
+            dispatch.fetchProject({ id });
+          });
+          connection.on(signalRActionTypes.SaveProject, (data) => {
+            console.log("SaveProject", data);
+          });
+          connection.on(signalRActionTypes.DeleteProject, (data) => {
+            console.log("DeleteProject", data);
+            alert(
+              "This VSM was deleted. We will now navigate you back to the start-page"
+            );
+            router.push("/");
           });
         });
       }
