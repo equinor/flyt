@@ -7,6 +7,7 @@ import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
 import { Layouts } from "../../layouts/LayoutWrapper";
 import { useStoreRehydrated } from "easy-peasy";
+import { setUpSignalRConnection } from "../../services/setUpSignalRConnection";
 
 const DynamicComponentWithNoSSR = dynamic(
   () => import("../../components/VSMCanvas"),
@@ -25,6 +26,15 @@ export default function Project() {
     if (id) {
       dispatch.fetchProject({ id });
       dispatch.setSelectedObject(null);
+
+      if (typeof id === "string") {
+        setUpSignalRConnection(parseInt(id)).then((connection) => {
+          connection.on("UpdateObject", (data) => {
+            console.log("recieved", data);
+            dispatch.fetchProject({ id });
+          });
+        });
+      }
     }
   }, [id]);
 
