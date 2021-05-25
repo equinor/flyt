@@ -12,7 +12,7 @@ import {
 import { chevron_down, close, delete_forever } from "@equinor/eds-icons";
 import styles from "./default.layout.module.scss";
 import { useAccount, useIsAuthenticated, useMsal } from "@azure/msal-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import UserMenu from "../components/AppHeader/UserMenu";
 import getConfig from "next/config";
 import { useStoreDispatch, useStoreState } from "../hooks/storeHooks";
@@ -21,6 +21,8 @@ import BaseAPIServices from "../services/BaseAPIServices";
 import { HomeButton } from "./homeButton";
 import { RightTopBarSection } from "../components/rightTopBarSection";
 import { getUserCanEdit } from "../components/GetUserCanEdit";
+import { disableMouseWheelZoom } from "../utils/disableMouseWheelZoom";
+import { disableKeyboardZoomShortcuts } from "../utils/disableKeyboardZoomShortcuts";
 
 const icons = {
   chevron_down,
@@ -107,6 +109,12 @@ const CanvasLayout = ({ children }) => {
         break;
     }
   };
+
+  useEffect(() => {
+    disableKeyboardZoomShortcuts();
+    disableMouseWheelZoom();
+  }, []);
+
   if (!isAuthenticated) {
     return (
       <>
