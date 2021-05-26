@@ -21,7 +21,7 @@
   "dependencies": {
     "@azure/msal-browser": "^2.14.0",
     "@azure/msal-react": "^1.0.0-alpha.3",
-    "@equinor/eds-core-react": "^0.10.1",
+    "@equinor/eds-core-react": "^0.11.0",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
     "axios": "^0.21.1",
