@@ -426,6 +426,10 @@ export default function VSMCanvas(): JSX.Element {
   useEffect(() => {
     if (userCanEdit) {
       return addToolBox(draggable);
+    } else {
+      return () => {
+        //nothing to clean up
+      };
     }
   }, [project]);
 
