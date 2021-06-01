@@ -4,7 +4,6 @@ import {
   Icon,
   Menu,
   Scrim,
-  Snackbar,
   TextField,
   TopBar,
   Typography,
@@ -23,6 +22,7 @@ import { RightTopBarSection } from "../components/rightTopBarSection";
 import { getUserCanEdit } from "../components/GetUserCanEdit";
 import { disableMouseWheelZoom } from "../utils/disableMouseWheelZoom";
 import { disableKeyboardZoomShortcuts } from "../utils/disableKeyboardZoomShortcuts";
+import { MySnackBar } from "../components/MySnackBar";
 
 const icons = {
   chevron_down,
@@ -320,16 +320,12 @@ const CanvasLayout = ({ children }) => {
       )}
 
       {snackMessage && (
-        <div className={styles.snackbar}>
-          <Snackbar
-            open
-            autoHideDuration={3000}
-            leftAlignFrom="1200px"
-            onClose={() => dispatch.setSnackMessage(null)}
-          >
-            {`${snackMessage}`}
-          </Snackbar>
-        </div>
+        <MySnackBar
+          autoHideDuration={3000}
+          onClose={() => dispatch.setSnackMessage(null)}
+        >
+          {`${snackMessage}`}
+        </MySnackBar>
       )}
     </>
   );
