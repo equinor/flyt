@@ -1,9 +1,8 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as PIXI from "pixi.js";
 import { Application, Container, Graphics } from "pixi.js";
 import { Viewport } from "pixi-viewport";
 import { isMobile } from "react-device-detect";
-import { vsmObjectFactory } from "./canvas/VsmObjectFactory";
 import { useStoreDispatch, useStoreState } from "../hooks/storeHooks";
 import { debounce } from "../utils/debounce";
 import { vsmObject } from "../interfaces/VsmObject";
@@ -16,6 +15,8 @@ import { DeleteVsmObjectDialog } from "./DeleteVsmObjectDialog";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { getUserCanEdit } from "./GetUserCanEdit";
 import { nodeIsInTree } from "./NodeIsInTree";
+import { clearSprites, newFactory } from "./canvas/NewFactory";
+import { loadAssets } from "./canvas/LoadAssets";
 
 const app: Application = new Application({
   // resizeTo: window,
@@ -26,7 +27,7 @@ const app: Application = new Application({
 });
 
 const viewport: Viewport = new Viewport({
-  interaction: app.renderer.plugins.interaction, // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
+  // interaction: app.renderer.plugins.interaction, // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
 });
 
 function initCanvas(ref: React.MutableRefObject<HTMLDivElement>) {
@@ -163,6 +164,7 @@ export default function VSMCanvas(): JSX.Element {
   const selectedObject = useStoreState((state) => state.selectedObject);
   const dispatch = useStoreDispatch();
   const project = useStoreState((state) => state.project);
+  const [assetsAreLoaded, setAssetsAreLoaded] = useState(false);
 
   const [visibleDeleteScrim, setVisibleDeleteScrim] = React.useState(false);
 
@@ -407,12 +409,27 @@ export default function VSMCanvas(): JSX.Element {
   // "Constructor"
   useEffect(() => {
     initCanvas(ref);
-    return () => cleanupApp();
+    const cleanupAssets = loadAssets(
+      {
+        subActivity: "/Postit/Yellow.png",
+        generic: "/Postit/Grey.png",
+        mainActivity: "/Postit/Blue.png",
+        choice: "/Choice.png",
+        waiting: "/Postit/Orange/Icon.png",
+        mainActivityStraight: "/Postit/Blue/Straight.png",
+        subActivityStraight: "/Postit/Yellow/Straight.png",
+      },
+      () => setAssetsAreLoaded(true)
+    );
+    return () => {
+      cleanupApp();
+      cleanupAssets();
+    };
   }, []);
 
   // "Renderer"
   useEffect(() => {
-    if (project) {
+    if (project && assetsAreLoaded) {
       const viewport = getViewPort();
       addCards(viewport);
 
@@ -421,7 +438,7 @@ export default function VSMCanvas(): JSX.Element {
         viewport.removeChildren();
       };
     }
-  }, [project]);
+  }, [project, assetsAreLoaded]);
 
   useEffect(() => {
     if (userCanEdit) {
@@ -434,12 +451,13 @@ export default function VSMCanvas(): JSX.Element {
   }, [project]);
 
   function createChild(child: vsmObject) {
-    const card = vsmObjectFactory(
-      child,
-      () => dispatch.setSelectedObject(child),
-      () => setHoveredObject(child),
-      () => clearHoveredObject()
-    );
+    // const card = vsmObjectFactory(
+    //   child,
+    //   () => dispatch.setSelectedObject(child),
+    //   () => setHoveredObject(child),
+    //   () => clearHoveredObject()
+    // );
+    const card = newFactory(child);
 
     const originalPosition = {
       x: card.position.x,
@@ -670,4 +688,8 @@ export default function VSMCanvas(): JSX.Element {
       <div className={style.canvasWrapper} ref={ref} />
     </>
   );
+}
+
+function handleLoadComplete(handleLoadComplete: any) {
+  console.log({ handleLoadComplete });
 }
