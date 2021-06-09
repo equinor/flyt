@@ -1,34 +1,95 @@
-import { vsmObject } from "../../interfaces/VsmObject";
+import { vsmObject } from "../../../interfaces/VsmObject";
 import * as PIXI from "pixi.js";
-import { vsmObjectTypes } from "../../types/vsmObjectTypes";
-import { getVsmTypeName } from "../GetVsmTypeName";
+import { vsmObjectTypes } from "../../../types/vsmObjectTypes";
+import { getVsmTypeName } from "../../GetVsmTypeName";
 import { formatCanvasText } from "./FormatCanvasText";
+import { pointerEvents } from "../../VSMCanvas";
+import {
+  clearHoveredObject,
+  getDragObject,
+  setHoveredObject,
+} from "./hoveredObject";
+import { clickHandler } from "../entities/ClickHandler";
+import { Dispatch } from "easy-peasy";
+import { ProjectModel } from "store/store";
 
-let sprites = {};
+let sprites:
+  | { sprite: PIXI.Container; data: vsmObject }
+  | Record<string, unknown> = {};
+
+export function assetFactory(
+  vsmObject: vsmObject,
+  dispatch: Dispatch<ProjectModel>
+): PIXI.Container {
+  if (!vsmObject) throw Error("vsmObject was not provided for factory");
+  const sprite = getSprite(vsmObject) || newSprite(vsmObject, dispatch);
+  if (!sprite) throw Error("Could not get or generate asset...");
+  return sprite;
+}
 
 /**
  * Get existing sprite for vsmObject
  * @param vsmObject
  */
-function getSprite(vsmObject: vsmObject) {
-  if (sprites[vsmObject.vsmObjectID]) console.info(`Using existing sprite`);
-  return sprites[vsmObject.vsmObjectID];
-}
+function getSprite(vsmObject: vsmObject): PIXI.Container | null {
+  if (!vsmObject)
+    throw new Error("You need to provide this method a vsmObject");
 
-export function newFactory(vsmObject: vsmObject): PIXI.Sprite {
-  if (!vsmObject) throw Error("vsmObject was not provided for factory");
-  return getSprite(vsmObject) || newSprite(vsmObject);
+  const sprite = sprites[vsmObject.vsmObjectID];
+
+  const oldObject = sprite && sprite.data;
+  if (!oldObject) return null;
+  if (nothingHasChangedOfImportanceForRenderingThisCard(oldObject, vsmObject)) {
+    //No change since last generation -> Using cached sprite
+    return sprite && sprite.sprite;
+  }
+  return null;
 }
 
 /**
- * Generate a new sprite and create or update the "cache" for a given vsmObject
- * @param vsmObject
+ * Check that nothing has changed that is of importance for rendering a card on the canvas
+ *
+ *  We do a diff check one the following fields:
+ *  - name
+ *  - role
+ *  - tasks
+ *  - time
+ *  - timeDefinition
+ *
+ * @param oldObject
+ * @param newObject
  */
-function newSprite(vsmObject: vsmObject) {
-  console.info(`Creating sprite`);
+function nothingHasChangedOfImportanceForRenderingThisCard(
+  oldObject: vsmObject,
+  newObject: vsmObject
+) {
+  return (
+    oldObject.name === newObject.name &&
+    oldObject.role === newObject.role &&
+    oldObject.tasks === newObject.tasks &&
+    oldObject.time === newObject.time &&
+    oldObject.timeDefinition === newObject.timeDefinition
+  );
+}
+
+/**
+ * Generate a new sprite and create or update the "sprites" for a given vsmObject
+ * @param vsmObject
+ * @param dispatch
+ */
+function newSprite(
+  vsmObject: vsmObject,
+  dispatch: { setSelectedObject: (arg0: vsmObject) => void }
+) {
+  console.info(`Creating sprite ${vsmObject.vsmObjectID}`);
   const { vsmObjectID } = vsmObject;
   const newSprite = createNewSprite(vsmObject);
-  sprites[vsmObjectID] = newSprite;
+  clickHandler(newSprite, () => dispatch.setSelectedObject(vsmObject));
+  newSprite.on(pointerEvents.pointerover, () =>
+    setHoveredObject(vsmObject, getDragObject())
+  );
+  newSprite.on(pointerEvents.pointerout, () => clearHoveredObject());
+  sprites[vsmObjectID] = { sprite: newSprite, data: vsmObject };
   return newSprite;
 }
 
@@ -36,7 +97,7 @@ function newSprite(vsmObject: vsmObject) {
  * Clear all sprites
  */
 export function clearSprites(): void {
-  console.info("clearing sprite pool");
+  // console.info("clearing sprite sprites");
   sprites = {};
 }
 

@@ -7,7 +7,7 @@ import { useStoreDispatch, useStoreState } from "../hooks/storeHooks";
 import { debounce } from "../utils/debounce";
 import { vsmObject } from "../interfaces/VsmObject";
 import { VSMSideBar } from "./VSMSideBar";
-import { GenericPostit } from "./canvas/GenericPostit";
+import { GenericPostit } from "./canvas/entities/GenericPostit";
 import { vsmObjectTypes } from "../types/vsmObjectTypes";
 import style from "./VSMCanvas.module.scss";
 import { getVsmTypeName } from "./GetVsmTypeName";
@@ -15,8 +15,8 @@ import { DeleteVsmObjectDialog } from "./DeleteVsmObjectDialog";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { getUserCanEdit } from "./GetUserCanEdit";
 import { nodeIsInTree } from "./NodeIsInTree";
-import { clearSprites, newFactory } from "./canvas/NewFactory";
-import { loadAssets } from "./canvas/LoadAssets";
+import { assetFactory } from "./canvas/utils/AssetFactory";
+import { loadAssets } from "./canvas/utils/LoadAssets";
 
 const app: Application = new Application({
   // resizeTo: window,
@@ -27,6 +27,7 @@ const app: Application = new Application({
 });
 
 const viewport: Viewport = new Viewport({
+  ticker: PIXI.Ticker.shared,
   // interaction: app.renderer.plugins.interaction, // the interaction module is important for wheel to work properly when renderer.view is placed or scaled
 });
 
@@ -450,14 +451,14 @@ export default function VSMCanvas(): JSX.Element {
     }
   }, [project]);
 
-  function createChild(child: vsmObject) {
+  function createChild(child: vsmObject, dispatch) {
     // const card = vsmObjectFactory(
     //   child,
     //   () => dispatch.setSelectedObject(child),
     //   () => setHoveredObject(child),
     //   () => clearHoveredObject()
     // );
-    const card = newFactory(child);
+    const card = assetFactory(child, dispatch);
 
     const originalPosition = {
       x: card.position.x,
@@ -558,7 +559,7 @@ export default function VSMCanvas(): JSX.Element {
 
     // Vertical placement for levels > 1
     const containerGroup = new PIXI.Container();
-    containerGroup.addChild(createChild(root));
+    containerGroup.addChild(createChild(root, dispatch));
 
     const container = new PIXI.Container();
     let nextY = containerGroup.height + 20; // Generic element y position
@@ -569,7 +570,7 @@ export default function VSMCanvas(): JSX.Element {
       const c = recursiveTree(child, level + 1);
       c.y = nextY;
       nextY = nextY + c.height + 20;
-      const tempChild = createChild(child);
+      const tempChild = createChild(child, dispatch);
       if (child.choiceGroup === "Left") {
         c.pivot.set(tempChild.width, 0);
         c.x = 126 / 2 - 10;
@@ -668,12 +669,11 @@ export default function VSMCanvas(): JSX.Element {
 
   return (
     <>
-      {visibleDeleteScrim && (
-        <DeleteVsmObjectDialog
-          objectToDelete={selectedObject}
-          onClose={() => setVisibleDeleteScrim(false)}
-        />
-      )}
+      <DeleteVsmObjectDialog
+        visible={visibleDeleteScrim}
+        objectToDelete={selectedObject}
+        onClose={() => setVisibleDeleteScrim(false)}
+      />
 
       <VSMSideBar
         onClose={() => dispatch.setSelectedObject(null)}

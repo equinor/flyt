@@ -1,10 +1,10 @@
 import * as PIXI from "pixi.js";
 import { Graphics, TextStyle } from "pixi.js";
-import { formatCanvasText } from "./FormatCanvasText";
-import { clickHandler } from "./entities/ClickHandler";
-import { pointerEvents } from "../VSMCanvas";
-import { createSideContainer } from "./entities/CreateSideContainer";
-import { taskObject } from "../../interfaces/taskObject";
+import { formatCanvasText } from "../utils/FormatCanvasText";
+import { clickHandler } from "./ClickHandler";
+import { pointerEvents } from "../../VSMCanvas";
+import { createSideContainer } from "./CreateSideContainer";
+import { taskObject } from "../../../interfaces/taskObject";
 
 interface Rectangle {
   options?: {

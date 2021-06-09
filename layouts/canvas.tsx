@@ -164,7 +164,9 @@ const CanvasLayout = ({ children }) => {
   }
 
   return (
-    <>
+    <div
+    // style={{ height: "100%", width: "100%", margin: 0, overflow: "hidden" }}
+    >
       <Head>
         <title>{publicRuntimeConfig.APP_NAME}</title>
         <meta charSet="utf-8" />
@@ -327,7 +329,7 @@ const CanvasLayout = ({ children }) => {
           {`${snackMessage}`}
         </MySnackBar>
       )}
-    </>
+    </div>
   );
 };
 

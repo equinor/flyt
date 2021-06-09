@@ -1,9 +1,9 @@
-/*!*To black scroll navigation set overscroll behavior*/
-/*This makes it possible to use two fingers on the trackpad for navigation in our vsm canvas*/
-/**!*/
-//html, body {
-//    overscroll-behavior-x: none;
-//}
+@import "styles/_variables.scss";
+
+.canvasWrapper {
+  border-left: 1px solid $equinor_GRAY;
+  border-right: 1px solid $equinor_GRAY;
+}
 
 .appear {
   animation-name: fade-in;
@@ -46,7 +46,7 @@
 
   /* Text + static icons/⚪️/Default */
 
-  color: #3d3d3d;
+  color: $text-default;
 }
 
 .vsmLabel {
@@ -172,8 +172,7 @@
   align-items: center;
 
   /* Text + static icons/⚪️/Default */
-
-  color: #3d3d3d;
+  color: $text-default;
 }
 
 .sideBarSectionHeader {

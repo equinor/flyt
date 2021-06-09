@@ -1,12 +1,12 @@
 import * as PIXI from "pixi.js";
-import { vsmObjectTypes } from "../../types/vsmObjectTypes";
-import { GenericPostit } from "./GenericPostit";
-import MainActivity from "./entities/MainActivity";
-import SubActivity from "./entities/SubActivity";
-import Waiting from "./entities/Waiting";
-import { vsmObject } from "../../interfaces/VsmObject";
-import Choice from "./entities/Choice";
-import { formatDuration } from "../../types/timeDefinitions";
+import { vsmObjectTypes } from "../../../types/vsmObjectTypes";
+import { GenericPostit } from "../entities/GenericPostit";
+import MainActivity from "../entities/MainActivity";
+import SubActivity from "../entities/SubActivity";
+import Waiting from "../entities/Waiting";
+import { vsmObject } from "../../../interfaces/VsmObject";
+import Choice from "../entities/Choice";
+import { formatDuration } from "../../../types/timeDefinitions";
 
 export function vsmObjectFactory(
   o: vsmObject,

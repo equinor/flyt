@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import { Graphics } from "pixi.js";
-import { formatCanvasText } from "../FormatCanvasText";
+import { formatCanvasText } from "../utils/FormatCanvasText";
 import { clickHandler } from "./ClickHandler";
 import { pointerEvents } from "../../VSMCanvas";
 

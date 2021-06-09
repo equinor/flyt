@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { clearSprites } from "./NewFactory";
+import { clearSprites } from "./AssetFactory";
 
 /**
  * Load assets into shared Pixi loader
