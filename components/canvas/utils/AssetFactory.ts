@@ -1,5 +1,6 @@
 import { vsmObject } from "../../../interfaces/VsmObject";
 import * as PIXI from "pixi.js";
+import { TextStyle } from "pixi.js";
 import { vsmObjectTypes } from "../../../types/vsmObjectTypes";
 import { getVsmTypeName } from "../../GetVsmTypeName";
 import { formatCanvasText } from "./FormatCanvasText";
@@ -13,9 +14,25 @@ import { clickHandler } from "../entities/ClickHandler";
 import { Dispatch } from "easy-peasy";
 import { ProjectModel } from "store/store";
 
+import { formatDuration } from "../../../types/timeDefinitions";
+
 let sprites:
   | { sprite: PIXI.Container; data: vsmObject }
   | Record<string, unknown> = {};
+
+const textResolution = 2; // Need to be at least 2 for not looking blurry. But higher resolution, higher performance hit....
+const defaultTextStyle = {
+  fill: 0x3d3d3d,
+  fontFamily: "Equinor",
+  fontWeight: "500",
+  fontSize: 12,
+  lineHeight: 16,
+  letterSpacing: 0.2,
+  wordWrapWidth: 100,
+  wordWrap: true,
+  breakWords: true,
+  trim: true,
+} as TextStyle;
 
 export function assetFactory(
   vsmObject: vsmObject,
@@ -121,7 +138,7 @@ function createChoiceAsset(vsmObject: vsmObject) {
       align: "center",
     }
   );
-  contentText.resolution = 3;
+  contentText.resolution = textResolution;
   contentText.alpha = content ? 1 : 0.4;
   contentText.anchor.set(0.5, 0.5);
   contentText.x = 126 / 2;
@@ -130,23 +147,14 @@ function createChoiceAsset(vsmObject: vsmObject) {
   return wrapper;
 }
 
-function getDefaultTextSprite(vsmObject: vsmObject) {
+function getDefaultTextSprite(vsmObject: vsmObject, maxLength = 60) {
   const top = 8;
-  const left = 4;
-  const width = 126 - left - left;
-  const textSprite = new PIXI.Text(formatCanvasText(vsmObject.name), {
-    fill: 0x3d3d3d,
-    fontFamily: "Equinor",
-    fontWeight: "500",
-    fontSize: 12,
-    lineHeight: 16,
-    letterSpacing: 0.2,
-    wordWrapWidth: width,
-    wordWrap: true,
-    breakWords: true,
-    trim: true,
-  });
-  textSprite.resolution = 3;
+  const left = 12;
+  const textSprite = new PIXI.Text(
+    formatCanvasText(vsmObject.name, maxLength),
+    defaultTextStyle
+  );
+  textSprite.resolution = textResolution;
   textSprite.y = top;
   textSprite.x = left;
   return textSprite;
@@ -154,7 +162,7 @@ function getDefaultTextSprite(vsmObject: vsmObject) {
 
 function createGenericCardAsset(vsmObject: vsmObject) {
   const { generic } = PIXI.Loader.shared.resources;
-  const textSprite = getDefaultTextSprite(vsmObject);
+  const textSprite = getDefaultTextSprite(vsmObject, 100);
   const wrapper = new PIXI.Container();
   wrapper.addChild(new PIXI.Sprite(generic.texture), textSprite);
   return wrapper;
@@ -162,25 +170,54 @@ function createGenericCardAsset(vsmObject: vsmObject) {
 
 function createMainActivityAsset(vsmObject: vsmObject) {
   const { mainActivity } = PIXI.Loader.shared.resources;
-  const textSprite = getDefaultTextSprite(vsmObject);
+  const textSprite = getDefaultTextSprite(vsmObject, 100);
   const wrapper = new PIXI.Container();
   wrapper.addChild(new PIXI.Sprite(mainActivity.texture), textSprite);
   return wrapper;
 }
 
+function getRoleText(vsmObject: vsmObject) {
+  const { role } = vsmObject;
+  return new PIXI.Text(formatCanvasText(role ?? "", 16), defaultTextStyle);
+}
+
+function getTimeText(vsmObject: vsmObject) {
+  const time = formatDuration(vsmObject.time, vsmObject.timeDefinition);
+  return new PIXI.Text(formatCanvasText(time, 12), defaultTextStyle);
+}
+
 function createSubActivityAsset(vsmObject: vsmObject) {
-  const { subActivity } = PIXI.Loader.shared.resources;
   const textSprite = getDefaultTextSprite(vsmObject);
+  const roleText = getRoleText(vsmObject);
+  roleText.resolution = textResolution;
+  roleText.y = 97;
+  roleText.x = 12;
+
+  const timeText = getTimeText(vsmObject);
+  timeText.resolution = textResolution;
+  timeText.y = 119;
+  timeText.x = roleText.x;
+
+  const { subActivity } = PIXI.Loader.shared.resources;
   const wrapper = new PIXI.Container();
-  wrapper.addChild(new PIXI.Sprite(subActivity.texture), textSprite);
+  wrapper.addChild(
+    new PIXI.Sprite(subActivity.texture),
+    textSprite,
+    roleText,
+    timeText
+  );
   return wrapper;
 }
 
 function createWaitingAsset(vsmObject: vsmObject) {
   const { waiting } = PIXI.Loader.shared.resources;
   const textSprite = getDefaultTextSprite(vsmObject);
+  const timeText = getTimeText(vsmObject);
+  timeText.resolution = textResolution;
+  timeText.y = 37;
+  timeText.x = 32;
   const wrapper = new PIXI.Container();
-  wrapper.addChild(new PIXI.Sprite(waiting.texture), textSprite);
+  wrapper.addChild(new PIXI.Sprite(waiting.texture), textSprite, timeText);
   return wrapper;
 }
 
