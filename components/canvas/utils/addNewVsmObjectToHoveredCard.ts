@@ -11,7 +11,7 @@ export function addNewVsmObjectToHoveredCard(
   const hoveredObject = getHoveredObject();
   //Todo: Improve target logic. Instead of using "hoveredObject", do a collision detection etc
   //  Read up on hitTest -> https://pixijs.download/release/docs/PIXI.InteractionManager.html#hitTest
-  if (!hoveredObject) return;
+  if (!hoveredObject || !hoveredObject.vsmObjectType) return;
 
   const { pkObjectType } = hoveredObject.vsmObjectType;
   if (dragType === vsmObjectTypes.mainActivity) {

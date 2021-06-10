@@ -13,7 +13,7 @@ export function initCanvas(ref: React.MutableRefObject<HTMLDivElement>) {
   if (isMobile) {
     getViewPort()
       .drag()
-      .pinch() // This doesn't work that well on desktop.
+      .pinch() // Pinch doesn't work that well on desktop.
       .wheel()
       .decelerate({ friction: 0.4 });
   } else getViewPort().drag().wheel().decelerate({ friction: 0.4 });

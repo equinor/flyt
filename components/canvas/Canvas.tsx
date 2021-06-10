@@ -58,6 +58,7 @@ export default function Canvas(): JSX.Element {
         subActivityStraight: "/Postit/Yellow/Straight.png",
         waiting: "/Postit/Orange/Icon.png",
         waitingStraight: "/Postit/Orange/Icon/Straight.png",
+        errorCard: "/ErrorPostit.png",
       },
       () => setAssetsAreLoaded(true)
     );

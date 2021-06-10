@@ -58,7 +58,7 @@ const projectModel: ProjectModel = {
   errorProject: null,
   project: null,
   snackMessage: null,
-  selectedObject: null, //Todo: Use this instead local state selectedObject in components/VSMCanvas.tsx
+  selectedObject: null,
 
   // selectedObject: computed((state) => {
   //   const { project, selectedObjectId } = state;
@@ -344,13 +344,8 @@ const projectModel: ProjectModel = {
     actions.setErrorProject(null);
     actions.setSnackMessage("⏳ Moving card...");
 
-    const {
-      vsmProjectID,
-      vsmObjectID,
-      parent,
-      leftObjectId,
-      choiceGroup,
-    } = newVsmObject;
+    const { vsmProjectID, vsmObjectID, parent, leftObjectId, choiceGroup } =
+      newVsmObject;
 
     // Send the object-update to api
     return BaseAPIServices.patch(`/api/v1.0/VSMObject`, {

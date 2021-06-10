@@ -1,5 +1,5 @@
 import PIXI from "pixi.js";
-import { pointerEvents } from "../../VSMCanvas";
+import { pointerEvents } from "../../../types/PointerEvents";
 
 export function clickHandler(
   container: PIXI.Container,

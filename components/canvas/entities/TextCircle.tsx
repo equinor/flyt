@@ -7,7 +7,6 @@ export function TextCircle(
   textResolution = 2
 ): PIXI.Container {
   const circle = new PIXI.Sprite(background.texture);
-  // circle.pivot.set(-circle.width / 2, -circle.height / 2);
 
   const circleText = new PIXI.Text(text, {
     fontFamily: "Equinor",

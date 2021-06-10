@@ -19,6 +19,7 @@ export function createGrid(
     const topItem = i !== 0 && i % breakAt === 0;
     const firstItem = !lastItem;
 
+    //Todo: Improve performance by using constant x + y coordinates instead of dynamic calculating it...
     if (firstItem) {
       // Put it top left
       item.y = spaceBetween; // Row

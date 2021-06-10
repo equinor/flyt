@@ -9,7 +9,7 @@ export function setHoveredObject(vsmObject: vsmObject, dragObject: vsmObject) {
   if (vsmObject !== dragObject) {
     console.log(
       "set hovered object",
-      getVsmTypeName(vsmObject.vsmObjectType.pkObjectType),
+      getVsmTypeName(vsmObject.vsmObjectType?.pkObjectType),
       vsmObject.vsmObjectID
     );
     hoveredObject = vsmObject;

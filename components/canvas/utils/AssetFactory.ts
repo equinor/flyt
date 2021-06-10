@@ -2,15 +2,13 @@ import { vsmObject } from "../../../interfaces/VsmObject";
 import * as PIXI from "pixi.js";
 import { TextStyle } from "pixi.js";
 import { vsmObjectTypes } from "../../../types/vsmObjectTypes";
-import { getVsmTypeName } from "../../GetVsmTypeName";
 import { formatCanvasText } from "./FormatCanvasText";
-import { pointerEvents } from "../../VSMCanvas";
 import {
   clearHoveredObject,
   getDragObject,
   setHoveredObject,
 } from "./hoveredObject";
-import { clickHandler } from "../entities/ClickHandler";
+import { clickHandler } from "./ClickHandler";
 import { Dispatch } from "easy-peasy";
 import { ProjectModel } from "store/store";
 
@@ -18,7 +16,8 @@ import { formatDuration } from "../../../types/timeDefinitions";
 import { taskSorter } from "../../../utils/taskSorter";
 import { vsmTaskTypes } from "../../../types/vsmTaskTypes";
 import { TextCircle } from "../entities/TextCircle";
-import { createGrid } from "../entities/CreateGrid";
+import { createGrid } from "./CreateGrid";
+import { pointerEvents } from "../../../types/PointerEvents";
 
 let sprites:
   | { sprite: PIXI.Container; data: vsmObject }
@@ -172,6 +171,14 @@ function createGenericCardAsset(vsmObject: vsmObject) {
   return wrapper;
 }
 
+function createErrorCardAsset(vsmObject: vsmObject) {
+  const { errorCard } = PIXI.Loader.shared.resources;
+  const textSprite = getDefaultTextSprite(vsmObject, 100);
+  const wrapper = new PIXI.Container();
+  wrapper.addChild(new PIXI.Sprite(errorCard.texture), textSprite);
+  return wrapper;
+}
+
 function createMainActivityAsset(vsmObject: vsmObject) {
   const { mainActivity } = PIXI.Loader.shared.resources;
   const textSprite = getDefaultTextSprite(vsmObject, 100);
@@ -320,7 +327,7 @@ function createWaitingAsset(vsmObject: vsmObject) {
 function createNewSprite(vsmObject: vsmObject): PIXI.Container {
   const { vsmObjectType } = vsmObject;
 
-  switch (vsmObjectType.pkObjectType) {
+  switch (vsmObjectType?.pkObjectType) {
     case vsmObjectTypes.process:
     case vsmObjectTypes.supplier:
     case vsmObjectTypes.output:
@@ -336,10 +343,6 @@ function createNewSprite(vsmObject: vsmObject): PIXI.Container {
     case vsmObjectTypes.choice:
       return createChoiceAsset(vsmObject);
     default:
-      throw Error(
-        `Could not find a matching texture for ${getVsmTypeName(
-          vsmObjectType.pkObjectType
-        )}`
-      );
+      return createErrorCardAsset(vsmObject);
   }
 }
