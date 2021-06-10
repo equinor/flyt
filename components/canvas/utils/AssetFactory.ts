@@ -150,11 +150,16 @@ function createChoiceAsset(vsmObject: vsmObject) {
   return wrapper;
 }
 
-function getDefaultTextSprite(vsmObject: vsmObject, maxLength = 60) {
+function getDefaultTextSprite(
+  vsmObject: vsmObject,
+  maxLength = 60,
+  placeholder = ""
+) {
   const top = 8;
   const left = 12;
+  const text = vsmObject.name ?? placeholder;
   const textSprite = new PIXI.Text(
-    formatCanvasText(vsmObject.name, maxLength),
+    formatCanvasText(text, maxLength),
     defaultTextStyle
   );
   textSprite.resolution = textResolution;
@@ -163,9 +168,9 @@ function getDefaultTextSprite(vsmObject: vsmObject, maxLength = 60) {
   return textSprite;
 }
 
-function createGenericCardAsset(vsmObject: vsmObject) {
+function createGenericCardAsset(vsmObject: vsmObject, placeholder = "") {
   const { generic } = PIXI.Loader.shared.resources;
-  const textSprite = getDefaultTextSprite(vsmObject, 100);
+  const textSprite = getDefaultTextSprite(vsmObject, 100, placeholder);
   const wrapper = new PIXI.Container();
   wrapper.addChild(new PIXI.Sprite(generic.texture), textSprite);
   return wrapper;
@@ -329,11 +334,15 @@ function createNewSprite(vsmObject: vsmObject): PIXI.Container {
 
   switch (vsmObjectType?.pkObjectType) {
     case vsmObjectTypes.process:
+      return createGenericCardAsset(vsmObject, "Process");
     case vsmObjectTypes.supplier:
+      return createGenericCardAsset(vsmObject, "Supplier");
     case vsmObjectTypes.output:
+      return createGenericCardAsset(vsmObject, "Output");
     case vsmObjectTypes.customer:
+      return createGenericCardAsset(vsmObject, "Customer");
     case vsmObjectTypes.input:
-      return createGenericCardAsset(vsmObject);
+      return createGenericCardAsset(vsmObject, "Input");
     case vsmObjectTypes.mainActivity:
       return createMainActivityAsset(vsmObject);
     case vsmObjectTypes.subActivity:
