@@ -15,6 +15,10 @@ import { Dispatch } from "easy-peasy";
 import { ProjectModel } from "store/store";
 
 import { formatDuration } from "../../../types/timeDefinitions";
+import { taskSorter } from "../../../utils/taskSorter";
+import { vsmTaskTypes } from "../../../types/vsmTaskTypes";
+import { TextCircle } from "../entities/TextCircle";
+import { createGrid } from "../entities/CreateGrid";
 
 let sprites:
   | { sprite: PIXI.Container; data: vsmObject }
@@ -171,8 +175,11 @@ function createGenericCardAsset(vsmObject: vsmObject) {
 function createMainActivityAsset(vsmObject: vsmObject) {
   const { mainActivity } = PIXI.Loader.shared.resources;
   const textSprite = getDefaultTextSprite(vsmObject, 100);
+
+  const mainActivitySprite = new PIXI.Sprite(mainActivity.texture);
+
   const wrapper = new PIXI.Container();
-  wrapper.addChild(new PIXI.Sprite(mainActivity.texture), textSprite);
+  wrapper.addChild(mainActivitySprite, textSprite);
   return wrapper;
 }
 
@@ -184,6 +191,57 @@ function getRoleText(vsmObject: vsmObject) {
 function getTimeText(vsmObject: vsmObject) {
   const time = formatDuration(vsmObject.time, vsmObject.timeDefinition);
   return new PIXI.Text(formatCanvasText(time, 12), defaultTextStyle);
+}
+
+function getTaskSection(
+  numberOfTasksPerBase: number,
+  assetTaskSection: PIXI.ILoaderResource,
+  assetTaskSectionEdge: PIXI.ILoaderResource,
+  vsmObject: vsmObject
+) {
+  const numberOfTasks = vsmObject.tasks.length;
+  const numberOfBases = Math.ceil(numberOfTasks / numberOfTasksPerBase);
+
+  if (numberOfBases === 0) return null;
+
+  const taskSection = new PIXI.Container();
+  for (let i = 0; i < numberOfBases; i++) {
+    const taskSectionBase = new PIXI.Sprite(assetTaskSection.texture);
+    taskSectionBase.x = 28 * i;
+    taskSection.addChild(taskSectionBase);
+  }
+
+  const taskSectionEdge = new PIXI.Sprite(assetTaskSectionEdge.texture);
+  taskSectionEdge.x = 28 * numberOfBases;
+  taskSection.addChild(taskSectionEdge);
+  taskSection.x = 126;
+
+  const tasks = vsmObject.tasks;
+  if (tasks?.length > 0) {
+    const { ideaCircle, problemCircle, questionCircle, unknownCircle } =
+      PIXI.Loader.shared.resources;
+
+    const newTasks = tasks.sort(taskSorter()).map((t) => {
+      switch (t?.fkTaskType) {
+        case vsmTaskTypes.problem:
+          return TextCircle(`${t.displayIndex}`, problemCircle, textResolution);
+        case vsmTaskTypes.question:
+          return TextCircle(
+            `${t.displayIndex}`,
+            questionCircle,
+            textResolution
+          );
+        case vsmTaskTypes.idea:
+          return TextCircle(`${t.displayIndex}`, ideaCircle, textResolution);
+        default:
+          return TextCircle(`${t}`, unknownCircle, textResolution);
+      }
+    });
+
+    const taskContainer = createGrid(newTasks, numberOfTasksPerBase, 2);
+    taskSection.addChild(taskContainer);
+  }
+  return taskSection;
 }
 
 function createSubActivityAsset(vsmObject: vsmObject) {
@@ -198,26 +256,60 @@ function createSubActivityAsset(vsmObject: vsmObject) {
   timeText.y = 119;
   timeText.x = roleText.x;
 
-  const { subActivity } = PIXI.Loader.shared.resources;
+  const {
+    subActivity,
+    subActivityStraight,
+    genericTaskSection,
+    genericTaskSectionEdge,
+  } = PIXI.Loader.shared.resources;
+
+  const gotTasks = vsmObject.tasks.length > 0;
+  const texture = gotTasks ? subActivityStraight.texture : subActivity.texture;
+  const subActivitySprite = new PIXI.Sprite(texture);
+
   const wrapper = new PIXI.Container();
-  wrapper.addChild(
-    new PIXI.Sprite(subActivity.texture),
-    textSprite,
-    roleText,
-    timeText
+  wrapper.addChild(subActivitySprite, textSprite, roleText, timeText);
+
+  const taskSection = getTaskSection(
+    4,
+    genericTaskSection,
+    genericTaskSectionEdge,
+    vsmObject
   );
+  if (taskSection) wrapper.addChild(taskSection);
+
   return wrapper;
 }
 
 function createWaitingAsset(vsmObject: vsmObject) {
-  const { waiting } = PIXI.Loader.shared.resources;
   const textSprite = getDefaultTextSprite(vsmObject);
   const timeText = getTimeText(vsmObject);
   timeText.resolution = textResolution;
   timeText.y = 37;
   timeText.x = 32;
+
+  const {
+    waiting,
+    waitingStraight,
+    waitingTaskSection,
+    waitingTaskSectionEdge,
+  } = PIXI.Loader.shared.resources;
+
+  const gotTasks = vsmObject.tasks.length > 0;
+  const texture = gotTasks ? waitingStraight.texture : waiting.texture;
+  const waitingSprite = new PIXI.Sprite(texture);
+
   const wrapper = new PIXI.Container();
-  wrapper.addChild(new PIXI.Sprite(waiting.texture), textSprite, timeText);
+  wrapper.addChild(waitingSprite, textSprite, timeText);
+
+  const taskSection = getTaskSection(
+    2,
+    waitingTaskSection,
+    waitingTaskSectionEdge,
+    vsmObject
+  );
+  if (taskSection) wrapper.addChild(taskSection);
+
   return wrapper;
 }
 

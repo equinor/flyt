@@ -43,13 +43,21 @@ export default function Canvas(): JSX.Element {
     initCanvas(ref);
     const cleanupAssets = loadAssets(
       {
-        subActivity: "/Postit/Yellow.png",
-        generic: "/Postit/Grey.png",
-        mainActivity: "/Postit/Blue.png",
         choice: "/Choice.png",
-        waiting: "/Postit/Orange/Icon.png",
-        mainActivityStraight: "/Postit/Blue/Straight.png",
+        genericTaskSection: "/genericTaskSection.png",
+        genericTaskSectionEdge: "/genericTaskSectionEdge.png",
+        waitingTaskSection: "/waitingTaskSection.png",
+        waitingTaskSectionEdge: "/waitingTaskSectionEdge.png",
+        generic: "/Postit/Grey.png",
+        ideaCircle: "/Idea/small/primary.png",
+        unknownCircle: "/Unknown/small/primary.png",
+        mainActivity: "/Postit/Blue.png",
+        problemCircle: "/Problem/small/primary.png",
+        questionCircle: "/Question/small/primary.png",
+        subActivity: "/Postit/Yellow.png",
         subActivityStraight: "/Postit/Yellow/Straight.png",
+        waiting: "/Postit/Orange/Icon.png",
+        waitingStraight: "/Postit/Orange/Icon/Straight.png",
       },
       () => setAssetsAreLoaded(true)
     );
