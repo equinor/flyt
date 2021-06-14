@@ -1,9 +1,9 @@
 import React from "react";
-import { getApp } from "./app";
-import { getViewPort } from "./viewport";
+import { getApp } from "./PixiApp";
+import { getViewPort } from "./PixiViewport";
 import { isMobile } from "react-device-detect";
 
-export function initCanvas(ref: React.MutableRefObject<HTMLDivElement>) {
+export function initCanvas(ref: React.MutableRefObject<HTMLDivElement>): void {
   const app = getApp();
   // Make sure the app.stage is empty
   app.stage.removeChildren();

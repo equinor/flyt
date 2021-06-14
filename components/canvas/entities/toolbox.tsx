@@ -3,7 +3,7 @@ import { Graphics } from "pixi.js";
 import { vsmObjectTypes } from "../../../types/vsmObjectTypes";
 import { addNewVsmObjectToHoveredCard } from "../utils/addNewVsmObjectToHoveredCard";
 import { clearHoveredObject } from "../utils/hoveredObject";
-import { getApp } from "../utils/app";
+import { getApp } from "../utils/PixiApp";
 import { ActionTypes, Dispatch, StateMapper } from "easy-peasy";
 import { vsmProject } from "interfaces/VsmProject";
 import { ProjectModel } from "store/store";

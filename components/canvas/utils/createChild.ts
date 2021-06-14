@@ -1,6 +1,6 @@
 import { vsmObject } from "../../../interfaces/VsmObject";
 import { assetFactory } from "./AssetFactory";
-import { getViewPort } from "./viewport";
+import { getViewPort } from "./PixiViewport";
 import { moveExistingVsmObjectToHoveredCard } from "./moveCard";
 import { vsmObjectTypes } from "../../../types/vsmObjectTypes";
 import { pointerEvents } from "../../../types/PointerEvents";

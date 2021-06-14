@@ -7,11 +7,11 @@ import { useAccount, useMsal } from "@azure/msal-react";
 import { getUserCanEdit } from "../GetUserCanEdit";
 import { loadAssets } from "./utils/LoadAssets";
 import { addToolBox } from "./entities/toolbox";
-import { getApp } from "./utils/app";
-import { getViewPort } from "./utils/viewport";
+import { getApp } from "./utils/PixiApp";
+import { getViewPort } from "./utils/PixiViewport";
 import { initCanvas } from "./utils/InitCanvas";
 import { draggable } from "./utils/draggable";
-import { addCards } from "./utils/addCards";
+import { addCardsToCanvas } from "./utils/AddCardsToCanvas";
 import {
   getOnChangeName,
   getOnChangeRole,
@@ -73,7 +73,7 @@ export default function Canvas(): JSX.Element {
   useEffect(() => {
     if (project && assetsAreLoaded) {
       const viewport = getViewPort();
-      addCards(viewport, project, userCanEdit, dispatch);
+      addCardsToCanvas(viewport, project, userCanEdit, dispatch);
 
       return () => {
         console.info("Clearing canvas");
@@ -91,7 +91,7 @@ export default function Canvas(): JSX.Element {
   }, [project]);
 
   return (
-    <div style={{ backgroundColor: "blue" }}>
+    <div style={{ backgroundColor: "black" }}>
       <DeleteVsmObjectDialog
         objectToDelete={selectedObject}
         visible={visibleDeleteScrim}

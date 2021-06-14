@@ -2,12 +2,26 @@ import { vsmObjectTypes } from "../../../types/vsmObjectTypes";
 import { vsmObject } from "../../../interfaces/VsmObject";
 import { getVsmTypeName } from "../../GetVsmTypeName";
 import { getHoveredObject } from "./hoveredObject";
+import { ActionTypes, Dispatch, StateMapper } from "easy-peasy";
+import { vsmProject } from "interfaces/VsmProject";
+import { ProjectModel } from "store/store";
+import { _FilterKeys } from "ts-toolbelt/out/Object/FilterKeys";
+import { _Pick } from "ts-toolbelt/out/Object/Pick";
 
+/**
+ * Handle drag and drop from our toolbox
+ * Ref: components/canvas/entities/toolbox.tsx
+ * @param dragType - The type of the new object to add to our hovered object
+ * @param project
+ * @param dispatch
+ */
 export function addNewVsmObjectToHoveredCard(
   dragType: vsmObjectTypes,
-  project,
-  dispatch
-) {
+  project: StateMapper<
+    _Pick<vsmProject, _FilterKeys<vsmProject, ActionTypes, "default">>
+  >,
+  dispatch: Dispatch<ProjectModel>
+): void {
   const hoveredObject = getHoveredObject();
   //Todo: Improve target logic. Instead of using "hoveredObject", do a collision detection etc
   //  Read up on hitTest -> https://pixijs.download/release/docs/PIXI.InteractionManager.html#hitTest

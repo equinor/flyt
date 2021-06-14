@@ -307,7 +307,7 @@ const projectModel: ProjectModel = {
     // So if the process ( aka the root node ) title is updated, let's update the vsm title as well.
     // ** Update project title if type is process **
     const { vsmProjectID, name, vsmObjectType } = payload;
-    if (vsmObjectType.pkObjectType === vsmObjectTypes.process) {
+    if (vsmObjectType?.pkObjectType === vsmObjectTypes.process) {
       actions.setProjectName(payload);
       debounce(
         () => {

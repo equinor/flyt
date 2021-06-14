@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import { vsmObjectTypes } from "../../../types/vsmObjectTypes";
-import { getViewPort } from "./viewport";
+import { getViewPort } from "./PixiViewport";
 import { pointerEvents } from "../../../types/PointerEvents";
 
 export function draggable(

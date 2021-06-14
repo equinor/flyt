@@ -5,7 +5,14 @@ import { vsmProject } from "../../../interfaces/VsmProject";
 import { ProjectModel } from "store/store";
 import { assetFactory } from "./AssetFactory";
 
-export function addCards(
+/**
+ * Adds the project-cards to our canvas
+ * @param viewport
+ * @param project
+ * @param userCanEdit
+ * @param dispatch
+ */
+export function addCardsToCanvas(
   viewport: Viewport,
   project: RecursiveState<vsmProject>,
   userCanEdit: boolean,

@@ -6,6 +6,7 @@ export function TextCircle(
   background: PIXI.ILoaderResource,
   textResolution = 2
 ): PIXI.Container {
+  const diameter = 26; // <- Must be the same as the circle sprite
   const circle = new PIXI.Sprite(background.texture);
 
   const circleText = new PIXI.Text(text, {
@@ -18,10 +19,11 @@ export function TextCircle(
     fill: "white",
   });
   circleText.resolution = textResolution;
+
   // Center text
   circleText.anchor.set(0.5);
-  circleText.y = circle.height / 2;
-  circleText.x = circle.width / 2;
+  circleText.y = diameter / 2;
+  circleText.x = diameter / 2;
 
   const circleContainer = new PIXI.Container();
   circleContainer.addChild(circle, circleText);
