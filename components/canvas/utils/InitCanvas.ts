@@ -22,6 +22,4 @@ export function initCanvas(ref: React.MutableRefObject<HTMLDivElement>): void {
   ref.current.appendChild(app.view);
 
   app?.start();
-
-  console.info("Initialized canvas");
 }

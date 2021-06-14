@@ -75,7 +75,6 @@ function newSprite(
   vsmObject: vsmObject,
   dispatch: { setSelectedObject: (arg0: vsmObject) => void }
 ) {
-  console.info(`Creating sprite ${vsmObject.vsmObjectID}`);
   const { vsmObjectID } = vsmObject;
   const newSprite = createNewSprite(vsmObject, textResolution);
   clickHandler(newSprite, () => dispatch.setSelectedObject(vsmObject));
@@ -91,7 +90,6 @@ function newSprite(
  * Clear all sprites
  */
 export function clearSprites(): void {
-  // console.info("clearing sprite sprites");
   sprites = {};
 }
 

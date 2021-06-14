@@ -32,12 +32,6 @@ export default function Canvas(): JSX.Element {
   const account = useAccount(accounts[0] || {});
   const userCanEdit = getUserCanEdit(account, project);
 
-  useEffect(() => {
-    if (selectedObject) {
-      console.log(selectedObject.vsmObjectID);
-    }
-  }, [selectedObject]);
-
   // "Constructor"
   useEffect(() => {
     initCanvas(ref);
@@ -76,7 +70,7 @@ export default function Canvas(): JSX.Element {
       addCardsToCanvas(viewport, project, userCanEdit, dispatch);
 
       return () => {
-        console.info("Clearing canvas");
+        // Clearing canvas
         viewport.removeChildren();
       };
     }

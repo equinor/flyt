@@ -18,7 +18,7 @@ export function addCardsToCanvas(
   userCanEdit: boolean,
   dispatch: Dispatch<ProjectModel>
 ): void {
-  console.info("Adding cards to canvas", { project });
+  // Adding cards to canvas
   const tree = project;
   const root = tree.objects ? tree.objects[0] : null;
   if (!root) {
