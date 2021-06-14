@@ -9,7 +9,7 @@ export function createSubActivityAsset(
   vsmObject: vsmObject,
   textResolution: number
 ): PIXI.Container {
-  const textSprite = getDefaultTextSprite(vsmObject, 100, null, textResolution);
+  const textSprite = getDefaultTextSprite(vsmObject, 70, null, textResolution);
 
   const roleText = getRoleText(vsmObject);
   roleText.resolution = textResolution;
