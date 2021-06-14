@@ -48,12 +48,6 @@ const CanvasLayout = ({ children }) => {
   const account = useAccount(accounts[0] || {});
   const userCanEdit = getUserCanEdit(account, project);
   const userCannotEdit = !userCanEdit;
-  // Show the title dialog if we don't have a title.
-  // useEffect(() => {
-  //   if (!projectTitle) {
-  //     setVisibleRenameScrim(true);
-  //   }
-  // }, [projectTitle]);
 
   const [visibleRenameScrim, setVisibleRenameScrim] = React.useState(false);
   const handleCloseRenameScrim = (event, closed) => {

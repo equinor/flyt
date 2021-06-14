@@ -6,7 +6,7 @@ import { DeleteVsmObjectDialog } from "../DeleteVsmObjectDialog";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { getUserCanEdit } from "../GetUserCanEdit";
 import { loadAssets } from "./utils/LoadAssets";
-import { addToolBox } from "./entities/toolbox";
+import { toolBox } from "./entities/toolbox/toolbox";
 import { getApp } from "./utils/PixiApp";
 import { getViewPort } from "./utils/PixiViewport";
 import { initCanvas } from "./utils/InitCanvas";
@@ -53,6 +53,11 @@ export default function Canvas(): JSX.Element {
         waiting: "/Postit/Orange/Icon.png",
         waitingStraight: "/Postit/Orange/Icon/Straight.png",
         errorCard: "/ErrorPostit.png",
+        toolbox: "/Toolbox.png",
+        toolboxMainActivity: "/ToolboxMainActivity.png",
+        toolboxSubActivity: "/ToolboxSubActivity.png",
+        toolboxWaiting: "/ToolboxWaiting.png",
+        toolboxChoice: "/ToolboxChoice.png",
       },
       () => setAssetsAreLoaded(true)
     );
@@ -69,20 +74,19 @@ export default function Canvas(): JSX.Element {
       const viewport = getViewPort();
       addCardsToCanvas(viewport, project, userCanEdit, dispatch);
 
+      const cleanupToolbox = userCanEdit
+        ? toolBox(draggable, project, dispatch)
+        : () => {
+            //nothing to clean up
+          };
+
       return () => {
         // Clearing canvas
         viewport.removeChildren();
+        cleanupToolbox();
       };
     }
   }, [project, assetsAreLoaded]);
-
-  useEffect(() => {
-    return userCanEdit
-      ? addToolBox(draggable, project, dispatch)
-      : () => {
-          //nothing to clean up
-        };
-  }, [project]);
 
   return (
     <div style={{ backgroundColor: "black" }}>
