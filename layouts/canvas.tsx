@@ -48,12 +48,6 @@ const CanvasLayout = ({ children }) => {
   const account = useAccount(accounts[0] || {});
   const userCanEdit = getUserCanEdit(account, project);
   const userCannotEdit = !userCanEdit;
-  // Show the title dialog if we don't have a title.
-  // useEffect(() => {
-  //   if (!projectTitle) {
-  //     setVisibleRenameScrim(true);
-  //   }
-  // }, [projectTitle]);
 
   const [visibleRenameScrim, setVisibleRenameScrim] = React.useState(false);
   const handleCloseRenameScrim = (event, closed) => {
@@ -164,7 +158,9 @@ const CanvasLayout = ({ children }) => {
   }
 
   return (
-    <>
+    <div
+    // style={{ height: "100%", width: "100%", margin: 0, overflow: "hidden" }}
+    >
       <Head>
         <title>{publicRuntimeConfig.APP_NAME}</title>
         <meta charSet="utf-8" />
@@ -327,7 +323,7 @@ const CanvasLayout = ({ children }) => {
           {`${snackMessage}`}
         </MySnackBar>
       )}
-    </>
+    </div>
   );
 };
 
