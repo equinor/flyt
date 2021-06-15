@@ -88,8 +88,9 @@
 
   overflow: scroll;
 
-  animation-name: appearFromRight;
-  animation-duration: 0.5s;
+  // Todo: Fix https://equinor-sds-si.atlassian.net/browse/VSM-145 then you can enable animation again
+  //animation-name: appearFromRight;
+  //animation-duration: 0.5s;
 }
 
 .letItBreath {
@@ -120,9 +121,9 @@
   max-width: 400px;
 
   /// The animation
-  animation-name: hideToRight;
-  animation-duration: 0.5s;
-  animation-fill-mode: forwards;
+  //animation-name: hideToRight;
+  //animation-duration: 0.5s;
+  //animation-fill-mode: forwards;
 }
 
 @keyframes appearFromRight {
