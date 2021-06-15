@@ -50,6 +50,8 @@ export function assetFactory(
 /**
  * Get existing sprite for vsmObject
  * @param vsmObject
+ *
+ * @returns sprite or null if sprite is out of date or does not exist
  */
 function getSprite(vsmObject: vsmObject): PIXI.Container | null {
   if (!vsmObject)
@@ -116,9 +118,9 @@ function createNewSprite(
     case vsmObjectTypes.input:
       return createGenericCardAsset(vsmObject, "Input", textResolution);
     case vsmObjectTypes.mainActivity:
-      return createMainActivityAsset(vsmObject, textResolution);
+      return createMainActivityAsset(vsmObject, "MainActivity", textResolution);
     case vsmObjectTypes.subActivity:
-      return createSubActivityAsset(vsmObject, textResolution);
+      return createSubActivityAsset(vsmObject, "SubActivity", textResolution);
     case vsmObjectTypes.waiting:
       return createWaitingAsset(vsmObject, textResolution);
     case vsmObjectTypes.choice:

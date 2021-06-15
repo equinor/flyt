@@ -7,7 +7,7 @@ export function getDefaultTextSprite(
   { name }: vsmObject,
   maxLength = 60,
   placeholder = "",
-  textResolution
+  textResolution: number
 ) {
   const text = name ? name : placeholder;
   const textSprite = new PIXI.Text(
@@ -17,5 +17,7 @@ export function getDefaultTextSprite(
   textSprite.resolution = textResolution;
   textSprite.y = 8;
   textSprite.x = 12;
+  textSprite.alpha = name ? 1 : 0.4;
+
   return textSprite;
 }

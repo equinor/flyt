@@ -4,10 +4,16 @@ import { vsmObject } from "../../../../interfaces/VsmObject";
 
 export function createMainActivityAsset(
   vsmObject: vsmObject,
+  placeholder = "",
   textResolution: number
 ): PIXI.Container {
   const { mainActivity } = PIXI.Loader.shared.resources;
-  const textSprite = getDefaultTextSprite(vsmObject, 100, null, textResolution);
+  const textSprite = getDefaultTextSprite(
+    vsmObject,
+    100,
+    placeholder,
+    textResolution
+  );
 
   const mainActivitySprite = new PIXI.Sprite(mainActivity.texture);
 

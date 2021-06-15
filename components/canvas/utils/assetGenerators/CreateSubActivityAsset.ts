@@ -7,9 +7,15 @@ import { vsmObject } from "../../../../interfaces/VsmObject";
 
 export function createSubActivityAsset(
   vsmObject: vsmObject,
+  placeholder = "",
   textResolution: number
 ): PIXI.Container {
-  const textSprite = getDefaultTextSprite(vsmObject, 70, null, textResolution);
+  const textSprite = getDefaultTextSprite(
+    vsmObject,
+    70,
+    placeholder,
+    textResolution
+  );
 
   const roleText = getRoleText(vsmObject);
   roleText.resolution = textResolution;

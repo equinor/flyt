@@ -16,7 +16,7 @@ import { vsmObject } from "../../../interfaces/VsmObject";
 export function nothingHasChangedOfImportanceForRenderingThisCard(
   oldObject: vsmObject,
   newObject: vsmObject
-) {
+): boolean {
   return (
     oldObject.name === newObject.name &&
     oldObject.role === newObject.role &&
