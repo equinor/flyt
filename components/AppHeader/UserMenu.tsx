@@ -63,8 +63,8 @@ const UserMenu: React.FC = () => {
         anchorEl={buttonEl}
         onClose={closeMenu}
       >
-        <Menu.MenuItem disabled> {account?.username} </Menu.MenuItem>
-        <Menu.MenuItem onClick={() => instance.logout()}>Logout </Menu.MenuItem>
+        <Menu.Item disabled> {account?.username} </Menu.Item>
+        <Menu.Item onClick={() => instance.logout()}>Logout </Menu.Item>
       </Menu>
     </>
   );
