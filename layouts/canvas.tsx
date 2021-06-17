@@ -4,7 +4,6 @@ import {
   Icon,
   Menu,
   Scrim,
-  Snackbar,
   TextField,
   TopBar,
   Typography,
@@ -23,6 +22,7 @@ import { RightTopBarSection } from "../components/rightTopBarSection";
 import { getUserCanEdit } from "../components/GetUserCanEdit";
 import { disableMouseWheelZoom } from "../utils/disableMouseWheelZoom";
 import { disableKeyboardZoomShortcuts } from "../utils/disableKeyboardZoomShortcuts";
+import { MySnackBar } from "../components/MySnackBar";
 
 const icons = {
   chevron_down,
@@ -48,12 +48,6 @@ const CanvasLayout = ({ children }) => {
   const account = useAccount(accounts[0] || {});
   const userCanEdit = getUserCanEdit(account, project);
   const userCannotEdit = !userCanEdit;
-  // Show the title dialog if we don't have a title.
-  // useEffect(() => {
-  //   if (!projectTitle) {
-  //     setVisibleRenameScrim(true);
-  //   }
-  // }, [projectTitle]);
 
   const [visibleRenameScrim, setVisibleRenameScrim] = React.useState(false);
   const handleCloseRenameScrim = (event, closed) => {
@@ -164,7 +158,9 @@ const CanvasLayout = ({ children }) => {
   }
 
   return (
-    <>
+    <div
+    // style={{ height: "100%", width: "100%", margin: 0, overflow: "hidden" }}
+    >
       <Head>
         <title>{publicRuntimeConfig.APP_NAME}</title>
         <meta charSet="utf-8" />
@@ -320,18 +316,14 @@ const CanvasLayout = ({ children }) => {
       )}
 
       {snackMessage && (
-        <div className={styles.snackbar}>
-          <Snackbar
-            open
-            autoHideDuration={3000}
-            leftAlignFrom="1200px"
-            onClose={() => dispatch.setSnackMessage(null)}
-          >
-            {`${snackMessage}`}
-          </Snackbar>
-        </div>
+        <MySnackBar
+          autoHideDuration={3000}
+          onClose={() => dispatch.setSnackMessage(null)}
+        >
+          {`${snackMessage}`}
+        </MySnackBar>
       )}
-    </>
+    </div>
   );
 };
 

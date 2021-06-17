@@ -24,6 +24,7 @@ export function VSMSideBar(props: {
   if (nothingSelected) return <></>;
   return (
     <div
+      onWheel={(event) => event.stopPropagation()}
       className={
         nothingSelected ? styles.hideSideBarToRight : styles.vsmSideMenu
       }

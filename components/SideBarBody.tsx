@@ -16,7 +16,7 @@ export function SideBarBody(props: {
 }): JSX.Element {
   const { selectedObject, setShowNewTaskSection } = props;
 
-  switch (selectedObject.vsmObjectType.pkObjectType) {
+  switch (selectedObject?.vsmObjectType?.pkObjectType) {
     case vsmObjectTypes.process:
       return (
         <TextField

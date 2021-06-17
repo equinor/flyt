@@ -9,7 +9,7 @@ import { Layouts } from "../../layouts/LayoutWrapper";
 import { useStoreRehydrated } from "easy-peasy";
 
 const DynamicComponentWithNoSSR = dynamic(
-  () => import("../../components/VSMCanvas"),
+  () => import("../../components/canvas/Canvas"),
   { ssr: false }
 );
 

@@ -82,7 +82,7 @@ export function ExistingTaskSection(props: {
                 defaultChecked={tasks.some(
                   (task) => task?.vsmTaskID === t?.vsmTaskID
                 )}
-                label={`${t.vsmTaskID} - ${t.description}`}
+                label={`${t.displayIndex} - ${t.description}`}
                 onChange={(event) =>
                   event.target.checked ? linkTask(t) : unLinkTask(t)
                 }
