@@ -12,7 +12,9 @@ export function SideBarHeader(props: {
 }): JSX.Element {
   return (
     <div className={styles.headerContainer}>
-      <Typography variant={"h2"}>{props.object?.vsmObjectType.name}</Typography>
+      <Typography variant={"h2"}>
+        {props.object?.vsmObjectType?.name}
+      </Typography>
       <div className={styles.actions}>
         <Button
           disabled={!canDeleteVSMObject(props.object) || !props.canEdit}

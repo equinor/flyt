@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import { getAccessToken } from "../auth/msalHelpers";
 import { APIConfigs } from "../Config";
 
