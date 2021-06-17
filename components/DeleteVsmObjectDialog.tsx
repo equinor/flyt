@@ -9,11 +9,14 @@ import { vsmObjectTypes } from "../types/vsmObjectTypes";
 export function DeleteVsmObjectDialog(props: {
   objectToDelete: vsmObject;
   onClose: () => void;
+  visible: boolean;
 }) {
   const dispatch = useStoreDispatch();
 
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState(null); //Todo: Display error if error
+
+  if (!props.visible) return null;
 
   const handleClose = () => {
     setError(null);

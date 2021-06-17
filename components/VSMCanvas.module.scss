@@ -1,9 +1,9 @@
-/*!*To black scroll navigation set overscroll behavior*/
-/*This makes it possible to use two fingers on the trackpad for navigation in our vsm canvas*/
-/**!*/
-//html, body {
-//    overscroll-behavior-x: none;
-//}
+@import "styles/_variables.scss";
+
+.canvasWrapper {
+  border-left: 1px solid $equinor_GRAY;
+  border-right: 1px solid $equinor_GRAY;
+}
 
 .appear {
   animation-name: fade-in;
@@ -46,7 +46,7 @@
 
   /* Text + static icons/⚪️/Default */
 
-  color: #3d3d3d;
+  color: $text-default;
 }
 
 .vsmLabel {
@@ -88,8 +88,9 @@
 
   overflow: scroll;
 
-  animation-name: appearFromRight;
-  animation-duration: 0.5s;
+  // Todo: Fix https://equinor-sds-si.atlassian.net/browse/VSM-145 then you can enable animation again
+  //animation-name: appearFromRight;
+  //animation-duration: 0.5s;
 }
 
 .letItBreath {
@@ -120,9 +121,9 @@
   max-width: 400px;
 
   /// The animation
-  animation-name: hideToRight;
-  animation-duration: 0.5s;
-  animation-fill-mode: forwards;
+  //animation-name: hideToRight;
+  //animation-duration: 0.5s;
+  //animation-fill-mode: forwards;
 }
 
 @keyframes appearFromRight {
@@ -172,8 +173,7 @@
   align-items: center;
 
   /* Text + static icons/⚪️/Default */
-
-  color: #3d3d3d;
+  color: $text-default;
 }
 
 .sideBarSectionHeader {
