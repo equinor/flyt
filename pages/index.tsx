@@ -11,7 +11,7 @@ import { projectTemplatesV1 } from "../assets/projectTemplatesV1";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { ProjectListSection } from "../components/projectListSection";
 
-const { TabList, Tab, TabPanels, TabPanel } = Tabs;
+const { List, Tab, Panels, Panel } = Tabs;
 
 Icon.add({ account_circle, add });
 
@@ -91,7 +91,7 @@ export default function Projects(): JSX.Element {
                 activeTab={activeTab}
                 onChange={(index) => setActiveTab(index)}
               >
-                <TabList
+                <List
                   style={{
                     justifyContent: "center",
                     display: "flex",
@@ -100,9 +100,9 @@ export default function Projects(): JSX.Element {
                 >
                   <Tab>Edit</Tab>
                   <Tab>View</Tab>
-                </TabList>
-                <TabPanels>
-                  <TabPanel>
+                </List>
+                <Panels>
+                  <Panel>
                     <p
                       style={{
                         paddingBottom: 12,
@@ -114,8 +114,8 @@ export default function Projects(): JSX.Element {
                       These are the VSMs you can edit
                     </p>
                     <ProjectListSection projects={projectsICanView} />
-                  </TabPanel>
-                  <TabPanel>
+                  </Panel>
+                  <Panel>
                     <p
                       style={{
                         paddingBottom: 12,
@@ -137,8 +137,8 @@ export default function Projects(): JSX.Element {
                       Currently you can only edit VSMs that you have created.
                     </p>
                     <ProjectListSection projects={projectsICanEdit} />
-                  </TabPanel>
-                </TabPanels>
+                  </Panel>
+                </Panels>
               </Tabs>
             </>
           )}
