@@ -23,6 +23,7 @@ import { getUserCanEdit } from "../components/GetUserCanEdit";
 import { disableMouseWheelZoom } from "../utils/disableMouseWheelZoom";
 import { disableKeyboardZoomShortcuts } from "../utils/disableKeyboardZoomShortcuts";
 import { MySnackBar } from "../components/MySnackBar";
+import { UserDots } from "../components/UserDots";
 
 const icons = {
   chevron_down,
@@ -157,6 +158,7 @@ const CanvasLayout = ({ children }) => {
     });
   }
 
+  const userAccesses = project?.userAccesses;
   return (
     <div
     // style={{ height: "100%", width: "100%", margin: 0, overflow: "hidden" }}
@@ -239,7 +241,21 @@ const CanvasLayout = ({ children }) => {
           </div>
         </div>
 
-        <RightTopBarSection isAuthenticated={isAuthenticated} />
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <UserDots users={userAccesses} />
+          {/*<div*/}
+          {/*  style={{*/}
+          {/*    display: "flex",*/}
+          {/*    alignItems: "center",*/}
+          {/*    marginRight: 12,*/}
+          {/*  }}*/}
+          {/*>*/}
+          {/*  <UserDot name={"LINE"} />*/}
+          {/*  <UserDot name={"JOSH"} />*/}
+          {/*  <UserDot name={"Trond"} />*/}
+          {/*</div>*/}
+          <RightTopBarSection isAuthenticated={isAuthenticated} />
+        </div>
       </TopBar>
 
       {children}

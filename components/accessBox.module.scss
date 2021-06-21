@@ -1,0 +1,120 @@
+@import "styles/_variables.scss";
+
+.box {
+  background: #ffffff;
+  border-radius: 4px;
+  padding: 15px;
+  min-width: 400px;
+  max-width: 550px;
+}
+
+.topSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; //Vertical align the items
+
+  border-bottom: #dcdcdc solid 1px;
+}
+
+.middleSection {
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+.bottomSection {
+  border-top: #dcdcdc solid 1px;
+  padding-top: 12px;
+}
+
+.heading {
+  /* Heading/H6 */
+  font-family: Equinor, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.2px;
+  color: $equinor_PROMINENT;
+}
+
+.emailSection {
+  display: flex;
+  justify-content: space-between;
+}
+
+.userListSection {
+  padding-top: 12px;
+}
+
+.userItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.userItem > select:hover {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.userDotAndName {
+  display: flex;
+  align-items: center;
+  padding-right: 8px;
+}
+
+.userRole {
+  max-width: 140px !important;
+}
+
+.userText {
+  padding-left: 8px;
+
+  /* Navigation/Menu Title */
+
+  font-family: Equinor, sans-serif;
+  font-size: 16px;
+  line-height: 16px;
+  /* identical to box height, or 100% */
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.2px;
+
+  color: #000000;
+}
+
+.accessText {
+  /* Navigation/Menu Title */
+
+  font-family: Equinor, sans-serif;
+  font-size: 16px;
+  line-height: 16px;
+  /* identical to box height, or 100% */
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.2px;
+
+  color: #000000;
+}
+
+.roleSelect {
+  /* Navigation/Menu Title */
+
+  font-family: Equinor, sans-serif;
+  font-size: 16px;
+  line-height: 16px;
+  /* identical to box height, or 100% */
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.2px;
+
+  min-width: 110px;
+  padding: 5px;
+  border: 0;
+  border-radius: 5px;
+  height: 34px;
+  background: url(/chevron_down.svg) no-repeat right;
+  -webkit-appearance: none;
+  background-position-x: 90px;
+}

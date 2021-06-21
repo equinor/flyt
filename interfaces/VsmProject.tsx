@@ -22,4 +22,5 @@ export interface vsmProject {
     fkTask: vsmTaskTypes;
   };
   objects: Array<vsmObject>;
+  userAccesses: Array<string>;
 }
