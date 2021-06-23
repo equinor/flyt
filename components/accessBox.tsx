@@ -1,12 +1,13 @@
 import style from "./accessBox.module.scss";
 import { Button, Icon, Input } from "@equinor/eds-core-react";
 import { UserDot } from "./UserDot";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { close, link } from "@equinor/eds-icons";
 import { accessRoles } from "../types/AccessRoles";
 import { vsmProject } from "../interfaces/VsmProject";
 import BaseAPIServices from "../services/BaseAPIServices";
-
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import * as userApi from "../services/userApi";
 const icons = {
   close,
   link,
@@ -18,21 +19,13 @@ export function AccessBox(props: {
   project: vsmProject;
   handleClose;
 }): JSX.Element {
-  const [userAccesses, setUserAccesses] = useState([]);
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    setLoading(true);
-    BaseAPIServices.get(`/api/v1.0/userAccess/${vsmProjectID}`)
-      .then((value) => {
-        setUserAccesses(value.data);
-      })
-      .catch((error) => {
-        console.error(error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [props.project]);
+  const { data: userAccesses, isLoading } = useQuery("userAccesses", () =>
+    BaseAPIServices.get(`/api/v1.0/userAccess/${vsmProjectID}`).then(
+      (value) => {
+        return value.data;
+      }
+    )
+  );
 
   if (!props.project) return <></>;
   const { created, vsmProjectID } = props.project;
@@ -45,7 +38,7 @@ export function AccessBox(props: {
         owner={owner}
         users={userAccesses}
         vsmId={vsmProjectID}
-        loading={loading}
+        loading={isLoading}
       />
       <BottomSection />
     </div>
@@ -130,10 +123,30 @@ function MiddleSection(props: {
   loading: boolean;
 }) {
   const [userInput, setEmailInput] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const [users, setUsers] = useState(props.users);
-  useEffect(() => setUsers(props.users), [props.users]);
+  const queryClient = useQueryClient();
+  const addUserMutation = useMutation(
+    (newUser: { user: string; vsmId: number; role: string }) =>
+      userApi.add(newUser),
+    {
+      onSuccess: () => {
+        setEmailInput("");
+        queryClient.invalidateQueries("userAccesses");
+      },
+    }
+  );
+  const removeUserMutation = useMutation(
+    (props: { accessId; vsmId }) => userApi.remove(props),
+    {
+      onSuccess: () => queryClient.invalidateQueries("userAccesses"),
+    }
+  );
+  const changeUserMutation = useMutation(
+    (props: { user: { accessId: number }; role: string }) =>
+      userApi.update(props),
+    {
+      onSuccess: () => queryClient.invalidateQueries("userAccesses"),
+    }
+  );
 
   /**
    * Add new user
@@ -141,24 +154,11 @@ function MiddleSection(props: {
    */
   function handleSubmit(e) {
     e.preventDefault();
-    setLoading(true);
-    const oldInput = userInput;
-    setEmailInput("");
-
-    BaseAPIServices.post(`/api/v1.0/userAccess`, {
+    addUserMutation.mutate({
       user: userInput,
       vsmId: props.vsmId,
       role: accessRoles.Contributor,
-    })
-      .then((value) => {
-        setUsers([...users, value.data]);
-      })
-      .catch((error) => {
-        setEmailInput(oldInput);
-        console.error(error);
-        //todo: Display the error
-      })
-      .finally(() => setLoading(false));
+    });
   }
 
   if (props.loading) {
@@ -177,44 +177,23 @@ function MiddleSection(props: {
         />
         <span style={{ padding: 4 }} />
         <Button type={"submit"} variant={"contained"}>
-          {loading ? "Adding..." : "Add"}
+          {props.loading ? "Adding..." : "Add"}
         </Button>
       </form>
       <div className={style.middleSection}>
         <div className={style.userListSection}>
           <OwnerItem owner={props.owner} />
-          {users.map((user, index) => (
+          {props.users?.map((user) => (
             <UserItem
               key={user.accessId}
               user={user}
-              onRemove={() => {
-                BaseAPIServices.delete(
-                  `/api/v1.0/userAccess/${props.vsmId}/${user.accessId}`
-                )
-                  .then(() => {
-                    const newUsers = [...users];
-                    newUsers.splice(
-                      newUsers.findIndex((u) => u.accessId === user.accessId),
-                      1
-                    );
-                    setUsers(newUsers);
-                    //Todo: snack-message
-                    // alert(
-                    //   `Removed "${user.user}". They still have read access`
-                    // );
-                  })
-                  .catch((reason) => console.error(reason));
-              }}
-              onRoleChange={(role) => {
-                //Todo: patch user
-                BaseAPIServices.patch(`/api/v1.0/userAccess`, {
+              onRoleChange={(role) => changeUserMutation.mutate({ user, role })}
+              onRemove={() =>
+                removeUserMutation.mutate({
                   accessId: user.accessId,
-                  role: role,
+                  vsmId: props.vsmId,
                 })
-                  .then((value) => console.log(value.data))
-                  .catch((reason) => console.error(reason));
-                // console.log(`${user} -> ${role}`);
-              }}
+              }
             />
           ))}
         </div>
