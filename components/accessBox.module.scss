@@ -3,9 +3,20 @@
 .box {
   background: #ffffff;
   border-radius: 4px;
-  padding: 15px;
-  min-width: 400px;
-  max-width: 550px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 15px;
+  margin: 12px;
+
+  display: flex;
+  flex-direction: column;
+
+  min-width: 320px;
+  max-width: 700px;
+  max-height: 90vh;
+
+  animation-name: fade-in;
+  animation-duration: 0.5s;
 }
 
 .topSection {
@@ -19,6 +30,7 @@
 .middleSection {
   margin-top: 12px;
   margin-bottom: 12px;
+  overflow: scroll;
 }
 
 .bottomSection {
@@ -36,18 +48,25 @@
 }
 
 .emailSection {
+  padding-top: 12px;
   display: flex;
   justify-content: space-between;
 }
 
 .userListSection {
   padding-top: 12px;
+
+  animation-name: fade-in;
+  animation-duration: 0.5s;
 }
 
 .userItem {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  animation-name: fade-in;
+  animation-duration: 0.5s;
 }
 
 .userItem > select:hover {
@@ -59,6 +78,10 @@
   display: flex;
   align-items: center;
   padding-right: 8px;
+}
+
+.userDotAndName > p {
+  word-break: break-all;
 }
 
 .userRole {
@@ -117,4 +140,11 @@
   background: url(/chevron_down.svg) no-repeat right;
   -webkit-appearance: none;
   background-position-x: 90px;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
 }

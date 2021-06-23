@@ -114,6 +114,18 @@ const projectModel: ProjectModel = {
       })
       .finally(() => actions.setFetchingProject(false));
   }),
+  // addUser: thunk(async (actions, payload) => {
+  //   const { id } = payload;
+  //   actions.setFetchingProject(true);
+  //   actions.setErrorProject(null);
+  //   BaseAPIServices.get(`/api/v1.0/project/${id}`)
+  //     .then((value) => actions.setProject(value.data))
+  //     .catch((reason) => {
+  //       actions.setSnackMessage(reason);
+  //       return actions.setErrorProject(reason);
+  //     })
+  //     .finally(() => actions.setFetchingProject(false));
+  // }),
   patchLocalObject: action((state, payload) => {
     const { project } = state;
 

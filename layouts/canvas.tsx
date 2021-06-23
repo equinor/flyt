@@ -8,7 +8,7 @@ import {
   TopBar,
   Typography,
 } from "@equinor/eds-core-react";
-import { chevron_down, close, delete_forever } from "@equinor/eds-icons";
+import { chevron_down, close, delete_forever, share } from "@equinor/eds-icons";
 import styles from "./default.layout.module.scss";
 import { useAccount, useIsAuthenticated, useMsal } from "@azure/msal-react";
 import React, { useEffect, useState } from "react";
@@ -23,12 +23,13 @@ import { getUserCanEdit } from "../components/GetUserCanEdit";
 import { disableMouseWheelZoom } from "../utils/disableMouseWheelZoom";
 import { disableKeyboardZoomShortcuts } from "../utils/disableKeyboardZoomShortcuts";
 import { MySnackBar } from "../components/MySnackBar";
-import { UserDots } from "../components/UserDots";
+import { AccessBox } from "../components/accessBox";
 
 const icons = {
   chevron_down,
   close,
   delete_forever,
+  share,
 };
 
 Icon.add(icons);
@@ -49,6 +50,12 @@ const CanvasLayout = ({ children }) => {
   const account = useAccount(accounts[0] || {});
   const userCanEdit = getUserCanEdit(account, project);
   const userCannotEdit = !userCanEdit;
+
+  const [visibleShareScrim, setVisibleShareScrim] = React.useState(false);
+  const handleCloseShareScrim = (event, closed) => {
+    if (closed) setVisibleShareScrim(closed);
+    else setVisibleShareScrim(!visibleShareScrim);
+  };
 
   const [visibleRenameScrim, setVisibleRenameScrim] = React.useState(false);
   const handleCloseRenameScrim = (event, closed) => {
@@ -242,26 +249,37 @@ const CanvasLayout = ({ children }) => {
         </div>
 
         <div style={{ display: "flex", alignItems: "center" }}>
-          <UserDots users={userAccesses} />
-          {/*<div*/}
-          {/*  style={{*/}
-          {/*    display: "flex",*/}
-          {/*    alignItems: "center",*/}
-          {/*    marginRight: 12,*/}
-          {/*  }}*/}
-          {/*>*/}
-          {/*  <UserDot name={"LINE"} />*/}
-          {/*  <UserDot name={"JOSH"} />*/}
-          {/*  <UserDot name={"Trond"} />*/}
-          {/*</div>*/}
+          {/*<UserDots users={userAccesses?.map((u) => u.user) || []} />*/}
+          <Button
+            variant={"ghost_icon"}
+            title={"Share"}
+            style={{ marginRight: 8 }}
+            onClick={() => setVisibleShareScrim(true)}
+          >
+            <Icon name={"share"} />
+          </Button>
           <RightTopBarSection isAuthenticated={isAuthenticated} />
         </div>
       </TopBar>
 
       {children}
 
+      {visibleShareScrim && (
+        <Scrim
+          onClose={handleCloseShareScrim}
+          onWheel={(e) => e.stopPropagation()}
+          isDismissable
+        >
+          <AccessBox project={project} handleClose={handleCloseShareScrim} />
+        </Scrim>
+      )}
+
       {visibleRenameScrim && (
-        <Scrim onClose={handleCloseRenameScrim} isDismissable>
+        <Scrim
+          onClose={handleCloseRenameScrim}
+          onWheel={(e) => e.stopPropagation()}
+          isDismissable
+        >
           <div className={styles.scrimWrapper}>
             <div className={styles.scrimHeaderWrapper}>
               <div className={styles.scrimTitle}>Rename VSM</div>
@@ -289,7 +307,11 @@ const CanvasLayout = ({ children }) => {
       )}
 
       {visibleDeleteScrim && (
-        <Scrim onClose={handleCloseDeleteScrim} isDismissable>
+        <Scrim
+          onClose={handleCloseDeleteScrim}
+          onWheel={(e) => e.stopPropagation()}
+          isDismissable
+        >
           <div className={styles.scrimWrapper}>
             {isDeleting ? (
               <Typography>Deleting...</Typography>

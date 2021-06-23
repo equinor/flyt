@@ -18,7 +18,10 @@ import { _Pick } from "ts-toolbelt/out/Object/Pick";
 export function addNewVsmObjectToHoveredCard(
   dragType: vsmObjectTypes,
   project: StateMapper<
-    _Pick<vsmProject, _FilterKeys<vsmProject, ActionTypes, "default">>
+    _Pick<
+      vsmProject,
+      "vsmProjectID" | "name" | "created" | "lastUpdated" | "objects"
+    >
   >,
   dispatch: Dispatch<ProjectModel>
 ): void {
