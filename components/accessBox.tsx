@@ -14,7 +14,6 @@ const icons = {
 
 Icon.add(icons);
 
-//Do we need to use our store? I'm contemplating to just add the request and store everything locally....
 export function AccessBox(props: {
   project: vsmProject;
   handleClose;
@@ -157,7 +156,7 @@ function MiddleSection(props: {
       .catch((error) => {
         setEmailInput(oldInput);
         console.error(error);
-        //todo: snackbar error message
+        //todo: Display the error
       })
       .finally(() => setLoading(false));
   }
@@ -169,8 +168,9 @@ function MiddleSection(props: {
     <>
       <form className={style.emailSection} onSubmit={handleSubmit}>
         <Input
+          autoFocus
           type={"text"}
-          // pattern={"[Bb]anana|[Cc]herry"}
+          // pattern={"[Bb]anana|[Cc]herry"} //Todo: pattern match?
           placeholder={"shortname"}
           value={userInput}
           onChange={(event) => setEmailInput(event.target.value)}
