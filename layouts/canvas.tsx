@@ -19,11 +19,11 @@ import { useRouter } from "next/router";
 import BaseAPIServices from "../services/BaseAPIServices";
 import { HomeButton } from "./homeButton";
 import { RightTopBarSection } from "../components/rightTopBarSection";
-import { getUserCanEdit } from "../components/GetUserCanEdit";
 import { disableMouseWheelZoom } from "../utils/disableMouseWheelZoom";
 import { disableKeyboardZoomShortcuts } from "../utils/disableKeyboardZoomShortcuts";
 import { MySnackBar } from "../components/MySnackBar";
 import { AccessBox } from "../components/accessBox";
+import { getMyAccess } from "../utils/getMyAccess";
 
 const icons = {
   chevron_down,
@@ -48,8 +48,10 @@ const CanvasLayout = ({ children }) => {
 
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
-  const userCanEdit = getUserCanEdit(account, project);
+  const myAccess = getMyAccess(project, account);
+  const userCanEdit = myAccess === "Admin" || myAccess === "Contributor";
   const userCannotEdit = !userCanEdit;
+  const isAdmin = myAccess === "Admin";
 
   const [visibleShareScrim, setVisibleShareScrim] = React.useState(false);
   const handleCloseShareScrim = (event, closed) => {
@@ -165,11 +167,8 @@ const CanvasLayout = ({ children }) => {
     });
   }
 
-  const userAccesses = project?.userAccesses;
   return (
-    <div
-    // style={{ height: "100%", width: "100%", margin: 0, overflow: "hidden" }}
-    >
+    <div>
       <Head>
         <title>{publicRuntimeConfig.APP_NAME}</title>
         <meta charSet="utf-8" />
@@ -210,7 +209,7 @@ const CanvasLayout = ({ children }) => {
               <Menu.Item
                 title={`${
                   userCannotEdit
-                    ? "Only the creator can rename this VSM"
+                    ? "Only the creator, admin or a contributor can rename this VSM"
                     : "Rename the current VSM"
                 }`}
                 disabled={userCannotEdit}
@@ -225,11 +224,11 @@ const CanvasLayout = ({ children }) => {
               </Menu.Item>
               <Menu.Item
                 title={`${
-                  userCannotEdit
-                    ? "Only the creator can delete this VSM"
-                    : "Delete the current VSM"
+                  isAdmin
+                    ? "Delete the current VSM"
+                    : "Only the creator can delete this VSM"
                 }`}
-                disabled={userCannotEdit}
+                disabled={!isAdmin}
                 onKeyDown={(e) => {
                   if (e.code === "Enter") setVisibleDeleteScrim(true);
                 }}
@@ -270,7 +269,11 @@ const CanvasLayout = ({ children }) => {
           onWheel={(e) => e.stopPropagation()}
           isDismissable
         >
-          <AccessBox project={project} handleClose={handleCloseShareScrim} />
+          <AccessBox
+            project={project}
+            handleClose={handleCloseShareScrim}
+            isAdmin={isAdmin}
+          />
         </Scrim>
       )}
 

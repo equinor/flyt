@@ -18,6 +18,7 @@ Icon.add(icons);
 export function AccessBox(props: {
   project: vsmProject;
   handleClose;
+  isAdmin: boolean;
 }): JSX.Element {
   const { data: userAccesses, isLoading } = useQuery("userAccesses", () =>
     BaseAPIServices.get(`/api/v1.0/userAccess/${vsmProjectID}`).then(
@@ -39,6 +40,7 @@ export function AccessBox(props: {
         users={userAccesses}
         vsmId={vsmProjectID}
         loading={isLoading}
+        isAdmin={props.isAdmin}
       />
       <BottomSection />
     </div>
@@ -48,6 +50,7 @@ export function AccessBox(props: {
 function RoleSelect(props: {
   onChange: (arg0: string) => void;
   defaultValue: string;
+  disabled: boolean;
 }) {
   return (
     <select
@@ -56,6 +59,7 @@ function RoleSelect(props: {
       id="AccessRoles"
       name="AccessRole"
       onChange={(event) => props.onChange(event.target.value)}
+      disabled={props.disabled}
     >
       <option value="Admin">Admin</option>
       <option value="Contributor">Contributor</option>
@@ -79,6 +83,7 @@ function UserItem(props: {
   user: { accessId: number; user: string; role: string };
   onRoleChange;
   onRemove;
+  disabled: boolean;
 }) {
   function handleChange(role: string) {
     if (role === "Remove") {
@@ -98,6 +103,7 @@ function UserItem(props: {
       <RoleSelect
         onChange={(role) => handleChange(role)}
         defaultValue={props.user.role}
+        disabled={props.disabled}
       />
     </div>
   );
@@ -121,6 +127,7 @@ function MiddleSection(props: {
   users: { accessId: number; user: string; role: string }[];
   vsmId: number;
   loading: boolean;
+  isAdmin: boolean;
 }) {
   const [userInput, setEmailInput] = useState("");
   const queryClient = useQueryClient();
@@ -168,6 +175,7 @@ function MiddleSection(props: {
     <>
       <form className={style.emailSection} onSubmit={handleSubmit}>
         <Input
+          disabled={!props.isAdmin}
           autoFocus
           type={"text"}
           // pattern={"[Bb]anana|[Cc]herry"} //Todo: pattern match?
@@ -176,10 +184,15 @@ function MiddleSection(props: {
           onChange={(event) => setEmailInput(event.target.value)}
         />
         <span style={{ padding: 4 }} />
-        <Button type={"submit"} variant={"contained"}>
+        <Button type={"submit"} variant={"contained"} disabled={!props.isAdmin}>
           {props.loading ? "Adding..." : "Add"}
         </Button>
       </form>
+      {!props.isAdmin && (
+        <div className={style.infoCannotEdit}>
+          <p>You need to be the creator or an admin to manage sharing</p>
+        </div>
+      )}
       <div className={style.middleSection}>
         <div className={style.userListSection}>
           <OwnerItem owner={props.owner} />
@@ -194,6 +207,7 @@ function MiddleSection(props: {
                   vsmId: props.vsmId,
                 })
               }
+              disabled={!props.isAdmin}
             />
           ))}
         </div>

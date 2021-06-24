@@ -38,3 +38,13 @@ export const remove = (props: {
   BaseAPIServices.delete(
     `/api/v1.0/userAccess/${props.vsmId}/${props.accessId}`
   );
+
+/**
+ * Gets the access for the specified user in the specified Vsm
+ * @param props
+ */
+export const get = ({ vsmId, userName }) => {
+  return BaseAPIServices.get(`/api/v1.0/userAccess/${vsmId}/${userName}`).then(
+    (res) => res.data
+  );
+};
