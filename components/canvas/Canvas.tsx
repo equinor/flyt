@@ -18,6 +18,7 @@ import {
   getOnChangeTime,
   getOnChangeTimeDefinition,
 } from "./utils/vsmObjectChangeHandlers";
+import { getMyAccess } from "../../utils/getMyAccess";
 
 export default function Canvas(): JSX.Element {
   const ref = useRef();
@@ -30,7 +31,8 @@ export default function Canvas(): JSX.Element {
 
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
-  const userCanEdit = getUserCanEdit(account, project);
+  const myAccess = getMyAccess(project, account);
+  const userCanEdit = myAccess === "Admin" || myAccess === "Contributor";
 
   // "Constructor"
   useEffect(() => {
