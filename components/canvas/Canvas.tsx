@@ -18,6 +18,7 @@ import {
   getOnChangeTimeDefinition,
 } from "./utils/vsmObjectChangeHandlers";
 import { getMyAccess } from "../../utils/getMyAccess";
+import { assets } from "./utils/AssetFactory";
 
 export default function Canvas(): JSX.Element {
   const ref = useRef();
@@ -36,34 +37,7 @@ export default function Canvas(): JSX.Element {
   // "Constructor"
   useEffect(() => {
     initCanvas(ref);
-    const cleanupAssets = loadAssets(
-      {
-        choice: "/Choice.png",
-        genericTaskSection: "/genericTaskSection.png",
-        genericTaskSectionEdge: "/genericTaskSectionEdge.png",
-        waitingTaskSection: "/waitingTaskSection.png",
-        waitingTaskSectionEdge: "/waitingTaskSectionEdge.png",
-        generic: "/Postit/Grey.png",
-        genericStraight: "/Postit/Green/Straight.png",
-        ideaCircle: "/Idea/small/primary.png",
-        unknownCircle: "/Unknown/small/primary.png",
-        mainActivity: "/Postit/Blue.png",
-        mainActivityStraight: "/Postit/Blue/Straight.png",
-        problemCircle: "/Problem/small/primary.png",
-        questionCircle: "/Question/small/primary.png",
-        subActivity: "/Postit/Yellow.png",
-        subActivityStraight: "/Postit/Yellow/Straight.png",
-        waiting: "/Postit/Orange/Icon.png",
-        waitingStraight: "/Postit/Orange/Icon/Straight.png",
-        errorCard: "/ErrorPostit.png",
-        toolbox: "/Toolbox.png",
-        toolboxMainActivity: "/ToolboxMainActivity.png",
-        toolboxSubActivity: "/ToolboxSubActivity.png",
-        toolboxWaiting: "/ToolboxWaiting.png",
-        toolboxChoice: "/ToolboxChoice.png",
-      },
-      () => setAssetsAreLoaded(true)
-    );
+    const cleanupAssets = loadAssets(assets, () => setAssetsAreLoaded(true));
     return () => {
       cleanupAssets();
       getApp().stage.removeChildren();
