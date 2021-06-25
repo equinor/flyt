@@ -19,6 +19,32 @@ import { createWaitingAsset } from "./assetGenerators/CreateWaitingAsset";
 import { createChoiceAsset } from "./assetGenerators/CreateChoiceAsset";
 import { nothingHasChangedOfImportanceForRenderingThisCard } from "./NothingHasChangedOfImportanceForRenderingThisCard";
 
+export const assets = {
+  choice: "/Choice.png",
+  genericTaskSection: "/genericTaskSection.png",
+  genericTaskSectionEdge: "/genericTaskSectionEdge.png",
+  waitingTaskSection: "/waitingTaskSection.png",
+  waitingTaskSectionEdge: "/waitingTaskSectionEdge.png",
+  generic: "/Postit/Grey.png",
+  genericStraight: "/Postit/Green/Straight.png",
+  ideaCircle: "/Idea/small/primary.png",
+  unknownCircle: "/Unknown/small/primary.png",
+  mainActivity: "/Postit/Blue.png",
+  mainActivityStraight: "/Postit/Blue/Straight.png",
+  problemCircle: "/Problem/small/primary.png",
+  questionCircle: "/Question/small/primary.png",
+  subActivity: "/Postit/Yellow.png",
+  subActivityStraight: "/Postit/Yellow/Straight.png",
+  waiting: "/Postit/Orange/Icon.png",
+  waitingStraight: "/Postit/Orange/Icon/Straight.png",
+  errorCard: "/ErrorPostit.png",
+  toolbox: "/Toolbox.png",
+  toolboxMainActivity: "/ToolboxMainActivity.png",
+  toolboxSubActivity: "/ToolboxSubActivity.png",
+  toolboxWaiting: "/ToolboxWaiting.png",
+  toolboxChoice: "/ToolboxChoice.png",
+};
+
 let sprites:
   | { sprite: PIXI.Container; data: vsmObject }
   | Record<string, unknown> = {};
