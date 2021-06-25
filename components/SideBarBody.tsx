@@ -112,16 +112,23 @@ export function SideBarBody(props: {
       );
     case vsmObjectTypes.mainActivity:
       return (
-        <TextField
-          disabled={!props.canEdit}
-          label={"Add description"}
-          multiline
-          rows={4}
-          variant={"default"}
-          value={selectedObject.name || ""}
-          onChange={props.onChangeName}
-          id={"vsmObjectDescription"}
-        />
+        <>
+          <TextField
+            disabled={!props.canEdit}
+            label={"Add description"}
+            multiline
+            rows={4}
+            variant={"default"}
+            value={selectedObject.name || ""}
+            onChange={props.onChangeName}
+            id={"vsmObjectDescription"}
+          />
+          <QIPSection
+            canEdit={props.canEdit}
+            object={selectedObject}
+            onClickNewTask={() => setShowNewTaskSection(true)}
+          />
+        </>
       );
     case vsmObjectTypes.subActivity:
       return (
