@@ -17,6 +17,7 @@ import {
   getOnChangeTime,
   getOnChangeTimeDefinition,
 } from "./utils/vsmObjectChangeHandlers";
+import { getUserCanEdit } from "../GetUserCanEdit";
 
 export default function Canvas(): JSX.Element {
   const ref = useRef();
@@ -46,6 +47,7 @@ export default function Canvas(): JSX.Element {
         ideaCircle: "/Idea/small/primary.png",
         unknownCircle: "/Unknown/small/primary.png",
         mainActivity: "/Postit/Blue.png",
+        mainActivityStraight: "/Postit/Blue/Straight.png",
         problemCircle: "/Problem/small/primary.png",
         questionCircle: "/Question/small/primary.png",
         subActivity: "/Postit/Yellow.png",
