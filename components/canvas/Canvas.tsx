@@ -4,7 +4,6 @@ import { VSMSideBar } from "../VSMSideBar";
 import style from "../VSMCanvas.module.scss";
 import { DeleteVsmObjectDialog } from "../DeleteVsmObjectDialog";
 import { useAccount, useMsal } from "@azure/msal-react";
-import { getUserCanEdit } from "../GetUserCanEdit";
 import { loadAssets } from "./utils/LoadAssets";
 import { toolBox } from "./entities/toolbox/toolbox";
 import { getApp } from "./utils/PixiApp";
@@ -43,6 +42,7 @@ export default function Canvas(): JSX.Element {
         waitingTaskSection: "/waitingTaskSection.png",
         waitingTaskSectionEdge: "/waitingTaskSectionEdge.png",
         generic: "/Postit/Grey.png",
+        genericStraight: "/Postit/Green/Straight.png",
         ideaCircle: "/Idea/small/primary.png",
         unknownCircle: "/Unknown/small/primary.png",
         mainActivity: "/Postit/Blue.png",
@@ -74,6 +74,7 @@ export default function Canvas(): JSX.Element {
       const viewport = getViewPort();
       addCardsToCanvas(viewport, project, userCanEdit, dispatch);
 
+      //Todo: Only show toolbox if userCanEdit. ref: https://equinor-sds-si.atlassian.net/browse/VSM-143
       const cleanupToolbox = userCanEdit
         ? toolBox(draggable, project, dispatch)
         : () => {
