@@ -61,12 +61,17 @@ export default function Projects(): JSX.Element {
       </div>
     );
 
-  const projectsICanEdit = projects.filter(
-    (p) => p.created.userIdentity !== account?.username.split("@")[0]
-  );
   const projectsICanView = projects.filter(
-    (p) => p.created.userIdentity === account?.username.split("@")[0]
+    // Only display other peoples projects that have been given a name
+    (p) => {
+      return (
+        !!p.name && p.created.userIdentity !== account?.username.split("@")[0]
+      );
+    }
   );
+  const projectsICanEdit = projects.filter((p) => {
+    return p.created.userIdentity === account?.username.split("@")[0];
+  });
   return (
     <div className={commonStyles.container}>
       <Head>
@@ -113,7 +118,7 @@ export default function Projects(): JSX.Element {
                     >
                       These are the VSMs you can edit
                     </p>
-                    <ProjectListSection projects={projectsICanView} />
+                    <ProjectListSection projects={projectsICanEdit} />
                   </Panel>
                   <Panel>
                     <p
@@ -136,7 +141,7 @@ export default function Projects(): JSX.Element {
                     >
                       Currently you can only edit VSMs that you have created.
                     </p>
-                    <ProjectListSection projects={projectsICanEdit} />
+                    <ProjectListSection projects={projectsICanView} />
                   </Panel>
                 </Panels>
               </Tabs>
