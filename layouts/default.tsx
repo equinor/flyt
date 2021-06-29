@@ -5,7 +5,7 @@ import { useIsAuthenticated } from "@azure/msal-react";
 import React from "react";
 import getConfig from "next/config";
 import { HomeButton } from "./homeButton";
-import { RightTopBarSection } from "../components/rightTopBarSection";
+import { RightTopBarSection } from "../components/RightTopBarSection";
 
 const DefaultLayout = ({ children }) => {
   const isAuthenticated = useIsAuthenticated();

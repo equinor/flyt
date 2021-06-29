@@ -18,7 +18,7 @@ import { useStoreDispatch, useStoreState } from "../hooks/storeHooks";
 import { useRouter } from "next/router";
 import BaseAPIServices from "../services/BaseAPIServices";
 import { HomeButton } from "./homeButton";
-import { RightTopBarSection } from "../components/rightTopBarSection";
+import { RightTopBarSection } from "../components/RightTopBarSection";
 import { disableMouseWheelZoom } from "../utils/disableMouseWheelZoom";
 import { disableKeyboardZoomShortcuts } from "../utils/disableKeyboardZoomShortcuts";
 import { MySnackBar } from "../components/MySnackBar";

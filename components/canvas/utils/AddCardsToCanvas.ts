@@ -16,7 +16,7 @@ export function addCardsToCanvas(
   viewport: Viewport,
   project: RecursiveState<vsmProject>,
   userCanEdit: boolean,
-  dispatch: Dispatch<ProjectModel>
+  dispatch?: Dispatch<ProjectModel>
 ): void {
   // Adding cards to canvas
   const tree = project;
