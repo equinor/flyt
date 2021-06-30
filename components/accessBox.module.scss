@@ -1,0 +1,163 @@
+@import "styles/_variables.scss";
+
+.box {
+  background: #ffffff;
+  border-radius: 4px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 15px;
+  margin: 12px;
+
+  display: flex;
+  flex-direction: column;
+
+  min-width: 320px;
+  max-width: 700px;
+  max-height: 90vh;
+
+  animation-name: fade-in;
+  animation-duration: 0.5s;
+}
+
+.topSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; //Vertical align the items
+
+  border-bottom: #dcdcdc solid 1px;
+}
+
+.middleSection {
+  margin-top: 12px;
+  margin-bottom: 12px;
+  overflow: scroll;
+}
+
+.bottomSection {
+  border-top: #dcdcdc solid 1px;
+  padding-top: 12px;
+}
+
+.heading {
+  /* Heading/H6 */
+  font-family: Equinor, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.2px;
+  color: $equinor_PROMINENT;
+}
+
+.emailSection {
+  padding-top: 12px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.userListSection {
+  padding-top: 12px;
+
+  animation-name: fade-in;
+  animation-duration: 0.5s;
+}
+
+.userItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  animation-name: fade-in;
+  animation-duration: 0.5s;
+}
+
+.userDotAndName {
+  display: flex;
+  align-items: center;
+  padding-right: 8px;
+}
+
+.userDotAndName > p {
+  word-break: break-all;
+}
+
+.userRole {
+  max-width: 140px !important;
+}
+
+.userText {
+  padding-left: 8px;
+
+  /* Navigation/Menu Title */
+
+  font-family: Equinor, sans-serif;
+  font-size: 16px;
+  line-height: 16px;
+  /* identical to box height, or 100% */
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.2px;
+
+  color: #000000;
+}
+
+.accessText {
+  /* Navigation/Menu Title */
+
+  font-family: Equinor, sans-serif;
+  font-size: 16px;
+  line-height: 16px;
+  /* identical to box height, or 100% */
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.2px;
+
+  color: #000000;
+}
+
+.roleSelect {
+  /* Navigation/Menu Title */
+
+  font-family: Equinor, sans-serif;
+  font-size: 16px;
+  line-height: 16px;
+  /* identical to box height, or 100% */
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.2px;
+
+  min-width: 110px;
+  border: 0;
+  background: transparent;
+
+  // Replace the chevron with a green one
+  -webkit-appearance: none; // Hide the original chevron
+  background: url(/chevron_down.svg) no-repeat right; // Add svg chevron
+  background-position-x: 90px; // Adjust placement
+}
+
+.roleSelect:disabled {
+  filter: saturate(0);
+  //opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.roleSelect:hover:enabled {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+.infoCannotEdit {
+  margin-top: 12px;
+  border-radius: 4px;
+  border: $equinor_DISABLED solid 1px;
+  padding: 8px;
+}

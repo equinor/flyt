@@ -2,13 +2,20 @@ import { vsmObject } from "../../../interfaces/VsmObject";
 
 let hoveredObject: vsmObject | null = null;
 
-export const getHoveredObject = (): vsmObject | null => hoveredObject;
+export const getHoveredObject = (): vsmObject | null => {
+  console.log("Get hovered object", { hoveredObject });
+  return hoveredObject;
+};
 
 export function setHoveredObject(
   vsmObject: vsmObject,
   dragObject: vsmObject
 ): void {
-  if (vsmObject !== dragObject) hoveredObject = vsmObject;
+  console.log("setHoveredObject", { vsmObject, dragObject });
+  if (vsmObject === dragObject) {
+    console.error("vsmObject === dragObject", { vsmObject, dragObject });
+  }
+  hoveredObject = vsmObject;
 }
 
 export const clearHoveredObject = (): void => {

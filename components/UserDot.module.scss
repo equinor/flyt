@@ -7,4 +7,5 @@
   height: 24px;
   width: 24px;
   font-family: Equinor, sans-serif;
+  min-width: 24px; //For some reason setting width wasn't enough. It got squished
 }

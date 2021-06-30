@@ -8,7 +8,7 @@ import {
   TopBar,
   Typography,
 } from "@equinor/eds-core-react";
-import { chevron_down, close, delete_forever } from "@equinor/eds-icons";
+import { chevron_down, close, delete_forever, share } from "@equinor/eds-icons";
 import styles from "./default.layout.module.scss";
 import { useAccount, useIsAuthenticated, useMsal } from "@azure/msal-react";
 import React, { useEffect, useState } from "react";
@@ -18,16 +18,18 @@ import { useStoreDispatch, useStoreState } from "../hooks/storeHooks";
 import { useRouter } from "next/router";
 import BaseAPIServices from "../services/BaseAPIServices";
 import { HomeButton } from "./homeButton";
-import { RightTopBarSection } from "../components/rightTopBarSection";
-import { getUserCanEdit } from "../components/GetUserCanEdit";
+import { RightTopBarSection } from "../components/RightTopBarSection";
 import { disableMouseWheelZoom } from "../utils/disableMouseWheelZoom";
 import { disableKeyboardZoomShortcuts } from "../utils/disableKeyboardZoomShortcuts";
 import { MySnackBar } from "../components/MySnackBar";
+import { AccessBox } from "../components/accessBox";
+import { getMyAccess } from "../utils/getMyAccess";
 
 const icons = {
   chevron_down,
   close,
   delete_forever,
+  share,
 };
 
 Icon.add(icons);
@@ -46,8 +48,16 @@ const CanvasLayout = ({ children }) => {
 
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
-  const userCanEdit = getUserCanEdit(account, project);
+  const myAccess = getMyAccess(project, account);
+  const userCanEdit = myAccess === "Admin" || myAccess === "Contributor";
   const userCannotEdit = !userCanEdit;
+  const isAdmin = myAccess === "Admin";
+
+  const [visibleShareScrim, setVisibleShareScrim] = React.useState(false);
+  const handleCloseShareScrim = (event, closed) => {
+    if (closed) setVisibleShareScrim(closed);
+    else setVisibleShareScrim(!visibleShareScrim);
+  };
 
   const [visibleRenameScrim, setVisibleRenameScrim] = React.useState(false);
   const handleCloseRenameScrim = (event, closed) => {
@@ -158,9 +168,7 @@ const CanvasLayout = ({ children }) => {
   }
 
   return (
-    <div
-    // style={{ height: "100%", width: "100%", margin: 0, overflow: "hidden" }}
-    >
+    <div>
       <Head>
         <title>{publicRuntimeConfig.APP_NAME}</title>
         <meta charSet="utf-8" />
@@ -201,7 +209,7 @@ const CanvasLayout = ({ children }) => {
               <Menu.Item
                 title={`${
                   userCannotEdit
-                    ? "Only the creator can rename this VSM"
+                    ? "Only the creator, admin or a contributor can rename this VSM"
                     : "Rename the current VSM"
                 }`}
                 disabled={userCannotEdit}
@@ -216,11 +224,11 @@ const CanvasLayout = ({ children }) => {
               </Menu.Item>
               <Menu.Item
                 title={`${
-                  userCannotEdit
-                    ? "Only the creator can delete this VSM"
-                    : "Delete the current VSM"
+                  isAdmin
+                    ? "Delete the current VSM"
+                    : "Only the creator can delete this VSM"
                 }`}
-                disabled={userCannotEdit}
+                disabled={!isAdmin}
                 onKeyDown={(e) => {
                   if (e.code === "Enter") setVisibleDeleteScrim(true);
                 }}
@@ -239,13 +247,42 @@ const CanvasLayout = ({ children }) => {
           </div>
         </div>
 
-        <RightTopBarSection isAuthenticated={isAuthenticated} />
+        <div style={{ display: "flex", alignItems: "center" }}>
+          {/*<UserDots users={userAccesses?.map((u) => u.user) || []} />*/}
+          <Button
+            variant={"ghost_icon"}
+            title={"Share"}
+            style={{ marginRight: 8 }}
+            onClick={() => setVisibleShareScrim(true)}
+          >
+            <Icon name={"share"} />
+          </Button>
+          <RightTopBarSection isAuthenticated={isAuthenticated} />
+        </div>
       </TopBar>
 
       {children}
 
+      {visibleShareScrim && (
+        <Scrim
+          onClose={handleCloseShareScrim}
+          onWheel={(e) => e.stopPropagation()}
+          isDismissable
+        >
+          <AccessBox
+            project={project}
+            handleClose={handleCloseShareScrim}
+            isAdmin={isAdmin}
+          />
+        </Scrim>
+      )}
+
       {visibleRenameScrim && (
-        <Scrim onClose={handleCloseRenameScrim} isDismissable>
+        <Scrim
+          onClose={handleCloseRenameScrim}
+          onWheel={(e) => e.stopPropagation()}
+          isDismissable
+        >
           <div className={styles.scrimWrapper}>
             <div className={styles.scrimHeaderWrapper}>
               <div className={styles.scrimTitle}>Rename VSM</div>
@@ -273,7 +310,11 @@ const CanvasLayout = ({ children }) => {
       )}
 
       {visibleDeleteScrim && (
-        <Scrim onClose={handleCloseDeleteScrim} isDismissable>
+        <Scrim
+          onClose={handleCloseDeleteScrim}
+          onWheel={(e) => e.stopPropagation()}
+          isDismissable
+        >
           <div className={styles.scrimWrapper}>
             {isDeleting ? (
               <Typography>Deleting...</Typography>

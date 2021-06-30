@@ -17,8 +17,10 @@ import {
   getOnChangeTime,
   getOnChangeTimeDefinition,
 } from "./utils/vsmObjectChangeHandlers";
-import { getUserCanEdit } from "../GetUserCanEdit";
+import { getMyAccess } from "../../utils/getMyAccess";
 import { assets } from "./utils/AssetFactory";
+import { Button, Icon } from "@equinor/eds-core-react";
+import { download_tree_as_png } from "./utils/downloadVSMImage";
 
 export default function Canvas(): JSX.Element {
   const ref = useRef();
@@ -31,7 +33,8 @@ export default function Canvas(): JSX.Element {
 
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
-  const userCanEdit = getUserCanEdit(account, project);
+  const myAccess = getMyAccess(project, account);
+  const userCanEdit = myAccess === "Admin" || myAccess === "Contributor";
 
   // "Constructor"
   useEffect(() => {

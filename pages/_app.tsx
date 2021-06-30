@@ -5,15 +5,24 @@ import AuthenticationProvider from "../auth/AuthenticationProvider";
 import { StoreProvider } from "easy-peasy";
 import store from "../store/store";
 import App, { AppContext } from "next/app";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 
+//Todo: get rid of the StoreProvider. (Simplify our workflow by using React-Query for server state data-handling and interactions)
+const queryClient = new QueryClient();
 const MyApp = ({ Component, pageProps }) => {
   return (
     <StoreProvider store={store}>
-      <AuthenticationProvider>
-        <LayoutWrapper {...pageProps}>
-          <Component {...pageProps} />
-        </LayoutWrapper>
-      </AuthenticationProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthenticationProvider>
+          <LayoutWrapper {...pageProps}>
+            <Component {...pageProps} />
+          </LayoutWrapper>
+        </AuthenticationProvider>
+        <div onWheel={(e) => e.stopPropagation()}>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </div>
+      </QueryClientProvider>
     </StoreProvider>
   );
 };
@@ -26,4 +35,3 @@ MyApp.getInitialProps = async (appContext: AppContext) => {
 
   return { ...appProps };
 };
-

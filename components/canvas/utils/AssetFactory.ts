@@ -65,7 +65,7 @@ export const defaultTextStyle = {
 
 export function assetFactory(
   vsmObject: vsmObject,
-  dispatch: Dispatch<ProjectModel>
+  dispatch?: Dispatch<ProjectModel>
 ): PIXI.Container {
   if (!vsmObject) throw Error("vsmObject was not provided for factory");
   const sprite = getSprite(vsmObject) || newSprite(vsmObject, dispatch);
@@ -101,11 +101,11 @@ function getSprite(vsmObject: vsmObject): PIXI.Container | null {
  */
 function newSprite(
   vsmObject: vsmObject,
-  dispatch: { setSelectedObject: (arg0: vsmObject) => void }
+  dispatch?: { setSelectedObject: (arg0: vsmObject) => void }
 ) {
   const { vsmObjectID } = vsmObject;
   const newSprite = createNewSprite(vsmObject, textResolution);
-  clickHandler(newSprite, () => dispatch.setSelectedObject(vsmObject));
+  clickHandler(newSprite, () => dispatch?.setSelectedObject(vsmObject));
   newSprite.on(pointerEvents.pointerover, () =>
     setHoveredObject(vsmObject, getDragObject())
   );

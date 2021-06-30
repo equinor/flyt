@@ -22,7 +22,7 @@ import { ProjectModel } from "store/store";
 export function createChild(
   child: vsmObject,
   userCanEdit: boolean,
-  dispatch: Dispatch<ProjectModel>
+  dispatch?: Dispatch<ProjectModel>
 ) {
   // const card = vsmObjectFactory(
   //   child,

@@ -9,7 +9,7 @@ export function recursiveTree(
   root: vsmObject,
   level = 0,
   userCanEdit: boolean,
-  dispatch: Dispatch<ProjectModel>
+  dispatch?: Dispatch<ProjectModel>
 ): Container {
   // Level 0 contains the root-node and we don't display it.
   // Level 1 should be rendered horizontal.

@@ -88,7 +88,7 @@ export default function Projects(): JSX.Element {
           </Button>
         </div>
         <>
-          {!!fetching ? (
+          {fetching ? (
             <Typography variant={"h2"}>Fetching projects... </Typography>
           ) : (
             <>
@@ -139,7 +139,8 @@ export default function Projects(): JSX.Element {
                         fontStyle: "italic",
                       }}
                     >
-                      Currently you can only edit VSMs that you have created.
+                      Currently you can only edit VSMs that you have created or
+                      been given access to.
                     </p>
                     <ProjectListSection projects={projectsICanView} />
                   </Panel>
