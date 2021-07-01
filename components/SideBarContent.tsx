@@ -41,7 +41,10 @@ export function SideBarContent(props: {
       name?: string;
       role?: string;
       time?: number;
-      timeDefinition?: string; //Todo: BUG in API? Patching timeDefinition sets time to 0
+      timeDefinition?: string;
+      //Todo: BUG in API? Patching timeDefinition sets time to 0...
+      // Not a bug, but a "feature": Changing unit does a conversion of the current time to the new format.
+      // Ref: https://equinor-sds-si.atlassian.net/browse/VSM-160
     }
   ) {
     debounce(
