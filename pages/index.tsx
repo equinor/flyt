@@ -4,14 +4,13 @@ import Head from "next/head";
 import { Button, Icon, Tabs, Typography } from "@equinor/eds-core-react";
 import { Layouts } from "../layouts/LayoutWrapper";
 import { account_circle, add } from "@equinor/eds-icons";
-import BaseAPIServices from "../services/BaseAPIServices";
 import { useRouter } from "next/router";
 import styles from "./projects/Projects.module.scss";
-import { projectTemplatesV1 } from "../assets/projectTemplatesV1";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { ProjectListSection } from "../components/projectListSection";
 import { useMutation, useQuery } from "react-query";
 import { createProject, getProjects } from "../services/projectApi";
+import { categorizeProjects } from "../utils/categorizeProjects";
 
 const { List, Tab, Panels, Panel } = Tabs;
 
@@ -51,12 +50,11 @@ export default function Projects(): JSX.Element {
       </div>
     );
 
-  const projectsICanEdit = projects?.filter(
-    (p) => p.created.userIdentity !== account?.username.split("@")[0]
+  const { projectsICanEdit, projectsICanView } = categorizeProjects(
+    projects,
+    account
   );
-  const projectsICanView = projects?.filter(
-    (p) => p.created.userIdentity === account?.username.split("@")[0]
-  );
+
   return (
     <div className={commonStyles.container}>
       <Head>
@@ -106,7 +104,7 @@ export default function Projects(): JSX.Element {
                     >
                       These are the VSMs you can edit
                     </p>
-                    <ProjectListSection projects={projectsICanView} />
+                    <ProjectListSection projects={projectsICanEdit} />
                   </Panel>
                   <Panel>
                     <p
@@ -127,10 +125,12 @@ export default function Projects(): JSX.Element {
                         fontStyle: "italic",
                       }}
                     >
-                      Currently you can only edit VSMs that you have created or
-                      been given access to.
+                      You can only edit VSMs that you have created or been given
+                      access to.
                     </p>
-                    <ProjectListSection projects={projectsICanEdit} />
+                    <ProjectListSection
+                      projects={projectsICanView.filter((p) => p.name)}
+                    />
                   </Panel>
                 </Panels>
               </Tabs>
