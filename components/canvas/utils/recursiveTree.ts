@@ -9,7 +9,7 @@ export function recursiveTree(
   root: vsmObject,
   level = 0,
   userCanEdit: boolean,
-  dispatch: Dispatch<ProjectModel>,
+  dispatch,
   setSelectedObject,
   vsmObjectMutation
 ): Container {

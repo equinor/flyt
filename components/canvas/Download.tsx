@@ -7,23 +7,20 @@ import { getMyAccess } from "../../utils/getMyAccess";
 import { loadAssets } from "./utils/LoadAssets";
 import { assets } from "./utils/AssetFactory";
 import { getApp } from "./utils/PixiApp";
+import { recursiveTree } from "./utils/recursiveTree";
+import { useMutation, useQuery } from "react-query";
+import { getProject } from "../../services/projectApi";
+import { useRouter } from "next/router";
 
 export default function Download() {
-  const selectedObject = useStoreState((state) => state.selectedObject);
-  const dispatch = useStoreDispatch();
-  const project = useStoreState((state) => state.project);
-  const [assetsAreLoaded, setAssetsAreLoaded] = useState(false);
-
-  const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
-
-  const { accounts } = useMsal();
-  const account = useAccount(accounts[0] || {});
-  const myAccess = getMyAccess(project, account);
-  const userCanEdit = myAccess === "Admin" || myAccess === "Contributor";
-
+  const router = useRouter();
+  const { id } = router.query;
+  const { data: project } = useQuery(["project", id], () => getProject(id));
+  const [assetsAreReady, setAssetsAreReady] = useState(false);
+  const [tree, setTree] = useState(null);
   // "Constructor"
   useEffect(() => {
-    const cleanupAssets = loadAssets(assets, () => setAssetsAreLoaded(true));
+    const cleanupAssets = loadAssets(assets, () => setAssetsAreReady(true));
     return () => {
       cleanupAssets();
       getApp().stage.removeChildren();
@@ -31,26 +28,31 @@ export default function Download() {
     };
   }, []);
 
-  // "Renderer"
-  // useEffect(() => {
-  //   if (project && assetsAreLoaded) {
-  //     const viewport = getViewPort();
-  //     addCardsToCanvas(viewport, project, userCanEdit, dispatch);
-  //
-  //     //Todo: Only show toolbox if userCanEdit. ref: https://equinor-sds-si.atlassian.net/browse/VSM-143
-  //     const cleanupToolbox = userCanEdit
-  //       ? toolBox(draggable, project, dispatch)
-  //       : () => {
-  //           //nothing to clean up
-  //         };
-  //
-  //     return () => {
-  //       // Clearing canvas
-  //       viewport.removeChildren();
-  //       cleanupToolbox();
-  //     };
-  //   }
-  // }, [project, assetsAreLoaded]);
+  useEffect(() => {
+    if (assetsAreReady && project && project.objects) {
+      const newTree = recursiveTree(
+        project.objects[0],
+        0,
+        true,
+        {
+          setSnackMessage: () => {
+            //ignore
+          },
+        },
+        () => {
+          //ignore
+        },
+        () => {
+          //ignore
+        }
+      );
+      setTree(newTree);
+    }
+  }, [assetsAreReady, project]);
+
+  if (!tree) {
+    return <p>Generating tree</p>;
+  }
 
   return (
     <div
@@ -64,7 +66,7 @@ export default function Download() {
       <Button
         variant={"contained"}
         title={"Download VSM"}
-        onClick={() => download_tree_as_png(project, dispatch)}
+        onClick={() => download_tree_as_png(project, tree)}
       >
         <Icon name={"download"} />
         Download
