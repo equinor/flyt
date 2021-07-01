@@ -2,10 +2,11 @@ import { Icon, TopBar } from "@equinor/eds-core-react";
 import styles from "../layouts/default.layout.module.scss";
 import UserMenu from "./AppHeader/UserMenu";
 import React from "react";
-import { comment_important, info_circle } from "@equinor/eds-icons";
+import { bar_chart, comment_important, info_circle } from "@equinor/eds-icons";
 import { LinkIcon } from "./linkIcon";
 
 const icons = {
+  bar_chart,
   comment_important,
   info_circle,
 };
@@ -22,6 +23,12 @@ export function RightTopBarSection(props: {
         justifyContent: "flex-end",
       }}
     >
+      <LinkIcon
+        helpText="Open Power BI Dashboard"
+        iconName="bar_chart"
+        link="https://app.powerbi.com/groups/cad7c965-c975-4e58-8cbb-d06ea30d8950/reports/bc52b0ff-fd14-4b85-8ddb-246d11f3dbb7/ReportSection5ac160214341b78811d2"
+        style={{ marginRight: 8 }}
+      />
       <LinkIcon
         helpText="Open Wiki"
         iconName="info_circle"
