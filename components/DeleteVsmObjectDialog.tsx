@@ -1,39 +1,37 @@
 import { Button, Icon, Scrim, Typography } from "@equinor/eds-core-react";
 import styles from "../layouts/default.layout.module.scss";
-import React, { useState } from "react";
+import React from "react";
 import { vsmObject } from "../interfaces/VsmObject";
-import { useStoreDispatch } from "../hooks/storeHooks";
 import { getVsmTypeName } from "./GetVsmTypeName";
 import { vsmObjectTypes } from "../types/vsmObjectTypes";
+import { useMutation, useQueryClient } from "react-query";
+import { unknownErrorToString } from "../utils/isError";
+import { deleteVSMObject } from "../services/vsmObjectApi";
+import { useStoreDispatch } from "hooks/storeHooks";
 
 export function DeleteVsmObjectDialog(props: {
   objectToDelete: vsmObject;
   onClose: () => void;
   visible: boolean;
-}) {
+}): JSX.Element {
   const dispatch = useStoreDispatch();
-
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [error, setError] = useState(null); //Todo: Display error if error
+  const queryClient = useQueryClient();
+  const deleteMutation = useMutation(
+    (vsmObjectID: number) => deleteVSMObject(vsmObjectID),
+    {
+      onSuccess() {
+        props.onClose();
+        return queryClient.invalidateQueries();
+      },
+      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+    }
+  );
 
   if (!props.visible) return null;
 
-  const handleClose = () => {
-    setError(null);
-    props.onClose();
-  };
-
-  const handleDelete = () => {
-    setError(null);
-    setIsDeleting(true);
-    dispatch
-      .deleteVSMObject(props.objectToDelete)
-      .then(() => {
-        setIsDeleting(false);
-        handleClose();
-      })
-      .catch((error) => setError(error));
-  };
+  const handleClose = () => props.onClose();
+  const handleDelete = () =>
+    deleteMutation.mutate(props.objectToDelete.vsmObjectID);
 
   const { pkObjectType: type } = props.objectToDelete.vsmObjectType;
   const { choice, mainActivity } = vsmObjectTypes;
@@ -51,7 +49,7 @@ export function DeleteVsmObjectDialog(props: {
   return (
     <Scrim onClose={handleClose} isDismissable>
       <div className={styles.scrimWrapper}>
-        {isDeleting ? (
+        {deleteMutation.isLoading ? (
           <Typography>Deleting...</Typography>
         ) : (
           <>
@@ -62,9 +60,9 @@ export function DeleteVsmObjectDialog(props: {
               </Button>
             </div>
             <div className={styles.scrimContent}>
-              {error && (
+              {deleteMutation.error && (
                 <Typography color={"warning"} variant={"h4"}>
-                  {`${error}`}
+                  {unknownErrorToString(deleteMutation.error)}
                 </Typography>
               )}
               <Typography variant={"h4"}>{warningMessage}</Typography>

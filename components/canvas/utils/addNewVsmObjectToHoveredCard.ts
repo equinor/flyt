@@ -23,6 +23,7 @@ export function addNewVsmObjectToHoveredCard(
       "vsmProjectID" | "name" | "created" | "lastUpdated" | "objects"
     >
   >,
+  vsmObjectAddMutation,
   dispatch: Dispatch<ProjectModel>
 ): void {
   const hoveredObject = getHoveredObject();
@@ -46,7 +47,9 @@ export function addNewVsmObjectToHoveredCard(
         parent: hoveredObject.parent,
         childObjects: [],
       };
-      dispatch.addObject(mainActivityObject);
+      //Todo: vsmObjectAddMutation
+      vsmObjectAddMutation.mutate(mainActivityObject);
+      // dispatch.addObject(mainActivityObject);
     } else {
       dispatch.setSnackMessage(
         `Cannot add a Main-Activity to a ${hoveredObject.vsmObjectType.name}`
@@ -101,7 +104,9 @@ export function addNewVsmObjectToHoveredCard(
 
   const newObject =
     dragType === vsmObjectTypes.choice ? choiceTypeObject : genericTypeObject;
-  dispatch.addObject(newObject);
+  //Todo: vsmObjectAddMutation
+  vsmObjectAddMutation.mutate(newObject);
+  // dispatch.addObject(newObject);
 
   function getParent() {
     const { pkObjectType } = hoveredObject.vsmObjectType;

@@ -64,7 +64,7 @@ export default function Download() {
       <Button
         variant={"contained"}
         title={"Download VSM"}
-        onClick={() => download_tree_as_png(project)}
+        onClick={() => download_tree_as_png(project, dispatch)}
       >
         <Icon name={"download"} />
         Download

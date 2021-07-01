@@ -8,6 +8,8 @@ import { vsmProject } from "../interfaces/VsmProject";
 import BaseAPIServices from "../services/BaseAPIServices";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import * as userApi from "../services/userApi";
+import { unknownErrorToString } from "utils/isError";
+import { useStoreDispatch } from "hooks/storeHooks";
 const icons = {
   close,
   link,
@@ -129,6 +131,7 @@ function MiddleSection(props: {
   loading: boolean;
   isAdmin: boolean;
 }) {
+  const dispatch = useStoreDispatch();
   const [userInput, setEmailInput] = useState("");
   const queryClient = useQueryClient();
   const addUserMutation = useMutation(
@@ -139,12 +142,14 @@ function MiddleSection(props: {
         setEmailInput("");
         queryClient.invalidateQueries("userAccesses");
       },
+      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
   const removeUserMutation = useMutation(
     (props: { accessId; vsmId }) => userApi.remove(props),
     {
       onSuccess: () => queryClient.invalidateQueries("userAccesses"),
+      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
   const changeUserMutation = useMutation(
@@ -152,6 +157,7 @@ function MiddleSection(props: {
       userApi.update(props),
     {
       onSuccess: () => queryClient.invalidateQueries("userAccesses"),
+      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
 

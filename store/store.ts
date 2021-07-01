@@ -157,7 +157,7 @@ const projectModel: ProjectModel = {
       },
       1000,
       "updateVSMTitle"
-    )();
+    );
     if (rootObjectId) {
       // Update the root object with the name as well
       debounce(
@@ -169,7 +169,7 @@ const projectModel: ProjectModel = {
         },
         1000,
         "updateVSMObject"
-      )();
+      );
     }
   }),
   setProjectName: action((state, payload) => {
@@ -323,7 +323,7 @@ const projectModel: ProjectModel = {
         },
         1000,
         "updateVSMTitle"
-      )();
+      );
     }
 
     // Send the object-update to api
@@ -338,7 +338,7 @@ const projectModel: ProjectModel = {
       },
       1000,
       "updateVSMObject"
-    )();
+    );
   }),
   moveVSMObject: thunk(async (actions, newVsmObject) => {
     actions.setErrorProject(null);

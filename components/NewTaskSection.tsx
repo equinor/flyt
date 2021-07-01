@@ -6,14 +6,34 @@ import { Button, Icon, SingleSelect, TextField } from "@equinor/eds-core-react";
 import { vsmTaskTypes } from "../types/vsmTaskTypes";
 import { ExistingTaskSection } from "./ExistingTaskSection";
 import { arrow_back } from "@equinor/eds-icons";
+import { debounce } from "../utils/debounce";
+import { useMutation, useQueryClient } from "react-query";
+import { vsmObject } from "../interfaces/VsmObject";
+import { patchVSMObject } from "../services/vsmObjectApi";
+import { createAndLinkTask, createTask, getTask } from "../services/taskApi";
+import { unknownErrorToString } from "utils/isError";
 
 Icon.add({
   arrow_back,
 });
 
-export function NewTaskSection(props: { onClose: () => void }): JSX.Element {
+export function NewTaskSection(props: {
+  onClose: () => void;
+  selectedObject;
+}): JSX.Element {
   const dispatch = useStoreDispatch();
-  const selectedObject = useStoreState((state) => state.selectedObject);
+  const selectedObject = props.selectedObject;
+  const queryClient = useQueryClient();
+  const taskMutations = useMutation(
+    (task: taskObject) => createAndLinkTask(task, selectedObject.vsmProjectID),
+    {
+      onSuccess() {
+        clearAndCloseAddTaskSection();
+        return queryClient.invalidateQueries();
+      },
+      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+    }
+  );
   const [newTask, setNewTask] = useState(null);
 
   const [existingTaskFilter, setExistingTaskFilter] = useState(null);
@@ -55,6 +75,7 @@ export function NewTaskSection(props: { onClose: () => void }): JSX.Element {
           "Existing Question",
         ]}
         handleSelectedItemChange={(e) => {
+          if (!selectedObject) throw new Error("No selected object");
           const t = {
             objects: [{ fkObject: selectedObject.vsmObjectID }],
             fkProject: selectedObject.vsmProjectID,
@@ -130,8 +151,16 @@ export function NewTaskSection(props: { onClose: () => void }): JSX.Element {
             <Button
               disabled={!newTaskIsReady(newTask)}
               onClick={() => {
-                dispatch.addTask(newTask);
-                clearAndCloseAddTaskSection();
+                // dispatch.addTask(newTask);
+                taskMutations.mutate(newTask);
+                // debounce(
+                //   () => {
+                //   },
+                //   1500,
+                //   `addTask - ${newTask.description}`
+                //   // `add Task - ${selectedObject.vsmObjectID}`
+                // );
+                // clearAndCloseAddTaskSection();
               }}
             >
               Add

@@ -26,6 +26,12 @@
   position: fixed;
 }
 
+.sideBarLoadingText {
+  animation-name: fade-in;
+  animation-duration: 0.5s;
+  align-self: center;
+}
+
 @keyframes fade-out {
   to {
     opacity: 0;

@@ -4,48 +4,48 @@ import React, { useEffect, useState } from "react";
 import { useStoreDispatch } from "../hooks/storeHooks";
 import BaseAPIServices from "../services/BaseAPIServices";
 import styles from "./ExistingTaskSection.module.scss";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { createAndLinkTask, linkTask, unlinkTask } from "../services/taskApi";
+import { vsmObject } from "../interfaces/VsmObject";
+import { unknownErrorToString } from "utils/isError";
 
 export function ExistingTaskSection(props: {
   visible: boolean;
   existingTaskFilter;
-  selectedObject;
+  selectedObject: vsmObject;
 }): JSX.Element {
   if (!props.visible) return <></>;
   const { existingTaskFilter, selectedObject } = props;
   const { tasks } = selectedObject;
   const dispatch = useStoreDispatch();
-  const [fetchingTasks, setFetchingTasks] = useState(false);
-  const [fetchingTasksError, setFetchingTasksError] = useState(false);
-  const [existingTasks, setExistingTasks] = useState([]);
-
-  useEffect(() => {
-    if (existingTaskFilter) {
-      setFetchingTasks(true);
-      setFetchingTasksError(null);
-      setExistingTasks([]);
+  const queryClient = useQueryClient();
+  const {
+    data: existingTasks,
+    error: fetchingTasksError,
+    isLoading: fetchingTasks,
+  } = useQuery(
+    `tasks - ${selectedObject.vsmProjectID}/${existingTaskFilter}`,
+    () =>
       BaseAPIServices.get(
         `/api/v1.0/task/list/${selectedObject.vsmProjectID}/${existingTaskFilter}`
-      )
-        .then((value) => setExistingTasks(value.data))
-        .catch((reason) => {
-          setFetchingTasksError(reason);
-        })
-        .finally(() => setFetchingTasks(false));
+      ).then((r) => r.data),
+    { enabled: !!existingTaskFilter }
+  );
+  const taskLinkMutation = useMutation(
+    (task: taskObject) => linkTask(selectedObject.vsmObjectID, task.vsmTaskID),
+    {
+      onSuccess: () => queryClient.invalidateQueries(),
+      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
-  }, [existingTaskFilter]);
-
-  function linkTask(t: taskObject) {
-    dispatch.linkTask({
-      taskId: t.vsmTaskID,
-      projectId: selectedObject.vsmProjectID,
-      vsmObjectId: selectedObject.vsmObjectID,
-      task: t,
-    });
-  }
-
-  function unLinkTask(t: taskObject) {
-    dispatch.unlinkTask({ object: selectedObject, task: t });
-  }
+  );
+  const taskUnlinkMutation = useMutation(
+    (task: taskObject) =>
+      unlinkTask(selectedObject.vsmObjectID, task.vsmTaskID),
+    {
+      onSuccess: () => queryClient.invalidateQueries(),
+      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+    }
+  );
 
   return (
     <div>
@@ -76,7 +76,7 @@ export function ExistingTaskSection(props: {
       )}
       <div>
         <ul className={styles.taskList}>
-          {existingTasks.map((t: taskObject) => (
+          {existingTasks?.map((t: taskObject) => (
             <li key={t.vsmTaskID}>
               <Checkbox
                 defaultChecked={tasks.some(
@@ -84,7 +84,9 @@ export function ExistingTaskSection(props: {
                 )}
                 label={`${t.displayIndex} - ${t.description}`}
                 onChange={(event) =>
-                  event.target.checked ? linkTask(t) : unLinkTask(t)
+                  event.target.checked
+                    ? taskLinkMutation.mutate(t)
+                    : taskUnlinkMutation.mutate(t)
                 }
               />
             </li>

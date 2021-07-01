@@ -19,7 +19,7 @@ export function DurationComponent(props: {
         disabled={props.disabled}
         label={"Duration"}
         type={"number"}
-        value={props.selectedObject.time?.toString()}
+        defaultValue={props.selectedObject.time?.toString()}
         id={"vsmObjectTime"}
         onChange={props.onChangeTime}
       />

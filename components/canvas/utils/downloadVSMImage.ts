@@ -21,9 +21,14 @@ export function download_sprite_as_png(
 }
 
 //Todo: This works, but cuts off parts of the vsm
-export const download_tree_as_png = ({ name, objects }: vsmProject): void => {
+export const download_tree_as_png = (
+  { name, objects }: vsmProject,
+  dispatch
+): void => {
   const { renderer, stage } = getApp();
-  const tree = recursiveTree(objects[0], 0, true);
+  const tree = recursiveTree(objects[0], 0, true, dispatch, () => {
+    //ignore
+  });
   // const { width, height } = tree.getBounds();
   // const { renderer } = new Application({
   //   antialias: true,

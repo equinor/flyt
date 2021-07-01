@@ -6,6 +6,8 @@ import { ProjectModel } from "../../../../store/store";
 import * as PIXI from "pixi.js";
 import { addNewVsmObjectToHoveredCard } from "../../utils/addNewVsmObjectToHoveredCard";
 import { clearHoveredObject } from "../../utils/hoveredObject";
+import { vsmObject } from "interfaces/VsmObject";
+import { UseMutationResult } from "react-query";
 
 export function createToolboxChoice(
   draggable: (
@@ -20,8 +22,9 @@ export function createToolboxChoice(
       "lastUpdated" | "created" | "objects" | "name" | "vsmProjectID"
     >
   >,
+  vsmObjectAddMutation: UseMutationResult<unknown, unknown, vsmObject, unknown>,
   dispatch: Actions<ProjectModel> & Dispatch
-) {
+): PIXI.Container {
   const { toolboxChoice } = PIXI.Loader.shared.resources;
 
   const choiceIcon = new PIXI.Sprite(toolboxChoice.texture);
@@ -32,7 +35,12 @@ export function createToolboxChoice(
     choiceIcon,
     vsmObjectTypes.choice,
     () =>
-      addNewVsmObjectToHoveredCard(vsmObjectTypes.choice, project, dispatch),
+      addNewVsmObjectToHoveredCard(
+        vsmObjectTypes.choice,
+        project,
+        vsmObjectAddMutation,
+        dispatch
+      ),
     clearHoveredObject
   );
   return choiceIcon;

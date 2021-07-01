@@ -18,7 +18,7 @@ export function getOnChangeTimeDefinition(
       },
       1000,
       "Canvas-UpdateTimeDefinition"
-    )();
+    );
   };
 }
 
@@ -38,7 +38,7 @@ export function getOnChangeName(
       },
       1000,
       "Canvas-UpdateName"
-    )();
+    );
   };
 }
 
@@ -58,7 +58,7 @@ export function getOnChangeRole(
       },
       1000,
       "Canvas-UpdateRole"
-    )();
+    );
   };
 }
 
@@ -79,6 +79,6 @@ export function getOnChangeTime(
       },
       1000,
       "Canvas-UpdateTime"
-    )();
+    );
   };
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import commonStyles from "../styles/common.module.scss";
 import Head from "next/head";
 import { Button, Icon, Tabs, Typography } from "@equinor/eds-core-react";
@@ -10,6 +10,8 @@ import styles from "./projects/Projects.module.scss";
 import { projectTemplatesV1 } from "../assets/projectTemplatesV1";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { ProjectListSection } from "../components/projectListSection";
+import { useMutation, useQuery } from "react-query";
+import { createProject, getProjects } from "../services/projectApi";
 
 const { List, Tab, Panels, Panel } = Tabs;
 
@@ -17,34 +19,22 @@ Icon.add({ account_circle, add });
 
 // eslint-disable-next-line max-lines-per-function
 export default function Projects(): JSX.Element {
-  const [projects, setProjects] = useState([]);
-  const [fetching, setFetching] = useState(true);
-  const [error, setError] = useState(null);
-
   const router = useRouter();
 
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
 
   const [activeTab, setActiveTab] = useState(0);
-
-  useEffect(() => {
-    setFetching(true);
-    BaseAPIServices.get("/api/v1.0/project")
-      .then((value) => setProjects(value.data))
-      .catch((reason) => {
-        setError(reason);
-      })
-      .finally(() => setFetching(false));
-  }, []);
-
-  function createNewVSM() {
-    setFetching(true);
-    BaseAPIServices.post("/api/v1.0/project", projectTemplatesV1.defaultProject)
-      .then((value) => router.push(`/projects/${value.data.vsmProjectID}`))
-      .catch((reason) => setError(reason))
-      .finally(() => setFetching(false));
-  }
+  const {
+    data: projects,
+    isLoading,
+    error,
+  } = useQuery("projects", getProjects);
+  const newProjectMutation = useMutation(() =>
+    createProject().then((value) =>
+      router.push(`/projects/${value.data.vsmProjectID}`)
+    )
+  );
 
   if (error)
     return (
@@ -61,17 +51,12 @@ export default function Projects(): JSX.Element {
       </div>
     );
 
-  const projectsICanView = projects.filter(
-    // Only display other peoples projects that have been given a name
-    (p) => {
-      return (
-        !!p.name && p.created.userIdentity !== account?.username.split("@")[0]
-      );
-    }
+  const projectsICanEdit = projects?.filter(
+    (p) => p.created.userIdentity !== account?.username.split("@")[0]
   );
-  const projectsICanEdit = projects.filter((p) => {
-    return p.created.userIdentity === account?.username.split("@")[0];
-  });
+  const projectsICanView = projects?.filter(
+    (p) => p.created.userIdentity === account?.username.split("@")[0]
+  );
   return (
     <div className={commonStyles.container}>
       <Head>
@@ -82,13 +67,16 @@ export default function Projects(): JSX.Element {
       <main className={commonStyles.main}>
         <div className={styles.header}>
           <Typography variant={"h1"}>My Value Stream Maps</Typography>
-          <Button variant={"outlined"} onClick={() => createNewVSM()}>
+          <Button
+            variant={"outlined"}
+            onClick={() => newProjectMutation.mutate()}
+          >
             Create new VSM
             <Icon name="add" title="add" />
           </Button>
         </div>
         <>
-          {fetching ? (
+          {isLoading ? (
             <Typography variant={"h2"}>Fetching projects... </Typography>
           ) : (
             <>
@@ -118,7 +106,7 @@ export default function Projects(): JSX.Element {
                     >
                       These are the VSMs you can edit
                     </p>
-                    <ProjectListSection projects={projectsICanEdit} />
+                    <ProjectListSection projects={projectsICanView} />
                   </Panel>
                   <Panel>
                     <p
@@ -142,7 +130,7 @@ export default function Projects(): JSX.Element {
                       Currently you can only edit VSMs that you have created or
                       been given access to.
                     </p>
-                    <ProjectListSection projects={projectsICanView} />
+                    <ProjectListSection projects={projectsICanEdit} />
                   </Panel>
                 </Panels>
               </Tabs>
