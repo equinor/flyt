@@ -22,15 +22,18 @@ export function AccessBox(props: {
   handleClose;
   isAdmin: boolean;
 }): JSX.Element {
-  const { data: userAccesses, isLoading } = useQuery("userAccesses", () =>
-    BaseAPIServices.get(`/api/v1.0/userAccess/${vsmProjectID}`).then(
-      (value) => {
+  const { data: userAccesses, isLoading } = useQuery(
+    "userAccesses",
+    () =>
+      BaseAPIServices.get(
+        `/api/v1.0/userAccess/${props.project.vsmProjectID}`
+      ).then((value) => {
         return value.data;
-      }
-    )
+      }),
+    { enabled: !!(props.project && props.project.vsmProjectID) }
   );
 
-  if (!props.project) return <></>;
+  if (!props.project) return <p>Missing project</p>;
   const { created, vsmProjectID } = props.project;
 
   const owner = created.userIdentity;

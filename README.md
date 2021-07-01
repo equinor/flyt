@@ -323,3 +323,14 @@ client_id=e6e2f3c4-d6bd-4d71-a00e-be0c16a703da
 &resource=b3e899bf-12af-4f63-8744-d1ef4edc30b5
 &prompt=consent
 ```
+
+## SignalR
+
+| Action                | method        | returns              |
+| --------------------- | ------------- | -------------------- |
+| SaveProject           | SaveProject   | projectobject        |
+| DeleteProject         | DeleteProject | The id it deleted    |
+| Save or update object | UpdateObject  | Saved object         |
+| Delete object         | DeletedObject | The id of the object |
+| Save or update Task   | SaveTask      | The saved task       |
+| Delete Task           | DeleteTask    | The task id          |

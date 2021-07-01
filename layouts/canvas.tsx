@@ -24,6 +24,13 @@ import { disableKeyboardZoomShortcuts } from "../utils/disableKeyboardZoomShortc
 import { MySnackBar } from "../components/MySnackBar";
 import { AccessBox } from "../components/accessBox";
 import { getMyAccess } from "../utils/getMyAccess";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { getProject, updateProject } from "../services/projectApi";
+import { debounce } from "../utils/debounce";
+import { vsmObject } from "../interfaces/VsmObject";
+import { moveVSMObject } from "../services/vsmObjectApi";
+import { unknownErrorToString } from "../utils/isError";
+import { vsmProject } from "../interfaces/VsmProject";
 
 const icons = {
   chevron_down,
@@ -37,9 +44,27 @@ Icon.add(icons);
 const CanvasLayout = ({ children }) => {
   const isAuthenticated = useIsAuthenticated();
   const { publicRuntimeConfig } = getConfig();
-  const project = useStoreState((state) => state.project);
-  const projectTitle = project?.name;
+
   const router = useRouter();
+  const { id } = router.query;
+  const { data: project } = useQuery(["project", id], () => getProject(id));
+  const projectTitle = project?.name;
+
+  const queryClient = useQueryClient();
+  const projectMutation = useMutation(
+    (updatedProject: { vsmProjectID: number; name: string }) => {
+      dispatch.setSnackMessage("⏳ Updating...");
+      return updateProject(updatedProject);
+    },
+    {
+      onSuccess: () => {
+        dispatch.setSnackMessage("✅ Done!");
+        return queryClient.invalidateQueries();
+      },
+      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+    }
+  );
+
   const dispatch = useStoreDispatch();
 
   const snackMessage = useStoreState((state) => state.snackMessage);
@@ -159,12 +184,16 @@ const CanvasLayout = ({ children }) => {
   }
 
   function updateProjectName(name: string) {
-    const rootObjectId = project.objects && project.objects[0]?.vsmObjectID;
-    dispatch.updateProjectName({
-      vsmProjectID: project.vsmProjectID,
-      name,
-      rootObjectId,
-    });
+    debounce(
+      () => {
+        projectMutation.mutate({
+          vsmProjectID: project.vsmProjectID,
+          name,
+        });
+      },
+      1000,
+      "updateProjectName"
+    );
   }
 
   return (
@@ -300,7 +329,7 @@ const CanvasLayout = ({ children }) => {
                 // multiline
                 // rows={3}
                 variant={"default"}
-                value={project?.name}
+                defaultValue={project?.name}
                 onChange={(e) => updateProjectName(e.target.value)}
                 id={"vsmObjectDescription"}
               />

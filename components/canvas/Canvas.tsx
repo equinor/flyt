@@ -19,6 +19,7 @@ import { useRouter } from "next/router";
 import { moveVSMObject, postVSMObject } from "../../services/vsmObjectApi";
 import { vsmObject } from "interfaces/VsmObject";
 import { unknownErrorToString } from "utils/isError";
+import { SignalRService } from "../../services/signalRService";
 
 export default function Canvas(): JSX.Element {
   const ref = useRef();
@@ -26,6 +27,11 @@ export default function Canvas(): JSX.Element {
   const dispatch = useStoreDispatch();
   const router = useRouter();
   const { id } = router.query;
+
+  useEffect(() => {
+    const s = new SignalRService();
+    console.log({ s });
+  }, [id]);
 
   const { data: project } = useQuery(["project", id], () => getProject(id));
 

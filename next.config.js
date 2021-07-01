@@ -9,6 +9,7 @@ module.exports = {
     API_BASEURL: process.env.API_BASEURL,
     SCOPE: process.env.SCOPE,
     CLIENT_ID: process.env.CLIENT_ID,
-    AUTHORITY: process.env.AUTHORITY
+    AUTHORITY: process.env.AUTHORITY,
+    API_HUB_URL: process.env.API_HUB_URL,
   },
 };

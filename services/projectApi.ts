@@ -17,7 +17,7 @@ export const createProject = (): AxiosPromise<{
 export const getProject = (id: string | string[]): Promise<vsmProject> =>
   BaseAPIServices.get(`${baseUrl}/project/${id}`).then((value) => value.data);
 
-export const updateProject = (data: vsmProject) =>
+export const updateProject = (data) =>
   BaseAPIServices.post(`${baseUrl}/project`, data);
 
 export const deleteProject = (id: string | string[]) =>
