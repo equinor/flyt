@@ -26,7 +26,7 @@ export function RightTopBarSection(props: {
       <LinkIcon
         helpText="Open Power BI Dashboard"
         iconName="bar_chart"
-        link="https://app.powerbi.com/groups/cad7c965-c975-4e58-8cbb-d06ea30d8950/reports/bc52b0ff-fd14-4b85-8ddb-246d11f3dbb7/ReportSection5ac160214341b78811d2"
+        link="https://app.powerbi.com/Redirect?action=OpenApp&appId=3f0b9d13-eb0a-4845-8868-15420556cfe9&ctid=3aa4a235-b6e2-48d5-9195-7fcf05b459b0"
         style={{ marginRight: 8 }}
       />
       <LinkIcon
