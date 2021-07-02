@@ -27,10 +27,7 @@ import { getMyAccess } from "../utils/getMyAccess";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getProject, updateProject } from "../services/projectApi";
 import { debounce } from "../utils/debounce";
-import { vsmObject } from "../interfaces/VsmObject";
-import { moveVSMObject } from "../services/vsmObjectApi";
 import { unknownErrorToString } from "../utils/isError";
-import { vsmProject } from "../interfaces/VsmProject";
 
 const icons = {
   chevron_down,
