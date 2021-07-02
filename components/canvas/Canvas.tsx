@@ -20,6 +20,8 @@ import { moveVSMObject, postVSMObject } from "../../services/vsmObjectApi";
 import { vsmObject } from "interfaces/VsmObject";
 import { unknownErrorToString } from "utils/isError";
 import { SignalRService } from "../../services/signalRService";
+import { setUpSignalRConnection } from "../../services/setUpSignalRConnection";
+import { signalRActionTypes } from "../../types/signalRActionTypes";
 
 export default function Canvas(): JSX.Element {
   const ref = useRef();
@@ -29,8 +31,47 @@ export default function Canvas(): JSX.Element {
   const { id } = router.query;
 
   useEffect(() => {
-    const s = new SignalRService();
-    console.log({ s });
+    if (id) {
+      const s = new SignalRService(parseInt(id.toString(), 10), {
+        onDeleteObject: (e) => console.log("onDeleteObject", e),
+        onDeleteProject: (e) => console.log("onDeleteProject", e),
+        onDeleteTask: (e) => console.log("onDeleteTask", e),
+        onSaveProject: (e) => console.log("onSaveProject", e),
+        onSaveTask: (e) => console.log("onSaveTask", e),
+        onUpdateObject: (e) => console.log("onUpdateObject", e),
+      });
+      // const s = new SignalRService(parseInt(id));
+      // const s = setUpSignalRConnection(parseInt(id.toString(), 10));
+      // setUpSignalRConnection(parseInt(id.toString())).then((connection) => {
+      //   connection.on(signalRActionTypes.SaveProject, (data) => {
+      //     console.log("SaveProject", data);
+      //   });
+      //   connection.on(signalRActionTypes.DeleteProject, (data) => {
+      //     console.log("DeleteProject", data);
+      //     alert(
+      //       "This VSM was deleted. We will now navigate you back to the start-page"
+      //     );
+      //     router.push("/");
+      //   });
+      //   connection.on(signalRActionTypes.UpdateObject, (data) => {
+      //     console.log("UpdateObject", data);
+      //     // dispatch.fetchProject({ id });
+      //   });
+      //   connection.on(signalRActionTypes.DeletedObject, (data) => {
+      //     console.log("DeletedObject", data);
+      //     // dispatch.fetchProject({ id });
+      //   });
+      //   connection.on(signalRActionTypes.SaveTask, (data) => {
+      //     console.log("DeletedObject", data);
+      //     // dispatch.fetchProject({ id });
+      //   });
+      //   connection.on(signalRActionTypes.DeleteTask, (data) => {
+      //     console.log("DeletedObject", data);
+      //     // dispatch.fetchProject({ id });
+      //   });
+      // });
+      return s.disconnect;
+    }
   }, [id]);
 
   const { data: project } = useQuery(["project", id], () => getProject(id));

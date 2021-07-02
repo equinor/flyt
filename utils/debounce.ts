@@ -5,12 +5,10 @@
  * @param caller - All callers with the same name will cancel another
  */
 export const debounce = (fn: () => void, ms = 500, caller = "any"): void => {
-  console.log({ caller, callers });
   delayed();
 
   function delayed(this: any, ...args: any[]) {
     const already_in_queue = callers[caller];
-    if (already_in_queue) console.log(`${caller} is already in queueu`);
     clearTimeout(already_in_queue);
     callers[caller] = setTimeout(() => {
       fn.apply(this, args);
