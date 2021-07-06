@@ -3,21 +3,19 @@ import React, { ReactNode, useEffect } from "react";
 export const MySnackBar = (props: {
   children: ReactNode;
   autoHideDuration: number;
-  onClose: () => void;
+  handleClose: () => void;
 }): JSX.Element => {
   useEffect(() => {
     setTimeout(() => {
-      props.onClose();
+      props.handleClose();
     }, props.autoHideDuration);
   }, []);
 
   return (
     <div
-      onClick={() => {
-        props.onClose();
-      }}
+      onClick={() => props.handleClose()}
       style={{
-        position: "absolute",
+        position: "absolute", // or fixed? https://css-tricks.com/absolute-relative-fixed-positioining-how-do-they-differ/
         bottom: 0,
         right: 0,
         margin: 20,

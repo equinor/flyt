@@ -359,7 +359,7 @@ const CanvasLayout = ({ children }) => {
       {snackMessage && (
         <MySnackBar
           autoHideDuration={3000}
-          onClose={() => dispatch.setSnackMessage(null)}
+          handleClose={() => dispatch.setSnackMessage(null)}
         >
           {`${snackMessage}`}
         </MySnackBar>
