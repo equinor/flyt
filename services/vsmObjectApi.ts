@@ -17,7 +17,7 @@ export const deleteVSMObject = (objectId: number): Promise<unknown> =>
   );
 
 // Gets a list of objects in the project specified
-export const getVSMObjects = (projectId: number): Promise<unknown> =>
+export const getVSMObjects = (projectId: number): Promise<Array<vsmObject>> =>
   BaseAPIServices.get(baseUrl + `/vsmObject/list/${projectId}`).then(
     (value) => value.data
   );
