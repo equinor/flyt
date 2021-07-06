@@ -6,7 +6,6 @@ import React from "react";
 import { useQuery } from "react-query";
 import { getTasksForProject } from "../../services/taskApi";
 import { unknownErrorToString } from "../../utils/isError";
-import { taskObject } from "../../interfaces/taskObject";
 
 export default function TablePage() {
   const router = useRouter();
@@ -15,7 +14,7 @@ export default function TablePage() {
     data: tasks,
     isLoading,
     error,
-  } = useQuery("projects", () =>
+  } = useQuery("tasks", () =>
     getTasksForProject(parseFloat(projectId.toString()))
   );
 
@@ -57,31 +56,30 @@ export default function TablePage() {
 
       <main className={commonStyles.main}>
         <Typography variant="h1">Project {projectId}</Typography>
-        <div>{JSON.stringify(tasks)}</div>
         <table>
           <thead>
             <tr>
-              <th>DisplayID</th>
+              {Object.keys(tasks[0]).map((k) => {
+                return <th key={k.toString()}>{k}</th>;
+              })}
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>{}</td>
-            </tr>
+            {tasks.map((task) => {
+              return (
+                <tr key={task.vsmTaskID}>
+                  {Object.keys(task).map((k) => {
+                    return (
+                      <td key={`${k}-${task.vsmTaskID}`}>
+                        {task && task[k] && task[k].toString()}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
-
-        <div>
-          {tasks?.map((task: taskObject) => {
-            return (
-              <div key={task.vsmTaskID} style={{ display: "flex" }}>
-                {/*<p>{task.fkTaskType}</p>*/}
-                <p>{task.displayIndex}</p>
-                <div>{JSON.stringify(task)}</div>
-              </div>
-            );
-          })}
-        </div>
       </main>
     </div>
   );

@@ -22,7 +22,7 @@ export function categorizeProjects(
     const imCreator =
       project.created.userIdentity === account?.username.split("@")[0];
 
-    const imEditor = project.userAccesses.find(
+    const imEditor = project.userAccesses?.find(
       (a) => a.user === account?.username.split("@")[0]
     );
 
