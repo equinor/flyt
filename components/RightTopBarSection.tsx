@@ -1,15 +1,9 @@
-import { Button, Icon, TopBar } from "@equinor/eds-core-react";
+import { Icon, TopBar } from "@equinor/eds-core-react";
 import styles from "../layouts/default.layout.module.scss";
 import UserMenu from "./AppHeader/UserMenu";
 import React from "react";
-import {
-  bar_chart,
-  comment_important,
-  download,
-  info_circle,
-} from "@equinor/eds-icons";
+import { bar_chart, comment_important, info_circle } from "@equinor/eds-icons";
 import { LinkIcon } from "./linkIcon";
-import Link from "next/link";
 
 const icons = {
   bar_chart,
@@ -21,7 +15,6 @@ Icon.add(icons);
 
 export function RightTopBarSection(props: {
   isAuthenticated: boolean;
-  projectId: string;
 }): JSX.Element {
   return (
     <div
@@ -30,15 +23,6 @@ export function RightTopBarSection(props: {
         justifyContent: "flex-end",
       }}
     >
-      <Link href={`/download/${props.projectId}`}>
-        <Button
-          variant={"ghost_icon"}
-          title={"Download"}
-          // style={props.style}
-        >
-          <Icon data={download} />
-        </Button>
-      </Link>
       <LinkIcon
         helpText="Open Power BI Dashboard"
         iconName="bar_chart"
