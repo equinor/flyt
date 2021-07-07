@@ -43,6 +43,7 @@ function mergeAndDownload(
   //provide the name for the CSV file to be downloaded
   hiddenElement.download = fileName;
   hiddenElement.click();
+  hiddenElement.remove();
 }
 
 function downloadProjectCardsAsCSV(project: vsmProject) {
