@@ -1,7 +1,7 @@
 import { taskObject } from "../../interfaces/taskObject";
 import React from "react";
 
-export function TaskTable({
+export default function TaskTable({
   tasks,
 }: {
   tasks: Array<taskObject>;

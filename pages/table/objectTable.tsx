@@ -1,6 +1,10 @@
 import React from "react";
 
-export function ObjectTable({ vsmObjects }: { vsmObjects }): JSX.Element {
+export default function ObjectTable({
+  vsmObjects,
+}: {
+  vsmObjects;
+}): JSX.Element {
   if (vsmObjects && vsmObjects.length > 0) {
     return (
       <table>

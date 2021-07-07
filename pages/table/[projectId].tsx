@@ -8,8 +8,8 @@ import { getTasksForProject } from "../../services/taskApi";
 import { unknownErrorToString } from "../../utils/isError";
 import { flattenProject } from "../../utils/flattenProject";
 import { getProject } from "../../services/projectApi";
-import { TaskTable } from "./taskTable";
-import { ObjectTable } from "./objectTable";
+import ObjectTable from "./objectTable";
+import TaskTable from "./taskTable";
 
 export default function TablePage() {
   const router = useRouter();
