@@ -18,9 +18,7 @@ export default function TablePage() {
     data: tasks,
     isLoading,
     error,
-  } = useQuery("tasks", () =>
-    getTasksForProject(parseFloat(projectId.toString()))
-  );
+  } = useQuery("tasks", () => getTasksForProject(projectId));
   const { data: project } = useQuery("project", () =>
     getProject(projectId.toString())
   );
