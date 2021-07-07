@@ -1,4 +1,4 @@
-import { taskObject } from "../../interfaces/taskObject";
+import { taskObject } from "../interfaces/taskObject";
 import React from "react";
 
 export default function TaskTable({

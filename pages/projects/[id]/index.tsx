@@ -1,16 +1,16 @@
-import commonStyles from "../../styles/common.module.scss";
+import commonStyles from "../../../styles/common.module.scss";
 import Head from "next/head";
 import { Typography } from "@equinor/eds-core-react";
 import { useRouter } from "next/router";
 import React from "react";
 import dynamic from "next/dynamic";
-import { Layouts } from "../../layouts/LayoutWrapper";
+import { Layouts } from "../../../layouts/LayoutWrapper";
 import { useQuery } from "react-query";
-import { getProject } from "../../services/projectApi";
-import { unknownErrorToString } from "../../utils/isError";
+import { getProject } from "../../../services/projectApi";
+import { unknownErrorToString } from "../../../utils/isError";
 
 const DynamicComponentWithNoSSR = dynamic(
-  () => import("../../components/canvas/Canvas"),
+  () => import("../../../components/canvas/Canvas"),
   { ssr: false }
 );
 
