@@ -8,6 +8,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { unknownErrorToString } from "../utils/isError";
 import { deleteVSMObject } from "../services/vsmObjectApi";
 import { useStoreDispatch } from "hooks/storeHooks";
+import { close as closeIcon, delete_forever } from "@equinor/eds-icons";
 
 export function DeleteVsmObjectDialog(props: {
   objectToDelete: vsmObject;
@@ -56,7 +57,7 @@ export function DeleteVsmObjectDialog(props: {
             <div className={styles.scrimHeaderWrapper}>
               <div className={styles.scrimTitle}>{header}</div>
               <Button autoFocus variant={"ghost_icon"} onClick={handleClose}>
-                <Icon name="close" title="Close" />
+                <Icon data={closeIcon} title="Close" />
               </Button>
             </div>
             <div className={styles.scrimContent}>
@@ -73,7 +74,7 @@ export function DeleteVsmObjectDialog(props: {
                 color={"danger"}
                 onClick={handleDelete}
               >
-                <Icon name="delete_forever" title="Delete VSM" size={16} />
+                <Icon data={delete_forever} title="Delete VSM" size={16} />
                 {confirmMessage}
               </Button>
             </div>

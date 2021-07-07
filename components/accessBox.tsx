@@ -10,12 +10,6 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import * as userApi from "../services/userApi";
 import { unknownErrorToString } from "utils/isError";
 import { useStoreDispatch } from "hooks/storeHooks";
-const icons = {
-  close,
-  link,
-};
-
-Icon.add(icons);
 
 export function AccessBox(props: {
   project: vsmProject;
@@ -78,7 +72,7 @@ function TopSection(props: { title: string; handleClose }) {
     <div className={style.topSection}>
       <p className={style.heading}> {props.title}</p>
       <Button variant={"ghost_icon"} onClick={props.handleClose}>
-        <Icon name={"close"} />
+        <Icon data={close} />
       </Button>
     </div>
   );
@@ -240,7 +234,7 @@ function BottomSection() {
   return (
     <div className={style.bottomSection}>
       <Button variant={"outlined"} onClick={copyToClipboard}>
-        <Icon name={"link"} />
+        <Icon data={link} />
         {copySuccess || "Copy link"}
       </Button>
     </div>

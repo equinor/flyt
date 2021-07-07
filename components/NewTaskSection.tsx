@@ -13,10 +13,6 @@ import { patchVSMObject } from "../services/vsmObjectApi";
 import { createAndLinkTask, createTask, getTask } from "../services/taskApi";
 import { unknownErrorToString } from "utils/isError";
 
-Icon.add({
-  arrow_back,
-});
-
 export function NewTaskSection(props: {
   onClose: () => void;
   selectedObject;
@@ -59,7 +55,7 @@ export function NewTaskSection(props: {
           clearAndCloseAddTaskSection();
         }}
       >
-        <Icon name="arrow_back" title="add" size={24} />
+        <Icon data={arrow_back} title="add" size={24} />
       </Button>
       <div className={styles.sideBarSectionHeader}>
         <p>Add Questions, Ideas and Problems</p>

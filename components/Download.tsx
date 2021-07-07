@@ -58,34 +58,35 @@ export default function Download(): JSX.Element {
   }
 
   return (
-    <div
-    // style={{
-    //   display: "flex",
-    //   // justifyContent: "center",
-    //   alignItems: "center",
-    //   justifyContent: "space-evenly",
-    //   height: 200,
-    // }}
-    >
+    <>
       <Button
         variant={"contained"}
         title={"Download VSM as PNG"}
         onClick={() => download_tree_as_png(project, tree)}
       >
         <Icon data={download} />
-        .PNG
+        Flyt.png
       </Button>
 
       <Button
         variant={"contained"}
         title={"Download VSM as CSV"}
         onClick={() => {
-          downloadProjectCardsAsCSV(project);
           downloadProjectTasksAsCSV(tasks, project);
         }}
       >
         <Icon data={download} />
-        .CSV
+        QIPs.csv
+      </Button>
+      <Button
+        variant={"contained"}
+        title={"Download VSM as CSV"}
+        onClick={() => {
+          downloadProjectCardsAsCSV(project);
+        }}
+      >
+        <Icon data={download} />
+        Cards.csv
       </Button>
       <Button
         variant={"contained"}
@@ -93,8 +94,8 @@ export default function Download(): JSX.Element {
         onClick={() => downloadJSON(project)}
       >
         <Icon data={download} />
-        .JSON
+        Flyt.json
       </Button>
-    </div>
+    </>
   );
 }

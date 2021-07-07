@@ -1,13 +1,9 @@
 import styles from "./VSMCanvas.module.scss";
 import { SideBarContent } from "./SideBarContent";
 import React from "react";
-import { Icon } from "@equinor/eds-core-react";
-import { close, delete_forever, delete_to_trash } from "@equinor/eds-icons";
 import { vsmObject } from "../interfaces/VsmObject";
 import { useQuery } from "react-query";
 import { getVSMObject } from "../services/vsmObjectApi";
-
-Icon.add({ close, delete_forever, delete_to_trash });
 
 export function VSMSideBar(props: {
   onClose: () => void;

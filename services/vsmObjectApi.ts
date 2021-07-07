@@ -5,10 +5,19 @@ const baseUrl = "/api/v1.0";
 import BaseAPIServices from "./BaseAPIServices";
 import { vsmObject } from "../interfaces/VsmObject";
 
-export const getVSMObject = (objectId: number): Promise<vsmObject> =>
-  BaseAPIServices.get(baseUrl + `/vsmObject/${objectId}`).then(
+export const getVSMObject = (objectId: number): Promise<vsmObject> => {
+  if (isNaN(objectId)) {
+    // Hack to stop requesting "undefined" object
+    // since setting react-query "{ enabled: !!vsmObjectId }" didn't seem to be enough...
+    return new Promise((resolve) => {
+      resolve({});
+    });
+  }
+
+  return BaseAPIServices.get(baseUrl + `/vsmObject/${objectId}`).then(
     (value) => value.data
   );
+};
 
 // Deletes an object and everything beneath it
 export const deleteVSMObject = (objectId: number): Promise<unknown> =>

@@ -14,8 +14,6 @@ import { categorizeProjects } from "../utils/categorizeProjects";
 
 const { List, Tab, Panels, Panel } = Tabs;
 
-Icon.add({ account_circle, add });
-
 // eslint-disable-next-line max-lines-per-function
 export default function Projects(): JSX.Element {
   const router = useRouter();
@@ -70,7 +68,7 @@ export default function Projects(): JSX.Element {
             onClick={() => newProjectMutation.mutate()}
           >
             Create new VSM
-            <Icon name="add" title="add" />
+            <Icon data={add} title="add" />
           </Button>
         </div>
         <>

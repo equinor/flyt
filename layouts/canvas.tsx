@@ -36,15 +36,6 @@ import { debounce } from "../utils/debounce";
 import { unknownErrorToString } from "../utils/isError";
 import Link from "next/link";
 
-const icons = {
-  chevron_down,
-  close,
-  delete_forever,
-  share,
-};
-
-Icon.add(icons);
-
 const CanvasLayout = ({ children }) => {
   const isAuthenticated = useIsAuthenticated();
   const { publicRuntimeConfig } = getConfig();
@@ -228,7 +219,7 @@ const CanvasLayout = ({ children }) => {
                 aria-haspopup="true"
                 aria-expanded={isOpen}
               >
-                <Icon name="chevron_down" title="chevron-down" size={16} />
+                <Icon data={chevron_down} title="chevron-down" size={16} />
               </Button>
             </div>
             <Menu
@@ -293,7 +284,7 @@ const CanvasLayout = ({ children }) => {
             style={{ marginRight: 8 }}
             onClick={() => setVisibleShareScrim(true)}
           >
-            <Icon name={"share"} />
+            <Icon data={share} />
           </Button>
           <RightTopBarSection isAuthenticated={isAuthenticated} />
         </div>
@@ -328,7 +319,7 @@ const CanvasLayout = ({ children }) => {
                 variant={"ghost_icon"}
                 onClick={() => setVisibleRenameScrim(false)}
               >
-                <Icon name="close" title="Close" />
+                <Icon data={close} title="Close" />
               </Button>
             </div>
             <div className={styles.scrimContent}>
@@ -365,7 +356,7 @@ const CanvasLayout = ({ children }) => {
                     variant={"ghost_icon"}
                     onClick={(e) => handleCloseDeleteScrim(e, false)}
                   >
-                    <Icon name="close" title="Close" />
+                    <Icon data={close} title="Close" />
                   </Button>
                 </div>
                 <div className={styles.scrimContent}>
@@ -384,7 +375,7 @@ const CanvasLayout = ({ children }) => {
                     color={"danger"}
                     onClick={() => deleteVSM()}
                   >
-                    <Icon name="delete_forever" title="Delete VSM" size={16} />
+                    <Icon data={delete_forever} title="Delete VSM" size={16} />
                     Delete VSM
                   </Button>
                 </div>

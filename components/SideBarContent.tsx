@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { SideBarHeader } from "./SideBarHeader";
 import { NewTaskSection } from "./NewTaskSection";
 import { SideBarBody } from "./SideBarBody";
@@ -10,6 +10,7 @@ import styles from "./VSMCanvas.module.scss";
 import { Button, Icon, Typography } from "@equinor/eds-core-react";
 import { unknownErrorToString } from "utils/isError";
 import { useStoreDispatch } from "hooks/storeHooks";
+import { close as closeIcon } from "@equinor/eds-icons";
 
 /**
  * Process specific content stuff
@@ -75,7 +76,7 @@ export function SideBarContent(props: {
             color={"primary"}
             onClick={props.onClose}
           >
-            <Icon name="close" title="add" size={24} />
+            <Icon data={closeIcon} title="add" size={24} />
           </Button>
         </div>
       </div>
@@ -93,7 +94,7 @@ export function SideBarContent(props: {
               color={"primary"}
               onClick={props.onClose}
             >
-              <Icon name="close" title="add" size={24} />
+              <Icon data={closeIcon} title="add" size={24} />
             </Button>
           </div>
         </div>
