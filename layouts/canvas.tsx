@@ -8,7 +8,13 @@ import {
   TopBar,
   Typography,
 } from "@equinor/eds-core-react";
-import { chevron_down, close, delete_forever, share } from "@equinor/eds-icons";
+import {
+  chevron_down,
+  close,
+  delete_forever,
+  download,
+  share,
+} from "@equinor/eds-icons";
 import styles from "./default.layout.module.scss";
 import { useAccount, useIsAuthenticated, useMsal } from "@azure/msal-react";
 import React, { useEffect, useState } from "react";
@@ -28,6 +34,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getProject, updateProject } from "../services/projectApi";
 import { debounce } from "../utils/debounce";
 import { unknownErrorToString } from "../utils/isError";
+import Link from "next/link";
 
 const icons = {
   chevron_down,
@@ -275,6 +282,11 @@ const CanvasLayout = ({ children }) => {
 
         <div style={{ display: "flex", alignItems: "center" }}>
           {/*<UserDots users={userAccesses?.map((u) => u.user) || []} />*/}
+          <Link href={`${router.asPath}/download`}>
+            <Button variant={"ghost_icon"} title={"Download"}>
+              <Icon data={download} />
+            </Button>
+          </Link>
           <Button
             variant={"ghost_icon"}
             title={"Share"}

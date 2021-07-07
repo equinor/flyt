@@ -9,7 +9,7 @@ import { Layouts } from "../../../layouts/LayoutWrapper";
 import { useStoreRehydrated } from "easy-peasy";
 
 const DynamicComponentWithNoSSR = dynamic(
-  () => import("../../../components/canvas/Download"),
+  () => import("../../../components/Download"),
   { ssr: false }
 );
 
@@ -74,5 +74,5 @@ export default function Project() {
   );
 }
 
-Project.layout = Layouts.Canvas;
+Project.layout = Layouts.Default;
 Project.auth = true;
