@@ -10,7 +10,9 @@ export const getTaskTypes = () =>
   BaseAPIServices.get("task/taskTypes").then((value) => value.data);
 
 // Get a list of tasks created in the project identified by its projectId (vsmId)
-export const getTasksForProject = (vsmId: number): Promise<Array<taskObject>> =>
+export const getTasksForProject = (
+  vsmId: string | string[]
+): Promise<Array<taskObject>> =>
   BaseAPIServices.get(baseUrl + `/task/list/${vsmId}`).then(
     (value) => value.data
   );

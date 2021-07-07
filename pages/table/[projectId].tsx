@@ -6,7 +6,7 @@ import React from "react";
 import { useQuery } from "react-query";
 import { getTasksForProject } from "../../services/taskApi";
 import { unknownErrorToString } from "../../utils/isError";
-import { FlattenProject } from "../../utils/flattenProject";
+import { flattenProject } from "../../utils/flattenProject";
 import { getProject } from "../../services/projectApi";
 import { TaskTable } from "./taskTable";
 import { ObjectTable } from "./objectTable";
@@ -53,7 +53,7 @@ export default function TablePage() {
       </div>
     );
   }
-  const flatObjects = FlattenProject(project);
+  const flatObjects = flattenProject(project);
   return (
     <div className={commonStyles.container}>
       <Head>

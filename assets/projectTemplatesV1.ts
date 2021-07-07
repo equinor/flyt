@@ -1,85 +1,6 @@
 import { vsmObjectTypes } from "../types/vsmObjectTypes";
 
 export const projectTemplatesV1 = {
-  experimental: {},
-  kitchenSink: {
-    name: "Welcome to the KitchenSink",
-    objects: [
-      {
-        parent: 0,
-        name: "KitchenSink",
-        fkObjectType: vsmObjectTypes.process,
-        childObjects: [
-          { fkObjectType: vsmObjectTypes.supplier, name: "supplier" },
-          { FkObjectType: vsmObjectTypes.input, Name: "input" },
-          {
-            FkObjectType: vsmObjectTypes.mainActivity,
-            Name: "Choose method",
-            childObjects: [
-              {
-                fkObjectType: vsmObjectTypes.choice,
-                Name: "Kaffetrakter eller presskanne?",
-                childObjects: [
-                  {
-                    name: "Kaffetrakter",
-                    fkObjectType: vsmObjectTypes.subActivity,
-                  },
-                  {
-                    name: "Presskanne",
-                    fkObjectType: vsmObjectTypes.subActivity,
-                    childObjects: [
-                      {
-                        name: "Finn presskanne",
-                        fkObjectType: vsmObjectTypes.subActivity,
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            FkObjectType: vsmObjectTypes.mainActivity,
-            Name: "Boil water",
-            childObjects: [
-              {
-                name: "Tilsett kaffe til presskanne",
-                fkObjectType: vsmObjectTypes.subActivity,
-              },
-            ],
-          },
-          {
-            FkObjectType: vsmObjectTypes.waiting,
-            Name: "Waiting",
-          },
-          {
-            FkObjectType: vsmObjectTypes.mainActivity,
-            Name: "Add water",
-            childObjects: [
-              {
-                name: "Waiting",
-                fkObjectType: vsmObjectTypes.waiting,
-                childObjects: [
-                  {
-                    name: "Press kaffe",
-                    fkObjectType: vsmObjectTypes.subActivity,
-                    childObjects: [
-                      {
-                        name: "Pour coffee",
-                        fkObjectType: vsmObjectTypes.subActivity,
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          },
-          { fkObjectType: vsmObjectTypes.output, name: "output" },
-          { fkObjectType: vsmObjectTypes.customer, name: "customer" },
-        ],
-      },
-    ],
-  },
   defaultProject: {
     objects: [
       {
@@ -95,380 +16,123 @@ export const projectTemplatesV1 = {
       },
     ],
   },
-  joshProject: {
+  devOpsExample: {
+    name: "DevOps Team Process",
     objects: [
       {
         parent: 0,
-        fkObjectType: vsmObjectTypes.process,
+        name: "DevOps Team Process",
+        fkObjectType: 1,
         childObjects: [
-          { fkObjectType: vsmObjectTypes.supplier },
-          { fkObjectType: vsmObjectTypes.input },
+          { name: "https://flyt.equinor.com/projects/83", fkObjectType: 2 },
+          { name: "Bugs & New feature requests.", fkObjectType: 3 },
           {
-            fkObjectType: vsmObjectTypes.mainActivity,
+            name: "Prepare tasks ",
             childObjects: [
               {
-                fkObjectType: vsmObjectTypes.subActivity,
-                childObjects: [
-                  {
-                    fkObjectType: vsmObjectTypes.choice,
-                    childObjects: [
-                      {
-                        fkObjectType: vsmObjectTypes.waiting,
-                      },
-                      {
-                        fkObjectType: vsmObjectTypes.subActivity,
-                      },
-                    ],
-                  },
-                ],
+                name: "Add new Bugs & Feature requests to our backlog",
+                fkObjectType: 5,
               },
-            ],
-          },
-          { fkObjectType: vsmObjectTypes.output },
-          { fkObjectType: vsmObjectTypes.customer },
-        ],
-      },
-    ],
-  },
-  slalomProject: {
-    objects: [
-      {
-        parent: 0,
-        fkObjectType: vsmObjectTypes.process,
-        childObjects: [
-          { fkObjectType: vsmObjectTypes.supplier },
-          { fkObjectType: vsmObjectTypes.input },
-          {
-            fkObjectType: vsmObjectTypes.mainActivity,
-            childObjects: [
               {
-                fkObjectType: vsmObjectTypes.choice,
-                childObjects: [
-                  { fkObjectType: vsmObjectTypes.subActivity },
-                  {
-                    fkObjectType: vsmObjectTypes.subActivity,
-                    childObjects: [
-                      {
-                        fkObjectType: vsmObjectTypes.choice,
-                        childObjects: [
-                          { fkObjectType: vsmObjectTypes.subActivity },
-                          {
-                            fkObjectType: vsmObjectTypes.subActivity,
-                            childObjects: [
-                              {
-                                fkObjectType: vsmObjectTypes.choice,
-                                childObjects: [
-                                  {
-                                    fkObjectType: vsmObjectTypes.subActivity,
-                                    childObjects: [
-                                      {
-                                        fkObjectType: vsmObjectTypes.choice,
-                                        childObjects: [
-                                          {
-                                            fkObjectType:
-                                              vsmObjectTypes.subActivity,
-                                          },
-                                          {
-                                            fkObjectType:
-                                              vsmObjectTypes.subActivity,
-                                            childObjects: [
-                                              {
-                                                fkObjectType:
-                                                  vsmObjectTypes.choice,
-                                                childObjects: [
-                                                  {
-                                                    fkObjectType:
-                                                      vsmObjectTypes.subActivity,
-                                                    childObjects: [
-                                                      {
-                                                        fkObjectType:
-                                                          vsmObjectTypes.choice,
-                                                        childObjects: [
-                                                          {
-                                                            fkObjectType:
-                                                              vsmObjectTypes.subActivity,
-                                                          },
-                                                          {
-                                                            fkObjectType:
-                                                              vsmObjectTypes.subActivity,
-                                                          },
-                                                        ],
-                                                      },
-                                                    ],
-                                                  },
-                                                  {
-                                                    fkObjectType:
-                                                      vsmObjectTypes.subActivity,
-                                                  },
-                                                ],
-                                              },
-                                            ],
-                                          },
-                                        ],
-                                      },
-                                    ],
-                                  },
-                                  { fkObjectType: vsmObjectTypes.subActivity },
-                                ],
-                              },
-                            ],
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                ],
+                name: "Prioritize by moving what we want to focus on to the selected column",
+                fkObjectType: 5,
               },
-            ],
-          },
-          { fkObjectType: vsmObjectTypes.output },
-          { fkObjectType: vsmObjectTypes.customer },
-        ],
-      },
-    ],
-  },
-  niceChoicesProject: {
-    objects: [
-      {
-        parent: 0,
-        fkObjectType: vsmObjectTypes.process,
-        childObjects: [
-          { fkObjectType: vsmObjectTypes.supplier },
-          { fkObjectType: vsmObjectTypes.input },
-          {
-            fkObjectType: vsmObjectTypes.mainActivity,
-            childObjects: [
               {
-                fkObjectType: vsmObjectTypes.choice,
-                childObjects: [
-                  {
-                    fkObjectType: vsmObjectTypes.subActivity,
-                    childObjects: [
-                      {
-                        fkObjectType: vsmObjectTypes.choice,
-                        childObjects: [
-                          {
-                            fkObjectType: vsmObjectTypes.subActivity,
-                            childObjects: [
-                              {
-                                fkObjectType: vsmObjectTypes.choice,
-                                childObjects: [
-                                  {
-                                    fkObjectType: vsmObjectTypes.subActivity,
-                                  },
-                                  {
-                                    fkObjectType: vsmObjectTypes.subActivity,
-                                  },
-                                ],
-                              },
-                            ],
-                          },
-                          {
-                            fkObjectType: vsmObjectTypes.subActivity,
-                            childObjects: [
-                              {
-                                fkObjectType: vsmObjectTypes.choice,
-                                childObjects: [
-                                  {
-                                    fkObjectType: vsmObjectTypes.subActivity,
-                                  },
-                                  {
-                                    fkObjectType: vsmObjectTypes.subActivity,
-                                  },
-                                ],
-                              },
-                            ],
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                  {
-                    fkObjectType: vsmObjectTypes.subActivity,
-                    childObjects: [
-                      {
-                        fkObjectType: vsmObjectTypes.choice,
-                        childObjects: [
-                          {
-                            fkObjectType: vsmObjectTypes.subActivity,
-                            childObjects: [
-                              {
-                                fkObjectType: vsmObjectTypes.choice,
-                                childObjects: [
-                                  {
-                                    fkObjectType: vsmObjectTypes.subActivity,
-                                  },
-                                  {
-                                    fkObjectType: vsmObjectTypes.subActivity,
-                                  },
-                                ],
-                              },
-                            ],
-                          },
-                          {
-                            fkObjectType: vsmObjectTypes.subActivity,
-                            childObjects: [
-                              {
-                                fkObjectType: vsmObjectTypes.choice,
-                                childObjects: [
-                                  {
-                                    fkObjectType: vsmObjectTypes.subActivity,
-                                  },
-                                  {
-                                    fkObjectType: vsmObjectTypes.subActivity,
-                                  },
-                                ],
-                              },
-                            ],
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                ],
+                name: "Fill in necessary user-story and implementation details.\n\n",
+                fkObjectType: 5,
               },
-            ],
-          },
-          { fkObjectType: vsmObjectTypes.output },
-          { fkObjectType: vsmObjectTypes.customer },
-        ],
-      },
-    ],
-  },
-  uglyChoicesProject: {
-    objects: [
-      {
-        parent: 0,
-        fkObjectType: vsmObjectTypes.process,
-        childObjects: [
-          { fkObjectType: vsmObjectTypes.supplier },
-          { fkObjectType: vsmObjectTypes.input },
-          {
-            fkObjectType: vsmObjectTypes.mainActivity,
-            childObjects: [
               {
-                fkObjectType: vsmObjectTypes.choice,
+                name: "Missing design?",
                 childObjects: [
-                  { fkObjectType: vsmObjectTypes.subActivity },
+                  { name: "No", choiceGroup: "Left", fkObjectType: 5 },
                   {
-                    fkObjectType: vsmObjectTypes.subActivity,
-                    childObjects: [
-                      {
-                        fkObjectType: vsmObjectTypes.choice,
-                        childObjects: [
-                          { fkObjectType: vsmObjectTypes.subActivity },
-                          {
-                            fkObjectType: vsmObjectTypes.subActivity,
-                            childObjects: [
-                              {
-                                fkObjectType: vsmObjectTypes.choice,
-                                childObjects: [
-                                  { fkObjectType: vsmObjectTypes.subActivity },
-                                  {
-                                    fkObjectType: vsmObjectTypes.subActivity,
-                                    childObjects: [
-                                      {
-                                        fkObjectType: vsmObjectTypes.choice,
-                                        childObjects: [
-                                          {
-                                            fkObjectType:
-                                              vsmObjectTypes.subActivity,
-                                          },
-                                          {
-                                            fkObjectType:
-                                              vsmObjectTypes.subActivity,
-                                          },
-                                        ],
-                                      },
-                                    ],
-                                  },
-                                ],
-                              },
-                            ],
-                          },
-                        ],
-                      },
-                    ],
+                    name: "Yes -> Add design subtask and assign a designer.",
+                    choiceGroup: "Right",
+                    fkObjectType: 5,
+                  },
+                  {
+                    name: "Design UI/UX",
+                    choiceGroup: "Right",
+                    fkObjectType: 5,
+                  },
+                  {
+                    name: "Update parent-task with design info / link.",
+                    choiceGroup: "Right",
+                    fkObjectType: 5,
+                  },
+                  {
+                    name: "Move task to Ready column",
+                    choiceGroup: "Right",
+                    fkObjectType: 5,
+                  },
+                  {
+                    name: "Move task to Ready column",
+                    choiceGroup: "Left",
+                    fkObjectType: 5,
                   },
                 ],
+                fkObjectType: 10,
               },
             ],
+            fkObjectType: 4,
           },
           {
-            fkObjectType: vsmObjectTypes.mainActivity,
+            name: "Code - Implement changes",
             childObjects: [
               {
-                fkObjectType: vsmObjectTypes.choice,
+                name: "Front-end or Back-end?",
                 childObjects: [
                   {
-                    fkObjectType: vsmObjectTypes.subActivity,
-                    childObjects: [
-                      {
-                        fkObjectType: vsmObjectTypes.choice,
-                        childObjects: [
-                          {
-                            fkObjectType: vsmObjectTypes.subActivity,
-                            childObjects: [
-                              {
-                                fkObjectType: vsmObjectTypes.choice,
-                                childObjects: [
-                                  {
-                                    fkObjectType: vsmObjectTypes.subActivity,
-                                    childObjects: [
-                                      {
-                                        fkObjectType: vsmObjectTypes.choice,
-                                        childObjects: [
-                                          {
-                                            fkObjectType:
-                                              vsmObjectTypes.subActivity,
-                                          },
-                                          {
-                                            fkObjectType:
-                                              vsmObjectTypes.subActivity,
-                                          },
-                                        ],
-                                      },
-                                    ],
-                                  },
-                                  { fkObjectType: vsmObjectTypes.subActivity },
-                                ],
-                              },
-                            ],
-                          },
-                          { fkObjectType: vsmObjectTypes.subActivity },
-                        ],
-                      },
-                    ],
+                    name: "Front-End | WEB\n\nCode the changes",
+                    choiceGroup: "Left",
+                    fkObjectType: 5,
                   },
                   {
-                    fkObjectType: vsmObjectTypes.subActivity,
-                    childObjects: [
-                      {
-                        fkObjectType: vsmObjectTypes.choice,
-                        childObjects: [
-                          {
-                            fkObjectType: vsmObjectTypes.subActivity,
-                            childObjects: [
-                              {
-                                fkObjectType: vsmObjectTypes.choice,
-                                childObjects: [
-                                  { fkObjectType: vsmObjectTypes.subActivity },
-                                  { fkObjectType: vsmObjectTypes.subActivity },
-                                ],
-                              },
-                            ],
-                          },
-                          { fkObjectType: vsmObjectTypes.subActivity },
-                        ],
-                      },
-                    ],
+                    name: "Back-end | API\nCode the changes",
+                    choiceGroup: "Right",
+                    fkObjectType: 5,
+                  },
+                  {
+                    name: "Build to Test environment\n\n$yarn release-test",
+                    choiceGroup: "Left",
+                    fkObjectType: 5,
                   },
                 ],
+                fkObjectType: 10,
               },
+              { name: "Move task to Test column", fkObjectType: 5 },
             ],
+            fkObjectType: 4,
           },
-          { fkObjectType: vsmObjectTypes.output },
-          { fkObjectType: vsmObjectTypes.customer },
+          {
+            name: "Test & QA",
+            childObjects: [
+              { name: "Test the code in test environment", fkObjectType: 5 },
+              { name: "Promote to QA", fkObjectType: 5 },
+              { name: "Notify POs?", fkObjectType: 5 },
+            ],
+            fkObjectType: 4,
+          },
+          {
+            name: "Release",
+            childObjects: [
+              {
+                name: "Check with developers that we are good to go.",
+                fkObjectType: 5,
+              },
+              {
+                name: "Promote QA environment to Production",
+                fkObjectType: 5,
+              },
+              { name: "Notify PO & users?", fkObjectType: 5 },
+            ],
+            fkObjectType: 4,
+          },
+          {
+            name: "New feature, bug fix or improvement deployed to flyt.equinor.com",
+            fkObjectType: 8,
+          },
+          { name: "Flyt users", fkObjectType: 9 },
         ],
       },
     ],

@@ -1,7 +1,7 @@
 import { vsmProject } from "../interfaces/VsmProject";
 import { vsmObject } from "../interfaces/VsmObject";
 
-export function FlattenProject(project: vsmProject) {
+export function flattenProject(project: vsmProject): Array<vsmObject> {
   if (!project) return [];
   const vsmObjects: Array<vsmObject> = [];
 

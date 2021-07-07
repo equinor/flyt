@@ -283,7 +283,10 @@ const CanvasLayout = ({ children }) => {
           >
             <Icon name={"share"} />
           </Button>
-          <RightTopBarSection isAuthenticated={isAuthenticated} />
+          <RightTopBarSection
+            isAuthenticated={isAuthenticated}
+            projectId={project?.vsmProjectID?.toString()}
+          />
         </div>
       </TopBar>
 
