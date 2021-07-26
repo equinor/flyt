@@ -192,7 +192,7 @@ const CanvasLayout = ({ children }) => {
   }
 
   return (
-    <div>
+    <div style={{ overflow: "hidden" /* Hide scrollbars */ }}>
       <Head>
         <title>{publicRuntimeConfig.APP_NAME}</title>
         <meta charSet="utf-8" />
