@@ -1,24 +1,25 @@
 import React from "react";
 import "../styles/globals.scss";
 import LayoutWrapper from "../layouts/LayoutWrapper";
-import AuthenticationProvider from "../auth/AuthenticationProvider";
 import { StoreProvider } from "easy-peasy";
 import store from "../store/store";
 import App, { AppContext } from "next/app";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { MsalProvider } from "@azure/msal-react";
+import msalInstance from "../auth/msalHelpers";
 
-//Todo: get rid of the StoreProvider. (Simplify our workflow by using React-Query for server state data-handling and interactions)
 const queryClient = new QueryClient();
 const MyApp = ({ Component, pageProps }) => {
   return (
+    // Todo: get rid of the StoreProvider. (Simplify our workflow by using React-Query for server state data-handling and interactions)
     <StoreProvider store={store}>
       <QueryClientProvider client={queryClient}>
-        <AuthenticationProvider>
+        <MsalProvider instance={msalInstance}>
           <LayoutWrapper {...pageProps}>
             <Component {...pageProps} />
           </LayoutWrapper>
-        </AuthenticationProvider>
+        </MsalProvider>
         <div onWheel={(e) => e.stopPropagation()}>
           <ReactQueryDevtools initialIsOpen={false} />
         </div>

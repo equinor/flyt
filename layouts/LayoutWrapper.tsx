@@ -20,17 +20,15 @@ const LayoutWrapper = (props) => {
   const authRequired = props.children?.type.auth;
   const isAuthenticated = useIsAuthenticated();
 
-  const authedComponent =
-    !isAuthenticated && authRequired ? (
-      <NotAuthenticatedMessage />
-    ) : (
-      props.children
+  if (!isAuthenticated && authRequired)
+    return (
+      <DefaultLayout {...props}>
+        <NotAuthenticatedMessage />
+      </DefaultLayout>
     );
 
-  if (Layout != null) {
-    return <Layout {...props}>{authedComponent}</Layout>;
-  }
-  return <DefaultLayout {...props}>{authedComponent}</DefaultLayout>;
+  if (Layout) return <Layout {...props}>{props.children}</Layout>;
+  return <DefaultLayout {...props}>{props.children}</DefaultLayout>;
 };
 
 export default LayoutWrapper;
