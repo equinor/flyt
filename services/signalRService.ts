@@ -5,6 +5,8 @@ import signalR, {
 import getConfig from "next/config";
 
 export class SignalRService {
+  private readonly _connection: signalR.HubConnection;
+
   constructor(
     projectId: number,
     changeHandlers: {
@@ -28,7 +30,9 @@ export class SignalRService {
       .then(() =>
         this._connection
           .invoke("SubscribeToVsm", projectId)
-          .then((r) => console.log("invocation response", r))
+          .then((r) => {
+            console.log("invocation response", r);
+          })
           .catch((e) => {
             console.error(e);
           })
@@ -38,35 +42,42 @@ export class SignalRService {
       });
 
     //todo: Make it work. It's not triggering on any updates...
-    this._connection.on("SaveProject", (data) =>
-      changeHandlers.onSaveProject(data)
-    );
-    this._connection.on("DeleteProject", (data) => {
+    this.connection.on("SaveProject", (data) => {
+      changeHandlers.onSaveProject(data);
+    });
+
+    this.connection.on("DeleteProject", (data) => {
       changeHandlers.onDeleteProject(data);
     });
-    this._connection.on("UpdateObject", (data) => {
+
+    this.connection.on("UpdateObject", (data) => {
       changeHandlers.onUpdateObject(data);
     });
-    this._connection.on("DeletedObject", (data) => {
+
+    this.connection.on("DeletedObject", (data) => {
       changeHandlers.onDeleteObject(data);
     });
-    this._connection.on("SaveTask", (data) => {
+
+    this.connection.on("SaveTask", (data) => {
       changeHandlers.onSaveTask(data);
     });
-    this._connection.on("DeleteTask", (data) =>
-      changeHandlers.onDeleteTask(data)
-    );
 
-    this._connection.onreconnecting((error) =>
-      console.log("Trying to reconnect...", { error })
-    );
-    this._connection.onreconnected((s) => console.log("Reconnected!", s));
-    this._connection.onclose((error) =>
-      console.log("Connection closed.", { error })
-    );
+    this.connection.on("DeleteTask", (data) => {
+      changeHandlers.onDeleteTask(data);
+    });
+
+    this.connection.onreconnecting((error) => {
+      console.log("SignalR | Trying to reconnect...", { error });
+    });
+
+    this.connection.onreconnected((s) => {
+      console.log("SignalR | Reconnected!", s);
+    });
+
+    this.connection.onclose((error) => {
+      console.log("SignalR | Connection closed.", { error });
+    });
   }
-
-  private _connection: signalR.HubConnection;
 
   get connection(): HubConnection {
     return this._connection;
