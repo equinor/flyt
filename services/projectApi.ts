@@ -12,7 +12,7 @@ export const getProjects = async (): Promise<[vsmProject]> =>
 export const createProject = (): AxiosPromise<{
   vsmProjectID: number;
 }> =>
-  BaseAPIServices.post(`${baseUrl}/project`, projectTemplatesV1.devOpsExample);
+  BaseAPIServices.post(`${baseUrl}/project`, projectTemplatesV1.defaultProject);
 
 export const getProject = (id: string | string[]): Promise<vsmProject> =>
   BaseAPIServices.get(`${baseUrl}/project/${id}`).then((value) => value.data);
