@@ -1,37 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import commonStyles from "../styles/common.module.scss";
 import Head from "next/head";
-import { Button, Icon, Tabs, Typography } from "@equinor/eds-core-react";
+import { Pagination, Switch, Typography } from "@equinor/eds-core-react";
 import { Layouts } from "../layouts/LayoutWrapper";
-import { account_circle, add } from "@equinor/eds-icons";
-import { useRouter } from "next/router";
-import styles from "./projects/Projects.module.scss";
-import { useAccount, useMsal } from "@azure/msal-react";
 import { ProjectListSection } from "../components/projectListSection";
-import { useMutation, useQuery } from "react-query";
-import { createProject, getProjects } from "../services/projectApi";
-import { categorizeProjects } from "../utils/categorizeProjects";
+import { useQuery } from "react-query";
+import { getProjects } from "../services/projectApi";
+import { useAccount, useMsal } from "@azure/msal-react";
+import { getUserName } from "../utils/getUserName";
 
-const { List, Tab, Panels, Panel } = Tabs;
-
-// eslint-disable-next-line max-lines-per-function
+const itemsPerPage = 19;
 export default function Projects(): JSX.Element {
-  const router = useRouter();
-
   const { accounts } = useMsal();
-  const account = useAccount(accounts[0] || {});
+  const account = useAccount(accounts[0]);
+  const [showMyProjects, setShowMyProjects] = useState(true);
+  const [page, setPage] = useState(1);
+  const [userNameFilter, setUserNameFilter] = useState("");
 
-  const [activeTab, setActiveTab] = useState(0);
-  const {
-    data: projects,
-    isLoading,
-    error,
-  } = useQuery("projects", getProjects);
-  const newProjectMutation = useMutation(() =>
-    createProject().then((value) =>
-      router.push(`/projects/${value.data.vsmProjectID}`)
-    )
+  const { data, isLoading, error } = useQuery(
+    ["projects", page, userNameFilter],
+    () =>
+      getProjects({
+        page,
+        user: userNameFilter,
+        items: itemsPerPage,
+      })
   );
+
+  useEffect(() => {
+    if (showMyProjects) setUserNameFilter(getUserName(account));
+    else setUserNameFilter("");
+    setPage(1);
+  }, [showMyProjects]);
+  const [lastTotalItems, setLastTotalItems] = useState(0);
+
+  useEffect(() => {
+    //Hack so that the pagination does not flicker
+    if (data?.totalItems) setLastTotalItems(data.totalItems);
+  }, [data?.totalItems]);
 
   if (error)
     return (
@@ -48,11 +54,6 @@ export default function Projects(): JSX.Element {
       </div>
     );
 
-  const { projectsICanEdit, projectsICanView } = categorizeProjects(
-    projects,
-    account
-  );
-
   return (
     <div className={commonStyles.container}>
       <Head>
@@ -61,80 +62,36 @@ export default function Projects(): JSX.Element {
       </Head>
 
       <main className={commonStyles.main}>
-        <div className={styles.header}>
-          <Typography variant={"h1"}>My Value Stream Maps</Typography>
-          <Button
-            variant={"outlined"}
-            onClick={() => newProjectMutation.mutate()}
-          >
-            Create new VSM
-            <Icon data={add} title="add" />
-          </Button>
+        <div
+          style={{
+            marginBottom: 20,
+            alignItems: "center",
+            display: "flex",
+            borderRadius: 4,
+            padding: 12,
+            width: "50%",
+            flexWrap: "wrap",
+            justifyContent: "center",
+          }}
+        >
+          <Switch
+            size={"small"}
+            label="Only show projects i can edit"
+            checked={showMyProjects}
+            onChange={() => {
+              setShowMyProjects(!showMyProjects);
+            }}
+          />
+          <Pagination
+            key={showMyProjects.toString()}
+            totalItems={data?.totalItems || lastTotalItems} // lastTotalItems-> Hack so that the pagination does not flicker
+            itemsPerPage={itemsPerPage}
+            // withItemIndicator
+            defaultValue={page}
+            onChange={(event, newPage) => setPage(newPage)}
+          />
         </div>
-        <>
-          {isLoading ? (
-            <Typography variant={"h2"}>Fetching projects... </Typography>
-          ) : (
-            <>
-              <Tabs
-                activeTab={activeTab}
-                onChange={(index) => setActiveTab(index)}
-              >
-                <List
-                  style={{
-                    justifyContent: "center",
-                    display: "flex",
-                    flexDirection: "row",
-                  }}
-                >
-                  <Tab>Edit</Tab>
-                  <Tab>View</Tab>
-                </List>
-                <Panels>
-                  <Panel>
-                    <p
-                      style={{
-                        paddingBottom: 12,
-                        display: "flex",
-                        justifyContent: "center",
-                        fontStyle: "italic",
-                      }}
-                    >
-                      These are the VSMs you can edit
-                    </p>
-                    <ProjectListSection projects={projectsICanEdit} />
-                  </Panel>
-                  <Panel>
-                    <p
-                      style={{
-                        paddingBottom: 12,
-                        display: "flex",
-                        justifyContent: "center",
-                        fontStyle: "italic",
-                      }}
-                    >
-                      These are the VSMs you can view.
-                    </p>
-                    <p
-                      style={{
-                        paddingBottom: 12,
-                        display: "flex",
-                        justifyContent: "center",
-                        fontStyle: "italic",
-                      }}
-                    >
-                      You can only edit VSMs that you have created or been given
-                      access to.
-                    </p>
-                    <ProjectListSection
-                      projects={projectsICanView.filter((p) => p.name)}
-                    />
-                  </Panel>
-                </Panels>
-              </Tabs>
-            </>
-          )}
-        </>
+        <ProjectListSection projects={data?.projects} isLoading={isLoading} />
       </main>
     </div>
   );
