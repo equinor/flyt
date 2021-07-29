@@ -16,13 +16,17 @@
     "use-qa": "cp environment-variables/QA.env .env && yarn dev",
     "use-prod": "cp environment-variables/PROD.env .env && yarn dev",
     "docker-run-dev": "docker build -t vsm . && docker run -p 3000:3000 --env-file ./environment-variables/DEV.env vsm",
+    "run-test": "docker build -t vsm . && docker run -p 3000:3000 --env-file ./environment-variables/TEST.env vsm",
+    "run-qa": "docker build -t vsm . && docker run -p 3000:3000 --env-file ./environment-variables/QA.env vsm",
+    "run-prod": "docker build -t vsm . && docker run -p 3000:3000 --env-file ./environment-variables/PROD.env vsm",
     "lint": "pretty-quick --staged && lint-staged",
     "postinstall": "husky install"
   },
   "dependencies": {
-    "@azure/msal-browser": "^2.14.0",
-    "@azure/msal-react": "^1.0.0-alpha.3",
+    "@azure/msal-browser": "^2.16.0",
+    "@azure/msal-react": "^1.0.1",
     "@equinor/eds-core-react": "^0.11.0",
+    "@microsoft/signalr": "^5.0.7",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.1",
     "axios": "^0.21.1",
@@ -36,11 +40,12 @@
     "react-dom": "17.0.2",
     "react-json-view": "^1.21.1",
     "react-query": "^3.17.2",
+    "react-table": "^7.7.0",
     "sass": "^1.32.11",
     "styled-components": "^5.2.2"
   },
   "devDependencies": {
-    "@types/node": "^14.14.22",
+    "@types/node": "^15.0.3",
     "@types/react": "^17.0.0",
     "eslint": "^7.17.0",
     "eslint-config-prettier": "^7.2.0",

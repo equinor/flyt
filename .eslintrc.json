@@ -23,7 +23,6 @@
   },
   "rules": {
     "react/prop-types": ["off"],
-    "sonarjs/cognitive-complexity": ["warn", 5],
-    "max-lines-per-function": ["warn", 40]
+    "sonarjs/cognitive-complexity": ["warn", 5]
   }
 }

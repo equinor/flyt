@@ -2,27 +2,30 @@ import { useIsAuthenticated, useMsalAuthentication } from "@azure/msal-react";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { loginRequest, msalConfig } from "../../Config";
-import { AuthError, InteractionType } from "@azure/msal-browser";
+import { InteractionType } from "@azure/msal-browser";
 import commonStyles from "../../styles/common.module.scss";
 import Link from "next/link";
 import { Button, Typography } from "@equinor/eds-core-react";
+import msalInstance from "../../auth/msalHelpers";
 
 export default function LoginPage() {
   const isAuthenticated = useIsAuthenticated();
   const { asPath } = useRouter();
   const router = useRouter();
+  const { error, result } = useMsalAuthentication(InteractionType.Redirect, {
+    scopes: loginRequest.scopes,
+    authority: msalConfig.auth.authority,
+  });
 
-  let error: AuthError | null;
-  if (!error) {
-    ({ error } = useMsalAuthentication(InteractionType.Redirect, {
-      scopes: loginRequest.scopes,
-      authority: msalConfig.auth.authority,
-    }));
-  }
+  useEffect(() => {
+    if (result) msalInstance.setActiveAccount(result.account);
+  }, [result]);
 
   const redirectUrl = asPath.split("=")[1];
   useEffect(() => {
-    if (isAuthenticated && !!redirectUrl) router.push(redirectUrl);
+    if (isAuthenticated && !!redirectUrl) {
+      router.push(redirectUrl);
+    }
   }, [isAuthenticated]);
 
   if (isAuthenticated) {

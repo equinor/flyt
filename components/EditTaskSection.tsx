@@ -7,10 +7,6 @@ import { Button, Icon } from "@equinor/eds-core-react";
 import { EditTaskTextField } from "./EditTaskTextField";
 import { delete_to_trash } from "@equinor/eds-icons";
 
-Icon.add({
-  delete_to_trash,
-});
-
 export function EditTaskSection(props: {
   task: taskObject;
   object: vsmObject;
@@ -39,7 +35,7 @@ export function EditTaskSection(props: {
             dispatch.unlinkTask({ task: task, object: object });
           }}
         >
-          <Icon name="delete_to_trash" size={24} />
+          <Icon data={delete_to_trash} size={24} />
         </Button>
       </div>
     </div>

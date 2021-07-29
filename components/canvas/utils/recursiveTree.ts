@@ -9,7 +9,9 @@ export function recursiveTree(
   root: vsmObject,
   level = 0,
   userCanEdit: boolean,
-  dispatch?: Dispatch<ProjectModel>
+  dispatch,
+  setSelectedObject,
+  vsmObjectMutation
 ): Container {
   // Level 0 contains the root-node and we don't display it.
   // Level 1 should be rendered horizontal.
@@ -22,7 +24,14 @@ export function recursiveTree(
     // Remember, we don't display the root node...
     // so let's start laying out our horizontal first row
     root.childObjects?.forEach((child) => {
-      const c = recursiveTree(child, level + 1, userCanEdit, dispatch);
+      const c = recursiveTree(
+        child,
+        level + 1,
+        userCanEdit,
+        dispatch,
+        setSelectedObject,
+        vsmObjectMutation
+      );
       const rectangle = new Graphics()
         // .beginFill(0xcacaca) //<- Comment out for debugging
         .drawRect(0, 0, c.width, c.height);
@@ -46,7 +55,15 @@ export function recursiveTree(
 
   // Vertical placement for levels > 1
   const containerGroup = new PIXI.Container();
-  containerGroup.addChild(createChild(root, userCanEdit, dispatch));
+  containerGroup.addChild(
+    createChild(
+      root,
+      userCanEdit,
+      dispatch,
+      setSelectedObject,
+      vsmObjectMutation
+    )
+  );
 
   const container = new PIXI.Container();
   let nextY = containerGroup.height + 20; // Generic element y position
@@ -54,10 +71,23 @@ export function recursiveTree(
   let nextRightY = nextY; // Right choiceGroup element y position
 
   root.childObjects?.forEach((child) => {
-    const c = recursiveTree(child, level + 1, userCanEdit, dispatch);
+    const c = recursiveTree(
+      child,
+      level + 1,
+      userCanEdit,
+      dispatch,
+      setSelectedObject,
+      vsmObjectMutation
+    );
     c.y = nextY;
     nextY = nextY + c.height + 20;
-    const tempChild = createChild(child, userCanEdit, dispatch);
+    const tempChild = createChild(
+      child,
+      userCanEdit,
+      dispatch,
+      setSelectedObject,
+      vsmObjectMutation
+    );
     if (child.choiceGroup === "Left") {
       c.pivot.set(tempChild.width, 0);
       c.x = 126 / 2 - 10;

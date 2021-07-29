@@ -8,27 +8,26 @@ import { vsmProject } from "../interfaces/VsmProject";
 import BaseAPIServices from "../services/BaseAPIServices";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import * as userApi from "../services/userApi";
-const icons = {
-  close,
-  link,
-};
-
-Icon.add(icons);
+import { unknownErrorToString } from "utils/isError";
+import { useStoreDispatch } from "hooks/storeHooks";
 
 export function AccessBox(props: {
   project: vsmProject;
   handleClose;
   isAdmin: boolean;
 }): JSX.Element {
-  const { data: userAccesses, isLoading } = useQuery("userAccesses", () =>
-    BaseAPIServices.get(`/api/v1.0/userAccess/${vsmProjectID}`).then(
-      (value) => {
+  const { data: userAccesses, isLoading } = useQuery(
+    "userAccesses",
+    () =>
+      BaseAPIServices.get(
+        `/api/v1.0/userAccess/${props.project.vsmProjectID}`
+      ).then((value) => {
         return value.data;
-      }
-    )
+      }),
+    { enabled: !!(props.project && props.project.vsmProjectID) }
   );
 
-  if (!props.project) return <></>;
+  if (!props.project) return <p>Missing project</p>;
   const { created, vsmProjectID } = props.project;
 
   const owner = created.userIdentity;
@@ -73,7 +72,7 @@ function TopSection(props: { title: string; handleClose }) {
     <div className={style.topSection}>
       <p className={style.heading}> {props.title}</p>
       <Button variant={"ghost_icon"} onClick={props.handleClose}>
-        <Icon name={"close"} />
+        <Icon data={close} />
       </Button>
     </div>
   );
@@ -129,6 +128,7 @@ function MiddleSection(props: {
   loading: boolean;
   isAdmin: boolean;
 }) {
+  const dispatch = useStoreDispatch();
   const [userInput, setEmailInput] = useState("");
   const queryClient = useQueryClient();
   const addUserMutation = useMutation(
@@ -139,12 +139,14 @@ function MiddleSection(props: {
         setEmailInput("");
         queryClient.invalidateQueries("userAccesses");
       },
+      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
   const removeUserMutation = useMutation(
     (props: { accessId; vsmId }) => userApi.remove(props),
     {
       onSuccess: () => queryClient.invalidateQueries("userAccesses"),
+      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
   const changeUserMutation = useMutation(
@@ -152,6 +154,7 @@ function MiddleSection(props: {
       userApi.update(props),
     {
       onSuccess: () => queryClient.invalidateQueries("userAccesses"),
+      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
 
@@ -231,7 +234,7 @@ function BottomSection() {
   return (
     <div className={style.bottomSection}>
       <Button variant={"outlined"} onClick={copyToClipboard}>
-        <Icon name={"link"} />
+        <Icon data={link} />
         {copySuccess || "Copy link"}
       </Button>
     </div>

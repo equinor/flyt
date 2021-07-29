@@ -24,22 +24,35 @@ import { disableKeyboardZoomShortcuts } from "../utils/disableKeyboardZoomShortc
 import { MySnackBar } from "../components/MySnackBar";
 import { AccessBox } from "../components/accessBox";
 import { getMyAccess } from "../utils/getMyAccess";
-
-const icons = {
-  chevron_down,
-  close,
-  delete_forever,
-  share,
-};
-
-Icon.add(icons);
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { getProject, updateProject } from "../services/projectApi";
+import { debounce } from "../utils/debounce";
+import { unknownErrorToString } from "../utils/isError";
 
 const CanvasLayout = ({ children }) => {
   const isAuthenticated = useIsAuthenticated();
   const { publicRuntimeConfig } = getConfig();
-  const project = useStoreState((state) => state.project);
-  const projectTitle = project?.name;
+
   const router = useRouter();
+  const { id } = router.query;
+  const { data: project } = useQuery(["project", id], () => getProject(id));
+  const projectTitle = project?.name;
+
+  const queryClient = useQueryClient();
+  const projectMutation = useMutation(
+    (updatedProject: { vsmProjectID: number; name: string }) => {
+      dispatch.setSnackMessage("⏳ Updating...");
+      return updateProject(updatedProject);
+    },
+    {
+      onSuccess: () => {
+        dispatch.setSnackMessage("✅ Done!");
+        return queryClient.invalidateQueries();
+      },
+      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+    }
+  );
+
   const dispatch = useStoreDispatch();
 
   const snackMessage = useStoreState((state) => state.snackMessage);
@@ -159,16 +172,20 @@ const CanvasLayout = ({ children }) => {
   }
 
   function updateProjectName(name: string) {
-    const rootObjectId = project.objects && project.objects[0]?.vsmObjectID;
-    dispatch.updateProjectName({
-      vsmProjectID: project.vsmProjectID,
-      name,
-      rootObjectId,
-    });
+    debounce(
+      () => {
+        projectMutation.mutate({
+          vsmProjectID: project.vsmProjectID,
+          name,
+        });
+      },
+      1000,
+      "updateProjectName"
+    );
   }
 
   return (
-    <div>
+    <div style={{ overflow: "hidden" /* Hide scrollbars */ }}>
       <Head>
         <title>{publicRuntimeConfig.APP_NAME}</title>
         <meta charSet="utf-8" />
@@ -195,7 +212,7 @@ const CanvasLayout = ({ children }) => {
                 aria-haspopup="true"
                 aria-expanded={isOpen}
               >
-                <Icon name="chevron_down" title="chevron-down" size={16} />
+                <Icon data={chevron_down} title="chevron-down" size={16} />
               </Button>
             </div>
             <Menu
@@ -255,7 +272,7 @@ const CanvasLayout = ({ children }) => {
             style={{ marginRight: 8 }}
             onClick={() => setVisibleShareScrim(true)}
           >
-            <Icon name={"share"} />
+            <Icon data={share} />
           </Button>
           <RightTopBarSection isAuthenticated={isAuthenticated} />
         </div>
@@ -290,7 +307,7 @@ const CanvasLayout = ({ children }) => {
                 variant={"ghost_icon"}
                 onClick={() => setVisibleRenameScrim(false)}
               >
-                <Icon name="close" title="Close" />
+                <Icon data={close} title="Close" />
               </Button>
             </div>
             <div className={styles.scrimContent}>
@@ -300,7 +317,7 @@ const CanvasLayout = ({ children }) => {
                 // multiline
                 // rows={3}
                 variant={"default"}
-                value={project?.name}
+                defaultValue={project?.name}
                 onChange={(e) => updateProjectName(e.target.value)}
                 id={"vsmObjectDescription"}
               />
@@ -327,7 +344,7 @@ const CanvasLayout = ({ children }) => {
                     variant={"ghost_icon"}
                     onClick={(e) => handleCloseDeleteScrim(e, false)}
                   >
-                    <Icon name="close" title="Close" />
+                    <Icon data={close} title="Close" />
                   </Button>
                 </div>
                 <div className={styles.scrimContent}>
@@ -346,7 +363,7 @@ const CanvasLayout = ({ children }) => {
                     color={"danger"}
                     onClick={() => deleteVSM()}
                   >
-                    <Icon name="delete_forever" title="Delete VSM" size={16} />
+                    <Icon data={delete_forever} title="Delete VSM" size={16} />
                     Delete VSM
                   </Button>
                 </div>

@@ -3,6 +3,7 @@ import { Button, Icon, Typography } from "@equinor/eds-core-react";
 import { canDeleteVSMObject } from "../utils/CanDeleteVSMObect";
 import React from "react";
 import { vsmObject } from "../interfaces/VsmObject";
+import { close, delete_forever } from "@equinor/eds-icons";
 
 export function SideBarHeader(props: {
   object: vsmObject;
@@ -23,7 +24,7 @@ export function SideBarHeader(props: {
           color={"danger"}
           onClick={props.onDelete}
         >
-          <Icon name="delete_forever" size={24} />
+          <Icon data={delete_forever} size={24} />
         </Button>
         <Button
           title={"Close the side-menu"}
@@ -31,7 +32,7 @@ export function SideBarHeader(props: {
           color={"primary"}
           onClick={props.onClose}
         >
-          <Icon name="close" title="add" size={24} />
+          <Icon data={close} title="add" size={24} />
         </Button>
       </div>
     </div>

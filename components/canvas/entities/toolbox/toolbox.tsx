@@ -10,6 +10,8 @@ import { createToolboxMainActivity } from "./createToolboxMainActivity";
 import { createToolboxSubActivity } from "./createToolboxSubActivity";
 import { createToolboxChoice } from "./createToolboxChoice";
 import { createToolboxWaiting } from "./createToolboxWaiting";
+import { vsmObject } from "interfaces/VsmObject";
+import { UseMutationResult } from "react-query";
 
 const cache = { project: null, toolBox: null };
 let box;
@@ -24,6 +26,7 @@ export const toolBox = (
   project: StateMapper<
     _Pick<vsmProject, _FilterKeys<vsmProject, ActionTypes, "default">>
   >,
+  vsmObjectAddMutation: UseMutationResult<unknown, unknown, vsmObject, unknown>,
   dispatch: Dispatch<ProjectModel>
 ): (() => void) => {
   const app = getApp();
@@ -44,11 +47,27 @@ export const toolBox = (
     const mainActivity = createToolboxMainActivity(
       draggable,
       project,
+      vsmObjectAddMutation,
       dispatch
     );
-    const subActivity = createToolboxSubActivity(draggable, project, dispatch);
-    const choiceIcon = createToolboxChoice(draggable, project, dispatch);
-    const waitingIcon = createToolboxWaiting(draggable, project, dispatch);
+    const subActivity = createToolboxSubActivity(
+      draggable,
+      project,
+      vsmObjectAddMutation,
+      dispatch
+    );
+    const choiceIcon = createToolboxChoice(
+      draggable,
+      project,
+      vsmObjectAddMutation,
+      dispatch
+    );
+    const waitingIcon = createToolboxWaiting(
+      draggable,
+      project,
+      vsmObjectAddMutation,
+      dispatch
+    );
 
     box.addChild(rectangle, mainActivity, subActivity, choiceIcon, waitingIcon);
     app.stage.addChild(box);

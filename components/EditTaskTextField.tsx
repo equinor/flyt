@@ -27,9 +27,9 @@ export function EditTaskTextField(props: {
           () => {
             dispatch.updateTask(updatedTask);
           },
-          500,
+          1000,
           "SideBarContent-UpdateTask"
-        )();
+        );
       }}
       multiline
       rows={5}

@@ -6,6 +6,15 @@ import { getHoveredObject } from "./hoveredObject";
 
 export function moveExistingVsmObjectToHoveredCard(
   child: vsmObject,
+  vsmObjectMutation: {
+    mutate: (arg0: {
+      vsmProjectID: number;
+      vsmObjectID: number;
+      choiceGroup: "Left" | "Right";
+      leftObjectId: number;
+      parent: number;
+    }) => void;
+  },
   dispatch?: {
     setSnackMessage: (arg0: string) => void;
     moveVSMObject: (arg0: {
@@ -16,7 +25,7 @@ export function moveExistingVsmObjectToHoveredCard(
       parent: number;
     }) => void;
   }
-) {
+): void {
   if (!child) return;
   const { vsmObjectID, vsmProjectID } = child;
   const target = getHoveredObject();
@@ -48,13 +57,20 @@ export function moveExistingVsmObjectToHoveredCard(
       hoveredType === vsmObjectTypes.input ||
       hoveredType === vsmObjectTypes.mainActivity
     ) {
-      dispatch?.moveVSMObject({
+      vsmObjectMutation.mutate({
         vsmProjectID,
         vsmObjectID,
         choiceGroup: target?.choiceGroup,
         leftObjectId: target?.vsmObjectID,
         parent: target?.parent,
       });
+      // dispatch?.moveVSMObject({
+      //   vsmProjectID,
+      //   vsmObjectID,
+      //   choiceGroup: target?.choiceGroup,
+      //   leftObjectId: target?.vsmObjectID,
+      //   parent: target?.parent,
+      // });
     } else {
       dispatch?.setSnackMessage(
         `Cannot move a Main-Activity to a ${target.vsmObjectType.name}`
@@ -68,7 +84,7 @@ export function moveExistingVsmObjectToHoveredCard(
     hoveredType === vsmObjectTypes.choice
   ) {
     //Note, All other types need to be dropped on a "mainActivity", "subActivity", "waiting", or a "choice".
-    dispatch?.moveVSMObject({
+    vsmObjectMutation.mutate({
       vsmProjectID,
       vsmObjectID,
       leftObjectId: target?.vsmObjectID,
@@ -78,6 +94,16 @@ export function moveExistingVsmObjectToHoveredCard(
           ? target?.vsmObjectID
           : target?.parent,
     });
+    // dispatch?.moveVSMObject({
+    //   vsmProjectID,
+    //   vsmObjectID,
+    //   leftObjectId: target?.vsmObjectID,
+    //   choiceGroup: target?.choiceGroup,
+    //   parent:
+    //     target?.vsmObjectType?.pkObjectType === vsmObjectTypes.mainActivity
+    //       ? target?.vsmObjectID
+    //       : target?.parent,
+    // });
   } else {
     dispatch?.setSnackMessage(
       `Cannot move a ${getVsmTypeName(dragType)} to a ${

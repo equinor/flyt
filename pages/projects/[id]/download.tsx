@@ -1,15 +1,15 @@
-import { useStoreDispatch, useStoreState } from "../../hooks/storeHooks";
-import commonStyles from "../../styles/common.module.scss";
+import { useStoreDispatch, useStoreState } from "../../../hooks/storeHooks";
+import commonStyles from "../../../styles/common.module.scss";
 import Head from "next/head";
 import { Typography } from "@equinor/eds-core-react";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
-import { Layouts } from "../../layouts/LayoutWrapper";
+import { Layouts } from "../../../layouts/LayoutWrapper";
 import { useStoreRehydrated } from "easy-peasy";
 
 const DynamicComponentWithNoSSR = dynamic(
-  () => import("../../components/canvas/Download"),
+  () => import("../../../components/Download"),
   { ssr: false }
 );
 
@@ -74,5 +74,5 @@ export default function Project() {
   );
 }
 
-Project.layout = Layouts.Canvas;
+Project.layout = Layouts.Default;
 Project.auth = true;

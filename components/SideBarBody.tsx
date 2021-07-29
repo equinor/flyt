@@ -25,7 +25,7 @@ export function SideBarBody(props: {
           multiline
           rows={4}
           variant={"default"}
-          value={selectedObject.name || ""}
+          defaultValue={selectedObject.name || ""}
           onChange={props.onChangeName}
           id={"vsmObjectDescription"}
         />
@@ -39,7 +39,7 @@ export function SideBarBody(props: {
             multiline
             rows={4}
             variant={"default"}
-            value={selectedObject.name || ""}
+            defaultValue={selectedObject.name || ""}
             onChange={props.onChangeName}
             id={"vsmObjectDescription"}
           />
@@ -59,7 +59,7 @@ export function SideBarBody(props: {
             multiline
             rows={4}
             variant={"default"}
-            value={selectedObject.name || ""}
+            defaultValue={selectedObject.name || ""}
             onChange={props.onChangeName}
             id={"vsmObjectDescription"}
           />
@@ -79,7 +79,7 @@ export function SideBarBody(props: {
             multiline
             rows={4}
             variant={"default"}
-            value={selectedObject.name || ""}
+            defaultValue={selectedObject.name || ""}
             onChange={props.onChangeName}
             id={"vsmObjectDescription"}
           />
@@ -99,7 +99,7 @@ export function SideBarBody(props: {
             multiline
             rows={4}
             variant={"default"}
-            value={selectedObject.name || ""}
+            defaultValue={selectedObject.name || ""}
             onChange={props.onChangeName}
             id={"vsmObjectDescription"}
           />
@@ -119,7 +119,7 @@ export function SideBarBody(props: {
             multiline
             rows={4}
             variant={"default"}
-            value={selectedObject.name || ""}
+            defaultValue={selectedObject.name || ""}
             onChange={props.onChangeName}
             id={"vsmObjectDescription"}
           />
@@ -139,7 +139,7 @@ export function SideBarBody(props: {
             multiline
             rows={4}
             variant={"default"}
-            value={selectedObject.name || ""}
+            defaultValue={selectedObject.name || ""}
             onChange={props.onChangeName}
             id={"vsmObjectDescription"}
           />
@@ -148,7 +148,7 @@ export function SideBarBody(props: {
               disabled={!props.canEdit}
               label={"Role(s)"}
               variant={"default"}
-              value={selectedObject.role?.toString()}
+              defaultValue={selectedObject.role?.toString()}
               id={"vsmObjectRole"}
               onChange={props.onChangeRole}
             />
@@ -190,7 +190,7 @@ export function SideBarBody(props: {
           multiline
           rows={4}
           variant={"default"}
-          value={selectedObject.name}
+          defaultValue={selectedObject.name}
           onChange={props.onChangeName}
           id={"vsmObjectDescription"}
         />

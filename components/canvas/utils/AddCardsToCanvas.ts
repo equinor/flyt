@@ -1,8 +1,7 @@
 import { Viewport } from "pixi-viewport";
 import { recursiveTree } from "./recursiveTree";
-import { Dispatch, RecursiveState } from "easy-peasy";
+import { RecursiveState } from "easy-peasy";
 import { vsmProject } from "../../../interfaces/VsmProject";
-import { ProjectModel } from "store/store";
 import { assetFactory } from "./AssetFactory";
 
 /**
@@ -11,12 +10,16 @@ import { assetFactory } from "./AssetFactory";
  * @param project
  * @param userCanEdit
  * @param dispatch
+ * @param setSelectedObject
+ * @param vsmObjectMutation
  */
 export function addCardsToCanvas(
   viewport: Viewport,
   project: RecursiveState<vsmProject>,
   userCanEdit: boolean,
-  dispatch?: Dispatch<ProjectModel>
+  dispatch,
+  setSelectedObject,
+  vsmObjectMutation
 ): void {
   // Adding cards to canvas
   const tree = project;
@@ -27,10 +30,19 @@ export function addCardsToCanvas(
         vsmObjectID: 0,
         name: "ERROR: Project contains no root object",
       },
-      dispatch
+      setSelectedObject
     );
     viewport.addChild(card);
   } else {
-    viewport.addChild(recursiveTree(root, 0, userCanEdit, dispatch));
+    viewport.addChild(
+      recursiveTree(
+        root,
+        0,
+        userCanEdit,
+        dispatch,
+        setSelectedObject,
+        vsmObjectMutation
+      )
+    );
   }
 }

@@ -6,6 +6,8 @@ import { ProjectModel } from "../../../../store/store";
 import * as PIXI from "pixi.js";
 import { addNewVsmObjectToHoveredCard } from "../../utils/addNewVsmObjectToHoveredCard";
 import { clearHoveredObject } from "../../utils/hoveredObject";
+import { vsmObject } from "interfaces/VsmObject";
+import { UseMutationResult } from "react-query";
 
 export function createToolboxMainActivity(
   draggable: (
@@ -20,8 +22,9 @@ export function createToolboxMainActivity(
       "lastUpdated" | "created" | "objects" | "name" | "vsmProjectID"
     >
   >,
+  vsmObjectAddMutation: UseMutationResult<unknown, unknown, vsmObject, unknown>,
   dispatch: Actions<ProjectModel> & Dispatch
-) {
+): PIXI.Container {
   const { toolboxMainActivity } = PIXI.Loader.shared.resources;
 
   const mainActivity = new PIXI.Sprite(toolboxMainActivity.texture);
@@ -34,6 +37,7 @@ export function createToolboxMainActivity(
       addNewVsmObjectToHoveredCard(
         vsmObjectTypes.mainActivity,
         project,
+        vsmObjectAddMutation,
         dispatch
       ),
     clearHoveredObject

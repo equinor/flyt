@@ -18,12 +18,15 @@ import {
 } from "./cardDragState";
 import { Dispatch } from "easy-peasy";
 import { ProjectModel } from "store/store";
+import * as PIXI from "pixi.js";
 
 export function createChild(
   child: vsmObject,
   userCanEdit: boolean,
-  dispatch?: Dispatch<ProjectModel>
-) {
+  dispatch: Dispatch<ProjectModel>,
+  setSelectedObject,
+  vsmObjectMutation
+): PIXI.Container {
   // const card = vsmObjectFactory(
   //   child,
   //   () => dispatch.setSelectedObject(child),
@@ -31,7 +34,7 @@ export function createChild(
   //   () => clearHoveredObject()
   // );
 
-  const card = assetFactory(child, dispatch);
+  const card = assetFactory(child, setSelectedObject);
 
   const originalPosition = {
     x: card.position.x,
@@ -51,7 +54,11 @@ export function createChild(
 
   function onDragEnd(dispatch) {
     //Todo: Fix bug where when dragging subactivity onto a mainactivity, the mainactivity is suddenly the child object... 🧐
-    moveExistingVsmObjectToHoveredCard(getDragObject(), dispatch);
+    moveExistingVsmObjectToHoveredCard(
+      getDragObject(),
+      vsmObjectMutation,
+      dispatch
+    );
 
     card.alpha = 1;
     setDragging(child.vsmObjectID, false);

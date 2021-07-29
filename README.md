@@ -20,6 +20,21 @@
 | Authentication   | [@azure/msal-react](https://github.com/AzureAD/microsoft-authentication-library-for-js#readme)                                         |
 | Styling          | [Sass](https://sass-lang.com/)                                                                                                         |
 | Templates        |                                                                                                                                        |
+| SignalR          | SignalR                                                                                                                                |
+
+#SignalR Actions
+The signalR hub transmits some
+
+| Actions                  | Comment                                     | Method        | Returns                |
+| ------------------------ | ------------------------------------------- | ------------- | ---------------------- |
+| Save or update vsmObject |                                             | UpdateObject  | Saved object           |
+| Delete vsmObject         |                                             | DeletedObject | The id of the object   |
+| Save Project             | Metadata stuff like the name of the project | SaveProject   | Updated Project object |
+| Delete Project           |                                             | DeleteProject | The id it deleted      |
+| Save or update Task      | On creating new task or updating one        | SaveTask      | The saved task         |
+| Delete Task              |                                             | DeleteTask    | The task id            |
+| Linking tasks?           |                                             |               |                        |
+| Concurrent users? Peers? |                                             |               |                        |
 
 # Developing
 
@@ -323,3 +338,14 @@ client_id=e6e2f3c4-d6bd-4d71-a00e-be0c16a703da
 &resource=b3e899bf-12af-4f63-8744-d1ef4edc30b5
 &prompt=consent
 ```
+
+## SignalR
+
+| Action                | method        | returns              |
+| --------------------- | ------------- | -------------------- |
+| SaveProject           | SaveProject   | projectobject        |
+| DeleteProject         | DeleteProject | The id it deleted    |
+| Save or update object | UpdateObject  | Saved object         |
+| Delete object         | DeletedObject | The id of the object |
+| Save or update Task   | SaveTask      | The saved task       |
+| Delete Task           | DeleteTask    | The task id          |
