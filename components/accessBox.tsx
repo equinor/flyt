@@ -193,7 +193,7 @@ function MiddleSection(props: {
       </form>
       {!props.isAdmin && (
         <div className={style.infoCannotEdit}>
-          <p>You need to be the creator or an admin to manage sharing</p>
+          <p>You need to be owner or admin to manage sharing</p>
         </div>
       )}
       <div className={style.middleSection}>
