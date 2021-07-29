@@ -21,7 +21,7 @@
   margin-bottom: 16px;
 
   animation-name: fade-in;
-  animation-duration: 0.5s;
+  animation-duration: 0.8s;
 
   transition: all 0.2s ease-in-out;
 }
@@ -47,7 +47,6 @@
 @keyframes fade-in {
   from {
     opacity: 0;
-    transform: translateY(10px);
   }
 }
 

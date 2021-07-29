@@ -13,8 +13,51 @@
   justify-content: center;
 }
 
+.loadingVSMCardContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
 @media screen and (max-width: 530px) {
   .header {
     justify-content: center;
+  }
+}
+
+.createCard {
+  color: #007079;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  width: 332px;
+  height: 168px;
+
+  min-width: 332px;
+  max-height: 168px;
+
+  border-radius: 4px;
+
+  margin-right: 16px;
+  margin-bottom: 16px;
+
+  border: 1px dashed #007079;
+  box-sizing: border-box;
+
+  animation-name: fade-in;
+  animation-duration: 0.5s;
+}
+
+.createCard:hover {
+  background-color: rgb(222, 237, 238);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    //transform: translateY(10px);
   }
 }
