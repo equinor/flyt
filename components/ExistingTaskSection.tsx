@@ -1,11 +1,11 @@
 import { taskObject } from "../interfaces/taskObject";
 import { Checkbox } from "@equinor/eds-core-react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useStoreDispatch } from "../hooks/storeHooks";
 import BaseAPIServices from "../services/BaseAPIServices";
 import styles from "./ExistingTaskSection.module.scss";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { createAndLinkTask, linkTask, unlinkTask } from "../services/taskApi";
+import { linkTask, unlinkTask } from "../services/taskApi";
 import { vsmObject } from "../interfaces/VsmObject";
 import { unknownErrorToString } from "utils/isError";
 

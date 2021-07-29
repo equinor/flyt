@@ -1,6 +1,5 @@
 import BaseAPIServices from "./BaseAPIServices";
 import { taskObject } from "../interfaces/taskObject";
-import { vsmProject } from "../interfaces/VsmProject";
 
 const baseUrl = "/api/v1.0";
 
@@ -27,17 +26,9 @@ export const getTask = (vsmId: number, taskId: number) =>
 export const deleteTask = (vsmId: number, taskId: number) =>
   BaseAPIServices.delete(baseUrl + `/task/list/${vsmId}/${taskId}`);
 
-// Saves or updates a task, if the taskId is present it updates the task otherwise a new task is created
-export const createTask = (data: taskObject) =>
-  BaseAPIServices.post(baseUrl + `/task`, data).then((r) => r.data);
-
-export const createAndLinkTask = (task: taskObject, projectId: number) =>
-  BaseAPIServices.post(baseUrl + `/task`, task).then((r) => {
-    const newTask: taskObject = r.data;
-    return linkTask(projectId, newTask.vsmTaskID).then((r) => {
-      return r.data;
-    });
-  });
+// Save or update a task. If the taskId is present it updates the task otherwise a new task is created.s
+export const createTask = (task: taskObject) =>
+  BaseAPIServices.post(baseUrl + `/task`, task).then((r) => r.data);
 
 // Saves or updates a task, if the taskId is present it updates the task otherwise a new task is created
 export const updateTask = (data: taskObject) =>
@@ -48,11 +39,7 @@ export const patchTask = (data: taskObject) =>
   BaseAPIServices.patch(baseUrl + `/task`, data);
 
 //Link a task to a vsmObject (card)
-export const linkTask = (
-  vsmObjectId: number,
-  taskId: number
-  // { projectId, task }
-) =>
+export const linkTask = (vsmObjectId: number, taskId: number) =>
   BaseAPIServices.put(
     baseUrl + `/task/link/${vsmObjectId}/${taskId}`,
     null

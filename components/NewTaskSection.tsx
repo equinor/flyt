@@ -1,4 +1,4 @@
-import { useStoreDispatch, useStoreState } from "../hooks/storeHooks";
+import { useStoreDispatch } from "../hooks/storeHooks";
 import React, { useState } from "react";
 import { taskObject } from "../interfaces/taskObject";
 import styles from "./VSMCanvas.module.scss";
@@ -6,11 +6,8 @@ import { Button, Icon, SingleSelect, TextField } from "@equinor/eds-core-react";
 import { vsmTaskTypes } from "../types/vsmTaskTypes";
 import { ExistingTaskSection } from "./ExistingTaskSection";
 import { arrow_back } from "@equinor/eds-icons";
-import { debounce } from "../utils/debounce";
 import { useMutation, useQueryClient } from "react-query";
-import { vsmObject } from "../interfaces/VsmObject";
-import { patchVSMObject } from "../services/vsmObjectApi";
-import { createAndLinkTask, createTask, getTask } from "../services/taskApi";
+import { createTask } from "../services/taskApi";
 import { unknownErrorToString } from "utils/isError";
 
 export function NewTaskSection(props: {
@@ -20,16 +17,13 @@ export function NewTaskSection(props: {
   const dispatch = useStoreDispatch();
   const selectedObject = props.selectedObject;
   const queryClient = useQueryClient();
-  const taskMutations = useMutation(
-    (task: taskObject) => createAndLinkTask(task, selectedObject.vsmProjectID),
-    {
-      onSuccess() {
-        clearAndCloseAddTaskSection();
-        return queryClient.invalidateQueries();
-      },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
-    }
-  );
+  const taskMutations = useMutation((task: taskObject) => createTask(task), {
+    onSuccess() {
+      clearAndCloseAddTaskSection();
+      return queryClient.invalidateQueries();
+    },
+    onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+  });
   const [newTask, setNewTask] = useState(null);
 
   const [existingTaskFilter, setExistingTaskFilter] = useState(null);

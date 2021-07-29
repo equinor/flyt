@@ -17,8 +17,8 @@ export function VSMSideBar(props: {
   const vsmObjectId = selectedObject?.vsmObjectID;
   const { data: vsmObject, isLoading } = useQuery(
     ["selectedObject", vsmObjectId],
-    () => getVSMObject(vsmObjectId),
-    { enabled: !!vsmObjectId }
+    () => getVSMObject(vsmObjectId)
+    // { enabled: vsmObjectId  }
   );
 
   const nothingSelected = !selectedObject;

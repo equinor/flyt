@@ -16,6 +16,9 @@
     "use-qa": "cp environment-variables/QA.env .env && yarn dev",
     "use-prod": "cp environment-variables/PROD.env .env && yarn dev",
     "docker-run-dev": "docker build -t vsm . && docker run -p 3000:3000 --env-file ./environment-variables/DEV.env vsm",
+    "run-test": "docker build -t vsm . && docker run -p 3000:3000 --env-file ./environment-variables/TEST.env vsm",
+    "run-qa": "docker build -t vsm . && docker run -p 3000:3000 --env-file ./environment-variables/QA.env vsm",
+    "run-prod": "docker build -t vsm . && docker run -p 3000:3000 --env-file ./environment-variables/PROD.env vsm",
     "lint": "pretty-quick --staged && lint-staged",
     "postinstall": "husky install"
   },
