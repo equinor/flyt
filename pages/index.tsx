@@ -10,7 +10,9 @@ import { useAccount, useMsal } from "@azure/msal-react";
 import { getUserShortName } from "../utils/getUserShortName";
 import { checkIfCreatorOrEditor } from "../utils/categorizeProjects";
 
-const itemsPerPage = 19;
+const itemsPerPage = 100; // increased from 19 to 100 since filtering (hiding project without name) is done on the client side
+// it looks bad when every other page just have a few cards and others have more... Therefore it would be better to just show a greater amount of cards at once
+
 export default function Projects(): JSX.Element {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0]);
@@ -65,6 +67,7 @@ export default function Projects(): JSX.Element {
         return imCreator || imEditor || !!project.name;
       }); //Hide projects with no name that I don't have access to
 
+  const totalItems = data?.totalItems;
   return (
     <div className={commonStyles.container}>
       <Head>
@@ -93,14 +96,16 @@ export default function Projects(): JSX.Element {
               setShowMyProjects(!showMyProjects);
             }}
           />
-          <Pagination
-            key={showMyProjects.toString()}
-            totalItems={data?.totalItems || lastTotalItems} // lastTotalItems-> Hack so that the pagination does not flicker
-            itemsPerPage={itemsPerPage}
-            // withItemIndicator
-            defaultValue={page}
-            onChange={(event, newPage) => setPage(newPage)}
-          />
+          {itemsPerPage < totalItems && (
+            <Pagination
+              key={showMyProjects.toString()}
+              totalItems={totalItems || lastTotalItems} // lastTotalItems-> Hack so that the pagination does not flicker
+              itemsPerPage={itemsPerPage}
+              // withItemIndicator
+              defaultValue={page}
+              onChange={(event, newPage) => setPage(newPage)}
+            />
+          )}
         </div>
         <ProjectListSection projects={filteredProjects} isLoading={isLoading} />
       </main>
