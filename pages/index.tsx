@@ -8,6 +8,7 @@ import { useQuery } from "react-query";
 import { getProjects } from "../services/projectApi";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { getUserShortName } from "../utils/getUserShortName";
+import { checkIfCreatorOrEditor } from "../utils/categorizeProjects";
 
 const itemsPerPage = 19;
 export default function Projects(): JSX.Element {
@@ -54,6 +55,16 @@ export default function Projects(): JSX.Element {
       </div>
     );
 
+  const filteredProjects = userNameFilter
+    ? data?.projects
+    : data?.projects.filter((project) => {
+        const { imCreator, imEditor } = checkIfCreatorOrEditor(
+          project,
+          account
+        );
+        return imCreator || imEditor || !!project.name;
+      }); //Hide projects with no name that I don't have access to
+
   return (
     <div className={commonStyles.container}>
       <Head>
@@ -91,7 +102,7 @@ export default function Projects(): JSX.Element {
             onChange={(event, newPage) => setPage(newPage)}
           />
         </div>
-        <ProjectListSection projects={data?.projects} isLoading={isLoading} />
+        <ProjectListSection projects={filteredProjects} isLoading={isLoading} />
       </main>
     </div>
   );
