@@ -49,11 +49,18 @@ const UserMenu: React.FC = () => {
         id="menuButton"
         aria-controls="menu-on-button"
         aria-haspopup="true"
-        aria-expanded={Boolean(buttonEl)}
+        aria-expanded={!!buttonEl}
         onClick={(e) => (isOpen ? closeMenu() : openMenu(e))}
         onKeyDown={onKeyPress}
       >
-        <UserDot name={account?.username.split("@")[0]} />
+        <div
+          style={{
+            position: "absolute",
+            left: "8%",
+          }}
+        >
+          <UserDot name={account?.username.split("@")[0]} />
+        </div>
       </Button>
       <Menu
         id="menu-on-button"
