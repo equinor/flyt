@@ -1,5 +1,5 @@
 import { vsmProject } from "../interfaces/VsmProject";
-import { getUserName } from "./getUserName";
+import { getUserShortName } from "./getUserShortName";
 
 /**
  * Get my access in a project
@@ -14,7 +14,7 @@ export function getMyAccess(
   if (!project || !account) return "Reader";
 
   //If we are the creator of the project, return Admin
-  const shortName = getUserName(account);
+  const shortName = getUserShortName(account);
   if (project?.created?.userIdentity === shortName) return "Admin";
 
   //Else, check if we have been given a role, then return that role

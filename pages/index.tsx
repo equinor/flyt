@@ -7,7 +7,7 @@ import { ProjectListSection } from "../components/projectListSection";
 import { useQuery } from "react-query";
 import { getProjects } from "../services/projectApi";
 import { useAccount, useMsal } from "@azure/msal-react";
-import { getUserName } from "../utils/getUserName";
+import { getUserShortName } from "../utils/getUserShortName";
 
 const itemsPerPage = 19;
 export default function Projects(): JSX.Element {
@@ -28,7 +28,7 @@ export default function Projects(): JSX.Element {
   );
 
   useEffect(() => {
-    if (showMyProjects) setUserNameFilter(getUserName(account));
+    if (showMyProjects) setUserNameFilter(getUserShortName(account));
     else setUserNameFilter("");
     setPage(1);
   }, [showMyProjects]);

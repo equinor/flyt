@@ -2,6 +2,7 @@ import React from "react";
 import { Button, Menu } from "@equinor/eds-core-react";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { UserDot } from "../UserDot";
+import { getUserShortName } from "../../utils/getUserShortName";
 
 const UserMenu: React.FC = () => {
   const { instance, accounts } = useMsal();
@@ -59,7 +60,7 @@ const UserMenu: React.FC = () => {
             left: "8%",
           }}
         >
-          <UserDot name={account?.username.split("@")[0]} />
+          <UserDot name={getUserShortName(account)} />
         </div>
       </Button>
       <Menu
