@@ -35,11 +35,11 @@ export default function Projects(): JSX.Element {
     else setUserNameFilter("");
     setPage(1);
   }, [showMyProjects]);
-  const [lastTotalItems, setLastTotalItems] = useState(0);
 
+  const [totalItems, setTotalItems] = useState(0);
   useEffect(() => {
     //Hack so that the pagination does not flicker
-    if (data?.totalItems) setLastTotalItems(data.totalItems);
+    if (data?.totalItems) setTotalItems(data.totalItems);
   }, [data?.totalItems]);
 
   if (error)
@@ -67,7 +67,6 @@ export default function Projects(): JSX.Element {
         return imCreator || imEditor || !!project.name;
       }); //Hide projects with no name that I don't have access to
 
-  const totalItems = data?.totalItems;
   return (
     <div className={commonStyles.container}>
       <Head>
@@ -98,8 +97,8 @@ export default function Projects(): JSX.Element {
           />
           {itemsPerPage < totalItems && (
             <Pagination
-              key={showMyProjects.toString()}
-              totalItems={totalItems || lastTotalItems} // lastTotalItems-> Hack so that the pagination does not flicker
+              key={`${showMyProjects} ${totalItems}`}
+              totalItems={totalItems}
               itemsPerPage={itemsPerPage}
               // withItemIndicator
               defaultValue={page}
