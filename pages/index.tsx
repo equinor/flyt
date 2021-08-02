@@ -3,7 +3,7 @@ import commonStyles from "../styles/common.module.scss";
 import Head from "next/head";
 import { Pagination, Switch, Typography } from "@equinor/eds-core-react";
 import { Layouts } from "../layouts/LayoutWrapper";
-import { ProjectListSection } from "../components/projectListSection";
+import { ProjectListSection } from "../components/ProjectListSection";
 import { useQuery } from "react-query";
 import { getProjects } from "../services/projectApi";
 import { useAccount, useMsal } from "@azure/msal-react";
