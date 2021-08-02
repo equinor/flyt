@@ -106,7 +106,11 @@ export default function Projects(): JSX.Element {
             />
           )}
         </div>
-        <ProjectListSection projects={filteredProjects} isLoading={isLoading} />
+        <ProjectListSection
+          projects={filteredProjects}
+          isLoading={isLoading}
+          expectedNumberOfProjects={itemsPerPage}
+        />
       </main>
     </div>
   );
