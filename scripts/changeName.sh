@@ -35,6 +35,7 @@ else
   sh ./scripts/syncRadixConfig.sh
 
   echo "Finished updating the name"
+  echo "NB. We are using a simple find & replace, so..."
   echo "Please verify that the changes were applied correctly: "
   printf "Changed files:
   - README.md

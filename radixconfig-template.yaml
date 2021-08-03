@@ -34,40 +34,40 @@ spec:
         - environment: dev
           variables:
             API_BASEURL: ${DEV_API_BASEURL}
+            API_HUB_URL: ${DEV_API_HUB_URL}
             APP_NAME: ${DEV_APP_NAME}
+            APP_VERSION: ${DEV_APP_VERSION}
             AUTHORITY: ${DEV_AUTHORITY}
             CLIENT_ID: ${DEV_CLIENT_ID}
             ENVIRONMENT: ${DEV_ENVIRONMENT}
             SCOPE: ${DEV_SCOPE}
-            APP_VERSION: ${DEV_APP_VERSION}
-            API_HUB_URL: ${DEV_API_HUB_URL}
         - environment: test
           variables:
             API_BASEURL: ${TEST_API_BASEURL}
+            API_HUB_URL: ${TEST_API_HUB_URL}
             APP_NAME: ${TEST_APP_NAME}
+            APP_VERSION: ${TEST_APP_VERSION}
             AUTHORITY: ${TEST_AUTHORITY}
             CLIENT_ID: ${TEST_CLIENT_ID}
             ENVIRONMENT: ${TEST_ENVIRONMENT}
             SCOPE: ${TEST_SCOPE}
-            APP_VERSION: ${TEST_APP_VERSION}
-            API_HUB_URL: ${TEST_API_HUB_URL}
         - environment: qa
           variables:
             API_BASEURL: ${QA_API_BASEURL}
+            API_HUB_URL: ${QA_API_HUB_URL}
             APP_NAME: ${QA_APP_NAME}
+            APP_VERSION: ${QA_APP_VERSION}
             AUTHORITY: ${QA_AUTHORITY}
             CLIENT_ID: ${QA_CLIENT_ID}
             ENVIRONMENT: ${QA_ENVIRONMENT}
             SCOPE: ${QA_SCOPE}
-            APP_VERSION: ${QA_APP_VERSION}
-            API_HUB_URL: ${QA_API_HUB_URL}
         - environment: prod
           variables:
             API_BASEURL: ${PROD_API_BASEURL}
+            API_HUB_URL: ${PROD_API_HUB_URL}
             APP_NAME: ${PROD_APP_NAME}
+            APP_VERSION: ${PROD_APP_VERSION}
             AUTHORITY: ${PROD_AUTHORITY}
             CLIENT_ID: ${PROD_CLIENT_ID}
             ENVIRONMENT: ${PROD_ENVIRONMENT}
             SCOPE: ${PROD_SCOPE}
-            APP_VERSION: ${PROD_APP_VERSION}
-            API_HUB_URL: ${PROD_API_HUB_URL}

@@ -33,41 +33,41 @@ spec:
       environmentConfig:
         - environment: dev
           variables:
-            API_BASEURL: https://api.statoil.com/app/equinor-flyt/dev
+            API_BASEURL: https://api.statoil.com/app/vsm/dev
+            API_HUB_URL: https://vsm-api-dev.azurewebsites.net/vsmhub
             APP_NAME: equinor-flyt
+            APP_VERSION: 0.1.0
             AUTHORITY: https://login.microsoftonline.com/statoilsrm.onmicrosoft.com
             CLIENT_ID: e6e2f3c4-d6bd-4d71-a00e-be0c16a703da
             ENVIRONMENT: DEV
             SCOPE: c001f24f-64a7-4f0c-bfe8-bf9c8e7aa74c/api.access
-            APP_VERSION: 0.1.0
-            API_HUB_URL: https://equinor-flyt-api-dev.azurewebsites.net/equinor-flythub
         - environment: test
           variables:
-            API_BASEURL: https://api.statoil.com/app/equinor-flyt/test
+            API_BASEURL: https://api.statoil.com/app/vsm/test
+            API_HUB_URL: TODO
             APP_NAME: equinor-flyt
+            APP_VERSION: 0.1.0
             AUTHORITY: https://login.microsoftonline.com/statoilsrm.onmicrosoft.com
             CLIENT_ID: b3e899bf-12af-4f63-8744-d1ef4edc30b5
             ENVIRONMENT: TEST
             SCOPE: cf7bf606-0fca-498d-9ec5-74d32a6ab4cf/api_access
-            APP_VERSION: 0.1.0
-            API_HUB_URL: TODO
         - environment: qa
           variables:
-            API_BASEURL: https://api.statoil.com/app/equinor-flyt/qa
+            API_BASEURL: https://api.statoil.com/app/vsm/qa
+            API_HUB_URL: TODO
             APP_NAME: equinor-flyt
+            APP_VERSION: 0.1.0
             AUTHORITY: https://login.microsoftonline.com/statoilsrm.onmicrosoft.com
             CLIENT_ID: 7fe4fa03-733a-414d-8d32-0a9358b5eeb9
             ENVIRONMENT: QA
             SCOPE: b78f9306-406d-4fa8-98e5-001dcd933ff4/user_impersonation
-            APP_VERSION: 0.1.0
-            API_HUB_URL: TODO
         - environment: prod
           variables:
-            API_BASEURL: https://api.statoil.com/app/equinor-flyt/prod
+            API_BASEURL: https://api.statoil.com/app/vsm/prod
+            API_HUB_URL: TODO
             APP_NAME: equinor-flyt
+            APP_VERSION: 0.1.0
             AUTHORITY: https://login.microsoftonline.com/statoilsrm.onmicrosoft.com
             CLIENT_ID: 7b6f1bd7-ecb7-4e9b-b8a4-7a0a0804760d
             ENVIRONMENT: PROD
             SCOPE: 93cb35f6-8dd4-4dc1-8f44-d2e8dbd4be48/user_impersonation
-            APP_VERSION: 0.1.0
-            API_HUB_URL: TODO

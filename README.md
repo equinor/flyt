@@ -1,10 +1,10 @@
-## equinor-flyt - Value Stream Mapping
+## Flyt - (aka VSM/Value Stream Mapping)
 
 ![Canvas example](./documentation/images/canvasExample.png)
 
 # Links
 
-- [Figma design & prototype](https://www.figma.com/file/IkHwmIQrsT0iR34f5R5UnZ/equinor-flyt)
+- [Figma design & prototype](https://www.figma.com/file/IkHwmIQrsT0iR34f5R5UnZ/vsm)
 
 # Tech stack / Features
 
@@ -25,16 +25,16 @@
 #SignalR Actions
 The signalR hub transmits some
 
-| Actions                           | Comment                                     | Method        | Returns                |
-| --------------------------------- | ------------------------------------------- | ------------- | ---------------------- |
-| Save or update equinor-flytObject |                                             | UpdateObject  | Saved object           |
-| Delete equinor-flytObject         |                                             | DeletedObject | The id of the object   |
-| Save Project                      | Metadata stuff like the name of the project | SaveProject   | Updated Project object |
-| Delete Project                    |                                             | DeleteProject | The id it deleted      |
-| Save or update Task               | On creating new task or updating one        | SaveTask      | The saved task         |
-| Delete Task                       |                                             | DeleteTask    | The task id            |
-| Linking tasks?                    |                                             |               |                        |
-| Concurrent users? Peers?          |                                             |               |                        |
+| Actions                  | Comment                                     | Method        | Returns                |
+| ------------------------ | ------------------------------------------- | ------------- | ---------------------- |
+| Save or update vsmObject |                                             | UpdateObject  | Saved object           |
+| Delete vsmObject         |                                             | DeletedObject | The id of the object   |
+| Save Project             | Metadata stuff like the name of the project | SaveProject   | Updated Project object |
+| Delete Project           |                                             | DeleteProject | The id it deleted      |
+| Save or update Task      | On creating new task or updating one        | SaveTask      | The saved task         |
+| Delete Task              |                                             | DeleteTask    | The task id            |
+| Linking tasks?           |                                             |               |                        |
+| Concurrent users? Peers? |                                             |               |                        |
 
 # Developing
 
@@ -69,14 +69,14 @@ for some reason.
 I've added a simple script to automate this:
 For example; Run `yarn release-dev` to tag DEV and push tags to GitHub.
 
-| Environment | Release script          | Deploy status                                                                                                                           | URL                                              | Who should test what?       | Comments                                                                         |
-| ----------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | --------------------------- | -------------------------------------------------------------------------------- |
-| DEV         | Run `yarn release-dev`  | ![DEV environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/equinor-flyt/environments/dev/buildstatus)   | https://web-equinor-flyt-dev.radix.equinor.com/  | Developer                   | Developer is free to use this environment however they want to                   |
-| TEST        | Run `yarn release-test` | ![TEST environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/equinor-flyt/environments/test/buildstatus) | https://web-equinor-flyt-test.radix.equinor.com/ | Internal testing            | Developer tags what needs to be tested for QA-tester in the team                 |
-| QA          | Run `yarn release-qa`   | ![QA environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/equinor-flyt/environments/qa/buildstatus)     | https://web-equinor-flyt-qa.radix.equinor.com/   | "Product Owner" or Customer | When said feature is ready, it gets released into QA so our PO can give feedback |
-| PROD        | Run `yarn release-prod` | ![PROD environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/equinor-flyt/environments/prod/buildstatus) | https://web-equinor-flyt-prod.radix.equinor.com/ | End-users                   | We wait with deploying to prod until everyone is happy                           |
+| Environment | Release script          | Deploy status                                                                                                                  | URL                                     | Who should test what?       | Comments                                                                         |
+| ----------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------- | --------------------------- | -------------------------------------------------------------------------------- |
+| TEST        | Run `yarn release-test` | ![TEST environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/vsm/environments/test/buildstatus) | https://web-vsm-test.radix.equinor.com/ | Internal testing            | Developer tags what needs to be tested for QA-tester in the team                 |
+| DEV         | Run `yarn release-dev`  | ![DEV environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/vsm/environments/dev/buildstatus)   | https://web-vsm-dev.radix.equinor.com/  | Developer                   | Developer is free to use this environment however they want to                   |
+| QA          | Run `yarn release-qa`   | ![QA environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/vsm/environments/qa/buildstatus)     | https://web-vsm-qa.radix.equinor.com/   | "Product Owner" or Customer | When said feature is ready, it gets released into QA so our PO can give feedback |
+| PROD        | Run `yarn release-prod` | ![PROD environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/vsm/environments/prod/buildstatus) | https://web-vsm-prod.radix.equinor.com/ | End-users                   | We wait with deploying to prod until everyone is happy                           |
 
-> **Note:** When running `yarn release-<environment>` we are starting a new build in Radix. If we already have a working build and want to release it to another environment, we may "promote" it to a different environment via the [Radix-console](https://console.radix.equinor.com/applications/equinor-flyt).
+> **Note:** When running `yarn release-<environment>` we are starting a new build in Radix. If we already have a working build and want to release it to another environment, we may "promote" it to a different environment via the [Radix-console](https://console.radix.equinor.com/applications/vsm).
 
 ## Docker
 
@@ -136,7 +136,7 @@ the distance to the next Main Activity etc...
 
 # Defining a process
 
-A equinor-flyt/process consists of a set of entities.
+A vsm/flyt/process consists of a set of entities.
 
 An entity can be of the following types:
 
@@ -163,7 +163,7 @@ Structure of an entity
 
 # API-Endpoints
 
-See swagger https://equinor-flyt-api-dev.azurewebsites.net/swagger/index.html
+See swagger https://vsm-api-dev.azurewebsites.net/swagger/index.html
 
 ## Project
 
