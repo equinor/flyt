@@ -15,18 +15,24 @@
     "use-test": "cp environment-variables/TEST.env .env && yarn dev",
     "use-qa": "cp environment-variables/QA.env .env && yarn dev",
     "use-prod": "cp environment-variables/PROD.env .env && yarn dev",
-    "docker-run-dev": "docker build -t vsm . && docker run -p 3000:3000 --env-file ./environment-variables/DEV.env vsm",
-    "run-test": "docker build -t vsm . && docker run -p 3000:3000 --env-file ./environment-variables/TEST.env vsm",
-    "run-qa": "docker build -t vsm . && docker run -p 3000:3000 --env-file ./environment-variables/QA.env vsm",
-    "run-prod": "docker build -t vsm . && docker run -p 3000:3000 --env-file ./environment-variables/PROD.env vsm",
+    "docker-run-dev": "docker build -t equinor-flyt . && docker run -p 3000:3000 --env-file ./environment-variables/DEV.env equinor-flyt",
+    "run-test": "docker build -t equinor-flyt . && docker run -p 3000:3000 --env-file ./environment-variables/TEST.env equinor-flyt",
+    "run-qa": "docker build -t equinor-flyt . && docker run -p 3000:3000 --env-file ./environment-variables/QA.env equinor-flyt",
+    "run-prod": "docker build -t equinor-flyt . && docker run -p 3000:3000 --env-file ./environment-variables/PROD.env equinor-flyt",
     "lint": "pretty-quick --staged && lint-staged",
-    "postinstall": "husky install"
+    "changeName": "sh scripts/changeName.sh",
+    "rename": "sh scripts/changeName.sh",
+    "update-radixconfig": "sh scripts/syncRadixConfig.sh",
+    "prepare": "husky install",
+    "postinstall": "sh scripts/postInstall.sh"
   },
   "dependencies": {
     "@azure/msal-browser": "^2.16.0",
     "@azure/msal-react": "^1.0.1",
     "@equinor/eds-core-react": "^0.13.1",
     "@microsoft/signalr": "^5.0.7",
+    "@types/node": "^15.0.3",
+    "@types/react": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.1",
     "axios": "^0.21.1",
@@ -45,8 +51,6 @@
     "styled-components": "^5.2.2"
   },
   "devDependencies": {
-    "@types/node": "^15.0.3",
-    "@types/react": "^17.0.0",
     "eslint": "^7.17.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-config-react": "^1.1.7",
@@ -54,7 +58,7 @@
     "eslint-plugin-react": "^7.22.0",
     "eslint-plugin-sonarjs": "^0.5.0",
     "eslint-plugin-you-dont-need-lodash-underscore": "^6.12.0",
-    "husky": "^5.0.9",
+    "husky": ">=6",
     "lint-staged": ">=8",
     "prettier": "^2.2.1",
     "pretty-quick": "^3.1.0",
@@ -63,6 +67,7 @@
   "lint-staged": {
     "*.{ts,js}": [
       "eslint --cache --fix"
-    ]
+    ],
+    "*.js": "eslint --cache --fix"
   }
 }

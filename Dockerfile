@@ -2,6 +2,8 @@
 FROM node:lts-alpine AS deps
 WORKDIR /opt/app
 COPY package.json yarn.lock ./
+COPY scripts scripts
+ENV NODE_ENV=production
 RUN yarn install --frozen-lockfile
 
 FROM node:lts-alpine AS builder

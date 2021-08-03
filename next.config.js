@@ -11,5 +11,6 @@ module.exports = {
     CLIENT_ID: process.env.CLIENT_ID,
     AUTHORITY: process.env.AUTHORITY,
     API_HUB_URL: process.env.API_HUB_URL,
+    APP_VERSION: process.env.APP_VERSION,
   },
 };

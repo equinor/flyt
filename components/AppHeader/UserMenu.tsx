@@ -3,10 +3,12 @@ import { Button, Menu } from "@equinor/eds-core-react";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { UserDot } from "../UserDot";
 import { getUserShortName } from "../../utils/getUserShortName";
+import getConfig from "next/config";
 
 const UserMenu: React.FC = () => {
   const { instance, accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
+  const { publicRuntimeConfig } = getConfig();
 
   const [state, setState] = React.useState<{
     buttonEl: HTMLButtonElement;
@@ -73,6 +75,9 @@ const UserMenu: React.FC = () => {
       >
         <Menu.Item disabled> {account?.username} </Menu.Item>
         <Menu.Item onClick={() => instance.logout()}>Logout </Menu.Item>
+        <Menu.Item disabled>
+          Version {publicRuntimeConfig.APP_VERSION}
+        </Menu.Item>
       </Menu>
     </>
   );

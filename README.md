@@ -1,10 +1,10 @@
-## VSM - Value Stream Mapping
+## equinor-flyt - Value Stream Mapping
 
 ![Canvas example](./documentation/images/canvasExample.png)
 
 # Links
 
-- [Figma design & prototype](https://www.figma.com/file/IkHwmIQrsT0iR34f5R5UnZ/VSM)
+- [Figma design & prototype](https://www.figma.com/file/IkHwmIQrsT0iR34f5R5UnZ/equinor-flyt)
 
 # Tech stack / Features
 
@@ -25,16 +25,16 @@
 #SignalR Actions
 The signalR hub transmits some
 
-| Actions                  | Comment                                     | Method        | Returns                |
-| ------------------------ | ------------------------------------------- | ------------- | ---------------------- |
-| Save or update vsmObject |                                             | UpdateObject  | Saved object           |
-| Delete vsmObject         |                                             | DeletedObject | The id of the object   |
-| Save Project             | Metadata stuff like the name of the project | SaveProject   | Updated Project object |
-| Delete Project           |                                             | DeleteProject | The id it deleted      |
-| Save or update Task      | On creating new task or updating one        | SaveTask      | The saved task         |
-| Delete Task              |                                             | DeleteTask    | The task id            |
-| Linking tasks?           |                                             |               |                        |
-| Concurrent users? Peers? |                                             |               |                        |
+| Actions                           | Comment                                     | Method        | Returns                |
+| --------------------------------- | ------------------------------------------- | ------------- | ---------------------- |
+| Save or update equinor-flytObject |                                             | UpdateObject  | Saved object           |
+| Delete equinor-flytObject         |                                             | DeletedObject | The id of the object   |
+| Save Project                      | Metadata stuff like the name of the project | SaveProject   | Updated Project object |
+| Delete Project                    |                                             | DeleteProject | The id it deleted      |
+| Save or update Task               | On creating new task or updating one        | SaveTask      | The saved task         |
+| Delete Task                       |                                             | DeleteTask    | The task id            |
+| Linking tasks?                    |                                             |               |                        |
+| Concurrent users? Peers?          |                                             |               |                        |
 
 # Developing
 
@@ -69,30 +69,30 @@ for some reason.
 I've added a simple script to automate this:
 For example; Run `yarn release-dev` to tag DEV and push tags to GitHub.
 
-| Environment | Release script          | Deploy status                                                                                                                  | URL                                     | Who should test what?       | Comments                                                                         |
-| ----------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------- | --------------------------- | -------------------------------------------------------------------------------- |
-| DEV         | Run `yarn release-dev`  | ![DEV environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/vsm/environments/dev/buildstatus)   | https://web-vsm-dev.radix.equinor.com/  | Developer                   | Developer is free to use this environment however they want to                   |
-| TEST        | Run `yarn release-test` | ![TEST environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/vsm/environments/test/buildstatus) | https://web-vsm-test.radix.equinor.com/ | Internal testing            | Developer tags what needs to be tested for QA-tester in the team                 |
-| QA          | Run `yarn release-qa`   | ![QA environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/vsm/environments/qa/buildstatus)     | https://web-vsm-qa.radix.equinor.com/   | "Product Owner" or Customer | When said feature is ready, it gets released into QA so our PO can give feedback |
-| PROD        | Run `yarn release-prod` | ![PROD environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/vsm/environments/prod/buildstatus) | https://web-vsm-prod.radix.equinor.com/ | End-users                   | We wait with deploying to prod until everyone is happy                           |
+| Environment | Release script          | Deploy status                                                                                                                           | URL                                              | Who should test what?       | Comments                                                                         |
+| ----------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ | --------------------------- | -------------------------------------------------------------------------------- |
+| DEV         | Run `yarn release-dev`  | ![DEV environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/equinor-flyt/environments/dev/buildstatus)   | https://web-equinor-flyt-dev.radix.equinor.com/  | Developer                   | Developer is free to use this environment however they want to                   |
+| TEST        | Run `yarn release-test` | ![TEST environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/equinor-flyt/environments/test/buildstatus) | https://web-equinor-flyt-test.radix.equinor.com/ | Internal testing            | Developer tags what needs to be tested for QA-tester in the team                 |
+| QA          | Run `yarn release-qa`   | ![QA environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/equinor-flyt/environments/qa/buildstatus)     | https://web-equinor-flyt-qa.radix.equinor.com/   | "Product Owner" or Customer | When said feature is ready, it gets released into QA so our PO can give feedback |
+| PROD        | Run `yarn release-prod` | ![PROD environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/equinor-flyt/environments/prod/buildstatus) | https://web-equinor-flyt-prod.radix.equinor.com/ | End-users                   | We wait with deploying to prod until everyone is happy                           |
 
-> **Note:** When running `yarn release-<environment>` we are starting a new build in Radix. If we already have a working build and want to release it to another environment, we may "promote" it to a different environment via the [Radix-console](https://console.radix.equinor.com/applications/vsm).
+> **Note:** When running `yarn release-<environment>` we are starting a new build in Radix. If we already have a working build and want to release it to another environment, we may "promote" it to a different environment via the [Radix-console](https://console.radix.equinor.com/applications/equinor-flyt).
 
 ## Docker
 
 ```bash
 # Building image
-docker build -t vsm .
+docker build -t equinor-flyt .
 
 # Running image
 ## Dev
-docker run -p 3000:3000 --env-file ./environment-variables/DEV.env vsm
+docker run -p 3000:3000 --env-file ./environment-variables/DEV.env equinor-flyt
 ## Test
-docker run -p 3000:3000 --env-file ./environment-variables/TEST.env vsm
+docker run -p 3000:3000 --env-file ./environment-variables/TEST.env equinor-flyt
 ## QA
-docker run -p 3000:3000 --env-file ./environment-variables/QA.env vsm
+docker run -p 3000:3000 --env-file ./environment-variables/QA.env equinor-flyt
 ## Prod
-docker run -p 3000:3000 --env-file ./environment-variables/PROD.env vsm
+docker run -p 3000:3000 --env-file ./environment-variables/PROD.env equinor-flyt
 ```
 
 ## Task tracking
@@ -136,7 +136,7 @@ the distance to the next Main Activity etc...
 
 # Defining a process
 
-A vsm/process consists of a set of entities.
+A equinor-flyt/process consists of a set of entities.
 
 An entity can be of the following types:
 
@@ -163,7 +163,7 @@ Structure of an entity
 
 # API-Endpoints
 
-See swagger https://vsm-api-dev.azurewebsites.net/swagger/index.html
+See swagger https://equinor-flyt-api-dev.azurewebsites.net/swagger/index.html
 
 ## Project
 
@@ -227,22 +227,29 @@ DELETE `/entity/{id}`
 
 ```typescript
 ///POST -> 'api/v1.0/project'
-const payload = {
-  name: processTitle,
-  objects: [
-    {
-      parent: 0,
-      name: processTitle,
-      fkObjectType: vsmObjectTypes.process,
-      childObjects: [
-        { fkObjectType: vsmObjectTypes.supplier, name: "supplier" },
-        { fkObjectType: vsmObjectTypes.input, Name: "input" },
-        { fkObjectType: vsmObjectTypes.output, name: "output" },
-        { fkObjectType: vsmObjectTypes.customer, name: "customer" },
-      ],
-    },
-  ],
-} as vsmProcessObject;
+const payload =
+  ({
+    name: processTitle,
+    objects: [
+      {
+        parent: 0,
+        name: processTitle,
+        fkObjectType: equinor - flytObjectTypes.process,
+        childObjects: [
+          {
+            fkObjectType: equinor - flytObjectTypes.supplier,
+            name: "supplier",
+          },
+          { fkObjectType: equinor - flytObjectTypes.input, Name: "input" },
+          { fkObjectType: equinor - flytObjectTypes.output, name: "output" },
+          {
+            fkObjectType: equinor - flytObjectTypes.customer,
+            name: "customer",
+          },
+        ],
+      },
+    ],
+  } as equinor) - flytProcessObject;
 ```
 
 ## Everything but the kitchen sink
@@ -251,78 +258,85 @@ const payload = {
 
 ```typescript
 ///POST -> 'api/v1.0/project'
-const payload = {
-  name: processTitle,
-  objects: [
-    {
-      parent: 0,
-      name: processTitle,
-      fkObjectType: vsmObjectTypes.process,
-      childObjects: [
-        { fkObjectType: vsmObjectTypes.supplier, name: "supplier" },
-        { FkObjectType: vsmObjectTypes.input, Name: "input" },
-        {
-          FkObjectType: vsmObjectTypes.mainActivity,
-          Name: "Choose method",
-          childObjects: [
-            {
-              name: "Kaffetrakter",
-              fkObjectType: vsmObjectTypes.subActivity,
-            },
-            {
-              name: "Presskanne",
-              fkObjectType: vsmObjectTypes.subActivity,
-              childObjects: [
-                {
-                  name: "Finn presskanne",
-                  fkObjectType: vsmObjectTypes.subActivity,
-                },
-              ],
-            },
-          ],
-        },
-        {
-          FkObjectType: vsmObjectTypes.mainActivity,
-          Name: "Boil water",
-          childObjects: [
-            {
-              name: "Tilsett kaffe til presskanne",
-              fkObjectType: vsmObjectTypes.subActivity,
-            },
-          ],
-        },
-        {
-          FkObjectType: vsmObjectTypes.waiting,
-          Name: "Waiting",
-        },
-        {
-          FkObjectType: vsmObjectTypes.mainActivity,
-          Name: "Add water",
-          childObjects: [
-            {
-              name: "Waiting",
-              fkObjectType: vsmObjectTypes.waiting,
-              childObjects: [
-                {
-                  name: "Press kaffe",
-                  fkObjectType: vsmObjectTypes.subActivity,
-                  childObjects: [
-                    {
-                      name: "Pour coffee",
-                      fkObjectType: vsmObjectTypes.subActivity,
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        { fkObjectType: vsmObjectTypes.output, name: "output" },
-        { fkObjectType: vsmObjectTypes.customer, name: "customer" },
-      ],
-    },
-  ],
-} as vsmProcessObject;
+const payload =
+  ({
+    name: processTitle,
+    objects: [
+      {
+        parent: 0,
+        name: processTitle,
+        fkObjectType: equinor - flytObjectTypes.process,
+        childObjects: [
+          {
+            fkObjectType: equinor - flytObjectTypes.supplier,
+            name: "supplier",
+          },
+          { FkObjectType: equinor - flytObjectTypes.input, Name: "input" },
+          {
+            FkObjectType: equinor - flytObjectTypes.mainActivity,
+            Name: "Choose method",
+            childObjects: [
+              {
+                name: "Kaffetrakter",
+                fkObjectType: equinor - flytObjectTypes.subActivity,
+              },
+              {
+                name: "Presskanne",
+                fkObjectType: equinor - flytObjectTypes.subActivity,
+                childObjects: [
+                  {
+                    name: "Finn presskanne",
+                    fkObjectType: equinor - flytObjectTypes.subActivity,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            FkObjectType: equinor - flytObjectTypes.mainActivity,
+            Name: "Boil water",
+            childObjects: [
+              {
+                name: "Tilsett kaffe til presskanne",
+                fkObjectType: equinor - flytObjectTypes.subActivity,
+              },
+            ],
+          },
+          {
+            FkObjectType: equinor - flytObjectTypes.waiting,
+            Name: "Waiting",
+          },
+          {
+            FkObjectType: equinor - flytObjectTypes.mainActivity,
+            Name: "Add water",
+            childObjects: [
+              {
+                name: "Waiting",
+                fkObjectType: equinor - flytObjectTypes.waiting,
+                childObjects: [
+                  {
+                    name: "Press kaffe",
+                    fkObjectType: equinor - flytObjectTypes.subActivity,
+                    childObjects: [
+                      {
+                        name: "Pour coffee",
+                        fkObjectType: equinor - flytObjectTypes.subActivity,
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          { fkObjectType: equinor - flytObjectTypes.output, name: "output" },
+          {
+            fkObjectType: equinor - flytObjectTypes.customer,
+            name: "customer",
+          },
+        ],
+      },
+    ],
+  } as equinor) - flytProcessObject;
 ```
 
 # Random
