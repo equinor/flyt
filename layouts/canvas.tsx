@@ -28,6 +28,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getProject, updateProject } from "../services/projectApi";
 import { debounce } from "../utils/debounce";
 import { unknownErrorToString } from "../utils/isError";
+import packageJson from "../package.json";
 
 const CanvasLayout = ({ children }) => {
   const isAuthenticated = useIsAuthenticated();
@@ -187,7 +188,7 @@ const CanvasLayout = ({ children }) => {
   return (
     <div style={{ overflow: "hidden" /* Hide scrollbars */ }}>
       <Head>
-        <title>{publicRuntimeConfig.APP_NAME}</title>
+        <title>{packageJson.name}</title>
         <meta charSet="utf-8" />
         {/*link manifest.json*/}
         <link rel="manifest" href="/manifest.json" />

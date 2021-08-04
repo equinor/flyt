@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 currentName=$(
   grep '"name":' package.json |
@@ -7,7 +7,7 @@ currentName=$(
     tr -d '[:space:]'
 )
 
-read -r "What do you want to name it? ($currentName) " newName
+read -r -p "What do you want to name it? ($currentName) " newName
 
 if [ -z "$newName" ]; then
   newName=$currentName
@@ -24,26 +24,15 @@ else
   if [ "$currentName" != "" ] && [ "$newName" != "" ]; then
     sedi -e "s/$currentName/$newName/g" README.md
     sedi -e "s/$currentName/$newName/g" package.json
-    sedi -e "s/$currentName/$newName/g" .env
-    sedi -e "s/$currentName/$newName/g" environment-variables/DEV.env
-    sedi -e "s/$currentName/$newName/g" environment-variables/TEST.env
-    sedi -e "s/$currentName/$newName/g" environment-variables/QA.env
-    sedi -e "s/$currentName/$newName/g" environment-variables/PROD.env
   fi
 
   #Re-generating radixconfig-file
-  sh ./scripts/syncRadixConfig.sh
+  sh ./scripts/generateRadixConfig.sh
 
   echo "Finished updating the name"
-  echo "NB. We are using a simple find & replace, so..."
   echo "Please verify that the changes were applied correctly: "
   printf "Changed files:
   - README.md
   - package.json
-  - .env
-  - environment-variables/DEV.env
-  - environment-variables/TEST.env
-  - environment-variables/QA.env
-  - environment-variables/PROD.env
 "
 fi
