@@ -24,21 +24,24 @@ export function VSMSideBar(props: {
   const nothingSelected = !selectedObject;
   if (nothingSelected) return <></>;
   return (
-    <div
-      onWheel={(event) => event.stopPropagation()}
-      className={
-        nothingSelected ? styles.hideSideBarToRight : styles.vsmSideMenu
-      }
-    >
-      <div className={styles.letItBreath}>
-        <SideBarContent
-          onClose={props.onClose}
-          onDelete={props.onDelete}
-          canEdit={props.canEdit}
-          selectedObject={vsmObject}
-          isLoading={isLoading}
-        />
+    <div>
+      <div
+        onWheel={(event) => event.stopPropagation()}
+        className={
+          nothingSelected ? styles.hideSideBarToRight : styles.vsmSideMenu
+        }
+      >
+        <div className={styles.letItBreath}>
+          <SideBarContent
+            onClose={props.onClose}
+            onDelete={props.onDelete}
+            canEdit={props.canEdit}
+            selectedObject={vsmObject}
+            isLoading={isLoading}
+          />
+        </div>
       </div>
+      <div className={styles.sideBarBackgroundCover} onClick={props.onClose} />
     </div>
   );
 }
