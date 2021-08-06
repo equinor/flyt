@@ -1,4 +1,4 @@
-import style from "./accessBox.module.scss";
+import style from "./AccessBox.module.scss";
 import { Button, Icon, Input } from "@equinor/eds-core-react";
 import { UserDot } from "./UserDot";
 import React, { useState } from "react";

@@ -1,0 +1,29 @@
+.addCategoryButton {
+  width: 284px;
+
+  margin-top: 16px;
+  margin-bottom: 16px;
+
+  height: 56px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 100px;
+  background: #ffffff;
+
+  border: 1px dashed #dcdcdc;
+  box-sizing: border-box;
+
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  color: #9ca6ac;
+  transition: all 0.2s ease-in-out;
+}
+
+.addCategoryButton:hover {
+  filter: brightness(0.95);
+  cursor: pointer;
+}

@@ -22,7 +22,7 @@ import { RightTopBarSection } from "../components/RightTopBarSection";
 import { disableMouseWheelZoom } from "../utils/disableMouseWheelZoom";
 import { disableKeyboardZoomShortcuts } from "../utils/disableKeyboardZoomShortcuts";
 import { MySnackBar } from "../components/MySnackBar";
-import { AccessBox } from "../components/accessBox";
+import { AccessBox } from "../components/AccessBox";
 import { getMyAccess } from "../utils/getMyAccess";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getProject, updateProject } from "../services/projectApi";

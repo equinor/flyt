@@ -1,0 +1,99 @@
+.wrapper {
+  display: flex;
+  width: 347px;
+  background-color: white;
+}
+
+.wrapper > div {
+  margin: 32px;
+}
+
+.header {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: 0.2px;
+  color: #3d3d3d;
+}
+
+.infoBox {
+  background-color: white;
+  filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.14));
+  border-radius: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+
+  font-size: 16px;
+  line-height: 24px;
+
+  letter-spacing: 0.4px;
+  color: #6f6f6f;
+}
+
+.infoBox > div {
+  display: flex;
+}
+
+.closeIcon {
+  width: 30px;
+}
+
+////
+
+////
+.categories {
+  //overflow: scroll;
+  //  height:200px
+}
+//
+
+.qipSection {
+  display: flex;
+  flex-wrap: wrap;
+
+  //background-color: blue;
+  width: 1000px; //Todo: make it occupy all the remaining space
+}
+
+.qipCard {
+  margin-right: 16px;
+  margin-bottom: 16px;
+
+  background-color: white;
+  border-radius: 4px;
+  padding: 4px 16px;
+
+  //height: 196px;
+  width: 245px;
+  // Text
+  font-size: 14px;
+  line-height: 20px;
+  color: #565656;
+  transition: all 0.1s ease-in-out;
+
+  //display: flex;
+  //justify-items: space-between;
+  //filter: drop-shadow(0px 10px 10px rgba(0, 0, 0, 0.04));
+}
+
+.qipCard:hover {
+  cursor: pointer;
+  transform: scale(1.01);
+  filter: drop-shadow(0px 10px 10px rgba(0, 0, 0, 0.14));
+}
+
+.qipCardTop {
+  display: flex;
+  align-items: center;
+}
+
+.qipCardTop > p {
+  padding-left: 5px;
+}
+
+.qipCardCategorySection {
+  display: flex;
+  flex-wrap: wrap;
+
+  //justify-content: space-evenly;
+}
