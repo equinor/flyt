@@ -31,5 +31,11 @@ export function createChoiceAsset(
   contentText.x = 126 / 2;
   contentText.y = 126 / 2;
   wrapper.addChild(new PIXI.Sprite(choice.texture), contentText);
+
+  const mask = new PIXI.Graphics();
+  mask.drawRect(0, 0, 126, 126);
+  contentText.mask = mask;
+  wrapper.addChild(mask);
+
   return wrapper;
 }
