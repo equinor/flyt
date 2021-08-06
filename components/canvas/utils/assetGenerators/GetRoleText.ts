@@ -18,5 +18,5 @@ const roleTextStyle = {
 
 export function getRoleText(vsmObject: vsmObject): PIXI.Text {
   const { role } = vsmObject;
-  return new PIXI.Text(formatCanvasText(role ?? "", 16), roleTextStyle);
+  return new PIXI.Text(formatCanvasText(role ?? "", 16, true), roleTextStyle);
 }

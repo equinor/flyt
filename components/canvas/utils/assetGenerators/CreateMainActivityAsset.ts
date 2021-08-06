@@ -40,5 +40,11 @@ export function createMainActivityAsset(
   );
 
   wrapper.addChild(textSprite);
+
+  const mask = new PIXI.Graphics();
+  mask.drawRect(0, 0, 126, 134);
+  textSprite.mask = mask;
+  wrapper.addChild(mask);
+
   return wrapper;
 }
