@@ -49,5 +49,10 @@ export function createSubActivityAsset(
   );
   if (taskSection) wrapper.addChild(taskSection);
 
+  const mask = new PIXI.Graphics();
+  mask.drawRect(0, 0, 126, 88);
+  textSprite.mask = mask;
+  wrapper.addChild(mask);
+
   return wrapper;
 }
