@@ -97,6 +97,7 @@
   // Todo: Fix https://equinor-sds-si.atlassian.net/browse/VSM-145 then you can enable animation again
   //animation-name: appearFromRight;
   //animation-duration: 0.5s;
+  z-index: 1;
 }
 
 .letItBreath {
@@ -150,6 +151,14 @@
   height: 100%;
   background-color: black;
   opacity: 0.5;
+}
+
+.sideBarBackgroundCover {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  opacity: 0.12;
 }
 
 .center {
