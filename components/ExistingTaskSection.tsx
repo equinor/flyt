@@ -77,7 +77,7 @@ export function ExistingTaskSection(props: {
       <div>
         <ul className={styles.taskList}>
           {existingTasks?.map((t: taskObject) => (
-            <li key={t.vsmTaskID}>
+            <li key={t.vsmTaskID} title={t.description}>
               <Checkbox
                 defaultChecked={tasks.some(
                   (task) => task?.vsmTaskID === t?.vsmTaskID
