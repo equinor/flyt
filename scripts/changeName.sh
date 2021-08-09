@@ -18,7 +18,11 @@ else
     #   MacOS is using bsd sed, so defining this function to support gnu/linux syntax as well
     #   We test for the --version option which is only found in the GNU version of sed.
     #   ref https://stackoverflow.com/questions/2320564/sed-i-command-for-in-place-editing-to-work-with-both-gnu-sed-and-bsd-osx
-    sed --version >/dev/null 2>&1 && sed -i -- "$@" || sed -i "" "$@"
+    if [ "$(sed --version >/dev/null 2>&1)" ]; then
+      sed -i -- "$@" #GNU/Linux
+    else
+      sed -i "" "$@" #BSD/Mac
+    fi
   }
 
   if [ "$currentName" != "" ] && [ "$newName" != "" ]; then
