@@ -1,5 +1,6 @@
 {
   "name": "flyt",
+  "radix-name": "vsm",
   "version": "0.1.0",
   "private": true,
   "scripts": {

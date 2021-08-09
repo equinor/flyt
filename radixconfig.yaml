@@ -34,7 +34,7 @@ spec:
         - environment: dev
           variables:
             API_BASEURL: https://api.statoil.com/app/vsm/dev
-            API_HUB_URL: https://vsm-api-dev.azurewebsites.net/vsmhub
+            API_HUB_URL: 
             AUTHORITY: https://login.microsoftonline.com/statoilsrm.onmicrosoft.com
             CLIENT_ID: e6e2f3c4-d6bd-4d71-a00e-be0c16a703da
             ENVIRONMENT: DEV
@@ -42,7 +42,7 @@ spec:
         - environment: test
           variables:
             API_BASEURL: https://api.statoil.com/app/vsm/test
-            API_HUB_URL: TODO
+            API_HUB_URL: 
             AUTHORITY: https://login.microsoftonline.com/statoilsrm.onmicrosoft.com
             CLIENT_ID: b3e899bf-12af-4f63-8744-d1ef4edc30b5
             ENVIRONMENT: TEST
@@ -50,7 +50,7 @@ spec:
         - environment: qa
           variables:
             API_BASEURL: https://api.statoil.com/app/vsm/qa
-            API_HUB_URL: TODO
+            API_HUB_URL: 
             AUTHORITY: https://login.microsoftonline.com/statoilsrm.onmicrosoft.com
             CLIENT_ID: 7fe4fa03-733a-414d-8d32-0a9358b5eeb9
             ENVIRONMENT: QA
@@ -58,7 +58,7 @@ spec:
         - environment: prod
           variables:
             API_BASEURL: https://api.statoil.com/app/vsm/prod
-            API_HUB_URL: TODO
+            API_HUB_URL: 
             AUTHORITY: https://login.microsoftonline.com/statoilsrm.onmicrosoft.com
             CLIENT_ID: 7b6f1bd7-ecb7-4e9b-b8a4-7a0a0804760d
             ENVIRONMENT: PROD

@@ -1,7 +1,7 @@
 apiVersion: radix.equinor.com/v1
 kind: RadixApplication
 metadata:
-  name: vsm
+  name: ${RADIX_NAME}
 spec:
   environments:
     - name: dev

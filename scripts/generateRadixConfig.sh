@@ -2,22 +2,20 @@
 
 echo 'Generating Radixconfig file with data from "environments-variables"-folder'
 
-currentName=$(
-  grep '"name":' package.json |
+currentRadixName=$(
+  grep '"radix-name":' package.json |
     awk -F: '{ print $2 }' |
     sed 's/[",]//g' |
     tr -d '[:space:]'
 )
 
-#if first time running...
-read -r -p "What is the name in radix? " newName
-if [ -z "$newName" ]; then
-  echo "No name provided... continuing using $currentName"
-  export RADIX_NAME=$currentName
-else
-  export RADIX_NAME=$newName
+#if radix name is not changed. Ake still "mad-template"
+#Show a warning that you should change it.
+if [ "$currentRadixName" = "mad-template" ]; then
+  printf "\e[91m%b\e[0m" "No radix-name set in package.json \n"
+  echo "Please fix then run 'yarn genRadix' again."
 fi
-#fi
+export RADIX_NAME=$currentRadixName
 
 source environment-variables/DEV.env
 export DEV_API_BASEURL=$API_BASEURL
