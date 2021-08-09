@@ -6,10 +6,10 @@ import React from "react";
 import getConfig from "next/config";
 import { HomeButton } from "./homeButton";
 import { RightTopBarSection } from "../components/RightTopBarSection";
+import packageJson from "../package.json";
 
 const DefaultLayout = ({ children }) => {
   const isAuthenticated = useIsAuthenticated();
-  const { publicRuntimeConfig } = getConfig();
 
   if (!isAuthenticated) {
     return (
@@ -36,7 +36,7 @@ const DefaultLayout = ({ children }) => {
   return (
     <>
       <Head>
-        <title>{publicRuntimeConfig.APP_NAME}</title>
+        <title>{packageJson.name}</title>
         <meta charSet="utf-8" />
         {/*link manifest.json*/}
         <link rel="manifest" href="/manifest.json" />

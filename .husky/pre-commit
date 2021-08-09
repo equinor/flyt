@@ -3,3 +3,4 @@
 
 yarn lint
 echo "Checking for typescript errors" && tsc
+yarn postinstall

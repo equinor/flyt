@@ -1,19 +1,16 @@
 @import "./variables";
-@import url("https://eds-static.equinor.com/font/equinor-font.css");
 
 html,
 body {
-  font-family: Equinor, sans-serif;
   padding: 0;
   margin: 0;
   font-size: 14px;
   background-color: #f7f7f7;
-  //background-color: black;
   color: $equinor_GRAY;
   height: 100%;
 }
 
 // Apply correct font everywhere
 * {
-  font-family: $font !important;
+  font-family: $font;
 }
