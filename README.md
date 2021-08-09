@@ -1,10 +1,10 @@
-## VSM - Value Stream Mapping
+## Flyt - (aka VSM/Value Stream Mapping)
 
 ![Canvas example](./documentation/images/canvasExample.png)
 
 # Links
 
-- [Figma design & prototype](https://www.figma.com/file/IkHwmIQrsT0iR34f5R5UnZ/VSM)
+- [Figma design & prototype](https://www.figma.com/file/IkHwmIQrsT0iR34f5R5UnZ/vsm)
 
 # Tech stack / Features
 
@@ -82,17 +82,17 @@ For example; Run `yarn release-dev` to tag DEV and push tags to GitHub.
 
 ```bash
 # Building image
-docker build -t vsm .
+docker build -t equinor-flyt .
 
 # Running image
 ## Dev
-docker run -p 3000:3000 --env-file ./environment-variables/DEV.env vsm
+docker run -p 3000:3000 --env-file ./environment-variables/DEV.env equinor-flyt
 ## Test
-docker run -p 3000:3000 --env-file ./environment-variables/TEST.env vsm
+docker run -p 3000:3000 --env-file ./environment-variables/TEST.env equinor-flyt
 ## QA
-docker run -p 3000:3000 --env-file ./environment-variables/QA.env vsm
+docker run -p 3000:3000 --env-file ./environment-variables/QA.env equinor-flyt
 ## Prod
-docker run -p 3000:3000 --env-file ./environment-variables/PROD.env vsm
+docker run -p 3000:3000 --env-file ./environment-variables/PROD.env equinor-flyt
 ```
 
 ## Task tracking
@@ -136,7 +136,7 @@ the distance to the next Main Activity etc...
 
 # Defining a process
 
-A vsm/process consists of a set of entities.
+A vsm/flyt/process consists of a set of entities.
 
 An entity can be of the following types:
 
@@ -164,180 +164,6 @@ Structure of an entity
 # API-Endpoints
 
 See swagger https://vsm-api-dev.azurewebsites.net/swagger/index.html
-
-## Project
-
-> NB: The following documentation is out of date. It was written before implementation to get our thoughts flowing.
-> TODO: Update documentation
-
-Create Project Read Project Update Project Delete Project
-
-### Project object
-
-Details WIP
-
-```JSON5
-{
-  id: '',
-  owner: [],
-  created: 'date',
-  lastUpdated: 'date',
-  Entities: []
-  // [{entity},{entity},{entity}],
-}
-```
-
-## Entity
-
-### Create Entity
-
-POST `/entity`
-
-body:
-
-```JSON5
-{
-  id: '',
-  type: 'Main Activity',
-  text: '',
-  roles: [],
-  duration: '',
-  problems: [],
-  ideas: [],
-  solutions: [],
-  parentId: ''
-}
-```
-
-### Read Entity
-
-GET `/entity/{id}`
-
-### Update Entity
-
-PUT (or PATCH?) `/entity/{id}`
-
-### Delete Entity
-
-DELETE `/entity/{id}`
-
-# Post new process - Example request bodies
-
-## Just the standard stuff
-
-```typescript
-///POST -> 'api/v1.0/project'
-const payload = {
-  name: processTitle,
-  objects: [
-    {
-      parent: 0,
-      name: processTitle,
-      fkObjectType: vsmObjectTypes.process,
-      childObjects: [
-        { fkObjectType: vsmObjectTypes.supplier, name: "supplier" },
-        { fkObjectType: vsmObjectTypes.input, Name: "input" },
-        { fkObjectType: vsmObjectTypes.output, name: "output" },
-        { fkObjectType: vsmObjectTypes.customer, name: "customer" },
-      ],
-    },
-  ],
-} as vsmProcessObject;
-```
-
-## Everything but the kitchen sink
-
-> NB. Actually missing choice. (Waiting on api-support)
-
-```typescript
-///POST -> 'api/v1.0/project'
-const payload = {
-  name: processTitle,
-  objects: [
-    {
-      parent: 0,
-      name: processTitle,
-      fkObjectType: vsmObjectTypes.process,
-      childObjects: [
-        { fkObjectType: vsmObjectTypes.supplier, name: "supplier" },
-        { FkObjectType: vsmObjectTypes.input, Name: "input" },
-        {
-          FkObjectType: vsmObjectTypes.mainActivity,
-          Name: "Choose method",
-          childObjects: [
-            {
-              name: "Kaffetrakter",
-              fkObjectType: vsmObjectTypes.subActivity,
-            },
-            {
-              name: "Presskanne",
-              fkObjectType: vsmObjectTypes.subActivity,
-              childObjects: [
-                {
-                  name: "Finn presskanne",
-                  fkObjectType: vsmObjectTypes.subActivity,
-                },
-              ],
-            },
-          ],
-        },
-        {
-          FkObjectType: vsmObjectTypes.mainActivity,
-          Name: "Boil water",
-          childObjects: [
-            {
-              name: "Tilsett kaffe til presskanne",
-              fkObjectType: vsmObjectTypes.subActivity,
-            },
-          ],
-        },
-        {
-          FkObjectType: vsmObjectTypes.waiting,
-          Name: "Waiting",
-        },
-        {
-          FkObjectType: vsmObjectTypes.mainActivity,
-          Name: "Add water",
-          childObjects: [
-            {
-              name: "Waiting",
-              fkObjectType: vsmObjectTypes.waiting,
-              childObjects: [
-                {
-                  name: "Press kaffe",
-                  fkObjectType: vsmObjectTypes.subActivity,
-                  childObjects: [
-                    {
-                      name: "Pour coffee",
-                      fkObjectType: vsmObjectTypes.subActivity,
-                    },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-        { fkObjectType: vsmObjectTypes.output, name: "output" },
-        { fkObjectType: vsmObjectTypes.customer, name: "customer" },
-      ],
-    },
-  ],
-} as vsmProcessObject;
-```
-
-# Random
-
-## Manual consent url
-
-```text
-https://login.microsoftonline.com/statoilsrm.onmicrosoft.com/oauth2/authorize?
-client_id=e6e2f3c4-d6bd-4d71-a00e-be0c16a703da
-&response_type=code
-&redirect_uri=https://www.getpostman.com/oauth2/callback
-&nonce=1234
-&resource=b3e899bf-12af-4f63-8744-d1ef4edc30b5
-&prompt=consent
-```
 
 ## SignalR
 
