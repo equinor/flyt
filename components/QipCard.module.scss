@@ -1,0 +1,60 @@
+.qipCard {
+  margin-right: 16px;
+  margin-bottom: 16px;
+
+  background-color: white;
+  border-radius: 4px;
+  padding: 4px 16px;
+
+  //height: 196px;
+  width: 245px;
+  // Text
+  font-size: 14px;
+  line-height: 20px;
+  color: #565656;
+  transition: all 0.1s ease-in-out;
+
+  //display: flex;
+  //justify-items: space-between;
+  //filter: drop-shadow(0px 10px 10px rgba(0, 0, 0, 0.04));
+}
+
+.stamp {
+  font-size: 3rem;
+  font-weight: 700;
+  display: inline-block;
+  padding: 0.25rem 1rem;
+  text-transform: uppercase;
+  font-family: "Courier", serif;
+  -webkit-mask-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/8399/grunge.png");
+  -webkit-mask-size: 944px 604px;
+  mix-blend-mode: multiply;
+
+  color: #008f75;
+  border: 0.5rem solid #008f75;
+  -webkit-mask-position: 13rem 6rem;
+  transform: rotate(-14deg);
+  border-radius: 0;
+}
+
+.qipCard:hover {
+  cursor: pointer;
+  transform: scale(1.01);
+  filter: drop-shadow(0px 10px 10px rgba(0, 0, 0, 0.14));
+}
+
+.qipCardTop {
+  display: flex;
+  align-items: center;
+}
+
+.qipCardTop > p {
+  padding-left: 5px;
+}
+
+.qipCardCategorySection {
+  display: flex;
+  flex-wrap: wrap;
+
+  //justify-content: space-evenly;
+}
