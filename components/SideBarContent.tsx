@@ -11,6 +11,8 @@ import { Button, Icon, Typography } from "@equinor/eds-core-react";
 import { unknownErrorToString } from "utils/isError";
 import { useStoreDispatch } from "hooks/storeHooks";
 import { close as closeIcon } from "@equinor/eds-icons";
+import { notifyOthers } from "../services/notifyOthers";
+import { useRouter } from "next/router";
 
 /**
  * Process specific content stuff
@@ -24,12 +26,15 @@ export function SideBarContent(props: {
   selectedObject;
   isLoading: boolean;
 }): JSX.Element {
+  const router = useRouter();
+  const { id } = router.query;
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
   const vsmObjectMutation = useMutation(
     (patchedObject: vsmObject) => patchVSMObject(patchedObject),
     {
       onSuccess() {
+        notifyOthers("patchVSMObject", id);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),

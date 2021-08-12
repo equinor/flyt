@@ -10,6 +10,8 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import * as userApi from "../services/userApi";
 import { unknownErrorToString } from "utils/isError";
 import { useStoreDispatch } from "hooks/storeHooks";
+import { useRouter } from "next/router";
+import { notifyOthers } from "../services/notifyOthers";
 
 export function AccessBox(props: {
   project: vsmProject;
@@ -131,12 +133,16 @@ function MiddleSection(props: {
   const dispatch = useStoreDispatch();
   const [userInput, setEmailInput] = useState("");
   const queryClient = useQueryClient();
+
+  const router = useRouter();
+  const { id } = router.query;
   const addUserMutation = useMutation(
     (newUser: { user: string; vsmId: number; role: string }) =>
       userApi.add(newUser),
     {
       onSuccess: () => {
         setEmailInput("");
+        notifyOthers("Gave access to new user", id);
         queryClient.invalidateQueries("userAccesses");
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
@@ -145,7 +151,10 @@ function MiddleSection(props: {
   const removeUserMutation = useMutation(
     (props: { accessId; vsmId }) => userApi.remove(props),
     {
-      onSuccess: () => queryClient.invalidateQueries("userAccesses"),
+      onSuccess: () => {
+        notifyOthers("Removed access for user", id);
+        return queryClient.invalidateQueries("userAccesses");
+      },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
@@ -153,7 +162,10 @@ function MiddleSection(props: {
     (props: { user: { accessId: number }; role: string }) =>
       userApi.update(props),
     {
-      onSuccess: () => queryClient.invalidateQueries("userAccesses"),
+      onSuccess() {
+        notifyOthers("Updated access for user", id);
+        return queryClient.invalidateQueries("userAccesses");
+      },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );

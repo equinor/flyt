@@ -8,6 +8,8 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { linkTask, unlinkTask } from "../services/taskApi";
 import { vsmObject } from "../interfaces/VsmObject";
 import { unknownErrorToString } from "utils/isError";
+import { useRouter } from "next/router";
+import { notifyOthers } from "../services/notifyOthers";
 
 export function ExistingTaskSection(props: {
   visible: boolean;
@@ -31,10 +33,15 @@ export function ExistingTaskSection(props: {
       ).then((r) => r.data),
     { enabled: !!existingTaskFilter }
   );
+  const router = useRouter();
+  const { id } = router.query;
   const taskLinkMutation = useMutation(
     (task: taskObject) => linkTask(selectedObject.vsmObjectID, task.vsmTaskID),
     {
-      onSuccess: () => queryClient.invalidateQueries(),
+      onSuccess: () => {
+        notifyOthers("Linked task", id);
+        return queryClient.invalidateQueries();
+      },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
@@ -42,7 +49,10 @@ export function ExistingTaskSection(props: {
     (task: taskObject) =>
       unlinkTask(selectedObject.vsmObjectID, task.vsmTaskID),
     {
-      onSuccess: () => queryClient.invalidateQueries(),
+      onSuccess() {
+        notifyOthers("Unlinked task", id);
+        return queryClient.invalidateQueries();
+      },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );

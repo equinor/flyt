@@ -9,19 +9,24 @@ import { unknownErrorToString } from "../utils/isError";
 import { deleteVSMObject } from "../services/vsmObjectApi";
 import { useStoreDispatch } from "hooks/storeHooks";
 import { close as closeIcon, delete_forever } from "@equinor/eds-icons";
+import { useRouter } from "next/router";
+import { notifyOthers } from "../services/notifyOthers";
 
 export function DeleteVsmObjectDialog(props: {
   objectToDelete: vsmObject;
   onClose: () => void;
   visible: boolean;
 }): JSX.Element {
+  const router = useRouter();
+  const { id } = router.query;
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
   const deleteMutation = useMutation(
     (vsmObjectID: number) => deleteVSMObject(vsmObjectID),
     {
       onSuccess() {
-        props.onClose();
+        handleClose();
+        notifyOthers("Deleted card", id);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),

@@ -19,7 +19,10 @@ import { useRouter } from "next/router";
 import { moveVSMObject, postVSMObject } from "../../services/vsmObjectApi";
 import { vsmObject } from "interfaces/VsmObject";
 import { unknownErrorToString } from "utils/isError";
-import { SignalRService } from "../../services/signalRService";
+import { io } from "socket.io-client";
+import { getUserShortName } from "../../utils/getUserShortName";
+import { AccountInfo } from "@azure/msal-browser";
+import { notifyOthers } from "../../services/notifyOthers";
 
 export default function Canvas(): JSX.Element {
   const ref = useRef();
@@ -27,21 +30,38 @@ export default function Canvas(): JSX.Element {
   const dispatch = useStoreDispatch();
   const router = useRouter();
   const { id } = router.query;
+  // useEffect(() => {
+  //   if (id) {
+  //     const projectId = parseInt(id.toString(), 10);
+  //     const s = new SignalRService(projectId, {
+  //       onDeleteObject: (e) => console.log("onDeleteObject", e),
+  //       onDeleteProject: (e) => console.log("onDeleteProject", e),
+  //       onDeleteTask: (e) => console.log("onDeleteTask", e),
+  //       onSaveProject: (e) => console.log("onSaveProject", e),
+  //       onSaveTask: (e) => console.log("onSaveTask", e),
+  //       onUpdateObject: (e) => console.log("onUpdateObject", e),
+  //     });
+  //     return s.disconnect;
+  //   }
 
-  useEffect(() => {
-    if (id) {
-      const projectId = parseInt(id.toString(), 10);
-      const s = new SignalRService(projectId, {
-        onDeleteObject: (e) => console.log("onDeleteObject", e),
-        onDeleteProject: (e) => console.log("onDeleteProject", e),
-        onDeleteTask: (e) => console.log("onDeleteTask", e),
-        onSaveProject: (e) => console.log("onSaveProject", e),
-        onSaveTask: (e) => console.log("onSaveTask", e),
-        onUpdateObject: (e) => console.log("onUpdateObject", e),
-      });
-      return s.disconnect;
-    }
-  }, [id]);
+  useEffect((): any => {
+    // connect to socket server
+    const socket = io(process.env.BASE_URL, {
+      path: "/api/socketio",
+    });
+    // log socket connection
+    socket.on("connect", () => {
+      console.log("SOCKET CONNECTED!", socket.id);
+    });
+
+    socket.on(`room-${id}`, (message) => {
+      console.log(`room-${id} | We got an update!`, message);
+      queryClient.invalidateQueries();
+    });
+
+    // socket disconnect onUnmount if exists
+    if (socket) return () => socket.disconnect();
+  }, []);
 
   const { data: project } = useQuery(["project", id], () => getProject(id));
 
@@ -62,6 +82,7 @@ export default function Canvas(): JSX.Element {
     {
       onSuccess: () => {
         dispatch.setSnackMessage("✅ Moved card!");
+        notifyOthers("✅ Moved card!!", id, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
@@ -75,6 +96,7 @@ export default function Canvas(): JSX.Element {
     {
       onSuccess: () => {
         dispatch.setSnackMessage("✅ Card added!");
+        notifyOthers("✅ Card added!", id, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
@@ -125,7 +147,10 @@ export default function Canvas(): JSX.Element {
       <DeleteVsmObjectDialog
         objectToDelete={selectedObject}
         visible={visibleDeleteScrim}
-        onClose={() => setVisibleDeleteScrim(false)}
+        onClose={() => {
+          setVisibleDeleteScrim(false);
+          setSelectedObject(null);
+        }}
       />
 
       <VSMSideBar

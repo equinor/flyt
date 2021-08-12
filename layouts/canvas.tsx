@@ -29,6 +29,7 @@ import { getProject, updateProject } from "../services/projectApi";
 import { debounce } from "../utils/debounce";
 import { unknownErrorToString } from "../utils/isError";
 import packageJson from "../package.json";
+import { notifyOthers } from "../services/notifyOthers";
 
 const CanvasLayout = ({ children }) => {
   const isAuthenticated = useIsAuthenticated();
@@ -42,12 +43,11 @@ const CanvasLayout = ({ children }) => {
   const queryClient = useQueryClient();
   const projectMutation = useMutation(
     (updatedProject: { vsmProjectID: number; name: string }) => {
-      dispatch.setSnackMessage("⏳ Updating...");
       return updateProject(updatedProject);
     },
     {
       onSuccess: () => {
-        dispatch.setSnackMessage("✅ Done!");
+        notifyOthers("updatedProject name", id);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),

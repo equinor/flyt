@@ -1,3 +1,13 @@
+#
+# Add a new group "radix-non-root-group" with group id 1001
+#RUN addgroup -S -g 1001 radix-non-root-group
+#
+## Add a new user "radix-non-root-user" with user id 1001 and include in group
+#RUN adduser -S -u 1001 -G radix-non-root-group radix-non-root-user
+#
+#USER 1001
+
+
 # Install dependencies only when needed
 FROM node:lts-alpine AS deps
 WORKDIR /opt/app
@@ -23,3 +33,4 @@ COPY --from=builder /opt/app/public ./public
 COPY --from=builder /opt/app/.next ./.next
 COPY --from=builder /opt/app/node_modules ./node_modules
 CMD ["node_modules/.bin/next", "start"]
+

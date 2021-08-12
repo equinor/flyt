@@ -3,6 +3,11 @@ import { useStoreDispatch } from "../hooks/storeHooks";
 import React from "react";
 import { TextField } from "@equinor/eds-core-react";
 import { debounce } from "../utils/debounce";
+import { useMutation, useQueryClient } from "react-query";
+import { unknownErrorToString } from "../utils/isError";
+import { updateTask } from "../services/taskApi";
+import { useRouter } from "next/router";
+import { notifyOthers } from "../services/notifyOthers";
 
 export function EditTaskTextField(props: {
   task: taskObject;
@@ -10,6 +15,22 @@ export function EditTaskTextField(props: {
 }): JSX.Element {
   const { description, vsmTaskID } = props.task;
   const dispatch = useStoreDispatch();
+
+  const router = useRouter();
+  const { id } = router.query;
+  const queryClient = useQueryClient();
+  const updateTaskMutation = useMutation(
+    (newObject: taskObject) => {
+      return updateTask(newObject);
+    },
+    {
+      onSuccess: () => {
+        notifyOthers("updateTask", id);
+        return queryClient.invalidateQueries();
+      },
+      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+    }
+  );
 
   return (
     <TextField
@@ -25,7 +46,7 @@ export function EditTaskTextField(props: {
         };
         debounce(
           () => {
-            dispatch.updateTask(updatedTask);
+            updateTaskMutation.mutate(updatedTask);
           },
           1000,
           "SideBarContent-UpdateTask"

@@ -10,6 +10,8 @@ import { useMutation, useQueryClient } from "react-query";
 import { createTask } from "../services/taskApi";
 import { unknownErrorToString } from "utils/isError";
 import { vsmObject } from "../interfaces/VsmObject";
+import { useRouter } from "next/router";
+import { notifyOthers } from "../services/notifyOthers";
 
 export function NewTaskSection(props: {
   onClose: () => void;
@@ -17,10 +19,15 @@ export function NewTaskSection(props: {
 }): JSX.Element {
   const dispatch = useStoreDispatch();
   const selectedObject = props.selectedObject;
+
+  const router = useRouter();
+  const { id } = router.query;
+
   const queryClient = useQueryClient();
   const taskMutations = useMutation((task: taskObject) => createTask(task), {
-    onSuccess() {
+    onSuccess: () => {
       clearAndCloseAddTaskSection();
+      notifyOthers("Created new task", id);
       return queryClient.invalidateQueries();
     },
     onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),

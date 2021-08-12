@@ -33,28 +33,22 @@ function getTaskTypeString(vsmTaskTypeID: vsmTaskTypes) {
 
 function getVSMObjectTypeColor(vsmObjectType: vsmObjectTypes) {
   switch (vsmObjectType) {
-    case vsmObjectTypes.process:
-      return "#00d889";
-    case vsmObjectTypes.supplier:
-      return "#00d889";
-    case vsmObjectTypes.input:
-      return "#00d889";
     case vsmObjectTypes.mainActivity:
       return "#00c1ff";
     case vsmObjectTypes.subActivity:
       return "#FDD835";
-    case vsmObjectTypes.text:
-      return "#ffffff";
     case vsmObjectTypes.waiting:
-      return "#FF8F00";
-    case vsmObjectTypes.output:
-      return "#00d889";
-    case vsmObjectTypes.customer:
-      return "#00d889";
     case vsmObjectTypes.choice:
       return "#FF8F00";
+    case vsmObjectTypes.process:
+    case vsmObjectTypes.supplier:
+    case vsmObjectTypes.input:
+    case vsmObjectTypes.output:
+    case vsmObjectTypes.customer:
+      return "#00d889";
+    default:
+      return "#FAFAFA";
   }
-  return "#FAFAFA";
 }
 
 function VSMObjectCard(props: { vsmObjectId: number }) {
@@ -102,6 +96,9 @@ function VSMObjectCard(props: { vsmObjectId: number }) {
             paddingLeft: 8,
             paddingTop: 1,
             padding: 8,
+            display: "flex",
+            flexDirection: "column",
+            flexWrap: "wrap",
           }}
         >
           {data.tasks.map((task) => (
