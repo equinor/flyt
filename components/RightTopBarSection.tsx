@@ -9,8 +9,6 @@ import {
   new_alert,
 } from "@equinor/eds-icons";
 import { LinkIcon } from "./LinkIcon";
-import { useQuery } from "react-query";
-import { getProject } from "../services/projectApi";
 import { useRouter } from "next/router";
 
 export function RightTopBarSection(props: {

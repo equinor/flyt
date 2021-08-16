@@ -54,14 +54,7 @@ const UserMenu: React.FC = () => {
         onClick={(e) => (isOpen ? closeMenu() : openMenu(e))}
         onKeyDown={onKeyPress}
       >
-        <div
-          style={{
-            position: "absolute",
-            left: "8%",
-          }}
-        >
-          <UserDot name={getUserShortName(account)} />
-        </div>
+        <UserDot name={getUserShortName(account)} />
       </Button>
       <Menu
         id="menu-on-button"
