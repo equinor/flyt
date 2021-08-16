@@ -32,6 +32,7 @@ spec:
           port: 3000
       environmentConfig:
         - environment: dev
+          runAsNonRoot: true
           variables:
             API_BASEURL: https://api.statoil.com/app/vsm/dev
             API_HUB_URL: https://vsm-api-dev.azurewebsites.net/vsmhub
@@ -40,6 +41,7 @@ spec:
             ENVIRONMENT: DEV
             SCOPE: c001f24f-64a7-4f0c-bfe8-bf9c8e7aa74c/api.access
         - environment: test
+          runAsNonRoot: true
           variables:
             API_BASEURL: https://api.statoil.com/app/vsm/test
             API_HUB_URL: TODO
@@ -48,6 +50,7 @@ spec:
             ENVIRONMENT: TEST
             SCOPE: cf7bf606-0fca-498d-9ec5-74d32a6ab4cf/api_access
         - environment: qa
+          runAsNonRoot: true
           variables:
             API_BASEURL: https://api.statoil.com/app/vsm/qa
             API_HUB_URL: TODO
