@@ -20,8 +20,6 @@ import { moveVSMObject, postVSMObject } from "../../services/vsmObjectApi";
 import { vsmObject } from "interfaces/VsmObject";
 import { unknownErrorToString } from "utils/isError";
 import { io } from "socket.io-client";
-import { getUserShortName } from "../../utils/getUserShortName";
-import { AccountInfo } from "@azure/msal-browser";
 import { notifyOthers } from "../../services/notifyOthers";
 
 export default function Canvas(): JSX.Element {
@@ -30,38 +28,16 @@ export default function Canvas(): JSX.Element {
   const dispatch = useStoreDispatch();
   const router = useRouter();
   const { id } = router.query;
-  // useEffect(() => {
-  //   if (id) {
-  //     const projectId = parseInt(id.toString(), 10);
-  //     const s = new SignalRService(projectId, {
-  //       onDeleteObject: (e) => console.log("onDeleteObject", e),
-  //       onDeleteProject: (e) => console.log("onDeleteProject", e),
-  //       onDeleteTask: (e) => console.log("onDeleteTask", e),
-  //       onSaveProject: (e) => console.log("onSaveProject", e),
-  //       onSaveTask: (e) => console.log("onSaveTask", e),
-  //       onUpdateObject: (e) => console.log("onUpdateObject", e),
-  //     });
-  //     return s.disconnect;
-  //   }
 
-  useEffect((): any => {
-    // connect to socket server
-    const socket = io(process.env.BASE_URL, {
-      path: "/api/socketio",
-    });
-    // log socket connection
-    socket.on("connect", () => {
-      console.log("SOCKET CONNECTED!", socket.id);
-    });
-
+  const [socket] = useState(io({ path: "/api/socket" }));
+  useEffect(() => {
     socket.on(`room-${id}`, (message) => {
-      console.log(`room-${id} | We got an update!`, message);
       queryClient.invalidateQueries();
     });
-
-    // socket disconnect onUnmount if exists
-    if (socket) return () => socket.disconnect();
-  }, []);
+    return () => {
+      if (socket) socket.disconnect();
+    };
+  }, [socket]);
 
   const { data: project } = useQuery(["project", id], () => getProject(id));
 
