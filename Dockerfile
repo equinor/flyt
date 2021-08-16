@@ -1,13 +1,3 @@
-#
-# Add a new group "radix-non-root-group" with group id 1001
-#RUN addgroup -S -g 1001 radix-non-root-group
-#
-## Add a new user "radix-non-root-user" with user id 1001 and include in group
-#RUN adduser -S -u 1001 -G radix-non-root-group radix-non-root-user
-#
-#USER 1001
-
-
 # Install dependencies only when needed
 FROM node:lts-alpine AS deps
 WORKDIR /opt/app
@@ -25,6 +15,9 @@ RUN yarn build
 
 # Production image, copy all the files and run next
 FROM node:lts-alpine AS runner
+RUN addgroup -S -g 1001 radix-non-root-group
+RUN adduser -S -u 1001 -G radix-non-root-group radix-non-root-user
+USER 1001
 ARG X_TAG
 WORKDIR /opt/app
 ENV NODE_ENV=production
