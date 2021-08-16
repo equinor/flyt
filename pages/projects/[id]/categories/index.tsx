@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Layouts } from "../../../../layouts/LayoutWrapper";
 import styles from "./categories.module.scss";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import { getTasksForProject } from "../../../../services/taskApi";
 import { useRouter } from "next/router";
 import { unknownErrorToString } from "../../../../utils/isError";
@@ -9,7 +9,6 @@ import { InfoBox } from "../../../../components/InfoBox";
 import { AddCategoryButton } from "../../../../components/AddCategoryButton";
 import { DraggableCategory } from "../../../../components/DraggableCategory";
 import { QipCard } from "../../../../components/QipCard";
-import { io } from "socket.io-client";
 
 export default function CategoriesPage(): JSX.Element {
   const router = useRouter();

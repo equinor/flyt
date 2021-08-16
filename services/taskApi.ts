@@ -5,7 +5,6 @@ const baseUrl = "/api/v1.0";
 
 //Questions, Ideas & Problems aka. Tasks
 // Gets a list of task types registered
-//[{"vsmTaskTypeID":1,"name":"Problem","description":null},{"vsmTaskTypeID":2,"name":"Question","description":null},{"vsmTaskTypeID":3,"name":"Idea","description":null}]
 export const getTaskTypes = (): Promise<
   Array<{ vsmTaskTypeID: number; name: string; description: string | null }>
 > =>

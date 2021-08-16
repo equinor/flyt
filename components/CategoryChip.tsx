@@ -11,7 +11,6 @@ export function CategoryChip(props: {
   onClickRemove: () => void;
 }): JSX.Element {
   const backgroundColor = getColor(props.text);
-  // const backgroundColor = props.color;
   const textColor =
     lightOrDark(backgroundColor) === "light" ? "black" : "white";
   return (

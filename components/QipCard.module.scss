@@ -5,18 +5,12 @@
   background-color: white;
   border-radius: 4px;
   padding: 4px 16px;
-
-  //height: 196px;
   width: 245px;
-  // Text
+
   font-size: 14px;
   line-height: 20px;
   color: #565656;
   transition: all 0.1s ease-in-out;
-
-  //display: flex;
-  //justify-items: space-between;
-  //filter: drop-shadow(0px 10px 10px rgba(0, 0, 0, 0.04));
 }
 
 .stamp {
@@ -55,6 +49,4 @@
 .qipCardCategorySection {
   display: flex;
   flex-wrap: wrap;
-
-  //justify-content: space-evenly;
 }
