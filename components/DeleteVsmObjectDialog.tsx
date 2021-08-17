@@ -2,7 +2,7 @@ import { Button, Icon, Scrim, Typography } from "@equinor/eds-core-react";
 import styles from "../layouts/default.layout.module.scss";
 import React from "react";
 import { vsmObject } from "../interfaces/VsmObject";
-import { getVsmTypeName } from "./GetVsmTypeName";
+import { getVsmTypeName } from "../utils/GetVsmTypeName";
 import { vsmObjectTypes } from "../types/vsmObjectTypes";
 import { useMutation, useQueryClient } from "react-query";
 import { unknownErrorToString } from "../utils/isError";
