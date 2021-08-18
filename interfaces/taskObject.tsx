@@ -14,4 +14,5 @@ export interface taskObject {
   displayIndex: string;
   objects?: Array<vsmObject>;
   changeLogs?: unknown[];
+  category;
 }

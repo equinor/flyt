@@ -21,6 +21,8 @@
   line-height: 16px;
   color: #9ca6ac;
   transition: all 0.2s ease-in-out;
+
+  user-select: none;
 }
 
 .addCategoryButton:hover {
