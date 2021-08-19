@@ -2,12 +2,7 @@ import { TopBar } from "@equinor/eds-core-react";
 import styles from "../layouts/default.layout.module.scss";
 import UserMenu from "./AppHeader/UserMenu";
 import React from "react";
-import {
-  bar_chart,
-  comment_important,
-  info_circle,
-  new_alert,
-} from "@equinor/eds-icons";
+import { bar_chart, comment_important, info_circle } from "@equinor/eds-icons";
 import { LinkIcon } from "./LinkIcon";
 import { useRouter } from "next/router";
 
@@ -15,7 +10,6 @@ export function RightTopBarSection(props: {
   isAuthenticated: boolean;
 }): JSX.Element {
   const router = useRouter();
-  const { id } = router.query;
   return (
     <div
       style={{
@@ -41,14 +35,6 @@ export function RightTopBarSection(props: {
         link="https://forms.office.com/Pages/ResponsePage.aspx?id=NaKkOuK21UiRlX_PBbRZsGXJ18p1yVhOjLvQbqMNiVBUQUQyVUFYMkZRVUZPUk5TWjBESERGMFVUTiQlQCN0PWcu"
         style={{ marginRight: 8 }}
       />
-      {id && (
-        <LinkIcon
-          helpText="Show QIPs for current flow in new tab"
-          icon={new_alert}
-          link={`/projects/${id}/qips`}
-          style={{ marginRight: 8 }}
-        />
-      )}
       {props.isAuthenticated && (
         <div className={styles.userCircle}>
           <TopBar.Actions>
