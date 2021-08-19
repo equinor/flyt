@@ -29,7 +29,7 @@
   transition: all 0.1s ease-in-out;
 }
 
-.category > p {
+.categoryText {
   flex: 1;
   padding-left: 10px;
   padding-right: 10px;
@@ -50,4 +50,11 @@
   transform: scale(1.001);
   filter: drop-shadow(0px 10px 10px rgba(0, 0, 0, 0.1));
   cursor: grabbing;
+}
+
+.categoryClickWrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }

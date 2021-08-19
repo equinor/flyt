@@ -3,7 +3,8 @@ import styles from "./DraggableCategory.module.scss";
 import { ColorDot } from "./ColorDot";
 import React, { useRef, useState } from "react";
 import { Button, Icon, Menu } from "@equinor/eds-core-react";
-import { more_vertical } from "@equinor/eds-icons";
+import { delete_to_trash, edit, more_vertical } from "@equinor/eds-icons";
+import colors from "../theme/colors";
 
 export function DraggableCategory(props: {
   text: string;
@@ -18,7 +19,6 @@ export function DraggableCategory(props: {
       <div
         style={{ border: props.checked && `${color} 2px solid` }}
         draggable={true}
-        onClick={props.onClick}
         onDragStart={(ev) => {
           ev.dataTransfer.setData(
             "text/plain",
@@ -30,14 +30,13 @@ export function DraggableCategory(props: {
         }}
         className={styles.category}
       >
-        <ColorDot color={color} />
-        <p>{props.text}</p>
+        <span onClick={props.onClick} className={styles.categoryClickWrapper}>
+          <ColorDot color={color} />
+          <p className={styles.categoryText}>{props.text}</p>
+        </span>
         <Button
           variant={"ghost_icon"}
-          onClick={(e) => {
-            e.stopPropagation();
-            setMenuOpen(true);
-          }}
+          onClick={() => setMenuOpen(true)}
           ref={menuButtonRef}
         >
           <Icon data={more_vertical} />
@@ -52,8 +51,14 @@ export function DraggableCategory(props: {
         onClose={() => setMenuOpen(false)}
         placement="bottom-end"
       >
-        <Menu.Item>Rename</Menu.Item>
-        <Menu.Item>Delete</Menu.Item>
+        <Menu.Item>
+          <Icon data={edit} />
+          Rename
+        </Menu.Item>
+        <Menu.Item style={{ color: colors.ERROR }}>
+          <Icon data={delete_to_trash} />
+          Delete
+        </Menu.Item>
       </Menu>
     </>
   );

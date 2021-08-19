@@ -9,11 +9,12 @@ import { InfoBox } from "../../../../components/InfoBox";
 import { AddCategoryButton } from "../../../../components/AddCategoryButton";
 import { DraggableCategory } from "../../../../components/DraggableCategory";
 import { QipCard } from "../../../../components/QipCard";
-import { Button, Checkbox } from "@equinor/eds-core-react";
+import { Checkbox } from "@equinor/eds-core-react";
 import { vsmTaskTypes } from "../../../../types/vsmTaskTypes";
 import { taskObject } from "../../../../interfaces/taskObject";
 import Image from "next/image";
 import useLocalStorage from "../../../../hooks/useLocalStorage";
+
 export default function CategoriesPage(): JSX.Element {
   const router = useRouter();
   const { id } = router.query;
@@ -60,6 +61,7 @@ export default function CategoriesPage(): JSX.Element {
     //Todo: Add functionality to filter on category as well...
     // NB: Show all categories if none are checked.
     if (categories.some((category) => category.checked)) {
+      // if something...
       if (!t.category?.some((c) => categoryIsChecked(c.name))) return false;
     }
     switch (t.taskType.vsmTaskTypeID) {
@@ -90,25 +92,17 @@ export default function CategoriesPage(): JSX.Element {
     <div className={styles.wrapper}>
       <div className={styles.categoriesWrap}>
         <p className={styles.header}>Categories</p>
-        {/*<Button*/}
-        {/*  onClick={() => {*/}
-        {/*    setShowDragHelper(true);*/}
-        {/*    setShowCategoryClickHelper(true);*/}
-        {/*  }}*/}
-        {/*>*/}
-        {/*  Reset helper dialogs*/}
-        {/*</Button>*/}
         {showDragHelper && (
           <InfoBox onClose={() => setShowDragHelper(false)}>
             <Image
               src={"/gifs/categoryDrag.gif"}
-              alt="Showing how to add a category to a QIP"
+              alt="Animation of dragging a category onto a Problem-card"
               unoptimized={true} //Trouble with optimizing gifs
               width={800}
               height={321}
               // layout={"fill"}
             />
-            <p style={{ zIndex: 1 }}>
+            <p>
               Drag a category into one or more of the problems, ideas or
               questions.
             </p>
