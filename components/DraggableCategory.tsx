@@ -24,7 +24,7 @@ export function DraggableCategory(props: {
   const color = getColor(categoryName);
   function saveText() {
     //Save the text and exit edit-mode
-    setEditText(false);
+    if (categoryName.trim() !== "") setEditText(false); // Todo: Maybe show an error message?
   }
 
   if (editText) {
