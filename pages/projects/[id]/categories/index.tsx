@@ -118,19 +118,25 @@ export default function CategoriesPage(): JSX.Element {
           onClickHandler={() =>
             setCategories([
               ...categories,
-              { name: `Category ${categories.length + 1}`, checked: false },
+              {
+                name: `Category ${categories.length + 1}`,
+                checked: false,
+                placement: categories.length + 1,
+              },
             ])
           }
         />
         <div className={styles.categoriesDraggableSection}>
-          {categories.reverse().map((category) => (
-            <DraggableCategory
-              key={category.name}
-              onClick={() => toggleSelection(category)}
-              text={category.name}
-              checked={category.checked}
-            />
-          ))}
+          {categories
+            .sort((a, b) => b.placement - a.placement)
+            .map((category) => (
+              <DraggableCategory
+                key={category.name}
+                onClick={() => toggleSelection(category)}
+                text={category.name}
+                checked={category.checked}
+              />
+            ))}
         </div>
       </div>
 
