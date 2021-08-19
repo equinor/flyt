@@ -2,8 +2,13 @@ import { getColor } from "../utils/getColor";
 import styles from "./DraggableCategory.module.scss";
 import { ColorDot } from "./ColorDot";
 import React, { useRef, useState } from "react";
-import { Button, Icon, Menu } from "@equinor/eds-core-react";
-import { delete_to_trash, edit, more_vertical } from "@equinor/eds-icons";
+import { Button, Icon, Input, Menu, TextField } from "@equinor/eds-core-react";
+import {
+  check,
+  delete_to_trash,
+  edit,
+  more_vertical,
+} from "@equinor/eds-icons";
 import colors from "../theme/colors";
 
 export function DraggableCategory(props: {
@@ -11,9 +16,43 @@ export function DraggableCategory(props: {
   onClick: () => void;
   checked: boolean;
 }): JSX.Element {
-  const color = getColor(props.text);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButtonRef = useRef();
+  const [categoryName, setCategoryName] = useState("");
+  const [editText, setEditText] = useState(true);
+
+  const color = getColor(categoryName);
+  function saveText() {
+    //Save the text and exit edit-mode
+    setEditText(false);
+  }
+
+  if (editText) {
+    return (
+      <>
+        <div
+          style={{ border: props.checked && `${color} 2px solid` }}
+          className={styles.category}
+        >
+          <Input
+            autoFocus
+            defaultValue={categoryName}
+            placeholder={props.text}
+            onClick={(event) => event.stopPropagation()}
+            onChange={(e) => setCategoryName(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.code === "Enter") {
+                saveText();
+              }
+            }}
+          />
+          <Button variant={"ghost_icon"} onClick={saveText} ref={menuButtonRef}>
+            <Icon data={check} />
+          </Button>
+        </div>
+      </>
+    );
+  }
   return (
     <>
       <div
@@ -23,7 +62,7 @@ export function DraggableCategory(props: {
           ev.dataTransfer.setData(
             "text/plain",
             JSON.stringify({
-              text: props.text,
+              text: categoryName,
               color: color,
             })
           );
@@ -32,7 +71,7 @@ export function DraggableCategory(props: {
       >
         <span onClick={props.onClick} className={styles.categoryClickWrapper}>
           <ColorDot color={color} />
-          <p className={styles.categoryText}>{props.text}</p>
+          <p className={styles.categoryText}>{categoryName}</p>
         </span>
         <Button
           variant={"ghost_icon"}
@@ -41,7 +80,6 @@ export function DraggableCategory(props: {
         >
           <Icon data={more_vertical} />
         </Button>
-        {/*  Todo: figure out what the close icon should do...*/}
       </div>
       <Menu
         open={menuOpen}
@@ -51,11 +89,18 @@ export function DraggableCategory(props: {
         onClose={() => setMenuOpen(false)}
         placement="bottom-end"
       >
-        <Menu.Item>
+        <Menu.Item
+          onClick={() => {
+            setEditText(true);
+          }}
+        >
           <Icon data={edit} />
           Rename
         </Menu.Item>
-        <Menu.Item style={{ color: colors.ERROR }}>
+        <Menu.Item
+          style={{ color: colors.ERROR }}
+          onClick={() => alert("Delete category - Not yet implemented")}
+        >
           <Icon data={delete_to_trash} />
           Delete
         </Menu.Item>

@@ -123,7 +123,7 @@ export default function CategoriesPage(): JSX.Element {
           }
         />
         <div className={styles.categoriesDraggableSection}>
-          {categories.map((category) => (
+          {categories.reverse().map((category) => (
             <DraggableCategory
               key={category.name}
               onClick={() => toggleSelection(category)}

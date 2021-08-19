@@ -21,7 +21,10 @@ export function CategoryChip(props: {
       <p style={{ color: textColor }}>{props.text}</p>
       <Icon
         className={styles.removeButton}
-        onClick={props.onClickRemove}
+        onClick={(e) => {
+          e.stopPropagation();
+          props.onClickRemove();
+        }}
         style={{ color: textColor, width: 16, height: 16 }}
         data={close}
       />

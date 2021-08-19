@@ -16,7 +16,7 @@ export default function SettingsPage(): JSX.Element {
     <div style={{ display: "flex", flexDirection: "column", padding: 24 }}>
       <h2>Helper dialogs</h2>
       <Switch
-        label="Show drag helper"
+        label="Show category drag helper"
         checked={showDragHelper}
         onChange={() => setShowDragHelper(!showDragHelper)}
         size={"small"}
