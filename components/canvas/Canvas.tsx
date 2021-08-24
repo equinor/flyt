@@ -21,6 +21,7 @@ import { vsmObject } from "interfaces/VsmObject";
 import { unknownErrorToString } from "utils/isError";
 import { io } from "socket.io-client";
 import { notifyOthers } from "../../services/notifyOthers";
+import { getAccessToken } from "../../auth/msalHelpers";
 
 export default function Canvas(): JSX.Element {
   const ref = useRef();
@@ -28,16 +29,46 @@ export default function Canvas(): JSX.Element {
   const dispatch = useStoreDispatch();
   const router = useRouter();
   const { id } = router.query;
-
-  const [socket] = useState(io({ path: "/api/socket" }));
+  // function notifyOthers(
+  //   socket: any,
+  //   eventType: string,
+  //   user: string,
+  //   project: number
+  // ) {
+  //   const payload = { user, project, eventType };
+  //   socket.emit(eventType, payload);
+  // }
   useEffect(() => {
-    socket.on(`room-${id}`, (message) => {
-      queryClient.invalidateQueries();
+    getAccessToken().then((accessToken) => {
+      const socket = io({ path: "/api/socket", auth: { token: accessToken } });
+
+      socket.on("connect", () => {
+        console.log("Socket connected!");
+      });
+
+      socket.on("disconnect", (reason) => {
+        console.log("Socket disconnect", reason);
+      });
+
+      socket.on(`room-${id}`, (message) => {
+        console.log({ message });
+        queryClient.invalidateQueries();
+      });
+
+      // Handling token expiration
+      socket.on("connect_error", (error) => {
+        // if (error.data.type === "UnauthorizedError") {
+        console.log("Error", error);
+        // }
+      });
+      socket.onAny((message) => console.log({ message }));
+      socket.emit(`room-${id}`, { message: "Hello!" });
+
+      socket.send("Hello!");
+
+      return () => socket.disconnect();
     });
-    return () => {
-      if (socket) socket.disconnect();
-    };
-  }, [socket]);
+  }, []);
 
   const { data: project } = useQuery(["project", id], () => getProject(id));
 

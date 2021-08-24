@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { Layouts } from "../layouts/LayoutWrapper";
+import { getAccessToken } from "../auth/msalHelpers";
 
 function getUserString(e) {
   if (e.user) return <> by User {e.user}</>;
@@ -9,32 +10,49 @@ function getUserString(e) {
 
 function LiveEventPage() {
   const [events, setEvents] = useState([]);
-  const [socket] = useState(io({ path: "/api/socket" }));
-  useEffect(() => {
-    socket.on("connect", () => {
-      console.log("Socket connected!");
-    });
+  const [socket, setSocket] = useState(null);
 
-    socket.on("disconnect", (reason) => {
-      console.log("Socket disconnect", reason);
-    });
+  // const [socket] = useState(io({ path: "/api/socket" }));
+  useEffect((): any => {
+    getAccessToken().then((accessToken) => {
+      const s = io({ path: "/api/socket", auth: { token: `${accessToken}` } });
+      // Handling token expiration
+      s.on("connect_error", (error) => {
+        // if (error.data.type === "UnauthorizedError") {
+        console.log(error);
+        // }
+      });
 
-    socket.onAny((eventName, ...args) => {
-      console.log(eventName, ...args);
-      setEvents((prevState) => [
-        { ...args[0], date: new Date().toLocaleTimeString() },
-        ...prevState,
-      ]);
-    });
+      s.on("connect", () => {
+        console.log("Socket connected!");
+      });
 
-    return () => {
-      if (socket) socket.disconnect();
-    };
-  }, [socket]);
+      s.on("disconnect", (reason) => {
+        console.log("Socket disconnect", reason);
+      });
+
+      s.onAny((eventName, ...args) => {
+        console.log(eventName, ...args);
+        setEvents((prevState) => [
+          { ...args[0], date: new Date().toLocaleTimeString() },
+          ...prevState,
+        ]);
+      });
+      s.onAny((message) => console.log({ message }));
+      s.emit(`room-0`, { message: "Hello!" });
+
+      s.send("Hello!");
+
+      setSocket(s);
+      return () => s.disconnect();
+    });
+  }, []);
 
   return (
     <div>
       <h1>Live events</h1>
+      <button onClick={() => socket.emit("update", "PING!")}>PING!</button>
+
       {events.map((e) => {
         return (
           <p key={`${e.date}${e.user}`} title={JSON.stringify(e)}>
