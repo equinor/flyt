@@ -3,7 +3,7 @@ import { NextApiResponseServerIO } from "../../types/next";
 import { Server as ServerIO } from "socket.io";
 import { Server as NetServer } from "http";
 import { authorize } from "@thream/socketio-jwt";
-// import getConfig from "next/config";
+import getConfig from "next/config";
 
 export const config = {
   api: {
@@ -12,7 +12,7 @@ export const config = {
 };
 
 const server = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
-  // const { serverRuntimeConfig } = getConfig();
+  const { serverRuntimeConfig } = getConfig();
 
   // Todo: Auth
   if (!res.socket.server.io) {
@@ -23,17 +23,8 @@ const server = async (req: NextApiRequest, res: NextApiResponseServerIO) => {
       path: "/api/socket",
     });
     io.use(
-      authorize({
-        secret: "***REMOVED***",
-      })
+      authorize({ secret: serverRuntimeConfig.AUTH_SECRET }) // "your secret or public key",
     );
-    // io.use(
-    //   // authorize({ secret: serverRuntimeConfig.AUTH_SECRET }) // "your secret or public key",
-    //   authorize({
-    //     secret: "***REMOVED***",
-    //   }) // "your secret or public key",
-    // );
-
     io.on("connection", async (socket) => {
       // jwt payload of the connected client
       console.log("socket.decodedToken", socket.decodedToken);
