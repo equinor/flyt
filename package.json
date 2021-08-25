@@ -38,6 +38,7 @@
     "@typescript-eslint/parser": "^4.22.1",
     "axios": "^0.21.1",
     "easy-peasy": "^5.0.0",
+    "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.1",
     "next": "^10.2.3",
     "pixi-viewport": "^4.30.4",

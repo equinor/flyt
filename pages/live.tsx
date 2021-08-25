@@ -15,7 +15,9 @@ function LiveEventPage() {
   // const [socket] = useState(io({ path: "/api/socket" }));
   useEffect((): any => {
     getAccessToken().then((accessToken) => {
-      const s = io({ path: "/api/socket", auth: { token: `${accessToken}` } });
+      const opts = { path: "/api/socket", auth: { token: accessToken } };
+      console.log(opts);
+      const s = io(opts);
       // Handling token expiration
       s.on("connect_error", (error) => {
         // if (error.data.type === "UnauthorizedError") {
@@ -40,7 +42,6 @@ function LiveEventPage() {
       });
       s.onAny((message) => console.log({ message }));
       s.emit(`room-0`, { message: "Hello!" });
-
       s.send("Hello!");
 
       setSocket(s);
