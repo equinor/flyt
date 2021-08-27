@@ -29,29 +29,26 @@ export default function Canvas(): JSX.Element {
   const dispatch = useStoreDispatch();
   const router = useRouter();
   const { id } = router.query;
-  // function notifyOthers(
-  //   socket: any,
-  //   eventType: string,
-  //   user: string,
-  //   project: number
-  // ) {
-  //   const payload = { user, project, eventType };
-  //   socket.emit(eventType, payload);
-  // }
+
+  const [socketConnected, setSocketConnected] = useState(false);
+
   useEffect(() => {
     getAccessToken().then((accessToken) => {
       const socket = io({ path: "/api/socket", auth: { token: accessToken } });
 
       socket.on("connect", () => {
-        console.log("Socket connected!");
+        setSocketConnected(true);
       });
 
       socket.on("disconnect", (reason) => {
-        console.log("Socket disconnect", reason);
+        dispatch.setSnackMessage(`Socket disconnected because ${reason}`);
+        setSocketConnected(false);
       });
 
-      socket.on(`room-${id}`, (message) => {
-        console.log({ message });
+      socket.on(`room-${id}`, (payload) => {
+        dispatch.setSnackMessage(
+          `${payload.user ? payload.user : "Someone"} ${payload.msg}`
+        );
         queryClient.invalidateQueries();
       });
 
@@ -61,10 +58,6 @@ export default function Canvas(): JSX.Element {
         console.log("Error", error);
         // }
       });
-      socket.onAny((message) => console.log({ message }));
-      socket.emit(`room-${id}`, { message: "Hello!" });
-
-      socket.send("Hello!");
 
       return () => socket.disconnect();
     });
@@ -89,7 +82,7 @@ export default function Canvas(): JSX.Element {
     {
       onSuccess: () => {
         dispatch.setSnackMessage("✅ Moved card!");
-        notifyOthers("✅ Moved card!!", id, account);
+        notifyOthers("Moved a card", id, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
@@ -103,7 +96,7 @@ export default function Canvas(): JSX.Element {
     {
       onSuccess: () => {
         dispatch.setSnackMessage("✅ Card added!");
-        notifyOthers("✅ Card added!", id, account);
+        notifyOthers("Added a new card", id, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),

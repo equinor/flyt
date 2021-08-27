@@ -8,11 +8,15 @@ import { unknownErrorToString } from "../utils/isError";
 import { updateTask } from "../services/taskApi";
 import { useRouter } from "next/router";
 import { notifyOthers } from "../services/notifyOthers";
+import { useAccount, useMsal } from "@azure/msal-react";
 
 export function EditTaskTextField(props: {
   task: taskObject;
   disabled: boolean;
 }): JSX.Element {
+  const { accounts } = useMsal();
+  const account = useAccount(accounts[0] || {});
+
   const { description, vsmTaskID } = props.task;
   const dispatch = useStoreDispatch();
 
@@ -25,7 +29,7 @@ export function EditTaskTextField(props: {
     },
     {
       onSuccess: () => {
-        notifyOthers("updateTask", id);
+        notifyOthers("Updated a Q/I/P", id, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),

@@ -1,5 +1,6 @@
 import { AccountInfo } from "@azure/msal-browser";
 import { getUserShortName } from "../utils/getUserShortName";
+import { getAccessToken } from "../auth/msalHelpers";
 
 export const notifyOthers = async (
   msg: unknown,
@@ -19,6 +20,7 @@ export const notifyOthers = async (
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: await getAccessToken(),
     },
     body: JSON.stringify(message),
   });

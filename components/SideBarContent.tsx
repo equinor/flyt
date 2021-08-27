@@ -13,6 +13,7 @@ import { useStoreDispatch } from "hooks/storeHooks";
 import { close as closeIcon } from "@equinor/eds-icons";
 import { notifyOthers } from "../services/notifyOthers";
 import { useRouter } from "next/router";
+import { useAccount, useMsal } from "@azure/msal-react";
 
 /**
  * Process specific content stuff
@@ -26,6 +27,9 @@ export function SideBarContent(props: {
   selectedObject;
   isLoading: boolean;
 }): JSX.Element {
+  const { accounts } = useMsal();
+  const account = useAccount(accounts[0] || {});
+
   const router = useRouter();
   const { id } = router.query;
   const dispatch = useStoreDispatch();
@@ -34,7 +38,7 @@ export function SideBarContent(props: {
     (patchedObject: vsmObject) => patchVSMObject(patchedObject),
     {
       onSuccess() {
-        notifyOthers("patchVSMObject", id);
+        notifyOthers("Updated a card", id, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),

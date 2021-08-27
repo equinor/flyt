@@ -12,6 +12,7 @@ import { unknownErrorToString } from "utils/isError";
 import { useStoreDispatch } from "hooks/storeHooks";
 import { useRouter } from "next/router";
 import { notifyOthers } from "../services/notifyOthers";
+import { useAccount, useMsal } from "@azure/msal-react";
 
 export function AccessBox(props: {
   project: vsmProject;
@@ -134,6 +135,9 @@ function MiddleSection(props: {
   const [userInput, setEmailInput] = useState("");
   const queryClient = useQueryClient();
 
+  const { accounts } = useMsal();
+  const account = useAccount(accounts[0] || {});
+
   const router = useRouter();
   const { id } = router.query;
   const addUserMutation = useMutation(
@@ -142,7 +146,7 @@ function MiddleSection(props: {
     {
       onSuccess: () => {
         setEmailInput("");
-        notifyOthers("Gave access to new user", id);
+        notifyOthers("Gave access to a new user", id, account);
         queryClient.invalidateQueries("userAccesses");
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
@@ -152,7 +156,7 @@ function MiddleSection(props: {
     (props: { accessId; vsmId }) => userApi.remove(props),
     {
       onSuccess: () => {
-        notifyOthers("Removed access for user", id);
+        notifyOthers("Removed access for user", id, account);
         return queryClient.invalidateQueries("userAccesses");
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
@@ -163,7 +167,7 @@ function MiddleSection(props: {
       userApi.update(props),
     {
       onSuccess() {
-        notifyOthers("Updated access for user", id);
+        notifyOthers("Updated access for some user", id, account);
         return queryClient.invalidateQueries("userAccesses");
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),

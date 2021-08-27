@@ -47,7 +47,7 @@ const CanvasLayout = ({ children }) => {
     },
     {
       onSuccess: () => {
-        notifyOthers("updatedProject name", id);
+        notifyOthers("Gave the process a new name", id, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),

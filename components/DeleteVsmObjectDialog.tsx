@@ -11,12 +11,16 @@ import { useStoreDispatch } from "hooks/storeHooks";
 import { close as closeIcon, delete_forever } from "@equinor/eds-icons";
 import { useRouter } from "next/router";
 import { notifyOthers } from "../services/notifyOthers";
+import { useAccount, useMsal } from "@azure/msal-react";
 
 export function DeleteVsmObjectDialog(props: {
   objectToDelete: vsmObject;
   onClose: () => void;
   visible: boolean;
 }): JSX.Element {
+  const { accounts } = useMsal();
+  const account = useAccount(accounts[0] || {});
+
   const router = useRouter();
   const { id } = router.query;
   const dispatch = useStoreDispatch();
@@ -26,7 +30,7 @@ export function DeleteVsmObjectDialog(props: {
     {
       onSuccess() {
         handleClose();
-        notifyOthers("Deleted card", id);
+        notifyOthers("Deleted a card", id, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),

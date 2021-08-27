@@ -10,12 +10,16 @@ import { vsmObject } from "../interfaces/VsmObject";
 import { unknownErrorToString } from "utils/isError";
 import { useRouter } from "next/router";
 import { notifyOthers } from "../services/notifyOthers";
+import { useAccount, useMsal } from "@azure/msal-react";
 
 export function ExistingTaskSection(props: {
   visible: boolean;
   existingTaskFilter;
   selectedObject: vsmObject;
 }): JSX.Element {
+  const { accounts } = useMsal();
+  const account = useAccount(accounts[0] || {});
+
   if (!props.visible) return <></>;
   const { existingTaskFilter, selectedObject } = props;
   const { tasks } = selectedObject;
@@ -39,7 +43,7 @@ export function ExistingTaskSection(props: {
     (task: taskObject) => linkTask(selectedObject.vsmObjectID, task.vsmTaskID),
     {
       onSuccess: () => {
-        notifyOthers("Linked task", id);
+        notifyOthers("Added a Q/I/P to a card", id, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
@@ -50,7 +54,7 @@ export function ExistingTaskSection(props: {
       unlinkTask(selectedObject.vsmObjectID, task.vsmTaskID),
     {
       onSuccess() {
-        notifyOthers("Unlinked task", id);
+        notifyOthers("Added a Q/I/P from a card", id, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),

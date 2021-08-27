@@ -12,11 +12,15 @@ import { unknownErrorToString } from "utils/isError";
 import { vsmObject } from "../interfaces/VsmObject";
 import { useRouter } from "next/router";
 import { notifyOthers } from "../services/notifyOthers";
+import { useAccount, useMsal } from "@azure/msal-react";
 
 export function NewTaskSection(props: {
   onClose: () => void;
   selectedObject;
 }): JSX.Element {
+  const { accounts } = useMsal();
+  const account = useAccount(accounts[0] || {});
+
   const dispatch = useStoreDispatch();
   const selectedObject = props.selectedObject;
 
@@ -27,7 +31,7 @@ export function NewTaskSection(props: {
   const taskMutations = useMutation((task: taskObject) => createTask(task), {
     onSuccess: () => {
       clearAndCloseAddTaskSection();
-      notifyOthers("Created new task", id);
+      notifyOthers(`Created a new Q/I/P`, id, account);
       return queryClient.invalidateQueries();
     },
     onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
