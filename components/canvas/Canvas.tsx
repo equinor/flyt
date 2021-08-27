@@ -22,30 +22,7 @@ import { unknownErrorToString } from "utils/isError";
 import { io } from "socket.io-client";
 import { notifyOthers } from "../../services/notifyOthers";
 import { getAccessToken } from "../../auth/msalHelpers";
-import colors from "../../theme/colors";
-import { ColorDot } from "../ColorDot";
-
-function LiveIndicator(props: { live: boolean; title: string }) {
-  const { live } = props;
-  return (
-    <div
-      style={{
-        paddingRight: 5,
-        paddingLeft: 5,
-        display: "flex",
-        alignItems: "center",
-        // justifyContent: "center",
-        backgroundColor: "white",
-      }}
-      title={props.title}
-    >
-      <div style={{ paddingRight: 5 }}>
-        <ColorDot color={live ? colors.SUCCESS : colors.ERROR} />
-      </div>
-      {live ? <p>Live</p> : <p>Disconnected</p>}
-    </div>
-  );
-}
+import { LiveIndicator } from "../LiveIndicator";
 
 export default function Canvas(): JSX.Element {
   const ref = useRef();
@@ -56,6 +33,9 @@ export default function Canvas(): JSX.Element {
 
   const [socketConnected, setSocketConnected] = useState(false);
   const [socketReason, setSocketReason] = useState("");
+
+  const { accounts } = useMsal();
+  const account = useAccount(accounts[0] || {});
 
   useEffect(() => {
     getAccessToken().then((accessToken) => {
@@ -80,9 +60,11 @@ export default function Canvas(): JSX.Element {
       });
 
       socket.on(`room-${id}`, (payload) => {
-        dispatch.setSnackMessage(
-          `${payload.user ? payload.user : "Someone"} ${payload.msg}`
-        );
+        if (payload.user !== account.username?.split("@")[0]) {
+          dispatch.setSnackMessage(
+            `${payload.user ? payload.user : "Someone"} ${payload.msg}`
+          );
+        }
         queryClient.invalidateQueries();
       });
       // Handling token expiration
@@ -92,12 +74,9 @@ export default function Canvas(): JSX.Element {
   }, []);
 
   const { data: project } = useQuery(["project", id], () => getProject(id));
-
   const [assetsAreLoaded, setAssetsAreLoaded] = useState(false);
-  const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
 
-  const { accounts } = useMsal();
-  const account = useAccount(accounts[0] || {});
+  const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
   const myAccess = getMyAccess(project, account);
   const userCanEdit = myAccess === "Admin" || myAccess === "Contributor";
 
@@ -174,12 +153,16 @@ export default function Canvas(): JSX.Element {
     <div
       style={{
         backgroundColor: "black",
-        display: "flex",
-        alignItems: "center",
-        flexDirection: "column",
       }}
     >
-      <LiveIndicator live={socketConnected} title={socketReason} />
+      <LiveIndicator
+        live={socketConnected}
+        title={
+          setSocketConnected
+            ? "Connection is looking good!\nYour changes should appear immediately for other users."
+            : `You are not connected because of ${socketReason}`
+        }
+      />
       <DeleteVsmObjectDialog
         objectToDelete={selectedObject}
         visible={visibleDeleteScrim}
