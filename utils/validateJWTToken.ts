@@ -1,6 +1,8 @@
 import getConfig from "next/config";
 import { ExtendedError } from "socket.io/dist/namespace";
 import jwt from "jsonwebtoken";
+import fetch from "node-fetch";
+import atob from "atob";
 
 let possibleKeys;
 
