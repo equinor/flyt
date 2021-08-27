@@ -22,6 +22,30 @@ import { unknownErrorToString } from "utils/isError";
 import { io } from "socket.io-client";
 import { notifyOthers } from "../../services/notifyOthers";
 import { getAccessToken } from "../../auth/msalHelpers";
+import colors from "../../theme/colors";
+import { ColorDot } from "../ColorDot";
+
+function LiveIndicator(props: { live: boolean; title: string }) {
+  const { live } = props;
+  return (
+    <div
+      style={{
+        paddingRight: 5,
+        paddingLeft: 5,
+        display: "flex",
+        alignItems: "center",
+        // justifyContent: "center",
+        backgroundColor: "white",
+      }}
+      title={props.title}
+    >
+      <div style={{ paddingRight: 5 }}>
+        <ColorDot color={live ? colors.SUCCESS : colors.ERROR} />
+      </div>
+      {live ? <p>Live</p> : <p>Disconnected</p>}
+    </div>
+  );
+}
 
 export default function Canvas(): JSX.Element {
   const ref = useRef();
@@ -31,6 +55,7 @@ export default function Canvas(): JSX.Element {
   const { id } = router.query;
 
   const [socketConnected, setSocketConnected] = useState(false);
+  const [socketReason, setSocketReason] = useState("");
 
   useEffect(() => {
     getAccessToken().then((accessToken) => {
@@ -43,6 +68,15 @@ export default function Canvas(): JSX.Element {
       socket.on("disconnect", (reason) => {
         dispatch.setSnackMessage(`Socket disconnected because ${reason}`);
         setSocketConnected(false);
+        setSocketReason(`${reason}`);
+      });
+
+      socket.on("connect_error", (error) => {
+        // if (error.data.type === "UnauthorizedError") {
+        console.log("Error", error);
+        setSocketConnected(false);
+        setSocketReason(error.message);
+        // }
       });
 
       socket.on(`room-${id}`, (payload) => {
@@ -51,13 +85,7 @@ export default function Canvas(): JSX.Element {
         );
         queryClient.invalidateQueries();
       });
-
       // Handling token expiration
-      socket.on("connect_error", (error) => {
-        // if (error.data.type === "UnauthorizedError") {
-        console.log("Error", error);
-        // }
-      });
 
       return () => socket.disconnect();
     });
@@ -143,7 +171,15 @@ export default function Canvas(): JSX.Element {
   }, [project, assetsAreLoaded]);
 
   return (
-    <div style={{ backgroundColor: "black" }}>
+    <div
+      style={{
+        backgroundColor: "black",
+        display: "flex",
+        alignItems: "center",
+        flexDirection: "column",
+      }}
+    >
+      <LiveIndicator live={socketConnected} title={socketReason} />
       <DeleteVsmObjectDialog
         objectToDelete={selectedObject}
         visible={visibleDeleteScrim}

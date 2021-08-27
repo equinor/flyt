@@ -13,4 +13,6 @@ export default {
   BLACK: "#000",
 
   ERROR: "#FF002D",
+
+  SUCCESS: "#3fd18e",
 };
