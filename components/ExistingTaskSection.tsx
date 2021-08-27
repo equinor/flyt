@@ -19,8 +19,6 @@ export function ExistingTaskSection(props: {
 }): JSX.Element {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
-
-  if (!props.visible) return <></>;
   const { existingTaskFilter, selectedObject } = props;
   const { tasks } = selectedObject;
   const dispatch = useStoreDispatch();
@@ -60,6 +58,8 @@ export function ExistingTaskSection(props: {
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
+
+  if (!props.visible) return <></>;
 
   return (
     <div>
