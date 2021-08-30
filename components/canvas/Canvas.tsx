@@ -158,9 +158,11 @@ export default function Canvas(): JSX.Element {
       <LiveIndicator
         live={socketConnected}
         title={
-          setSocketConnected
+          !!setSocketConnected
             ? "Connection is looking good!\nYour changes should appear immediately for other users."
-            : `You are not connected because of ${socketReason}`
+            : `You are not connected ${
+                socketReason ? `because of ${socketReason}` : ""
+              }`
         }
       />
       <DeleteVsmObjectDialog

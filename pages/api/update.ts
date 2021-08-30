@@ -1,6 +1,7 @@
 import { NextApiRequest } from "next";
 import { NextApiResponseServerIO } from "../../types/next";
-import { validateJWTToken } from "../../utils/validateJWTToken";
+import validateJWTToken from "validate-azure-token";
+import getConfig from "next/config";
 
 export default (req: NextApiRequest, res: NextApiResponseServerIO) => {
   return new Promise<void>((resolve) => {
@@ -11,7 +12,14 @@ export default (req: NextApiRequest, res: NextApiResponseServerIO) => {
           res.status(401).json({ message: "Unauthorized: Missing JWT token" });
           return resolve();
         }
-        return validateJWTToken(token)
+        const { serverRuntimeConfig } = getConfig();
+        const verifyOptions = {
+          algorithms: ["RS256"],
+          audience: serverRuntimeConfig.AUDIENCE,
+          issuer:
+            "https://sts.windows.net/3aa4a235-b6e2-48d5-9195-7fcf05b459b0/",
+        };
+        return validateJWTToken(token, verifyOptions)
           .then(() => {
             const { roomId } = req.body;
             res?.socket?.server?.io?.emit(`room-${roomId}`, req.body);
