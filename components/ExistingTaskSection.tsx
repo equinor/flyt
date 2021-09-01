@@ -52,7 +52,7 @@ export function ExistingTaskSection(props: {
       unlinkTask(selectedObject.vsmObjectID, task.vsmTaskID),
     {
       onSuccess() {
-        notifyOthers("Added a Q/I/P from a card", id, account);
+        notifyOthers("Removed Q/I/P from a card", id, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),

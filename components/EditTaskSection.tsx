@@ -6,6 +6,12 @@ import styles from "./VSMCanvas.module.scss";
 import { Button, Icon } from "@equinor/eds-core-react";
 import { EditTaskTextField } from "./EditTaskTextField";
 import { delete_to_trash } from "@equinor/eds-icons";
+import { useMutation, useQueryClient } from "react-query";
+import { unlinkTask } from "../services/taskApi";
+import { notifyOthers } from "../services/notifyOthers";
+import { unknownErrorToString } from "../utils/isError";
+import { useAccount, useMsal } from "@azure/msal-react";
+import { useRouter } from "next/router";
 
 export function EditTaskSection(props: {
   task: taskObject;
@@ -14,6 +20,22 @@ export function EditTaskSection(props: {
 }): JSX.Element {
   const { task, object } = props;
   const dispatch = useStoreDispatch();
+
+  const router = useRouter();
+  const { id } = router.query;
+  const { accounts } = useMsal();
+  const account = useAccount(accounts[0] || {});
+  const queryClient = useQueryClient();
+  const taskUnlinkMutation = useMutation(
+    (task: taskObject) => unlinkTask(object.vsmObjectID, task.vsmTaskID),
+    {
+      onSuccess() {
+        notifyOthers("Removed Q/I/P from a card", id, account);
+        return queryClient.invalidateQueries();
+      },
+      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+    }
+  );
 
   return (
     <div className={styles.headerContainer}>
@@ -32,7 +54,7 @@ export function EditTaskSection(props: {
           variant={"ghost_icon"}
           color={"danger"}
           onClick={() => {
-            dispatch.unlinkTask({ task: task, object: object });
+            taskUnlinkMutation.mutate(task);
           }}
         >
           <Icon data={delete_to_trash} size={24} />
