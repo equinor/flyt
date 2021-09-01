@@ -7,6 +7,7 @@
     "dev": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
+    "release": "standard-version && yarn release-test",
     "release-dev": "git tag -m 'Current DEV environment'   -a -f DEV  && yarn push-tags",
     "release-test": "git tag -m 'Current TEST environment' -a -f TEST && yarn push-tags",
     "release-qa": "git tag -m 'Current QA environment'     -a -f QA   && yarn push-tags",
@@ -24,8 +25,7 @@
     "rename": "sh scripts/changeName.sh",
     "genRadix": "sh scripts/generateRadixConfig.sh",
     "prepare": "husky install",
-    "postinstall": "sh scripts/postInstall.sh",
-    "release": "standard-version"
+    "postinstall": "sh scripts/postInstall.sh"
   },
   "dependencies": {
     "@azure/msal-browser": "^2.16.0",
