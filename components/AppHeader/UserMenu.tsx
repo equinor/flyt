@@ -4,6 +4,7 @@ import { useAccount, useMsal } from "@azure/msal-react";
 import { UserDot } from "../UserDot";
 import { getUserShortName } from "../../utils/getUserShortName";
 import packageJson from "../../package.json";
+import Link from "next/dist/client/link";
 
 const UserMenu: React.FC = () => {
   const { instance, accounts } = useMsal();
@@ -65,7 +66,9 @@ const UserMenu: React.FC = () => {
         onClose={closeMenu}
       >
         <Menu.Item disabled>{account?.username}</Menu.Item>
-        <Menu.Item disabled>Version {packageJson.version}</Menu.Item>
+        <Link href={"changelog"}>
+          <Menu.Item>Version {packageJson.version}</Menu.Item>
+        </Link>
         <Menu.Item onClick={() => instance.logout()}>Logout</Menu.Item>
       </Menu>
     </>
