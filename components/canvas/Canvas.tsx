@@ -158,7 +158,7 @@ export default function Canvas(): JSX.Element {
       <LiveIndicator
         live={socketConnected}
         title={
-          !!setSocketConnected
+          !!socketConnected
             ? "Connection is looking good!\nYour changes should appear immediately for other users."
             : `You are not connected ${
                 socketReason ? `because of ${socketReason}` : ""
