@@ -15,7 +15,7 @@ export default function ChangelogPage(): JSX.Element {
     return <p>Error loading changelog: {unknownErrorToString(error)}</p>;
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
-      <div>
+      <div style={{ maxWidth: 800 }}>
         <ReactMarkdown remarkPlugins={[gfm]}>{data?.text}</ReactMarkdown>
       </div>
     </div>

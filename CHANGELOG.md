@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.2](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.2) (2021-09-01)
+
+### Features
+
+- **changelog:** add changelog page ([1afb860](https://github.com/equinor/MAD-VSM-WEB/commit/1afb860aeae9695dfabbaf8cbf6c8ed9085f7fb2))
+
 ### 0.2.1 (2021-09-01)
 
 ### Bug Fixes
@@ -18,3 +24,30 @@ All notable changes to this project will be documented in this file. See [standa
 - upgrade next from 10.1.1 to 10.1.2 ([731b6ef](https://github.com/equinor/MAD-VSM-WEB/commit/731b6ef5d07d92742da94f0c127c930f264d7203))
 - upgrade next from 10.2.1 to 10.2.3 ([d59b01a](https://github.com/equinor/MAD-VSM-WEB/commit/d59b01a0f027e3350e61f507b117708d0f9330e5))
 - upgrade sass from 1.32.8 to 1.32.11 ([7adb0f8](https://github.com/equinor/MAD-VSM-WEB/commit/7adb0f82de491c3af57f8c055497e2bf02dd58a8))
+
+### 31.08.21: v0.2.0
+
+"Multiplayer" support. Users now see changes made by others in real-time
+
+### 06.08.21:
+
+Hiding sidebar when clicking the canvas Tooltip when adding questions, ideas and problems with long text Line shifts are displayed on cards in canvas
+
+### 30.07.21:
+
+Improved layout of the front page Access control: Sharing of write (contributor) and admin access is now available Bug
+fix: Long role names previously messed up the layout on cards; is now constrained to one line. Bug fix: Card text were sometimes lost during save
+
+### 01.07.21:
+
+Added link to Power BI
+
+### 29.06.21:
+
+Bug fix: Problems, questions and ideas did not show on SIPOC cards (blue and green ones). Untitled VSM's are now filtered out in the View mode.
+
+### 18.06.21:
+
+Bug fixes to improve performance Moved toolbar Disabled browser zoom Added link to wiki
+
+### 06.05.21: MVP1 (initial release)

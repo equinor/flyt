@@ -66,7 +66,7 @@ const UserMenu: React.FC = () => {
         onClose={closeMenu}
       >
         <Menu.Item disabled>{account?.username}</Menu.Item>
-        <Link href={"changelog"}>
+        <Link href={"/changelog"}>
           <Menu.Item>Version {packageJson.version}</Menu.Item>
         </Link>
         <Menu.Item onClick={() => instance.logout()}>Logout</Menu.Item>
