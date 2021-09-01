@@ -1,7 +1,7 @@
 import { vsmObject } from "../../../interfaces/VsmObject";
 import { vsmObjectTypes } from "../../../types/vsmObjectTypes";
-import { nodeIsInTree } from "../../NodeIsInTree";
-import { getVsmTypeName } from "../../GetVsmTypeName";
+import { nodeIsInTree } from "../../../utils/NodeIsInTree";
+import { getVsmTypeName } from "../../../utils/GetVsmTypeName";
 import { getHoveredObject } from "./hoveredObject";
 
 export function moveExistingVsmObjectToHoveredCard(

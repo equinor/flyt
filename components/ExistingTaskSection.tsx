@@ -8,13 +8,17 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { linkTask, unlinkTask } from "../services/taskApi";
 import { vsmObject } from "../interfaces/VsmObject";
 import { unknownErrorToString } from "utils/isError";
+import { useRouter } from "next/router";
+import { notifyOthers } from "../services/notifyOthers";
+import { useAccount, useMsal } from "@azure/msal-react";
 
 export function ExistingTaskSection(props: {
   visible: boolean;
   existingTaskFilter;
   selectedObject: vsmObject;
 }): JSX.Element {
-  if (!props.visible) return <></>;
+  const { accounts } = useMsal();
+  const account = useAccount(accounts[0] || {});
   const { existingTaskFilter, selectedObject } = props;
   const { tasks } = selectedObject;
   const dispatch = useStoreDispatch();
@@ -31,10 +35,15 @@ export function ExistingTaskSection(props: {
       ).then((r) => r.data),
     { enabled: !!existingTaskFilter }
   );
+  const router = useRouter();
+  const { id } = router.query;
   const taskLinkMutation = useMutation(
     (task: taskObject) => linkTask(selectedObject.vsmObjectID, task.vsmTaskID),
     {
-      onSuccess: () => queryClient.invalidateQueries(),
+      onSuccess: () => {
+        notifyOthers("Added a Q/I/P to a card", id, account);
+        return queryClient.invalidateQueries();
+      },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
@@ -42,10 +51,15 @@ export function ExistingTaskSection(props: {
     (task: taskObject) =>
       unlinkTask(selectedObject.vsmObjectID, task.vsmTaskID),
     {
-      onSuccess: () => queryClient.invalidateQueries(),
+      onSuccess() {
+        notifyOthers("Added a Q/I/P from a card", id, account);
+        return queryClient.invalidateQueries();
+      },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
+
+  if (!props.visible) return <></>;
 
   return (
     <div>

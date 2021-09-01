@@ -10,9 +10,9 @@ import { getProject } from "../services/projectApi";
 import { useRouter } from "next/router";
 import { download } from "@equinor/eds-icons";
 import { getTasksForProject } from "../services/taskApi";
-import { downloadJSON } from "./DownloadJSON";
-import { downloadProjectCardsAsCSV } from "./DownloadProjectCardsAsCSV";
-import { downloadProjectTasksAsCSV } from "./DownloadProjectTasksAsCSV";
+import { downloadJSON } from "../utils/DownloadJSON";
+import { downloadProjectCardsAsCSV } from "../utils/DownloadProjectCardsAsCSV";
+import { downloadProjectTasksAsCSV } from "../utils/DownloadProjectTasksAsCSV";
 
 export default function Download(): JSX.Element {
   const router = useRouter();

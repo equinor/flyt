@@ -14,7 +14,7 @@ export function TextCircle(
     fontSize: 12,
     fontStyle: "normal",
     fontWeight: "500",
-    lineHeight: 16,
+    lineHeight: 15,
     letterSpacing: 0,
     fill: "white",
   });

@@ -5,8 +5,10 @@ const baseUrl = "/api/v1.0";
 
 //Questions, Ideas & Problems aka. Tasks
 // Gets a list of task types registered
-export const getTaskTypes = () =>
-  BaseAPIServices.get("task/taskTypes").then((value) => value.data);
+export const getTaskTypes = (): Promise<
+  Array<{ vsmTaskTypeID: number; name: string; description: string | null }>
+> =>
+  BaseAPIServices.get(baseUrl + "/task/taskTypes").then((value) => value.data);
 
 // Get a list of tasks created in the project identified by its projectId (vsmId)
 export const getTasksForProject = (
@@ -15,10 +17,21 @@ export const getTasksForProject = (
   BaseAPIServices.get(baseUrl + `/task/list/${vsmId}`).then(
     (value) => value.data
   );
-// Gets a task by its taskId
 
-export const getTask = (vsmId: number, taskId: number) =>
-  BaseAPIServices.get(baseUrl + `/task/list/${vsmId}/${taskId}`).then(
+export const getTasksForProjectWithType = (
+  vsmId: string | string[],
+  taskType: number
+): Promise<Array<taskObject>> =>
+  BaseAPIServices.get(baseUrl + `/task/list/${vsmId}/${taskType}`).then(
+    (value) => value.data
+  );
+
+// Gets a task by its taskId
+export const getTask = (
+  vsmId: number | string | string[],
+  taskId: number | string | string[]
+): Promise<taskObject> =>
+  BaseAPIServices.get(baseUrl + `/task/${vsmId}/${taskId}`).then(
     (value) => value.data
   );
 

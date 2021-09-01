@@ -2,26 +2,35 @@ import { Button, Icon, Scrim, Typography } from "@equinor/eds-core-react";
 import styles from "../layouts/default.layout.module.scss";
 import React from "react";
 import { vsmObject } from "../interfaces/VsmObject";
-import { getVsmTypeName } from "./GetVsmTypeName";
+import { getVsmTypeName } from "../utils/GetVsmTypeName";
 import { vsmObjectTypes } from "../types/vsmObjectTypes";
 import { useMutation, useQueryClient } from "react-query";
 import { unknownErrorToString } from "../utils/isError";
 import { deleteVSMObject } from "../services/vsmObjectApi";
 import { useStoreDispatch } from "hooks/storeHooks";
 import { close as closeIcon, delete_forever } from "@equinor/eds-icons";
+import { useRouter } from "next/router";
+import { notifyOthers } from "../services/notifyOthers";
+import { useAccount, useMsal } from "@azure/msal-react";
 
 export function DeleteVsmObjectDialog(props: {
   objectToDelete: vsmObject;
   onClose: () => void;
   visible: boolean;
 }): JSX.Element {
+  const { accounts } = useMsal();
+  const account = useAccount(accounts[0] || {});
+
+  const router = useRouter();
+  const { id } = router.query;
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
   const deleteMutation = useMutation(
     (vsmObjectID: number) => deleteVSMObject(vsmObjectID),
     {
       onSuccess() {
-        props.onClose();
+        handleClose();
+        notifyOthers("Deleted a card", id, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),

@@ -1,5 +1,5 @@
 import { vsmProject } from "../interfaces/VsmProject";
-import { flattenProject } from "../utils/flattenProject";
+import { flattenProject } from "./flattenProject";
 import { getVsmTypeName } from "./GetVsmTypeName";
 import { mergeAndDownload } from "./MergeAndDownload";
 import { getDate } from "./GetDate";

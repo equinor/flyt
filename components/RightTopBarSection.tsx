@@ -3,11 +3,13 @@ import styles from "../layouts/default.layout.module.scss";
 import UserMenu from "./AppHeader/UserMenu";
 import React from "react";
 import { bar_chart, comment_important, info_circle } from "@equinor/eds-icons";
-import { LinkIcon } from "./linkIcon";
+import { LinkIcon } from "./LinkIcon";
+import { useRouter } from "next/router";
 
 export function RightTopBarSection(props: {
   isAuthenticated: boolean;
 }): JSX.Element {
+  const router = useRouter();
   return (
     <div
       style={{

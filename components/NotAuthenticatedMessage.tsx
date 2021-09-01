@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import styles from "../styles/common.module.scss";
 import { useRouter } from "next/router";
 
-const NotAuthenticatedMessage = () => {
+const NotAuthenticatedMessage = (): JSX.Element => {
   const { asPath: redirectUrl } = useRouter();
   const router = useRouter();
 

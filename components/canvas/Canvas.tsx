@@ -19,7 +19,10 @@ import { useRouter } from "next/router";
 import { moveVSMObject, postVSMObject } from "../../services/vsmObjectApi";
 import { vsmObject } from "interfaces/VsmObject";
 import { unknownErrorToString } from "utils/isError";
-import { SignalRService } from "../../services/signalRService";
+import { io } from "socket.io-client";
+import { notifyOthers } from "../../services/notifyOthers";
+import { getAccessToken } from "../../auth/msalHelpers";
+import { LiveIndicator } from "../LiveIndicator";
 
 export default function Canvas(): JSX.Element {
   const ref = useRef();
@@ -28,28 +31,52 @@ export default function Canvas(): JSX.Element {
   const router = useRouter();
   const { id } = router.query;
 
-  useEffect(() => {
-    if (id) {
-      const projectId = parseInt(id.toString(), 10);
-      const s = new SignalRService(projectId, {
-        onDeleteObject: (e) => console.log("onDeleteObject", e),
-        onDeleteProject: (e) => console.log("onDeleteProject", e),
-        onDeleteTask: (e) => console.log("onDeleteTask", e),
-        onSaveProject: (e) => console.log("onSaveProject", e),
-        onSaveTask: (e) => console.log("onSaveTask", e),
-        onUpdateObject: (e) => console.log("onUpdateObject", e),
-      });
-      return s.disconnect;
-    }
-  }, [id]);
-
-  const { data: project } = useQuery(["project", id], () => getProject(id));
-
-  const [assetsAreLoaded, setAssetsAreLoaded] = useState(false);
-  const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
+  const [socketConnected, setSocketConnected] = useState(false);
+  const [socketReason, setSocketReason] = useState("");
 
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
+
+  useEffect(() => {
+    getAccessToken().then((accessToken) => {
+      const socket = io({ path: "/api/socket", auth: { token: accessToken } });
+
+      socket.on("connect", () => {
+        setSocketConnected(true);
+      });
+
+      socket.on("disconnect", (reason) => {
+        dispatch.setSnackMessage(`Socket disconnected because ${reason}`);
+        setSocketConnected(false);
+        setSocketReason(`${reason}`);
+      });
+
+      socket.on("connect_error", (error) => {
+        // if (error.data.type === "UnauthorizedError") {
+        console.log("Error", error);
+        setSocketConnected(false);
+        setSocketReason(error.message);
+        // }
+      });
+
+      socket.on(`room-${id}`, (payload) => {
+        if (payload.user !== account.username?.split("@")[0]) {
+          dispatch.setSnackMessage(
+            `${payload.user ? payload.user : "Someone"} ${payload.msg}`
+          );
+        }
+        queryClient.invalidateQueries();
+      });
+      // Handling token expiration
+
+      return () => socket.disconnect();
+    });
+  }, []);
+
+  const { data: project } = useQuery(["project", id], () => getProject(id));
+  const [assetsAreLoaded, setAssetsAreLoaded] = useState(false);
+
+  const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
   const myAccess = getMyAccess(project, account);
   const userCanEdit = myAccess === "Admin" || myAccess === "Contributor";
 
@@ -62,6 +89,7 @@ export default function Canvas(): JSX.Element {
     {
       onSuccess: () => {
         dispatch.setSnackMessage("✅ Moved card!");
+        notifyOthers("Moved a card", id, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
@@ -75,6 +103,7 @@ export default function Canvas(): JSX.Element {
     {
       onSuccess: () => {
         dispatch.setSnackMessage("✅ Card added!");
+        notifyOthers("Added a new card", id, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
@@ -121,11 +150,28 @@ export default function Canvas(): JSX.Element {
   }, [project, assetsAreLoaded]);
 
   return (
-    <div style={{ backgroundColor: "black" }}>
+    <div
+      style={{
+        backgroundColor: "black",
+      }}
+    >
+      <LiveIndicator
+        live={socketConnected}
+        title={
+          !!setSocketConnected
+            ? "Connection is looking good!\nYour changes should appear immediately for other users."
+            : `You are not connected ${
+                socketReason ? `because of ${socketReason}` : ""
+              }`
+        }
+      />
       <DeleteVsmObjectDialog
         objectToDelete={selectedObject}
         visible={visibleDeleteScrim}
-        onClose={() => setVisibleDeleteScrim(false)}
+        onClose={() => {
+          setVisibleDeleteScrim(false);
+          setSelectedObject(null);
+        }}
       />
 
       <VSMSideBar

@@ -16,7 +16,7 @@ export function createChoiceAsset(
       fontFamily: "Equinor",
       fontWeight: "500",
       fontSize: 12,
-      lineHeight: 16,
+      lineHeight: 15,
       letterSpacing: 0.2,
       wordWrapWidth: 90,
       wordWrap: true,

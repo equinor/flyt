@@ -1,6 +1,8 @@
 module.exports = {
   serverRuntimeConfig: {
     // Will only be available on the server side
+    AUTH_SECRET: process.env.AUTH_SECRET, // "authentication secret or public key, used for validating user requests in pages/api",
+    AUDIENCE: process.env.AUDIENCE,
   },
   publicRuntimeConfig: {
     // Will be available on both server and client

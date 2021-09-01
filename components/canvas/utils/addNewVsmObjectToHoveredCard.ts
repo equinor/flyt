@@ -1,6 +1,6 @@
 import { vsmObjectTypes } from "../../../types/vsmObjectTypes";
 import { vsmObject } from "../../../interfaces/VsmObject";
-import { getVsmTypeName } from "../../GetVsmTypeName";
+import { getVsmTypeName } from "../../../utils/GetVsmTypeName";
 import { getHoveredObject } from "./hoveredObject";
 import { ActionTypes, Dispatch, StateMapper } from "easy-peasy";
 import { vsmProject } from "interfaces/VsmProject";

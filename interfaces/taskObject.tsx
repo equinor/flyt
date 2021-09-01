@@ -12,10 +12,7 @@ export interface taskObject {
   solvedDate?: string;
   fkProject: number;
   displayIndex: string;
-  objects?: [
-    {
-      fkObject: vsmObject["vsmObjectID"];
-    }
-  ];
+  objects?: Array<vsmObject>;
   changeLogs?: unknown[];
+  category;
 }

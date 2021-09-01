@@ -9,17 +9,29 @@ import { arrow_back } from "@equinor/eds-icons";
 import { useMutation, useQueryClient } from "react-query";
 import { createTask } from "../services/taskApi";
 import { unknownErrorToString } from "utils/isError";
+import { vsmObject } from "../interfaces/VsmObject";
+import { useRouter } from "next/router";
+import { notifyOthers } from "../services/notifyOthers";
+import { useAccount, useMsal } from "@azure/msal-react";
 
 export function NewTaskSection(props: {
   onClose: () => void;
   selectedObject;
 }): JSX.Element {
+  const { accounts } = useMsal();
+  const account = useAccount(accounts[0] || {});
+
   const dispatch = useStoreDispatch();
   const selectedObject = props.selectedObject;
+
+  const router = useRouter();
+  const { id } = router.query;
+
   const queryClient = useQueryClient();
   const taskMutations = useMutation((task: taskObject) => createTask(task), {
-    onSuccess() {
+    onSuccess: () => {
       clearAndCloseAddTaskSection();
+      notifyOthers(`Created a new Q/I/P`, id, account);
       return queryClient.invalidateQueries();
     },
     onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
@@ -67,7 +79,7 @@ export function NewTaskSection(props: {
         handleSelectedItemChange={(e) => {
           if (!selectedObject) throw new Error("No selected object");
           const t = {
-            objects: [{ fkObject: selectedObject.vsmObjectID }],
+            objects: [{ fkObject: selectedObject.vsmObjectID } as vsmObject],
             fkProject: selectedObject.vsmProjectID,
             description: newTask?.description ?? "", // Let's not overwrite description if we change the type midways
           } as taskObject;
@@ -141,16 +153,7 @@ export function NewTaskSection(props: {
             <Button
               disabled={!newTaskIsReady(newTask)}
               onClick={() => {
-                // dispatch.addTask(newTask);
                 taskMutations.mutate(newTask);
-                // debounce(
-                //   () => {
-                //   },
-                //   1500,
-                //   `addTask - ${newTask.description}`
-                //   // `add Task - ${selectedObject.vsmObjectID}`
-                // );
-                // clearAndCloseAddTaskSection();
               }}
             >
               Add
