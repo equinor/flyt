@@ -65,4 +65,4 @@ export const unlinkTask = (vsmObjectId: number, taskId: number) =>
   BaseAPIServices.delete(
     baseUrl + `/task/unlink/${vsmObjectId}/${taskId}`,
     null
-  ).then((r) => r.data);
+  );
