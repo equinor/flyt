@@ -22,10 +22,17 @@ export const getProjects = (filter?: {
     }
   );
 
-export const createProject = (): AxiosPromise<{
+export const createProject = (
+  template?: vsmProject
+): AxiosPromise<{
   vsmProjectID: number;
-}> =>
-  BaseAPIServices.post(`${baseUrl}/project`, projectTemplatesV1.defaultProject);
+}> => {
+  if (template) return BaseAPIServices.post(`${baseUrl}/project`, template);
+  return BaseAPIServices.post(
+    `${baseUrl}/project`,
+    projectTemplatesV1.defaultProject
+  );
+};
 
 export const getProject = (id: string | string[]): Promise<vsmProject> =>
   BaseAPIServices.get(`${baseUrl}/project/${id}`).then((value) => value.data);

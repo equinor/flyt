@@ -2,13 +2,16 @@ import { vsmProject } from "../interfaces/VsmProject";
 import { vsmObjectTypes } from "../types/vsmObjectTypes";
 import { stripGarbage } from "./StripGarbage";
 
-export function downloadJSON(project: vsmProject): void {
-  const formattedProject = {
-    name: project.name,
+export function getProjectAsCleanJsonWithoutQIPs(
+  project: vsmProject,
+  projectName?: string
+) {
+  return {
+    name: projectName || project.name,
     objects: [
       {
         parent: 0,
-        name: project.name,
+        name: projectName || project.name,
         fkObjectType: vsmObjectTypes.process,
         childObjects: project.objects[0].childObjects.map((o) =>
           stripGarbage(o)
@@ -16,6 +19,10 @@ export function downloadJSON(project: vsmProject): void {
       },
     ],
   } as vsmProject;
+}
+
+export function downloadJSON(project: vsmProject): void {
+  const formattedProject = getProjectAsCleanJsonWithoutQIPs(project);
 
   const json = JSON.stringify(formattedProject);
   const hiddenElement = document.createElement("a");

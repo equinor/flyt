@@ -241,6 +241,15 @@ const CanvasLayout = ({ children }) => {
                 </Typography>
               </Menu.Item>
               <Menu.Item
+                onClick={() =>
+                  router.push(`/projects/${project.vsmProjectID}/duplicate`)
+                }
+              >
+                <Typography group="navigation" variant="menu_title" as="span">
+                  Duplicate
+                </Typography>
+              </Menu.Item>
+              <Menu.Item
                 title={`${
                   isAdmin
                     ? "Delete the current VSM"
