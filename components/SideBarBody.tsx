@@ -9,8 +9,7 @@ export function SideBarBody(props: {
   selectedObject: vsmObject;
   onChangeName: (event: { target: { value: string } }) => void;
   onChangeRole: (event: { target: { value: string } }) => void;
-  onChangeTime: (event: { target: { value: string } }) => void;
-  onChangeTimeDefinition: (timeDefinition: string) => void;
+  onChangeTime: (e: { time: number; unit: string }) => void;
   setShowNewTaskSection: (boolean) => void;
   canEdit: boolean;
 }): JSX.Element {
@@ -156,7 +155,6 @@ export function SideBarBody(props: {
             <DurationComponent
               disabled={!props.canEdit}
               onChangeTime={props.onChangeTime}
-              onChangeTimeDefinition={props.onChangeTimeDefinition}
               selectedObject={selectedObject}
             />
           </div>

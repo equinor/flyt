@@ -175,7 +175,6 @@ export default function Category(): JSX.Element {
                     onChangeName={(e) => console.log(e)}
                     onChangeRole={(e) => console.log(e)}
                     onChangeTime={(e) => console.log(e)}
-                    onChangeTimeDefinition={(e) => console.log(e)}
                     setShowNewTaskSection={(e) => console.log(e)}
                     canEdit={false}
                   />
