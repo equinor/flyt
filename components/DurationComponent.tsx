@@ -5,23 +5,34 @@ import {
   getTimeDefinitionValue,
   getTimeDefinitionValues,
 } from "../types/timeDefinitions";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 export function DurationComponent(props: {
   selectedObject: vsmObject;
-  onChangeTime: (event: { target: { value: string } }) => void;
-  onChangeTimeDefinition: (timeDefinition: string) => void;
+  onChangeTime: (e: { time: number; unit: string }) => void;
   disabled: boolean;
 }): JSX.Element {
+  const [time, setTime] = useState(props.selectedObject.time);
+  const [unit, setUnit] = useState(props.selectedObject.timeDefinition);
+
+  useEffect(() => {
+    props.onChangeTime({ time: time, unit });
+  }, [time, unit]);
+
+  useEffect(() => {
+    setTime(props.selectedObject.time);
+    setUnit(props.selectedObject.timeDefinition);
+  }, [props.selectedObject]);
+
   return (
     <div style={{ display: "flex" }}>
       <TextField
         disabled={props.disabled}
         label={"Duration"}
         type={"number"}
-        defaultValue={props.selectedObject.time?.toString()}
         id={"vsmObjectTime"}
-        onChange={props.onChangeTime}
+        value={`${time}`}
+        onChange={(event) => setTime(parseFloat(event.target.value))}
       />
       <div style={{ padding: 8 }} />
       <SingleSelect
@@ -29,11 +40,9 @@ export function DurationComponent(props: {
         items={getTimeDefinitionValues()}
         handleSelectedItemChange={(i) => {
           const apiValue = getTimeDefinitionValue(i.selectedItem);
-          props.onChangeTimeDefinition(apiValue);
+          setUnit(apiValue);
         }}
-        initialSelectedItem={getTimeDefinitionDisplayName(
-          props.selectedObject.timeDefinition
-        )}
+        value={getTimeDefinitionDisplayName(unit)}
         label="Unit"
       />
     </div>

@@ -52,9 +52,6 @@ export function SideBarContent(props: {
       role?: string;
       time?: number;
       timeDefinition?: string;
-      //Todo: BUG in API? Patching timeDefinition sets time to 0...
-      // Not a bug, but a "feature": Changing unit does a conversion of the current time to the new format.
-      // Ref: https://equinor-sds-si.atlassian.net/browse/VSM-160
     }
   ) {
     debounce(
@@ -137,10 +134,7 @@ export function SideBarContent(props: {
           patchCard(selectedObject, { role: e.target.value })
         }
         onChangeTime={(e) =>
-          patchCard(selectedObject, { time: parseFloat(e.target.value) })
-        }
-        onChangeTimeDefinition={(e) =>
-          patchCard(selectedObject, { timeDefinition: e })
+          patchCard(selectedObject, { time: e.time, timeDefinition: e.unit })
         }
         setShowNewTaskSection={setShowNewTaskSection}
         canEdit={props.canEdit}
