@@ -16,10 +16,6 @@ export function DurationComponent(props: {
   const [unit, setUnit] = useState(props.selectedObject.timeDefinition);
 
   useEffect(() => {
-    props.onChangeTime({ time: time, unit });
-  }, [time, unit]);
-
-  useEffect(() => {
     setTime(props.selectedObject.time);
     setUnit(props.selectedObject.timeDefinition);
   }, [props.selectedObject]);
@@ -32,7 +28,13 @@ export function DurationComponent(props: {
         type={"number"}
         id={"vsmObjectTime"}
         value={`${time}`}
-        onChange={(event) => setTime(parseFloat(event.target.value))}
+        onChange={(event) => {
+          setTime(parseFloat(event.target.value));
+          props.onChangeTime({
+            time: parseFloat(event.target.value),
+            unit: unit,
+          });
+        }}
       />
       <div style={{ padding: 8 }} />
       <SingleSelect
@@ -41,6 +43,7 @@ export function DurationComponent(props: {
         handleSelectedItemChange={(i) => {
           const apiValue = getTimeDefinitionValue(i.selectedItem);
           setUnit(apiValue);
+          props.onChangeTime({ time: time, unit: apiValue });
         }}
         value={getTimeDefinitionDisplayName(unit)}
         label="Unit"
