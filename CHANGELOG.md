@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.3](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.3) (2021-09-03)
+
+### Features
+
+- create new vsm based on an existing one ([b3a5aaf](https://github.com/equinor/MAD-VSM-WEB/commit/b3a5aafb0eb37fa25115088ec3cd353f41a48108)), closes [#117](https://github.com/equinor/MAD-VSM-WEB/issues/117)
+
+### Bug Fixes
+
+- **durationcomponent:** fix erros when updating time on a card ([c151820](https://github.com/equinor/MAD-VSM-WEB/commit/c151820db9b139fd341c725b6eeaa647ed1806ab)), closes [#111](https://github.com/equinor/MAD-VSM-WEB/issues/111)
+- **duration:** do not send request when no change ([015876a](https://github.com/equinor/MAD-VSM-WEB/commit/015876a1caa363221531eeac07a30f4e98c641b2)), closes [#139](https://github.com/equinor/MAD-VSM-WEB/issues/139) [#111](https://github.com/equinor/MAD-VSM-WEB/issues/111)
+
 ### [0.2.2](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.2) (2021-09-01)
 
 ### Features
