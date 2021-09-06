@@ -4,10 +4,12 @@ import { stripGarbage } from "./StripGarbage";
 
 export function getProjectAsCleanJsonWithoutQIPs(
   project: vsmProject,
-  projectName?: string
+  projectName?: string,
+  duplicateOf?: string
 ) {
   return {
     name: projectName || project.name,
+    duplicateOf,
     objects: [
       {
         parent: 0,

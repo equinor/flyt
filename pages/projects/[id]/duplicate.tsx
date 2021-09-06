@@ -31,7 +31,8 @@ export default function DuplicatePage() {
         project,
         `${!!project.name ? project.name : "Untitled VSM"} (Duplicate of ${
           project.vsmProjectID
-        })`
+        })`,
+        `${project.vsmProjectID}`
       );
       if (json) {
         setStatusMessage("Creating new project");
