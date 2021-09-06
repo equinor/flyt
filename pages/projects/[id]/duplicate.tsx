@@ -29,7 +29,7 @@ export default function DuplicatePage() {
       setStatusMessage("Preparing project");
       const json = getProjectAsCleanJsonWithoutQIPs(
         project,
-        `Duplicate of ${!!project.name ? project.name : "Untitled VSM"} (${
+        `${!!project.name ? project.name : "Untitled VSM"} (Duplicate of ${
           project.vsmProjectID
         })`
       );
