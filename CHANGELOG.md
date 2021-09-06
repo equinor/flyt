@@ -2,11 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [0.2.3](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.3) (2021-09-03)
+### [0.2.4](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.4) (2021-09-06)
 
 ### Features
 
 - create new vsm based on an existing one ([b3a5aaf](https://github.com/equinor/MAD-VSM-WEB/commit/b3a5aafb0eb37fa25115088ec3cd353f41a48108)), closes [#117](https://github.com/equinor/MAD-VSM-WEB/issues/117)
+- **duplicate:** add link to old project as metadata ([6039e7e](https://github.com/equinor/MAD-VSM-WEB/commit/6039e7e72e9bbc6b5b99f263a6bc9beb6d426897)), closes [#147](https://github.com/equinor/MAD-VSM-WEB/issues/147) [#146](https://github.com/equinor/MAD-VSM-WEB/issues/146)
+
+### Bug Fixes
+
+- **duplicate:** "Title (Duplicate of xx)" instead of "Duplicate of Title (xx)" ([ef98e79](https://github.com/equinor/MAD-VSM-WEB/commit/ef98e79988c258cfdf4f9f88599b34f349090b52)), closes [#117](https://github.com/equinor/MAD-VSM-WEB/issues/117)
+- **snackmessage:** display notifications on top over the sidesheet ([6266b5b](https://github.com/equinor/MAD-VSM-WEB/commit/6266b5b68cfa8f1fb45354dc7e007ef371edc1f1)), closes [#130](https://github.com/equinor/MAD-VSM-WEB/issues/130)
+
+### [0.2.3](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.3) (2021-09-03)
 
 ### Bug Fixes
 
