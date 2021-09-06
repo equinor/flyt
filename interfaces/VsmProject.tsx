@@ -24,4 +24,5 @@ export interface vsmProject {
   };
   objects: Array<vsmObject>;
   userAccesses: Array<userAccess>;
+  duplicateOf?: string;
 }
