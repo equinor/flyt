@@ -131,11 +131,13 @@ export default function Category(): JSX.Element {
 
   return (
     <div>
-      <Link href={`/projects/${id}/qips`}>
-        <Button variant={"ghost_icon"} title={"back"}>
-          <Icon data={arrow_back} />
-        </Button>
-      </Link>
+      <Button
+        onClick={() => router.back()}
+        variant={"ghost_icon"}
+        title={"back"}
+      >
+        <Icon data={arrow_back} />
+      </Button>
       <div
         style={{
           display: "flex",
@@ -192,5 +194,5 @@ export default function Category(): JSX.Element {
   );
 }
 
-CategoriesPage.layout = Layouts.Default;
+CategoriesPage.layout = Layouts.Empty;
 Category.auth = true;

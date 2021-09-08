@@ -7,7 +7,6 @@ import React from "react";
 
 export function CategoryChip(props: {
   text: string;
-  color: string;
   onClickRemove: () => void;
 }): JSX.Element {
   const backgroundColor = getColor(props.text);

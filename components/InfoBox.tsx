@@ -1,11 +1,9 @@
-import React, { useState } from "react";
-import styles from "../pages/projects/[id]/categories/categories.module.scss";
+import React from "react";
+import styles from "./InfoBox.module.scss";
 import { Button, Icon } from "@equinor/eds-core-react";
 import { close } from "@equinor/eds-icons";
 
 export function InfoBox(props: { children; onClose }): JSX.Element {
-  // const [showInfobox, setShowInfobox] = useState(true);
-  // if (showInfobox)
   return (
     <div className={styles.infoBox}>
       <div>{props.children}</div>
@@ -16,5 +14,4 @@ export function InfoBox(props: { children; onClose }): JSX.Element {
       </div>
     </div>
   );
-  // return <></>;
 }

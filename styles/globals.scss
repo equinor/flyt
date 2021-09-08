@@ -2,12 +2,10 @@
 
 html,
 body {
-  padding: 0;
-  margin: 0;
-  font-size: 14px;
+  padding: unset;
+  margin: unset;
   background-color: #f7f7f7;
   color: $equinor_GRAY;
-  height: 100%;
 }
 
 // Apply correct font everywhere

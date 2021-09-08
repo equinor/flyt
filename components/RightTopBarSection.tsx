@@ -1,8 +1,13 @@
-import { TopBar } from "@equinor/eds-core-react";
+import { Button, Icon, TopBar } from "@equinor/eds-core-react";
 import styles from "../layouts/default.layout.module.scss";
 import UserMenu from "./AppHeader/UserMenu";
 import React from "react";
-import { bar_chart, comment_important, info_circle } from "@equinor/eds-icons";
+import {
+  bar_chart,
+  category,
+  comment_important,
+  info_circle,
+} from "@equinor/eds-icons";
 import { LinkIcon } from "./LinkIcon";
 import { useRouter } from "next/router";
 
@@ -10,6 +15,7 @@ export function RightTopBarSection(props: {
   isAuthenticated: boolean;
 }): JSX.Element {
   const router = useRouter();
+  const { id } = router.query;
   return (
     <div
       style={{
@@ -17,6 +23,16 @@ export function RightTopBarSection(props: {
         justifyContent: "flex-end",
       }}
     >
+      {id && (
+        <Button
+          onClick={() => router.push(`/projects/${id}/categories`)}
+          variant={"ghost_icon"}
+          title={"Categorise PQIs"}
+        >
+          <Icon data={category} />
+        </Button>
+      )}
+
       <LinkIcon
         helpText="Open Power BI Dashboard"
         icon={bar_chart}

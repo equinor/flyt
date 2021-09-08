@@ -13,28 +13,37 @@ export default function SettingsPage(): JSX.Element {
   );
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", padding: 24 }}>
-      <h2>Helper dialogs</h2>
-      <Switch
-        label="Show category drag helper"
-        checked={showDragHelper}
-        onChange={() => setShowDragHelper(!showDragHelper)}
-        size={"small"}
-      />
-      <Switch
-        label="Show category click helper"
-        checked={showCategoryClickHelper}
-        onChange={() => setShowCategoryClickHelper(!showCategoryClickHelper)}
-        size={"small"}
-      />
-      <Button
-        onClick={() => {
-          setShowDragHelper(true);
-          setShowCategoryClickHelper(true);
+    <div style={{ display: "flex", justifyContent: "center" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          padding: 24,
+          maxWidth: 500,
         }}
       >
-        Restore all helper dialogs
-      </Button>
+        <h2>Helper dialogs</h2>
+        <Switch
+          label="Show category drag helper"
+          checked={showDragHelper}
+          onChange={() => setShowDragHelper(!showDragHelper)}
+          size={"small"}
+        />
+        <Switch
+          label="Show category click helper"
+          checked={showCategoryClickHelper}
+          onChange={() => setShowCategoryClickHelper(!showCategoryClickHelper)}
+          size={"small"}
+        />
+        <Button
+          onClick={() => {
+            setShowDragHelper(true);
+            setShowCategoryClickHelper(true);
+          }}
+        >
+          Restore all helper dialogs
+        </Button>
+      </div>
     </div>
   );
 }
