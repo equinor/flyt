@@ -41,19 +41,19 @@
     "moment": "^2.29.1",
     "next": "^11.1.2",
     "pixi-viewport": "^4.30.4",
-    "pixi.js": "^6.0.2",
+    "pixi.js": "6.1.2",
     "react": "^17.0.2",
     "react-device-detect": "^1.17.0",
     "react-dom": "^17.0.2",
     "react-json-view": "^1.21.1",
-    "react-markdown": "^6.0.3",
+    "react-markdown": "7.0.1",
     "react-query": "^3.17.2",
     "react-table": "^7.7.0",
     "remark-gfm": "^1.0.0",
     "sass": "^1.32.11",
-    "socket.io": "^4.1.3",
-    "socket.io-client": "^4.1.3",
-    "styled-components": "^5.2.2",
+    "socket.io": "4.2.0",
+    "socket.io-client": "4.2.0",
+    "styled-components": "5.3.1",
     "validate-azure-token": "^1.0.2"
   },
   "devDependencies": {
@@ -70,7 +70,7 @@
     "prettier": "^2.2.1",
     "pretty-quick": "^3.1.0",
     "standard-version": "^9.3.1",
-    "typescript": "^4.1.3"
+    "typescript": "4.4.2"
   },
   "lint-staged": {
     "*.{ts,js}": [
