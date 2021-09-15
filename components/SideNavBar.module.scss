@@ -1,0 +1,38 @@
+@media screen and (min-width: 510px) {
+  .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 100%;
+    width: 56px;
+    background-color: #ffffff;
+    position: fixed;
+    top: 64px;
+    left: 0;
+  }
+  .iconContainer {
+    border-bottom: 1px solid #dcdcdc;
+  }
+}
+
+@media screen and (max-width: 510px) {
+  .container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    height: 56px;
+    background-color: #ffffff;
+  }
+  .iconContainer {
+    border-bottom: 1px solid #dcdcdc;
+  }
+}
+
+.iconContainer {
+  display: flex;
+  flex-direction: row;
+  height: 56px;
+  width: 56px;
+  justify-content: center;
+  align-items: center;
+}

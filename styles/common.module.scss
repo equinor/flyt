@@ -19,6 +19,12 @@
   width: 100%;
 }
 
+@media screen and (min-width: 510px) {
+  .contentContainer {
+    margin-left: 56px;
+  }
+}
+
 .appear {
   animation-name: fade-in;
   animation-duration: 0.5s;
