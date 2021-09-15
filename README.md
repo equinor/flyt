@@ -21,21 +21,6 @@
 | Authentication   | [@azure/msal-react](https://github.com/AzureAD/microsoft-authentication-library-for-js#readme)                                         |
 | Styling          | [Sass](https://sass-lang.com/)                                                                                                         |
 | Templates        |                                                                                                                                        |
-| SignalR          | SignalR                                                                                                                                |
-
-#SignalR Actions
-The signalR hub transmits some
-
-| Actions                  | Comment                                     | Method        | Returns                |
-| ------------------------ | ------------------------------------------- | ------------- | ---------------------- |
-| Save or update vsmObject |                                             | UpdateObject  | Saved object           |
-| Delete vsmObject         |                                             | DeletedObject | The id of the object   |
-| Save Project             | Metadata stuff like the name of the project | SaveProject   | Updated Project object |
-| Delete Project           |                                             | DeleteProject | The id it deleted      |
-| Save or update Task      | On creating new task or updating one        | SaveTask      | The saved task         |
-| Delete Task              |                                             | DeleteTask    | The task id            |
-| Linking tasks?           |                                             |               |                        |
-| Concurrent users? Peers? |                                             |               |                        |
 
 # Developing
 
@@ -49,7 +34,7 @@ To get up and running:
 | Dev  | `yarn use-dev`  |
 | Test | `yarn use-test` |
 | QA   |  `yarn use-qa`  |
-| PROD |     --TBD--     |
+| PROD | `yarn use-prod` |
 
 ### What it does
 
