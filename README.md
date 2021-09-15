@@ -1,10 +1,11 @@
 ## Flyt - (aka VSM/Value Stream Mapping)
 
-![Canvas example](./documentation/images/canvasExample.png)
+![Flyt canvas (13) - Process feedback on 'Flyt'  - Wednesday, September 15, 2021](https://user-images.githubusercontent.com/3164065/133470524-d6934d90-82ce-4870-aea3-450fd1f4c48f.png)
 
 # Links
 
 - [Figma design & prototype](https://www.figma.com/file/IkHwmIQrsT0iR34f5R5UnZ/vsm)
+- Api-endpoints: See swagger https://vsm-api-dev.azurewebsites.net/swagger/index.html
 
 # Tech stack / Features
 
@@ -95,17 +96,6 @@ docker run -p 3000:3000 --env-file ./environment-variables/QA.env equinor-flyt
 docker run -p 3000:3000 --env-file ./environment-variables/PROD.env equinor-flyt
 ```
 
-## Task tracking
-
-### Workflow triggers
-
-| GitHub Events        | Triggers |
-| -------------------- | -------- |
-| Pull request created |
-| Pull request merged  |
-| Commit created       |
-| Branch created       |
-
 ## Runtime environment variables
 
 When using NEXT.JS, the environment variables need to be set when building the image and not at runtime.
@@ -160,18 +150,3 @@ Structure of an entity
   parentId: "",
 }
 ```
-
-# API-Endpoints
-
-See swagger https://vsm-api-dev.azurewebsites.net/swagger/index.html
-
-## SignalR
-
-| Action                | method        | returns              |
-| --------------------- | ------------- | -------------------- |
-| SaveProject           | SaveProject   | projectobject        |
-| DeleteProject         | DeleteProject | The id it deleted    |
-| Save or update object | UpdateObject  | Saved object         |
-| Delete object         | DeletedObject | The id of the object |
-| Save or update Task   | SaveTask      | The saved task       |
-| Delete Task           | DeleteTask    | The task id          |
