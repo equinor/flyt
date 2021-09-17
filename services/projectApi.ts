@@ -12,6 +12,7 @@ export const getProjects = (filter?: {
   orderBy?: "name" | "modified" | "created";
   page?: number;
   items?: number;
+  onlyFavorites?: boolean;
 }): Promise<{ projects: [vsmProject]; totalItems: number }> =>
   BaseAPIServices.get(`${baseUrl}/project${createUrlParams(filter)}`).then(
     (value) => {
@@ -42,3 +43,9 @@ export const updateProject = (data) =>
 
 export const deleteProject = (id: string | string[]) =>
   BaseAPIServices.delete(`${baseUrl}/project/${id}`);
+
+export const faveProject = (isFavorite: boolean, id: number) =>
+  BaseAPIServices.post(`${baseUrl}/project`, {
+    isFavorite,
+    vsmProjectID: id,
+  });

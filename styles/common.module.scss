@@ -19,10 +19,45 @@
   width: 100%;
 }
 
+.frontPageMain {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.contentContainer {
+  padding-top: 32px;
+  animation-name: fade-in;
+  animation-duration: 0.5s;
+  width: 100%;
+}
+
 @media screen and (min-width: 510px) {
   .contentContainer {
-    margin-left: 56px;
+    margin-left: 70px;
   }
+}
+
+.searchFieldContainer {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+}
+
+.searchField {
+  background-color: #ffffff;
+  border: none;
+  border-radius: 0;
+  height: 36px;
+  flex: 578px 1 1;
+  max-width: 578px;
+  font-size: 16px;
+  color: #6f6f6f;
+  padding-left: 10px;
 }
 
 .appear {

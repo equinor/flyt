@@ -6,11 +6,18 @@ import { UserDots } from "../UserDots";
 import { vsmProject } from "../../interfaces/VsmProject";
 import { favorite_outlined, favorite_filled } from "@equinor/eds-icons";
 import { Icon } from "@equinor/eds-core-react";
+import { useMutation, useQueryClient } from "react-query";
+import { faveProject } from "services/projectApi";
 
 export function VSMCard(props: { vsm: vsmProject }): JSX.Element {
   const { userIdentity: createdBy } = props.vsm.created;
   const [isHighlighted, setIsHighlighted] = useState(false);
-  const [isFavourite, setIsFavourite] = useState(false);
+  const queryClient = useQueryClient();
+
+  const faveMutation = useMutation(
+    (isFavourite: boolean) => faveProject(isFavourite, props.vsm.vsmProjectID),
+    { onSettled: () => queryClient.invalidateQueries() }
+  );
 
   return (
     <Link href={`/projects/${props.vsm.vsmProjectID}`}>
@@ -33,10 +40,10 @@ export function VSMCard(props: { vsm: vsmProject }): JSX.Element {
             }}
             onClick={(e) => {
               e.stopPropagation();
-              setIsFavourite((previous) => !previous);
+              faveMutation.mutate(!props.vsm.isFavorite);
             }}
           >
-            {isFavourite ? (
+            {props.vsm.isFavorite ? (
               <Icon color="#ff1243" data={favorite_filled} />
             ) : isHighlighted ? (
               <Icon color="#DADADA" data={favorite_filled} />
