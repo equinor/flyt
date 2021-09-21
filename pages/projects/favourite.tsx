@@ -9,7 +9,7 @@ import { useQuery } from "react-query";
 import { getProjects } from "../../services/projectApi";
 import SideNavBar from "components/SideNavBar";
 
-const itemsPerPage = 20; // increased from 19 to 100 since filtering (hiding project without name) is done on the client side
+const itemsPerPage = 16; // increased from 19 to 100 since filtering (hiding project without name) is done on the client side
 // it looks bad when every other page just have a few cards and others have more... Therefore it would be better to just show a greater amount of cards at once
 
 export default function Projects(): JSX.Element {
