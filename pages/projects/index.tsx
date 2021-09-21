@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import commonStyles from "../../styles/common.module.scss";
+import styles from "./Projects.module.scss";
 import Head from "next/head";
 import { Pagination, Typography } from "@equinor/eds-core-react";
 import { Layouts } from "../../layouts/LayoutWrapper";
@@ -60,35 +61,30 @@ export default function Projects(): JSX.Element {
 
       <main className={commonStyles.frontPageMain}>
         <SideNavBar />
-        <div className={commonStyles.contentContainer}>
-          <div
-            style={{
-              marginBottom: 20,
-              alignItems: "center",
-              display: "flex",
-              borderRadius: 4,
-              padding: 12,
-              flexWrap: "wrap",
-              justifyContent: "center",
-            }}
-          >
-            {itemsPerPage < totalItems && (
-              <Pagination
-                key={`${totalItems}`}
-                totalItems={totalItems}
-                itemsPerPage={itemsPerPage}
-                // withItemIndicator
-                defaultValue={page}
-                onChange={(event, newPage) => setPage(newPage)}
-              />
-            )}
+        <div className={styles.contentContainer}>
+          <div className={styles.contentHeader}>
+            <Typography variant="h3">All Projects</Typography>
           </div>
-          <ProjectListSection
-            projects={filteredProjects}
-            isLoading={isLoading}
-            expectedNumberOfProjects={itemsPerPage}
-            printNewProjectButton={true}
-          />
+          <div className={styles.contentBottom}>
+            <ProjectListSection
+              projects={filteredProjects}
+              isLoading={isLoading}
+              expectedNumberOfProjects={itemsPerPage}
+              printNewProjectButton={true}
+            />
+            <div className={styles.contentFooter}>
+              {itemsPerPage < totalItems && (
+                <Pagination
+                  key={`${totalItems}`}
+                  totalItems={totalItems}
+                  itemsPerPage={itemsPerPage}
+                  // withItemIndicator
+                  defaultValue={page}
+                  onChange={(event, newPage) => setPage(newPage)}
+                />
+              )}
+            </div>
+          </div>
         </div>
       </main>
     </div>

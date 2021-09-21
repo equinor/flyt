@@ -7,15 +7,19 @@ import { vsmProject } from "../../interfaces/VsmProject";
 import { favorite_outlined, favorite_filled } from "@equinor/eds-icons";
 import { Icon } from "@equinor/eds-core-react";
 import { useMutation, useQueryClient } from "react-query";
-import { faveProject } from "services/projectApi";
+import { faveProject, unfaveProject } from "services/projectApi";
 
 export function VSMCard(props: { vsm: vsmProject }): JSX.Element {
   const { userIdentity: createdBy } = props.vsm.created;
   const [isHighlighted, setIsHighlighted] = useState(false);
   const queryClient = useQueryClient();
 
-  const faveMutation = useMutation(
-    (isFavourite: boolean) => faveProject(isFavourite, props.vsm.vsmProjectID),
+  const faveMutation = useMutation(() => faveProject(props.vsm.vsmProjectID), {
+    onSettled: () => queryClient.invalidateQueries(),
+  });
+
+  const unfaveMutation = useMutation(
+    () => unfaveProject(props.vsm.vsmProjectID),
     { onSettled: () => queryClient.invalidateQueries() }
   );
 
@@ -40,7 +44,9 @@ export function VSMCard(props: { vsm: vsmProject }): JSX.Element {
             }}
             onClick={(e) => {
               e.stopPropagation();
-              faveMutation.mutate(!props.vsm.isFavorite);
+              props.vsm.isFavorite
+                ? unfaveMutation.mutate()
+                : faveMutation.mutate();
             }}
           >
             {props.vsm.isFavorite ? (

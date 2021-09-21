@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import commonStyles from "../../styles/common.module.scss";
+import styles from "./Projects.module.scss";
 import Head from "next/head";
 import { Pagination, Typography } from "@equinor/eds-core-react";
 import { Layouts } from "../../layouts/LayoutWrapper";
@@ -10,7 +11,7 @@ import { useAccount, useMsal } from "@azure/msal-react";
 import { getUserShortName } from "../../utils/getUserShortName";
 import SideNavBar from "components/SideNavBar";
 
-const itemsPerPage = 2; // increased from 19 to 100 since filtering (hiding project without name) is done on the client side
+const itemsPerPage = 20; // increased from 19 to 100 since filtering (hiding project without name) is done on the client side
 // it looks bad when every other page just have a few cards and others have more... Therefore it would be better to just show a greater amount of cards at once
 
 export default function Projects(): JSX.Element {
@@ -59,35 +60,30 @@ export default function Projects(): JSX.Element {
 
       <main className={commonStyles.frontPageMain}>
         <SideNavBar />
-        <div className={commonStyles.contentContainer}>
-          <div
-            style={{
-              marginBottom: 20,
-              alignItems: "center",
-              display: "flex",
-              borderRadius: 4,
-              padding: 12,
-              flexWrap: "wrap",
-              justifyContent: "center",
-            }}
-          >
-            {itemsPerPage < totalItems && (
-              <Pagination
-                key={`${totalItems}`}
-                totalItems={totalItems}
-                itemsPerPage={itemsPerPage}
-                // withItemIndicator
-                defaultValue={page}
-                onChange={(event, newPage) => setPage(newPage)}
-              />
-            )}
+        <div className={styles.contentContainer}>
+          <div className={styles.contentHeader}>
+            <Typography variant="h3">My Projects</Typography>
           </div>
-          <ProjectListSection
-            projects={data?.projects}
-            isLoading={isLoading}
-            expectedNumberOfProjects={itemsPerPage}
-            printNewProjectButton={true}
-          />
+          <div className={styles.contentBottom}>
+            <ProjectListSection
+              projects={data?.projects}
+              isLoading={isLoading}
+              expectedNumberOfProjects={itemsPerPage}
+              printNewProjectButton={true}
+            />
+            <div className={styles.contentFooter}>
+              {itemsPerPage < totalItems && (
+                <Pagination
+                  key={`${totalItems}`}
+                  totalItems={totalItems}
+                  itemsPerPage={itemsPerPage}
+                  // withItemIndicator
+                  defaultValue={page}
+                  onChange={(event, newPage) => setPage(newPage)}
+                />
+              )}
+            </div>
+          </div>
         </div>
       </main>
     </div>

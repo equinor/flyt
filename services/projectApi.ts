@@ -9,7 +9,7 @@ const baseUrl = "/api/v1.0";
 export const getProjects = (filter?: {
   q?: string;
   user?: string;
-  orderBy?: "name" | "modified" | "created";
+  orderBy?: string;
   page?: number;
   items?: number;
   onlyFavorites?: boolean;
@@ -44,8 +44,8 @@ export const updateProject = (data) =>
 export const deleteProject = (id: string | string[]) =>
   BaseAPIServices.delete(`${baseUrl}/project/${id}`);
 
-export const faveProject = (isFavorite: boolean, id: number) =>
-  BaseAPIServices.post(`${baseUrl}/project`, {
-    isFavorite,
-    vsmProjectID: id,
-  });
+export const faveProject = (id: number) =>
+  BaseAPIServices.put(`${baseUrl}/project/favorite/${id}`, {});
+
+export const unfaveProject = (id: number) =>
+  BaseAPIServices.delete(`${baseUrl}/project/favorite/${id}`);
