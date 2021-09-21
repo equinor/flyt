@@ -47,20 +47,13 @@
 
 .contentHeader {
   width: 80%;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-}
-
-.searchFieldContainer {
-  display: flex;
-  flex-direction: row;
   margin-bottom: 30px;
+  margin-top: 30px;
 }
 
 .searchField {
-  height: 36px;
   flex: 578px 0 1;
+  height: 36px;
   background-color: #ffffff;
   border: none;
   border-radius: 0;

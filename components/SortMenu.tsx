@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Menu, Button } from "@equinor/eds-core-react";
+import { Menu, Button, Typography, Icon } from "@equinor/eds-core-react";
+import { chevron_down } from "@equinor/eds-icons";
 
 export default function SortMenu(props: {
   setOrderBy: (any: string) => void;
@@ -38,9 +39,17 @@ export default function SortMenu(props: {
   };
 
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-around",
+        alignItems: "center",
+      }}
+    >
+      <Typography variant="h6">{buttonLabel}</Typography>
       <Button
-        variant="ghost"
+        variant="ghost_icon"
         id="menuButton"
         aria-controls="menu-on-button"
         aria-haspopup="true"
@@ -48,7 +57,7 @@ export default function SortMenu(props: {
         onClick={(e) => (isOpen ? closeMenu() : openMenu(e))}
         onKeyDown={onKeyPress}
       >
-        {buttonLabel}
+        <Icon data={chevron_down} />
       </Button>
       <Menu
         id="menu-on-button"

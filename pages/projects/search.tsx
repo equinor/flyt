@@ -71,7 +71,13 @@ export default function Projects(): JSX.Element {
         <SideNavBar />
         <div className={styles.contentContainer}>
           <div className={styles.contentHeader}>
-            <div className={styles.searchFieldContainer}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
               <input
                 className={styles.searchField}
                 type="text"
@@ -80,15 +86,6 @@ export default function Projects(): JSX.Element {
                   debounce(() => setQ(e.target.value), 500, "projectSearch");
                 }}
               />
-            </div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <Typography variant="h3">Search Projects</Typography>
               <SortMenu setOrderBy={(any: string) => setOrderBy(any)} />
             </div>
           </div>
