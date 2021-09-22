@@ -10,23 +10,24 @@ import { getProjects } from "../../services/projectApi";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { getUserShortName } from "../../utils/getUserShortName";
 import SideNavBar from "components/SideNavBar";
+import SortMenu from "components/SortMenu";
 
-const itemsPerPage = 16; // increased from 19 to 100 since filtering (hiding project without name) is done on the client side
-// it looks bad when every other page just have a few cards and others have more... Therefore it would be better to just show a greater amount of cards at once
-
+const itemsPerPage = 16;
 export default function Projects(): JSX.Element {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0]);
   const userNameFilter = getUserShortName(account);
   const [page, setPage] = useState(1);
+  const [orderBy, setOrderBy] = useState("name");
 
   const { data, isLoading, error } = useQuery(
-    ["projects", page, userNameFilter],
+    ["projects", page, userNameFilter, orderBy],
     () =>
       getProjects({
         page,
         user: userNameFilter,
         items: itemsPerPage,
+        orderBy,
       })
   );
 
@@ -62,14 +63,24 @@ export default function Projects(): JSX.Element {
         <SideNavBar />
         <div className={styles.contentContainer}>
           <div className={styles.contentHeader}>
-            <Typography variant="h3">My Projects</Typography>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="h3">My Projects</Typography>
+              <SortMenu setOrderBy={(any: string) => setOrderBy(any)} />
+            </div>
           </div>
           <div className={styles.contentBottom}>
             <ProjectListSection
               projects={data?.projects}
               isLoading={isLoading}
               expectedNumberOfProjects={itemsPerPage}
-              printNewProjectButton={true}
+              showNewProjectButton={true}
             />
             <div className={styles.contentFooter}>
               {itemsPerPage < totalItems && (

@@ -8,21 +8,18 @@ import { ProjectListSection } from "../../components/ProjectListSection";
 import { useQuery } from "react-query";
 import { getProjects } from "../../services/projectApi";
 import SideNavBar from "components/SideNavBar";
-import { checkIfCreatorOrEditor } from "utils/categorizeProjects";
-import { useAccount, useMsal } from "@azure/msal-react";
+import SortMenu from "components/SortMenu";
 
-const itemsPerPage = 16; // increased from 19 to 100 since filtering (hiding project without name) is done on the client side
-// it looks bad when every other page just have a few cards and others have more... Therefore it would be better to just show a greater amount of cards at once
-
+const itemsPerPage = 15;
 export default function Projects(): JSX.Element {
-  const { accounts } = useMsal();
-  const account = useAccount(accounts[0]);
   const [page, setPage] = useState(1);
+  const [orderBy, setOrderBy] = useState("name");
 
-  const { data, isLoading, error } = useQuery(["projects", page], () =>
+  const { data, isLoading, error } = useQuery(["projects", page, orderBy], () =>
     getProjects({
       page,
       items: itemsPerPage,
+      orderBy,
     })
   );
 
@@ -47,11 +44,6 @@ export default function Projects(): JSX.Element {
       </div>
     );
 
-  const filteredProjects = data?.projects.filter((project) => {
-    const { imCreator, imEditor } = checkIfCreatorOrEditor(project, account);
-    return imCreator || imEditor || !!project.name;
-  }); //Hide projects with no name that I don't have access to
-
   return (
     <div className={commonStyles.container} style={{ padding: "0" }}>
       <Head>
@@ -63,28 +55,42 @@ export default function Projects(): JSX.Element {
         <SideNavBar />
         <div className={styles.contentContainer}>
           <div className={styles.contentHeader}>
-            <Typography variant="h3">All Projects</Typography>
-          </div>
-          <div className={styles.contentBottom}>
-            <ProjectListSection
-              projects={filteredProjects}
-              isLoading={isLoading}
-              expectedNumberOfProjects={itemsPerPage}
-              printNewProjectButton={true}
-            />
-            <div className={styles.contentFooter}>
-              {itemsPerPage < totalItems && (
-                <Pagination
-                  key={`${totalItems}`}
-                  totalItems={totalItems}
-                  itemsPerPage={itemsPerPage}
-                  // withItemIndicator
-                  defaultValue={page}
-                  onChange={(event, newPage) => setPage(newPage)}
-                />
-              )}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="h3">All Projects</Typography>
+              <SortMenu setOrderBy={(any: string) => setOrderBy(any)} />
             </div>
           </div>
+          {data?.totalItems != 0 ? (
+            <div className={styles.contentBottom}>
+              <ProjectListSection
+                projects={data?.projects}
+                isLoading={isLoading}
+                expectedNumberOfProjects={itemsPerPage}
+                showNewProjectButton={true}
+              />
+              <div className={styles.contentFooter}>
+                {itemsPerPage < totalItems && (
+                  <Pagination
+                    key={`${totalItems}`}
+                    totalItems={totalItems}
+                    itemsPerPage={itemsPerPage}
+                    // withItemIndicator
+                    defaultValue={page}
+                    onChange={(event, newPage) => setPage(newPage)}
+                  />
+                )}
+              </div>
+            </div>
+          ) : (
+            <div>There are no projects to display.</div>
+          )}
         </div>
       </main>
     </div>

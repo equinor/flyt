@@ -9,11 +9,11 @@ export function ProjectListSection(props: {
   projects: Array<vsmProject>;
   isLoading: boolean;
   expectedNumberOfProjects: number;
-  printNewProjectButton: boolean;
+  showNewProjectButton: boolean;
 }): JSX.Element {
   return (
     <div className={styles.vsmCardContainer}>
-      {props.printNewProjectButton && <NewProjectButton />}
+      {props.showNewProjectButton && <NewProjectButton />}
       {props.isLoading ? (
         <PlaceholderProjectCards
           numberOfCards={props.expectedNumberOfProjects}

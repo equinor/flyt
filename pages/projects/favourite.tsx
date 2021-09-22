@@ -8,15 +8,15 @@ import { ProjectListSection } from "../../components/ProjectListSection";
 import { useQuery } from "react-query";
 import { getProjects } from "../../services/projectApi";
 import SideNavBar from "components/SideNavBar";
+import SortMenu from "components/SortMenu";
 
-const itemsPerPage = 16; // increased from 19 to 100 since filtering (hiding project without name) is done on the client side
-// it looks bad when every other page just have a few cards and others have more... Therefore it would be better to just show a greater amount of cards at once
-
+const itemsPerPage = 16;
 export default function Projects(): JSX.Element {
   const [page, setPage] = useState(1);
+  const [orderBy, setOrderBy] = useState("name");
 
   const { data, isLoading, error } = useQuery(
-    ["projects", page, "isFavourite"],
+    ["projects", page, "isFavourite", orderBy],
     () =>
       getProjects({
         page,
@@ -57,28 +57,42 @@ export default function Projects(): JSX.Element {
         <SideNavBar />
         <div className={styles.contentContainer}>
           <div className={styles.contentHeader}>
-            <Typography variant="h3">Favourite Projects</Typography>
-          </div>
-          <div className={styles.contentBottom}>
-            <ProjectListSection
-              projects={data?.projects}
-              isLoading={isLoading}
-              expectedNumberOfProjects={itemsPerPage}
-              printNewProjectButton={false}
-            />
-            <div className={styles.contentFooter}>
-              {itemsPerPage < totalItems && (
-                <Pagination
-                  key={`${totalItems}`}
-                  totalItems={totalItems}
-                  itemsPerPage={itemsPerPage}
-                  // withItemIndicator
-                  defaultValue={page}
-                  onChange={(event, newPage) => setPage(newPage)}
-                />
-              )}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="h3">Favourite Projects</Typography>
+              <SortMenu setOrderBy={(any: string) => setOrderBy(any)} />
             </div>
           </div>
+          {data?.totalItems != 0 ? (
+            <div className={styles.contentBottom}>
+              <ProjectListSection
+                projects={data?.projects}
+                isLoading={isLoading}
+                expectedNumberOfProjects={itemsPerPage}
+                showNewProjectButton={false}
+              />
+              <div className={styles.contentFooter}>
+                {itemsPerPage < totalItems && (
+                  <Pagination
+                    key={`${totalItems}`}
+                    totalItems={totalItems}
+                    itemsPerPage={itemsPerPage}
+                    // withItemIndicator
+                    defaultValue={page}
+                    onChange={(event, newPage) => setPage(newPage)}
+                  />
+                )}
+              </div>
+            </div>
+          ) : (
+            <div>There are no favourite projects to display.</div>
+          )}
         </div>
       </main>
     </div>
