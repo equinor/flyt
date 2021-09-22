@@ -16,7 +16,7 @@ export function ImprovedEdsCheckbox(props: {
       style={{ paddingRight: 20, display: "flex", cursor: "pointer" }}
       onClick={() => props.setIsChecked((p) => !p)}
     >
-      <Checkbox checked={props.isChecked} />
+      <Checkbox checked={props.isChecked} onChange={() => null} />
       <p>{props.label}</p>
     </div>
   );

@@ -23,6 +23,7 @@ import { io } from "socket.io-client";
 import { notifyOthers } from "../../services/notifyOthers";
 import { getAccessToken } from "../../auth/msalHelpers";
 import { LiveIndicator } from "../LiveIndicator";
+import { ParkingLotButton } from "../ParkingLotButton";
 
 export default function Canvas(): JSX.Element {
   const ref = useRef();
@@ -36,6 +37,10 @@ export default function Canvas(): JSX.Element {
 
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
+
+  useEffect(() => {
+    console.log("CANVAS");
+  }, []);
 
   useEffect(() => {
     getAccessToken().then((accessToken) => {
@@ -155,6 +160,7 @@ export default function Canvas(): JSX.Element {
         backgroundColor: "black",
       }}
     >
+      <ParkingLotButton userCanEdit={userCanEdit} />
       <LiveIndicator
         live={socketConnected}
         title={

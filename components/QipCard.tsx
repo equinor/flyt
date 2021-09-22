@@ -21,6 +21,7 @@ export function QipCard(props: {
   const { displayIndex, description, categories, vsmTaskID, solved } = task;
   const taskColor = getTaskColor(task);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDragOver, setIsDragOver] = useState(false);
 
   const queryClient = useQueryClient();
   const linkTaskMutation = useMutation(
@@ -29,8 +30,12 @@ export function QipCard(props: {
       return linkTaskCategory(p.categoryId, p.taskId);
     },
     {
-      onSuccess: () => queryClient.invalidateQueries(),
-      onSettled: () => setIsLoading(false),
+      onSettled: () => {
+        queryClient.invalidateQueries(["taskCategories"]).then(() => {
+          setIsLoading(false);
+          setIsDragOver(false);
+        });
+      },
     }
   );
 
@@ -45,15 +50,26 @@ export function QipCard(props: {
     }
   );
 
+  function getAlreadyThere(data: { text: string; color: string; id: number }) {
+    return categories?.some((c) => c.id === data.id);
+  }
+
   return (
     <div
+      style={{
+        transform: (isDragOver || isLoading) && "scale(0.98)",
+        opacity: (isDragOver || isLoading) && 0.4,
+        borderStyle: isDragOver && "dashed",
+      }}
       onClick={props.onClick}
       onDrop={(event) => {
         const data: { text: string; color: string; id: number } = JSON.parse(
           event.dataTransfer.getData("text/plain")
         );
-        const alreadyThere = categories?.some((c) => c.id === data.id);
-        if (!alreadyThere) {
+        const alreadyThere = getAlreadyThere(data);
+        if (alreadyThere) {
+          setIsDragOver(false);
+        } else {
           linkTaskMutation.mutate({
             categoryId: data.id,
             taskId: vsmTaskID,
@@ -61,6 +77,16 @@ export function QipCard(props: {
         }
       }}
       onDragOver={(e) => e.preventDefault()}
+      onDragEnterCapture={(event) => {
+        const data: { text: string; color: string; id: number } = JSON.parse(
+          event.dataTransfer.getData("text/plain")
+        );
+        const alreadyThere = getAlreadyThere(data);
+        if (!alreadyThere) {
+          setIsDragOver(true);
+        }
+      }}
+      onDragExitCapture={() => setIsDragOver(false)}
       className={styles.qipCard}
     >
       {solved && <span className={styles.stamp}>Solved</span>}
@@ -70,7 +96,6 @@ export function QipCard(props: {
       </div>
       <ReactMarkdown remarkPlugins={[gfm]}>{description}</ReactMarkdown>
       <div className={styles.qipCardCategorySection}>
-        {isLoading && <p>Loading...</p>}
         {categories?.map((category: taskCategory) => (
           <CategoryChip
             key={category.id}

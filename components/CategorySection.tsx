@@ -11,9 +11,8 @@ import { DraggableCategory } from "./DraggableCategory";
 export function CategorySection(props: {
   setCategories: (value: ((prevState: any[]) => any[]) | any[]) => void;
   categories: any[];
-  toggleSelection: (category) => void;
 }) {
-  const { categories, setCategories, toggleSelection } = props;
+  const { categories, setCategories } = props;
   const router = useRouter();
   const { id } = router.query;
 
@@ -28,6 +27,19 @@ export function CategorySection(props: {
       setCategories(taskCategories);
     }
   }, [taskCategories]);
+
+  const toggleSelection = (category) => {
+    const newCategories = categories.map((c) => {
+      if (c === category) {
+        return {
+          ...category,
+          checked: !category.checked,
+        };
+      }
+      return c;
+    });
+    setCategories(newCategories);
+  };
 
   return (
     <div>

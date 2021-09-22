@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Layouts } from "../../../../layouts/LayoutWrapper";
 import { vsmTaskTypes } from "../../../../types/vsmTaskTypes";
 import { taskObject } from "../../../../interfaces/taskObject";
-import { taskCategory } from "../../../../interfaces/taskCategory";
 import { TaskSection } from "../../../../components/taskSection";
 import { CategorySection } from "../../../../components/CategorySection";
 import { ImprovedEdsCheckbox } from "../../../../components/ImprovedEdsCheckbox";
+import { useRouter } from "next/router";
+import { Button } from "@equinor/eds-core-react";
 
 export default function CategoriesPage(): JSX.Element {
   const [categories, setCategories] = useState([]);
@@ -14,17 +15,20 @@ export default function CategoriesPage(): JSX.Element {
   const [ideaChecked, setIdeaChecked] = useState(true);
   const [questionChecked, setQuestionChecked] = useState(true);
 
-  function allSelectedCategoriesAreInTask(
-    checkedCategories: Array<taskCategory>,
-    t: taskObject
-  ) {
-    let shouldShow = true;
-    checkedCategories.forEach((category) => {
-      const exists = t.categories.some((c) => c.id === category.id);
-      if (!exists) shouldShow = false;
-    });
-    return shouldShow;
+  const router = useRouter();
+  const { id } = router.query;
+
+  function navigateToCanvas() {
+    router.push(`/projects/${id}`);
   }
+
+  useEffect(() => {
+    document.addEventListener("keydown", (event) => {
+      if (event.code === "Escape") {
+        navigateToCanvas();
+      }
+    });
+  }, []);
 
   const taskTypeIsChecked = (t: taskObject) => {
     switch (t.taskType.vsmTaskTypeID) {
@@ -43,24 +47,17 @@ export default function CategoriesPage(): JSX.Element {
     const selectedCategories = categories.filter(
       (category) => category.checked
     );
-    return selectedCategories.length
-      ? taskTypeIsChecked(t) &&
-          allSelectedCategoriesAreInTask(selectedCategories, t)
-      : taskTypeIsChecked(t);
+    // Do not display if checkbox is not checked
+    if (!taskTypeIsChecked(t)) return false;
+    // Display it if checkbox is checked but no categories are selected.
+    if (!selectedCategories.length) return true;
+    // If task contains a category that is selected, display it!
+    return t.categories.some((taskCategory) =>
+      selectedCategories.some(
+        (selectedCategory) => selectedCategory.id === taskCategory.id
+      )
+    );
   };
-
-  function toggleSelection(category) {
-    const newCategories = categories.map((c) => {
-      if (c === category) {
-        return {
-          ...category,
-          checked: !category.checked,
-        };
-      }
-      return c;
-    });
-    setCategories(newCategories);
-  }
 
   function FilterCheckBoxes() {
     return (
@@ -107,10 +104,10 @@ export default function CategoriesPage(): JSX.Element {
           backgroundColor: "white",
         }}
       >
+        <Button onClick={() => navigateToCanvas()}>Go to Canvas</Button>
         <CategorySection
           categories={categories}
           setCategories={setCategories}
-          toggleSelection={toggleSelection}
         />
       </div>
       <div
