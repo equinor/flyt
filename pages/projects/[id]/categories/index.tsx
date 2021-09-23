@@ -76,14 +76,14 @@ export default function CategoriesPage(): JSX.Element {
           label={"Problem"}
         />
         <ImprovedEdsCheckbox
-          setIsChecked={setIdeaChecked}
-          isChecked={ideaChecked}
-          label={"Idea"}
-        />
-        <ImprovedEdsCheckbox
           setIsChecked={setQuestionChecked}
           isChecked={questionChecked}
           label={"Question"}
+        />
+        <ImprovedEdsCheckbox
+          setIsChecked={setIdeaChecked}
+          isChecked={ideaChecked}
+          label={"Idea"}
         />
       </div>
     );
