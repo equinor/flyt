@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import commonStyles from "../../styles/common.module.scss";
 import styles from "./Projects.module.scss";
 import Head from "next/head";
-import { Pagination, Typography } from "@equinor/eds-core-react";
+import { Pagination, Search, Typography } from "@equinor/eds-core-react";
 import { Layouts } from "../../layouts/LayoutWrapper";
 import { ProjectListSection } from "../../components/ProjectListSection";
 import { useQuery } from "react-query";
@@ -10,6 +10,7 @@ import { getProjects } from "../../services/projectApi";
 import SideNavBar from "components/SideNavBar";
 import { debounce } from "utils/debounce";
 import SortMenu from "components/SortMenu";
+import { styled } from "styled-components";
 
 const itemsPerPage = 16;
 export default function Projects(): JSX.Element {
@@ -18,7 +19,7 @@ export default function Projects(): JSX.Element {
   const [orderBy, setOrderBy] = useState("name");
 
   const { data, isLoading, error } = useQuery(
-    ["projects", page, queryString, orderBy],
+    ["searchedProjects", page, queryString, orderBy],
     () =>
       getProjects({
         page,
@@ -68,10 +69,11 @@ export default function Projects(): JSX.Element {
                 alignItems: "center",
               }}
             >
-              <input
-                className={styles.searchField}
-                type="text"
+              <Search
+                aria-label="search"
+                id="searchProjects"
                 placeholder="Search content"
+                className={styles.searchField}
                 onChange={(e) => {
                   debounce(
                     () => setQueryString(e.target.value),
@@ -105,7 +107,7 @@ export default function Projects(): JSX.Element {
               </div>
             </div>
           ) : (
-            <div>There are no projects matching the search criteria.</div>
+            <p>There are no projects matching the search criteria.</p>
           )}
         </div>
       </main>

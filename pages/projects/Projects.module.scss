@@ -18,6 +18,7 @@
 
 @media screen and (min-width: 510px) {
   .contentContainer {
+    width: calc(100% - 56px);
     padding-left: 70px;
     min-width: 500px;
   }
@@ -55,12 +56,8 @@
 .searchField {
   flex: 578px 0 1;
   height: 36px;
-  background-color: #ffffff;
-  border: none;
-  border-radius: 0;
-  font-size: 16px;
-  color: #6f6f6f;
-  padding-left: 10px;
+  background-color: #ffffff !important;
+  margin-right: 20px;
 }
 
 .contentFooter {

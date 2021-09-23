@@ -16,7 +16,7 @@ export default function Projects(): JSX.Element {
   const [orderBy, setOrderBy] = useState("name");
 
   const { data, isLoading, error } = useQuery(
-    ["projects", page, "isFavourite", orderBy],
+    ["favProjects", page, "isFavourite", orderBy],
     () =>
       getProjects({
         page,
@@ -91,7 +91,7 @@ export default function Projects(): JSX.Element {
               </div>
             </div>
           ) : (
-            <div>There are no favourite projects to display.</div>
+            <p>You can set projects as favourite by pressing the heart icon.</p>
           )}
         </div>
       </main>

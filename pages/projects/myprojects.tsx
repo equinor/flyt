@@ -21,7 +21,7 @@ export default function Projects(): JSX.Element {
   const [orderBy, setOrderBy] = useState("name");
 
   const { data, isLoading, error } = useQuery(
-    ["projects", page, userNameFilter, orderBy],
+    ["myProjects", page, userNameFilter, orderBy],
     () =>
       getProjects({
         page,

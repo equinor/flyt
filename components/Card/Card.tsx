@@ -34,7 +34,7 @@ export function VSMCard(props: { vsm: vsmProject }): JSX.Element {
           </div>
           <div
             className={styles.favIconContainer}
-            onMouseOver={(e) => {
+            onMouseEnter={(e) => {
               e.stopPropagation();
               setIsHighlighted(true);
             }}

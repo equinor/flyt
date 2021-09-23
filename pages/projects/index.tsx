@@ -89,7 +89,7 @@ export default function Projects(): JSX.Element {
               </div>
             </div>
           ) : (
-            <div>There are no projects to display.</div>
+            <p>There are no projects to display.</p>
           )}
         </div>
       </main>
