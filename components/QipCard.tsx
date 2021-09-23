@@ -12,6 +12,7 @@ import {
   unlinkTaskCategory,
 } from "../services/taskCategoriesApi";
 import { taskCategory } from "../interfaces/taskCategory";
+import { useRouter } from "next/router";
 
 export function QipCard(props: {
   task: taskObject;
@@ -22,6 +23,8 @@ export function QipCard(props: {
   const taskColor = getTaskColor(task);
   const [isLoading, setIsLoading] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
+  const router = useRouter();
+  const { id } = router.query;
 
   const queryClient = useQueryClient();
   const linkTaskMutation = useMutation(
@@ -30,8 +33,10 @@ export function QipCard(props: {
       return linkTaskCategory(p.categoryId, p.taskId);
     },
     {
+      onSuccess: (message) => console.log(message),
+      onError: (error) => console.log(`${error}`),
       onSettled: () => {
-        queryClient.invalidateQueries(["taskCategories"]).then(() => {
+        queryClient.invalidateQueries(["tasks", id]).then(() => {
           setIsLoading(false);
           setIsDragOver(false);
         });
@@ -45,13 +50,17 @@ export function QipCard(props: {
       return unlinkTaskCategory(p.categoryId, p.taskId);
     },
     {
-      onSuccess: () => queryClient.invalidateQueries(),
-      onSettled: () => setIsLoading(false),
+      onSettled: () => {
+        queryClient
+          .invalidateQueries(["tasks", id])
+          .then(() => setIsLoading(false));
+      },
     }
   );
 
   function getAlreadyThere(data: { text: string; color: string; id: number }) {
-    return categories?.some((c) => c.id === data.id);
+    // return categories?.some((c) => c.id === data.id);
+    return false;
   }
 
   return (
@@ -78,9 +87,11 @@ export function QipCard(props: {
       }}
       onDragOver={(e) => e.preventDefault()}
       onDragEnterCapture={(event) => {
-        const data: { text: string; color: string; id: number } = JSON.parse(
-          event.dataTransfer.getData("text/plain")
-        );
+        event.stopPropagation();
+        const dragData = event.dataTransfer.getData("text/plain");
+        if (!dragData) return;
+        const data: { text: string; color: string; id: number } =
+          JSON.parse(dragData);
         const alreadyThere = getAlreadyThere(data);
         if (!alreadyThere) {
           setIsDragOver(true);
