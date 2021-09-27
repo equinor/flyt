@@ -1,17 +1,15 @@
 import moment from "moment";
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import styles from "./Card.module.scss";
 import { UserDots } from "../UserDots";
 import { vsmProject } from "../../interfaces/VsmProject";
-import { favorite_outlined, favorite_filled } from "@equinor/eds-icons";
-import { Icon } from "@equinor/eds-core-react";
 import { useMutation, useQueryClient } from "react-query";
 import { faveProject, unfaveProject } from "services/projectApi";
+import Heart from "components/Heart";
 
 export function VSMCard(props: { vsm: vsmProject }): JSX.Element {
   const { userIdentity: createdBy } = props.vsm.created;
-  const [isHighlighted, setIsHighlighted] = useState(false);
   const queryClient = useQueryClient();
 
   const faveMutation = useMutation(() => faveProject(props.vsm.vsmProjectID), {
@@ -32,31 +30,11 @@ export function VSMCard(props: { vsm: vsmProject }): JSX.Element {
               {props.vsm.name || "Untitled VSM"}
             </h1>
           </div>
-          <div
-            className={styles.favIconContainer}
-            onMouseEnter={(e) => {
-              e.stopPropagation();
-              setIsHighlighted(true);
-            }}
-            onMouseLeave={(e) => {
-              e.stopPropagation();
-              setIsHighlighted(false);
-            }}
-            onClick={(e) => {
-              e.stopPropagation();
-              props.vsm.isFavorite
-                ? unfaveMutation.mutate()
-                : faveMutation.mutate();
-            }}
-          >
-            {props.vsm.isFavorite ? (
-              <Icon color="#ff1243" data={favorite_filled} />
-            ) : isHighlighted ? (
-              <Icon color="#DADADA" data={favorite_filled} />
-            ) : (
-              <Icon color="#DADADA" data={favorite_outlined} />
-            )}
-          </div>
+          <Heart
+            isFavourite={props.vsm.isFavorite}
+            fave={() => faveMutation.mutate()}
+            unfave={() => unfaveMutation.mutate()}
+          ></Heart>
         </div>
         <div>
           <div className={styles.bottomSection}>

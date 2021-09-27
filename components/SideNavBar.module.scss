@@ -10,33 +10,14 @@
     top: 64px;
     left: 0;
   }
-  .iconContainer {
-    border-bottom: 1px solid #dcdcdc;
-  }
 }
 
 @media screen and (max-width: 510px) {
   .container {
     display: flex;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: center;
     height: 56px;
     background-color: #ffffff;
   }
-  .iconContainer {
-    border-bottom: 1px solid #dcdcdc;
-  }
-}
-
-.iconContainer {
-  display: flex;
-  flex-direction: row;
-  height: 56px;
-  width: 56px;
-  justify-content: center;
-  align-items: center;
-}
-
-.iconContainer :hover {
-  background-color: #dadada;
 }

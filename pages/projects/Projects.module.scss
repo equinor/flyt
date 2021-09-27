@@ -7,69 +7,6 @@
   width: 97%;
 }
 
-.contentContainer {
-  padding-top: 32px;
-  animation-name: fade-in;
-  animation-duration: 0.5s;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-@media screen and (min-width: 510px) {
-  .contentContainer {
-    width: calc(100% - 56px);
-    padding-left: 70px;
-    min-width: 500px;
-  }
-}
-
-@media screen and (max-width: 510px) {
-  .contentContainer {
-    width: 100%;
-  }
-}
-
-@media screen and (max-width: 1024px) {
-  .contentBottom {
-    display: flex;
-    flex-direction: column-reverse;
-  }
-}
-
-@media screen and (min-width: 1024px) {
-  .contentBottom {
-    display: flex;
-    flex-direction: column;
-  }
-  .contentFooter {
-    margin-top: 20px;
-  }
-}
-
-.contentHeader {
-  width: 80%;
-  margin-bottom: 30px;
-  margin-top: 30px;
-}
-
-.searchField {
-  flex: 578px 0 1;
-  height: 36px;
-  background-color: #ffffff !important;
-  margin-right: 20px;
-}
-
-.contentFooter {
-  margin-bottom: 20;
-  align-items: center;
-  display: flex;
-  border-radius: 4px;
-  padding: 12px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
 .vsmCardContainer {
   display: flex;
   flex-wrap: wrap;

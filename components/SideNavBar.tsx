@@ -14,20 +14,24 @@ export default function SideNavBar(): JSX.Element {
       <SideNavBarElement
         icon={dashboard}
         title="All projects"
-        href="/projects"
+        pathname="/projects"
       />
       <SideNavBarElement
         icon={person}
         title="My projects"
-        href="/projects/myprojects"
+        pathname="/projects/mine"
       />
       <SideNavBarElement
         icon={favorite_outlined}
         title="Favourite"
-        href="/projects/favourite"
+        pathname="/projects/favourite"
       />
 
-      <SideNavBarElement icon={search} title="Search" href="/projects/search" />
+      <SideNavBarElement
+        icon={search}
+        title="Search"
+        pathname="/projects/search"
+      />
     </div>
   );
 }

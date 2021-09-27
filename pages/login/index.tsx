@@ -21,7 +21,9 @@ export default function LoginPage() {
     if (result) msalInstance.setActiveAccount(result.account);
   }, [result]);
 
-  const redirectUrl = asPath.split("=")[1];
+  const sliceIndex = asPath.indexOf("=") + 1;
+  const redirectUrl = asPath.slice(sliceIndex);
+
   useEffect(() => {
     if (isAuthenticated && !!redirectUrl) {
       router.push(redirectUrl);

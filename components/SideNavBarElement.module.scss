@@ -17,4 +17,12 @@
   width: 56px;
   justify-content: center;
   align-items: center;
+  background-color: #ffffff;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+
+.iconContainer :hover {
+  background-color: #dadada;
 }

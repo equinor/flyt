@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import commonStyles from "../../styles/common.module.scss";
-import styles from "./Projects.module.scss";
+import styles from "./FrontPage.module.scss";
 import Head from "next/head";
 import { Pagination, Typography } from "@equinor/eds-core-react";
 import { Layouts } from "../../layouts/LayoutWrapper";
@@ -8,18 +8,20 @@ import { ProjectListSection } from "../../components/ProjectListSection";
 import { useQuery } from "react-query";
 import { getProjects } from "../../services/projectApi";
 import SideNavBar from "components/SideNavBar";
-import SortMenu from "components/SortMenu";
+import FrontPageHeader from "components/FrontPageHeader";
+import { useRouter } from "next/router";
 
 const itemsPerPage = 15;
 export default function Projects(): JSX.Element {
   const [page, setPage] = useState(1);
-  const [orderBy, setOrderBy] = useState("name");
+  const router = useRouter();
+  const { orderBy } = router.query;
 
   const { data, isLoading, error } = useQuery(["projects", page, orderBy], () =>
     getProjects({
       page,
       items: itemsPerPage,
-      orderBy,
+      orderBy: orderBy.toString(),
     })
   );
 
@@ -51,31 +53,21 @@ export default function Projects(): JSX.Element {
         <link rel={"icon"} href={"/favicon.ico"} />
       </Head>
 
-      <main className={commonStyles.frontPageMain}>
+      <main className={styles.frontPageMain}>
         <SideNavBar />
-        <div className={styles.contentContainer}>
-          <div className={styles.contentHeader}>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <Typography variant="h3">All Projects</Typography>
-              <SortMenu setOrderBy={(any: string) => setOrderBy(any)} />
-            </div>
+        <div className={styles.frontPageContainer}>
+          <div className={styles.frontPageHeader}>
+            <FrontPageHeader title="All Projects" />
           </div>
           {data?.totalItems != 0 ? (
-            <div className={styles.contentBottom}>
+            <div className={styles.frontPageBody}>
               <ProjectListSection
                 projects={data?.projects}
                 isLoading={isLoading}
                 expectedNumberOfProjects={itemsPerPage}
                 showNewProjectButton={true}
               />
-              <div className={styles.contentFooter}>
+              <div className={styles.frontPageFooter}>
                 {itemsPerPage < totalItems && (
                   <Pagination
                     key={`${totalItems}`}
