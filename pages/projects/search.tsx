@@ -4,11 +4,29 @@ import styles from "./FrontPage.module.scss";
 import Head from "next/head";
 import { Layouts } from "../../layouts/LayoutWrapper";
 import SideNavBar from "components/SideNavBar";
-import FrontPageHeader from "components/FrontPageHeader";
 import FrontPageBody from "components/FrontPageBody";
+import { useQuery } from "react-query";
+import { getProjects } from "../../services/projectApi";
+import { useRouter } from "next/router";
+import SortMenu from "../../components/SortMenu";
+import { SearchField } from "../../components/SearchField";
 
-export default function Projects(): JSX.Element {
-  const [queryString, setQueryString] = useState("");
+export default function SearchProjects(): JSX.Element {
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 14; //Todo: how many items?
+
+  const router = useRouter();
+  const { searchQuery, orderBy } = router?.query;
+  const query = useQuery(
+    ["searchedProjects", page, searchQuery || "", orderBy],
+    () =>
+      getProjects({
+        page,
+        items: itemsPerPage,
+        q: router?.query?.searchQuery,
+        orderBy: orderBy.toString(),
+      })
+  );
 
   return (
     <div className={commonStyles.container} style={{ padding: "0" }}>
@@ -20,16 +38,21 @@ export default function Projects(): JSX.Element {
       <main className={styles.frontPageMain}>
         <SideNavBar />
         <div className={styles.frontPageContainer}>
-          <FrontPageHeader
-            isSearchPage={true}
-            setQueryString={setQueryString}
+          <div className={styles.frontPageHeader}>
+            <SearchField />
+            <SortMenu />
+          </div>
+          <FrontPageBody
+            itemsPerPage={15}
+            onChangePage={(pageNumber: number) => setPage(pageNumber)}
+            query={query}
+            showNewProjectButton={false}
           />
-          <FrontPageBody pageType="search" queryString={queryString} />
         </div>
       </main>
     </div>
   );
 }
 
-Projects.layout = Layouts.Default;
-Projects.auth = true;
+SearchProjects.layout = Layouts.Default;
+SearchProjects.auth = true;

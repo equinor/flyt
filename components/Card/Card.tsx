@@ -34,7 +34,7 @@ export function VSMCard(props: { vsm: vsmProject }): JSX.Element {
             isFavourite={props.vsm.isFavorite}
             fave={() => faveMutation.mutate()}
             unfave={() => unfaveMutation.mutate()}
-          ></Heart>
+          />
         </div>
         <div>
           <div className={styles.bottomSection}>

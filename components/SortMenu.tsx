@@ -46,7 +46,7 @@ export default function SortMenu(): JSX.Element {
   };
 
   const handleClick = (newOrderBy: string) =>
-    router.push({ pathname: path, query: { orderBy: newOrderBy } });
+    router.replace({ pathname: path, query: { orderBy: newOrderBy } });
 
   return (
     <div
