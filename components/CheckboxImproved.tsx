@@ -6,11 +6,11 @@ import React from "react";
  * @param props
  * @constructor
  */
-export function ImprovedEdsCheckbox(props: {
+export function CheckboxImproved(props: {
   setIsChecked: (isChecked: (p) => boolean) => void;
   isChecked: boolean;
   label: string;
-}) {
+}): JSX.Element {
   return (
     <div
       style={{ paddingRight: 20, display: "flex", cursor: "pointer" }}

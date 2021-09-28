@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Layouts } from "../../../../layouts/LayoutWrapper";
 import { vsmTaskTypes } from "../../../../types/vsmTaskTypes";
 import { taskObject } from "../../../../interfaces/taskObject";
 import { TaskSection } from "../../../../components/taskSection";
 import { CategorySection } from "../../../../components/CategorySection";
-import { ImprovedEdsCheckbox } from "../../../../components/ImprovedEdsCheckbox";
+import { CheckboxImproved } from "../../../../components/CheckboxImproved";
 import { useRouter } from "next/router";
-import { Button } from "@equinor/eds-core-react";
+import { ButtonNavigateToProcess } from "../../../../components/ButtonNavigateToProcess";
+import { Button, Dialog, Scrim, Typography } from "@equinor/eds-core-react";
 
 export default function CategoriesPage(): JSX.Element {
   const [categories, setCategories] = useState([]);
@@ -14,21 +15,10 @@ export default function CategoriesPage(): JSX.Element {
   const [problemChecked, setProblemChecked] = useState(true);
   const [ideaChecked, setIdeaChecked] = useState(true);
   const [questionChecked, setQuestionChecked] = useState(true);
+  const [visibleScrim, setVisibleScrim] = useState(false);
 
   const router = useRouter();
   const { id } = router.query;
-
-  function navigateToCanvas() {
-    router.push(`/projects/${id}`);
-  }
-
-  useEffect(() => {
-    document.addEventListener("keydown", (event) => {
-      if (event.code === "Escape") {
-        navigateToCanvas();
-      }
-    });
-  }, []);
 
   const taskTypeIsChecked = (t: taskObject) => {
     switch (t.taskType.vsmTaskTypeID) {
@@ -70,17 +60,17 @@ export default function CategoriesPage(): JSX.Element {
           flexWrap: "wrap",
         }}
       >
-        <ImprovedEdsCheckbox
+        <CheckboxImproved
           isChecked={problemChecked}
           setIsChecked={setProblemChecked}
           label={"Problem"}
         />
-        <ImprovedEdsCheckbox
+        <CheckboxImproved
           setIsChecked={setQuestionChecked}
           isChecked={questionChecked}
           label={"Question"}
         />
-        <ImprovedEdsCheckbox
+        <CheckboxImproved
           setIsChecked={setIdeaChecked}
           isChecked={ideaChecked}
           label={"Idea"}
@@ -90,37 +80,39 @@ export default function CategoriesPage(): JSX.Element {
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        top: 64,
-        height: "calc(100vmin - 64px)",
-      }}
-    >
+    <>
       <div
         style={{
-          overflowY: "auto",
-          padding: 12,
-          backgroundColor: "white",
+          display: "flex",
+          top: 64,
+          height: "calc(100vh - 64px)",
         }}
       >
-        <Button onClick={() => navigateToCanvas()}>Go to Canvas</Button>
-        <CategorySection
-          categories={categories}
-          setCategories={setCategories}
-        />
+        <div
+          style={{
+            overflowY: "auto",
+            padding: 12,
+            backgroundColor: "white",
+          }}
+        >
+          <ButtonNavigateToProcess />
+          <CategorySection
+            categories={categories}
+            setCategories={setCategories}
+          />
+        </div>
+        <div
+          style={{
+            flex: 1,
+            backgroundColor: "#f7f7f7",
+            overflowY: "scroll",
+          }}
+        >
+          <FilterCheckBoxes />
+          <TaskSection filterFunction={getFilter} />
+        </div>
       </div>
-      <div
-        style={{
-          flex: 1,
-          backgroundColor: "#f7f7f7",
-          overflowY: "scroll",
-        }}
-      >
-        <FilterCheckBoxes />
-        <TaskSection filterFunction={getFilter} />
-      </div>
-    </div>
+    </>
   );
 }
 

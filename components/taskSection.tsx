@@ -8,7 +8,7 @@ import React from "react";
 
 export function TaskSection(props: {
   filterFunction: (t: taskObject) => boolean;
-}) {
+}): JSX.Element {
   const router = useRouter();
   const { id } = router.query;
 

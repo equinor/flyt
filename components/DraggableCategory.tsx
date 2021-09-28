@@ -2,7 +2,15 @@ import { getColor } from "../utils/getColor";
 import styles from "./DraggableCategory.module.scss";
 import { ColorDot } from "./ColorDot";
 import React, { useRef, useState } from "react";
-import { Button, Icon, Input, Menu } from "@equinor/eds-core-react";
+import {
+  Button,
+  Dialog,
+  Icon,
+  Input,
+  Menu,
+  Scrim,
+  Typography,
+} from "@equinor/eds-core-react";
 import {
   check,
   delete_to_trash,
@@ -18,6 +26,29 @@ import {
 } from "../services/taskCategoriesApi";
 import { taskCategory } from "../interfaces/taskCategory";
 
+function ErrorScrim(props: {
+  visible: boolean;
+  handleClose: () => void;
+  message: string;
+}) {
+  if (!props.visible) return null;
+  return (
+    <Scrim onClose={props.handleClose}>
+      <Dialog>
+        <Dialog.Title>Error</Dialog.Title>
+        <Dialog.CustomContent scrollable>
+          <Typography variant="body_short">{`${props.message}`}</Typography>
+        </Dialog.CustomContent>
+        <Dialog.Actions>
+          <div>
+            <Button onClick={props.handleClose}>OK</Button>
+          </div>
+        </Dialog.Actions>
+      </Dialog>
+    </Scrim>
+  );
+}
+
 export function DraggableCategory(props: {
   category: taskCategory;
   onClick: () => void;
@@ -29,7 +60,8 @@ export function DraggableCategory(props: {
   const [categoryName, setCategoryName] = useState(`${props.category.name}`);
   const [editText, setEditText] = useState(() => !props.category.id);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [visibleScrim, setVisibleScrim] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
   const queryClient = useQueryClient();
   const newTaskCategoryMutation = useMutation(
     (category: taskCategory) => {
@@ -61,6 +93,15 @@ export function DraggableCategory(props: {
     },
     {
       onSuccess: () => queryClient.invalidateQueries(),
+      onError: (error: { response: { status: number } }, taskCategory) => {
+        const statusCode = error?.response?.status;
+        let errorMessage = "";
+        if (statusCode === 409) {
+          errorMessage = "Conflict";
+        }
+        setErrorMessage(errorMessage);
+        setVisibleScrim(true);
+      },
       onSettled: () => setIsLoading(false),
     }
   );
@@ -124,6 +165,11 @@ export function DraggableCategory(props: {
 
   return (
     <>
+      <ErrorScrim
+        visible={visibleScrim}
+        handleClose={() => setVisibleScrim(false)}
+        message={errorMessage}
+      />
       <div
         style={{ border: props.checked && `${color} 2px solid` }}
         draggable={true}

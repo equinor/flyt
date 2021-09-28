@@ -23,7 +23,7 @@ import { io } from "socket.io-client";
 import { notifyOthers } from "../../services/notifyOthers";
 import { getAccessToken } from "../../auth/msalHelpers";
 import { LiveIndicator } from "../LiveIndicator";
-import { ParkingLotButton } from "../ParkingLotButton";
+import { CategorizationPageButton } from "../CategorizationPageButton";
 
 export default function Canvas(): JSX.Element {
   const ref = useRef();
@@ -160,7 +160,7 @@ export default function Canvas(): JSX.Element {
         backgroundColor: "black",
       }}
     >
-      <ParkingLotButton userCanEdit={userCanEdit} />
+      <CategorizationPageButton userCanEdit={userCanEdit} />
       <LiveIndicator
         live={socketConnected}
         title={

@@ -11,7 +11,12 @@
   filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.14));
 }
 
-.pBorder {
+.wrapper:hover {
+  cursor: pointer;
+  background-color: #deedee;
+}
+
+.iconBorder {
   width: 24px;
   height: 24px;
   display: flex;
@@ -19,9 +24,4 @@
   align-items: center;
   border: 2px solid #007079;
   border-radius: 4px;
-}
-
-.wrapper:hover {
-  cursor: pointer;
-  background-color: #deedee;
 }

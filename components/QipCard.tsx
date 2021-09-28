@@ -59,8 +59,7 @@ export function QipCard(props: {
   );
 
   function getAlreadyThere(data: { text: string; color: string; id: number }) {
-    // return categories?.some((c) => c.id === data.id);
-    return false;
+    return categories?.some((c) => c.id === data.id);
   }
 
   return (
