@@ -7,9 +7,9 @@ import { createUrlParams } from "../utils/createUrlParams";
 const baseUrl = "/api/v1.0";
 //Project aka. VSM aka. Flyt or Flow
 export const getProjects = (filter?: {
-  q?: string;
-  user?: string;
-  orderBy?: string;
+  q?: string | string[];
+  user?: string | string[];
+  orderBy?: string | string[];
   page?: number;
   items?: number;
   onlyFavorites?: boolean;
@@ -45,7 +45,7 @@ export const deleteProject = (id: string | string[]) =>
   BaseAPIServices.delete(`${baseUrl}/project/${id}`);
 
 export const faveProject = (id: number) =>
-  BaseAPIServices.put(`${baseUrl}/project/favorite/${id}`, {});
+  BaseAPIServices.put(`${baseUrl}/project/${id}/favorite`, null);
 
 export const unfaveProject = (id: number) =>
-  BaseAPIServices.delete(`${baseUrl}/project/favorite/${id}`);
+  BaseAPIServices.delete(`${baseUrl}/project/${id}/favorite`);

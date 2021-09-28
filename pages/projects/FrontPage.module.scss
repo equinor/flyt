@@ -16,6 +16,23 @@
   align-items: center;
 }
 
+.frontPageHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  margin-top: 30px;
+  width: calc(90vw - 70px);
+}
+
+.searchField {
+  flex: 578px 0 1;
+  height: 36px;
+  background-color: #ffffff !important;
+  margin-right: 20px;
+}
+
 @media screen and (min-width: 510px) {
   .frontPageContainer {
     width: calc(100% - 56px);

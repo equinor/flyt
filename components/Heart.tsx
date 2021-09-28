@@ -1,37 +1,36 @@
 import { Icon } from "@equinor/eds-core-react";
-import React, { useState } from "react";
-import { favorite_outlined, favorite_filled } from "@equinor/eds-icons";
+import React from "react";
+import { favorite_filled, favorite_outlined } from "@equinor/eds-icons";
+import styles from "./Heart.module.scss";
 
 export default function Heart(props: {
   isFavourite: boolean;
+  isLoading: boolean;
   fave: () => void;
   unfave: () => void;
 }): JSX.Element {
-  const [isHighlighted, setIsHighlighted] = useState(false);
+  const handleClick = (e) => {
+    e.stopPropagation();
+    props.isFavourite ? props.unfave() : props.fave();
+  };
 
+  if (props.isLoading) {
+    return (
+      <button className={styles.heart} onClick={handleClick}>
+        <Icon data={favorite_filled} />
+      </button>
+    );
+  }
+  if (props.isFavourite) {
+    return (
+      <button className={styles.favedHeart} onClick={handleClick}>
+        <Icon data={favorite_filled} />
+      </button>
+    );
+  }
   return (
-    <div
-      style={{ alignSelf: "center", margin: "12px" }}
-      onMouseEnter={(e) => {
-        e.stopPropagation();
-        setIsHighlighted(true);
-      }}
-      onMouseLeave={(e) => {
-        e.stopPropagation();
-        setIsHighlighted(false);
-      }}
-      onClick={(e) => {
-        e.stopPropagation();
-        props.isFavourite ? props.unfave() : props.fave();
-      }}
-    >
-      {props.isFavourite ? (
-        <Icon color="#ff1243" data={favorite_filled} />
-      ) : isHighlighted ? (
-        <Icon color="#DADADA" data={favorite_filled} />
-      ) : (
-        <Icon color="#DADADA" data={favorite_outlined} />
-      )}
-    </div>
+    <button className={styles.heart} onClick={handleClick}>
+      <Icon data={favorite_outlined} />
+    </button>
   );
 }
