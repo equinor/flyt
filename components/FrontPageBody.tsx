@@ -1,37 +1,19 @@
-import { useAccount, useMsal } from "@azure/msal-react";
 import { Pagination, Typography } from "@equinor/eds-core-react";
-import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { doFrontPageQuery } from "utils/frontPageQueries";
-import { getUserShortName } from "utils/getUserShortName";
 import styles from "./FrontPageBody.module.scss";
 import { ProjectListSection } from "./ProjectListSection";
+import { unknownErrorToString } from "../utils/isError";
 
 export default function FrontPageBody(props: {
-  pageType: string;
-  queryString?: string;
+  showNewProjectButton: boolean;
+  itemsPerPage: number;
+  query;
+  onChangePage: (newPage: number) => void;
 }): JSX.Element {
   const [page, setPage] = useState(1);
-  const router = useRouter();
-  const { orderBy } = router.query;
 
-  const { accounts } = useMsal();
-  const account = useAccount(accounts[0]);
-  const userNameFilter = getUserShortName(account);
-
-  const itemsPerPage =
-    props.pageType == "index" || props.pageType == "mine" ? 15 : 16;
-  const showNewProjectButton =
-    props.pageType == "index" || props.pageType == "mine" ? true : false;
-
-  const { data, isLoading, error } = doFrontPageQuery(
-    props.pageType,
-    page,
-    orderBy,
-    itemsPerPage,
-    props.queryString,
-    userNameFilter
-  );
+  const { showNewProjectButton, itemsPerPage, query } = props;
+  const { data, isLoading, error } = query;
 
   const [totalItems, setTotalItems] = useState(0);
   useEffect(() => {
@@ -43,9 +25,14 @@ export default function FrontPageBody(props: {
     return (
       <div className={styles.frontPageBody}>
         <Typography variant={"h2"}>{`Couldn't fetch projects`}</Typography>
-        <Typography variant={"h3"}>{error.toString()}</Typography>
+        <Typography variant={"h3"}>{unknownErrorToString(error)}</Typography>
       </div>
     );
+
+  const handlePageChange = (event, newPage) => {
+    props.onChangePage(newPage);
+    setPage(newPage);
+  };
 
   return (
     <div className={styles.frontPageBody}>
@@ -56,15 +43,12 @@ export default function FrontPageBody(props: {
         showNewProjectButton={showNewProjectButton}
       />
       <div className={styles.frontPageFooter}>
-        {console.log(totalItems)}
         {itemsPerPage < totalItems && (
           <Pagination
-            key={`${totalItems}`}
             totalItems={totalItems}
             itemsPerPage={itemsPerPage}
-            // withItemIndicator
             defaultValue={page}
-            onChange={(event, newPage) => setPage(newPage)}
+            onChange={handlePageChange}
           />
         )}
       </div>

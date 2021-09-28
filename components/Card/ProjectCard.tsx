@@ -1,5 +1,5 @@
 import moment from "moment";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import styles from "./Card.module.scss";
 import { UserDots } from "../UserDots";
@@ -8,17 +8,35 @@ import { useMutation, useQueryClient } from "react-query";
 import { faveProject, unfaveProject } from "services/projectApi";
 import Heart from "components/Heart";
 
-export function VSMCard(props: { vsm: vsmProject }): JSX.Element {
+export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
   const { userIdentity: createdBy } = props.vsm.created;
   const queryClient = useQueryClient();
+  const [isMutatingFavourite, setIsMutatingFavourite] = useState(false);
 
-  const faveMutation = useMutation(() => faveProject(props.vsm.vsmProjectID), {
-    onSettled: () => queryClient.invalidateQueries(),
-  });
+  const faveMutation = useMutation(
+    () => {
+      setIsMutatingFavourite(true);
+      return faveProject(props.vsm.vsmProjectID);
+    },
+    {
+      onSettled: () =>
+        queryClient
+          .invalidateQueries()
+          .then(() => setIsMutatingFavourite(false)),
+    }
+  );
 
   const unfaveMutation = useMutation(
-    () => unfaveProject(props.vsm.vsmProjectID),
-    { onSettled: () => queryClient.invalidateQueries() }
+    () => {
+      setIsMutatingFavourite(true);
+      return unfaveProject(props.vsm.vsmProjectID);
+    },
+    {
+      onSettled: () =>
+        queryClient
+          .invalidateQueries()
+          .then(() => setIsMutatingFavourite(false)),
+    }
   );
 
   return (
@@ -34,7 +52,8 @@ export function VSMCard(props: { vsm: vsmProject }): JSX.Element {
             isFavourite={props.vsm.isFavorite}
             fave={() => faveMutation.mutate()}
             unfave={() => unfaveMutation.mutate()}
-          ></Heart>
+            isLoading={isMutatingFavourite}
+          />
         </div>
         <div>
           <div className={styles.bottomSection}>
