@@ -32,6 +32,19 @@ export default function SortMenu(): JSX.Element {
 
   const closeMenu = () => setState({ ...state, buttonEl: null });
 
+  const onKeyPress = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    const { key } = e;
+    switch (key) {
+      case "ArrowDown":
+      case "ArrowUp":
+        isOpen ? closeMenu() : openMenu(e);
+        break;
+      case "Escape":
+        closeMenu();
+        break;
+    }
+  };
+
   const handleClick = (newOrderBy: string) =>
     router.push({ pathname: path, query: { orderBy: newOrderBy } });
 
@@ -54,6 +67,7 @@ export default function SortMenu(): JSX.Element {
         aria-haspopup="true"
         aria-expanded={!!buttonEl}
         onClick={(e) => (isOpen ? closeMenu() : openMenu(e))}
+        onKeyDown={onKeyPress}
       >
         <Icon data={chevron_down} />
       </Button>

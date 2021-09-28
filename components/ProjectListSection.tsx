@@ -11,6 +11,14 @@ export function ProjectListSection(props: {
   expectedNumberOfProjects: number;
   showNewProjectButton: boolean;
 }): JSX.Element {
+  if (props.projects === undefined || props.projects.length === 0) {
+    return (
+      <div className={styles.vsmEmptyCardContainer}>
+        {props.showNewProjectButton && <NewProjectButton />}
+        <p>There are no projects to show.</p>
+      </div>
+    );
+  }
   return (
     <div className={styles.vsmCardContainer}>
       {props.showNewProjectButton && <NewProjectButton />}

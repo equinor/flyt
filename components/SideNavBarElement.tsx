@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Icon, Tooltip } from "@equinor/eds-core-react";
 import styles from "./SideNavBarElement.module.scss";
 import { useRouter } from "next/router";
@@ -14,18 +14,20 @@ export default function SideNavBarElement(props: {
   const isOnCurrentPage = pathname == props.pathname;
 
   return (
-    <button
-      style={{ backgroundColor: isOnCurrentPage && "#E6FAEC" }}
-      className={styles.iconContainer}
-      onClick={() =>
-        router.push({ pathname: props.pathname, query: { orderBy } })
-      }
-    >
-      <Icon
-        data={props.icon}
-        className={styles.icon}
-        style={{ backgroundColor: "inherit" }}
-      ></Icon>
-    </button>
+    <Tooltip title={props.title} placement="right">
+      <button
+        style={{ backgroundColor: isOnCurrentPage && "#E6FAEC" }}
+        className={styles.iconContainer}
+        onClick={() =>
+          router.push({ pathname: props.pathname, query: { orderBy } })
+        }
+      >
+        <Icon
+          data={props.icon}
+          className={styles.icon}
+          style={{ backgroundColor: "inherit" }}
+        ></Icon>
+      </button>
+    </Tooltip>
   );
 }
