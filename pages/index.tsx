@@ -10,7 +10,7 @@ export default function DummyPage(): JSX.Element {
   });
   return (
     <div className={commonStyles.main}>
-      <Typography variant={"h2"}>Redirecting you to the home site.</Typography>
+      <Typography variant={"h2"}>Redirecting you to the front page.</Typography>
     </div>
   );
 }
