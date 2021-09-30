@@ -5,6 +5,7 @@
 $problemColor: $Interactive-Danger;
 $questionColor: $Interactive-Warning;
 $ideaColor: $Infographic-Substitute_Green-Succulent;
+$riskColor: rgb(255, 146, 0);
 $unknownColor: rgba(0, 0, 0, 0.08);
 $draftColor: $black;
 //
@@ -61,6 +62,18 @@ $draftColor: $black;
   @extend .question;
   color: white;
   background-color: $questionColor;
+}
+
+.risk {
+  @extend .circle;
+  color: $riskColor;
+  border: solid 1px $riskColor;
+}
+
+.risk.selected {
+  @extend .risk;
+  color: white;
+  background-color: $riskColor;
 }
 
 .unknown {
