@@ -54,6 +54,16 @@ export function TaskButton({
           <p>{task.displayIndex}</p>
         </div>
       );
+    case vsmTaskTypes.risk:
+      return (
+        <div
+          className={`${style.risk} ${selected && style.selected} ${
+            draft && style.draft
+          }`}
+        >
+          <p>{task.displayIndex}</p>
+        </div>
+      );
     default:
       return (
         <div

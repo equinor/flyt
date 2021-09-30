@@ -28,13 +28,19 @@ export function getTaskSection(
   taskSection.x = 126;
   const tasks = vsmObject.tasks;
   if (tasks?.length > 0) {
-    const { ideaCircle, problemCircle, questionCircle, unknownCircle } =
-      PIXI.Loader.shared.resources;
+    const {
+      ideaCircle,
+      problemCircle,
+      questionCircle,
+      riskCircle,
+      unknownCircle,
+    } = PIXI.Loader.shared.resources;
     const newTasks = createArrayOfTaskCircles(
       tasks,
       problemCircle,
       questionCircle,
       ideaCircle,
+      riskCircle,
       unknownCircle,
       textResolution
     );

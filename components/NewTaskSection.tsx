@@ -64,7 +64,7 @@ export function NewTaskSection(props: {
         <Icon data={arrow_back} title="add" size={24} />
       </Button>
       <div className={styles.sideBarSectionHeader}>
-        <p>Add Questions, Ideas and Problems</p>
+        <p>Add Questions, Ideas, Problems and Risks</p>
       </div>
       <SingleSelect
         autoFocus
@@ -72,9 +72,11 @@ export function NewTaskSection(props: {
           "Problem",
           "Idea",
           "Question",
+          "Risk",
           "Existing Problem",
           "Existing Idea",
           "Existing Question",
+          "Existing Risk",
         ]}
         handleSelectedItemChange={(e) => {
           if (!selectedObject) throw new Error("No selected object");
@@ -100,6 +102,11 @@ export function NewTaskSection(props: {
               setNewTask(t);
               setShowExistingTaskSection(false);
               break;
+            case "Risk":
+              t.fkTaskType = vsmTaskTypes.risk;
+              setNewTask(t);
+              setShowExistingTaskSection(false);
+              break;
             case "Existing Problem":
               setShowExistingTaskSection(true);
               setExistingTaskFilter(vsmTaskTypes.problem);
@@ -111,6 +118,10 @@ export function NewTaskSection(props: {
             case "Existing Question":
               setShowExistingTaskSection(true);
               setExistingTaskFilter(vsmTaskTypes.question);
+              break;
+            case "Existing Risk":
+              setShowExistingTaskSection(true);
+              setExistingTaskFilter(vsmTaskTypes.risk);
               break;
           }
         }}
