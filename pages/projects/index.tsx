@@ -10,17 +10,20 @@ import { getProjects } from "../../services/projectApi";
 import { useRouter } from "next/router";
 import { Typography } from "@equinor/eds-core-react";
 import { SortSelect } from "../../components/SortSelect";
+import { SearchField } from "components/SearchField";
 
-export default function AllProjects(): JSX.Element {
+export default function AllProcesses(): JSX.Element {
   const [page, setPage] = useState(1);
   const itemsPerPage = 15; //Todo: Display as many cards we can fit while still making space for the pagination
-  const router = useRouter();
-  const { orderBy } = router.query;
 
-  const query = useQuery(["projects", page, orderBy], () =>
+  const router = useRouter();
+  const { searchQuery, orderBy } = router?.query;
+
+  const query = useQuery(["projects", page, searchQuery || "", orderBy], () =>
     getProjects({
       page,
       items: itemsPerPage,
+      q: searchQuery || "",
       orderBy,
     })
   );
@@ -28,7 +31,7 @@ export default function AllProjects(): JSX.Element {
   return (
     <div className={commonStyles.container} style={{ padding: "0" }}>
       <Head>
-        <title>Flyt | All Projects</title>
+        <title>Flyt | All processes</title>
         <link rel={"icon"} href={"/favicon.ico"} />
       </Head>
 
@@ -36,8 +39,13 @@ export default function AllProjects(): JSX.Element {
         <SideNavBar />
         <div className={styles.frontPageContainer}>
           <div className={styles.frontPageHeader}>
-            <Typography variant="h3">All projects</Typography>
-            <SortSelect />
+            <div className={styles.frontPageSubHeader}>
+              <SearchField />
+            </div>
+            <div className={styles.frontPageSubHeader}>
+              <Typography variant="h3">All processes</Typography>
+              <SortSelect />
+            </div>
           </div>
           <FrontPageBody
             showNewProjectButton={true}
@@ -51,5 +59,5 @@ export default function AllProjects(): JSX.Element {
   );
 }
 
-AllProjects.layout = Layouts.Default;
-AllProjects.auth = true;
+AllProcesses.layout = Layouts.Default;
+AllProcesses.auth = true;

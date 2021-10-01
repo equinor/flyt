@@ -10,26 +10,31 @@ import { getProjects } from "../../services/projectApi";
 import { useRouter } from "next/router";
 import { Typography } from "@equinor/eds-core-react";
 import { SortSelect } from "../../components/SortSelect";
+import { SearchField } from "components/SearchField";
 
-export default function FavoriteProjects(): JSX.Element {
+export default function FavoriteProcesses(): JSX.Element {
   const [page, setPage] = useState(1);
   const itemsPerPage = 15; //Todo: Display as many cards we can fit while still making space for the pagination
-  const router = useRouter();
-  const { orderBy } = router.query;
 
-  const query = useQuery(["favProjects", page, "isFavourite", orderBy], () =>
-    getProjects({
-      page,
-      items: itemsPerPage,
-      onlyFavorites: true,
-      orderBy,
-    })
+  const router = useRouter();
+  const { searchQuery, orderBy } = router?.query;
+
+  const query = useQuery(
+    ["favProjects", page, "isFavourite", searchQuery || "", orderBy],
+    () =>
+      getProjects({
+        page,
+        items: itemsPerPage,
+        onlyFavorites: true,
+        q: searchQuery || "",
+        orderBy,
+      })
   );
 
   return (
     <div className={commonStyles.container} style={{ padding: "0" }}>
       <Head>
-        <title>Flyt | Favorite projects</title>
+        <title>Flyt | Favorite processes</title>
         <link rel={"icon"} href={"/favicon.ico"} />
       </Head>
 
@@ -37,8 +42,13 @@ export default function FavoriteProjects(): JSX.Element {
         <SideNavBar />
         <div className={styles.frontPageContainer}>
           <div className={styles.frontPageHeader}>
-            <Typography variant="h3">Your favourite projects</Typography>
-            <SortSelect />
+            <div className={styles.frontPageSubHeader}>
+              <SearchField />
+            </div>
+            <div className={styles.frontPageSubHeader}>
+              <Typography variant="h3">My favourite processes</Typography>
+              <SortSelect />
+            </div>
           </div>
           <FrontPageBody
             itemsPerPage={itemsPerPage}
@@ -52,5 +62,5 @@ export default function FavoriteProjects(): JSX.Element {
   );
 }
 
-FavoriteProjects.layout = Layouts.Default;
-FavoriteProjects.auth = true;
+FavoriteProcesses.layout = Layouts.Default;
+FavoriteProcesses.auth = true;
