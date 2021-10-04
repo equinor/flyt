@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./FrontPageBody.module.scss";
 import { ProjectListSection } from "./ProjectListSection";
 import { unknownErrorToString } from "../utils/isError";
+import { delay } from "rxjs/operators";
 
 export default function FrontPageBody(props: {
   showNewProjectButton: boolean;
@@ -18,8 +19,8 @@ export default function FrontPageBody(props: {
   const [totalItems, setTotalItems] = useState(0);
   useEffect(() => {
     //Hack so that the pagination does not flicker
-    if (data?.totalItems) setTotalItems(data.totalItems);
-  }, [data?.totalItems]);
+    if (data && !isLoading && !error) setTotalItems(data.totalItems);
+  }, [data]);
 
   if (error)
     return (
