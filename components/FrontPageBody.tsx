@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import styles from "./FrontPageBody.module.scss";
 import { ProjectListSection } from "./ProjectListSection";
 import { unknownErrorToString } from "../utils/isError";
-import { delay } from "rxjs/operators";
 
 export default function FrontPageBody(props: {
   showNewProjectButton: boolean;
