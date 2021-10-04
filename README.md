@@ -1,10 +1,12 @@
 ## Flyt - (aka VSM/Value Stream Mapping)
 
-![Canvas example](./documentation/images/canvasExample.png)
+![Flyt canvas (13) - Process feedback on 'Flyt'  - Wednesday, September 15, 2021](https://user-images.githubusercontent.com/3164065/133470524-d6934d90-82ce-4870-aea3-450fd1f4c48f.png)
 
 # Links
 
+- [Issue and feature tracker](https://github.com/orgs/equinor/projects/77)
 - [Figma design & prototype](https://www.figma.com/file/IkHwmIQrsT0iR34f5R5UnZ/vsm)
+- Api-endpoints: See swagger https://vsm-api-dev.azurewebsites.net/swagger/index.html
 
 # Tech stack / Features
 
@@ -20,21 +22,6 @@
 | Authentication   | [@azure/msal-react](https://github.com/AzureAD/microsoft-authentication-library-for-js#readme)                                         |
 | Styling          | [Sass](https://sass-lang.com/)                                                                                                         |
 | Templates        |                                                                                                                                        |
-| SignalR          | SignalR                                                                                                                                |
-
-#SignalR Actions
-The signalR hub transmits some
-
-| Actions                  | Comment                                     | Method        | Returns                |
-| ------------------------ | ------------------------------------------- | ------------- | ---------------------- |
-| Save or update vsmObject |                                             | UpdateObject  | Saved object           |
-| Delete vsmObject         |                                             | DeletedObject | The id of the object   |
-| Save Project             | Metadata stuff like the name of the project | SaveProject   | Updated Project object |
-| Delete Project           |                                             | DeleteProject | The id it deleted      |
-| Save or update Task      | On creating new task or updating one        | SaveTask      | The saved task         |
-| Delete Task              |                                             | DeleteTask    | The task id            |
-| Linking tasks?           |                                             |               |                        |
-| Concurrent users? Peers? |                                             |               |                        |
 
 # Developing
 
@@ -48,7 +35,7 @@ To get up and running:
 | Dev  | `yarn use-dev`  |
 | Test | `yarn use-test` |
 | QA   |  `yarn use-qa`  |
-| PROD |     --TBD--     |
+| PROD | `yarn use-prod` |
 
 ### What it does
 
@@ -94,17 +81,6 @@ docker run -p 3000:3000 --env-file ./environment-variables/QA.env equinor-flyt
 ## Prod
 docker run -p 3000:3000 --env-file ./environment-variables/PROD.env equinor-flyt
 ```
-
-## Task tracking
-
-### Workflow triggers
-
-| GitHub Events        | Triggers |
-| -------------------- | -------- |
-| Pull request created |
-| Pull request merged  |
-| Commit created       |
-| Branch created       |
 
 ## Runtime environment variables
 
@@ -160,18 +136,3 @@ Structure of an entity
   parentId: "",
 }
 ```
-
-# API-Endpoints
-
-See swagger https://vsm-api-dev.azurewebsites.net/swagger/index.html
-
-## SignalR
-
-| Action                | method        | returns              |
-| --------------------- | ------------- | -------------------- |
-| SaveProject           | SaveProject   | projectobject        |
-| DeleteProject         | DeleteProject | The id it deleted    |
-| Save or update object | UpdateObject  | Saved object         |
-| Delete object         | DeletedObject | The id of the object |
-| Save or update Task   | SaveTask      | The saved task       |
-| Delete Task           | DeleteTask    | The task id          |
