@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  dashboard,
-  person,
-  favorite_outlined,
-  search,
-} from "@equinor/eds-icons";
+import { dashboard, person, favorite_outlined } from "@equinor/eds-icons";
 import styles from "./SideNavBar.module.scss";
 import SideNavBarElement from "./SideNavBarElement";
 

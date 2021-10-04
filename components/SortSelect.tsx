@@ -17,7 +17,7 @@ export const SortSelect = (): JSX.Element => {
       }}
     >
       <option value="name">Alphabetically</option>
-      <option value="created">Last created</option>
+      <option value="created">Date created</option>
       <option value="modified">Last modified</option>
     </select>
   );
