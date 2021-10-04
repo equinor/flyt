@@ -20,7 +20,7 @@ export default function DuplicatePage() {
   const [statusMessage, setStatusMessage] = useState("");
   const newProjectMutation = useMutation((project: vsmProject) =>
     createProject(project).then((value) =>
-      router.replace(`/projects/${value.data.vsmProjectID}`)
+      router.replace(`/process/${value.data.vsmProjectID}`)
     )
   );
 

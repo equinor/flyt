@@ -242,7 +242,7 @@ const CanvasLayout = ({ children }) => {
               </Menu.Item>
               <Menu.Item
                 onClick={() =>
-                  router.push(`/projects/${project.vsmProjectID}/duplicate`)
+                  router.push(`/process/${project.vsmProjectID}/duplicate`)
                 }
               >
                 <Typography group="navigation" variant="menu_title" as="span">

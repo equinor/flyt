@@ -40,7 +40,7 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
   );
 
   return (
-    <Link href={`/projects/${props.vsm.vsmProjectID}`}>
+    <Link href={`/process/${props.vsm.vsmProjectID}`}>
       <div className={styles.card}>
         <div className={styles.topSection}>
           <div className={styles.vsmTitleContainer}>

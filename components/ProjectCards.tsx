@@ -6,7 +6,7 @@ export function ProjectCards(props: {
   projects: Array<vsmProject>;
 }): JSX.Element {
   if (props.projects.length < 1) {
-    return <p>There are no projects to show.</p>;
+    return <p>There are no processes to show.</p>;
   }
   return (
     <>

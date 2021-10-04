@@ -11,7 +11,7 @@ export function NewProjectButton(): JSX.Element {
 
   const newProjectMutation = useMutation(() =>
     createProject().then((value) =>
-      router.push(`/projects/${value.data.vsmProjectID}`)
+      router.push(`/process/${value.data.vsmProjectID}`)
     )
   );
 

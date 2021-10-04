@@ -24,7 +24,7 @@ export const projectTemplatesV1 = {
         name: "DevOps Team Process",
         fkObjectType: 1,
         childObjects: [
-          { name: "https://flyt.equinor.com/projects/83", fkObjectType: 2 },
+          { name: "https://flyt.equinor.com/process/83", fkObjectType: 2 },
           { name: "Bugs & New feature requests.", fkObjectType: 3 },
           {
             name: "Prepare tasks ",
