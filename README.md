@@ -3,7 +3,7 @@
 ![Flyt canvas (13) - Process feedback on 'Flyt'  - Wednesday, September 15, 2021](https://user-images.githubusercontent.com/3164065/133470524-d6934d90-82ce-4870-aea3-450fd1f4c48f.png)
 
 # Links
-
+- [Issue and feature tracker](https://github.com/orgs/equinor/projects/77)
 - [Figma design & prototype](https://www.figma.com/file/IkHwmIQrsT0iR34f5R5UnZ/vsm)
 - Api-endpoints: See swagger https://vsm-api-dev.azurewebsites.net/swagger/index.html
 
