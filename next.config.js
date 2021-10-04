@@ -13,4 +13,13 @@ module.exports = {
     ENVIRONMENT: process.env.ENVIRONMENT,
     SCOPE: process.env.SCOPE,
   },
+  async redirects() {
+    return [
+      {
+        source: "/projects/:path*",
+        destination: "/process/:path*",
+        permanent: false,
+      },
+    ];
+  },
 };

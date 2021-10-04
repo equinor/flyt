@@ -14,17 +14,17 @@ export default function SideNavBar(): JSX.Element {
       <SideNavBarElement
         icon={dashboard}
         title="See all processes"
-        pathname="/projects"
+        pathname="/processes"
       />
       <SideNavBarElement
         icon={person}
         title="See my processes"
-        pathname="/projects/mine"
+        pathname="/processes/mine"
       />
       <SideNavBarElement
         icon={favorite_outlined}
         title="See my favourite processes"
-        pathname="/projects/favourite"
+        pathname="/processes/favourite"
       />
     </div>
   );

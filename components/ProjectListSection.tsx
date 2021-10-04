@@ -1,4 +1,4 @@
-import styles from "../pages/projects/Projects.module.scss";
+import styles from "../pages/processes/Projects.module.scss";
 import { vsmProject } from "../interfaces/VsmProject";
 import React from "react";
 import { PlaceholderProjectCards } from "./PlaceholderProjectCards";
