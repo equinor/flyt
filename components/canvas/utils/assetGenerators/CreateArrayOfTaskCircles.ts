@@ -10,6 +10,7 @@ export function createArrayOfTaskCircles(
   problemCircle: ILoaderResource,
   questionCircle: ILoaderResource,
   ideaCircle: ILoaderResource,
+  riskCircle: ILoaderResource,
   unknownCircle: ILoaderResource,
   textResolution: number
 ): Array<PIXI.Container> {
@@ -21,6 +22,8 @@ export function createArrayOfTaskCircles(
         return TextCircle(`${t.displayIndex}`, questionCircle, textResolution);
       case vsmTaskTypes.idea:
         return TextCircle(`${t.displayIndex}`, ideaCircle, textResolution);
+      case vsmTaskTypes.risk:
+        return TextCircle(`${t.displayIndex}`, riskCircle, textResolution);
       default:
         return TextCircle(`${t}`, unknownCircle, textResolution);
     }

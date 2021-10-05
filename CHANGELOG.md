@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.5](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.5) (2021-10-05)
+
+### Features
+
+- Add R to PQI's (R for Risk) ([1ae6f43](https://github.com/equinor/MAD-VSM-WEB/commit/1ae6f43b159e049b2f98c213f10dceb992e1384b)), closes [#155](https://github.com/equinor/MAD-VSM-WEB/issues/155)
+
 ### [0.2.4](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.4) (2021-09-06)
 
 ### Features

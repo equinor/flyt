@@ -34,7 +34,9 @@ export const QIPSection = (props: {
 
   return (
     <div className={styles.QIPContainer}>
-      <Typography variant={"h3"}>Questions, Ideas and Problems</Typography>
+      <Typography variant={"h3"}>
+        Questions, Ideas, Problems and Risks
+      </Typography>
 
       {showEditTaskSection && (
         <EditTaskSection
@@ -57,8 +59,8 @@ export const QIPSection = (props: {
             onClick={() => props.canEdit && props.onClickNewTask()}
           >
             {props.canEdit
-              ? "Add Question, Idea or Problem"
-              : "No question, ideas or problems added"}
+              ? "Add question, idea, problem or risk"
+              : "No questions, ideas, problems or risks added"}
           </p>
         )}
         <div style={{ display: "flex", flexWrap: "wrap" }}>
