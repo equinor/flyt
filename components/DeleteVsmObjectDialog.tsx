@@ -83,7 +83,7 @@ export function DeleteVsmObjectDialog(props: {
                 color={"danger"}
                 onClick={handleDelete}
               >
-                <Icon data={delete_forever} title="Delete VSM" size={16} />
+                <Icon data={delete_forever} title="Delete process" size={16} />
                 {confirmMessage}
               </Button>
             </div>

@@ -1,0 +1,21 @@
+.sortSelect {
+  /* Navigation/Menu Title */
+
+  font-family: Equinor, sans-serif;
+  font-size: 16px;
+  line-height: 16px;
+  /* identical to box height, or 100% */
+
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.2px;
+
+  min-width: 125px;
+  border: 0;
+  background: transparent;
+
+  // Replace the chevron with a green one
+  -webkit-appearance: none; // Hide the original chevron
+  background: url(/chevron_down.svg) no-repeat right; // Add svg chevron
+  background-position-x: 105px; // Adjust placement
+}

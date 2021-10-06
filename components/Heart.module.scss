@@ -1,0 +1,21 @@
+.heart {
+  color: #dadada;
+  align-self: center;
+  margin: 12px;
+
+  border: none;
+  background-color: unset;
+}
+
+.heart:hover {
+  opacity: 0.5;
+}
+
+.heart:active {
+  color: black;
+}
+
+.favedHeart {
+  @extend .heart;
+  color: #ff1243;
+}

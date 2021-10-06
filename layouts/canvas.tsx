@@ -242,7 +242,7 @@ const CanvasLayout = ({ children }) => {
               </Menu.Item>
               <Menu.Item
                 onClick={() =>
-                  router.push(`/projects/${project.vsmProjectID}/duplicate`)
+                  router.push(`/process/${project.vsmProjectID}/duplicate`)
                 }
               >
                 <Typography group="navigation" variant="menu_title" as="span">
@@ -262,7 +262,7 @@ const CanvasLayout = ({ children }) => {
                 onClick={() => setVisibleDeleteScrim(true)}
               >
                 <Typography group="navigation" variant="menu_title" as="span">
-                  Delete VSM
+                  Delete process
                 </Typography>
               </Menu.Item>
               <Menu.Item disabled>
@@ -312,7 +312,7 @@ const CanvasLayout = ({ children }) => {
         >
           <div className={styles.scrimWrapper}>
             <div className={styles.scrimHeaderWrapper}>
-              <div className={styles.scrimTitle}>Rename VSM</div>
+              <div className={styles.scrimTitle}>Rename process</div>
               <Button
                 variant={"ghost_icon"}
                 onClick={() => setVisibleRenameScrim(false)}
@@ -348,7 +348,7 @@ const CanvasLayout = ({ children }) => {
             ) : (
               <>
                 <div className={styles.scrimHeaderWrapper}>
-                  <div className={styles.scrimTitle}>Delete VSM</div>
+                  <div className={styles.scrimTitle}>Delete process</div>
                   <Button
                     autoFocus
                     variant={"ghost_icon"}
@@ -364,7 +364,7 @@ const CanvasLayout = ({ children }) => {
                     </Typography>
                   )}
                   <Typography variant={"h4"}>
-                    Are you sure you want to delete the entire VSM?
+                    Are you sure you want to delete the entire process?
                   </Typography>
                 </div>
                 <div className={styles.deleteButton}>
@@ -373,8 +373,12 @@ const CanvasLayout = ({ children }) => {
                     color={"danger"}
                     onClick={() => deleteVSM()}
                   >
-                    <Icon data={delete_forever} title="Delete VSM" size={16} />
-                    Delete VSM
+                    <Icon
+                      data={delete_forever}
+                      title="Delete process"
+                      size={16}
+                    />
+                    Delete process
                   </Button>
                 </div>
               </>

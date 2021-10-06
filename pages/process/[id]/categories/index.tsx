@@ -169,7 +169,7 @@ export default function CategoriesPage(): JSX.Element {
               .map((task) => (
                 <QipCard
                   onClick={() =>
-                    router.push(`/projects/${id}/${task.vsmTaskID}`)
+                    router.push(`/process/${id}/${task.vsmTaskID}`)
                   }
                   key={task.vsmTaskID}
                   task={task}

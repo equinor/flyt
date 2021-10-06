@@ -3,7 +3,7 @@
  * @param params
  */
 export function createUrlParams(params: {
-  [x: string]: string | number;
+  [x: string]: string | string[] | number | boolean;
 }): string {
   if (!params) return "";
   return Object.keys(params)

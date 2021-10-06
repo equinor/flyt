@@ -9,7 +9,6 @@
 - :dizzy: [Our development process: Mapped in Flyt itself](https://flyt.equinor.com/projects/172)
 - 🏃 [Running in Radix](https://console.radix.equinor.com/applications/vsm/)
 
-
 # Background
 > TBD: write some background about mapping and what Flyt aims to solve and improve.
 
