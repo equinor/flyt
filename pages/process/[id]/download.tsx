@@ -55,7 +55,8 @@ export default function Project() {
         <main className={commonStyles.main}>
           <Typography variant="h1">{error.message}</Typography>
           <p>
-            We have some troubles with this VSM. Please try to refresh the page.
+            We have some troubles with this process. Please try to refresh the
+            page.
           </p>
         </main>
       </div>

@@ -61,7 +61,7 @@ export default function Download(): JSX.Element {
     <>
       <Button
         variant={"contained"}
-        title={"Download VSM as PNG"}
+        title={"Download process as PNG"}
         onClick={() => download_tree_as_png(project, tree)}
       >
         <Icon data={download} />
@@ -70,7 +70,7 @@ export default function Download(): JSX.Element {
 
       <Button
         variant={"contained"}
-        title={"Download VSM as CSV"}
+        title={"Download process as CSV"}
         onClick={() => {
           downloadProjectTasksAsCSV(tasks, project);
         }}
@@ -80,7 +80,7 @@ export default function Download(): JSX.Element {
       </Button>
       <Button
         variant={"contained"}
-        title={"Download VSM as CSV"}
+        title={"Download process as CSV"}
         onClick={() => {
           downloadProjectCardsAsCSV(project);
         }}
@@ -90,7 +90,7 @@ export default function Download(): JSX.Element {
       </Button>
       <Button
         variant={"contained"}
-        title={"Download VSM as JSON"}
+        title={"Download process as JSON"}
         onClick={() => downloadJSON(project)}
       >
         <Icon data={download} />

@@ -45,7 +45,7 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
         <div className={styles.topSection}>
           <div className={styles.vsmTitleContainer}>
             <h1 className={styles.vsmTitle}>
-              {props.vsm.name || "Untitled VSM"}
+              {props.vsm.name || "Untitled Process"}
             </h1>
           </div>
           <Heart
