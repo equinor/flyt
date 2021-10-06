@@ -15,6 +15,7 @@ export default function CategoriesPage(): JSX.Element {
   const [problemChecked, setProblemChecked] = useState(true);
   const [ideaChecked, setIdeaChecked] = useState(true);
   const [questionChecked, setQuestionChecked] = useState(true);
+  const [riskChecked, setRiskChecked] = useState(true);
   const [visibleScrim, setVisibleScrim] = useState(false);
 
   const router = useRouter();
@@ -28,6 +29,8 @@ export default function CategoriesPage(): JSX.Element {
         return questionChecked;
       case vsmTaskTypes.idea:
         return ideaChecked;
+      // case vsmTaskTypes.risk:
+      //   return riskChecked;
       default:
         return false;
     }
@@ -74,6 +77,11 @@ export default function CategoriesPage(): JSX.Element {
           setIsChecked={setIdeaChecked}
           isChecked={ideaChecked}
           label={"Idea"}
+        />
+        <CheckboxImproved
+          setIsChecked={setRiskChecked}
+          isChecked={riskChecked}
+          label={"Risk"}
         />
       </div>
     );
