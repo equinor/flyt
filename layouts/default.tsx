@@ -3,10 +3,10 @@ import { TopBar } from "@equinor/eds-core-react";
 import styles from "./default.layout.module.scss";
 import { useIsAuthenticated } from "@azure/msal-react";
 import React from "react";
-import getConfig from "next/config";
 import { HomeButton } from "./homeButton";
 import { RightTopBarSection } from "../components/RightTopBarSection";
 import packageJson from "../package.json";
+import { ServiceMessageBanner } from "../components/ServiceMessageBanner";
 
 const DefaultLayout = ({ children }) => {
   const isAuthenticated = useIsAuthenticated();
@@ -49,6 +49,7 @@ const DefaultLayout = ({ children }) => {
         <div />
         <RightTopBarSection isAuthenticated={isAuthenticated} />
       </TopBar>
+      <ServiceMessageBanner />
 
       {children}
     </>
