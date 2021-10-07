@@ -1,0 +1,18 @@
+.banner {
+  margin-left: 56px;
+  animation-name: drop-down;
+  animation-duration: 1s;
+}
+
+@keyframes drop-down {
+  from {
+    opacity: 0;
+    transform: translateY(-72px);
+  }
+}
+
+@media screen and (max-width: 510px) {
+  .banner {
+    margin-left: 0;
+  }
+}
