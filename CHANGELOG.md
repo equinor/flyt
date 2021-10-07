@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.6](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.6) (2021-10-06)
+
+### Features
+
+- improve discoverability on the frontpage ([4b59760](https://github.com/equinor/MAD-VSM-WEB/commit/4b59760481901318ede1053c28ff32ad8b0a0b7f)), closes [#113](https://github.com/equinor/MAD-VSM-WEB/issues/113)
+
 ### [0.2.5](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.5) (2021-10-05)
 
 ### Features

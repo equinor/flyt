@@ -26,16 +26,16 @@ export default function DuplicatePage() {
 
   useEffect(() => {
     if (project) {
-      setStatusMessage("Preparing project");
+      setStatusMessage("Preparing process");
       const json = getProjectAsCleanJsonWithoutQIPs(
         project,
-        `${!!project.name ? project.name : "Untitled VSM"} (Duplicate of ${
+        `${!!project.name ? project.name : "Untitled process"} (Duplicate of ${
           project.vsmProjectID
         })`,
         `${project.vsmProjectID}`
       );
       if (json) {
-        setStatusMessage("Creating new project");
+        setStatusMessage("Creating new process");
         debounce(
           //Hack to stop sending multiple requests when the project-object changes
           () => newProjectMutation.mutate(json),
@@ -47,8 +47,8 @@ export default function DuplicatePage() {
   }, [project]);
 
   function Progress() {
-    if (isLoading) return <h1>Fetching project</h1>;
-    if (error) return <h1>Failed to fetch project</h1>;
+    if (isLoading) return <h1>Fetching process</h1>;
+    if (error) return <h1>Failed to fetch process</h1>;
     return <h1>{statusMessage}</h1>;
   }
 
