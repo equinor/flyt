@@ -1,0 +1,39 @@
+.dotsContainer {
+  position: relative;
+  width: 90px;
+  height: 24px;
+  background-color: #ffffff;
+  padding: 0;
+  border: none;
+  padding: 0;
+}
+
+.dotsContainer div:nth-child(1) {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+
+.dotsContainer div:nth-child(2) {
+  position: absolute;
+  top: 0px;
+  right: 12px;
+  transition-property: right;
+  transition-duration: 0.5s;
+}
+
+.dotsContainer div:nth-child(3) {
+  position: absolute;
+  top: 0px;
+  right: 24px;
+  transition-property: right, height, width;
+  transition-duration: 0.5s;
+}
+
+.dotsContainer:hover > div:nth-child(2) {
+  right: 24px;
+}
+
+.dotsContainer:hover > div:nth-child(3) {
+  right: 48px;
+}

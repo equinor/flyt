@@ -300,6 +300,7 @@ const CanvasLayout = ({ children }) => {
             project={project}
             handleClose={handleCloseShareScrim}
             isAdmin={isAdmin}
+            title="Sharing"
           />
         </Scrim>
       )}

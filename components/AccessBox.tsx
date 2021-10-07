@@ -18,6 +18,7 @@ export function AccessBox(props: {
   project: vsmProject;
   handleClose;
   isAdmin: boolean;
+  title: string;
 }): JSX.Element {
   const { data: userAccesses, isLoading } = useQuery(
     "userAccesses",
@@ -36,7 +37,7 @@ export function AccessBox(props: {
   const owner = created.userIdentity;
   return (
     <div className={style.box}>
-      <TopSection title={"Sharing"} handleClose={props.handleClose} />
+      <TopSection title={props.title} handleClose={props.handleClose} />
       <MiddleSection
         owner={owner}
         users={userAccesses}
