@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useMutation } from "react-query";
 import { createProject } from "../services/projectApi";
-import styles from "../pages/projects/Projects.module.scss";
+import styles from "../pages/processes/Projects.module.scss";
 import { Icon } from "@equinor/eds-core-react";
 import { add } from "@equinor/eds-icons";
 import React from "react";
@@ -11,7 +11,7 @@ export function NewProjectButton(): JSX.Element {
 
   const newProjectMutation = useMutation(() =>
     createProject().then((value) =>
-      router.push(`/projects/${value.data.vsmProjectID}`)
+      router.push(`/process/${value.data.vsmProjectID}`)
     )
   );
 

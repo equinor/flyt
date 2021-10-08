@@ -33,6 +33,7 @@ export const assets = {
   mainActivityStraight: "/Postit/Blue/Straight.png",
   problemCircle: "/Problem/small/primary.png",
   questionCircle: "/Question/small/primary.png",
+  riskCircle: "/Risk/small/primary.png",
   subActivity: "/Postit/Yellow.png",
   subActivityStraight: "/Postit/Yellow/Straight.png",
   waiting: "/Postit/Orange/Icon.png",

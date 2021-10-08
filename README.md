@@ -1,10 +1,18 @@
 ## Flyt - (aka VSM/Value Stream Mapping)
 
-![Canvas example](./documentation/images/canvasExample.png)
+![Flyt canvas (13) - Process feedback on 'Flyt'  - Wednesday, September 15, 2021](https://user-images.githubusercontent.com/3164065/133470524-d6934d90-82ce-4870-aea3-450fd1f4c48f.png)
 
 # Links
 
-- [Figma design & prototype](https://www.figma.com/file/IkHwmIQrsT0iR34f5R5UnZ/vsm)
+- :inbox_tray: [Bug and feature tracker](https://github.com/orgs/equinor/projects/77)
+- :art: [Figma design & prototype](https://www.figma.com/file/IkHwmIQrsT0iR34f5R5UnZ/vsm)
+- :zap: [Api-endpoints: See swagger](https://vsm-api-dev.azurewebsites.net/swagger/index.html)
+- :dizzy: [Our development process: Mapped in Flyt itself](https://flyt.equinor.com/projects/172)
+- 🏃 [Running in Radix](https://console.radix.equinor.com/applications/vsm/)
+
+# Background
+
+> TBD: write some background about mapping and what Flyt aims to solve and improve.
 
 # Tech stack / Features
 
@@ -20,21 +28,6 @@
 | Authentication   | [@azure/msal-react](https://github.com/AzureAD/microsoft-authentication-library-for-js#readme)                                         |
 | Styling          | [Sass](https://sass-lang.com/)                                                                                                         |
 | Templates        |                                                                                                                                        |
-| SignalR          | SignalR                                                                                                                                |
-
-#SignalR Actions
-The signalR hub transmits some
-
-| Actions                  | Comment                                     | Method        | Returns                |
-| ------------------------ | ------------------------------------------- | ------------- | ---------------------- |
-| Save or update vsmObject |                                             | UpdateObject  | Saved object           |
-| Delete vsmObject         |                                             | DeletedObject | The id of the object   |
-| Save Project             | Metadata stuff like the name of the project | SaveProject   | Updated Project object |
-| Delete Project           |                                             | DeleteProject | The id it deleted      |
-| Save or update Task      | On creating new task or updating one        | SaveTask      | The saved task         |
-| Delete Task              |                                             | DeleteTask    | The task id            |
-| Linking tasks?           |                                             |               |                        |
-| Concurrent users? Peers? |                                             |               |                        |
 
 # Developing
 
@@ -48,7 +41,7 @@ To get up and running:
 | Dev  | `yarn use-dev`  |
 | Test | `yarn use-test` |
 | QA   |  `yarn use-qa`  |
-| PROD |     --TBD--     |
+| PROD | `yarn use-prod` |
 
 ### What it does
 
@@ -68,6 +61,8 @@ for some reason.
 
 I've added a simple script to automate this:
 For example; Run `yarn release-dev` to tag DEV and push tags to GitHub.
+
+> **NOTE:** This script need to be updated to accomadate for multiple people updating the tags. Until then, try to update the tag and push it manually. [Read more about git tags](https://git-scm.com/book/en/v2/Git-Basics-Tagging).
 
 | Environment | Release script          | Deploy status                                                                                                                  | URL                                     | Who should test what?       | Comments                                                                         |
 | ----------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------- | --------------------------- | -------------------------------------------------------------------------------- |
@@ -94,17 +89,6 @@ docker run -p 3000:3000 --env-file ./environment-variables/QA.env equinor-flyt
 ## Prod
 docker run -p 3000:3000 --env-file ./environment-variables/PROD.env equinor-flyt
 ```
-
-## Task tracking
-
-### Workflow triggers
-
-| GitHub Events        | Triggers |
-| -------------------- | -------- |
-| Pull request created |
-| Pull request merged  |
-| Commit created       |
-| Branch created       |
 
 ## Runtime environment variables
 
@@ -161,17 +145,39 @@ Structure of an entity
 }
 ```
 
-# API-Endpoints
+# Semantic Commit Messages
 
-See swagger https://vsm-api-dev.azurewebsites.net/swagger/index.html
+> Copied from https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716
 
-## SignalR
+See how a minor change to your commit message style can make you a better programmer.
 
-| Action                | method        | returns              |
-| --------------------- | ------------- | -------------------- |
-| SaveProject           | SaveProject   | projectobject        |
-| DeleteProject         | DeleteProject | The id it deleted    |
-| Save or update object | UpdateObject  | Saved object         |
-| Delete object         | DeletedObject | The id of the object |
-| Save or update Task   | SaveTask      | The saved task       |
-| Delete Task           | DeleteTask    | The task id          |
+Format: `<type>(<scope>): <subject>`
+
+`<scope>` is optional
+
+## Example
+
+```
+feat: add hat wobble
+^--^  ^------------^
+|     |
+|     +-> Summary in present tense.
+|
++-------> Type: chore, docs, feat, fix, refactor, style, or test.
+```
+
+More Examples:
+
+- `feat`: (new feature for the user, not a new feature for build script)
+- `fix`: (bug fix for the user, not a fix to a build script)
+- `docs`: (changes to the documentation)
+- `style`: (formatting, missing semi colons, etc; no production code change)
+- `refactor`: (refactoring production code, eg. renaming a variable)
+- `test`: (adding missing tests, refactoring tests; no production code change)
+- `chore`: (updating grunt tasks etc; no production code change)
+
+References:
+
+- https://www.conventionalcommits.org/
+- https://seesparkbox.com/foundry/semantic_commit_messages
+- http://karma-runner.github.io/1.0/dev/git-commit-msg.html

@@ -33,7 +33,7 @@ export default function Project() {
     return (
       <div className={commonStyles.container}>
         <Head>
-          <title>Flyt | Project {id}</title>
+          <title>Flyt | Process {id}</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
@@ -55,7 +55,8 @@ export default function Project() {
         <main className={commonStyles.main}>
           <Typography variant="h1">{error.message}</Typography>
           <p>
-            We have some troubles with this VSM. Please try to refresh the page.
+            We have some troubles with this process. Please try to refresh the
+            page.
           </p>
         </main>
       </div>
@@ -64,7 +65,7 @@ export default function Project() {
   return (
     <div className={commonStyles.container}>
       <Head>
-        <title>{project?.name || `Flyt | Project ${id}`}</title>
+        <title>{project?.name || `Flyt | Process ${id}`}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>

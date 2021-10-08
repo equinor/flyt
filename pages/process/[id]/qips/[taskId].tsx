@@ -105,7 +105,7 @@ function VSMObjectCard(props: { vsmObjectId: number }) {
             <div
               key={task.vsmTaskID}
               onClick={() =>
-                router.push(`/projects/${id}/qips/${task.vsmTaskID}`)
+                router.push(`/process/${id}/qips/${task.vsmTaskID}`)
               }
             >
               <TaskButton task={task} selected={true} draft={false} />
@@ -131,13 +131,11 @@ export default function Category(): JSX.Element {
 
   return (
     <div>
-      <Button
-        onClick={() => router.back()}
-        variant={"ghost_icon"}
-        title={"back"}
-      >
-        <Icon data={arrow_back} />
-      </Button>
+      <Link href={`/process/${id}/qips`}>
+        <Button variant={"ghost_icon"} title={"back"}>
+          <Icon data={arrow_back} />
+        </Button>
+      </Link>
       <div
         style={{
           display: "flex",

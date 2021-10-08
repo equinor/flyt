@@ -9,10 +9,10 @@
   /* UI Background/Default */
 
   width: 332px;
-  height: 168px;
+  height: 100px;
 
   min-width: 332px;
-  max-height: 168px;
+  max-height: 100px;
 
   background: #ffffff;
   border-radius: 4px;
@@ -26,6 +26,13 @@
   transition: all 0.2s ease-in-out;
 }
 
+@media screen and (max-width: 510px) {
+  .card {
+    width: 300px;
+    min-width: 300px;
+  }
+}
+
 .card:hover {
   transform: scale(1.05);
   filter: drop-shadow(0px 10px 10px rgba(0, 0, 0, 0.14));
@@ -35,7 +42,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  max-height: 70px;
+  max-height: 40px;
   overflow: hidden;
 }
 
@@ -56,11 +63,18 @@
   }
 }
 
+.topSection {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
 .vsmTitleContainer {
-  margin: 8px 16px 16px;
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin: 8px 12px 12px 12px;
 }
 
 .vsmTitle {

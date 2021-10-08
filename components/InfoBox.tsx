@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./InfoBox.module.scss";
+import styles from "../pages/process/[id]/categories/categories.module.scss";
 import { Button, Icon } from "@equinor/eds-core-react";
 import { close } from "@equinor/eds-icons";
 

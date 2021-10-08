@@ -1,17 +1,18 @@
 {
   "name": "flyt",
   "radix-name": "vsm",
-  "version": "0.2.4",
+  "version": "0.2.6",
   "private": true,
   "scripts": {
     "dev": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
-    "release": "standard-version && yarn release-test",
-    "release-dev": "git tag -m 'Current DEV environment'   -a -f DEV  && yarn push-tags",
-    "release-test": "git tag -m 'Current TEST environment' -a -f TEST && yarn push-tags",
-    "release-qa": "git tag -m 'Current QA environment'     -a -f QA   && yarn push-tags",
-    "release-prod": "git tag -m 'Current PROD environment' -a -f PROD && yarn push-tags",
+    "release": "standard-version",
+    "fetch-tags": "git fetch origin tag DEV TEST QA PROD",
+    "release-dev": "yarn fetch-tags && git tag -m 'Current DEV environment'   -a -f DEV  && yarn push-tags",
+    "release-test": "yarn fetch-tags && git tag -m 'Current TEST environment' -a -f TEST && yarn push-tags",
+    "release-qa": "yarn fetch-tags && git tag -m 'Current QA environment'     -a -f QA   && yarn push-tags",
+    "release-prod": "yarn fetch-tags && git tag -m 'Current PROD environment' -a -f PROD && yarn push-tags",
     "push-tags": "git push origin --tags -f && echo Check status: https://console.radix.equinor.com/applications/vsm/jobs",
     "use-dev": "cp environment-variables/DEV.env .env && yarn dev",
     "use-test": "cp environment-variables/TEST.env .env && yarn dev",
@@ -41,19 +42,19 @@
     "moment": "^2.29.1",
     "next": "^11.1.2",
     "pixi-viewport": "^4.30.4",
-    "pixi.js": "^6.0.2",
+    "pixi.js": "6.1.2",
     "react": "^17.0.2",
     "react-device-detect": "^1.17.0",
     "react-dom": "^17.0.2",
     "react-json-view": "^1.21.1",
-    "react-markdown": "^6.0.3",
+    "react-markdown": "7.0.1",
     "react-query": "^3.17.2",
     "react-table": "^7.7.0",
     "remark-gfm": "^1.0.0",
     "sass": "^1.32.11",
-    "socket.io": "^4.1.3",
-    "socket.io-client": "^4.1.3",
-    "styled-components": "^5.2.2",
+    "socket.io": "4.2.0",
+    "socket.io-client": "4.2.0",
+    "styled-components": "5.3.1",
     "validate-azure-token": "^1.0.2"
   },
   "devDependencies": {
@@ -70,7 +71,7 @@
     "prettier": "^2.2.1",
     "pretty-quick": "^3.1.0",
     "standard-version": "^9.3.1",
-    "typescript": "^4.1.3"
+    "typescript": "4.4.2"
   },
   "lint-staged": {
     "*.{ts,js}": [
