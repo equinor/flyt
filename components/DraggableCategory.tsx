@@ -42,32 +42,6 @@ export function DraggableCategory(props: {
       });
   };
 
-  const newTaskCategoryMutation = useMutation(
-    (category: taskCategory) => {
-      setIsLoading(true);
-      return newTaskCategory({
-        name: category.name,
-        fkProject: props.projectId,
-      });
-    },
-    {
-      onSettled: () => getCategories(),
-      onError: (error: { response: { status: number } }) => {
-        const statusCode = error?.response?.status;
-        let errorMessage: string[];
-        if (statusCode === 409) {
-          errorMessage = [
-            `Name must be unique.`,
-            "Cannot create a category with the same name as another.",
-          ];
-        } else {
-          errorMessage = [`Error ${statusCode}`];
-        }
-        setErrorMessage(errorMessage);
-        setVisibleScrim(true);
-      },
-    }
-  );
   const patchTaskCategoryMutation = useMutation(
     (category: taskCategory) => {
       setIsLoading(true);
@@ -126,15 +100,12 @@ export function DraggableCategory(props: {
   function saveText() {
     //Save or update text and exit edit-mode
     const name = categoryName.trim();
-    const isNew = !props.category.id;
-    !!name && isNew
-      ? newTaskCategoryMutation.mutate({
-          name: name,
-        })
-      : patchTaskCategoryMutation.mutate({
-          name: name,
-          id: props.category.id,
-        });
+    if (!!name) {
+      patchTaskCategoryMutation.mutate({
+        name: name,
+        id: props.category.id,
+      });
+    }
     setEditText(false);
   }
 

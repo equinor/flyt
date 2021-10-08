@@ -45,19 +45,7 @@ export function CategorySection(props: {
     <div>
       <p className={styles.header}>Categories</p>
       <CategoryHelpers />
-      <AddCategoryButton
-        onClickHandler={() => {
-          setCategories([
-            ...categories,
-            {
-              name: `Category ${categories.length + 1}`,
-              checked: false,
-              placement: categories.length + 1,
-              draft: true,
-            },
-          ]);
-        }}
-      />
+      <AddCategoryButton projectId={id} />
       <div>
         {isLoadingCategories && <p>Loading</p>}
         {!isLoadingCategories && errorCategories && (
@@ -72,17 +60,15 @@ export function CategorySection(props: {
             <p>{unknownErrorToString(errorCategories)}</p>
           </div>
         )}
-        {categories
-          ?.sort((a, b) => b.placement - a.placement)
-          .map((category) => (
-            <DraggableCategory
-              projectId={id}
-              key={category.id}
-              onClick={() => toggleSelection(category)}
-              checked={category.checked}
-              category={category}
-            />
-          ))}
+        {categories.map((category) => (
+          <DraggableCategory
+            projectId={id}
+            key={category.id}
+            onClick={() => toggleSelection(category)}
+            checked={category.checked}
+            category={category}
+          />
+        ))}
       </div>
     </div>
   );
