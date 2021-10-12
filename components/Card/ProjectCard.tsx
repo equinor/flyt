@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import styles from "./Card.module.scss";
-import { UserDots } from "../UserDots";
+import { UserDots } from "./UserDots";
 import { vsmProject } from "../../interfaces/VsmProject";
-import { useMutation, useQueryClient } from "react-query";
-import { faveProject, unfaveProject } from "services/projectApi";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { faveProject, getLabels, unfaveProject } from "services/projectApi";
 import Heart from "components/Heart";
 import { Scrim } from "@equinor/eds-core-react";
 import { AccessBox } from "components/AccessBox";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { getMyAccess } from "utils/getMyAccess";
-import LabelContainer from "components/LabelContainer";
+import Labels from "components/Labels";
 import ProjectCardHeader from "./ProjectCardHeader";
 
 export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
@@ -23,8 +23,6 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
   const account = useAccount(accounts[0] || {});
   const myAccess = getMyAccess(props.vsm, account);
   const isAdmin = myAccess === "Admin";
-
-  const labels = ["coffee", "milk", "chocolate"];
 
   const handleSettled = () => {
     queryClient.invalidateQueries().then(() => setIsMutatingFavourite(false));
@@ -56,28 +54,24 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
         <div className={styles.card}>
           <div className={styles.topSection}>
             <ProjectCardHeader vsm={props.vsm} />
-            <div className={styles.heartContainer}>
-              <Heart
-                isFavourite={props.vsm.isFavorite}
-                fave={() => faveMutation.mutate()}
-                unfave={() => unfaveMutation.mutate()}
-                isLoading={isMutatingFavourite}
-              />
-            </div>
+            <Heart
+              isFavourite={props.vsm.isFavorite}
+              fave={() => faveMutation.mutate()}
+              unfave={() => unfaveMutation.mutate()}
+              isLoading={isMutatingFavourite}
+            />
           </div>
-          <div>
-            <div className={styles.bottomSection}>
-              <LabelContainer labels={labels} />
-              {createdBy && (
-                <UserDots
-                  users={[
-                    `${createdBy}`,
-                    ...props.vsm.userAccesses.map((u) => u.user),
-                  ]}
-                  setVisibleScrim={(any: boolean) => setVisibleScrim(any)}
-                />
-              )}
-            </div>
+          <div className={styles.bottomSection}>
+            <Labels labels={props.vsm.labels} />
+            {createdBy && (
+              <UserDots
+                users={[
+                  `${createdBy}`,
+                  ...props.vsm.userAccesses.map((u) => u.user),
+                ]}
+                setVisibleScrim={(any: boolean) => setVisibleScrim(any)}
+              />
+            )}
           </div>
         </div>
       </Link>

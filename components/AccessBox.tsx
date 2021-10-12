@@ -148,7 +148,7 @@ function MiddleSection(props: {
       onSuccess: () => {
         setEmailInput("");
         notifyOthers("Gave access to a new user", id, account);
-        queryClient.invalidateQueries("userAccesses");
+        queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
@@ -158,7 +158,7 @@ function MiddleSection(props: {
     {
       onSuccess: () => {
         notifyOthers("Removed access for user", id, account);
-        return queryClient.invalidateQueries("userAccesses");
+        return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }

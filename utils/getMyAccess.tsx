@@ -15,7 +15,7 @@ export function getMyAccess(
 
   //If we are the creator of the project, return Admin
   const shortName = getUserShortName(account);
-  if (project?.created?.userIdentity.toUpperCase() === shortName)
+  if (project?.created?.userIdentity?.toUpperCase() === shortName)
     return "Admin";
 
   //Else, check if we have been given a role, then return that role
