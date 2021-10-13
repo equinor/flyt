@@ -9,7 +9,7 @@ export function UserDots(props: {
 }): JSX.Element {
   const { users, setVisibleScrim } = props;
   const shownUsers = users.length > 3 ? users.slice(0, 3) : users;
-  const numberOtherUsers = users.length > 3 ? users.length - 3 : 0;
+  const numberOtherUsers = users.length - shownUsers.length;
 
   return (
     <Tooltip title={users.join(", ")}>
@@ -22,7 +22,7 @@ export function UserDots(props: {
       >
         <UserDotsAccordion users={shownUsers} />
         {!!numberOtherUsers && (
-          <OtherUsersButton numberOtherUsers={numberOtherUsers} />
+          <p className={styles.otherUsersText}>+{numberOtherUsers}</p>
         )}
       </button>
     </Tooltip>
@@ -31,32 +31,15 @@ export function UserDots(props: {
 
 export function UserDotsAccordion(props: { users: string[] }): JSX.Element {
   const users = props.users.reverse();
-
-  const numberOfUserDots =
-    users.length == 1
-      ? styles.oneUserDot
-      : users.length == 2
-      ? styles.twoUserDots
-      : styles.threeUserDots;
+  const width = users.length <= 3 ? 24 * users.length : 72;
 
   return (
-    <div className={`${numberOfUserDots} ${styles.containerUserDots}`}>
+    <div className={styles.containerUserDots} style={{ width: width }}>
       {users.map((name) => (
         <div key={name}>
           <UserDot name={name} />
         </div>
       ))}
-    </div>
-  );
-}
-
-export function OtherUsersButton(props: {
-  numberOtherUsers: number;
-}): JSX.Element {
-  const { numberOtherUsers } = props;
-  return (
-    <div className={styles.otherUsersContainer}>
-      <p className={styles.otherUsersText}>+{numberOtherUsers}</p>
     </div>
   );
 }

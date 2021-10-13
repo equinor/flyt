@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import Link from "next/link";
 import styles from "./Card.module.scss";
 import { UserDots } from "./UserDots";
 import { vsmProject } from "../../interfaces/VsmProject";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { faveProject, getLabels, unfaveProject } from "services/projectApi";
+import { useMutation, useQueryClient } from "react-query";
+import { faveProject, unfaveProject } from "services/projectApi";
 import Heart from "components/Heart";
 import { Scrim } from "@equinor/eds-core-react";
 import { AccessBox } from "components/AccessBox";
@@ -12,11 +11,13 @@ import { useAccount, useMsal } from "@azure/msal-react";
 import { getMyAccess } from "utils/getMyAccess";
 import Labels from "components/Labels";
 import ProjectCardHeader from "./ProjectCardHeader";
+import { useRouter } from "next/router";
 
 export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
   const { userIdentity: createdBy } = props.vsm.created;
   const queryClient = useQueryClient();
   const [isMutatingFavourite, setIsMutatingFavourite] = useState(false);
+  const router = useRouter();
 
   const [visibleScrim, setVisibleScrim] = useState(false);
   const { accounts } = useMsal();
@@ -50,7 +51,17 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
 
   return (
     <>
-      <Link href={`/process/${props.vsm.vsmProjectID}`}>
+      <button
+        style={{
+          padding: "0",
+          marginRight: "16px",
+          marginBottom: "16px",
+          border: "none",
+          textAlign: "inherit",
+          display: "inherit",
+          backgroundColor: "unset",
+        }}
+      >
         <div className={styles.card}>
           <div className={styles.topSection}>
             <ProjectCardHeader vsm={props.vsm} />
@@ -74,7 +85,7 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
             )}
           </div>
         </div>
-      </Link>
+      </button>
 
       {visibleScrim && (
         <Scrim onClose={() => setVisibleScrim(false)} isDismissable>
@@ -82,7 +93,6 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
             project={props.vsm}
             handleClose={() => setVisibleScrim(false)}
             isAdmin={isAdmin}
-            title="Users"
           />
         </Scrim>
       )}

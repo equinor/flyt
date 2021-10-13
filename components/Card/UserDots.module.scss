@@ -21,27 +21,15 @@
   height: 24px;
 }
 
-.oneUserDot {
-  width: 24px;
-}
-
-.twoUserDots {
-  width: 48px;
-}
-
-.threeUserDots {
-  width: 72px;
-}
-
 .containerUserDots div:nth-child(1) {
   position: absolute;
-  top: 0px;
-  right: 0px;
+  top: 0;
+  right: 0;
 }
 
 .containerUserDots div:nth-child(2) {
   position: absolute;
-  top: 0x;
+  top: 0;
   right: 12px;
   transition-property: right;
   transition-duration: 0.5s;
@@ -49,7 +37,7 @@
 
 .containerUserDots div:nth-child(3) {
   position: absolute;
-  top: 0px;
+  top: 0;
   right: 24px;
   transition-property: right;
   transition-duration: 0.5s;
@@ -57,28 +45,19 @@
 
 .containerUserDots:hover > div:nth-child(2) {
   position: absolute;
-  top: 0px;
+  top: 0;
   right: 24px;
 }
 
 .containerUserDots:hover > div:nth-child(3) {
   position: absolute;
-  top: 0px;
+  top: 0;
   right: 48px;
-}
-
-.otherUsersContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #ffffff;
-  border: none;
-  height: 24px;
-  margin-left: 6px;
 }
 
 .otherUsersText {
   font-size: 14px;
   color: #6f6f6f;
   margin: 0;
+  margin: 0 0 0 6px;
 }

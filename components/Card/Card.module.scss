@@ -15,20 +15,11 @@
   background: #ffffff;
   border-radius: 4px;
 
-  margin-right: 16px;
-  margin-bottom: 16px;
-
   animation-name: fade-in;
   animation-duration: 0.8s;
 
   transition: all 0.2s ease-in-out;
-}
-
-@media screen and (max-width: 510px) {
-  .card {
-    width: 300px;
-    min-width: 300px;
-  }
+  align-self: stretch;
 }
 
 .card:hover {

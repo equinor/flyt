@@ -8,7 +8,9 @@ export default function ProjectCardHeader(props: {
 }): JSX.Element {
   return (
     <div className={styles.vsmTitleContainer}>
-      <h1 className={styles.vsmTitle}>{props.vsm.name || "Untitled VSM"}</h1>
+      <h1 className={styles.vsmTitle}>
+        {props.vsm.name || "Untitled process"}
+      </h1>
       {!!props.vsm.lastUpdated && (
         <p className={styles.lastEditedLabel}>
           Edited {moment(props.vsm.lastUpdated.changeDate).fromNow()}
