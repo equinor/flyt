@@ -38,24 +38,26 @@ export default function FavoriteProcesses(): JSX.Element {
         <link rel={"icon"} href={"/favicon.ico"} />
       </Head>
 
-      <main className={commonStyles.frontPageMain}>
+      <main className={styles.main}>
         <SideNavBar />
-        <div className={styles.frontPageContainer}>
-          <div className={styles.frontPageHeader}>
-            <div className={styles.frontPageSubHeader}>
-              <SearchField />
+        <div className={styles.outercontainer}>
+          <div className={styles.container}>
+            <div className={styles.header}>
+              <div className={styles.subHeader}>
+                <SearchField />
+              </div>
+              <div className={styles.subHeader}>
+                <Typography variant="h3">My favourite processes</Typography>
+                <SortSelect />
+              </div>
             </div>
-            <div className={styles.frontPageSubHeader}>
-              <Typography variant="h3">My favourite processes</Typography>
-              <SortSelect />
-            </div>
+            <FrontPageBody
+              itemsPerPage={itemsPerPage}
+              query={query}
+              showNewProjectButton={false}
+              onChangePage={(pageNumber: number) => setPage(pageNumber)}
+            />
           </div>
-          <FrontPageBody
-            itemsPerPage={itemsPerPage}
-            query={query}
-            showNewProjectButton={false}
-            onChangePage={(pageNumber: number) => setPage(pageNumber)}
-          />
         </div>
       </main>
     </div>

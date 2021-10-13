@@ -10,7 +10,15 @@
 .vsmCardContainer {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
+}
+
+// When cards are arranged in one single columns, center cards
+
+@media screen and (max-width: 952px) {
+  .vsmCardContainer {
+    justify-content: center;
+  }
 }
 
 .emptyVsmCardContainer {
@@ -57,6 +65,13 @@
 
   animation-name: fade-in;
   animation-duration: 0.5s;
+}
+
+@media screen and (max-width: 510px) {
+  .createCard {
+    width: 300px;
+    min-width: 300px;
+  }
 }
 
 .createCard:hover {

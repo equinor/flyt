@@ -1,23 +1,24 @@
 @media screen and (min-width: 510px) {
-  .container {
+  .elements {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     height: 100%;
     width: 56px;
     background-color: #ffffff;
-    position: fixed;
-    top: 64px;
-    left: 0;
   }
 }
 
 @media screen and (max-width: 510px) {
   .container {
+    width: 168px;
+    align-self: center;
+  }
+  .elements {
     display: flex;
     flex-direction: row;
-    justify-content: center;
     height: 56px;
+    width: 168px;
     background-color: #ffffff;
   }
 }

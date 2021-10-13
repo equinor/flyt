@@ -1,27 +1,78 @@
-.frontPageMain {
+// Format for main container, where the navigation bar is on the left for large screens and on top for small screens
+
+.main {
   flex: 1;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   width: 100%;
 }
 
-.frontPageContainer {
-  padding-top: 32px;
+@media screen and (min-width: 510px) {
+  .main {
+    flex-direction: row;
+  }
+}
+
+@media screen and (max-width: 510px) {
+  .main {
+    flex-direction: column;
+  }
+}
+
+// The outercontainer allows to center the container while specifying a width for the container
+
+.outercontainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+// The container changes width depending on the size of the screen
+// The width of the container is calculated to fit either 1, 2, 3, or 4 columns of cards
+
+.container {
   animation-name: fade-in;
   animation-duration: 0.5s;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  padding-top: 30px;
 }
 
-.frontPageHeader {
+@media screen and (min-width: 1648px) {
+  .container {
+    width: 1392px;
+  }
+}
+
+@media screen and (min-width: 1300px) and (max-width: 1648px) {
+  .container {
+    width: 1044px;
+  }
+}
+
+@media screen and (min-width: 952px) and (max-width: 1300px) {
+  .container {
+    width: 696px;
+  }
+}
+
+@media screen and (max-width: 952px) {
+  .container {
+    width: 460px;
+    padding-left: 30px;
+    padding-right: 30px;
+    align-items: center;
+  }
+}
+
+// The header and subheaders remain the same regardless of the screen size
+
+.header {
   margin-bottom: 30px;
-  width: calc(80vw - 70px);
+  width: 100%;
 }
 
-.frontPageSubHeader {
+.subHeader {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -29,16 +80,39 @@
   margin-top: 30px;
 }
 
-@media screen and (min-width: 510px) {
-  .frontPageContainer {
-    width: calc(100vw - 70px);
-    padding-left: 70px;
-    min-width: 500px;
+// The footer is at the bottom of the page for large screens and on top for small screens
+
+.body {
+  align-self: center;
+}
+
+@media screen and (max-width: 1300px) {
+  .body {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+  .footer {
+    margin-bottom: 20px;
   }
 }
 
-@media screen and (max-width: 510px) {
-  .frontPageContainer {
-    width: 100%;
+@media screen and (min-width: 1300px) {
+  .body {
+    display: flex;
+    flex-direction: column;
   }
+  .footer {
+    align-self: flex-end;
+    margin-top: 20px;
+    margin-bottom: 30px;
+  }
+}
+
+.footer {
+  align-items: center;
+  display: flex;
+  border-radius: 4px;
+  padding: 12px;
+  flex-wrap: wrap;
 }

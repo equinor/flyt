@@ -14,7 +14,7 @@ import { SearchField } from "components/SearchField";
 
 export default function AllProcesses(): JSX.Element {
   const [page, setPage] = useState(1);
-  const itemsPerPage = 15; //Todo: Display as many cards we can fit while still making space for the pagination
+  const itemsPerPage = 14; //Todo: Display as many cards we can fit while still making space for the pagination
 
   const router = useRouter();
   const { searchQuery, orderBy } = router?.query;
@@ -35,24 +35,26 @@ export default function AllProcesses(): JSX.Element {
         <link rel={"icon"} href={"/favicon.ico"} />
       </Head>
 
-      <main className={styles.frontPageMain}>
+      <main className={styles.main}>
         <SideNavBar />
-        <div className={styles.frontPageContainer}>
-          <div className={styles.frontPageHeader}>
-            <div className={styles.frontPageSubHeader}>
-              <SearchField />
+        <div className={styles.outercontainer}>
+          <div className={styles.container}>
+            <div className={styles.header}>
+              <div className={styles.subHeader}>
+                <SearchField />
+              </div>
+              <div className={styles.subHeader}>
+                <Typography variant="h3">All processes</Typography>
+                <SortSelect />
+              </div>
             </div>
-            <div className={styles.frontPageSubHeader}>
-              <Typography variant="h3">All processes</Typography>
-              <SortSelect />
-            </div>
+            <FrontPageBody
+              showNewProjectButton={true}
+              itemsPerPage={itemsPerPage}
+              query={query}
+              onChangePage={(newPage) => setPage(newPage)}
+            />
           </div>
-          <FrontPageBody
-            showNewProjectButton={true}
-            itemsPerPage={itemsPerPage}
-            query={query}
-            onChangePage={(newPage) => setPage(newPage)}
-          />
         </div>
       </main>
     </div>

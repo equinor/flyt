@@ -1,6 +1,6 @@
 import { Pagination, Typography } from "@equinor/eds-core-react";
 import React, { useEffect, useState } from "react";
-import styles from "./FrontPageBody.module.scss";
+import styles from "../pages/processes/FrontPage.module.scss";
 import { ProjectListSection } from "./ProjectListSection";
 import { unknownErrorToString } from "../utils/isError";
 
@@ -35,14 +35,14 @@ export default function FrontPageBody(props: {
   };
 
   return (
-    <div className={styles.frontPageBody}>
+    <div className={styles.body}>
       <ProjectListSection
         projects={data?.projects}
         isLoading={isLoading}
         expectedNumberOfProjects={itemsPerPage}
         showNewProjectButton={showNewProjectButton}
       />
-      <div className={styles.frontPageFooter}>
+      <div className={styles.footer}>
         {itemsPerPage < totalItems && (
           <Pagination
             totalItems={totalItems}
