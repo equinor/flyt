@@ -61,6 +61,7 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
           display: "inherit",
           backgroundColor: "unset",
         }}
+        onClick={() => router.push(`/process/${props.vsm.vsmProjectID}`)}
       >
         <div className={styles.card}>
           <div className={styles.topSection}>
