@@ -20,7 +20,7 @@ export function AccessBox(props: {
   isAdmin: boolean;
 }): JSX.Element {
   const { data: userAccesses, isLoading } = useQuery(
-    "userAccesses",
+    ["userAccesses", props.project.vsmProjectID],
     () =>
       BaseAPIServices.get(
         `/api/v1.0/userAccess/${props.project.vsmProjectID}`
