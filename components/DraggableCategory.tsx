@@ -13,7 +13,6 @@ import colors from "../theme/colors";
 import { useMutation, useQueryClient } from "react-query";
 import {
   deleteTaskCategory,
-  newTaskCategory,
   patchTaskCategory,
 } from "../services/taskCategoriesApi";
 import { taskCategory } from "../interfaces/taskCategory";
@@ -40,6 +39,7 @@ export function DraggableCategory(props: {
       .then(() => {
         setIsLoading(false);
       });
+    setCategoryName(props.category.name);
   };
 
   const patchTaskCategoryMutation = useMutation(
@@ -66,6 +66,7 @@ export function DraggableCategory(props: {
         }
         setErrorMessage(errorMessage);
         setVisibleScrim(true);
+        getCategories();
       },
     }
   );

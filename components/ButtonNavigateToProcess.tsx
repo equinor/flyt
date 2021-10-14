@@ -1,30 +1,24 @@
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React from "react";
 import { Button, Icon, Tooltip } from "@equinor/eds-core-react";
 import { arrow_back_ios } from "@equinor/eds-icons";
+import Link from "next/link";
 
 export function ButtonNavigateToProcess(): JSX.Element {
   const router = useRouter();
   const { id } = router.query;
 
-  function navigateToCanvas() {
-    router.push(`/projects/${id}`);
-  }
-
-  useEffect(() => {
-    const handleKeyboard = (event) => {
-      if (event.code === "Escape") navigateToCanvas();
-    };
-    document.addEventListener("keydown", handleKeyboard);
-    return () => document.removeEventListener("keydown", handleKeyboard);
-  }, []);
-
+  // Note - EDS Tooltip bug: does not work with Link tag without some wrapping
   return (
-    <Tooltip title={"Go to the process overview. - [Escape]"}>
-      <Button variant={"ghost"} onClick={() => navigateToCanvas()}>
-        <Icon data={arrow_back_ios} color={"#007079"} />
-        Back to Process
-      </Button>
+    <Tooltip title={"Go to the process overview."}>
+      <span>
+        <Link href={`/projects/${id}`}>
+          <Button variant={"ghost"}>
+            <Icon data={arrow_back_ios} color={"#007079"} />
+            Back to Process
+          </Button>
+        </Link>
+      </span>
     </Tooltip>
   );
 }
