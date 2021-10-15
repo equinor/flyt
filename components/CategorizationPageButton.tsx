@@ -7,7 +7,7 @@ import useWindowSize, { WindowSize } from "../hooks/useWindowSize";
 import { TooltipImproved } from "./TooltipImproved";
 
 /**
- * NB. Currently only adjusted for use in the canvas. path: "baseURL/projects/{id}"
+ * NB. Currently only adjusted for use in the canvas. path: "baseURL/process/{id}"
  * @constructor
  */
 export const CategorizationPageButton = (props: {

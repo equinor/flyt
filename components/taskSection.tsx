@@ -44,7 +44,7 @@ export function TaskSection(props: {
           .map((task) => (
             <QipCard
               // onClick={() =>
-              //   router.push(`/projects/${id}/qips/${task.vsmTaskID}`)
+              //   router.push(`/process/${id}/qips/${task.vsmTaskID}`)
               // }
               key={task.vsmTaskID}
               task={task}

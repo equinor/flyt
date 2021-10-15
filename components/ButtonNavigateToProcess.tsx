@@ -12,7 +12,7 @@ export function ButtonNavigateToProcess(): JSX.Element {
   return (
     <Tooltip title={"Go to the process overview."}>
       <span>
-        <Link href={`/projects/${id}`}>
+        <Link href={`/process/${id}`}>
           <Button variant={"ghost"}>
             <Icon data={arrow_back_ios} color={"#007079"} />
             Back to Process
