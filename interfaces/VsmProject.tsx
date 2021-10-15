@@ -2,12 +2,10 @@ import { vsmObjectTypes } from "../types/vsmObjectTypes";
 import { vsmTaskTypes } from "../types/vsmTaskTypes";
 import { vsmObject } from "./VsmObject";
 import { userAccess } from "./UserAccess";
-import { processLabel } from "./processLabel";
 
 export interface vsmProject {
   vsmProjectID: number;
   name: string;
-  labels: processLabel[];
   created: {
     pkChangeLog: number;
     userIdentity: string;

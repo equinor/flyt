@@ -9,7 +9,6 @@ import { Scrim } from "@equinor/eds-core-react";
 import { AccessBox } from "components/AccessBox";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { getMyAccess } from "utils/getMyAccess";
-import Labels from "components/Labels";
 import ProjectCardHeader from "./ProjectCardHeader";
 import { useRouter } from "next/router";
 
@@ -74,7 +73,6 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
             />
           </div>
           <div className={styles.bottomSection}>
-            <Labels labels={props.vsm.labels} />
             {createdBy && (
               <UserDots
                 users={[
