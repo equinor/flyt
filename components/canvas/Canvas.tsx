@@ -24,6 +24,7 @@ import { notifyOthers } from "../../services/notifyOthers";
 import { getAccessToken } from "../../auth/msalHelpers";
 import { LiveIndicator } from "../LiveIndicator";
 import { CategorizationPageButton } from "../CategorizationPageButton";
+import { resetCanvasZoomAndPosition } from "./utils/ResetCanvasZoomAndPosition";
 
 export default function Canvas(): JSX.Element {
   const ref = useRef();
@@ -38,9 +39,7 @@ export default function Canvas(): JSX.Element {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
 
-  useEffect(() => {
-    console.log("CANVAS");
-  }, []);
+  useEffect(() => resetCanvasZoomAndPosition(), []);
 
   useEffect(() => {
     getAccessToken().then((accessToken) => {
