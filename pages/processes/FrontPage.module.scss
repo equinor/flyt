@@ -18,58 +18,22 @@
   }
 }
 
-// The outercontainer allows to center the container while specifying a width for the container
-
-.outercontainer {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-// The container changes width depending on the size of the screen
-// The width of the container is calculated to fit either 1, 2, 3, or 4 columns of cards
-
 .container {
   animation-name: fade-in;
   animation-duration: 0.5s;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   padding-top: 30px;
+  width: 100%;
+  margin-right: 100px;
+  margin-left: 100px;
 }
-
-@media screen and (min-width: 1648px) {
-  .container {
-    width: 1392px;
-  }
-}
-
-@media screen and (min-width: 1300px) and (max-width: 1648px) {
-  .container {
-    width: 1044px;
-  }
-}
-
-@media screen and (min-width: 952px) and (max-width: 1300px) {
-  .container {
-    width: 696px;
-  }
-}
-
-@media screen and (max-width: 952px) {
-  .container {
-    width: 460px;
-    padding-left: 30px;
-    padding-right: 30px;
-    align-items: center;
-  }
-}
-
-// The header and subheaders remain the same regardless of the screen size
 
 .header {
   margin-bottom: 30px;
   width: 100%;
+  flex: 1;
 }
 
 .subHeader {
@@ -78,12 +42,14 @@
   justify-content: space-between;
   align-items: center;
   margin-top: 30px;
+  flex: 1;
 }
 
 // The footer is at the bottom of the page for large screens and on top for small screens
 
 .body {
   align-self: center;
+  width: 100%;
 }
 
 @media screen and (max-width: 1300px) {

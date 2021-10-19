@@ -6,13 +6,8 @@
   display: flex;
   flex-direction: column;
   filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.14));
-  /* UI Background/Default */
-
-  width: 332px;
-  height: 100px;
 
   min-width: 332px;
-  max-height: 100px;
 
   background: #ffffff;
   border-radius: 4px;
@@ -26,10 +21,10 @@
   transition: all 0.2s ease-in-out;
 }
 
-@media screen and (max-width: 510px) {
+@media screen and (max-width: 966px) {
   .card {
-    width: 300px;
-    min-width: 300px;
+    width: 332px;
+    min-width: 332px;
   }
 }
 

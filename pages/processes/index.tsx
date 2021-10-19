@@ -37,24 +37,22 @@ export default function AllProcesses(): JSX.Element {
 
       <main className={styles.main}>
         <SideNavBar />
-        <div className={styles.outercontainer}>
-          <div className={styles.container}>
-            <div className={styles.header}>
-              <div className={styles.subHeader}>
-                <SearchField />
-              </div>
-              <div className={styles.subHeader}>
-                <Typography variant="h3">All processes</Typography>
-                <SortSelect />
-              </div>
+        <div className={styles.container}>
+          <div className={styles.header}>
+            <div className={styles.subHeader}>
+              <SearchField />
             </div>
-            <FrontPageBody
-              showNewProjectButton={true}
-              itemsPerPage={itemsPerPage}
-              query={query}
-              onChangePage={(newPage) => setPage(newPage)}
-            />
+            <div className={styles.subHeader}>
+              <Typography variant="h3">All processes</Typography>
+              <SortSelect />
+            </div>
           </div>
+          <FrontPageBody
+            showNewProjectButton={true}
+            itemsPerPage={itemsPerPage}
+            query={query}
+            onChangePage={(newPage) => setPage(newPage)}
+          />
         </div>
       </main>
     </div>

@@ -40,24 +40,22 @@ export default function FavoriteProcesses(): JSX.Element {
 
       <main className={styles.main}>
         <SideNavBar />
-        <div className={styles.outercontainer}>
-          <div className={styles.container}>
-            <div className={styles.header}>
-              <div className={styles.subHeader}>
-                <SearchField />
-              </div>
-              <div className={styles.subHeader}>
-                <Typography variant="h3">My favourite processes</Typography>
-                <SortSelect />
-              </div>
+        <div className={styles.container}>
+          <div className={styles.header}>
+            <div className={styles.subHeader}>
+              <SearchField />
             </div>
-            <FrontPageBody
-              itemsPerPage={itemsPerPage}
-              query={query}
-              showNewProjectButton={false}
-              onChangePage={(pageNumber: number) => setPage(pageNumber)}
-            />
+            <div className={styles.subHeader}>
+              <Typography variant="h3">My favourite processes</Typography>
+              <SortSelect />
+            </div>
           </div>
+          <FrontPageBody
+            itemsPerPage={itemsPerPage}
+            query={query}
+            showNewProjectButton={false}
+            onChangePage={(pageNumber: number) => setPage(pageNumber)}
+          />
         </div>
       </main>
     </div>

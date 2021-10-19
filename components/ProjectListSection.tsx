@@ -21,10 +21,10 @@ export function ProjectListSection(props: {
 
   if (isLoading) {
     return (
-      <div className={styles.vsmCardContainer}>
-        {showNewProjectButton && <NewProjectButton />}
-        <PlaceholderProjectCards numberOfCards={expectedNumberOfProjects} />
-      </div>
+      <PlaceholderProjectCards
+        numberOfCards={expectedNumberOfProjects}
+        showNewProjectButton={showNewProjectButton}
+      />
     );
   }
 
@@ -40,9 +40,9 @@ export function ProjectListSection(props: {
   }
 
   return (
-    <div className={styles.vsmCardContainer}>
-      {showNewProjectButton && <NewProjectButton />}
-      <ProjectCards projects={projects} />
-    </div>
+    <ProjectCards
+      projects={projects}
+      showNewProjectButton={showNewProjectButton}
+    />
   );
 }

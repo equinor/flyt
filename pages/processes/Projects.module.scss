@@ -1,24 +1,11 @@
-.header {
+.grid {
+  display: -webkit-box; /* Not needed if autoprefixing */
+  display: -ms-flexbox; /* Not needed if autoprefixing */
   display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  padding-bottom: 48px;
-  width: 97%;
+  width: 100%;
 }
-
-.vsmCardContainer {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-}
-
-// When cards are arranged in one single columns, center cards
-
-@media screen and (max-width: 952px) {
-  .vsmCardContainer {
-    justify-content: center;
-  }
+.gridcolumn {
+  background-clip: padding-box;
 }
 
 .emptyVsmCardContainer {
@@ -35,12 +22,6 @@
   justify-content: center;
 }
 
-@media screen and (max-width: 530px) {
-  .header {
-    justify-content: center;
-  }
-}
-
 .createCard {
   color: #007079;
 
@@ -49,7 +30,6 @@
   justify-content: center;
   align-items: center;
 
-  width: 332px;
   height: 100px;
 
   min-width: 332px;
@@ -67,10 +47,10 @@
   animation-duration: 0.5s;
 }
 
-@media screen and (max-width: 510px) {
+@media screen and (max-width: 966px) {
   .createCard {
-    width: 300px;
-    min-width: 300px;
+    width: 332px;
+    min-width: 332px;
   }
 }
 
