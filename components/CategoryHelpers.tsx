@@ -3,7 +3,7 @@ import { InfoBox } from "./InfoBox";
 import Image from "next/image";
 import React from "react";
 
-export function CategoryHelpers() {
+export function CategoryHelpers(): JSX.Element {
   const [showDragHelper, setShowDragHelper] = useLocalStorage(
     "showDragHelper",
     true
@@ -22,7 +22,6 @@ export function CategoryHelpers() {
             unoptimized={true} //Trouble with optimizing gifs
             width={800}
             height={321}
-            // layout={"fill"}
           />
           <p>
             Drag a category into one or more of the problems, ideas or

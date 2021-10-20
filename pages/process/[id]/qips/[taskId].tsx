@@ -9,7 +9,6 @@ import { unknownErrorToString } from "../../../../utils/isError";
 import { Button, Checkbox, Icon } from "@equinor/eds-core-react";
 import { SideBarBody } from "../../../../components/SideBarBody";
 import { vsmTaskTypes } from "../../../../types/vsmTaskTypes";
-import { vsmObject } from "../../../../interfaces/VsmObject";
 import { vsmObjectTypes } from "../../../../types/vsmObjectTypes";
 import { getVSMObject } from "../../../../services/vsmObjectApi";
 import gfm from "remark-gfm";

@@ -13,7 +13,6 @@ import styles from "./default.layout.module.scss";
 import { useAccount, useIsAuthenticated, useMsal } from "@azure/msal-react";
 import React, { useEffect, useState } from "react";
 import UserMenu from "../components/AppHeader/UserMenu";
-import getConfig from "next/config";
 import { useStoreDispatch, useStoreState } from "../hooks/storeHooks";
 import { useRouter } from "next/router";
 import BaseAPIServices from "../services/BaseAPIServices";
@@ -188,7 +187,7 @@ const CanvasLayout = ({ children }) => {
   return (
     <div style={{ overflow: "hidden" /* Hide scrollbars */ }}>
       <Head>
-        {/*<title>{packageJson.name}</title>*/}
+        <title>{packageJson.name}</title>
         <meta charSet="utf-8" />
         {/*link manifest.json*/}
         <link rel="manifest" href="/manifest.json" />

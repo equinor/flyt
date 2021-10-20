@@ -161,7 +161,6 @@ export function DraggableCategory(props: {
         style={{ border: props.checked && `${color} 2px solid` }}
         draggable={true}
         onDragStart={(ev) => {
-          // ev.dataTransfer.dropEffect = "link";
           ev.dataTransfer.setData(
             "text/plain",
             JSON.stringify({
@@ -193,11 +192,7 @@ export function DraggableCategory(props: {
         onClose={() => setMenuOpen(false)}
         placement="bottom-end"
       >
-        <Menu.Item
-          onClick={() => {
-            setEditText(true);
-          }}
-        >
+        <Menu.Item onClick={() => setEditText(true)}>
           <Icon data={edit} />
           Rename
         </Menu.Item>

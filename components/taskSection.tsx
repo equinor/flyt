@@ -42,13 +42,7 @@ export function TaskSection(props: {
           ?.filter(props.filterFunction)
           .sort((a, b) => a.fkTaskType - b.fkTaskType)
           .map((task) => (
-            <QipCard
-              // onClick={() =>
-              //   router.push(`/process/${id}/qips/${task.vsmTaskID}`)
-              // }
-              key={task.vsmTaskID}
-              task={task}
-            />
+            <QipCard key={task.vsmTaskID} task={task} />
           ))}
       </div>
     </>
