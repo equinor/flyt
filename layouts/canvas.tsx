@@ -31,11 +31,9 @@ import { unknownErrorToString } from "../utils/isError";
 import packageJson from "../package.json";
 import { notifyOthers } from "../services/notifyOthers";
 import { TooltipImproved } from "../components/TooltipImproved";
-import { UserDots } from "../components/UserDots";
 
 const CanvasLayout = ({ children }) => {
   const isAuthenticated = useIsAuthenticated();
-  const { publicRuntimeConfig } = getConfig();
 
   const router = useRouter();
   const { id } = router.query;
@@ -190,7 +188,7 @@ const CanvasLayout = ({ children }) => {
   return (
     <div style={{ overflow: "hidden" /* Hide scrollbars */ }}>
       <Head>
-        <title>{packageJson.name}</title>
+        {/*<title>{packageJson.name}</title>*/}
         <meta charSet="utf-8" />
         {/*link manifest.json*/}
         <link rel="manifest" href="/manifest.json" />

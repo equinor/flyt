@@ -33,7 +33,7 @@ export const CategorizationPageButton = (props: {
   }
 
   return (
-    <TooltipImproved title="Categorize PQIs">
+    <TooltipImproved title="Categorize PQIR's">
       <div
         style={{ left: getLeft() }}
         onClick={() => router.push(`${router.asPath}/categories`)}

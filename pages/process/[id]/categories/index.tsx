@@ -5,21 +5,24 @@ import { taskObject } from "../../../../interfaces/taskObject";
 import { TaskSection } from "../../../../components/taskSection";
 import { CategorySection } from "../../../../components/CategorySection";
 import { CheckboxImproved } from "../../../../components/CheckboxImproved";
-import { useRouter } from "next/router";
 import { ButtonNavigateToProcess } from "../../../../components/ButtonNavigateToProcess";
-import { Button, Dialog, Scrim, Typography } from "@equinor/eds-core-react";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useQuery } from "react-query";
+import { getProject } from "../../../../services/projectApi";
 
 export default function CategoriesPage(): JSX.Element {
+  const router = useRouter();
+  const { id } = router.query;
+  const { data: project } = useQuery(["project", id], () => getProject(id));
+  const projectTitle = project?.name;
+
   const [categories, setCategories] = useState([]);
 
   const [problemChecked, setProblemChecked] = useState(true);
   const [ideaChecked, setIdeaChecked] = useState(true);
   const [questionChecked, setQuestionChecked] = useState(true);
   const [riskChecked, setRiskChecked] = useState(true);
-  const [visibleScrim, setVisibleScrim] = useState(false);
-
-  const router = useRouter();
-  const { id } = router.query;
 
   const taskTypeIsChecked = (t: taskObject) => {
     switch (t.taskType.vsmTaskTypeID) {
@@ -29,8 +32,8 @@ export default function CategoriesPage(): JSX.Element {
         return questionChecked;
       case vsmTaskTypes.idea:
         return ideaChecked;
-      // case vsmTaskTypes.risk:
-      //   return riskChecked;
+      case vsmTaskTypes.risk:
+        return riskChecked;
       default:
         return false;
     }
@@ -66,22 +69,22 @@ export default function CategoriesPage(): JSX.Element {
         <CheckboxImproved
           isChecked={problemChecked}
           setIsChecked={setProblemChecked}
-          label={"Problem"}
+          label={"Problems"}
         />
         <CheckboxImproved
           setIsChecked={setQuestionChecked}
           isChecked={questionChecked}
-          label={"Question"}
+          label={"Questions"}
         />
         <CheckboxImproved
           setIsChecked={setIdeaChecked}
           isChecked={ideaChecked}
-          label={"Idea"}
+          label={"Ideas"}
         />
         <CheckboxImproved
           setIsChecked={setRiskChecked}
           isChecked={riskChecked}
-          label={"Risk"}
+          label={"Risks"}
         />
       </div>
     );
@@ -89,6 +92,9 @@ export default function CategoriesPage(): JSX.Element {
 
   return (
     <>
+      <Head>
+        <title>{projectTitle || "Untitled VSM"} - Categorisation</title>
+      </Head>
       <div
         style={{
           display: "flex",
