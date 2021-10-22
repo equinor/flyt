@@ -53,16 +53,19 @@ export function DraggableCategory(props: {
           setIsLoading(false);
         });
       },
-      onError: (error: { response: { status: number } }) => {
-        const statusCode = error?.response?.status;
+      onError: (error: {
+        response: { status: number; data: { userMessage?: string } };
+      }) => {
+        const status = error?.response?.status;
+        const userMessage = error?.response?.data?.userMessage;
         let errorMessage: string[];
-        if (statusCode === 409) {
+        if (status === 409) {
           errorMessage = [
             `Name must be unique.`,
             "Cannot name a category the same as another.",
           ];
         } else {
-          errorMessage = [`Error ${statusCode}`];
+          errorMessage = [`Error ${status}`, `${userMessage}`];
         }
         setErrorMessage(errorMessage);
         setVisibleScrim(true);
@@ -155,7 +158,8 @@ export function DraggableCategory(props: {
       <ErrorScrim
         visible={visibleScrim}
         handleClose={() => setVisibleScrim(false)}
-        messages={errorMessage}
+        title={errorMessage?.[0]}
+        messages={errorMessage?.slice(1)}
       />
       <div
         style={{ border: props.checked && `${color} 2px solid` }}

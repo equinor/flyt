@@ -4,13 +4,14 @@ import React from "react";
 export function ErrorScrim(props: {
   visible: boolean;
   handleClose: () => void;
+  title?: string;
   messages: Array<string>;
 }): JSX.Element {
   if (!props.visible) return null;
   return (
     <Scrim onClose={props.handleClose}>
       <Dialog>
-        <Dialog.Title>Error</Dialog.Title>
+        <Dialog.Title>{props.title || "Error"}</Dialog.Title>
         <Dialog.CustomContent scrollable>
           {props.messages.map((message) => (
             <Typography variant="body_short" key={message}>

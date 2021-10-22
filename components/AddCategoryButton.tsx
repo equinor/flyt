@@ -36,16 +36,19 @@ export function AddCategoryButton(props: { projectId }): JSX.Element {
         SET_STATE_EDIT(false);
         getCategories();
       },
-      onError: (error: { response: { status: number } }) => {
-        const statusCode = error?.response?.status;
+      onError: (error: {
+        response: { status: number; data: { userMessage?: string } };
+      }) => {
+        const status = error?.response?.status;
+        const userMessage = error?.response?.data?.userMessage;
         let errorMessage: string[];
-        if (statusCode === 409) {
+        if (status === 409) {
           errorMessage = [
             `Name must be unique.`,
             "Cannot create a category with the same name as another.",
           ];
         } else {
-          errorMessage = [`Error ${statusCode}`];
+          errorMessage = [`Error ${status}`, `${userMessage}`];
         }
         setErrorMessage(errorMessage);
         setVisibleScrim(true);
@@ -102,7 +105,8 @@ export function AddCategoryButton(props: { projectId }): JSX.Element {
       <ErrorScrim
         visible={visibleScrim}
         handleClose={() => setVisibleScrim(false)}
-        messages={errorMessage}
+        title={errorMessage?.[0]}
+        messages={errorMessage?.slice(1)}
       />
       <button
         className={styles.addCategoryButton}
