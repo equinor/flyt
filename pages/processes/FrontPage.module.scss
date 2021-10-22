@@ -16,6 +16,20 @@
   align-items: center;
 }
 
+@media screen and (min-width: 510px) {
+  .frontPageContainer {
+    width: calc(100vw - 70px);
+    padding-left: 70px;
+    min-width: 500px;
+  }
+}
+
+@media screen and (max-width: 510px) {
+  .frontPageContainer {
+    width: 100%;
+  }
+}
+
 .frontPageHeader {
   margin-bottom: 30px;
   width: calc(80vw - 70px);
@@ -29,16 +43,6 @@
   margin-top: 30px;
 }
 
-@media screen and (min-width: 510px) {
-  .frontPageContainer {
-    width: calc(100vw - 70px);
-    padding-left: 70px;
-    min-width: 500px;
-  }
-}
-
-@media screen and (max-width: 510px) {
-  .frontPageContainer {
-    width: 100%;
-  }
+.sortAndFilter {
+  display: flex;
 }

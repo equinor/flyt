@@ -1,0 +1,54 @@
+@import "styles/variables";
+
+.box {
+  background: #ffffff;
+  border-radius: 4px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 15px;
+  margin: 12px;
+
+  display: flex;
+  flex-direction: column;
+
+  min-width: 320px;
+  max-width: 700px;
+  max-height: 90vh;
+
+  animation-name: fade-in;
+  animation-duration: 0.5s;
+}
+
+.topSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; //Vertical align the items
+
+  border-bottom: #dcdcdc solid 1px;
+}
+
+.heading {
+  /* Heading/H6 */
+  font-family: Equinor, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.2px;
+  color: $equinor_PROMINENT;
+}
+
+.searchSection {
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+.labelSection {
+  margin-top: 12px;
+  margin-bottom: 12px;
+  overflow: scroll;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.chip:focus {
+  background-color: green;
+}
