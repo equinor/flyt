@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.8](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.8) (2021-10-22)
+
+### Features
+
+- Categorization page ([#251](https://github.com/equinor/MAD-VSM-WEB/issues/251)) ([3069642](https://github.com/equinor/MAD-VSM-WEB/commit/30696422e22460aa09a207ae079776c7b3e73c9b)), closes [#112](https://github.com/equinor/MAD-VSM-WEB/issues/112) [#221](https://github.com/equinor/MAD-VSM-WEB/issues/221) [#223](https://github.com/equinor/MAD-VSM-WEB/issues/223) [#222](https://github.com/equinor/MAD-VSM-WEB/issues/222)
+
 ### [0.2.7](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.7) (2021-10-22)
 
 ### Features
