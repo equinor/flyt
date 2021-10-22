@@ -17,14 +17,20 @@ export function CategoryChip(props: {
       className={styles.categoryPill}
       style={{ backgroundColor: backgroundColor }}
     >
-      <p style={{ color: textColor }}>{props.text}</p>
+      <p style={{ color: textColor, overflow: "hidden" }}>{props.text}</p>
       <Icon
         className={styles.removeButton}
         onClick={(e) => {
           e.stopPropagation();
           props.onClickRemove();
         }}
-        style={{ color: textColor, width: 16, height: 16 }}
+        style={{
+          color: textColor,
+          width: 16,
+          height: 16,
+          minWidth: 16,
+          minHeight: 16,
+        }}
         data={close}
       />
     </div>
