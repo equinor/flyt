@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { Typography } from "@equinor/eds-core-react";
 import { SortSelect } from "../../components/SortSelect";
 import { SearchField } from "components/SearchField";
+import FilterLabelButton from "components/FilterLabelButton";
 
 export default function FavoriteProcesses(): JSX.Element {
   const [page, setPage] = useState(1);
@@ -47,7 +48,10 @@ export default function FavoriteProcesses(): JSX.Element {
             </div>
             <div className={styles.frontPageSubHeader}>
               <Typography variant="h3">My favourite processes</Typography>
-              <SortSelect />
+              <div className={styles.sortAndFilter}>
+                <FilterLabelButton />
+                <SortSelect />
+              </div>
             </div>
           </div>
           <FrontPageBody
