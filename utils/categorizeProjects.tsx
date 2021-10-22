@@ -1,18 +1,6 @@
 import { vsmProject } from "../interfaces/VsmProject";
 import { AccountInfo } from "@azure/msal-browser";
-
-export function checkIfCreatorOrEditor(
-  project: vsmProject,
-  account: AccountInfo
-) {
-  const imCreator =
-    project.created.userIdentity === account?.username.split("@")[0];
-
-  const imEditor = project.userAccesses?.find(
-    (a) => a.user === account?.username.split("@")[0]
-  );
-  return { imCreator, imEditor };
-}
+import { checkIfCreatorOrEditor } from "./checkIfCreatorOrEditor";
 
 /**
  * Sort projects into two buckets.

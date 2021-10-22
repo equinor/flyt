@@ -57,7 +57,10 @@ export default function QipsPage(): JSX.Element {
         tasks
           ?.sort((a, b) => a.fkTaskType - b.fkTaskType)
           .map((task) => (
-            <Link key={task.vsmTaskID} href={`qips/${task.vsmTaskID}`}>
+            <Link
+              key={task.vsmTaskID}
+              href={`/process/${id}/qips/${task.vsmTaskID}`}
+            >
               <QipCard task={task} />
             </Link>
           ))

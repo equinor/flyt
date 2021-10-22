@@ -2,7 +2,7 @@ import { getColor } from "../utils/getColor";
 import styles from "./DraggableCategory.module.scss";
 import { ColorDot } from "./ColorDot";
 import React, { useRef, useState } from "react";
-import { Button, Icon, Input, Menu, TextField } from "@equinor/eds-core-react";
+import { Button, Icon, Input, Menu } from "@equinor/eds-core-react";
 import {
   check,
   delete_to_trash,
@@ -10,21 +10,122 @@ import {
   more_vertical,
 } from "@equinor/eds-icons";
 import colors from "../theme/colors";
+import { useMutation, useQueryClient } from "react-query";
+import {
+  deleteTaskCategory,
+  patchTaskCategory,
+} from "../services/taskCategoriesApi";
+import { taskCategory } from "../interfaces/taskCategory";
+import { ErrorScrim } from "./ErrorScrim";
 
 export function DraggableCategory(props: {
-  text: string;
+  category: taskCategory;
   onClick: () => void;
   checked: boolean;
+  projectId: number | string | string[];
 }): JSX.Element {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButtonRef = useRef();
-  const [categoryName, setCategoryName] = useState("");
-  const [editText, setEditText] = useState(true);
+  const [categoryName, setCategoryName] = useState(`${props.category.name}`);
+  const [editText, setEditText] = useState(() => !props.category.id);
+  const [isLoading, setIsLoading] = useState(false);
+  const [visibleScrim, setVisibleScrim] = useState(false);
+  const [errorMessage, setErrorMessage] = useState([null]);
+  const queryClient = useQueryClient();
+
+  const getCategories = () => {
+    queryClient
+      .invalidateQueries(["taskCategories", props.projectId])
+      .then(() => {
+        setIsLoading(false);
+      });
+    setCategoryName(props.category.name);
+  };
+
+  const patchTaskCategoryMutation = useMutation(
+    (category: taskCategory) => {
+      setIsLoading(true);
+      return patchTaskCategory({ name: category.name, id: category.id });
+    },
+    {
+      onSettled: () => {
+        queryClient.invalidateQueries(["tasks", props.projectId]).then(() => {
+          setIsLoading(false);
+        });
+      },
+      onError: (error: {
+        response: { status: number; data: { userMessage?: string } };
+      }) => {
+        const status = error?.response?.status;
+        const userMessage = error?.response?.data?.userMessage;
+        let errorMessage: string[];
+        if (status === 409) {
+          errorMessage = [
+            `Name must be unique.`,
+            "Cannot name a category the same as another.",
+          ];
+        } else {
+          errorMessage = [`Error ${status}`, `${userMessage}`];
+        }
+        setErrorMessage(errorMessage);
+        setVisibleScrim(true);
+        getCategories();
+      },
+    }
+  );
+
+  const deleteTaskCategoryMutation = useMutation(
+    (category: taskCategory) => {
+      setIsLoading(true);
+      return deleteTaskCategory(category.id);
+    },
+    {
+      onSettled: () => getCategories(),
+      onError: (error: { response: { status: number } }, taskCategory) => {
+        const statusCode = error?.response?.status;
+        let errorMessage = [];
+        if (statusCode === 409) {
+          //Error 409-Conflict is given when you try to delete something that is still linked to a project
+          errorMessage = [
+            `Could not delete category "${taskCategory.name}".`,
+            "Make sure that it is not added to any PQIs.",
+          ];
+        } else {
+          errorMessage = [`Error ${statusCode}`];
+        }
+        setErrorMessage(errorMessage);
+        setVisibleScrim(true);
+      },
+    }
+  );
 
   const color = getColor(categoryName);
+
   function saveText() {
-    //Save the text and exit edit-mode
-    if (categoryName.trim() !== "") setEditText(false); // Todo: Maybe show an error message?
+    //Save or update text and exit edit-mode
+    const name = categoryName.trim();
+    if (!!name) {
+      patchTaskCategoryMutation.mutate({
+        name: name,
+        id: props.category.id,
+      });
+    }
+    setEditText(false);
+  }
+
+  function deleteCategory() {
+    deleteTaskCategoryMutation.mutate(props.category);
+  }
+
+  if (isLoading) {
+    return (
+      <div
+        style={{ border: props.checked && `${color} 2px solid` }}
+        className={styles.category}
+      >
+        <p>Loading...</p>
+      </div>
+    );
   }
 
   if (editText) {
@@ -37,13 +138,11 @@ export function DraggableCategory(props: {
           <Input
             autoFocus
             defaultValue={categoryName}
-            placeholder={props.text}
+            placeholder={props.category.name}
             onClick={(event) => event.stopPropagation()}
             onChange={(e) => setCategoryName(e.target.value)}
             onKeyDown={(e) => {
-              if (e.code === "Enter") {
-                saveText();
-              }
+              if (e.code === "Enter") saveText();
             }}
           />
           <Button variant={"ghost_icon"} onClick={saveText} ref={menuButtonRef}>
@@ -53,8 +152,15 @@ export function DraggableCategory(props: {
       </>
     );
   }
+
   return (
     <>
+      <ErrorScrim
+        visible={visibleScrim}
+        handleClose={() => setVisibleScrim(false)}
+        title={errorMessage?.[0]}
+        messages={errorMessage?.slice(1)}
+      />
       <div
         style={{ border: props.checked && `${color} 2px solid` }}
         draggable={true}
@@ -63,6 +169,7 @@ export function DraggableCategory(props: {
             "text/plain",
             JSON.stringify({
               text: categoryName,
+              id: props.category.id,
               color: color,
             })
           );
@@ -89,17 +196,13 @@ export function DraggableCategory(props: {
         onClose={() => setMenuOpen(false)}
         placement="bottom-end"
       >
-        <Menu.Item
-          onClick={() => {
-            setEditText(true);
-          }}
-        >
+        <Menu.Item onClick={() => setEditText(true)}>
           <Icon data={edit} />
           Rename
         </Menu.Item>
         <Menu.Item
           style={{ color: colors.ERROR }}
-          onClick={() => alert("Delete category - Not yet implemented")}
+          onClick={() => deleteCategory()}
         >
           <Icon data={delete_to_trash} />
           Delete
