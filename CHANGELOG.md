@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.7](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.7) (2021-10-22)
+
+### Features
+
+- service-message banner ([d771b93](https://github.com/equinor/MAD-VSM-WEB/commit/d771b9358734cc691ca2497e0a872df6ce3aa27b)), closes [#224](https://github.com/equinor/MAD-VSM-WEB/issues/224)
+
+### Bug Fixes
+
+- center plus sign in add button ([cf1b74b](https://github.com/equinor/MAD-VSM-WEB/commit/cf1b74bc9a245c0590f753fa564b6ee303956d17)), closes [#237](https://github.com/equinor/MAD-VSM-WEB/issues/237)
+
 ### [0.2.6](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.6) (2021-10-06)
 
 ### Features
