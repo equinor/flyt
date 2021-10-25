@@ -1,11 +1,13 @@
 import styles from "../pages/processes/Projects.module.scss";
 import { vsmProject } from "../interfaces/VsmProject";
 import React from "react";
-import { PlaceholderProjectCardsArray } from "./PlaceholderProjectCardsArray";
 import { NewProjectButton } from "./NewProjectButton";
-import { ProjectCardsArray } from "./ProjectCardsArray";
 import { Typography } from "@equinor/eds-core-react";
 import Masonry from "react-masonry-css";
+import {
+  placeholderProjectCardsArray,
+  projectCardsArray,
+} from "../utils/getProjectCardsArray";
 
 export function ProjectListSection(props: {
   projects: Array<vsmProject>;
@@ -47,8 +49,8 @@ export function ProjectListSection(props: {
       >
         {props.showNewProjectButton && <NewProjectButton />}
         {isLoading
-          ? PlaceholderProjectCardsArray(expectedNumberOfProjects)
-          : ProjectCardsArray(projects)}
+          ? placeholderProjectCardsArray(expectedNumberOfProjects)
+          : projectCardsArray(projects)}
       </Masonry>
     </>
   );
