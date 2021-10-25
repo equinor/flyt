@@ -32,7 +32,7 @@
 
   height: 100px;
 
-  min-width: 332px;
+  min-width: 290px;
   max-height: 100px;
 
   border-radius: 4px;
@@ -45,13 +45,6 @@
 
   animation-name: fade-in;
   animation-duration: 0.5s;
-}
-
-@media screen and (max-width: 966px) {
-  .createCard {
-    width: 332px;
-    min-width: 332px;
-  }
 }
 
 .createCard:hover {
