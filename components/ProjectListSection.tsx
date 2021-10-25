@@ -1,10 +1,11 @@
 import styles from "../pages/processes/Projects.module.scss";
 import { vsmProject } from "../interfaces/VsmProject";
 import React from "react";
-import { PlaceholderProjectCards } from "./PlaceholderProjectCards";
+import { PlaceholderProjectCardsArray } from "./PlaceholderProjectCardsArray";
 import { NewProjectButton } from "./NewProjectButton";
-import { ProjectCards } from "./ProjectCards";
+import { ProjectCardsArray } from "./ProjectCardsArray";
 import { Typography } from "@equinor/eds-core-react";
+import Masonry from "react-masonry-css";
 
 export function ProjectListSection(props: {
   projects: Array<vsmProject>;
@@ -19,14 +20,12 @@ export function ProjectListSection(props: {
     expectedNumberOfProjects,
   } = props;
 
-  if (isLoading) {
-    return (
-      <PlaceholderProjectCards
-        numberOfCards={expectedNumberOfProjects}
-        showNewProjectButton={showNewProjectButton}
-      />
-    );
-  }
+  const breakpointColumnsObj = {
+    default: 4,
+    1648: 3,
+    1300: 2,
+    952: 1,
+  };
 
   if (projects?.length < 1) {
     return (
@@ -40,9 +39,17 @@ export function ProjectListSection(props: {
   }
 
   return (
-    <ProjectCards
-      projects={projects}
-      showNewProjectButton={showNewProjectButton}
-    />
+    <>
+      <Masonry
+        breakpointCols={breakpointColumnsObj}
+        className={styles.grid}
+        columnClassName={styles.gridcolumn}
+      >
+        {props.showNewProjectButton && <NewProjectButton />}
+        {isLoading
+          ? PlaceholderProjectCardsArray(expectedNumberOfProjects)
+          : ProjectCardsArray(projects)}
+      </Masonry>
+    </>
   );
 }
