@@ -15,6 +15,7 @@ export const ServiceMessageBanner = () => {
   );
 
   if (isLoading || error) return null;
+  if (data && !data.status) return null; // https://github.com/equinor/MAD-VSM-WEB/issues/259#issue-1034675684
 
   return (
     <>
