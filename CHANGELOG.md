@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.9](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.9) (2021-10-25)
+
+### Bug Fixes
+
+- **service-message:** Hide the service-message-banner when there is no active message. ([62295f4](https://github.com/equinor/MAD-VSM-WEB/commit/62295f480d5e2781f06a2684233b7cded506a373)), closes [#259](https://github.com/equinor/MAD-VSM-WEB/issues/259)
+
 ### [0.2.8](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.8) (2021-10-22)
 
 ### Features
