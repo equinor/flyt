@@ -3,9 +3,9 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    height: max(100%, 100vh);
-    width: 56px;
     background-color: #ffffff;
+    width: 56px;
+    height: max(100%, calc(100vh - 64px));
   }
 }
 
