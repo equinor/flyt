@@ -1,24 +1,8 @@
-@media screen and (min-width: 510px) {
-  .elements {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    background-color: #ffffff;
-    width: 56px;
-    height: max(100%, calc(100vh - 64px));
-  }
-}
-
-@media screen and (max-width: 510px) {
-  .container {
-    width: 168px;
-    align-self: center;
-  }
-  .elements {
-    display: flex;
-    flex-direction: row;
-    height: 56px;
-    width: 168px;
-    background-color: #ffffff;
-  }
+.elements {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background-color: #ffffff;
+  width: 56px;
+  height: max(100%, calc(100vh - 64px));
 }

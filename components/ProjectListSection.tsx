@@ -1,4 +1,4 @@
-import styles from "../pages/processes/Projects.module.scss";
+import styles from "./ProjectListSection.module.scss";
 import { vsmProject } from "../interfaces/VsmProject";
 import React from "react";
 import { NewProjectButton } from "./NewProjectButton";
