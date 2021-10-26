@@ -200,14 +200,18 @@ const CanvasLayout = ({ children }) => {
         <div className={styles.center}>
           <div style={{ gridAutoFlow: "row" }} className={styles.centerButton}>
             <div className={styles.centerButton}>
-              <Typography variant={"h4"} className={styles.projectName}>
-                {projectTitle || "Untitled VSM"}
+              <Typography
+                data-test={"processName"}
+                variant={"h4"}
+                className={styles.projectName}
+              >
+                {projectTitle || "Untitled process"}
               </Typography>
               <Button
                 variant={"ghost"}
                 onClick={(e) => (isOpen ? closeMenu() : openMenu(e, null))}
                 onKeyDown={onKeyPress}
-                id="menuButton"
+                data-test="processMenuButton"
                 aria-controls="menu-on-button"
                 aria-haspopup="true"
                 aria-expanded={isOpen}
@@ -224,6 +228,7 @@ const CanvasLayout = ({ children }) => {
               focus={focus}
             >
               <Menu.Item
+                data-test={`renameButton`}
                 title={`${
                   userCannotEdit
                     ? "Only the creator, admin or a contributor can rename this VSM"
@@ -249,6 +254,7 @@ const CanvasLayout = ({ children }) => {
                 </Typography>
               </Menu.Item>
               <Menu.Item
+                data-test={"deleteButton"}
                 title={`${
                   isAdmin
                     ? "Delete the current VSM"
@@ -277,6 +283,7 @@ const CanvasLayout = ({ children }) => {
           {/*<UserDots users={userAccesses?.map((u) => u.user) || []} />*/}
           <TooltipImproved title={"Share"}>
             <Button
+              id={`shareButton`}
               variant={"ghost_icon"}
               style={{ marginRight: 8 }}
               onClick={() => setVisibleShareScrim(true)}
@@ -314,6 +321,7 @@ const CanvasLayout = ({ children }) => {
             <div className={styles.scrimHeaderWrapper}>
               <div className={styles.scrimTitle}>Rename process</div>
               <Button
+                data-test={`renameButtonClose`}
                 variant={"ghost_icon"}
                 onClick={() => setVisibleRenameScrim(false)}
               >
@@ -322,6 +330,8 @@ const CanvasLayout = ({ children }) => {
             </div>
             <div className={styles.scrimContent}>
               <TextField
+                data-test={"renameInput"}
+                id="renameInput"
                 autoFocus
                 label={"Add title"}
                 // multiline
@@ -329,7 +339,6 @@ const CanvasLayout = ({ children }) => {
                 variant={"default"}
                 defaultValue={project?.name}
                 onChange={(e) => updateProjectName(e.target.value)}
-                id={"vsmObjectDescription"}
               />
             </div>
           </div>
@@ -350,6 +359,7 @@ const CanvasLayout = ({ children }) => {
                 <div className={styles.scrimHeaderWrapper}>
                   <div className={styles.scrimTitle}>Delete process</div>
                   <Button
+                    data-test={"deleteButtonCancel"}
                     autoFocus
                     variant={"ghost_icon"}
                     onClick={(e) => handleCloseDeleteScrim(e, false)}
@@ -369,6 +379,7 @@ const CanvasLayout = ({ children }) => {
                 </div>
                 <div className={styles.deleteButton}>
                   <Button
+                    data-test={`deleteButtonApprove`}
                     variant={"contained"}
                     color={"danger"}
                     onClick={() => deleteVSM()}

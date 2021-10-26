@@ -14,7 +14,7 @@ export function SearchField(): JSX.Element {
   return (
     <Search
       aria-label="search"
-      id="searchProjects"
+      data-test="searchInput"
       placeholder="Search by username or title"
       className={styles.searchField}
       defaultValue={router.query.searchQuery}

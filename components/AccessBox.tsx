@@ -74,7 +74,11 @@ function TopSection(props: { title: string; handleClose }) {
   return (
     <div className={style.topSection}>
       <p className={style.heading}> {props.title}</p>
-      <Button variant={"ghost_icon"} onClick={props.handleClose}>
+      <Button
+        variant={"ghost_icon"}
+        onClick={props.handleClose}
+        data-test={"shareButtonClose"}
+      >
         <Icon data={close} />
       </Button>
     </div>
@@ -194,6 +198,7 @@ function MiddleSection(props: {
     <>
       <form className={style.emailSection} onSubmit={handleSubmit}>
         <Input
+          data-test={"shareInput"}
           disabled={!props.isAdmin}
           autoFocus
           type={"text"}
@@ -203,7 +208,12 @@ function MiddleSection(props: {
           onChange={(event) => setEmailInput(event.target.value)}
         />
         <span style={{ padding: 4 }} />
-        <Button type={"submit"} variant={"contained"} disabled={!props.isAdmin}>
+        <Button
+          type={"submit"}
+          variant={"contained"}
+          disabled={!props.isAdmin}
+          data-test={"shareButtonAdd"}
+        >
           {props.loading ? "Adding..." : "Add"}
         </Button>
       </form>

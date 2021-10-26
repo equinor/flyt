@@ -7,16 +7,19 @@ export default function SideNavBar(): JSX.Element {
   return (
     <div className={styles.container}>
       <SideNavBarElement
+        testId={"allProcessesButton"}
         icon={dashboard}
         title="See all processes"
         pathname="/processes"
       />
       <SideNavBarElement
+        testId={"myProcessesButton"}
         icon={person}
         title="See my processes"
         pathname="/processes/mine"
       />
       <SideNavBarElement
+        testId={"myFavoriteProcessesButton"}
         icon={favorite_outlined}
         title="See my favourite processes"
         pathname="/processes/favourite"

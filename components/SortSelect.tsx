@@ -15,6 +15,7 @@ export const SortSelect = (): JSX.Element => {
         router.query.orderBy = event.target.value;
         router.replace(router);
       }}
+      data-test="sort-select"
     >
       <option value="name">Alphabetically</option>
       <option value="created">Date created</option>

@@ -23,6 +23,7 @@
   },
   "rules": {
     "react/prop-types": ["off"],
-    "sonarjs/cognitive-complexity": ["warn", 5]
+    "sonarjs/cognitive-complexity": ["warn", 5],
+    "sonarjs/no-duplicate-string": ["warn", 5]
   }
 }
