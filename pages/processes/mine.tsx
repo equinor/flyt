@@ -30,7 +30,7 @@ export default function MyProcesses(): JSX.Element {
     () =>
       getProjects({
         page,
-        user: "HSJO",
+        user: userNameFilter,
         items: itemsPerPage,
         q: searchQuery || "",
         orderBy,
