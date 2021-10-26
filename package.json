@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "release": "standard-version",
-    "fetch-tags": "git fetch origin tag DEV TEST QA PROD",
+    "fetch-tags": "git fetch origin --tags --force",
     "release-dev": "yarn fetch-tags && git tag -m 'Current DEV environment'   -a -f DEV  && yarn push-tags",
     "release-test": "yarn fetch-tags && git tag -m 'Current TEST environment' -a -f TEST && yarn push-tags",
     "release-qa": "yarn fetch-tags && git tag -m 'Current QA environment'     -a -f QA   && yarn push-tags",
