@@ -14,7 +14,7 @@ import { SearchField } from "components/SearchField";
 
 export default function FavoriteProcesses(): JSX.Element {
   const [page, setPage] = useState(1);
-  const itemsPerPage = 15; //Todo: Display as many cards we can fit while still making space for the pagination
+  const itemsPerPage = 16;
 
   const router = useRouter();
   const { searchQuery, orderBy } = router?.query;

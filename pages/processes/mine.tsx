@@ -16,7 +16,7 @@ import { SearchField } from "components/SearchField";
 
 export default function MyProcesses(): JSX.Element {
   const [page, setPage] = useState(1);
-  const itemsPerPage = 14; //Todo: Display as many cards we can fit while still making space for the pagination
+  const itemsPerPage = 15;
 
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
