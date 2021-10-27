@@ -1,0 +1,23 @@
+.infoBox {
+  margin-top: 12px;
+  margin-bottom: 12px;
+
+  background-color: white;
+  filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.14));
+  border-radius: 4px;
+  padding-left: 16px;
+  padding-right: 16px;
+
+  font-size: 16px;
+  line-height: 24px;
+
+  letter-spacing: 0.4px;
+  color: #6f6f6f;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.closeIcon {
+  width: 30px;
+}

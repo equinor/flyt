@@ -69,6 +69,9 @@ const UserMenu: React.FC = () => {
         <Link href={"/changelog"}>
           <Menu.Item>Version {packageJson.version}</Menu.Item>
         </Link>
+        <Link href={"/settings"}>
+          <Menu.Item>Settings</Menu.Item>
+        </Link>
         <Menu.Item onClick={() => instance.logout()}>Logout</Menu.Item>
       </Menu>
     </>

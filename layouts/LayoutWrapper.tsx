@@ -8,11 +8,15 @@ import CanvasLayout from "./canvas";
 const layouts = {
   default: DefaultLayout,
   canvas: CanvasLayout,
+  empty: function EmptyLayout(props: { children }) {
+    return <>{props.children}</>;
+  },
 };
 
 export const Layouts = {
   Default: "default",
   Canvas: "canvas",
+  Empty: "empty",
 };
 
 const LayoutWrapper = (props) => {

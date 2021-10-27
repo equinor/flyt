@@ -1,69 +1,30 @@
 import React, { useState } from "react";
 import { Layouts } from "../../../../layouts/LayoutWrapper";
-import styles from "./categories.module.scss";
-import { useQuery } from "react-query";
-import { getTasksForProject } from "../../../../services/taskApi";
-import { useRouter } from "next/router";
-import { unknownErrorToString } from "../../../../utils/isError";
-import { InfoBox } from "../../../../components/InfoBox";
-import { AddCategoryButton } from "../../../../components/AddCategoryButton";
-import { DraggableCategory } from "../../../../components/DraggableCategory";
-import { QipCard } from "../../../../components/QipCard";
-import { Checkbox } from "@equinor/eds-core-react";
 import { vsmTaskTypes } from "../../../../types/vsmTaskTypes";
 import { taskObject } from "../../../../interfaces/taskObject";
-import Image from "next/image";
-import useLocalStorage from "../../../../hooks/useLocalStorage";
+import { TaskSection } from "../../../../components/taskSection";
+import { CategorySection } from "../../../../components/CategorySection";
+import { CheckboxImproved } from "../../../../components/CheckboxImproved";
+import { ButtonNavigateToProcess } from "../../../../components/ButtonNavigateToProcess";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useQuery } from "react-query";
+import { getProject } from "../../../../services/projectApi";
 
 export default function CategoriesPage(): JSX.Element {
   const router = useRouter();
   const { id } = router.query;
-
-  // const [taskType, setTaskType] = useState(1);
-  // const {
-  //   data: tasks,
-  //   isLoading,
-  //   error,
-  // } = useQuery(["tasks", id, taskType], () =>
-  //   getTasksForProjectWithType(id, taskType)
-  // );
-  const {
-    data: tasks,
-    isLoading,
-    error,
-  } = useQuery(["tasks", id], () => getTasksForProject(id));
+  const { data: project } = useQuery(["project", id], () => getProject(id));
+  const projectTitle = project?.name;
 
   const [categories, setCategories] = useState([]);
+
   const [problemChecked, setProblemChecked] = useState(true);
   const [ideaChecked, setIdeaChecked] = useState(true);
   const [questionChecked, setQuestionChecked] = useState(true);
+  const [riskChecked, setRiskChecked] = useState(true);
 
-  const [showDragHelper, setShowDragHelper] = useLocalStorage(
-    "showDragHelper",
-    true
-  );
-  const [showCategoryClickHelper, setShowCategoryClickHelper] = useLocalStorage(
-    "showCategoryClickHelper",
-    true
-  );
-
-  if (error) {
-    return <p>{unknownErrorToString(error)}</p>;
-  }
-
-  const categoryIsChecked = (categoryName: string) => {
-    return categories.some(
-      (category) => categoryName === category.name && category.checked
-    );
-  };
-
-  const getFilter = (t: taskObject) => {
-    //Todo: Add functionality to filter on category as well...
-    // NB: Show all categories if none are checked.
-    if (categories.some((category) => category.checked)) {
-      // if something...
-      if (!t.category?.some((c) => categoryIsChecked(c.name))) return false;
-    }
+  const taskTypeIsChecked = (t: taskObject) => {
     switch (t.taskType.vsmTaskTypeID) {
       case vsmTaskTypes.problem:
         return problemChecked;
@@ -71,116 +32,103 @@ export default function CategoriesPage(): JSX.Element {
         return questionChecked;
       case vsmTaskTypes.idea:
         return ideaChecked;
+      case vsmTaskTypes.risk:
+        return riskChecked;
+      default:
+        return false;
     }
-    return false;
   };
 
-  function toggleSelection(category) {
-    const newCategories = categories.map((c) => {
-      if (c === category) {
-        return {
-          ...category,
-          checked: !category.checked,
-        };
-      }
-      return c;
-    });
-    setCategories(newCategories);
+  const getFilter = (t: taskObject) => {
+    const selectedCategories = categories.filter(
+      (category) => category.checked
+    );
+    // Do not display if checkbox is not checked
+    if (!taskTypeIsChecked(t)) return false;
+    // Display it if checkbox is checked but no categories are selected.
+    if (!selectedCategories.length) return true;
+    // If task contains a category that is selected, display it!
+    return t.categories.some((taskCategory) =>
+      selectedCategories.some(
+        (selectedCategory) => selectedCategory.id === taskCategory.id
+      )
+    );
+  };
+
+  function FilterCheckBoxes() {
+    return (
+      <div
+        style={{
+          paddingLeft: 24,
+          paddingRight: 24,
+          paddingTop: 12,
+          display: "flex",
+          flexWrap: "wrap",
+        }}
+      >
+        <CheckboxImproved
+          isChecked={problemChecked}
+          setIsChecked={setProblemChecked}
+          label={"Problems"}
+        />
+        <CheckboxImproved
+          setIsChecked={setQuestionChecked}
+          isChecked={questionChecked}
+          label={"Questions"}
+        />
+        <CheckboxImproved
+          setIsChecked={setIdeaChecked}
+          isChecked={ideaChecked}
+          label={"Ideas"}
+        />
+        <CheckboxImproved
+          setIsChecked={setRiskChecked}
+          isChecked={riskChecked}
+          label={"Risks"}
+        />
+      </div>
+    );
   }
 
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.categoriesWrap}>
-        <p className={styles.header}>Categories</p>
-        {showDragHelper && (
-          <InfoBox onClose={() => setShowDragHelper(false)}>
-            <Image
-              src={"/gifs/categoryDrag.gif"}
-              alt="Animation of dragging a category onto a Problem-card"
-              unoptimized={true} //Trouble with optimizing gifs
-              width={800}
-              height={321}
-              // layout={"fill"}
-            />
-            <p>
-              Drag a category into one or more of the problems, ideas or
-              questions.
-            </p>
-          </InfoBox>
-        )}
-        {showCategoryClickHelper && (
-          <InfoBox onClose={() => setShowCategoryClickHelper(false)}>
-            <p>Click on a category to focus on it</p>
-          </InfoBox>
-        )}
-
-        <AddCategoryButton
-          onClickHandler={() =>
-            setCategories([
-              ...categories,
-              {
-                name: `Category ${categories.length + 1}`,
-                checked: false,
-                placement: categories.length + 1,
-              },
-            ])
-          }
-        />
-        <div className={styles.categoriesDraggableSection}>
-          {categories
-            .sort((a, b) => b.placement - a.placement)
-            .map((category) => (
-              <DraggableCategory
-                key={category.name}
-                onClick={() => toggleSelection(category)}
-                text={category.name}
-                checked={category.checked}
-              />
-            ))}
+    <>
+      <Head>
+        <title>{projectTitle || "Untitled VSM"} - Categorisation</title>
+      </Head>
+      <div
+        style={{
+          display: "flex",
+          top: 64,
+          height: "calc(100vh - 64px)",
+        }}
+      >
+        <div
+          style={{
+            overflowY: "auto",
+            padding: 12,
+            backgroundColor: "white",
+          }}
+        >
+          <ButtonNavigateToProcess />
+          <CategorySection
+            categories={categories}
+            setCategories={setCategories}
+          />
+        </div>
+        <div
+          style={{
+            flex: 1,
+            backgroundColor: "#f7f7f7",
+            overflowY: "scroll",
+          }}
+        >
+          <FilterCheckBoxes />
+          <TaskSection filterFunction={getFilter} />
         </div>
       </div>
-
-      <div>
-        <div style={{ marginLeft: 48, marginTop: 24 }}>
-          <Checkbox
-            label={"Problems"}
-            checked={problemChecked}
-            onClick={() => setProblemChecked((p) => !p)}
-          />
-          <Checkbox
-            label={"Ideas"}
-            checked={ideaChecked}
-            onClick={() => setIdeaChecked((p) => !p)}
-          />
-          <Checkbox
-            label={"Questions"}
-            checked={questionChecked}
-            onClick={() => setQuestionChecked((p) => !p)}
-          />
-        </div>
-        {/*<SelectTaskType onSelect={(e: number) => setTaskType(e)} />*/}
-        <div className={styles.qipSection}>
-          {isLoading ? (
-            <p>Loading...</p>
-          ) : (
-            tasks
-              ?.filter(getFilter)
-              .sort((a, b) => a.fkTaskType - b.fkTaskType)
-              .map((task) => (
-                <QipCard
-                  onClick={() =>
-                    router.push(`/process/${id}/${task.vsmTaskID}`)
-                  }
-                  key={task.vsmTaskID}
-                  task={task}
-                />
-              ))
-          )}
-        </div>
-      </div>
-    </div>
+    </>
   );
 }
 
-CategoriesPage.layout = Layouts.Default;
+CategoriesPage.layout = Layouts.Canvas;
 CategoriesPage.auth = true;

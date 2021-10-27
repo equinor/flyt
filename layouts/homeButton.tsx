@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Button, Typography } from "@equinor/eds-core-react";
 import Image from "next/image";
 import React from "react";
+import { TooltipImproved } from "../components/TooltipImproved";
 
 export function HomeButton(): JSX.Element {
   return (
