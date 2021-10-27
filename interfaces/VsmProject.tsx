@@ -6,6 +6,8 @@ import { userAccess } from "./UserAccess";
 export interface vsmProject {
   vsmProjectID: number;
   name: string;
+  toBeProcessID?: number;
+  currentProcessId?: number;
   created: {
     pkChangeLog: number;
     userIdentity: string;

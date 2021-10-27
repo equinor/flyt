@@ -31,7 +31,7 @@ import packageJson from "../package.json";
 import { notifyOthers } from "../services/notifyOthers";
 import { TooltipImproved } from "../components/TooltipImproved";
 
-const CanvasLayout = ({ children }) => {
+const CanvasLayout = ({ children }): JSX.Element => {
   const isAuthenticated = useIsAuthenticated();
 
   const router = useRouter();
@@ -184,6 +184,14 @@ const CanvasLayout = ({ children }) => {
     );
   }
 
+  function handleDuplicate() {
+    if (project?.currentProcessId) {
+      router.push(`/process/${project.currentProcessId}/duplicate`);
+    } else {
+      router.push(`/process/${project.vsmProjectID}/duplicate`);
+    }
+  }
+
   return (
     <div style={{ overflow: "hidden" /* Hide scrollbars */ }}>
       <Head>
@@ -239,11 +247,7 @@ const CanvasLayout = ({ children }) => {
                   Rename
                 </Typography>
               </Menu.Item>
-              <Menu.Item
-                onClick={() =>
-                  router.push(`/process/${project.vsmProjectID}/duplicate`)
-                }
-              >
+              <Menu.Item onClick={handleDuplicate}>
                 <Typography group="navigation" variant="menu_title" as="span">
                   Duplicate
                 </Typography>

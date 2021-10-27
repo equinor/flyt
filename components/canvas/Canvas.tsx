@@ -25,6 +25,7 @@ import { getAccessToken } from "../../auth/msalHelpers";
 import { LiveIndicator } from "../LiveIndicator";
 import { CategorizationPageButton } from "../CategorizationPageButton";
 import { resetCanvasZoomAndPosition } from "./utils/ResetCanvasZoomAndPosition";
+import { ToBeToggle } from "./ToBeToggle";
 
 export default function Canvas(): JSX.Element {
   const ref = useRef();
@@ -167,9 +168,10 @@ export default function Canvas(): JSX.Element {
             ? "Connection is looking good!\nYour changes should appear immediately for other users."
             : `You are not connected ${
                 socketReason ? `because of ${socketReason}` : ""
-              }`
+              }.`
         }
       />
+      <ToBeToggle />
       <DeleteVsmObjectDialog
         objectToDelete={selectedObject}
         visible={visibleDeleteScrim}
