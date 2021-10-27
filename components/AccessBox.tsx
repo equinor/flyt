@@ -184,9 +184,11 @@ function MiddleSection(props: {
   function handleSubmit(e) {
     e.preventDefault();
     userInput
-      .split(",")
-      .map((user) => user.trim())
+      .split(",") // Split by comma
+      .filter((user) => !!user.trim()) // remove empty strings
+      .map((user) => user.trim()) // remove whitespace
       .forEach((user) => {
+        // add each user
         addUserMutation.mutate({
           user: user,
           vsmId: props.vsmId,
