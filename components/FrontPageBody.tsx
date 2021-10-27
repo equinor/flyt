@@ -36,14 +36,12 @@ export default function FrontPageBody(props: {
 
   return (
     <>
-      <div className={styles.body}>
-        <ProjectListSection
-          projects={data?.projects}
-          isLoading={isLoading}
-          expectedNumberOfProjects={itemsPerPage}
-          showNewProjectButton={showNewProjectButton}
-        />
-      </div>
+      <ProjectListSection
+        projects={data?.projects}
+        isLoading={isLoading}
+        expectedNumberOfProjects={itemsPerPage}
+        showNewProjectButton={showNewProjectButton}
+      />
       <div className={styles.footer}>
         {itemsPerPage < totalItems && (
           <Pagination

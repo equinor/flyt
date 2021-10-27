@@ -29,7 +29,7 @@ export default function AllProcesses(): JSX.Element {
   );
 
   return (
-    <div className={commonStyles.container} style={{ padding: "0" }}>
+    <div>
       <Head>
         <title>Flyt | All processes</title>
         <link rel={"icon"} href={"/favicon.ico"} />
