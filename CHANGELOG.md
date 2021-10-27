@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.10](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.10) (2021-10-27)
+
+### Features
+
+- enhanced front page design ([f38a817](https://github.com/equinor/MAD-VSM-WEB/commit/f38a81744dfb5d9314842da744d355008cb867b2)), closes [#220](https://github.com/equinor/MAD-VSM-WEB/issues/220)
+
+### Bug Fixes
+
+- **service-message:** service-message should not be indented, but fill the full screen ([#267](https://github.com/equinor/MAD-VSM-WEB/issues/267)) ([132e61a](https://github.com/equinor/MAD-VSM-WEB/commit/132e61a93bdb0d517800ba49dab80996e9c50687)), closes [#234](https://github.com/equinor/MAD-VSM-WEB/issues/234) [#256](https://github.com/equinor/MAD-VSM-WEB/issues/256)
+
 ### [0.2.9](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.9) (2021-10-25)
 
 ### Bug Fixes
