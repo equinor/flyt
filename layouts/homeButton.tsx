@@ -7,18 +7,21 @@ import { TooltipImproved } from "../components/TooltipImproved";
 
 export function HomeButton(): JSX.Element {
   return (
-    <TooltipImproved title={"Go to the frontpage"}>
-      <div className={styles.homeButton}>
-        <Link href={"/"}>
-          <Button variant={"ghost"}>
-            <Image src={"/logo.png"} alt={"Logo"} width={12.53} height={25} />
-            <span style={{ padding: 4 }} />
-            <Typography className={styles.homeButtonText} variant={"h4"}>
-              Flyt
-            </Typography>
-          </Button>
-        </Link>
-      </div>
-    </TooltipImproved>
+    <div className={styles.homeButton}>
+      <Link href={"/"}>
+        <Button variant={"ghost"}>
+          <Image
+            src={"/greenLogo.png"}
+            alt={"Logo"}
+            width={12.53}
+            height={25}
+          />
+          <span style={{ padding: 4 }} />
+          <Typography className={styles.homeButtonText} variant={"h4"}>
+            Flyt
+          </Typography>
+        </Button>
+      </Link>
+    </div>
   );
 }

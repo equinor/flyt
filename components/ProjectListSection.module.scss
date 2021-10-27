@@ -1,0 +1,17 @@
+.grid {
+  display: flex;
+}
+
+.emptyVsmCardContainer {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.loadingVSMCardContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
