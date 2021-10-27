@@ -1,23 +1,10 @@
-@media screen and (min-width: 510px) {
-  .container {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    height: 100%;
-    width: 56px;
-    background-color: #ffffff;
-    position: fixed;
-    top: 64px;
-    left: 0;
-  }
-}
-
-@media screen and (max-width: 510px) {
-  .container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    height: 56px;
-    background-color: #ffffff;
-  }
+.elements {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background-color: #ffffff;
+  width: 56px;
+  height: calc(100vh - 64px);
+  position: sticky;
+  top: 64px;
 }
