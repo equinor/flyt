@@ -22,13 +22,6 @@ export function ProjectListSection(props: {
     expectedNumberOfProjects,
   } = props;
 
-  const breakpointColumnsObj = {
-    default: 4,
-    1648: 3,
-    1300: 2,
-    952: 1,
-  };
-
   if (projects?.length < 1) {
     return (
       <div className={styles.emptyVsmCardContainer}>
@@ -43,9 +36,13 @@ export function ProjectListSection(props: {
   return (
     <>
       <Masonry
-        breakpointCols={breakpointColumnsObj}
+        breakpointCols={{
+          default: 4,
+          1648: 3,
+          1300: 2,
+          952: 1,
+        }}
         className={styles.grid}
-        columnClassName={styles.gridcolumn}
       >
         {props.showNewProjectButton && <NewProjectButton />}
         {isLoading

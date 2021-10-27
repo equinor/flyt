@@ -32,7 +32,7 @@ export default function FavoriteProcesses(): JSX.Element {
   );
 
   return (
-    <div className={commonStyles.container} style={{ padding: "0" }}>
+    <div>
       <Head>
         <title>Flyt | Favorite processes</title>
         <link rel={"icon"} href={"/favicon.ico"} />

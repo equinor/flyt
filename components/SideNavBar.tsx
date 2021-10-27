@@ -5,24 +5,22 @@ import SideNavBarElement from "./SideNavBarElement";
 
 export default function SideNavBar(): JSX.Element {
   return (
-    <div className={styles.container}>
-      <div className={styles.elements}>
-        <SideNavBarElement
-          icon={dashboard}
-          title="See all processes"
-          pathname="/processes"
-        />
-        <SideNavBarElement
-          icon={person}
-          title="See my processes"
-          pathname="/processes/mine"
-        />
-        <SideNavBarElement
-          icon={favorite_outlined}
-          title="See my favourite processes"
-          pathname="/processes/favourite"
-        />
-      </div>
+    <div className={styles.elements}>
+      <SideNavBarElement
+        icon={dashboard}
+        title="See all processes"
+        pathname="/processes"
+      />
+      <SideNavBarElement
+        icon={person}
+        title="See my processes"
+        pathname="/processes/mine"
+      />
+      <SideNavBarElement
+        icon={favorite_outlined}
+        title="See my favourite processes"
+        pathname="/processes/favourite"
+      />
     </div>
   );
 }
