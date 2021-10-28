@@ -1,4 +1,5 @@
 module.exports = {
+  swcMinify: true,
   serverRuntimeConfig: {
     // Will only be available on the server side
     AUTH_SECRET: process.env.AUTH_SECRET, // "authentication secret or public key, used for validating user requests in pages/api",

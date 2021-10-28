@@ -13,17 +13,15 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
   const queryClient = useQueryClient();
   const [isMutatingFavourite, setIsMutatingFavourite] = useState(false);
 
+  const handleSettled = () =>
+    queryClient.invalidateQueries().then(() => setIsMutatingFavourite(false));
+
   const faveMutation = useMutation(
     () => {
       setIsMutatingFavourite(true);
       return faveProject(props.vsm.vsmProjectID);
     },
-    {
-      onSettled: () =>
-        queryClient
-          .invalidateQueries()
-          .then(() => setIsMutatingFavourite(false)),
-    }
+    { onSettled: handleSettled }
   );
 
   const unfaveMutation = useMutation(
@@ -31,12 +29,7 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
       setIsMutatingFavourite(true);
       return unfaveProject(props.vsm.vsmProjectID);
     },
-    {
-      onSettled: () =>
-        queryClient
-          .invalidateQueries()
-          .then(() => setIsMutatingFavourite(false)),
-    }
+    { onSettled: handleSettled }
   );
 
   return (

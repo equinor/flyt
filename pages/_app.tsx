@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { MsalProvider } from "@azure/msal-react";
 import msalInstance from "../auth/msalHelpers";
+import Head from "next/head";
 
 const queryClient = new QueryClient();
 const MyApp = ({ Component, pageProps }) => {
@@ -16,6 +17,12 @@ const MyApp = ({ Component, pageProps }) => {
     <StoreProvider store={store}>
       <QueryClientProvider client={queryClient}>
         <MsalProvider instance={msalInstance}>
+          <Head>
+            <link
+              rel="stylesheet"
+              href="https://eds-static.equinor.com/font/equinor-font.css"
+            />
+          </Head>
           <LayoutWrapper {...pageProps}>
             <Component {...pageProps} />
           </LayoutWrapper>
