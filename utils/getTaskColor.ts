@@ -9,6 +9,8 @@ export function getTaskColor(task: taskObject): string {
       return "#ad6200";
     case vsmTaskTypes.idea:
       return "#00977b";
+    case vsmTaskTypes.risk:
+      return "#ff9101";
   }
   return "#000000";
 }

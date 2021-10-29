@@ -7,10 +7,8 @@
   flex-direction: column;
   justify-content: space-between;
   filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.14));
-  /* UI Background/Default */
 
-  width: 332px;
-  min-width: 332px;
+  min-width: 290px;
 
   background: #ffffff;
   border-radius: 4px;
@@ -19,7 +17,6 @@
   animation-duration: 0.8s;
 
   transition: all 0.2s ease-in-out;
-  align-self: stretch;
 }
 
 .card:hover {

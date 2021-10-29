@@ -1,0 +1,11 @@
+.banner {
+  animation-name: drop-down;
+  animation-duration: 1s;
+}
+
+@keyframes drop-down {
+  from {
+    opacity: 0;
+    transform: translateY(-72px);
+  }
+}

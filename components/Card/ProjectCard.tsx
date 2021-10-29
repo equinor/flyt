@@ -54,12 +54,12 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
       <button
         style={{
           padding: "0",
-          marginRight: "16px",
           marginBottom: "16px",
           border: "none",
           textAlign: "inherit",
           display: "inherit",
           backgroundColor: "unset",
+          width: "100%",
         }}
         onClick={() => router.push(`/process/${props.vsm.vsmProjectID}`)}
       >

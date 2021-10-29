@@ -5,7 +5,7 @@ import SideNavBarElement from "./SideNavBarElement";
 
 export default function SideNavBar(): JSX.Element {
   return (
-    <div className={styles.container}>
+    <div className={styles.elements}>
       <SideNavBarElement
         icon={dashboard}
         title="See all processes"

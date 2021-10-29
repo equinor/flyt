@@ -3,6 +3,7 @@
 ![Flyt canvas (13) - Process feedback on 'Flyt'  - Wednesday, September 15, 2021](https://user-images.githubusercontent.com/3164065/133470524-d6934d90-82ce-4870-aea3-450fd1f4c48f.png)
 
 # Links
+
 - :inbox_tray: [Bug and feature tracker](https://github.com/orgs/equinor/projects/77)
 - :art: [Figma design & prototype](https://www.figma.com/file/IkHwmIQrsT0iR34f5R5UnZ/vsm)
 - :zap: [Api-endpoints: See swagger](https://vsm-api-dev.azurewebsites.net/swagger/index.html)
@@ -10,6 +11,7 @@
 - 🏃 [Running in Radix](https://console.radix.equinor.com/applications/vsm/)
 
 # Background
+
 > TBD: write some background about mapping and what Flyt aims to solve and improve.
 
 # Tech stack / Features
@@ -59,8 +61,8 @@ for some reason.
 
 I've added a simple script to automate this:
 For example; Run `yarn release-dev` to tag DEV and push tags to GitHub.
-> **NOTE:** This script need to be updated to accomadate for multiple people updating the tags. Until then, try to update the tag and push it manually. [Read more about git tags](https://git-scm.com/book/en/v2/Git-Basics-Tagging).
 
+> **NOTE:** This script need to be updated to accomadate for multiple people updating the tags. Until then, try to update the tag and push it manually. [Read more about git tags](https://git-scm.com/book/en/v2/Git-Basics-Tagging).
 
 | Environment | Release script          | Deploy status                                                                                                                  | URL                                     | Who should test what?       | Comments                                                                         |
 | ----------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------- | --------------------------- | -------------------------------------------------------------------------------- |
@@ -143,8 +145,8 @@ Structure of an entity
 }
 ```
 
-
 # Semantic Commit Messages
+
 > Copied from https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716
 
 See how a minor change to your commit message style can make you a better programmer.

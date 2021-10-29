@@ -2,6 +2,38 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.10](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.10) (2021-10-27)
+
+### Features
+
+- enhanced front page design ([f38a817](https://github.com/equinor/MAD-VSM-WEB/commit/f38a81744dfb5d9314842da744d355008cb867b2)), closes [#220](https://github.com/equinor/MAD-VSM-WEB/issues/220)
+
+### Bug Fixes
+
+- **service-message:** service-message should not be indented, but fill the full screen ([#267](https://github.com/equinor/MAD-VSM-WEB/issues/267)) ([132e61a](https://github.com/equinor/MAD-VSM-WEB/commit/132e61a93bdb0d517800ba49dab80996e9c50687)), closes [#234](https://github.com/equinor/MAD-VSM-WEB/issues/234) [#256](https://github.com/equinor/MAD-VSM-WEB/issues/256)
+
+### [0.2.9](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.9) (2021-10-25)
+
+### Bug Fixes
+
+- **service-message:** Hide the service-message-banner when there is no active message. ([62295f4](https://github.com/equinor/MAD-VSM-WEB/commit/62295f480d5e2781f06a2684233b7cded506a373)), closes [#259](https://github.com/equinor/MAD-VSM-WEB/issues/259)
+
+### [0.2.8](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.8) (2021-10-22)
+
+### Features
+
+- Categorization page ([#251](https://github.com/equinor/MAD-VSM-WEB/issues/251)) ([3069642](https://github.com/equinor/MAD-VSM-WEB/commit/30696422e22460aa09a207ae079776c7b3e73c9b)), closes [#112](https://github.com/equinor/MAD-VSM-WEB/issues/112) [#221](https://github.com/equinor/MAD-VSM-WEB/issues/221) [#223](https://github.com/equinor/MAD-VSM-WEB/issues/223) [#222](https://github.com/equinor/MAD-VSM-WEB/issues/222)
+
+### [0.2.7](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.7) (2021-10-22)
+
+### Features
+
+- service-message banner ([d771b93](https://github.com/equinor/MAD-VSM-WEB/commit/d771b9358734cc691ca2497e0a872df6ce3aa27b)), closes [#224](https://github.com/equinor/MAD-VSM-WEB/issues/224)
+
+### Bug Fixes
+
+- center plus sign in add button ([cf1b74b](https://github.com/equinor/MAD-VSM-WEB/commit/cf1b74bc9a245c0590f753fa564b6ee303956d17)), closes [#237](https://github.com/equinor/MAD-VSM-WEB/issues/237)
+
 ### [0.2.6](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.6) (2021-10-06)
 
 ### Features
