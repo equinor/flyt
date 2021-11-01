@@ -44,7 +44,7 @@ export function AccessBox(props: {
         loading={isLoading}
         isAdmin={props.isAdmin}
       />
-      <BottomSection />
+      <BottomSection vsmProjectID={props.project.vsmProjectID} />
     </div>
   );
 }
@@ -235,16 +235,18 @@ function MiddleSection(props: {
   );
 }
 
-function BottomSection() {
+function BottomSection(props: { vsmProjectID: number }) {
   const [copySuccess, setCopySuccess] = useState("");
 
   function copyToClipboard() {
-    navigator.clipboard.writeText(window.location.href).then(() => {
-      setCopySuccess("Copied to clipboard!");
-      setTimeout(() => {
-        setCopySuccess("");
-      }, 2000);
-    });
+    navigator.clipboard
+      .writeText(`${window.location.origin}/process/${props.vsmProjectID}`)
+      .then(() => {
+        setCopySuccess("Copied to clipboard!");
+        setTimeout(() => {
+          setCopySuccess("");
+        }, 2000);
+      });
   }
 
   return (
