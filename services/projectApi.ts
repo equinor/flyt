@@ -7,9 +7,9 @@ import { createUrlParams } from "../utils/createUrlParams";
 const baseUrl = "/api/v1.0";
 //Project aka. VSM aka. Flyt or Flow
 export const getProjects = (filter?: {
-  q?: string | string[];
-  user?: string | string[];
-  orderBy?: string | string[];
+  q?: string;
+  user?: string;
+  orderBy?: string;
   page?: number;
   items?: number;
   onlyFavorites?: boolean;
