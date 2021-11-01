@@ -23,8 +23,8 @@ export default function AllProcesses(): JSX.Element {
     getProjects({
       page,
       items: itemsPerPage,
-      q: searchQuery || "",
-      orderBy,
+      q: searchQuery ? `${searchQuery}` : "",
+      orderBy: orderBy && `${orderBy}`,
     })
   );
 
