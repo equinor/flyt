@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import commonStyles from "../../styles/common.module.scss";
 import styles from "./FrontPage.module.scss";
 import Head from "next/head";
 import { Layouts } from "../../layouts/LayoutWrapper";
@@ -26,8 +25,8 @@ export default function FavoriteProcesses(): JSX.Element {
         page,
         items: itemsPerPage,
         onlyFavorites: true,
-        q: searchQuery || "",
-        orderBy,
+        q: searchQuery ? `${searchQuery}` : "",
+        orderBy: orderBy && `${orderBy}`,
       })
   );
 

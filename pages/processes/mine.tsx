@@ -32,8 +32,8 @@ export default function MyProcesses(): JSX.Element {
         page,
         user: userNameFilter,
         items: itemsPerPage,
-        q: searchQuery || "",
-        orderBy,
+        q: searchQuery ? `${searchQuery}` : "",
+        orderBy: orderBy && `${orderBy}`,
       })
   );
 
