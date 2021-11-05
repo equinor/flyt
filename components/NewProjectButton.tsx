@@ -16,12 +16,12 @@ export function NewProjectButton(): JSX.Element {
   );
 
   return (
-    <div
+    <button
       className={styles.createCard}
       onClick={() => newProjectMutation.mutate()}
     >
       <Icon data={add} title="add" />
       <p>Create new</p>
-    </div>
+    </button>
   );
 }

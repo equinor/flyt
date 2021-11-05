@@ -16,17 +16,15 @@ export function UserDot(props: { name: string }): JSX.Element {
   }
 
   return (
-    <TooltipImproved title={`${props.name}`}>
-      <div className={styles.container} style={{ backgroundColor: color }}>
-        <p
-          style={{
-            fontFamily: "Equinor",
-            color: lightOrDark(color) === "dark" ? "white" : "black",
-          }}
-        >
-          {props.name && props.name[0].toUpperCase()}
-        </p>
-      </div>
-    </TooltipImproved>
+    <div className={styles.container} style={{ backgroundColor: color }}>
+      <p
+        style={{
+          fontFamily: "Equinor",
+          color: lightOrDark(color) === "dark" ? "white" : "black",
+        }}
+      >
+        {props.name && props.name[0].toUpperCase()}
+      </p>
+    </div>
   );
 }

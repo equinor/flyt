@@ -2,6 +2,11 @@
   display: flex;
 }
 
+.gridColumn {
+  min-width: 290px;
+  padding-right: 16px;
+}
+
 .emptyVsmCardContainer {
   display: flex;
   flex-direction: column;
