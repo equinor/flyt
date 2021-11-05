@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.11](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.11) (2021-11-05)
+
+### Features
+
+- redesign process card ([5648643](https://github.com/equinor/MAD-VSM-WEB/commit/56486434ddab435f9ef4fa573ef9df420ac1c0fb)), closes [#219](https://github.com/equinor/MAD-VSM-WEB/issues/219)
+
 ### [0.2.10](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.10) (2021-10-27)
 
 ### Features
