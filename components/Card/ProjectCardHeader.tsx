@@ -13,7 +13,7 @@ export default function ProjectCardHeader(props: {
       </h1>
       {!!props.vsm.lastUpdated && (
         <p className={styles.lastEditedLabel}>
-          Edited {moment(props.vsm.lastUpdated.changeDate).fromNow()}
+          Modified {moment(props.vsm.lastUpdated.changeDate).fromNow()}
         </p>
       )}
     </div>
