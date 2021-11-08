@@ -3,13 +3,14 @@ import { projectTemplatesV1 } from "../assets/projectTemplatesV1";
 import { AxiosPromise } from "axios";
 import { vsmProject } from "../interfaces/VsmProject";
 import { createUrlParams } from "../utils/createUrlParams";
+import { processLabel } from "interfaces/processLabel";
 
 const baseUrl = "/api/v1.0";
 //Project aka. VSM aka. Flyt or Flow
 export const getProjects = (filter?: {
-  q?: string | string[];
-  user?: string | string[];
-  orderBy?: string | string[];
+  q?: string;
+  user?: string;
+  orderBy?: string;
   page?: number;
   items?: number;
   onlyFavorites?: boolean;
@@ -49,3 +50,8 @@ export const faveProject = (id: number) =>
 
 export const unfaveProject = (id: number) =>
   BaseAPIServices.delete(`${baseUrl}/project/${id}/favorite`);
+
+export const getLabels = (id: number): Promise<processLabel> =>
+  BaseAPIServices.get(`${baseUrl}/project/${id}/labels`).then(
+    (value) => value.data
+  );

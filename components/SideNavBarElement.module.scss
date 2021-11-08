@@ -1,15 +1,3 @@
-@media screen and (min-width: 510px) {
-  .iconContainer {
-    border-bottom: 1px solid #dcdcdc;
-  }
-}
-
-@media screen and (max-width: 510px) {
-  .iconContainer {
-    border-bottom: 1px solid #dcdcdc;
-  }
-}
-
 .iconContainer {
   display: flex;
   flex-direction: row;
@@ -21,6 +9,7 @@
   border-top: none;
   border-left: none;
   border-right: none;
+  border-bottom: 1px solid #dcdcdc;
 }
 
 .iconContainer:hover {

@@ -1,15 +1,10 @@
 ---
 name: Feature request
 about: Suggest an idea for this project
-title: ''
-labels: ''
-assignees: ''
-
+title: ""
+labels: "enhancement"
+assignees: ""
 ---
-**User input (if feedback)**
-
-**Sharepoint ID(s) (if feedback)**
-XX
 
 **User story**
 A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]

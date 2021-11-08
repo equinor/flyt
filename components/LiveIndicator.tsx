@@ -2,7 +2,10 @@ import { ColorDot } from "./ColorDot";
 import colors from "../theme/colors";
 import React from "react";
 
-export function LiveIndicator(props: { live: boolean; title: string }) {
+export function LiveIndicator(props: {
+  live: boolean;
+  title: string;
+}): JSX.Element {
   const { live } = props;
   return (
     <div style={{ position: "absolute", right: 0 }}>

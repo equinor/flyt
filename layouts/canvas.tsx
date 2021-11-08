@@ -13,7 +13,6 @@ import styles from "./default.layout.module.scss";
 import { useAccount, useIsAuthenticated, useMsal } from "@azure/msal-react";
 import React, { useEffect, useState } from "react";
 import UserMenu from "../components/AppHeader/UserMenu";
-import getConfig from "next/config";
 import { useStoreDispatch, useStoreState } from "../hooks/storeHooks";
 import { useRouter } from "next/router";
 import BaseAPIServices from "../services/BaseAPIServices";
@@ -30,10 +29,10 @@ import { debounce } from "../utils/debounce";
 import { unknownErrorToString } from "../utils/isError";
 import packageJson from "../package.json";
 import { notifyOthers } from "../services/notifyOthers";
+import { TooltipImproved } from "../components/TooltipImproved";
 
 const CanvasLayout = ({ children }) => {
   const isAuthenticated = useIsAuthenticated();
-  const { publicRuntimeConfig } = getConfig();
 
   const router = useRouter();
   const { id } = router.query;
@@ -276,14 +275,15 @@ const CanvasLayout = ({ children }) => {
 
         <div style={{ display: "flex", alignItems: "center" }}>
           {/*<UserDots users={userAccesses?.map((u) => u.user) || []} />*/}
-          <Button
-            variant={"ghost_icon"}
-            title={"Share"}
-            style={{ marginRight: 8 }}
-            onClick={() => setVisibleShareScrim(true)}
-          >
-            <Icon data={share} />
-          </Button>
+          <TooltipImproved title={"Share"}>
+            <Button
+              variant={"ghost_icon"}
+              style={{ marginRight: 8 }}
+              onClick={() => setVisibleShareScrim(true)}
+            >
+              <Icon data={share} />
+            </Button>
+          </TooltipImproved>
           <RightTopBarSection isAuthenticated={isAuthenticated} />
         </div>
       </TopBar>

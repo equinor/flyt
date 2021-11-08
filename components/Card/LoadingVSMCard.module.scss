@@ -1,11 +1,10 @@
 .card {
-  width: 332px;
+  min-width: 290px;
   height: 100px;
 
   background: #ffffff;
   border-radius: 4px;
 
-  margin-right: 16px;
   margin-bottom: 16px;
 
   animation-name: fade-in;

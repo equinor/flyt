@@ -6,55 +6,118 @@ import { ColorDot } from "./ColorDot";
 import { CategoryChip } from "./CategoryChip";
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
+import { useMutation, useQueryClient } from "react-query";
+import {
+  linkTaskCategory,
+  unlinkTaskCategory,
+} from "../services/taskCategoriesApi";
+import { taskCategory } from "../interfaces/taskCategory";
+import { useRouter } from "next/router";
 
 export function QipCard(props: {
   task: taskObject;
   onClick?: () => void;
 }): JSX.Element {
-  const [categories, setCategories] = useState([]);
-  const taskColor = getTaskColor(props.task);
+  const task = props.task;
+  const { displayIndex, description, categories, vsmTaskID, solved } = task;
+  const taskColor = getTaskColor(task);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDragOver, setIsDragOver] = useState(false);
+  const router = useRouter();
+  const { id } = router.query;
+
+  const queryClient = useQueryClient();
+  const linkTaskMutation = useMutation(
+    (p: { categoryId; taskId }) => {
+      setIsLoading(true);
+      return linkTaskCategory(p.categoryId, p.taskId);
+    },
+    {
+      onSuccess: (message) => console.log(message),
+      onError: (error) => console.log(`${error}`),
+      onSettled: () => {
+        queryClient.invalidateQueries(["tasks", id]).then(() => {
+          setIsLoading(false);
+          setIsDragOver(false);
+        });
+      },
+    }
+  );
+
+  const unlinkTaskMutation = useMutation(
+    (p: { categoryId: number; taskId: number }) => {
+      setIsLoading(true);
+      return unlinkTaskCategory(p.categoryId, p.taskId);
+    },
+    {
+      onSettled: () => {
+        queryClient
+          .invalidateQueries(["tasks", id])
+          .then(() => setIsLoading(false));
+      },
+    }
+  );
+
+  function getAlreadyThere(data: { text: string; color: string; id: number }) {
+    return categories?.some((c) => c.id === data.id);
+  }
+
   return (
     <div
+      style={{
+        transform: (isDragOver || isLoading) && "scale(0.98)",
+        opacity: (isDragOver || isLoading) && 0.4,
+        borderStyle: isDragOver && "dashed",
+      }}
       onClick={props.onClick}
       onDrop={(event) => {
-        const data: { text: string; color: string } = JSON.parse(
+        const data: { text: string; color: string; id: number } = JSON.parse(
           event.dataTransfer.getData("text/plain")
         );
-        const alreadyThere = categories?.find(
-          (category) => category.text === data.text
-        );
-        if (!alreadyThere) {
-          setCategories([...categories, data]);
+        const alreadyThere = getAlreadyThere(data);
+        if (alreadyThere) {
+          setIsDragOver(false);
+        } else {
+          linkTaskMutation.mutate({
+            categoryId: data.id,
+            taskId: vsmTaskID,
+          });
         }
       }}
       onDragOver={(e) => e.preventDefault()}
+      onDragEnterCapture={(event) => {
+        event.stopPropagation();
+        const dragData = event.dataTransfer.getData("text/plain");
+        if (!dragData) return;
+        const data: { text: string; color: string; id: number } =
+          JSON.parse(dragData);
+        const alreadyThere = getAlreadyThere(data);
+        if (!alreadyThere) {
+          setIsDragOver(true);
+        }
+      }}
+      onDragExitCapture={() => setIsDragOver(false)}
       className={styles.qipCard}
     >
-      {props.task.solved && <span className={styles.stamp}>Solved</span>}
+      {solved && <span className={styles.stamp}>Solved</span>}
       <div className={styles.qipCardTop}>
         <ColorDot color={taskColor} />
-        <p>{props.task?.displayIndex || "?"}</p>
+        <p>{displayIndex || "?"}</p>
       </div>
-      <ReactMarkdown remarkPlugins={[gfm]}>
-        {props.task?.description}
-      </ReactMarkdown>
+      <ReactMarkdown remarkPlugins={[gfm]}>{description}</ReactMarkdown>
       <div className={styles.qipCardCategorySection}>
-        {categories
-          .sort((a, b) => {
-            return a.text > b.text ? 1 : 0;
-          })
-          .map((category) => (
-            <CategoryChip
-              key={category.text}
-              text={category.text}
-              color={category.color}
-              onClickRemove={() =>
-                setCategories(
-                  categories.filter((c) => c.text !== category.text)
-                )
-              }
-            />
-          ))}
+        {categories?.map((category: taskCategory) => (
+          <CategoryChip
+            key={category.id}
+            text={category.name}
+            onClickRemove={() => {
+              unlinkTaskMutation.mutate({
+                categoryId: category.id,
+                taskId: vsmTaskID,
+              });
+            }}
+          />
+        ))}
       </div>
     </div>
   );

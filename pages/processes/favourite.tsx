@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import commonStyles from "../../styles/common.module.scss";
 import styles from "./FrontPage.module.scss";
 import Head from "next/head";
 import { Layouts } from "../../layouts/LayoutWrapper";
@@ -15,7 +14,7 @@ import FilterLabelButton from "components/FilterLabelButton";
 
 export default function FavoriteProcesses(): JSX.Element {
   const [page, setPage] = useState(1);
-  const itemsPerPage = 15; //Todo: Display as many cards we can fit while still making space for the pagination
+  const itemsPerPage = 16;
 
   const router = useRouter();
   const { searchQuery, orderBy } = router?.query;
@@ -27,26 +26,26 @@ export default function FavoriteProcesses(): JSX.Element {
         page,
         items: itemsPerPage,
         onlyFavorites: true,
-        q: searchQuery || "",
-        orderBy,
+        q: searchQuery ? `${searchQuery}` : "",
+        orderBy: orderBy && `${orderBy}`,
       })
   );
 
   return (
-    <div className={commonStyles.container} style={{ padding: "0" }}>
+    <div>
       <Head>
         <title>Flyt | Favorite processes</title>
         <link rel={"icon"} href={"/favicon.ico"} />
       </Head>
 
-      <main className={commonStyles.frontPageMain}>
+      <main className={styles.main}>
         <SideNavBar />
-        <div className={styles.frontPageContainer}>
-          <div className={styles.frontPageHeader}>
-            <div className={styles.frontPageSubHeader}>
+        <div className={styles.container}>
+          <div className={styles.header}>
+            <div className={styles.subHeader}>
               <SearchField />
             </div>
-            <div className={styles.frontPageSubHeader}>
+            <div className={styles.subHeader}>
               <Typography variant="h3">My favourite processes</Typography>
               <div className={styles.sortAndFilter}>
                 <FilterLabelButton />

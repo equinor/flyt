@@ -92,11 +92,11 @@
   width: 100vw;
   max-width: 400px;
 
-  overflow: scroll;
+  overflow-y: scroll;
 
   // Todo: Fix https://equinor-sds-si.atlassian.net/browse/VSM-145 then you can enable animation again
-  //animation-name: appearFromRight;
-  //animation-duration: 0.5s;
+  animation-name: appearFromRight;
+  animation-duration: 0.5s;
   z-index: 1;
 }
 
