@@ -15,7 +15,7 @@ export function placeholderProjectCardsArray(
 }
 
 export function projectCardsArray(projects: Array<vsmProject>): JSX.Element[] {
-  return projects.map((vsm: vsmProject) => (
+  return projects?.map((vsm: vsmProject) => (
     <ProjectCard key={vsm.vsmProjectID} vsm={vsm} />
   ));
 }
