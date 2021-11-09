@@ -6,7 +6,7 @@ import { Layouts } from "../../layouts/LayoutWrapper";
 import FrontPageBody from "components/FrontPageBody";
 import SideNavBar from "components/SideNavBar";
 import { useQuery } from "react-query";
-import { getProjects } from "../../services/projectApi";
+import { getProjects, searchUser } from "../../services/projectApi";
 import { getUserShortName } from "../../utils/getUserShortName";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useRouter } from "next/router";
@@ -19,23 +19,28 @@ export default function MyProcesses(): JSX.Element {
   const [page, setPage] = useState(1);
   const itemsPerPage = 15;
 
-  const { accounts } = useMsal();
-  const account = useAccount(accounts[0] || {});
-  const userNameFilter = getUserShortName(account);
-
   const router = useRouter();
   const { searchQuery, orderBy } = router?.query;
 
+  //Get my user
+  const { accounts } = useMsal();
+  const account = useAccount(accounts[0] || {});
+  const shortName = getUserShortName(account);
+
+  const { data: users } = useQuery(["userName"], () => searchUser(shortName));
+  const myUserId = users?.find((user) => user.userName === shortName)?.pkUser;
+
   const query = useQuery(
-    ["myProjects", page, userNameFilter, searchQuery || "", orderBy],
+    ["myProjects", page, myUserId, searchQuery || "", orderBy],
     () =>
       getProjects({
         page,
-        user: userNameFilter,
+        ru: [myUserId],
         items: itemsPerPage,
         q: searchQuery ? `${searchQuery}` : "",
         orderBy: orderBy && `${orderBy}`,
-      })
+      }),
+    { enabled: !!myUserId }
   );
 
   return (
