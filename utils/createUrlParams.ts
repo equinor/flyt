@@ -15,9 +15,9 @@ export function createUrlParams(params: {
       .map((key) => {
         const value = params[key];
         if (Array.isArray(value)) {
-          return value.map((v) => `${key}=${v}`).join("&");
+          return value.map((v) => `${key}=${encodeURIComponent(v)}`).join("&");
         }
-        return `${key}=${value}`;
+        return `${key}=${encodeURIComponent(value)}`;
       })
       .join("&")
   );
