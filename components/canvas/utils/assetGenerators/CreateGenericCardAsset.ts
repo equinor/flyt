@@ -17,7 +17,7 @@ export function createGenericCardAsset(
     genericTaskSectionEdge,
   } = PIXI.Loader.shared.resources;
   //CARD
-  const gotTasks = vsmObject.tasks.length > 0;
+  const gotTasks = vsmObject.tasks?.length > 0;
   const texture = gotTasks ? genericStraight.texture : generic.texture;
   const cardSprite = new PIXI.Sprite(texture);
   wrapper.addChild(cardSprite);

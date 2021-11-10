@@ -16,7 +16,7 @@ export function createMainActivityAsset(
     genericTaskSectionEdge,
   } = PIXI.Loader.shared.resources;
   //CARD
-  const gotTasks = vsmObject.tasks.length > 0;
+  const gotTasks = vsmObject.tasks?.length > 0;
   const texture = gotTasks
     ? mainActivityStraight.texture
     : mainActivity.texture;

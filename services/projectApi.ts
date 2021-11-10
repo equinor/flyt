@@ -4,6 +4,7 @@ import { AxiosPromise } from "axios";
 import { vsmProject } from "../interfaces/VsmProject";
 import { createUrlParams } from "../utils/createUrlParams";
 import { processLabel } from "interfaces/processLabel";
+import { Process } from "interfaces/generated";
 
 const baseUrl = "/api/v1.0";
 //Project aka. VSM aka. Flyt or Flow
@@ -43,7 +44,7 @@ export const createProject = (
   );
 };
 
-export const getProject = (id: string | string[]): Promise<vsmProject> =>
+export const getProject = (id: string | string[]): Promise<Process> =>
   BaseAPIServices.get(`${baseUrl}/project/${id}`).then((value) => value.data);
 
 export const updateProject = (data) =>

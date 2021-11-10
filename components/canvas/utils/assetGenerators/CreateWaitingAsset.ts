@@ -26,7 +26,7 @@ export function createWaitingAsset(
     waitingTaskSectionEdge,
   } = PIXI.Loader.shared.resources;
 
-  const gotTasks = vsmObject.tasks.length > 0;
+  const gotTasks = vsmObject.tasks?.length > 0;
   const texture = gotTasks ? waitingStraight.texture : waiting.texture;
   const waitingSprite = new PIXI.Sprite(texture);
 

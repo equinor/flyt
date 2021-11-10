@@ -34,7 +34,7 @@ export function createSubActivityAsset(
     genericTaskSectionEdge,
   } = PIXI.Loader.shared.resources;
 
-  const gotTasks = vsmObject.tasks.length > 0;
+  const gotTasks = vsmObject.tasks?.length > 0;
   const texture = gotTasks ? subActivityStraight.texture : subActivity.texture;
   const subActivitySprite = new PIXI.Sprite(texture);
 
