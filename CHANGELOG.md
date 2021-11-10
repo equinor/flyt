@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.13](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.12...v0.2.13) (2021-11-09)
+
+### Bug Fixes
+
+- support searching with special characters like & (url-encode search queries) ([#292](https://github.com/equinor/MAD-VSM-WEB/issues/292)) ([7bf8aaa](https://github.com/equinor/MAD-VSM-WEB/commit/7bf8aaaaa7574fa39d1085ba2104b45b7ba4b618)), closes [#225](https://github.com/equinor/MAD-VSM-WEB/issues/225) [#278](https://github.com/equinor/MAD-VSM-WEB/issues/278) [#291](https://github.com/equinor/MAD-VSM-WEB/issues/291)
+
 ### [0.2.12](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.11...v0.2.12) (2021-11-09)
 
 ### Bug Fixes
