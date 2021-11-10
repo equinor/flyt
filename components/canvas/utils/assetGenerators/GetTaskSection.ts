@@ -11,7 +11,7 @@ export function getTaskSection(
   assetTaskSectionEdge: PIXI.ILoaderResource,
   vsmObject: vsmObject
 ): PIXI.Container {
-  const numberOfTasks = vsmObject.tasks.length;
+  const numberOfTasks = vsmObject.tasks?.length;
   const numberOfBases = Math.ceil(numberOfTasks / numberOfTasksPerBase);
 
   if (numberOfBases === 0) return null;
