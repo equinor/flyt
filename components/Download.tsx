@@ -13,8 +13,10 @@ import { getTasksForProject } from "../services/taskApi";
 import { downloadJSON } from "../utils/DownloadJSON";
 import { downloadProjectCardsAsCSV } from "../utils/DownloadProjectCardsAsCSV";
 import { downloadProjectTasksAsCSV } from "../utils/DownloadProjectTasksAsCSV";
+import { vsmProject } from "interfaces/VsmProject";
 
 export default function Download(): JSX.Element {
+  //Todo update to use the new layout engine
   const router = useRouter();
   const { id } = router.query;
   const { data: project } = useQuery(["project", id], () => getProject(id));
@@ -34,7 +36,7 @@ export default function Download(): JSX.Element {
   useEffect(() => {
     if (assetsAreReady && project && project.objects) {
       const newTree = recursiveTree(
-        project.objects[0],
+        project.objects[0] as unknown as vsmProject,
         0,
         true,
         {
@@ -62,7 +64,7 @@ export default function Download(): JSX.Element {
       <Button
         variant={"contained"}
         title={"Download process as PNG"}
-        onClick={() => download_tree_as_png(project, tree)}
+        onClick={() => download_tree_as_png(project as vsmProject, tree)}
       >
         <Icon data={download} />
         Flyt.png
@@ -72,7 +74,7 @@ export default function Download(): JSX.Element {
         variant={"contained"}
         title={"Download process as CSV"}
         onClick={() => {
-          downloadProjectTasksAsCSV(tasks, project);
+          downloadProjectTasksAsCSV(tasks, project as vsmProject);
         }}
       >
         <Icon data={download} />
@@ -82,7 +84,7 @@ export default function Download(): JSX.Element {
         variant={"contained"}
         title={"Download process as CSV"}
         onClick={() => {
-          downloadProjectCardsAsCSV(project);
+          downloadProjectCardsAsCSV(project as vsmProject);
         }}
       >
         <Icon data={download} />
@@ -91,7 +93,7 @@ export default function Download(): JSX.Element {
       <Button
         variant={"contained"}
         title={"Download process as JSON"}
-        onClick={() => downloadJSON(project)}
+        onClick={() => downloadJSON(project as vsmProject)}
       >
         <Icon data={download} />
         Flyt.json

@@ -1,25 +1,25 @@
-import { Process } from "interfaces/generated";
+import { vsmProject } from "interfaces/VsmProject";
 import { getUserShortName } from "./getUserShortName";
 
 /**
  * Get my access in a project
- * @param project
+ * @param process
  * @param account
  */
 export function getMyAccess(
-  project: Process,
+  process: vsmProject, //todo: change to process type
   account: { username: string }
 ): "Admin" | "Contributor" | "Reader" {
   //Default to "Reader"
-  if (!project || !account) return "Reader";
+  if (!process || !account) return "Reader";
 
   //If we are the creator of the project, return Admin
   const shortName = getUserShortName(account);
-  if (project?.created?.userIdentity?.toUpperCase() === shortName)
+  if (process?.created?.userIdentity?.toUpperCase() === shortName)
     return "Admin";
 
   //Else, check if we have been given a role, then return that role
-  const found = project?.userAccesses.find(
+  const found = process?.userAccesses.find(
     (u) => u.user.toUpperCase() === shortName
   );
   if (found) return found.role;

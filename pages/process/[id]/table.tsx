@@ -10,6 +10,7 @@ import { flattenProject } from "../../../utils/flattenProject";
 import { getProject } from "../../../services/projectApi";
 import ObjectTable from "../../../components/objectTable";
 import TaskTable from "../../../components/taskTable";
+import { vsmProject } from "interfaces/VsmProject";
 
 export default function TablePage() {
   const router = useRouter();
@@ -51,7 +52,7 @@ export default function TablePage() {
       </div>
     );
   }
-  const flatObjects = flattenProject(project);
+  const flatObjects = flattenProject(project as vsmProject);
   return (
     <div className={commonStyles.container}>
       <Head>

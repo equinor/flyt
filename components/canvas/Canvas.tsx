@@ -25,6 +25,7 @@ import { getAccessToken } from "../../auth/msalHelpers";
 import { LiveIndicator } from "../LiveIndicator";
 import { CategorizationPageButton } from "../CategorizationPageButton";
 import { resetCanvasZoomAndPosition } from "./utils/ResetCanvasZoomAndPosition";
+import { vsmProject } from "interfaces/VsmProject";
 
 export default function Canvas(): JSX.Element {
   const ref = useRef();
@@ -81,7 +82,7 @@ export default function Canvas(): JSX.Element {
   const [assetsAreLoaded, setAssetsAreLoaded] = useState(false);
 
   const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
-  const myAccess = getMyAccess(project, account);
+  const myAccess = getMyAccess(project as vsmProject, account);
   const userCanEdit = myAccess === "Admin" || myAccess === "Contributor";
 
   const queryClient = useQueryClient();
@@ -140,7 +141,12 @@ export default function Canvas(): JSX.Element {
 
       //Todo: Only show toolbox if userCanEdit. ref: https://equinor-sds-si.atlassian.net/browse/VSM-143
       const cleanupToolbox = userCanEdit
-        ? toolBox(draggable, project, vsmObjectAddMutation, dispatch)
+        ? toolBox(
+            draggable,
+            project as vsmProject,
+            vsmObjectAddMutation,
+            dispatch
+          )
         : () => {
             //nothing to clean up
           };

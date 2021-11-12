@@ -30,6 +30,7 @@ import { unknownErrorToString } from "../utils/isError";
 import packageJson from "../package.json";
 import { notifyOthers } from "../services/notifyOthers";
 import { TooltipImproved } from "../components/TooltipImproved";
+import { vsmProject } from "interfaces/VsmProject";
 
 const CanvasLayout = ({ children }) => {
   const isAuthenticated = useIsAuthenticated();
@@ -61,7 +62,7 @@ const CanvasLayout = ({ children }) => {
 
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
-  const myAccess = getMyAccess(project, account);
+  const myAccess = getMyAccess(project as vsmProject, account);
   const userCanEdit = myAccess === "Admin" || myAccess === "Contributor";
   const userCannotEdit = !userCanEdit;
   const isAdmin = myAccess === "Admin";
@@ -297,7 +298,7 @@ const CanvasLayout = ({ children }) => {
           isDismissable
         >
           <AccessBox
-            project={project}
+            project={project as vsmProject}
             handleClose={handleCloseShareScrim}
             isAdmin={isAdmin}
           />
