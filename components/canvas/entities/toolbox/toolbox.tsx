@@ -12,6 +12,7 @@ import { createToolboxChoice } from "./createToolboxChoice";
 import { createToolboxWaiting } from "./createToolboxWaiting";
 import { vsmObject } from "interfaces/VsmObject";
 import { UseMutationResult } from "react-query";
+import { Process } from "interfaces/generated";
 
 const cache = { project: null, toolBox: null };
 let box;
@@ -24,7 +25,7 @@ export const toolBox = (
     clearHoveredObject
   ) => void,
   project: StateMapper<
-    _Pick<vsmProject, _FilterKeys<vsmProject, ActionTypes, "default">>
+    _Pick<vsmProject, _FilterKeys<Process, ActionTypes, "default">>
   >,
   vsmObjectAddMutation: UseMutationResult<unknown, unknown, vsmObject, unknown>,
   dispatch: Dispatch<ProjectModel>

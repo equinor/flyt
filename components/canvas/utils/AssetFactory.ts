@@ -104,11 +104,11 @@ function getSprite(vsmObject: vsmObject): PIXI.Container | null {
 function newSprite(vsmObject: vsmObject, setSelectedObject) {
   const { vsmObjectID } = vsmObject;
   const newSprite = createNewSprite(vsmObject, textResolution);
-  clickHandler(newSprite, () => setSelectedObject(vsmObject));
-  newSprite.on(pointerEvents.pointerover, () =>
-    setHoveredObject(vsmObject, getDragObject())
-  );
-  newSprite.on(pointerEvents.pointerout, () => clearHoveredObject());
+  // clickHandler(newSprite, () => setSelectedObject(vsmObject));
+  // newSprite.on(pointerEvents.pointerover, () =>
+  //   setHoveredObject(vsmObject, getDragObject())
+  // );
+  // newSprite.on(pointerEvents.pointerout, () => clearHoveredObject());
   sprites[vsmObjectID] = { sprite: newSprite, data: vsmObject };
   return newSprite;
 }

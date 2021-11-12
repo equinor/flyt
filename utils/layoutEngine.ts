@@ -1,21 +1,16 @@
-import {
-  ChildObjectsEntity,
-  ChildObjectsEntity1,
-  ChildObjectsEntity2,
-  ChildObjectsEntity3,
-  Process,
-  TasksEntity,
-} from "interfaces/generated";
+import { Process, TasksEntity } from "interfaces/generated";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
+import { createGraph } from "./createGraph";
 
-interface Node {
+export interface GraphNode {
+  selected: boolean;
   type: vsmObjectTypes;
   id: number;
   name?: string;
   time?: { value: number; unit: string };
   role?: string;
   hidden?: boolean;
-  tasks?: Array<TasksEntity>;
+  tasks: Array<TasksEntity>;
   position?: {
     x: number;
     y: number;
@@ -23,9 +18,14 @@ interface Node {
   width: number;
   height: number;
   level: number;
+  choiceGroup: choiceGroupTypes;
 }
-
-interface Edge {
+export enum choiceGroupTypes {
+  Left = "Left",
+  Right = "Right",
+  Center = "Center",
+}
+export interface GraphEdge {
   from: number; //vsmObjectID
   to: number; //vsmObjectID
   position?: {
@@ -39,11 +39,25 @@ interface Edge {
     };
   };
   hidden?: boolean;
+  label?: string;
 }
 
+type User = {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  pointer: {
+    x: number;
+    y: number;
+  };
+};
+
 export class Graph {
-  nodes: Array<Node>;
-  edges: Array<Edge>;
+  process: Process;
+  nodes: Array<GraphNode>;
+  edges: Array<GraphEdge>;
+  users: Array<User>;
 
   constructor(process: Process) {
     const graph = createGraph(process);
@@ -51,7 +65,7 @@ export class Graph {
     this.edges = graph.edges;
   }
 
-  getNode(id: number): Node {
+  getNode(id: number): GraphNode {
     const result = this.nodes.find((node) => node.id === id);
     if (!result) {
       throw new Error(`Node with id ${id} not found`);
@@ -59,7 +73,7 @@ export class Graph {
     return result;
   }
 
-  getEdge(from: number, to: number): Edge {
+  getEdge(from: number, to: number): GraphEdge {
     const result = this.edges.find(
       (edge) => edge.from === from && edge.to === to
     );
@@ -69,155 +83,82 @@ export class Graph {
     return result;
   }
 
-  getMaxWidth(): number {
-    return this.nodes.reduce(
-      (max, node) => (node.position.x > max ? node.position.x : max),
-      0
-    );
-  }
-  getMaxHeight(): number {
-    return this.nodes.reduce(
-      (max, node) => (node.position.y > max ? node.position.y : max),
-      0
-    );
-  }
-}
-
-// create a graph of nodes with edges
-function createGraph(process: Process): {
-  nodes: Array<Node>;
-  edges: Array<Edge>;
-} {
-  const graph = {
-    nodes: Array<Node>(),
-    edges: Array<Edge>(),
-  };
-
-  // add the root node
-  const rootNode = {
-    id: process.objects[0].vsmProjectID,
-    name: process.objects[0].name,
-    hidden: true, //We don't want to see the root node in the canvas
-    level: 0,
-    width: 200,
-    height: 200,
-    type: vsmObjectTypes.process,
-  };
-  graph.nodes.push(rootNode);
-
-  // add the children nodes (level 1)
-  process.objects[0].childObjects.forEach((child) => {
-    const childNode = {
-      id: child.vsmObjectID,
-      name: child.name,
-      level: 1,
-      width: 200,
-      height: 200,
-      type: child.vsmObjectType.pkObjectType,
-    };
-    graph.nodes.push(childNode);
-    graph.edges.push({
-      from: process.vsmProjectID,
-      to: child.vsmObjectID,
-      hidden: true,
-    });
-
-    //Then add the children of the children (level 2++)
-    traverseAndAdd(child);
-
-    function traverseAndAdd(
-      child:
-        | ChildObjectsEntity
-        | ChildObjectsEntity1
-        | ChildObjectsEntity2
-        | ChildObjectsEntity3,
-      level = 2
-    ) {
-      child.childObjects.forEach(
-        (
-          grandChild:
-            | ChildObjectsEntity
-            | ChildObjectsEntity1
-            | ChildObjectsEntity2
-            | ChildObjectsEntity3
-        ) => {
-          const grandChildNode = {
-            id: grandChild.vsmObjectID,
-            name: grandChild.name,
-            level,
-            width: 200,
-            height: 200,
-            type: grandChild.vsmObjectType.pkObjectType,
-          };
-          graph.nodes.push(grandChildNode);
-          graph.edges.push({
-            // add the edge from the child to the grandchild
-            from: child.vsmObjectID,
-            to: grandChild.vsmObjectID,
-          });
-        }
-      );
-      //If there are no grandchildren, we don't need to traverse further
-      //but if there are grandchildren, we need to traverse them
-      if (child.childObjects.length > 0) {
-        child.childObjects.forEach((grandChild) => {
-          traverseAndAdd(grandChild, level + 1);
-        });
-      }
+  updateNodePosition(node: GraphNode, x: number, y: number): void {
+    const { position } = node;
+    if (!position) {
+      throw new Error(`Node ${node.id} has no position`);
     }
-  });
+    position.x = x;
+    position.y = y;
+  }
 
-  //Calculate positions for the nodes. Place all nodes at the same level in a row
-  //and place the children of each node in a column
+  /**
+   * Returns all edges that are connected to the node
+   * @param node GraphNode - node to get edges for
+   * @returns Array<GraphEdge> - all edges that are connected to the node
+   */
+  getNodeEdges(node: GraphNode): Array<GraphEdge> {
+    return this.edges.filter(
+      (edge) => edge.from === node.id || edge.to === node.id
+    );
+  }
 
-  //For each level, calculate the width of the level and the height of the level
+  /**
+   * Returns all nodes that are direct neighbors of the node
+   * @param node GraphNode - node to get edges for
+   * @returns Array<GraphEdge> - all edges that are connected to the node
+   */
+  getNodeNeighbors(node: GraphNode): Array<GraphNode> {
+    const edges = this.getNodeEdges(node);
+    return edges.map((edge) => this.getNode(edge.to));
+  }
 
-  // Group nodes by level
-  const nodesByLevel: Array<Node> = groupBy(graph.nodes, "level");
-
-  //for each level, calculate the width of the level
-  const levelWidths = Object.keys(nodesByLevel).map((level) => {
-    const nodes = nodesByLevel[level];
-    //sum the width of all nodes in the level
-    return nodes.reduce((sum, node) => sum + node.width, 0);
-  });
-  //Find the max width of the levels
-  const maxLevelWidth = Math.max(...levelWidths);
-
-  //traverse through all levels and place each card in a column
-  Object.keys(nodesByLevel).forEach((level) => {
-    const nodes = nodesByLevel[level];
-    nodes.forEach((node: Node, index: number) => {
-      //TODO: calculate the x and y position of the node
-      node.position = {
-        x: (index * maxLevelWidth) / nodes.length,
-        y: Number(level) * node.height,
-      };
+  hitTest(x: number, y: number): { node: GraphNode; edge: GraphEdge } {
+    const node = this.nodes.find((node) => {
+      const { position } = node;
+      if (!position) {
+        return false;
+      }
+      const { x: nodeX, y: nodeY } = position;
+      return (
+        x >= nodeX &&
+        x <= nodeX + node.width &&
+        y >= nodeY &&
+        y <= nodeY + node.height
+      );
     });
-  });
+    if (node) {
+      return { node, edge: null };
+    }
+    const edge = this.edges.find((edge) => {
+      const { position } = edge;
+      if (!position) {
+        return false;
+      }
+      const { start, end } = position;
+      const { x: startX, y: startY } = start;
+      const { x: endX, y: endY } = end;
+      return x >= startX && x <= endX && y >= startY && y <= endY;
+    });
+    if (edge) {
+      return { node: null, edge };
+    }
+    return { node: null, edge: null };
+  }
 
-  //Calculate positions for the edges
-  graph.edges.forEach((edge) => {
-    const fromNode = graph.nodes.find((node) => node.id === edge.from) as Node;
-    const toNode = graph.nodes.find((node) => node.id === edge.to) as Node;
-    edge.position = {
-      start: {
-        x: fromNode.position.x + fromNode.width / 2,
-        y: fromNode.position.y + fromNode.height / 2,
-      },
-      end: {
-        x: toNode.position.x + toNode.width / 2,
-        y: toNode.position.y + toNode.height / 2,
-      },
-    };
-  });
-
-  return graph;
-}
-
-function groupBy(nodes: Node[], arg1: string) {
-  return nodes.reduce((r, a) => {
-    r[a[arg1]] = [...(r[a[arg1]] || []), a];
-    return r;
-  }, []);
+  selectNode(node: GraphNode): void {
+    this.nodes.forEach((n) => (n.selected = n === node));
+  }
+  deselectAllNodes(): void {
+    this.nodes.forEach((n) => (n.selected = false));
+  }
+  dragNode(node: GraphNode, x: number, y: number): void {
+    this.updateNodePosition(node, x, y);
+  }
+  dragNodeStart(node: GraphNode): void {
+    this.selectNode(node);
+  }
+  dragNodeEnd(): void {
+    this.deselectAllNodes();
+  }
 }
