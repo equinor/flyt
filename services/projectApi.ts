@@ -14,6 +14,7 @@ export const getProjects = (filter?: {
   page?: number;
   items?: number;
   onlyFavorites?: boolean;
+  rl?: string[] | string;
 }): Promise<{ projects: vsmProject[]; totalItems: number }> =>
   BaseAPIServices.get(`${baseUrl}/project${createUrlParams(filter)}`).then(
     (value) => {

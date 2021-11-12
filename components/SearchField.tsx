@@ -3,12 +3,16 @@ import { Search } from "@equinor/eds-core-react";
 import { debounce } from "../utils/debounce";
 import React from "react";
 import styles from "./SearchField.module.scss";
+import { getQueryObject } from "utils/getQueryObject";
 
 export function SearchField(): JSX.Element {
   const router = useRouter();
-  const handleSearch = (searchQuery: string) => {
-    router.query.searchQuery = searchQuery;
-    router.replace(router);
+  const handleSearch = (q: string) => {
+    const queryObject = getQueryObject(router.query, { q });
+    router.replace({
+      pathname: router.pathname,
+      query: { ...queryObject },
+    });
   };
 
   return (
@@ -17,7 +21,7 @@ export function SearchField(): JSX.Element {
       id="searchProjects"
       placeholder="Search by username or title"
       className={styles.searchField}
-      defaultValue={router.query.searchQuery}
+      defaultValue={router.query.q}
       onChange={(e) => {
         debounce(() => handleSearch(`${e.target.value}`), 500, "projectSearch");
       }}

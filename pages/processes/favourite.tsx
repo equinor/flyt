@@ -10,26 +10,29 @@ import { useRouter } from "next/router";
 import { Typography } from "@equinor/eds-core-react";
 import { SortSelect } from "../../components/SortSelect";
 import { SearchField } from "components/SearchField";
-import FilterLabelButton from "components/FilterLabelButton";
+import FilterLabelButton from "components/Labels/FilterLabelButton";
+import { getQueryObject } from "utils/getQueryObject";
+import LabelSubHeader from "components/Labels/LabelSubHeader";
 
 export default function FavoriteProcesses(): JSX.Element {
   const [page, setPage] = useState(1);
   const itemsPerPage = 16;
 
   const router = useRouter();
-  const { searchQuery, orderBy } = router?.query;
+  const urlQueryObject = getQueryObject({}, router.query);
 
   const query = useQuery(
-    ["favProjects", page, "isFavourite", searchQuery || "", orderBy],
+    ["favProjects", page, "isFavourite", ...Object.values(urlQueryObject)],
     () =>
       getProjects({
         page,
         items: itemsPerPage,
         onlyFavorites: true,
-        q: searchQuery ? `${searchQuery}` : "",
-        orderBy: orderBy && `${orderBy}`,
+        ...urlQueryObject,
       })
   );
+
+  const labelsID = router.query.rl ? `${router.query.rl}`.split(",") : null;
 
   return (
     <div>
@@ -52,6 +55,11 @@ export default function FavoriteProcesses(): JSX.Element {
                 <SortSelect />
               </div>
             </div>
+            {labelsID && (
+              <div className={styles.subHeader}>
+                <LabelSubHeader labelsID={labelsID} />
+              </div>
+            )}
           </div>
           <FrontPageBody
             itemsPerPage={itemsPerPage}

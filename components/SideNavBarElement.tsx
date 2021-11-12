@@ -2,6 +2,7 @@ import React from "react";
 import { Icon, Tooltip } from "@equinor/eds-core-react";
 import styles from "./SideNavBarElement.module.scss";
 import { useRouter } from "next/router";
+import { getQueryObject } from "utils/getQueryObject";
 
 export default function SideNavBarElement(props: {
   icon;
@@ -10,7 +11,6 @@ export default function SideNavBarElement(props: {
 }): JSX.Element {
   const router = useRouter();
   const pathname = router.pathname;
-  const { searchQuery, orderBy } = router.query;
   const isOnCurrentPage = pathname == props.pathname;
 
   return (
@@ -21,7 +21,7 @@ export default function SideNavBarElement(props: {
         onClick={() =>
           router.push({
             pathname: props.pathname,
-            query: { orderBy, searchQuery },
+            query: router.query,
           })
         }
       >

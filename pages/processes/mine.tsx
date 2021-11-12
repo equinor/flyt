@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import commonStyles from "../../styles/common.module.scss";
 import styles from "./FrontPage.module.scss";
 import Head from "next/head";
 import { Layouts } from "../../layouts/LayoutWrapper";
@@ -13,14 +12,16 @@ import { useRouter } from "next/router";
 import { Typography } from "@equinor/eds-core-react";
 import { SortSelect } from "../../components/SortSelect";
 import { SearchField } from "components/SearchField";
-import FilterLabelButton from "components/FilterLabelButton";
+import FilterLabelButton from "components/Labels/FilterLabelButton";
+import { getQueryObject } from "utils/getQueryObject";
+import LabelSubHeader from "components/Labels/LabelSubHeader";
 
 export default function MyProcesses(): JSX.Element {
   const [page, setPage] = useState(1);
   const itemsPerPage = 15;
 
   const router = useRouter();
-  const { searchQuery, orderBy } = router?.query;
+  const urlQueryObject = getQueryObject({}, router.query);
 
   //Get my user
   const { accounts } = useMsal();
@@ -31,17 +32,18 @@ export default function MyProcesses(): JSX.Element {
   const myUserId = users?.find((user) => user.userName === shortName)?.pkUser;
 
   const query = useQuery(
-    ["myProjects", page, myUserId, searchQuery || "", orderBy],
+    ["myProjects", page, myUserId, ...Object.values(urlQueryObject)],
     () =>
       getProjects({
         page,
         ru: [myUserId],
         items: itemsPerPage,
-        q: searchQuery ? `${searchQuery}` : "",
-        orderBy: orderBy && `${orderBy}`,
+        ...urlQueryObject,
       }),
     { enabled: !!myUserId }
   );
+
+  const labelsID = router.query.rl ? `${router.query.rl}`.split(",") : null;
 
   return (
     <div>
@@ -64,6 +66,11 @@ export default function MyProcesses(): JSX.Element {
                 <SortSelect />
               </div>
             </div>
+            {labelsID && (
+              <div className={styles.subHeader}>
+                <LabelSubHeader labelsID={labelsID} />
+              </div>
+            )}
           </div>
           <FrontPageBody
             itemsPerPage={itemsPerPage}

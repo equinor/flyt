@@ -3,16 +3,11 @@
 .box {
   background: #ffffff;
   border-radius: 4px;
-  padding-left: 15px;
-  padding-right: 15px;
-  padding-bottom: 15px;
-  margin: 12px;
+  padding: 0 20px 25px 20px;
 
-  display: flex;
-  flex-direction: column;
+  display: block;
 
-  min-width: 320px;
-  max-width: 700px;
+  width: 600px;
   max-height: 90vh;
 
   animation-name: fade-in;
@@ -23,8 +18,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center; //Vertical align the items
-
   border-bottom: #dcdcdc solid 1px;
+  margin-bottom: 16px;
 }
 
 .heading {
@@ -37,18 +32,28 @@
 }
 
 .searchSection {
-  margin-top: 12px;
-  margin-bottom: 12px;
+  display: flex;
 }
 
 .labelSection {
-  margin-top: 12px;
-  margin-bottom: 12px;
+  display: block;
+  justify-content: left;
+}
+
+.labelCounter {
+  font-size: 16px;
+}
+
+.labelContainer {
   overflow: scroll;
   display: flex;
   flex-wrap: wrap;
 }
 
 .chip:focus {
+  background-color: green;
+}
+
+.activeLabel {
   background-color: green;
 }
