@@ -2,16 +2,16 @@ import { taskObject } from "../../../../interfaces/taskObject";
 import { taskSorter } from "../../../../utils/taskSorter";
 import { vsmTaskTypes } from "../../../../types/vsmTaskTypes";
 import { TextCircle } from "../../entities/TextCircle";
-import { ILoaderResource } from "@pixi/loaders";
+import { LoaderResource } from "@pixi/loaders";
 import * as PIXI from "pixi.js";
 
 export function createArrayOfTaskCircles(
   tasks: taskObject[],
-  problemCircle: ILoaderResource,
-  questionCircle: ILoaderResource,
-  ideaCircle: ILoaderResource,
-  riskCircle: ILoaderResource,
-  unknownCircle: ILoaderResource,
+  problemCircle: LoaderResource,
+  questionCircle: LoaderResource,
+  ideaCircle: LoaderResource,
+  riskCircle: LoaderResource,
+  unknownCircle: LoaderResource,
   textResolution: number
 ): Array<PIXI.Container> {
   return tasks.sort(taskSorter()).map((t) => {

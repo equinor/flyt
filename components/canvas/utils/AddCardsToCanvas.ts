@@ -1,12 +1,9 @@
 import { Viewport } from "pixi-viewport";
-import { recursiveTree } from "./recursiveTree";
-import { RecursiveState } from "easy-peasy";
-import { vsmProject } from "../../../interfaces/VsmProject";
 import { assetFactory } from "./AssetFactory";
-import { createGraph, Graph } from "utils/layoutEngine";
+import { Graph } from "utils/layoutEngine";
 import { Process } from "interfaces/generated";
-import { vsmObject } from "interfaces/VsmObject";
-import { vsmObjectTypes } from "types/vsmObjectTypes";
+import { drawGraphEdges } from "./drawGraphEdges";
+import { drawGraphNodes } from "./drawGraphNodes";
 import * as PIXI from "pixi.js";
 
 /**
@@ -40,42 +37,75 @@ export function addCardsToCanvas(
   } else {
     const graph = new Graph(process);
     const { nodes, edges } = graph;
-    nodes.forEach((node) => {
-      if (!node.hidden) {
-        const card = assetFactory(
-          {
-            vsmObjectID: node.id,
-            name: node.name,
-            vsmObjectType: { pkObjectType: node.type },
-            tasks: node.tasks,
-          } as vsmObject,
-          setSelectedObject
-        );
-        viewport.addChild(card);
-        card.x = node.position.x;
-        card.y = node.position.y;
-      }
+
+    drawGraphNodes(nodes, setSelectedObject, viewport);
+    drawGraphEdges(edges, viewport);
+
+    // add a user-cursor to the canvas
+    const cursor = new PIXI.Graphics();
+    cursor.beginFill(0x000000, 0.5);
+    cursor.drawCircle(0, 0, 10);
+    cursor.endFill();
+    viewport.addChild(cursor);
+    cursor.visible = false;
+
+    // add a highlight circle
+    const highlight = new PIXI.Graphics();
+    //dark blue
+    highlight.beginFill(0x0000ff, 0.1);
+    highlight.drawCircle(0, 0, 100);
+    highlight.endFill();
+    viewport.addChild(highlight);
+    highlight.visible = false;
+
+    const lastHitTest = null;
+    //Track mouse positon and update cursor position, keeping scroll position in mind
+    viewport.on("mousemove", (e) => {
+      // make the cursor visible
+      cursor.visible = true;
+      const { x, y } = e.data.getLocalPosition(viewport);
+      cursor.x = x;
+      cursor.y = y;
+
+      //If hover, show a tooltip
+      // Do not hittest too often (performance)
+      // if (Date.now() - lastHitTest > 200) {
+      //   const hit = graph.hitTest(x, y);
+      //   lastHitTest = Date.now();
+      //   if (hit.node || hit.edge) {
+      //     //Todo: Do something with the hit
+      //     // console.log({ node: hit.node, edge: hit.edge, x, y });
+      //     // graph.selectNode(hit.node);
+      //   } else {
+      //     // graph.deselectAllNodes();
+      //   }
+      // }
+    });
+    viewport.on("mouseout", () => {
+      cursor.visible = false;
     });
 
-    edges.forEach((edge) => {
-      if (!edge.hidden) {
-        //Draw a line between the two nodes
-        const line = new PIXI.Graphics();
-        line.lineStyle(1, 0x888888, 1);
-        line.moveTo(edge.position.start.x, edge.position.start.y);
-        line.lineTo(edge.position.end.x, edge.position.end.y);
-        viewport.addChild(line);
+    //Hittest the cursor against the nodes and edges
+    viewport.on("pointerdown", (e) => {
+      const { x, y } = e.data.getLocalPosition(viewport);
+      const hit = graph.hitTest(x, y);
+      if (hit?.node) {
+        graph.selectNode(hit.node);
+        // highligh the node
+
+        const highlightDiameter =
+          Math.max(hit.node.width, hit.node.height) * 1.5;
+
+        highlight.width = highlightDiameter;
+        highlight.height = highlightDiameter;
+
+        highlight.x = hit.node.position.x + hit.node.width / 2;
+        highlight.y = hit.node.position.y + hit.node.height / 2;
+        highlight.visible = true;
+      } else {
+        graph.deselectAllNodes();
+        highlight.visible = false;
       }
     });
-    // viewport.addChild(
-    //   recursiveTree(
-    //     root,
-    //     0,
-    //     userCanEdit,
-    //     dispatch,
-    //     setSelectedObject,
-    //     vsmObjectMutation
-    //   )
-    // );
   }
 }
