@@ -4,7 +4,7 @@
 export interface Process {
   vsmProjectID: number;
   name: string;
-  isFavorite: boolean;
+  isFavorite?: boolean;
   duplicateOf?: null;
   toBeProcessID?: null;
   currentProcessId?: null;

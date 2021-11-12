@@ -1,5 +1,3 @@
-import { getUserShortName } from "./getUserShortName";
-import { vsmProject } from "../interfaces/VsmProject";
 import { userAccessRole } from "../interfaces/UserAccess";
 
 /**
