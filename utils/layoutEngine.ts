@@ -3,6 +3,7 @@ import { vsmObjectTypes } from "types/vsmObjectTypes";
 import { createGraph } from "./createGraph";
 
 export interface GraphNode {
+  notPositionedCorrectly?: boolean;
   selected: boolean;
   type: vsmObjectTypes;
   id: number;
@@ -19,6 +20,7 @@ export interface GraphNode {
   height: number;
   level: number;
   choiceGroup: choiceGroupTypes;
+  children: Array<number>; // children ids
 }
 export enum choiceGroupTypes {
   Left = "Left",
@@ -54,6 +56,96 @@ type User = {
 };
 
 export class Graph {
+  navigateRight(): GraphNode {
+    // debugger;
+    const selectedNode = this.nodes.find((node) => node.selected);
+    if (!selectedNode) {
+      return;
+    }
+    const { x, y } = selectedNode.position;
+    const { height } = selectedNode;
+    //find the next node that is to the right of the selected node
+    // sort nodes by x position
+    const sortedNodes = this.nodes.sort(this.sortByXPosition);
+    const nextNode = sortedNodes.find((node) => {
+      // const nextNode = this.nodes.find((node) => {
+      const { x: nodeX, y: nodeY } = node.position;
+      return nodeX > x && nodeY >= y && nodeY <= y + height; //node is in the same row;
+    });
+    // debugger;
+    //select nextNode
+    if (nextNode) {
+      this.selectNode(nextNode);
+    }
+    return nextNode;
+  }
+  navigateLeft(): GraphNode {
+    const selectedNode = this.nodes.find((node) => node.selected);
+    if (!selectedNode) {
+      return;
+    }
+    const { x, y } = selectedNode.position;
+    const { height } = selectedNode;
+    //find the next node that is to the left of the selected node
+
+    //sort nodes by x position
+    const sortedNodes = this.nodes.sort(this.sortByXPosition).reverse();
+    const nextNode = sortedNodes.find((node) => {
+      // const nextNode = this.nodes.reverse().find((node) => {
+      const { x: nodeX, y: nodeY } = node.position;
+      return nodeX < x && nodeY >= y && nodeY <= y + height; //node is in the same row;
+    });
+    //select nextNode
+    if (nextNode) {
+      this.selectNode(nextNode);
+    }
+    return nextNode;
+  }
+
+  navigateUp(): GraphNode {
+    const selectedNode = this.nodes.find((node) => node.selected);
+    if (!selectedNode) {
+      return;
+    }
+    const { x, y } = selectedNode.position;
+    const { width } = selectedNode;
+    //find the next node that is over the selected node
+    // sort nodes by y position
+    const sortedNodes = this.nodes.sort(this.sortByYPosition).reverse();
+    const nextNode = sortedNodes.find((node) => {
+      // const nextNode = this.nodes.find((node) => {
+      const { x: nodeX, y: nodeY } = node.position;
+      return nodeX >= x && nodeX <= x + width && nodeY < y;
+    });
+    //select nextNode
+    if (nextNode) {
+      this.selectNode(nextNode);
+    }
+    return nextNode;
+  }
+  navigateDown(): GraphNode {
+    const selectedNode = this.nodes.find((node) => node.selected);
+
+    if (!selectedNode) {
+      return;
+    }
+    const { x, y } = selectedNode.position;
+    const { width } = selectedNode;
+
+    //find the next node that is under the selected node
+    // sort nodes by y position
+    const sortedNodes = this.nodes.sort(this.sortByYPosition);
+    const nextNode = sortedNodes.find((node) => {
+      // const nextNode = this.nodes.find((node) => {
+      const { x: nodeX, y: nodeY } = node.position;
+      return nodeX >= x && nodeX <= x + width && nodeY > y;
+    });
+    //select nextNode
+    if (nextNode) {
+      this.selectNode(nextNode);
+    }
+    return nextNode;
+  }
   process: Process;
   nodes: Array<GraphNode>;
   edges: Array<GraphEdge>;
@@ -64,6 +156,31 @@ export class Graph {
     this.nodes = graph.nodes;
     this.edges = graph.edges;
   }
+
+  sortByXPosition = (a: GraphNode, b: GraphNode): -1 | 1 | 0 => {
+    const { x: aX } = a.position;
+    const { x: bX } = b.position;
+
+    if (aX < bX) {
+      return -1;
+    }
+    if (aX > bX) {
+      return 1;
+    }
+    return 0;
+  };
+  sortByYPosition = (a: GraphNode, b: GraphNode): -1 | 1 | 0 => {
+    const { y: aY } = a.position;
+    const { y: bY } = b.position;
+
+    if (aY < bY) {
+      return -1;
+    }
+    if (aY > bY) {
+      return 1;
+    }
+    return 0;
+  };
 
   getNode(id: number): GraphNode {
     const result = this.nodes.find((node) => node.id === id);
@@ -110,9 +227,19 @@ export class Graph {
    */
   getNodeNeighbors(node: GraphNode): Array<GraphNode> {
     const edges = this.getNodeEdges(node);
-    return edges.map((edge) => this.getNode(edge.to));
+    const edgesComingIntoThisNode = edges.map((edge) => this.getNode(edge.to));
+    const edgesGoingOutOfThisNode = edges.map((edge) =>
+      this.getNode(edge.from)
+    );
+    return [...edgesComingIntoThisNode, ...edgesGoingOutOfThisNode];
   }
 
+  /**
+   * Checks if something is at the given position
+   * @param x - x position to check
+   * @param y - y position to check
+   * @returns GraphNode | GraphEdge | null - node or edge at the given position
+   */
   hitTest(x: number, y: number): { node: GraphNode; edge: GraphEdge } {
     const node = this.nodes.find((node) => {
       const { position } = node;
@@ -160,5 +287,8 @@ export class Graph {
   }
   dragNodeEnd(): void {
     this.deselectAllNodes();
+  }
+  getSelectedNodes(): Array<GraphNode> {
+    return this.nodes.filter((node) => node.selected);
   }
 }

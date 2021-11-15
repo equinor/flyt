@@ -7,11 +7,11 @@ import { GraphNode, GraphEdge } from "./layoutEngine";
  * @returns An array of all the nodes that are connected to the given node
  */
 export function getAllConnectedNodesFromNodeToLeafNode(
+  node: GraphNode,
   graph: {
     nodes: Array<GraphNode>;
     edges: Array<GraphEdge>;
-  },
-  node: GraphNode
+  }
 ): GraphNode[] {
   const { nodes, edges } = graph;
   const connectedNodes: GraphNode[] = [];

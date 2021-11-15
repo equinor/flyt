@@ -7,7 +7,7 @@ import { PositionNodesAndEdges } from "./PositionNodesAndEdges";
 import { AddNodesAndEdges } from "./AddNodesAndEdges";
 
 export const defaultNodeWidth = 126;
-export const defaultnodeHeight = 136;
+export const defaultNodeHeight = 136;
 export const padding = 25; //Padding between the cards
 // create a graph of nodes and edges
 export function createGraph(process: Process): {
