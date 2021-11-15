@@ -1,7 +1,7 @@
 import { ChildObjectsEntity, Process } from "interfaces/generated";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
 import { GraphNode, GraphEdge, choiceGroupTypes } from "./layoutEngine";
-import { defaultNodeWidth, defaultnodeHeight } from "./createGraph";
+import { defaultNodeWidth, defaultNodeHeight } from "./createGraph";
 import { calculateTaskSectionWidth } from "./calculateTaskSectionWidth";
 
 /**
@@ -17,14 +17,17 @@ export function AddNodesAndEdges(
   const rootNode = {
     id: process.objects[0].vsmProjectID,
     name: process.objects[0].name,
-    hidden: true,
+    // hidden: true,
     width: defaultNodeWidth,
-    height: defaultnodeHeight,
+    height: defaultNodeHeight,
     type: vsmObjectTypes.process,
     level: 0,
     choiceGroup: choiceGroupTypes.Center,
     tasks: [],
     selected: false,
+    children: process.objects[0].childObjects.map(
+      (child: ChildObjectsEntity) => child.vsmObjectID
+    ),
   };
   graph.nodes.push(rootNode);
 
@@ -34,12 +37,15 @@ export function AddNodesAndEdges(
       id: child.vsmObjectID,
       name: child.name,
       width: defaultNodeWidth,
-      height: defaultnodeHeight,
+      height: defaultNodeHeight,
       type: child.vsmObjectType.pkObjectType,
       tasks: child.tasks,
       level: 1,
       choiceGroup: choiceGroupTypes.Center,
       selected: false,
+      children: child.childObjects.map(
+        (child: ChildObjectsEntity) => child.vsmObjectID
+      ),
     };
     graph.nodes.push(childNode);
 
@@ -47,7 +53,7 @@ export function AddNodesAndEdges(
     graph.edges.push({
       from: process.vsmProjectID,
       to: child.vsmObjectID,
-      hidden: true,
+      // hidden: true,
     });
 
     // Then add the children of the children (level 2++)
@@ -87,12 +93,15 @@ export function AddNodesAndEdges(
               id: leftChild.vsmObjectID,
               name: leftChild.name,
               width: defaultNodeWidth,
-              height: defaultnodeHeight,
+              height: defaultNodeHeight,
               level: level,
               type: leftChild.vsmObjectType.pkObjectType,
               tasks: leftChild.tasks,
               choiceGroup: choiceGroupTypes.Left,
               selected: false,
+              children: leftChild.childObjects.map(
+                (child: ChildObjectsEntity) => child.vsmObjectID
+              ),
             };
             graph.nodes.push(leftChildNode);
             if (index === 0) {
@@ -120,11 +129,14 @@ export function AddNodesAndEdges(
               name: rightChild.name,
               level: level,
               width: defaultNodeWidth,
-              height: defaultnodeHeight,
+              height: defaultNodeHeight,
               type: rightChild.vsmObjectType.pkObjectType,
               tasks: rightChild.tasks,
               choiceGroup: choiceGroupTypes.Right,
               selected: false,
+              children: rightChild.childObjects.map(
+                (child: ChildObjectsEntity) => child.vsmObjectID
+              ),
             };
 
             graph.nodes.push(rightChildNode);
@@ -155,60 +167,62 @@ export function AddNodesAndEdges(
             height:
               grandChild.vsmObjectType.pkObjectType === vsmObjectTypes.waiting
                 ? 61
-                : defaultnodeHeight,
+                : defaultNodeHeight,
             type: grandChild.vsmObjectType.pkObjectType,
             tasks: grandChild.tasks,
             level,
             choiceGroup: choiceGroupTypes.Center,
             selected: false,
+            children: grandChild.childObjects.map(
+              (child: ChildObjectsEntity) => child.vsmObjectID
+            ),
           };
           graph.nodes.push(grandChildNode);
 
           //if it is the first grandChild, add an edge from the child to the grandChild
           if (index === 0) {
-            //Todo: CHeck. Is this the right place?
-            ///////////////////////////////////////////////////////////////////////////////
-            // but if it is a child of a choice node, we need to add an edge from the choice leaf-nodes to the first child
-            // if (child.vsmObjectType.pkObjectType === vsmObjectTypes.choice) {
-            //   // get left and right children
-            //   const leftObjects = child.childObjects.filter(
-            //     (choiceChild) => choiceChild?.choiceGroup === "Left"
-            //   );
-            //   const rightObjects = child.childObjects.filter(
-            //     (choiceChild) => choiceChild?.choiceGroup === "Right"
-            //   );
-
-            //   const lastLeftObject = leftObjects[leftObjects.length - 1];
-            //   const lastRightObject = rightObjects[rightObjects.length - 1];
-
-            //   if (lastLeftObject) {
-            //     graph.edges.push({
-            //       from: lastLeftObject.vsmObjectID,
-            //       to: grandChild.vsmObjectID,
-            //       label: "Continue",
-            //     });
-            //   }
-            //   if (lastRightObject) {
-            //     graph.edges.push({
-            //       from: lastRightObject.vsmObjectID,
-            //       to: grandChild.vsmObjectID,
-            //       label: "Continue",
-            //     });
-            //   }
-            //   /////////////////////////////////////////////////////////////////////////////////
-            // } else {
             graph.edges.push({
               from: child.vsmObjectID,
               to: grandChild.vsmObjectID,
             });
-            // }
           } else {
-            //if it is not the first grandChild, add an edge from the previous grandChild to the current grandChild
-            graph.edges.push({
-              from: child.childObjects[index - 1].vsmObjectID,
-              to: grandChild.vsmObjectID,
-              label: "Continue",
-            });
+            const selectedChild = child.childObjects[index - 1];
+            if (
+              selectedChild.vsmObjectType.pkObjectType === vsmObjectTypes.choice
+            ) {
+              // if the previous child is a choice node, we need to add an edge from the previous childrens leaf-nodes to the current child
+              const leftLeafNodeIndex = selectedChild.childObjects
+                .map((child) => `${child.choiceGroup}`)
+                .lastIndexOf("Left");
+              const rightLeafNodeIndex = selectedChild.childObjects
+                .map((child) => `${child.choiceGroup}`)
+                .lastIndexOf("Right");
+
+              const leftLeafNode =
+                selectedChild.childObjects[leftLeafNodeIndex];
+              const rightLeafNode =
+                selectedChild.childObjects[rightLeafNodeIndex];
+
+              if (leftLeafNode) {
+                graph.edges.push({
+                  from: leftLeafNode.vsmObjectID,
+                  to: grandChild.vsmObjectID,
+                });
+              }
+              if (rightLeafNode) {
+                graph.edges.push({
+                  from: rightLeafNode.vsmObjectID,
+                  to: grandChild.vsmObjectID,
+                });
+              }
+            } else {
+              //if it is not the first grandChild, add an edge from the previous grandChild to the current grandChild
+              graph.edges.push({
+                from: child.childObjects[index - 1].vsmObjectID,
+                to: grandChild.vsmObjectID,
+                // label: "Continue",
+              });
+            }
           }
 
           return grandChild;
