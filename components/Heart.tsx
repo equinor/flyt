@@ -16,21 +16,27 @@ export default function Heart(props: {
 
   if (props.isLoading) {
     return (
-      <button className={styles.heart} onClick={handleClick}>
-        <Icon data={favorite_filled} />
-      </button>
+      <div>
+        <button className={styles.heart} onClick={handleClick}>
+          <Icon data={favorite_filled} />
+        </button>
+      </div>
     );
   }
   if (props.isFavourite) {
     return (
-      <button className={styles.favedHeart} onClick={handleClick}>
-        <Icon data={favorite_filled} />
-      </button>
+      <div>
+        <button className={styles.favedHeart} onClick={handleClick}>
+          <Icon data={favorite_filled} />
+        </button>
+      </div>
     );
   }
   return (
-    <button className={styles.heart} onClick={handleClick}>
-      <Icon data={favorite_outlined} />
-    </button>
+    <div>
+      <button className={styles.heart} onClick={handleClick}>
+        <Icon data={favorite_outlined} />
+      </button>
+    </div>
   );
 }

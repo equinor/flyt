@@ -5,15 +5,13 @@
   text-decoration: none;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.14));
 
   min-width: 290px;
 
   background: #ffffff;
   border-radius: 4px;
-
-  margin-right: 16px;
-  margin-bottom: 16px;
 
   animation-name: fade-in;
   animation-duration: 0.8s;
@@ -24,14 +22,6 @@
 .card:hover {
   transform: scale(1.05);
   filter: drop-shadow(0px 10px 10px rgba(0, 0, 0, 0.14));
-}
-
-.bottomSection {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-height: 40px;
-  overflow: hidden;
 }
 
 .appear {
@@ -55,47 +45,17 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  overflow: hidden;
-}
-
-.vsmTitleContainer {
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin: 8px 12px 12px 12px;
-}
-
-.vsmTitle {
-  /* Heading/H6 */
-
-  font-family: Equinor, sans-serif;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 24px;
-  /* identical to box height, or 150% */
-
-  letter-spacing: 0.2px;
-
-  /* Text + static icons/⚪️/Default */
-
-  color: $text-default;
-}
-
-.vsmLabel {
+  align-items: flex-start;
   margin: 12px;
-  /* Navigation/Label */
+}
 
-  font-family: Equinor, sans-serif;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 12px;
-  line-height: 16px;
-  /* identical to box height, or 133% */
-
-  /* Text + static icons/⚪️/Tertiary */
-
-  color: #6f6f6f;
+.bottomSection {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+  overflow: hidden;
+  margin: 12px;
 }
 
 .noselect {

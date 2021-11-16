@@ -1,0 +1,63 @@
+.buttonUserDots {
+  display: flex;
+  flex-direction: row;
+  overflow: auto;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border-radius: 4px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  flex-shrink: 0;
+}
+
+.buttonUserDots:hover > * {
+  cursor: pointer;
+}
+
+.containerUserDots {
+  position: relative;
+  height: 24px;
+}
+
+.containerUserDots div:nth-child(1) {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.containerUserDots div:nth-child(2) {
+  position: absolute;
+  top: 0;
+  right: 12px;
+  transition-property: right;
+  transition-duration: 0.5s;
+}
+
+.containerUserDots div:nth-child(3) {
+  position: absolute;
+  top: 0;
+  right: 24px;
+  transition-property: right;
+  transition-duration: 0.5s;
+}
+
+.containerUserDots:hover > div:nth-child(2) {
+  position: absolute;
+  top: 0;
+  right: 24px;
+}
+
+.containerUserDots:hover > div:nth-child(3) {
+  position: absolute;
+  top: 0;
+  right: 48px;
+}
+
+.otherUsersText {
+  font-size: 14px;
+  color: #6f6f6f;
+  margin: 0;
+  margin: 0 0 0 6px;
+}

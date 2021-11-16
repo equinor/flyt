@@ -43,6 +43,7 @@ export function ProjectListSection(props: {
           952: 1,
         }}
         className={styles.grid}
+        columnClassName={styles.gridColumn}
       >
         {props.showNewProjectButton && <NewProjectButton />}
         {isLoading
