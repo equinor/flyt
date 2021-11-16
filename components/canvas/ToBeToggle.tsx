@@ -7,6 +7,9 @@ import { vsmProject } from "../../interfaces/VsmProject";
 import { projectTemplatesV1 } from "../../assets/projectTemplatesV1";
 import { getMyAccess } from "utils/getMyAccess";
 import { useAccount, useMsal } from "@azure/msal-react";
+import { TooltipImproved } from "components/TooltipImproved";
+import { ToggleButtonGroup } from "components/ToggleButtonGroup";
+import { ToggleButton } from "components/ToggleButton";
 
 export const ToBeToggle = (): JSX.Element => {
   const router = useRouter();
@@ -35,38 +38,50 @@ export const ToBeToggle = (): JSX.Element => {
         right: 0,
         margin: 12,
         padding: 12,
-        backgroundColor: "white",
         borderRadius: 4,
       }}
     >
-      <Switch
-        label={"To-be process"}
+      <ToggleButtonGroup>
+        {/* 
         // Note:
         // - currentProcessId is only defined on a "To-be" process
         // - toBeProcessID is only defined on the "Current" proccess
         // We may use this information to know what type of process we are currently viewing.
-
-        checked={!!project?.currentProcessId} // currentProcessId is null if we are on the "Current"-process.
-        onChange={() => {
-          if (project.toBeProcessID) {
-            // We are currently on the "Current"-process and there exists a "To-be" process
-            // Let's navigate to it
-            router.push(`/process/${project.toBeProcessID}`);
-          } else if (project.currentProcessId) {
-            // We are on a "To-be" process and there exists a "Current" process
-            // Let's navigate to it
-            router.push(`/process/${project.currentProcessId}`);
-          } else {
-            // We are on a "Current" process, but there is no "To-be" process created
-            // Let's create one and navigate to it
-            newProjectMutation.mutate();
+       */}
+        <ToggleButton
+          name="Current"
+          selected={!project?.currentProcessId} // currentProcessId is null if we are on the "Current"-process.
+          onClick={() => {
+            if (project.currentProcessId) {
+              // We are on a "To-be" process and there exists a "Current" process
+              // Let's navigate to it
+              router.push(`/process/${project.currentProcessId}`);
+            }
+          }}
+        />
+        <ToggleButton
+          name="To-be"
+          selected={!!project?.currentProcessId} // currentProcessId is true if we are on the "To-be"-process.
+          disabled={
+            !userCanEdit &&
+            !(project?.toBeProcessID || project?.currentProcessId)
           }
-        }}
-        disabled={
-          !userCanEdit && !(project?.toBeProcessID || project?.currentProcessId)
-        }
-        size={"small"}
-      />
+          onClick={() => {
+            if (project.toBeProcessID) {
+              // We are currently on the "Current"-process and there exists a "To-be" process
+              // Let's navigate to it
+              router.push(`/process/${project.toBeProcessID}`);
+            } else {
+              // We are on a "Current" process, but there is no "To-be" process created
+              // Let's create one and navigate to it
+              newProjectMutation.mutate();
+            }
+          }}
+          disabledTooltip={
+            "There is no To-be process and you don't have access to create one."
+          }
+        />
+      </ToggleButtonGroup>
     </div>
   );
 };
