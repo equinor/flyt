@@ -61,7 +61,7 @@ export const ToBeToggle = (): JSX.Element => {
         />
         <ToggleButton
           name="To-be"
-          selected={!!project?.currentProcessId} // currentProcessId is true if we are on the "To-be"-process.
+          selected={!!project?.currentProcessId} // currentProcessId is truthy if we are on the "To-be"-process.
           disabled={
             !userCanEdit &&
             !(project?.toBeProcessID || project?.currentProcessId)
