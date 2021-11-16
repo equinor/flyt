@@ -353,13 +353,6 @@ const CanvasLayout = ({ children }): JSX.Element => {
               <>
                 <div className={styles.scrimHeaderWrapper}>
                   <div className={styles.scrimTitle}>Delete process</div>
-                  <Button
-                    autoFocus
-                    variant={"ghost_icon"}
-                    onClick={(e) => handleCloseDeleteScrim(e, false)}
-                  >
-                    <Icon data={close} title="Close" />
-                  </Button>
                 </div>
                 <div className={styles.scrimContent}>
                   {deleteError && (
@@ -367,22 +360,32 @@ const CanvasLayout = ({ children }): JSX.Element => {
                       {`${deleteError}`}
                     </Typography>
                   )}
-                  <Typography variant={"h4"}>
-                    Are you sure you want to delete the entire process?
-                  </Typography>
+                  <p>
+                    Are you sure you want to delete this process? By doing so
+                    you will delete all versions of Current and To-be processes,
+                    neither of which will be recoverable.
+                  </p>
                 </div>
-                <div className={styles.deleteButton}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    gap: 12,
+                  }}
+                >
+                  <Button
+                    autoFocus
+                    variant={"outlined"}
+                    onClick={(e) => handleCloseDeleteScrim(e, false)}
+                  >
+                    Cancel
+                  </Button>
                   <Button
                     variant={"contained"}
                     color={"danger"}
                     onClick={() => deleteVSM()}
                   >
-                    <Icon
-                      data={delete_forever}
-                      title="Delete process"
-                      size={16}
-                    />
-                    Delete process
+                    Delete
                   </Button>
                 </div>
               </>
