@@ -1,4 +1,3 @@
-import { Switch } from "@equinor/eds-core-react";
 import React from "react";
 import { useRouter } from "next/router";
 import { useMutation, useQuery } from "react-query";
@@ -7,7 +6,6 @@ import { vsmProject } from "../../interfaces/VsmProject";
 import { projectTemplatesV1 } from "../../assets/projectTemplatesV1";
 import { getMyAccess } from "utils/getMyAccess";
 import { useAccount, useMsal } from "@azure/msal-react";
-import { TooltipImproved } from "components/TooltipImproved";
 import { ToggleButtonGroup } from "components/ToggleButtonGroup";
 import { ToggleButton } from "components/ToggleButton";
 
@@ -55,7 +53,7 @@ export const ToBeToggle = (): JSX.Element => {
             if (project.currentProcessId) {
               // We are on a "To-be" process and there exists a "Current" process
               // Let's navigate to it
-              router.push(`/process/${project.currentProcessId}`);
+              router.replace(`/process/${project.currentProcessId}`);
             }
           }}
         />
@@ -70,16 +68,14 @@ export const ToBeToggle = (): JSX.Element => {
             if (project.toBeProcessID) {
               // We are currently on the "Current"-process and there exists a "To-be" process
               // Let's navigate to it
-              router.push(`/process/${project.toBeProcessID}`);
+              router.replace(`/process/${project.toBeProcessID}`);
             } else {
               // We are on a "Current" process, but there is no "To-be" process created
               // Let's create one and navigate to it
               newProjectMutation.mutate();
             }
           }}
-          disabledTooltip={
-            "There is no To-be process and you don't have access to create one."
-          }
+          disabledTooltip="There is no To-be process and you don't have access to create one."
         />
       </ToggleButtonGroup>
     </div>
