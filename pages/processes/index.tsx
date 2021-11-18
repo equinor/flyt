@@ -14,7 +14,7 @@ import { SearchField } from "components/SearchField";
 
 export default function AllProcesses(): JSX.Element {
   const [page, setPage] = useState(1);
-  const itemsPerPage = 15; //Todo: Display as many cards we can fit while still making space for the pagination
+  const itemsPerPage = 15;
 
   const router = useRouter();
   const { searchQuery, orderBy } = router?.query;
@@ -23,26 +23,26 @@ export default function AllProcesses(): JSX.Element {
     getProjects({
       page,
       items: itemsPerPage,
-      q: searchQuery || "",
-      orderBy,
+      q: searchQuery ? `${searchQuery}` : "",
+      orderBy: orderBy && `${orderBy}`,
     })
   );
 
   return (
-    <div className={commonStyles.container} style={{ padding: "0" }}>
+    <div>
       <Head>
         <title>Flyt | All processes</title>
         <link rel={"icon"} href={"/favicon.ico"} />
       </Head>
 
-      <main className={styles.frontPageMain}>
+      <main className={styles.main}>
         <SideNavBar />
-        <div className={styles.frontPageContainer}>
-          <div className={styles.frontPageHeader}>
-            <div className={styles.frontPageSubHeader}>
+        <div className={styles.container}>
+          <div className={styles.header}>
+            <div className={styles.subHeader}>
               <SearchField />
             </div>
-            <div className={styles.frontPageSubHeader}>
+            <div className={styles.subHeader}>
               <Typography variant="h3">All processes</Typography>
               <SortSelect />
             </div>

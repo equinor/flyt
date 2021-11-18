@@ -3,13 +3,22 @@
  * @param params
  */
 export function createUrlParams(params: {
-  [x: string]: string | string[] | number | boolean;
+  [x: string]: string | number | boolean | Array<string | number | boolean>;
 }): string {
+  // If no params, return empty string
   if (!params) return "";
-  return Object.keys(params)
-    .map((key, index) => {
-      const prefix = index === 0 ? `?` : `&`;
-      return `${prefix}${key}=${params[key]}`;
-    })
-    .join("");
+
+  // Create a string of params
+  return (
+    `?` +
+    Object.keys(params)
+      .map((key) => {
+        const value = params[key];
+        if (Array.isArray(value)) {
+          return value.map((v) => `${key}=${encodeURIComponent(v)}`).join("&");
+        }
+        return `${key}=${encodeURIComponent(value)}`;
+      })
+      .join("&")
+  );
 }

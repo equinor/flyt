@@ -24,17 +24,33 @@ export default function Heart(props: {
     }
     if (props.isFavourite) {
       return (
-        <button className={styles.favedHeart} onClick={handleClick}>
+        <button data-test={"buttonHeart"} className={styles.favedHeart} onClick={handleClick}>
           <Icon data={favorite_filled} />
         </button>
       );
     }
     return (
-      <button className={styles.heart} onClick={handleClick}>
-        <Icon data={favorite_outlined} />
-      </button>
+      <div>
+        <button data-test={"buttonHeart"} className={styles.heart} onClick={handleClick}>
+          <Icon data={favorite_filled} />
+        </button>
+      </div>
     );
   }
-
-  return <div data-test={"buttonHeart"}>{extracted()}</div>;
+  if (props.isFavourite) {
+    return (
+      <div>
+        <button data-test={"buttonHeart"} className={styles.favedHeart} onClick={handleClick}>
+          <Icon data={favorite_filled} />
+        </button>
+      </div>
+    );
+  }
+  return (
+    <div>
+      <button data-test={"buttonHeart"} className={styles.heart} onClick={handleClick}>
+        <Icon data={favorite_outlined} />
+      </button>
+    </div>
+  );
 }

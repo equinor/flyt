@@ -6,7 +6,7 @@ import { Layouts } from "../../layouts/LayoutWrapper";
 import FrontPageBody from "components/FrontPageBody";
 import SideNavBar from "components/SideNavBar";
 import { useQuery } from "react-query";
-import { getProjects } from "../../services/projectApi";
+import { getProjects, searchUser } from "../../services/projectApi";
 import { getUserShortName } from "../../utils/getUserShortName";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useRouter } from "next/router";
@@ -16,42 +16,47 @@ import { SearchField } from "components/SearchField";
 
 export default function MyProcesses(): JSX.Element {
   const [page, setPage] = useState(1);
-  const itemsPerPage = 15; //Todo: Display as many cards we can fit while still making space for the pagination
-
-  const { accounts } = useMsal();
-  const account = useAccount(accounts[0] || {});
-  const userNameFilter = getUserShortName(account);
+  const itemsPerPage = 15;
 
   const router = useRouter();
   const { searchQuery, orderBy } = router?.query;
 
+  //Get my user
+  const { accounts } = useMsal();
+  const account = useAccount(accounts[0] || {});
+  const shortName = getUserShortName(account);
+
+  const { data: users } = useQuery(["userName"], () => searchUser(shortName));
+  const myUserId = users?.find((user) => user.userName === shortName)?.pkUser;
+
   const query = useQuery(
-    ["myProjects", page, userNameFilter, searchQuery || "", orderBy],
+    ["myProjects", page, myUserId, searchQuery || "", orderBy],
     () =>
       getProjects({
         page,
-        user: userNameFilter,
+        ru: [myUserId],
         items: itemsPerPage,
-        q: searchQuery || "",
-        orderBy,
-      })
+        q: searchQuery ? `${searchQuery}` : "",
+        orderBy: orderBy && `${orderBy}`,
+      }),
+    { enabled: !!myUserId }
   );
 
   return (
-    <div className={commonStyles.container} style={{ padding: "0" }}>
+    <div>
       <Head>
         <title>Flyt | My processes</title>
         <link rel={"icon"} href={"/favicon.ico"} />
       </Head>
 
-      <main className={styles.frontPageMain}>
+      <main className={styles.main}>
         <SideNavBar />
-        <div className={styles.frontPageContainer}>
-          <div className={styles.frontPageHeader}>
-            <div className={styles.frontPageSubHeader}>
+        <div className={styles.container}>
+          <div className={styles.header}>
+            <div className={styles.subHeader}>
               <SearchField />
             </div>
-            <div className={styles.frontPageSubHeader}>
+            <div className={styles.subHeader}>
               <Typography variant="h3">My processes</Typography>
               <SortSelect />
             </div>

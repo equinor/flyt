@@ -20,7 +20,7 @@ export function AccessBox(props: {
   isAdmin: boolean;
 }): JSX.Element {
   const { data: userAccesses, isLoading } = useQuery(
-    "userAccesses",
+    ["userAccesses", props.project.vsmProjectID],
     () =>
       BaseAPIServices.get(
         `/api/v1.0/userAccess/${props.project.vsmProjectID}`
@@ -36,7 +36,7 @@ export function AccessBox(props: {
   const owner = created.userIdentity;
   return (
     <div className={style.box}>
-      <TopSection title={"Sharing"} handleClose={props.handleClose} />
+      <TopSection title={"User access"} handleClose={props.handleClose} />
       <MiddleSection
         owner={owner}
         users={userAccesses}
@@ -44,7 +44,7 @@ export function AccessBox(props: {
         loading={isLoading}
         isAdmin={props.isAdmin}
       />
-      <BottomSection />
+      <BottomSection vsmProjectID={props.project.vsmProjectID} />
     </div>
   );
 }
@@ -151,7 +151,7 @@ function MiddleSection(props: {
       onSuccess: () => {
         setEmailInput("");
         notifyOthers("Gave access to a new user", id, account);
-        queryClient.invalidateQueries("userAccesses");
+        queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
@@ -161,7 +161,7 @@ function MiddleSection(props: {
     {
       onSuccess: () => {
         notifyOthers("Removed access for user", id, account);
-        return queryClient.invalidateQueries("userAccesses");
+        return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
@@ -245,16 +245,18 @@ function MiddleSection(props: {
   );
 }
 
-function BottomSection() {
+function BottomSection(props: { vsmProjectID: number }) {
   const [copySuccess, setCopySuccess] = useState("");
 
   function copyToClipboard() {
-    navigator.clipboard.writeText(window.location.href).then(() => {
-      setCopySuccess("Copied to clipboard!");
-      setTimeout(() => {
-        setCopySuccess("");
-      }, 2000);
-    });
+    navigator.clipboard
+      .writeText(`${window.location.origin}/process/${props.vsmProjectID}`)
+      .then(() => {
+        setCopySuccess("Copied to clipboard!");
+        setTimeout(() => {
+          setCopySuccess("");
+        }, 2000);
+      });
   }
 
   return (

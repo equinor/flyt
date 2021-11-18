@@ -1,0 +1,22 @@
+.grid {
+  display: flex;
+}
+
+.gridColumn {
+  min-width: 290px;
+  padding-right: 16px;
+}
+
+.emptyVsmCardContainer {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.loadingVSMCardContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
