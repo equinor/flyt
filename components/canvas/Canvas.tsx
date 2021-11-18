@@ -14,7 +14,7 @@ import { addCardsToCanvas } from "./utils/AddCardsToCanvas";
 import { getMyAccess } from "../../utils/getMyAccess";
 import { assets } from "./utils/AssetFactory";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { getProject } from "../../services/projectApi";
+import { getProject, resetProcess } from "../../services/projectApi";
 import { useRouter } from "next/router";
 import { moveVSMObject, postVSMObject } from "../../services/vsmObjectApi";
 import { vsmObject } from "interfaces/VsmObject";
@@ -26,6 +26,10 @@ import { LiveIndicator } from "../LiveIndicator";
 import { CategorizationPageButton } from "../CategorizationPageButton";
 import { resetCanvasZoomAndPosition } from "./utils/ResetCanvasZoomAndPosition";
 import { ToBeToggle } from "./ToBeToggle";
+import { Button, Dialog, Icon, Scrim } from "@equinor/eds-core-react";
+import { restore } from "@equinor/eds-icons";
+import { ResetProcessDialog } from "components/ResetProcessDialog";
+import { ErrorDialog } from "components/ErrorDialog";
 
 export default function Canvas(): JSX.Element {
   const ref = useRef();
@@ -172,6 +176,7 @@ export default function Canvas(): JSX.Element {
         }
       />
       <ToBeToggle />
+      <ResetProcessButton />
       <DeleteVsmObjectDialog
         objectToDelete={selectedObject}
         visible={visibleDeleteScrim}
@@ -191,3 +196,57 @@ export default function Canvas(): JSX.Element {
     </div>
   );
 }
+const ResetProcessButton = () => {
+  const { id } = useRouter().query;
+  const { data: process } = useQuery(["project", id], () => getProject(id));
+  const isTobeProcess = !!process?.currentProcessId;
+  const myAccess = getMyAccess(process, useAccount(useMsal().accounts[0]));
+  const userCanEdit = myAccess === "Admin" || myAccess === "Contributor";
+  // const resetProcessMutation = useMutation(() => alert(`Reset process ${id}`)
+  const queryClient = useQueryClient();
+  const resetProcessMutation = useMutation(() => resetProcess(id), {
+    onSuccess: () => {
+      notifyOthers("Reset the process", id, useAccount(useMsal().accounts[0]));
+    },
+    onError: () => setShowErrorDialog(true),
+    onSettled: () => queryClient.invalidateQueries(),
+  });
+  const [showResetScrim, setShowResetScrim] = useState(false);
+  const [showErrorDialog, setShowErrorDialog] = useState(false);
+  //Only show the reset-button if:
+  // 1. This is a to-be process
+  // 2. The user have the right to edit the process
+  if (!isTobeProcess || !userCanEdit) return null;
+
+  return (
+    <>
+      <ResetProcessDialog
+        visible={showResetScrim}
+        onClose={() => setShowResetScrim(false)}
+        onReset={() => {
+          resetProcessMutation.mutate();
+          setShowResetScrim(false);
+        }}
+      />
+      <ErrorDialog
+        visible={showErrorDialog}
+        error={resetProcessMutation.error}
+        onClose={() => setShowErrorDialog(false)}
+      />
+      <Button
+        variant="outlined"
+        style={{
+          position: "absolute",
+          left: 0,
+          margin: 24,
+        }}
+        onClick={() => {
+          setShowResetScrim(true);
+        }}
+      >
+        <Icon data={restore} />
+        Reset page
+      </Button>
+    </>
+  );
+};
