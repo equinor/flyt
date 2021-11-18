@@ -59,7 +59,7 @@
     "validate-azure-token": "^1.0.2"
   },
   "devDependencies": {
-    "cypress": "^8.7.0",
+    "cypress": "9.0.0",
     "cz-conventional-changelog": "3.3.0",
     "eslint": "^7.17.0",
     "eslint-config-prettier": "^7.2.0",

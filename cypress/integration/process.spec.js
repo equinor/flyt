@@ -7,23 +7,22 @@
 describe("Managing a process", () => {
   it("loads the frontpage", () => {
     cy.visit("localhost:3000");
-    cy.wait(4000);
   });
 
-  it("Can order by last modified", () => {
-    cy.get("[data-test=sort-select]").select("Last modified");
-    //todo: check the order of the process-cards
-  });
-
-  it("Can order by alphabetically", () => {
-    cy.get("[data-test=sort-select]").select("Alphabetically");
-    //todo: check the order of the process-cards
-  });
-
-  it("Can order by date created", () => {
-    cy.get("[data-test=sort-select]").select("Date created");
-    //todo: check the order of the process-cards
-  });
+  // it("Can order by last modified", () => {
+  //   cy.get("[data-test=sort-select]").select("Last modified");
+  //   //todo: check the order of the process-cards
+  // });
+  //
+  // it("Can order by alphabetically", () => {
+  //   cy.get("[data-test=sort-select]").select("Alphabetically");
+  //   //todo: check the order of the process-cards
+  // });
+  //
+  // it("Can order by date created", () => {
+  //   cy.get("[data-test=sort-select]").select("Date created");
+  //   //todo: check the order of the process-cards
+  // });
 
   it("can create a new process", () => {
     cy.contains("Create new").click();

@@ -1,6 +1,6 @@
 ## Flyt - (aka VSM/Value Stream Mapping)
 
-![Flyt canvas (13) - Process feedback on 'Flyt'  - Wednesday, September 15, 2021](https://user-images.githubusercontent.com/3164065/133470524-d6934d90-82ce-4870-aea3-450fd1f4c48f.png)
+![Flyt canvas (13) - Process feedback on 'Flyt' - Wednesday, September 15, 2021](https://user-images.githubusercontent.com/3164065/133470524-d6934d90-82ce-4870-aea3-450fd1f4c48f.png)
 
 # Links
 
@@ -23,7 +23,7 @@
 | Navigation       | [NextJS](https://nextjs.org/)                                                                                                          |
 | State management | [EasyPeasy](https://easy-peasy.now.sh/) persisted global store                                                                         |
 | Canvas tools     | We heavily rely on canvas and use [PixiJS](https://www.pixijs.com/) to ease development.                                               |
-| Testing          | TODO: [Testing-Library](https://testing-library.com/)                                                                                  |
+| Testing          | Cypress and [Testing-Library](https://testing-library.com/) (TODO: setup testing-library)                                              |
 | Code-Style       | We use [ESLint](https://eslint.org/) together with [Prettier](https://prettier.io/) for linting and enforcing a consistent code-style. |
 | Authentication   | [@azure/msal-react](https://github.com/AzureAD/microsoft-authentication-library-for-js#readme)                                         |
 | Styling          | [Sass](https://sass-lang.com/)                                                                                                         |
@@ -47,6 +47,15 @@ To get up and running:
 
 For example: running `yarn use-dev` replaces the root `.env` file with `environment-variables/DEV.env`, then it
 runs `yarn dev`.
+
+## Testing
+
+In order to test the application, we use [Cypress](https://www.cypress.io/).
+
+> In the future, we will add [Testing-Library](https://testing-library.com/) for unit, and integration-testing. There's also a plugin for cypress that we may explore.
+
+To start cypress, start your development server, for example: `yarn use-dev`.
+Then run `yarn cypress`.
 
 ## Branching and deploying stuff
 
@@ -115,8 +124,8 @@ pages. [Read more ...](https://github.com/vercel/next.js/blob/master/errors/opt-
 
 ## Making space for stuff
 
-Put every Main activity and all it's children inside a container. That container width can be used to figure out
-the distance to the next Main Activity etc...
+Put every Main activity and all it's children inside a container. That container width can be used to figure out the
+distance to the next Main Activity etc...
 
 # Defining a process
 
