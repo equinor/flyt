@@ -1,0 +1,36 @@
+@startuml [Container] VSM
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/release/1-0/C4_Container.puml
+
+'Roles
+Person(User, "App User", "User of the application")
+
+
+'Main system boundary and relations internally
+System_Boundary(c1, "VSM") {
+    Container(app, "Web application", "Docker container in Radix", "Web page for creating and maintaining Value Stream Mapping")
+
+    Container(azure_api_mgmt, "Mobile Platform API Management", "Azure Service", "End-point for APIs in Azure") 
+
+    Container(azure_api, "API - Vsm", "Docker - .NET Core", "API implementation for solution. ")  
+
+    Container(azure_app_insight, "Application Insight", "Azure Service", "Logging of API calls and source for usage metrics") 
+
+    'Relations inside boundary     
+    Rel_Down(app, azure_api_mgmt, "Performs REST API calls against APIM using jwt bearer token")  
+    Rel_Right(azure_api_mgmt, azure_api, "Certificate-based mutual authenication and proxy to implementation")  
+    Rel_Down(azure_api, azure_app_insight, "logs API requests to")  
+}
+
+System_Ext(SQL, "Azure SQL Server", "Storage of Vsm models")
+
+Rel_Up(azure_api,SQL, "Get content from Azure SQL server")
+
+'External systems and their relations
+System_Ext(azure_ad,"Azure AD", "Provides authentication and access control")
+Rel_Right(app, azure_ad, "API calls to authenticate using two factor auth")  
+
+'Relations Persons
+Rel_Down(User, app, "Using the VSM page")
+
+
+@enduml
