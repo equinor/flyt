@@ -1,4 +1,4 @@
-import { Button, Icon, Search } from "@equinor/eds-core-react";
+import { Button, Chip, Icon, Search } from "@equinor/eds-core-react";
 import React, { useState } from "react";
 import styles from "./FilterLabelBox.module.scss";
 import { close } from "@equinor/eds-icons";
@@ -23,17 +23,14 @@ export default function FilterLabelBox(props: {
 
   return (
     <div className={styles.box}>
-      <TopSection title="Filter by label" handleClose={props.handleClose} />
+      <TopSection handleClose={props.handleClose} />
       <SearchSection setSearchText={setSearchText} />
       <LabelSection labels={labels} isLoading={isLoading} error={error} />
     </div>
   );
 }
 
-function TopSection(props: {
-  title: string;
-  handleClose: () => void;
-}): JSX.Element {
+function TopSection(props: { handleClose: () => void }): JSX.Element {
   return (
     <div className={styles.topSection}>
       <p className={styles.heading}>Filter by label</p>
@@ -55,7 +52,6 @@ function SearchSection(props: {
         aria-label="search"
         id="searchProjects"
         placeholder="Search labels"
-        className={styles.searchField}
         onChange={(e) => {
           debounce(
             () => setSearchText(`${e.target.value}`),
@@ -82,6 +78,12 @@ function LabelSection(props: { labels; isLoading; error }): JSX.Element {
     });
   };
 
+  const isActive = (id: string) => {
+    if (router.query.rl) {
+      return `${router.query.rl}`.split(",").some((element) => element == id);
+    }
+  };
+
   if (isLoading) {
     return <p>Loading labels...</p>;
   }
@@ -102,8 +104,11 @@ function LabelSection(props: { labels; isLoading; error }): JSX.Element {
           <button
             key={label.id}
             onClick={() => handleClick(label.id.toString())}
+            style={{ padding: "0", backgroundColor: "#ffffff", border: "none" }}
           >
-            {label.text}
+            <Chip variant={isActive(label.id.toString()) ? "active" : null}>
+              {label.text}
+            </Chip>
           </button>
         ))}
       </div>

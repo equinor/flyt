@@ -23,8 +23,9 @@ import { io } from "socket.io-client";
 import { notifyOthers } from "../../services/notifyOthers";
 import { getAccessToken } from "../../auth/msalHelpers";
 import { LiveIndicator } from "../LiveIndicator";
-import { CategorizationPageButton } from "../CategorizationPageButton";
 import { resetCanvasZoomAndPosition } from "./utils/ResetCanvasZoomAndPosition";
+import { CanvasButtons } from "components/CanvasButtons";
+import ManageLabelBox from "components/Labels/ManageLabelBox";
 
 export default function Canvas(): JSX.Element {
   const ref = useRef();
@@ -81,6 +82,7 @@ export default function Canvas(): JSX.Element {
   const [assetsAreLoaded, setAssetsAreLoaded] = useState(false);
 
   const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
+  const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
   const myAccess = getMyAccess(project, account);
   const userCanEdit = myAccess === "Admin" || myAccess === "Contributor";
 
@@ -159,7 +161,15 @@ export default function Canvas(): JSX.Element {
         backgroundColor: "black",
       }}
     >
-      <CategorizationPageButton userCanEdit={userCanEdit} />
+      <CanvasButtons
+        userCanEdit={userCanEdit}
+        handleClickLabel={() => setVisibleLabelScrim(true)}
+      />
+      <ManageLabelBox
+        handleClose={() => setVisibleLabelScrim(false)}
+        isVisible={visibleLabelScrim}
+        process={project}
+      />
       <LiveIndicator
         live={socketConnected}
         title={

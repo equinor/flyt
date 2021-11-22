@@ -12,3 +12,16 @@ export const getLabels = (
 
 export const getLabel = (id: string): Promise<processLabel> =>
   BaseAPIServices.get(`${baseUrl}/labels/${id}`).then((value) => value.data);
+
+export const addLabelToProcess = (
+  processID: number,
+  label: processLabel | { text: string }
+) => {
+  return BaseAPIServices.put(`${baseUrl}/project/${processID}/label`, label);
+};
+
+export const removeLabelFromProcess = (processID: number, labelID: number) => {
+  return BaseAPIServices.delete(
+    `${baseUrl}/project/${processID}/label/${labelID}`
+  );
+};
