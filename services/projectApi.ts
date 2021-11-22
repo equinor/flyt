@@ -66,4 +66,4 @@ export const getLabels = (id: number): Promise<processLabel> =>
 export const resetProcess = (
   id: number | string | string[]
 ): Promise<AxiosResponse> =>
-  BaseAPIServices.post(`${baseUrl}/project/${id}/reset`, null);
+  BaseAPIServices.patch(`${baseUrl}/project/${id}/reset`, null);
