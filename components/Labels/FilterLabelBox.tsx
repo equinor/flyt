@@ -105,8 +105,12 @@ function LabelSection(props: { labels; isLoading; error }): JSX.Element {
             key={label.id}
             onClick={() => handleClick(label.id.toString())}
             style={{ padding: "0", backgroundColor: "#ffffff", border: "none" }}
+            className={styles.button}
           >
-            <Chip variant={isActive(label.id.toString()) ? "active" : null}>
+            <Chip
+              variant={isActive(label.id.toString()) ? "active" : null}
+              style={{ marginRight: "5px", marginBottom: "10px" }}
+            >
               {label.text}
             </Chip>
           </button>

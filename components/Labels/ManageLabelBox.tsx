@@ -41,10 +41,25 @@ function TopSection(props: { handleClose: () => void }): JSX.Element {
 
 function AddSection(props: { process: vsmProject }): JSX.Element {
   const [inputLabelText, setInputLabelText] = useState("");
+  const [dropdownIsVisible, setDropdownIsVisible] = useState(false);
 
   const queryClient = useQueryClient();
-  const dropdownRef = useRef();
-  useOutsideClick(dropdownRef, () => setInputLabelText(""));
+  const addSectionRef = useRef();
+  const inputRef = useRef(null);
+  useOutsideClick(addSectionRef, () => setDropdownIsVisible(false));
+
+  useEffect(() => {
+    console.log("dropdownIsVisible " + dropdownIsVisible);
+    console.log("isText " + (debouncedInputLabelText.length > 0));
+  });
+
+  useEffect(() => {
+    // Moving cursor to the end
+    if (dropdownIsVisible) {
+      inputRef.current.selectionStart = inputRef.current.value.length;
+      inputRef.current.selectionEnd = inputRef.current.value.length;
+    }
+  }, [dropdownIsVisible]);
 
   const [debouncedInputLabelText, setDebouncedInputLabelText] = useState("");
   useEffect(() => {
@@ -55,10 +70,6 @@ function AddSection(props: { process: vsmProject }): JSX.Element {
       200,
       "LabelSearchQuery"
     );
-  }, [inputLabelText]);
-
-  useEffect(() => {
-    console.log(inputLabelText);
   }, [inputLabelText]);
 
   const addLabelMutation = useMutation(
@@ -77,63 +88,64 @@ function AddSection(props: { process: vsmProject }): JSX.Element {
       label,
     });
     setInputLabelText("");
+    setDropdownIsVisible(false);
   };
 
   const handleAddClick = () => {
-    if (!inputLabelText) {
+    const trimmedInputLabelText = inputLabelText.trim();
+    if (!trimmedInputLabelText) {
       return null;
     }
     const index = props.process.labels
       .map((label) => label.text)
-      .findIndex((element) => element == inputLabelText);
+      .findIndex((element) => element == trimmedInputLabelText);
     if (index == -1) {
-      addLabel({ text: inputLabelText });
+      addLabel({ text: trimmedInputLabelText });
     } else {
-      addLabel({ id: props.process.labels[index].id, text: inputLabelText });
+      addLabel({
+        id: props.process.labels[index].id,
+        text: trimmedInputLabelText,
+      });
     }
   };
 
   return (
-    <div className={styles.addSection}>
-      <div
-        ref={dropdownRef}
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          flex: "60% 1 1",
-          position: "relative",
-        }}
-      >
-        <Input
-          placeholder="Add process labels"
-          onChange={(e) => {
-            setInputLabelText(e.target.value);
-          }}
-          onKeyDown={(e) => {
-            if (e.key == "Enter") {
-              handleAddClick();
-            }
-          }}
-          value={inputLabelText}
-        />
+    <div ref={addSectionRef}>
+      <div className={styles.addSection}>
+        <div className={styles.dropdown}>
+          <Input
+            ref={inputRef}
+            placeholder="Add process labels"
+            value={inputLabelText}
+            onChange={(e) => {
+              setInputLabelText(e.target.value);
+            }}
+            onKeyDown={(e) => {
+              if (e.key == "Enter") {
+                handleAddClick();
+              }
+            }}
+            onFocus={() => setDropdownIsVisible(true)}
+          />
 
-        {debouncedInputLabelText.length > 0 && (
-          <div className={styles.containerListExistingLabels}>
-            <ListExistingLabels
-              searchText={debouncedInputLabelText}
-              addLabel={addLabel}
-            />
-          </div>
-        )}
+          {dropdownIsVisible && debouncedInputLabelText.length > 0 && (
+            <div className={styles.containerListExistingLabels}>
+              <ListExistingLabels
+                searchText={debouncedInputLabelText}
+                addLabel={addLabel}
+              />
+            </div>
+          )}
+        </div>
+        <Button
+          color="primary"
+          variant="contained"
+          style={{ marginLeft: "20px" }}
+          onClick={handleAddClick}
+        >
+          Add
+        </Button>
       </div>
-      <Button
-        color="primary"
-        variant="contained"
-        style={{ marginLeft: "20px" }}
-        onClick={handleAddClick}
-      >
-        Add
-      </Button>
     </div>
   );
 }
@@ -159,6 +171,7 @@ function LabelSection(props: { process: vsmProject }): JSX.Element {
               labelID: label.id,
             })
           }
+          style={{ marginRight: "10px", marginBottom: "10px" }}
         >
           {label.text}
         </Chip>

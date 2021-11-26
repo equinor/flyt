@@ -12,6 +12,7 @@ import { getMyAccess } from "utils/getMyAccess";
 import Labels from "components/Labels/Labels";
 import ProjectCardHeader from "./ProjectCardHeader";
 import { useRouter } from "next/router";
+import ManageLabelBox from "components/Labels/ManageLabelBox";
 
 export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
   const { userIdentity: createdBy } = props.vsm.created;
@@ -20,6 +21,8 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
   const router = useRouter();
 
   const [visibleScrim, setVisibleScrim] = useState(false);
+  const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
+
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
   const myAccess = getMyAccess(props.vsm, account);
@@ -74,7 +77,10 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
             />
           </div>
           <div className={styles.bottomSection}>
-            <Labels labels={props.vsm.labels} />
+            <Labels
+              labels={props.vsm.labels}
+              onLabelClick={() => setVisibleLabelScrim(true)}
+            />
             {createdBy && (
               <UserDots
                 users={[
@@ -97,6 +103,12 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
           />
         </Scrim>
       )}
+
+      <ManageLabelBox
+        handleClose={() => setVisibleLabelScrim(false)}
+        isVisible={visibleLabelScrim}
+        process={props.vsm}
+      />
     </>
   );
 }

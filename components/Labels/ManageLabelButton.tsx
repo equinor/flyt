@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-import { Icon, Scrim } from "@equinor/eds-core-react";
+import React from "react";
+import { Icon } from "@equinor/eds-core-react";
 import { tag } from "@equinor/eds-icons";
 import style from "../CanvasButton.module.scss";
 import { TooltipImproved } from "../TooltipImproved";
-import ManageLabelBox from "./ManageLabelBox";
 
 /**
  * NB. Currently only adjusted for use in the canvas. path: "baseURL/process/{id}"
