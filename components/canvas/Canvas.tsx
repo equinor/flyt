@@ -14,7 +14,7 @@ import { addCardsToCanvas } from "./utils/AddCardsToCanvas";
 import { getMyAccess } from "../../utils/getMyAccess";
 import { assets } from "./utils/AssetFactory";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { getProject } from "../../services/projectApi";
+import { getProject, resetProcess } from "../../services/projectApi";
 import { useRouter } from "next/router";
 import { moveVSMObject, postVSMObject } from "../../services/vsmObjectApi";
 import { vsmObject } from "interfaces/VsmObject";
@@ -25,6 +25,12 @@ import { getAccessToken } from "../../auth/msalHelpers";
 import { LiveIndicator } from "../LiveIndicator";
 import { CategorizationPageButton } from "../CategorizationPageButton";
 import { resetCanvasZoomAndPosition } from "./utils/ResetCanvasZoomAndPosition";
+import { ToBeToggle } from "./ToBeToggle";
+import { Button, Dialog, Icon, Scrim } from "@equinor/eds-core-react";
+import { restore } from "@equinor/eds-icons";
+import { ResetProcessDialog } from "components/ResetProcessDialog";
+import { ErrorDialog } from "components/ErrorDialog";
+import { ResetProcessButton } from "components/ResetProcessButton";
 
 export default function Canvas(): JSX.Element {
   const ref = useRef();
@@ -167,9 +173,11 @@ export default function Canvas(): JSX.Element {
             ? "Connection is looking good!\nYour changes should appear immediately for other users."
             : `You are not connected ${
                 socketReason ? `because of ${socketReason}` : ""
-              }`
+              }.`
         }
       />
+      <ToBeToggle />
+      <ResetProcessButton />
       <DeleteVsmObjectDialog
         objectToDelete={selectedObject}
         visible={visibleDeleteScrim}
