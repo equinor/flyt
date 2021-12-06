@@ -3,6 +3,10 @@
   "radix-name": "vsm",
   "version": "0.2.13",
   "private": true,
+  "engines": {
+    "node": ">=0.16.0"
+  },
+  "engineStrict": true,
   "scripts": {
     "dev": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",

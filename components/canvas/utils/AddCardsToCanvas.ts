@@ -1,6 +1,6 @@
 import { IAnimateOptions, Viewport } from "pixi-viewport";
 import { assetFactory } from "./AssetFactory";
-import { Graph } from "utils/layoutEngine";
+import { Graph, GraphNode } from "utils/layoutEngine";
 import { Process } from "interfaces/generated";
 import { drawGraphEdges } from "./drawGraphEdges";
 import { drawGraphNodes } from "./drawGraphNodes";
@@ -191,10 +191,7 @@ export function addCardsToCanvas(
    * @param node - node to be highlighted
    * @param highlight - PIXI highlight circle
    */
-  function highLightNode(
-    node: import("/workspaces/MAD-VSM-WEB/utils/layoutEngine").GraphNode,
-    highlight: PIXI.Graphics
-  ) {
+  function highLightNode(node: GraphNode, highlight: PIXI.Graphics) {
     const highlightDiameter = Math.max(node.width, node.height) * 1.5;
 
     highlight.width = highlightDiameter;
