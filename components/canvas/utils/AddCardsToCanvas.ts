@@ -1,11 +1,11 @@
-import { IAnimateOptions, Viewport } from "pixi-viewport";
+import { Viewport } from "pixi-viewport";
 import { assetFactory } from "./AssetFactory";
 import { Graph, GraphNode } from "utils/layoutEngine";
 import { Process } from "interfaces/generated";
 import { drawGraphEdges } from "./drawGraphEdges";
 import { drawGraphNodes } from "./drawGraphNodes";
 import * as PIXI from "pixi.js";
-import { Point, Ticker } from "pixi.js";
+import { Point } from "pixi.js";
 import { getColor } from "utils/getColor";
 
 /**
@@ -40,18 +40,16 @@ export function addCardsToCanvas(
     const graph = new Graph(process);
     const { nodes, edges } = graph;
 
-    drawGraphEdges(edges, viewport);
     drawGraphNodes(nodes, setSelectedObject, viewport);
+    drawGraphEdges(edges, viewport);
 
-    // add a user-cursor to the canvas
-    const cursor = new PIXI.Graphics();
+    const hexColor = getColor("HSJO@equinor.com"); //Todo: get user color
     //Get user color
-    const hexColor = getColor("HSJO@equinor.com");
     // convert hexcolor to number
     const color = parseInt(hexColor.slice(1), 16);
-    cursor.beginFill(color, 0.5);
-    cursor.drawCircle(0, 0, 10);
-    cursor.endFill();
+
+    // add a user-cursor to the canvas
+    const cursor = newCursor(color);
     viewport.addChild(cursor);
     cursor.visible = false;
 
@@ -139,7 +137,9 @@ export function addCardsToCanvas(
       } else if (event.key === "Enter") {
         //highlight the selected node
         // highlightAndMove(graph, highlight);
-        alert("EDIT not yet implemented");
+        const selectedNode = graph.getSelectedNodes()[0];
+        setSelectedObject(selectedNode);
+        // alert("EDIT not yet implemented");
       }
     });
 
@@ -201,4 +201,17 @@ export function addCardsToCanvas(
     highlight.y = node.position.y + node.height / 2;
     highlight.visible = true;
   }
+}
+
+/**
+ * Create a new cursor
+ * @param color
+ * @returns {PIXI.Graphics} cursor
+ */
+function newCursor(color: number): PIXI.Graphics {
+  const cursor = new PIXI.Graphics();
+  cursor.beginFill(color, 0.5);
+  cursor.drawCircle(0, 0, 10);
+  cursor.endFill();
+  return cursor;
 }
