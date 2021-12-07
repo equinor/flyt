@@ -7,6 +7,7 @@ import { drawGraphNodes } from "./drawGraphNodes";
 import * as PIXI from "pixi.js";
 import { Point } from "pixi.js";
 import { getColor } from "utils/getColor";
+import { vsmObjectTypes } from "types/vsmObjectTypes";
 
 /**
  * Adds the project-cards to our canvas
@@ -80,6 +81,21 @@ export function addCardsToCanvas(
     viewport.addChild(tooltip);
     tooltipBox.visible = false;
 
+    //arrow
+    const arrow = new PIXI.Graphics();
+    arrow.lineStyle(2);
+    // arrow.moveTo(0, 0);
+    arrow.lineTo(10, 0); //line
+
+    //arrowhead
+    arrow.moveTo(10, -10);
+    arrow.lineTo(20, 0);
+    arrow.lineTo(10, 10);
+
+    // arrow.lineTo(10, -10); //close
+    arrow.visible = false;
+    viewport.addChild(arrow);
+
     let lastHitTest = null;
     //Track mouse positon and update cursor position, keeping scroll position in mind
     viewport.on("mousemove", (e) => {
@@ -110,9 +126,111 @@ export function addCardsToCanvas(
           //toltipbox the size of the text
           tooltipBox.width = tooltip.width + 10;
           tooltipBox.height = tooltip.height + 10;
+
+          const centerLeft = {
+            y: hit.node.position.y + hit.node.height / 2,
+            x: hit.node.position.x,
+          };
+
+          const centerRight = {
+            y: hit.node.position.y + hit.node.height / 2,
+            x: hit.node.position.x + hit.node.width,
+          };
+
+          const centerTop = {
+            y: hit.node.position.y,
+            x: hit.node.position.x + hit.node.width / 2,
+          };
+
+          const centerBottom = {
+            y: hit.node.position.y + hit.node.height,
+            x: hit.node.position.x + hit.node.width / 2,
+          };
+
+          //calculate distance to centers
+          const distanceToCenterLeft = Math.sqrt(
+            Math.pow(centerLeft.x - x, 2) + Math.pow(centerLeft.y - y, 2)
+          );
+          const distanceToCenterRight = Math.sqrt(
+            Math.pow(centerRight.x - x, 2) + Math.pow(centerRight.y - y, 2)
+          );
+          const distanceToCenterTop = Math.sqrt(
+            Math.pow(centerTop.x - x, 2) + Math.pow(centerTop.y - y, 2)
+          );
+          const distanceToCenterBottom = Math.sqrt(
+            Math.pow(centerBottom.x - x, 2) + Math.pow(centerBottom.y - y, 2)
+          );
+
+          //todo: make this easier to read
+          let closest: { x: number; y: number } = { x: 0, y: 0 };
+          const closestToCenterBottom =
+            distanceToCenterBottom < distanceToCenterTop &&
+            distanceToCenterBottom < distanceToCenterLeft &&
+            distanceToCenterBottom < distanceToCenterRight;
+          const closestToCenterLeft =
+            distanceToCenterLeft < distanceToCenterRight &&
+            distanceToCenterLeft < distanceToCenterTop &&
+            distanceToCenterLeft < distanceToCenterBottom;
+          const closestToCenterRight =
+            distanceToCenterRight < distanceToCenterLeft &&
+            distanceToCenterRight < distanceToCenterTop &&
+            distanceToCenterRight < distanceToCenterBottom;
+          const closestToCenterTop =
+            distanceToCenterTop < distanceToCenterBottom &&
+            distanceToCenterTop < distanceToCenterLeft &&
+            distanceToCenterTop < distanceToCenterRight;
+
+          if (closestToCenterBottom) {
+            closest = centerBottom;
+            arrow.rotation = Math.PI / 2;
+          } else if (closestToCenterLeft) {
+            arrow.rotation = Math.PI;
+            closest = centerLeft;
+          } else if (closestToCenterRight) {
+            arrow.rotation = 0;
+            closest = centerRight;
+          } else if (closestToCenterTop) {
+            arrow.rotation = -Math.PI / 2;
+            closest = centerTop;
+          }
+          // move the arrow to indicate where we may drop a new node
+          arrow.x = closest.x;
+          arrow.y = closest.y;
+          //only show the arrow if it is a valid drop location
+
+          // if type is MainACtivity
+          // if (
+          //   hit.node.type === vsmObjectTypes.mainActivity &&
+          //   (closestToCenterBottom ||
+          //     closestToCenterLeft ||
+          //     closestToCenterRight)
+          // ) {
+          //   arrow.visible = true;
+          // } else if (
+          //   hit.node.type === vsmObjectTypes.subActivity &&
+          //   (closestToCenterTop || closestToCenterBottom)
+          // ) {
+          //   tooltip.visible = true;
+          // } else if (
+          //   hit.node.type === vsmObjectTypes.input &&
+          //   closestToCenterRight
+          // ) {
+          //   arrow.visible = true;
+          // } else if (
+          //   hit.node.type === vsmObjectTypes.output &&
+          //   closestToCenterLeft
+          // ) {
+          //   arrow.visible = true;
+          // } else {
+          //   arrow.visible = false;
+          // }
+          // console.log(hit.node.type);
+          //if it is a choice node
+          arrow.visible = true;
         } else {
           tooltip.visible = false;
           tooltipBox.visible = false;
+          arrow.visible = false;
         }
       }
     });
