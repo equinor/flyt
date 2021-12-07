@@ -43,71 +43,72 @@ export default function Canvas() {
       // New pixi canvas with pixi-viewport setup
       const { viewPort, cleanup: pixiCleanup } = PixiSetup(ref);
 
-      // Note that elements added to the viewPort are affected by the zoom and pan
-      // while elements added to the app.stage are not.
-
-      // For example, if you want the pointer to stay the same size when you zoom, you add it to the app.stage.
-      const pointer = UserPointer();
-      viewPort.addChild(pointer);
-      pointer.visible = false; // note we are currently not displaying this pointer since we already are displaying the pointer created in AddCardsToCanvas class
-
+      //Todo: improve this
       //Add assets
       const cleanupAssets = loadAssets(assets, () => setAssetsAreLoaded(true));
       if (process && assetsAreLoaded) {
         addCardsToCanvas(viewPort, process, true, null, null, null);
       }
 
+      // Note that elements added to the viewPort are affected by the zoom and pan
+      // while elements added to the app.stage are not.
+      // For example, if you want the pointer to stay the same size when you zoom, you add it to the app.stage.
+      // const pointer = UserPointer();
+      // viewPort.addChild(pointer);
+      // pointer.visible = false; // note we are currently not displaying this pointer since we already are displaying the pointer created in AddCardsToCanvas class
       // add it to the viewport
       // viewPort.addChild(pointer);
 
-      let lastPointerEvent = 0;
-      // listen for pointer move events
-      viewPort.on("pointermove", (event) => {
-        //get the pointer position
-        const { x, y } = viewPort.toLocal(event.data.global);
+      // //Todo Emit pointer position to other users
+      // let lastPointerEvent = 0;
+      // // listen for pointer move events
+      // viewPort.on("pointermove", (event) => {
+      //   //get the pointer position
+      //   const { x, y } = viewPort.toLocal(event.data.global);
 
-        //let's throttle the amount of events we send to the server
-        // limit it to once every 100ms
-        const now = Date.now();
-        if (now - lastPointerEvent > 100) {
-          lastPointerEvent = now;
-          // socket.emit("pointermove", { x, y, user: userName });
-        } else {
-          //let's make sure the last position is sent
-          debounce(
-            () => socket.emit("pointer", { x, y, user: userName }),
-            1000,
-            "PointerPosition"
-          );
-        }
-      });
+      //   //let's throttle the amount of events we send to the server
+      //   // limit it to once every 100ms
+      //   const now = Date.now();
+      //   if (now - lastPointerEvent > 100) {
+      //     lastPointerEvent = now;
+      //     // socket.emit("pointermove", { x, y, user: userName });
+      //   } else {
+      //     //let's make sure the last position is sent
+      //     debounce(
+      //       () => socket.emit("pointer", { x, y, user: userName }),
+      //       1000,
+      //       "PointerPosition"
+      //     );
+      //   }
+      // });
 
-      // Pointers
-      const pointers: {
-        [x: string]: { x: number; y: number; sprite };
-      } = {};
-      // socket listen for pointer position
-      socket.on("pointer", (data: { user: string; x: number; y: number }) => {
-        // if (data.user === userName) return;
-        console.log(data.user);
-        // update the sprite position
-        const { x, y } = data;
-        if (!pointers[data.user]) {
-          const sprite = new PIXI.Graphics();
-          const color = Math.floor(Math.random() * 0xffffff);
-          sprite.beginFill(color);
-          sprite.drawCircle(0, 0, 10);
-          sprite.endFill();
-          viewPort.addChild(sprite);
-          pointers[data.user] = { x, y, sprite };
-        } else {
-          pointers[data.user].x = x;
-          pointers[data.user].y = y;
-        }
+      // //Todo: handle other people's pointer events
+      // // Pointers
+      // const pointers: {
+      //   [x: string]: { x: number; y: number; sprite };
+      // } = {};
+      // // socket listen for pointer position
+      // socket.on("pointer", (data: { user: string; x: number; y: number }) => {
+      //   // if (data.user === userName) return;
+      //   console.log(data.user);
+      //   // update the sprite position
+      //   const { x, y } = data;
+      //   if (!pointers[data.user]) {
+      //     const sprite = new PIXI.Graphics();
+      //     const color = Math.floor(Math.random() * 0xffffff);
+      //     sprite.beginFill(color);
+      //     sprite.drawCircle(0, 0, 10);
+      //     sprite.endFill();
+      //     viewPort.addChild(sprite);
+      //     pointers[data.user] = { x, y, sprite };
+      //   } else {
+      //     pointers[data.user].x = x;
+      //     pointers[data.user].y = y;
+      //   }
 
-        //move the sprite
-        pointers[data.user].sprite.position.set(x, y);
-      });
+      //   //move the sprite
+      //   pointers[data.user].sprite.position.set(x, y);
+      // });
 
       // //show pointer when in ViewPort
       // viewPort.on("pointerover", (event: any) => (pointer.visible = true));
