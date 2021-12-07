@@ -78,13 +78,13 @@ export function AddNodesAndEdges(
           (choiceChild) => choiceChild?.choiceGroup === "Right"
         );
         // objects that are not grouped by their left or right position
-        const ungroupedObjects = child.childObjects.filter(
-          (choiceChild) =>
-            choiceChild?.choiceGroup !== "Left" &&
-            choiceChild?.choiceGroup !== "Right"
-        );
+        // const ungroupedObjects = child.childObjects.filter(
+        //   (choiceChild) =>
+        //     choiceChild?.choiceGroup !== "Left" &&
+        //     choiceChild?.choiceGroup !== "Right"
+        // );
 
-        console.log({ child, leftObjects, rightObjects, ungroupedObjects });
+        // console.log({ child, leftObjects, rightObjects, ungroupedObjects });
         // add the left children
         leftObjects.forEach((leftChild, index) => {
           // const leftChild = leftObjects[0];
@@ -204,16 +204,77 @@ export function AddNodesAndEdges(
                 selectedChild.childObjects[rightLeafNodeIndex];
 
               if (leftLeafNode) {
-                graph.edges.push({
-                  from: leftLeafNode.vsmObjectID,
-                  to: grandChild.vsmObjectID,
-                });
+                //Only add an edge if the left leaf does not have a child
+                if (leftLeafNode.childObjects.length === 0) {
+                  graph.edges.push({
+                    from: leftLeafNode.vsmObjectID,
+                    to: grandChild.vsmObjectID,
+                    // label: "leftleaf",
+                  });
+                } else {
+                  //group left leaf children and right leaf children
+                  const leftLeafChildren = leftLeafNode.childObjects.filter(
+                    (child) => child.choiceGroup === "Left"
+                  );
+                  const rightLeafChildren = rightLeafNode.childObjects.filter(
+                    (child) => child.choiceGroup === "Right"
+                  );
+                  const lastLeftLeafChild =
+                    leftLeafChildren[leftLeafChildren.length - 1];
+                  const lastRightLeafChild =
+                    rightLeafChildren[rightLeafChildren.length - 1];
+                  if (lastLeftLeafChild) {
+                    graph.edges.push({
+                      from: lastLeftLeafChild.vsmObjectID,
+                      to: grandChild.vsmObjectID,
+                      // label: "leftleaf",
+                    });
+                  }
+                  if (lastRightLeafChild) {
+                    graph.edges.push({
+                      from: lastRightLeafChild.vsmObjectID,
+                      to: grandChild.vsmObjectID,
+                      // label: "rightleaf",
+                    });
+                  }
+                }
               }
               if (rightLeafNode) {
-                graph.edges.push({
-                  from: rightLeafNode.vsmObjectID,
-                  to: grandChild.vsmObjectID,
-                });
+                //Only add an edge if the right leaf does not have a child
+                if (rightLeafNode.childObjects.length === 0) {
+                  graph.edges.push({
+                    from: rightLeafNode.vsmObjectID,
+                    to: grandChild.vsmObjectID,
+                    // label: "rightleaf",
+                  });
+                } else {
+                  //group left leaf children and right leaf children
+                  const leftLeafChildren = leftLeafNode.childObjects.filter(
+                    (child) => child.vsmObjectID
+                  );
+                  const rightLeafChildren = rightLeafNode.childObjects.filter(
+                    (child) => child.vsmObjectID
+                  );
+                  const lastLeftLeafChild =
+                    leftLeafChildren[leftLeafChildren.length - 1];
+                  const lastRightLeafChild =
+                    rightLeafChildren[rightLeafChildren.length - 1];
+
+                  if (lastLeftLeafChild) {
+                    graph.edges.push({
+                      from: lastLeftLeafChild.vsmObjectID,
+                      to: grandChild.vsmObjectID,
+                      // label: "leftleaf",
+                    });
+                  }
+                  if (lastRightLeafChild) {
+                    graph.edges.push({
+                      from: lastRightLeafChild.vsmObjectID,
+                      to: grandChild.vsmObjectID,
+                      // label: "rightleaf",
+                    });
+                  }
+                }
               }
             } else {
               //if it is not the first grandChild, add an edge from the previous grandChild to the current grandChild

@@ -62,7 +62,7 @@ export default function Canvas() {
 
       let lastPointerEvent = 0;
       // listen for pointer move events
-      viewPort.on("pointermove", (event: any) => {
+      viewPort.on("pointermove", (event) => {
         //get the pointer position
         const { x, y } = viewPort.toLocal(event.data.global);
 
@@ -71,7 +71,7 @@ export default function Canvas() {
         const now = Date.now();
         if (now - lastPointerEvent > 100) {
           lastPointerEvent = now;
-          socket.emit("pointermove", { x, y, user: userName });
+          // socket.emit("pointermove", { x, y, user: userName });
         } else {
           //let's make sure the last position is sent
           debounce(
