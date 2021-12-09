@@ -1,16 +1,18 @@
-import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 import * as PIXI from "pixi.js";
-import { io } from "socket.io-client";
-import { Viewport } from "pixi-viewport";
-import { getAccessToken } from "auth/msalHelpers";
-import { addCardsToCanvas } from "./utils/AddCardsToCanvas";
-import { getProject } from "services/projectApi";
-import { useRouter } from "next/router";
-import { useQuery } from "react-query";
-import { loadAssets } from "./utils/LoadAssets";
-import { assets } from "./utils/AssetFactory";
+
+import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 import { useAccount, useMsal } from "@azure/msal-react";
+
+import { Viewport } from "pixi-viewport";
+import { addCardsToCanvas } from "./utils/AddCardsToCanvas";
+import { assets } from "./utils/AssetFactory";
 import { debounce } from "utils/debounce";
+import { getAccessToken } from "auth/msalHelpers";
+import { getProject } from "services/projectApi";
+import { io } from "socket.io-client";
+import { loadAssets } from "./utils/LoadAssets";
+import { useQuery } from "react-query";
+import { useRouter } from "next/router";
 
 export default function Canvas() {
   const { instance, accounts } = useMsal();
@@ -41,13 +43,13 @@ export default function Canvas() {
       });
 
       // New pixi canvas with pixi-viewport setup
-      const { viewPort, cleanup: pixiCleanup } = PixiSetup(ref);
+      const { viewPort, cleanup: pixiCleanup, app } = PixiSetup(ref);
 
       //Todo: improve this
       //Add assets
       const cleanupAssets = loadAssets(assets, () => setAssetsAreLoaded(true));
       if (process && assetsAreLoaded) {
-        addCardsToCanvas(viewPort, process, true, null, null, null);
+        addCardsToCanvas(viewPort, process, true, null, null, null, app);
       }
 
       // Note that elements added to the viewPort are affected by the zoom and pan
