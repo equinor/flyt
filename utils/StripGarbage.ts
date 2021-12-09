@@ -9,19 +9,28 @@ import { vsmObject } from "../interfaces/VsmObject";
  * @param childObjects
  * @param choiceGroup
  * @param name
+ * @param role
+ * @param time
+ * @param timeDefinition
  * @param pkObjectType
  */
 export function stripGarbage({
   childObjects,
   choiceGroup,
   name,
+  role,
+  time,
+  timeDefinition,
   vsmObjectType: { pkObjectType },
 }: vsmObject) {
   const newObj = {};
-  if (name) newObj["name"] = name;
-  if (choiceGroup) newObj["choiceGroup"] = choiceGroup;
   if (childObjects?.length > 0)
     newObj["childObjects"] = childObjects.map((o) => stripGarbage(o));
+  if (choiceGroup) newObj["choiceGroup"] = choiceGroup;
+  if (name) newObj["name"] = name;
+  if (role) newObj["role"] = role;
+  if (time) newObj["time"] = time;
+  if (timeDefinition) newObj["timeDefinition"] = timeDefinition;
 
   return {
     ...newObj,
