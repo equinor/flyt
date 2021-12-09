@@ -1,6 +1,8 @@
 import { Process, TasksEntity } from "interfaces/generated";
-import { vsmObjectTypes } from "types/vsmObjectTypes";
+
+import { calculateEdgePositions } from "./calculateEdgePositions";
 import { createGraph } from "./createGraph";
+import { vsmObjectTypes } from "types/vsmObjectTypes";
 
 export interface GraphNode {
   notPositionedCorrectly?: boolean;
@@ -56,6 +58,16 @@ type User = {
 };
 
 export class Graph {
+  process: Process;
+  nodes: Array<GraphNode>;
+  edges: Array<GraphEdge>;
+  users: Array<User>;
+
+  constructor(process: Process) {
+    const graph = createGraph(process);
+    this.nodes = graph.nodes;
+    this.edges = graph.edges;
+  }
   navigateRight(): GraphNode {
     // debugger;
     const selectedNode = this.nodes.find((node) => node.selected);
@@ -146,16 +158,6 @@ export class Graph {
     }
     return nextNode;
   }
-  process: Process;
-  nodes: Array<GraphNode>;
-  edges: Array<GraphEdge>;
-  users: Array<User>;
-
-  constructor(process: Process) {
-    const graph = createGraph(process);
-    this.nodes = graph.nodes;
-    this.edges = graph.edges;
-  }
 
   sortByXPosition = (a: GraphNode, b: GraphNode): -1 | 1 | 0 => {
     const { x: aX } = a.position;
@@ -235,7 +237,28 @@ export class Graph {
   }
 
   /**
+   * Get the closest node to the position
+   * @param x - x position
+   * @param y - y position
+   * @returns closest node to the position
+   */
+  getClosestNode(x: number, y: number): GraphNode {
+    //  get the distance to all nodes
+    const distances = this.nodes.map((node) => {
+      // const { x: nodeX, y: nodeY } = node.position;
+      const nodeX = node.position.x + node.width / 2;
+      const nodeY = node.position.y + node.height / 2;
+      return Math.sqrt(Math.pow(nodeX - x, 2) + Math.pow(nodeY - y, 2));
+    });
+    // get the index of the smallest distance
+    const indexOfSmallestDistance = distances.indexOf(Math.min(...distances));
+    // return the node at that index
+    return this.nodes[indexOfSmallestDistance];
+  }
+
+  /**
    * Checks if something is at the given position
+   * Note: the position is global, and you need to account for a potential viewport offset depending on how you are rendering the graph
    * @param x - x position to check
    * @param y - y position to check
    * @returns GraphNode | GraphEdge | null - node or edge at the given position
@@ -243,34 +266,46 @@ export class Graph {
   hitTest(x: number, y: number): { node: GraphNode; edge: GraphEdge } {
     const node = this.nodes.find((node) => {
       const { position } = node;
-      if (!position) {
-        return false;
-      }
-      const { x: nodeX, y: nodeY } = position;
+      if (!position) return false;
       return (
-        x >= nodeX &&
-        x <= nodeX + node.width &&
-        y >= nodeY &&
-        y <= nodeY + node.height
+        x >= position.x &&
+        x <= position.x + node.width &&
+        y >= position.y &&
+        y <= position.y + node.height
       );
     });
-    if (node) {
-      return { node, edge: null };
-    }
     const edge = this.edges.find((edge) => {
       const { position } = edge;
-      if (!position) {
-        return false;
-      }
+      if (!position) return false;
       const { start, end } = position;
-      const { x: startX, y: startY } = start;
-      const { x: endX, y: endY } = end;
-      return x >= startX && x <= endX && y >= startY && y <= endY;
+      return x >= start.x && x <= end.x && y >= start.y && y <= end.y;
     });
-    if (edge) {
-      return { node: null, edge };
-    }
-    return { node: null, edge: null };
+    return { node, edge };
+  }
+
+  // Add child to node
+  addChild(node: GraphNode, child: GraphNode): void {
+    const edge = this.getEdge(node.id, child.id);
+    if (edge) return; // edge already exists
+    this.edges.push({
+      from: node.id,
+      to: child.id,
+    });
+  }
+
+  // Remove child from node
+  removeChild(node: GraphNode, child: GraphNode): void {
+    const edge = this.getEdge(node.id, child.id);
+    if (!edge) return; // edge does not exist
+    this.edges = this.edges.filter((edge) => {
+      return edge.from !== node.id || edge.to !== child.id;
+    });
+  }
+
+  //add new node to graph
+  addNode(node: GraphNode, parent: GraphNode): void {
+    this.nodes.push(node);
+    this.addChild(parent, node);
   }
 
   selectNode(node: GraphNode): void {

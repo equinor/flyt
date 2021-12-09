@@ -1,30 +1,31 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useStoreDispatch } from "../../hooks/storeHooks";
-import { VSMSideBar } from "../VSMSideBar";
-import style from "../VSMCanvas.module.scss";
-import { DeleteVsmObjectDialog } from "../DeleteVsmObjectDialog";
+import { moveVSMObject, postVSMObject } from "../../services/vsmObjectApi";
 import { useAccount, useMsal } from "@azure/msal-react";
-import { loadAssets } from "./utils/LoadAssets";
-import { toolBox } from "./entities/toolbox/toolbox";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+
+import { CategorizationPageButton } from "../CategorizationPageButton";
+import { DeleteVsmObjectDialog } from "../DeleteVsmObjectDialog";
+import { LiveIndicator } from "../LiveIndicator";
+import { VSMSideBar } from "../VSMSideBar";
+import { addCardsToCanvas } from "./utils/AddCardsToCanvas";
+import { assets } from "./utils/AssetFactory";
+import { draggable } from "./utils/draggable";
+import { getAccessToken } from "../../auth/msalHelpers";
 import { getApp } from "./utils/PixiApp";
+import { getMyAccess } from "../../utils/getMyAccess";
+import { getProject } from "../../services/projectApi";
 import { getViewPort } from "./utils/PixiViewport";
 import { initCanvas } from "./utils/InitCanvas";
-import { draggable } from "./utils/draggable";
-import { addCardsToCanvas } from "./utils/AddCardsToCanvas";
-import { getMyAccess } from "../../utils/getMyAccess";
-import { assets } from "./utils/AssetFactory";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { getProject } from "../../services/projectApi";
-import { useRouter } from "next/router";
-import { moveVSMObject, postVSMObject } from "../../services/vsmObjectApi";
-import { vsmObject } from "interfaces/VsmObject";
-import { unknownErrorToString } from "utils/isError";
 import { io } from "socket.io-client";
+import { loadAssets } from "./utils/LoadAssets";
 import { notifyOthers } from "../../services/notifyOthers";
-import { getAccessToken } from "../../auth/msalHelpers";
-import { LiveIndicator } from "../LiveIndicator";
-import { CategorizationPageButton } from "../CategorizationPageButton";
 import { resetCanvasZoomAndPosition } from "./utils/ResetCanvasZoomAndPosition";
+import style from "../VSMCanvas.module.scss";
+import { toolBox } from "./entities/toolbox/toolbox";
+import { unknownErrorToString } from "utils/isError";
+import { useRouter } from "next/router";
+import { useStoreDispatch } from "../../hooks/storeHooks";
+import { vsmObject } from "interfaces/VsmObject";
 import { vsmProject } from "interfaces/VsmProject";
 
 export default function Canvas(): JSX.Element {
@@ -129,6 +130,7 @@ export default function Canvas(): JSX.Element {
   // "Renderer"
   useEffect(() => {
     if (project && assetsAreLoaded) {
+      const app = getApp();
       const viewport = getViewPort();
       addCardsToCanvas(
         viewport,
@@ -136,7 +138,8 @@ export default function Canvas(): JSX.Element {
         userCanEdit,
         dispatch,
         setSelectedObject,
-        vsmObjectMutation
+        vsmObjectMutation,
+        app
       );
 
       //Todo: Only show toolbox if userCanEdit. ref: https://equinor-sds-si.atlassian.net/browse/VSM-143
