@@ -5,15 +5,14 @@
   border-radius: 4px;
   padding: 0 20px 25px 20px;
 
-  display: block;
+  display: flex;
+  flex-direction: column;
 
   width: min(90vw, 400px);
   max-height: 70vh;
 
   animation-name: fade-in;
   animation-duration: 0.5s;
-
-  overflow-x: scroll;
 }
 
 .topSection {
@@ -37,7 +36,7 @@
   display: flex;
   margin-top: 30px;
   flex-wrap: wrap;
-  overflow-y: scroll;
+  overflow: scroll;
 }
 
 .containerListExistingLabels {

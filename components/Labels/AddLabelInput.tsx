@@ -27,12 +27,6 @@ export default function AddLabelInput(props: {
     props.handleSelectTerm(item);
     setTerm("");
   };
-  const handleKeyDown = (event) => {
-    if (event.key == "Enter") {
-      props.handleSelectTerm(term);
-      setTerm("");
-    }
-  };
   const handleClickAdd = () => {
     props.handleSelectTerm(term);
     setTerm("");
@@ -59,7 +53,6 @@ export default function AddLabelInput(props: {
         <ComboboxInput
           value={term}
           onChange={handleChange}
-          onKeyDown={handleKeyDown}
           className={styles.textInput}
         />
         {!!labels && (
