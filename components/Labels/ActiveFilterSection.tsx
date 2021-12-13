@@ -3,19 +3,18 @@ import { useRouter } from "next/router";
 import React from "react";
 import { useQuery } from "react-query";
 import { getLabel } from "services/labelsApi";
-import { getQueryObject } from "utils/getQueryObject";
 import { getUpdatedLabel } from "utils/getUpdatedLabel";
 import { unknownErrorToString } from "utils/isError";
 import ButtonClearAll from "./ButtonClearAll";
 
-export default function LabelSubHeader(props: {
-  labelsID: string[];
+export default function ActiveFilterSection(props: {
+  labelIDArray: string[];
 }): JSX.Element {
-  const { labelsID } = props;
+  const { labelIDArray } = props;
 
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
-      {labelsID.map((id) => (
+      {labelIDArray.map((id) => (
         <SingleLabel key={id} id={id} />
       ))}
       <ButtonClearAll />
@@ -33,11 +32,10 @@ export function SingleLabel(props: { id: string }): JSX.Element {
   } = useQuery(["label", id], () => getLabel(id));
 
   const handleClickDelete = (id: string) => {
-    const rl = getUpdatedLabel(id, router.query.rl);
-    const queryObject = getQueryObject(router.query, { rl });
+    // rl stands for "required label"
+    const labelIdArray = getUpdatedLabel(id, router.query.rl);
     router.replace({
-      pathname: router.pathname,
-      query: { ...queryObject },
+      query: { ...router.query, rl: labelIdArray },
     });
   };
 

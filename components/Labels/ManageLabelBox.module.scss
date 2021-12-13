@@ -7,11 +7,13 @@
 
   display: block;
 
-  width: min(90vw, 600px);
-  max-height: 90vh;
+  width: min(90vw, 400px);
+  max-height: 70vh;
 
   animation-name: fade-in;
   animation-duration: 0.5s;
+
+  overflow-x: scroll;
 }
 
 .topSection {
@@ -31,29 +33,16 @@
   color: $equinor_PROMINENT;
 }
 
-.addSection {
-  display: flex;
-  width: 100%;
-}
-
-.dropdown {
-  display: flex;
-  flex-direction: column;
-  flex: 80% 1 1;
-  position: relative;
-}
-
 .labelSection {
   display: flex;
-  width: 100%;
   margin-top: 30px;
   flex-wrap: wrap;
+  overflow-y: scroll;
 }
 
 .containerListExistingLabels {
   position: absolute;
   top: 37px;
   z-index: 1000;
-  width: 100%;
   background-color: white;
 }

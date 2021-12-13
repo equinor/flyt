@@ -11,27 +11,25 @@ import { Typography } from "@equinor/eds-core-react";
 import { SortSelect } from "../../components/SortSelect";
 import { SearchField } from "components/SearchField";
 import FilterLabelButton from "components/Labels/FilterLabelButton";
-import { getQueryObject } from "utils/getQueryObject";
-import LabelSubHeader from "components/Labels/LabelSubHeader";
-
+import ActiveFilterSection from "components/Labels/ActiveFilterSection";
 export default function AllProcesses(): JSX.Element {
   const [page, setPage] = useState(1);
   const itemsPerPage = 15;
 
   const router = useRouter();
-  const urlQueryObject = getQueryObject(router.query);
 
   const query = useQuery(
-    ["projects", page, ...Object.values(urlQueryObject)],
+    ["projects", page, ...Object.values(router.query)],
     () =>
       getProjects({
         page,
         items: itemsPerPage,
-        ...urlQueryObject,
+        ...router.query,
       })
   );
 
-  const labelsID = router.query.rl ? `${router.query.rl}`.split(",") : null;
+  // rl stands for "required label"
+  const labelIdArray = router.query.rl ? `${router.query.rl}`.split(",") : null;
 
   return (
     <div>
@@ -54,9 +52,9 @@ export default function AllProcesses(): JSX.Element {
                 <SortSelect />
               </div>
             </div>
-            {labelsID && (
+            {labelIdArray && (
               <div className={styles.subHeader}>
-                <LabelSubHeader labelsID={labelsID} />
+                <ActiveFilterSection labelIDArray={labelIdArray} />
               </div>
             )}
           </div>

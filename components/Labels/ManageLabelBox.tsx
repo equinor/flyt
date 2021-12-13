@@ -6,9 +6,7 @@ import { addLabelToProcess, removeLabelFromProcess } from "services/labelsApi";
 import { useMutation, useQueryClient } from "react-query";
 import { vsmProject } from "interfaces/VsmProject";
 import { processLabel } from "interfaces/processLabel";
-import ListExistingLabels from "./ListExistingLabels";
-import { debounce } from "utils/debounce";
-import { useOutsideClick } from "rooks";
+import AddLabelInput from "./AddLabelInput";
 
 export default function ManageLabelBox(props: {
   isVisible: boolean;
@@ -40,37 +38,7 @@ function TopSection(props: { handleClose: () => void }): JSX.Element {
 }
 
 function AddSection(props: { process: vsmProject }): JSX.Element {
-  const [inputLabelText, setInputLabelText] = useState("");
-  const [dropdownIsVisible, setDropdownIsVisible] = useState(false);
-
   const queryClient = useQueryClient();
-  const addSectionRef = useRef();
-  const inputRef = useRef(null);
-  useOutsideClick(addSectionRef, () => setDropdownIsVisible(false));
-
-  useEffect(() => {
-    console.log("dropdownIsVisible " + dropdownIsVisible);
-    console.log("isText " + (debouncedInputLabelText.length > 0));
-  });
-
-  useEffect(() => {
-    // Moving cursor to the end
-    if (dropdownIsVisible) {
-      inputRef.current.selectionStart = inputRef.current.value.length;
-      inputRef.current.selectionEnd = inputRef.current.value.length;
-    }
-  }, [dropdownIsVisible]);
-
-  const [debouncedInputLabelText, setDebouncedInputLabelText] = useState("");
-  useEffect(() => {
-    debounce(
-      () => {
-        setDebouncedInputLabelText(inputLabelText);
-      },
-      200,
-      "LabelSearchQuery"
-    );
-  }, [inputLabelText]);
 
   const addLabelMutation = useMutation(
     (payload: {
@@ -87,66 +55,20 @@ function AddSection(props: { process: vsmProject }): JSX.Element {
       processID: props.process.vsmProjectID,
       label,
     });
-    setInputLabelText("");
-    setDropdownIsVisible(false);
   };
 
-  const handleAddClick = () => {
-    const trimmedInputLabelText = inputLabelText.trim();
-    if (!trimmedInputLabelText) {
+  const handleSelectTerm = (term: string) => {
+    const trimmedTerm = term.trim();
+    if (!trimmedTerm) {
       return null;
     }
-    const index = props.process.labels
-      .map((label) => label.text)
-      .findIndex((element) => element == trimmedInputLabelText);
-    if (index == -1) {
-      addLabel({ text: trimmedInputLabelText });
-    } else {
-      addLabel({
-        id: props.process.labels[index].id,
-        text: trimmedInputLabelText,
-      });
-    }
+    addLabel({ text: trimmedTerm });
   };
 
   return (
-    <div ref={addSectionRef}>
-      <div className={styles.addSection}>
-        <div className={styles.dropdown}>
-          <Input
-            ref={inputRef}
-            placeholder="Add process labels"
-            value={inputLabelText}
-            onChange={(e) => {
-              setInputLabelText(e.target.value);
-            }}
-            onKeyDown={(e) => {
-              if (e.key == "Enter") {
-                handleAddClick();
-              }
-            }}
-            onFocus={() => setDropdownIsVisible(true)}
-          />
-
-          {dropdownIsVisible && debouncedInputLabelText.length > 0 && (
-            <div className={styles.containerListExistingLabels}>
-              <ListExistingLabels
-                searchText={debouncedInputLabelText}
-                addLabel={addLabel}
-              />
-            </div>
-          )}
-        </div>
-        <Button
-          color="primary"
-          variant="contained"
-          style={{ marginLeft: "20px" }}
-          onClick={handleAddClick}
-        >
-          Add
-        </Button>
-      </div>
-    </div>
+    <>
+      <AddLabelInput handleSelectTerm={handleSelectTerm} />
+    </>
   );
 }
 
@@ -171,7 +93,10 @@ function LabelSection(props: { process: vsmProject }): JSX.Element {
               labelID: label.id,
             })
           }
-          style={{ marginRight: "10px", marginBottom: "10px" }}
+          style={{
+            marginRight: "10px",
+            marginBottom: "10px",
+          }}
         >
           {label.text}
         </Chip>

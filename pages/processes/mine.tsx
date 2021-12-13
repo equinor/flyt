@@ -13,15 +13,13 @@ import { Typography } from "@equinor/eds-core-react";
 import { SortSelect } from "../../components/SortSelect";
 import { SearchField } from "components/SearchField";
 import FilterLabelButton from "components/Labels/FilterLabelButton";
-import { getQueryObject } from "utils/getQueryObject";
-import LabelSubHeader from "components/Labels/LabelSubHeader";
+import ActiveFilterSection from "components/Labels/ActiveFilterSection";
 
 export default function MyProcesses(): JSX.Element {
   const [page, setPage] = useState(1);
   const itemsPerPage = 15;
 
   const router = useRouter();
-  const urlQueryObject = getQueryObject({}, router.query);
 
   //Get my user
   const { accounts } = useMsal();
@@ -32,17 +30,18 @@ export default function MyProcesses(): JSX.Element {
   const myUserId = users?.find((user) => user.userName === shortName)?.pkUser;
 
   const query = useQuery(
-    ["myProjects", page, myUserId, ...Object.values(urlQueryObject)],
+    ["myProjects", page, myUserId, ...Object.values(router.query)],
     () =>
       getProjects({
         page,
         ru: [myUserId],
         items: itemsPerPage,
-        ...urlQueryObject,
+        ...router.query,
       }),
     { enabled: !!myUserId }
   );
 
+  // rl stands for "required label"
   const labelsID = router.query.rl ? `${router.query.rl}`.split(",") : null;
 
   return (
@@ -68,7 +67,7 @@ export default function MyProcesses(): JSX.Element {
             </div>
             {labelsID && (
               <div className={styles.subHeader}>
-                <LabelSubHeader labelsID={labelsID} />
+                <ActiveFilterSection labelIDArray={labelsID} />
               </div>
             )}
           </div>

@@ -17,7 +17,7 @@ const NotAuthenticatedMessage = (): JSX.Element => {
 
   return (
     <main className={styles.main}>
-      <Typography variant="h2">You must be logged in to see that...</Typography>
+      <Typography variant="h1">You must be logged in to see that...</Typography>
     </main>
   );
 };

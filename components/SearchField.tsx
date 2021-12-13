@@ -3,15 +3,13 @@ import { Search } from "@equinor/eds-core-react";
 import { debounce } from "../utils/debounce";
 import React from "react";
 import styles from "./SearchField.module.scss";
-import { getQueryObject } from "utils/getQueryObject";
+import removeEmpty from "utils/removeEmpty";
 
 export function SearchField(): JSX.Element {
   const router = useRouter();
-  const handleSearch = (q: string) => {
-    const queryObject = getQueryObject(router.query, { q });
+  const handleSearch = (searchQuery: string) => {
     router.replace({
-      pathname: router.pathname,
-      query: { ...queryObject },
+      query: removeEmpty({ ...router.query, q: searchQuery }),
     });
   };
 

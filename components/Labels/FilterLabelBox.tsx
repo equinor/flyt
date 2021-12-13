@@ -8,7 +8,6 @@ import { unknownErrorToString } from "utils/isError";
 import { useRouter } from "next/router";
 import { getUpdatedLabel } from "utils/getUpdatedLabel";
 import { debounce } from "utils/debounce";
-import { getQueryObject } from "utils/getQueryObject";
 import ButtonClearAll from "./ButtonClearAll";
 
 export default function FilterLabelBox(props: {
@@ -69,12 +68,11 @@ function LabelSection(props: { labels; isLoading; error }): JSX.Element {
   const { labels, isLoading, error } = props;
   const router = useRouter();
 
-  const handleClick = (id: string) => {
-    const rl = getUpdatedLabel(id, router.query.rl);
-    const queryObject = getQueryObject(router.query, { rl });
+  // rl stands for "required label"
+  const handleClick = (selectedLabelId: string) => {
+    const labelIdArray = getUpdatedLabel(selectedLabelId, router.query.rl);
     router.replace({
-      pathname: router.pathname,
-      query: { ...queryObject },
+      query: { ...router.query, rl: labelIdArray },
     });
   };
 
