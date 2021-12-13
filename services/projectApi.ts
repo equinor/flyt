@@ -1,6 +1,6 @@
 import BaseAPIServices from "./BaseAPIServices";
 import { projectTemplatesV1 } from "../assets/projectTemplatesV1";
-import { AxiosPromise } from "axios";
+import { AxiosPromise, AxiosResponse } from "axios";
 import { vsmProject } from "../interfaces/VsmProject";
 import { createUrlParams } from "../utils/createUrlParams";
 import { processLabel } from "interfaces/processLabel";
@@ -63,3 +63,8 @@ export const getLabels = (id: number): Promise<processLabel> =>
   BaseAPIServices.get(`${baseUrl}/project/${id}/labels`).then(
     (value) => value.data
   );
+
+export const resetProcess = (
+  id: number | string | string[]
+): Promise<AxiosResponse> =>
+  BaseAPIServices.patch(`${baseUrl}/project/${id}/reset`, null);

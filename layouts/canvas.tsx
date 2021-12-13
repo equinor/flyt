@@ -8,7 +8,7 @@ import {
   TopBar,
   Typography,
 } from "@equinor/eds-core-react";
-import { chevron_down, close, delete_forever, share } from "@equinor/eds-icons";
+import { chevron_down, close, share } from "@equinor/eds-icons";
 import styles from "./default.layout.module.scss";
 import { useAccount, useIsAuthenticated, useMsal } from "@azure/msal-react";
 import React, { useEffect, useState } from "react";
@@ -31,7 +31,7 @@ import packageJson from "../package.json";
 import { notifyOthers } from "../services/notifyOthers";
 import { TooltipImproved } from "../components/TooltipImproved";
 
-const CanvasLayout = ({ children }) => {
+const CanvasLayout = ({ children }): JSX.Element => {
   const isAuthenticated = useIsAuthenticated();
 
   const router = useRouter();
@@ -184,6 +184,14 @@ const CanvasLayout = ({ children }) => {
     );
   }
 
+  function handleDuplicate() {
+    if (project?.currentProcessId) {
+      router.push(`/process/${project.currentProcessId}/duplicate`);
+    } else {
+      router.push(`/process/${project.vsmProjectID}/duplicate`);
+    }
+  }
+
   return (
     <div style={{ overflow: "hidden" /* Hide scrollbars */ }}>
       <Head>
@@ -239,11 +247,7 @@ const CanvasLayout = ({ children }) => {
                   Rename
                 </Typography>
               </Menu.Item>
-              <Menu.Item
-                onClick={() =>
-                  router.push(`/process/${project.vsmProjectID}/duplicate`)
-                }
-              >
+              <Menu.Item onClick={handleDuplicate}>
                 <Typography group="navigation" variant="menu_title" as="span">
                   Duplicate
                 </Typography>
@@ -349,13 +353,6 @@ const CanvasLayout = ({ children }) => {
               <>
                 <div className={styles.scrimHeaderWrapper}>
                   <div className={styles.scrimTitle}>Delete process</div>
-                  <Button
-                    autoFocus
-                    variant={"ghost_icon"}
-                    onClick={(e) => handleCloseDeleteScrim(e, false)}
-                  >
-                    <Icon data={close} title="Close" />
-                  </Button>
                 </div>
                 <div className={styles.scrimContent}>
                   {deleteError && (
@@ -363,22 +360,32 @@ const CanvasLayout = ({ children }) => {
                       {`${deleteError}`}
                     </Typography>
                   )}
-                  <Typography variant={"h4"}>
-                    Are you sure you want to delete the entire process?
-                  </Typography>
+                  <p>
+                    Are you sure you want to delete this process? By doing so
+                    you will delete all versions of Current and To-be processes,
+                    neither of which will be recoverable.
+                  </p>
                 </div>
-                <div className={styles.deleteButton}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    gap: 12,
+                  }}
+                >
+                  <Button
+                    autoFocus
+                    variant={"outlined"}
+                    onClick={(e) => handleCloseDeleteScrim(e, false)}
+                  >
+                    Cancel
+                  </Button>
                   <Button
                     variant={"contained"}
                     color={"danger"}
                     onClick={() => deleteVSM()}
                   >
-                    <Icon
-                      data={delete_forever}
-                      title="Delete process"
-                      size={16}
-                    />
-                    Delete process
+                    Delete
                   </Button>
                 </div>
               </>
