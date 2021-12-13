@@ -27,6 +27,7 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
   const account = useAccount(accounts[0] || {});
   const myAccess = getMyAccess(props.vsm, account);
   const isAdmin = myAccess === "Admin";
+  const userCanEdit = isAdmin || myAccess == "Contributor";
 
   const handleSettled = () => {
     queryClient.invalidateQueries().then(() => setIsMutatingFavourite(false));
@@ -79,7 +80,8 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
           <div className={styles.bottomSection}>
             <Labels
               labels={props.vsm.labels}
-              onLabelClick={() => setVisibleLabelScrim(true)}
+              onClickEdit={() => setVisibleLabelScrim(true)}
+              userCanEdit={userCanEdit}
             />
             {createdBy && (
               <UserDots
