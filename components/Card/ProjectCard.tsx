@@ -9,7 +9,7 @@ import { Scrim } from "@equinor/eds-core-react";
 import { AccessBox } from "components/AccessBox";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { getMyAccess } from "utils/getMyAccess";
-import Labels from "components/Labels/Labels";
+import Labels from "../Labels/Labels";
 import ProjectCardHeader from "./ProjectCardHeader";
 import { useRouter } from "next/router";
 import ManageLabelBox from "components/Labels/ManageLabelBox";
