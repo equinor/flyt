@@ -11,7 +11,7 @@ import { useQuery } from "react-query";
 import { getLabels } from "services/labelsApi";
 import "@reach/combobox/styles.css";
 import { unknownErrorToString } from "utils/isError";
-import { Button, Popover, Typography } from "@equinor/eds-core-react";
+import { Button } from "@equinor/eds-core-react";
 import styles from "./AddLabelInput.module.scss";
 
 export default function AddLabelInput(props: {
@@ -20,7 +20,9 @@ export default function AddLabelInput(props: {
   const [term, setTerm] = useState("");
   const [debouncedTerm, setDebouncedTerm] = useState("");
   const [isVisibleErrorMessage, setIsVisibleErrorMessage] = useState(false);
-  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const marginBottomPopover = 100;
+  const maxHeightPopover = window.innerHeight / 2 - marginBottomPopover;
 
   const handleChange = (event) => {
     setTerm(event.target.value);
@@ -65,7 +67,14 @@ export default function AddLabelInput(props: {
             className={styles.textInput}
           />
           {!!labels && (
-            <ComboboxPopover style={{ width: 300, zIndex: 5000 }}>
+            <ComboboxPopover
+              style={{
+                width: 300,
+                zIndex: 5000,
+                maxHeight: `${maxHeightPopover}px`,
+                overflowY: "auto",
+              }}
+            >
               {labels.length > 0 ? (
                 <ComboboxList>
                   {labels.map((label, index) => (
@@ -86,7 +95,6 @@ export default function AddLabelInput(props: {
       </div>
 
       <Button
-        ref={buttonRef}
         color="primary"
         variant="contained"
         style={{ marginLeft: "20px" }}
