@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Combobox,
   ComboboxInput,
@@ -11,7 +11,7 @@ import { useQuery } from "react-query";
 import { getLabels } from "services/labelsApi";
 import "@reach/combobox/styles.css";
 import { unknownErrorToString } from "utils/isError";
-import { Button } from "@equinor/eds-core-react";
+import { Button, Popover, Typography } from "@equinor/eds-core-react";
 import styles from "./AddLabelInput.module.scss";
 
 export default function AddLabelInput(props: {
@@ -19,6 +19,8 @@ export default function AddLabelInput(props: {
 }): JSX.Element {
   const [term, setTerm] = useState("");
   const [debouncedTerm, setDebouncedTerm] = useState("");
+  const [isVisibleErrorMessage, setIsVisibleErrorMessage] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const handleChange = (event) => {
     setTerm(event.target.value);
@@ -28,8 +30,14 @@ export default function AddLabelInput(props: {
     setTerm("");
   };
   const handleClickAdd = () => {
-    props.handleSelectTerm(term);
-    setTerm("");
+    // Display error message if user inputs a label longer than 200 characters
+    if (term.length > 200) {
+      setIsVisibleErrorMessage(true);
+    } else {
+      setIsVisibleErrorMessage(false);
+      props.handleSelectTerm(term);
+      setTerm("");
+    }
   };
 
   useEffect(() => {
@@ -49,29 +57,36 @@ export default function AddLabelInput(props: {
   return (
     <div className={styles.container}>
       {error && <p>{unknownErrorToString(error)}</p>}
-      <Combobox onSelect={handleSelect}>
-        <ComboboxInput
-          value={term}
-          onChange={handleChange}
-          className={styles.textInput}
-        />
-        {!!labels && (
-          <ComboboxPopover style={{ width: 300, zIndex: 5000 }}>
-            {labels.length > 0 ? (
-              <ComboboxList>
-                {labels.map((label, index) => (
-                  <ComboboxOption key={index} value={`${label.text}`} />
-                ))}
-              </ComboboxList>
-            ) : (
-              <div>
-                <p style={{ padding: 10, textAlign: "center" }}>No results</p>
-              </div>
-            )}
-          </ComboboxPopover>
+      <div>
+        <Combobox onSelect={handleSelect}>
+          <ComboboxInput
+            value={term}
+            onChange={handleChange}
+            className={styles.textInput}
+          />
+          {!!labels && (
+            <ComboboxPopover style={{ width: 300, zIndex: 5000 }}>
+              {labels.length > 0 ? (
+                <ComboboxList>
+                  {labels.map((label, index) => (
+                    <ComboboxOption key={index} value={`${label.text}`} />
+                  ))}
+                </ComboboxList>
+              ) : (
+                <div>
+                  <p style={{ padding: 10, textAlign: "center" }}>No results</p>
+                </div>
+              )}
+            </ComboboxPopover>
+          )}
+        </Combobox>
+        {isVisibleErrorMessage && (
+          <p>The length of the label cannot exceed 200 characters.</p>
         )}
-      </Combobox>
+      </div>
+
       <Button
+        ref={buttonRef}
         color="primary"
         variant="contained"
         style={{ marginLeft: "20px" }}

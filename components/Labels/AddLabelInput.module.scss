@@ -1,11 +1,11 @@
 .container {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: flex-start;
 }
 
 .textInput {
-  height: 36px;
+  height: 35px;
   width: 300px;
   margin: 0;
   padding: 0 2px;
