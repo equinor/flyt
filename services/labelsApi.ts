@@ -1,5 +1,6 @@
-import { processLabel } from "interfaces/processLabel";
+import { AxiosResponse } from "axios";
 import BaseAPIServices from "./BaseAPIServices";
+import { processLabel } from "interfaces/processLabel";
 
 const baseUrl = "/api/v1.0";
 
@@ -25,4 +26,8 @@ export const removeLabelFromProcess = (processID: number, labelID: number) => {
   return BaseAPIServices.delete(
     `${baseUrl}/project/${processID}/label/${labelID}`
   );
+};
+
+export const createLabel = (label: processLabel) => {
+  return BaseAPIServices.post(`${baseUrl}/labels`, label);
 };
