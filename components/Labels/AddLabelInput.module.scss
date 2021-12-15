@@ -1,15 +1,33 @@
+@import "../../styles/variables";
+
 .container {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
 }
 
+.combobox {
+  width: 100%;
+}
+
 .textInput {
   height: 35px;
-  width: 300px;
+  width: 100%;
   margin: 0;
-  padding: 0 2px;
+  padding: 0;
   border: none;
   border-bottom: 1px solid #6f6f6f;
+  background-color: #f7f7f7;
   border-radius: 0;
+  outline: none;
+
+  box-sizing: border-box;
+  padding: 0 6px;
+
+  font-size: 16px;
+}
+
+.textInput:focus {
+  box-shadow: 0 0 0 2px $equinor_PROMINENT;
+  border-bottom: none;
 }
