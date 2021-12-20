@@ -1,3 +1,4 @@
+import React from "react";
 import { Chip, Typography } from "@equinor/eds-core-react";
 import { useMutation, useQueryClient } from "react-query";
 
