@@ -110,6 +110,7 @@ function AddSection(props: { process: vsmProject }): JSX.Element {
         className={styles.searchField}
         onChange={handleChange}
         autoFocus
+        value={term}
       />
       {error && <p>{unknownErrorToString(error)}</p>}
       <div className={styles.labelSection}>
