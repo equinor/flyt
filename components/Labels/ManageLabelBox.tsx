@@ -1,12 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  Button,
-  Chip,
-  Icon,
-  Input,
-  Scrim,
-  Search,
-} from "@equinor/eds-core-react";
+import React, { useEffect, useState } from "react";
+import { Button, Chip, Icon, Scrim, Search } from "@equinor/eds-core-react";
 import styles from "./ManageLabelBox.module.scss";
 import { close } from "@equinor/eds-icons";
 import {
@@ -90,6 +83,16 @@ function AddSection(props: { process: vsmProject }): JSX.Element {
       processID: props.process.vsmProjectID,
       label: { text: trimmedItem },
     });
+    props.process.toBeProcessID &&
+      addLabelMutation.mutate({
+        processID: props.process.toBeProcessID,
+        label: { text: trimmedItem },
+      });
+    props.process.currentProcessId &&
+      addLabelMutation.mutate({
+        processID: props.process.currentProcessId,
+        label: { text: trimmedItem },
+      });
     setTerm("");
   };
 
@@ -100,6 +103,23 @@ function AddSection(props: { process: vsmProject }): JSX.Element {
       onSettled: () => queryClient.invalidateQueries(),
     }
   );
+
+  const handleDelete = (item: number) => {
+    removeLabelMutation.mutate({
+      processID: props.process.vsmProjectID,
+      labelID: item,
+    });
+    props.process.toBeProcessID &&
+      removeLabelMutation.mutate({
+        processID: props.process.toBeProcessID,
+        labelID: item,
+      });
+    props.process.currentProcessId &&
+      removeLabelMutation.mutate({
+        processID: props.process.currentProcessId,
+        labelID: item,
+      });
+  };
 
   return (
     <>
@@ -117,12 +137,7 @@ function AddSection(props: { process: vsmProject }): JSX.Element {
         {props.process.labels?.map((label) => (
           <Chip
             key={label.id}
-            onDelete={() =>
-              removeLabelMutation.mutate({
-                processID: props.process.vsmProjectID,
-                labelID: label.id,
-              })
-            }
+            onDelete={() => handleDelete(label.id)}
             style={{
               marginRight: "10px",
               marginBottom: "10px",
