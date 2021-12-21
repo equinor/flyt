@@ -40,7 +40,6 @@
 .labelSection {
   display: block;
   justify-content: left;
-  overflow: auto;
 }
 
 .labelCounter {
@@ -49,7 +48,7 @@
 }
 
 .labelContainer {
-  overflow: scroll;
+  overflow: auto;
   display: flex;
   flex-wrap: wrap;
 }
