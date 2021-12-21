@@ -78,7 +78,7 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
               isLoading={isMutatingFavourite}
             />
           </div>
-          <div className={styles.section}>
+          <div className={`${styles.section} ${styles.labelSection}`}>
             <Labels labels={props.vsm.labels} />
           </div>
           <div className={`${styles.section} ${styles.bottomSection}`}>
