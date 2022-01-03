@@ -20,7 +20,7 @@
   justify-content: space-between;
   align-items: center; //Vertical align the items
   border-bottom: #dcdcdc solid 1px;
-  margin-bottom: 16px;
+  margin-bottom: 30px;
 }
 
 .heading {
@@ -38,17 +38,17 @@
 }
 
 .labelSection {
-  display: block;
+  display: flex;
+  flex-direction: column;
   justify-content: left;
+  overflow: auto;
 }
 
 .labelCounter {
   font-size: 16px;
-  margin-top: 10px;
 }
 
 .labelContainer {
-  overflow: auto;
   display: flex;
   flex-wrap: wrap;
 }
