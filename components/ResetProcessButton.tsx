@@ -1,14 +1,15 @@
-import { useAccount, useMsal } from "@azure/msal-react";
 import { Button, Icon } from "@equinor/eds-core-react";
-import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { useQuery, useQueryClient, useMutation } from "react-query";
-import { notifyOthers } from "services/notifyOthers";
 import { getProject, resetProcess } from "services/projectApi";
-import { getMyAccess } from "utils/getMyAccess";
+import { useAccount, useMsal } from "@azure/msal-react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+
 import { ErrorDialog } from "./ErrorDialog";
 import { ResetProcessDialog } from "./ResetProcessDialog";
+import { getMyAccess } from "utils/getMyAccess";
+import { notifyOthers } from "services/notifyOthers";
 import { restore } from "@equinor/eds-icons";
+import { useRouter } from "next/router";
 
 export const ResetProcessButton = () => {
   const { id } = useRouter().query;
@@ -32,7 +33,7 @@ export const ResetProcessButton = () => {
   // 1. This is a to-be process
   const isTobeProcess = !!process?.currentProcessId;
   // 2. The user have the right to edit the process
-  const userCanEdit = myAccess === "Admin" || myAccess === "Contributor";
+  const userCanEdit = myAccess !== "Reader";
 
   if (!isTobeProcess || !userCanEdit) return null;
 

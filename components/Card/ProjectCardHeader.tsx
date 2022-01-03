@@ -1,6 +1,6 @@
 import React from "react";
-import styles from "./ProjectCardHeader.module.scss";
 import moment from "moment";
+import styles from "./ProjectCardHeader.module.scss";
 import { vsmProject } from "interfaces/VsmProject";
 
 export default function ProjectCardHeader(props: {
@@ -13,7 +13,7 @@ export default function ProjectCardHeader(props: {
       </h1>
       {!!props.vsm.lastUpdated && (
         <p className={styles.lastEditedLabel}>
-          Modified {moment(props.vsm.lastUpdated.changeDate).fromNow()}
+          Modified {moment(props.vsm.lastUpdated).fromNow()}
         </p>
       )}
     </div>

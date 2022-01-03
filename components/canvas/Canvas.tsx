@@ -1,36 +1,37 @@
+import { Button, Dialog, Icon, Scrim } from "@equinor/eds-core-react";
 import React, { useEffect, useRef, useState } from "react";
-import { useStoreDispatch } from "../../hooks/storeHooks";
-import { VSMSideBar } from "../VSMSideBar";
-import style from "../VSMCanvas.module.scss";
-import { DeleteVsmObjectDialog } from "../DeleteVsmObjectDialog";
+import { getProject, resetProcess } from "../../services/projectApi";
+import { moveVSMObject, postVSMObject } from "../../services/vsmObjectApi";
 import { useAccount, useMsal } from "@azure/msal-react";
-import { loadAssets } from "./utils/LoadAssets";
-import { toolBox } from "./entities/toolbox/toolbox";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+
+import { CategorizationPageButton } from "../CategorizationPageButton";
+import { DeleteVsmObjectDialog } from "../DeleteVsmObjectDialog";
+import { ErrorDialog } from "components/ErrorDialog";
+import { LiveIndicator } from "../LiveIndicator";
+import { ResetProcessButton } from "components/ResetProcessButton";
+import { ResetProcessDialog } from "components/ResetProcessDialog";
+import { ToBeToggle } from "./ToBeToggle";
+import { VSMSideBar } from "../VSMSideBar";
+import { addCardsToCanvas } from "./utils/AddCardsToCanvas";
+import { assets } from "./utils/AssetFactory";
+import { draggable } from "./utils/draggable";
+import { getAccessToken } from "../../auth/msalHelpers";
 import { getApp } from "./utils/PixiApp";
+import { getMyAccess } from "../../utils/getMyAccess";
 import { getViewPort } from "./utils/PixiViewport";
 import { initCanvas } from "./utils/InitCanvas";
-import { draggable } from "./utils/draggable";
-import { addCardsToCanvas } from "./utils/AddCardsToCanvas";
-import { getMyAccess } from "../../utils/getMyAccess";
-import { assets } from "./utils/AssetFactory";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { getProject, resetProcess } from "../../services/projectApi";
-import { useRouter } from "next/router";
-import { moveVSMObject, postVSMObject } from "../../services/vsmObjectApi";
-import { vsmObject } from "interfaces/VsmObject";
-import { unknownErrorToString } from "utils/isError";
 import { io } from "socket.io-client";
+import { loadAssets } from "./utils/LoadAssets";
 import { notifyOthers } from "../../services/notifyOthers";
-import { getAccessToken } from "../../auth/msalHelpers";
-import { LiveIndicator } from "../LiveIndicator";
-import { CategorizationPageButton } from "../CategorizationPageButton";
 import { resetCanvasZoomAndPosition } from "./utils/ResetCanvasZoomAndPosition";
-import { ToBeToggle } from "./ToBeToggle";
-import { Button, Dialog, Icon, Scrim } from "@equinor/eds-core-react";
 import { restore } from "@equinor/eds-icons";
-import { ResetProcessDialog } from "components/ResetProcessDialog";
-import { ErrorDialog } from "components/ErrorDialog";
-import { ResetProcessButton } from "components/ResetProcessButton";
+import style from "../VSMCanvas.module.scss";
+import { toolBox } from "./entities/toolbox/toolbox";
+import { unknownErrorToString } from "utils/isError";
+import { useRouter } from "next/router";
+import { useStoreDispatch } from "../../hooks/storeHooks";
+import { vsmObject } from "interfaces/VsmObject";
 
 export default function Canvas(): JSX.Element {
   const ref = useRef();
@@ -88,7 +89,7 @@ export default function Canvas(): JSX.Element {
 
   const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
   const myAccess = getMyAccess(project, account);
-  const userCanEdit = myAccess === "Admin" || myAccess === "Contributor";
+  const userCanEdit = myAccess !== "Reader";
 
   const queryClient = useQueryClient();
   const vsmObjectMutation = useMutation(

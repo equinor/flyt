@@ -1,5 +1,5 @@
-import { vsmProject } from "../interfaces/VsmProject";
 import { getUserShortName } from "./getUserShortName";
+import { vsmProject } from "../interfaces/VsmProject";
 
 /**
  * Get my access in a project
@@ -9,21 +9,19 @@ import { getUserShortName } from "./getUserShortName";
 export function getMyAccess(
   project: vsmProject,
   account: { username: string }
-): "Admin" | "Contributor" | "Reader" {
-  //Default to "Reader"
-  if (!project || !account) return "Reader";
-
-  //If we are the creator of the project, return Admin
-  const shortName = getUserShortName(account);
-  if (project?.created?.userIdentity?.toUpperCase() === shortName)
-    return "Admin";
-
-  //Else, check if we have been given a role, then return that role
-  const found = project?.userAccesses.find(
-    (u) => u.user.toUpperCase() === shortName
-  );
-  if (found) return found.role;
-
+): "Owner" | "Admin" | "Contributor" | "Reader" {
   //If not given a role, we default to "Reader"
-  return "Reader";
+  const defaultRole = "Reader";
+  if (!project || !account) return defaultRole;
+
+  const shortName = getUserShortName(account);
+
+  // If the user has been given a role, we use that
+  const userAccess = project.userAccesses.find(
+    (user) => user.user.toUpperCase() === shortName.toUpperCase()
+  );
+  if (userAccess) return userAccess.role;
+
+  // If the user has not been given a role, we use the default role
+  return defaultRole;
 }

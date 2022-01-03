@@ -1,20 +1,21 @@
 import React, { useState } from "react";
-import styles from "./Card.module.scss";
-import { UserDots } from "./UserDots";
-import { vsmProject } from "../../interfaces/VsmProject";
-import { useMutation, useQueryClient } from "react-query";
 import { faveProject, unfaveProject } from "services/projectApi";
-import Heart from "components/Heart";
-import { Scrim } from "@equinor/eds-core-react";
-import { AccessBox } from "components/AccessBox";
 import { useAccount, useMsal } from "@azure/msal-react";
-import { getMyAccess } from "utils/getMyAccess";
+import { useMutation, useQueryClient } from "react-query";
+
+import { AccessBox } from "components/AccessBox";
+import Heart from "components/Heart";
 import Labels from "components/Labels";
 import ProjectCardHeader from "./ProjectCardHeader";
+import { Scrim } from "@equinor/eds-core-react";
+import { UserDots } from "./UserDots";
+import { getMyAccess } from "utils/getMyAccess";
+import { getOwner } from "utils/getOwner";
+import styles from "./Card.module.scss";
 import { useRouter } from "next/router";
+import { vsmProject } from "../../interfaces/VsmProject";
 
 export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
-  const { userIdentity: createdBy } = props.vsm.created;
   const queryClient = useQueryClient();
   const [isMutatingFavourite, setIsMutatingFavourite] = useState(false);
   const router = useRouter();
@@ -23,7 +24,7 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
   const myAccess = getMyAccess(props.vsm, account);
-  const isAdmin = myAccess === "Admin";
+  const isAdmin = myAccess === "Admin" || myAccess === "Owner";
 
   const handleSettled = () => {
     queryClient.invalidateQueries().then(() => setIsMutatingFavourite(false));
@@ -75,15 +76,10 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
           </div>
           <div className={styles.bottomSection}>
             <Labels labels={props.vsm.labels} />
-            {createdBy && (
-              <UserDots
-                users={[
-                  `${createdBy}`,
-                  ...props.vsm.userAccesses.map((u) => u.user),
-                ]}
-                setVisibleScrim={(any: boolean) => setVisibleScrim(any)}
-              />
-            )}
+            <UserDots
+              users={[...props.vsm.userAccesses.map((u) => u.user)]}
+              setVisibleScrim={(any: boolean) => setVisibleScrim(any)}
+            />
           </div>
         </div>
       </button>
