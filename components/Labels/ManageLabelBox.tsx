@@ -83,16 +83,6 @@ function AddSection(props: { process: vsmProject }): JSX.Element {
       processID: props.process.vsmProjectID,
       label: { text: trimmedItem },
     });
-    props.process.toBeProcessID &&
-      addLabelMutation.mutate({
-        processID: props.process.toBeProcessID,
-        label: { text: trimmedItem },
-      });
-    props.process.currentProcessId &&
-      addLabelMutation.mutate({
-        processID: props.process.currentProcessId,
-        label: { text: trimmedItem },
-      });
     setTerm("");
   };
 
@@ -109,16 +99,6 @@ function AddSection(props: { process: vsmProject }): JSX.Element {
       processID: props.process.vsmProjectID,
       labelID: item,
     });
-    props.process.toBeProcessID &&
-      removeLabelMutation.mutate({
-        processID: props.process.toBeProcessID,
-        labelID: item,
-      });
-    props.process.currentProcessId &&
-      removeLabelMutation.mutate({
-        processID: props.process.currentProcessId,
-        labelID: item,
-      });
   };
 
   return (
