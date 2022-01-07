@@ -38,7 +38,7 @@ export default function Canvas(): JSX.Element {
   const [selectedObject, setSelectedObject] = useState(null);
   const dispatch = useStoreDispatch();
   const router = useRouter();
-  const { id } = router.query;
+  const { id, version } = router.query;
 
   const [socketConnected, setSocketConnected] = useState(false);
   const [socketReason, setSocketReason] = useState("");
@@ -84,7 +84,9 @@ export default function Canvas(): JSX.Element {
     });
   }, []);
 
-  const { data: project } = useQuery(["project", id], () => getProject(id));
+  const { data: project } = useQuery(["project", id, version], () =>
+    getProject(id, version)
+  );
   const [assetsAreLoaded, setAssetsAreLoaded] = useState(false);
 
   const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);

@@ -1,9 +1,10 @@
-import BaseAPIServices from "./BaseAPIServices";
-import { projectTemplatesV1 } from "../assets/projectTemplatesV1";
 import { AxiosPromise, AxiosResponse } from "axios";
-import { vsmProject } from "../interfaces/VsmProject";
+
+import BaseAPIServices from "./BaseAPIServices";
 import { createUrlParams } from "../utils/createUrlParams";
 import { processLabel } from "interfaces/processLabel";
+import { projectTemplatesV1 } from "../assets/projectTemplatesV1";
+import { vsmProject } from "../interfaces/VsmProject";
 
 const baseUrl = "/api/v1.0";
 //Project aka. VSM aka. Flyt or Flow
@@ -43,8 +44,25 @@ export const createProject = (
   );
 };
 
-export const getProject = (id: string | string[]): Promise<vsmProject> =>
-  BaseAPIServices.get(`${baseUrl}/project/${id}`).then((value) => value.data);
+/**
+ * Get project by id
+ * @param id project id
+ * @param asOf Get the project in a previous version by setting this to a historical time.
+ * @returns VSM Process
+ */
+export const getProject = (
+  id: string | string[],
+  asOf?: string | string[]
+): Promise<vsmProject> => {
+  if (asOf) {
+    return BaseAPIServices.get(`${baseUrl}/project/${id}?asOf=${asOf}`).then(
+      (value) => value.data
+    );
+  }
+  return BaseAPIServices.get(`${baseUrl}/project/${id}`).then(
+    (value) => value.data
+  );
+};
 
 export const updateProject = (data) =>
   BaseAPIServices.post(`${baseUrl}/project`, data);
@@ -67,3 +85,11 @@ export const resetProcess = (
   id: number | string | string[]
 ): Promise<AxiosResponse> =>
   BaseAPIServices.patch(`${baseUrl}/project/${id}/reset`, null);
+
+// Check at what datetimes the given project has been updated.
+export const getProjectUpdateTimes = (
+  id: number | string | string[]
+): Promise<Array<string>> =>
+  BaseAPIServices.get(`${baseUrl}/project/${id}/updates`).then(
+    (value) => value.data
+  );
