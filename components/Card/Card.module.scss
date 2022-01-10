@@ -41,7 +41,7 @@
   }
 }
 
-.topSection {
+.section {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -49,13 +49,14 @@
   margin: 12px;
 }
 
+.labelSection {
+  overflow: auto;
+}
+
 .bottomSection {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-end;
-  overflow: hidden;
-  margin: 12px;
+  margin-top: 0;
+  flex-direction: row-reverse;
+  align-items: center;
 }
 
 .noselect {

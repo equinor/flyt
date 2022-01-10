@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import commonStyles from "../../styles/common.module.scss";
 import styles from "./FrontPage.module.scss";
 import Head from "next/head";
 import { Layouts } from "../../layouts/LayoutWrapper";
@@ -11,22 +10,26 @@ import { useRouter } from "next/router";
 import { Typography } from "@equinor/eds-core-react";
 import { SortSelect } from "../../components/SortSelect";
 import { SearchField } from "components/SearchField";
-
+import FilterLabelButton from "components/Labels/FilterLabelButton";
+import ActiveFilterSection from "components/Labels/ActiveFilterSection";
 export default function AllProcesses(): JSX.Element {
   const [page, setPage] = useState(1);
   const itemsPerPage = 15;
 
   const router = useRouter();
-  const { searchQuery, orderBy } = router?.query;
 
-  const query = useQuery(["projects", page, searchQuery || "", orderBy], () =>
-    getProjects({
-      page,
-      items: itemsPerPage,
-      q: searchQuery ? `${searchQuery}` : "",
-      orderBy: orderBy && `${orderBy}`,
-    })
+  const query = useQuery(
+    ["projects", page, ...Object.values(router.query)],
+    () =>
+      getProjects({
+        page,
+        items: itemsPerPage,
+        ...router.query,
+      })
   );
+
+  // rl stands for "required label"
+  const labelIdArray = router.query.rl ? `${router.query.rl}`.split(",") : null;
 
   return (
     <div>
@@ -44,8 +47,16 @@ export default function AllProcesses(): JSX.Element {
             </div>
             <div className={styles.subHeader}>
               <Typography variant="h3">All processes</Typography>
-              <SortSelect />
+              <div className={styles.sortAndFilter}>
+                <FilterLabelButton />
+                <SortSelect />
+              </div>
             </div>
+            {labelIdArray && (
+              <div className={styles.subHeader}>
+                <ActiveFilterSection labelIDArray={labelIdArray} />
+              </div>
+            )}
           </div>
           <FrontPageBody
             showNewProjectButton={true}

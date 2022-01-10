@@ -1,0 +1,17 @@
+.wrapper {
+  position: absolute;
+  bottom: 35px;
+  right: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 4px;
+  filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.14));
+}
+
+@media screen and (max-width: 768px) {
+  .wrapper {
+    flex-direction: column;
+  }
+}

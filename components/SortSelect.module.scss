@@ -1,9 +1,12 @@
+@import "styles/_variables.scss";
+
 .sortSelect {
   /* Navigation/Menu Title */
 
   font-family: Equinor, sans-serif;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 16px;
+  color: $equinor_PROMINENT;
   /* identical to box height, or 100% */
 
   display: flex;
@@ -17,5 +20,5 @@
   // Replace the chevron with a green one
   -webkit-appearance: none; // Hide the original chevron
   background: url(/chevron_down.svg) no-repeat right; // Add svg chevron
-  background-position-x: 105px; // Adjust placement
+  background-position-x: 90px; // Adjust placement
 }
