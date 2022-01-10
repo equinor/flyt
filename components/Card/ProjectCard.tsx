@@ -1,17 +1,18 @@
 import React, { useState } from "react";
-import styles from "./Card.module.scss";
-import { UserDots } from "./UserDots";
-import { vsmProject } from "../../interfaces/VsmProject";
-import { useMutation, useQueryClient } from "react-query";
 import { faveProject, unfaveProject } from "services/projectApi";
-import Heart from "components/Heart";
-import { Scrim } from "@equinor/eds-core-react";
-import { AccessBox } from "components/AccessBox";
 import { useAccount, useMsal } from "@azure/msal-react";
-import { getMyAccess } from "utils/getMyAccess";
+import { useMutation, useQueryClient } from "react-query";
+
+import { AccessBox } from "components/AccessBox";
+import Heart from "components/Heart";
 import Labels from "components/Labels";
 import ProjectCardHeader from "./ProjectCardHeader";
+import { Scrim } from "@equinor/eds-core-react";
+import { UserDots } from "./UserDots";
+import { getMyAccess } from "utils/getMyAccess";
+import styles from "./Card.module.scss";
 import { useRouter } from "next/router";
+import { vsmProject } from "../../interfaces/VsmProject";
 
 export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
   const { userIdentity: createdBy } = props.vsm.created;
@@ -88,15 +89,17 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
         </div>
       </button>
 
-      {visibleScrim && (
-        <Scrim onClose={() => setVisibleScrim(false)} isDismissable>
-          <AccessBox
-            project={props.vsm}
-            handleClose={() => setVisibleScrim(false)}
-            isAdmin={isAdmin}
-          />
-        </Scrim>
-      )}
+      <Scrim
+        open={visibleScrim}
+        onClose={() => setVisibleScrim(false)}
+        isDismissable
+      >
+        <AccessBox
+          project={props.vsm}
+          handleClose={() => setVisibleScrim(false)}
+          isAdmin={isAdmin}
+        />
+      </Scrim>
     </>
   );
 }

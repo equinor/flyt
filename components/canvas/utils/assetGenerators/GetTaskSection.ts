@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+
 import { createArrayOfTaskCircles } from "./CreateArrayOfTaskCircles";
 import { createGrid } from "../CreateGrid";
 import { textResolution } from "../AssetFactory";
@@ -26,7 +27,8 @@ export function getTaskSection(
   taskSectionEdge.x = 28 * numberOfBases;
   taskSection.addChild(taskSectionEdge);
   taskSection.x = 126;
-  const tasks = vsmObject.tasks;
+  // Remember to not include solved tasks
+  const tasks = vsmObject.tasks.filter((task) => !task.solved);
   if (tasks?.length > 0) {
     const {
       ideaCircle,
