@@ -5,6 +5,7 @@ import { category, timeline } from "@equinor/eds-icons";
 import { close, link } from "@equinor/eds-icons";
 import useWindowSize, { WindowSize } from "../hooks/useWindowSize";
 
+import { GlowFilter } from "pixi-filters";
 import { Scrollbox } from "pixi-scrollbox";
 import { TooltipImproved } from "./TooltipImproved";
 import { getProjectUpdateTimes } from "services/projectApi";
@@ -114,46 +115,21 @@ export const VersionHistoryButton = (props: {
           style={{
             position: "absolute",
             bottom: "0",
-            // left: "0",
-            // width: "100%",
-            // height: "250px",
-            backgroundColor: "white",
             zIndex: 1,
-            // marginLeft: "20px",
-            // marginRight: "20px",
-            minHeight: "200px",
-            // borderRadius: "4px 4px 0 0",
-            // // marginLeft: 20,
-            // marginRight: 20
-            borderColor: "black",
-            borderWidth: 10,
           }}
         >
-          <div
+          <Button
             style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              backgroundColor: "#fafafa",
-              border: "1px solid grey",
+              position: "absolute",
+              right: "0",
+              top: "0",
             }}
+            variant={"ghost_icon"}
+            onClick={closeVersionHistoryBottomSheet}
           >
-            <Button
-              variant={"ghost_icon"}
-              onClick={closeVersionHistoryBottomSheet}
-            >
-              <Icon data={close} />
-            </Button>
-          </div>
+            <Icon data={close} />
+          </Button>
           <ProcessTimeline processId={projectId} />
-          {/* <div style={{ display: "flex" }}>
-            {data?.map((date: string, index) => {
-              return (
-                <Button onClick={(e) => travelToVersion(date)}>
-                  {moment(date).format("DD/MM/YYYY HH:mm")}
-                </Button>
-              );
-            })}
-          </div> */}
         </div>
       )}
       <TooltipImproved title="Show version history">
@@ -327,10 +303,17 @@ export const ProcessTimeline = (props: { processId: string }) => {
     highlighter.endFill();
     highlighter.visible = false;
 
+    const maxDistanceToNextDate = 200;
     if (datesFiltered) {
-      const placedElements = datesFiltered.map((date) => {
+      const placedElements = datesFiltered.map((date, index) => {
         const x =
           date.parsed.diff(datesFiltered[0].parsed, "days") * spacingMultiplier;
+
+        const previous = datesFiltered[index - 1];
+        const deltaX = date.parsed.diff(datesFiltered[index - 1], "days");
+        console.log({ previous, deltaX }, Math.abs(deltaX));
+
+        // const x = date.parsed.diff(datesFiltered[0].parsed, "days") * spacingMultiplier;
         const y = app.screen.height / 2; // Center the timeline vertically
 
         // Draw a white circle with a border around it
@@ -343,6 +326,14 @@ export const ProcessTimeline = (props: { processId: string }) => {
         circle.interactive = true;
         // make the circle hitbox large
         circle.hitArea = new Circle(0, 0, 20);
+        circle.on("pointerover", () => {
+          circle.filters = [new GlowFilter()];
+          circle.cursor = "pointer";
+        });
+        circle.on("pointerout", () => {
+          circle.filters = [];
+          circle.cursor = "default";
+        });
 
         // Draw a text label
         const text = new Text(date.parsed.format("DD.MM.YY"));
@@ -360,6 +351,8 @@ export const ProcessTimeline = (props: { processId: string }) => {
           highlighter.visible = true;
           highlighter.x = x;
           highlighter.y = y;
+          // rememeber to scroll this element into view
+          scrollbox.ensureVisible(x, y, circle.width * 10, circle.height);
         }
         return { circle, text, date };
       });
