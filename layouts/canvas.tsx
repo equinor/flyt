@@ -241,7 +241,7 @@ const CanvasLayout = ({ children }): JSX.Element => {
           <div style={{ gridAutoFlow: "row" }} className={styles.centerButton}>
             <div className={styles.centerButton}>
               <Typography variant={"h4"} className={styles.projectName}>
-                {projectTitle || "Untitled VSM"}
+                {projectTitle || "Untitled process"}
               </Typography>
               <Button
                 variant={"ghost"}
@@ -272,8 +272,8 @@ const CanvasLayout = ({ children }): JSX.Element => {
               <Menu.Item
                 title={`${
                   userCannotEdit
-                    ? "Only the creator, admin or a contributor can rename this VSM"
-                    : "Rename the current VSM"
+                    ? "Only the creator, admin or a contributor can rename this process"
+                    : "Rename the current process"
                 }`}
                 disabled={userCannotEdit}
                 onKeyDown={(e) => {
@@ -293,8 +293,8 @@ const CanvasLayout = ({ children }): JSX.Element => {
               <Menu.Item
                 title={`${
                   isAdmin
-                    ? "Delete the current VSM"
-                    : "Only the creator can delete this VSM"
+                    ? "Delete the current process"
+                    : "Only the creator can delete this process"
                 }`}
                 disabled={!isAdmin}
                 onKeyDown={(e) => {

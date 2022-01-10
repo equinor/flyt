@@ -261,3 +261,5 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/react,macos,windows,linux,intellij,vscode
 
 .idea
+
+tsconfig.tsbuildinfo
