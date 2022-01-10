@@ -1,14 +1,15 @@
 import { Button, Chip, Icon, Search } from "@equinor/eds-core-react";
 import React, { useState } from "react";
-import styles from "./FilterLabelBox.module.scss";
-import { close } from "@equinor/eds-icons";
-import { useQuery } from "react-query";
-import { getLabels } from "services/labelsApi";
-import { unknownErrorToString } from "utils/isError";
-import { useRouter } from "next/router";
-import { getUpdatedLabel } from "utils/getUpdatedLabel";
-import { debounce } from "utils/debounce";
+
 import ButtonClearAll from "./ButtonClearAll";
+import { close } from "@equinor/eds-icons";
+import { debounce } from "utils/debounce";
+import { getLabels } from "services/labelsApi";
+import { getUpdatedLabel } from "utils/getUpdatedLabel";
+import styles from "./FilterLabelBox.module.scss";
+import { unknownErrorToString } from "utils/isError";
+import { useQuery } from "react-query";
+import { useRouter } from "next/router";
 
 export default function FilterLabelBox(props: {
   handleClose: () => void;
@@ -51,6 +52,7 @@ function SearchSection(props: {
         aria-label="search"
         id="searchProjects"
         placeholder="Search labels"
+        autoComplete="off"
         onChange={(e) => {
           debounce(
             () => setSearchText(`${e.target.value}`),

@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from "react";
 import { Button, Chip, Icon, Scrim, Search } from "@equinor/eds-core-react";
-import styles from "./ManageLabelBox.module.scss";
-import { close } from "@equinor/eds-icons";
+import React, { useEffect, useState } from "react";
 import {
   addLabelToProcess,
   getLabels,
   removeLabelFromProcess,
 } from "services/labelsApi";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { vsmProject } from "interfaces/VsmProject";
-import { processLabel } from "interfaces/processLabel";
+
+import { close } from "@equinor/eds-icons";
 import { debounce } from "utils/debounce";
+import { processLabel } from "interfaces/processLabel";
+import styles from "./ManageLabelBox.module.scss";
 import { unknownErrorToString } from "utils/isError";
+import { vsmProject } from "interfaces/VsmProject";
 
 export default function ManageLabelBox(props: {
   isVisible: boolean;
@@ -107,6 +108,7 @@ function AddSection(props: { process: vsmProject }): JSX.Element {
         aria-label="search"
         id="searchProjects"
         placeholder="Search labels"
+        autoComplete="off"
         className={styles.searchField}
         onChange={handleChange}
         autoFocus
