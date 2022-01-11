@@ -1,5 +1,6 @@
-import { vsmProject } from "interfaces/VsmProject";
+import { Process } from "interfaces/generated";
 import { getUserShortName } from "./getUserShortName";
+import { vsmProject } from "interfaces/VsmProject";
 
 /**
  * Get my access in a project
@@ -7,7 +8,7 @@ import { getUserShortName } from "./getUserShortName";
  * @param account
  */
 export function getMyAccess(
-  process: vsmProject, //todo: change to process type
+  process: Process | vsmProject, //todo: change to process type
   account: { username: string }
 ): "Admin" | "Contributor" | "Reader" {
   //Default to "Reader"

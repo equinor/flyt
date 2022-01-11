@@ -168,7 +168,7 @@ export default function Next(): JSX.Element {
         backgroundColor: "black",
       }}
     >
-      <CategorizationPageButton userCanEdit={userCanEdit} />
+      <CategorizationPageButton />
       <LiveIndicator
         live={socketConnected}
         title={

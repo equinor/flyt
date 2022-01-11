@@ -3,9 +3,12 @@ import { moveVSMObject, postVSMObject } from "../../services/vsmObjectApi";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
-import { CategorizationPageButton } from "../CategorizationPageButton";
+import { CanvasButtons } from "components/CanvasButtons";
 import { DeleteVsmObjectDialog } from "../DeleteVsmObjectDialog";
 import { LiveIndicator } from "../LiveIndicator";
+import ManageLabelBox from "components/Labels/ManageLabelBox";
+import { ResetProcessButton } from "components/ResetProcessButton";
+import { ToBeToggle } from "./ToBeToggle";
 import { VSMSideBar } from "../VSMSideBar";
 import { addCardsToCanvas } from "./utils/AddCardsToCanvas";
 import { assets } from "./utils/AssetFactory";
@@ -83,7 +86,8 @@ export default function Canvas(): JSX.Element {
   const [assetsAreLoaded, setAssetsAreLoaded] = useState(false);
 
   const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
-  const myAccess = getMyAccess(project as vsmProject, account);
+  const myAccess = getMyAccess(project, account);
+  const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
   const userCanEdit = myAccess === "Admin" || myAccess === "Contributor";
 
   const queryClient = useQueryClient();
@@ -168,7 +172,15 @@ export default function Canvas(): JSX.Element {
         backgroundColor: "black",
       }}
     >
-      <CategorizationPageButton userCanEdit={userCanEdit} />
+      <CanvasButtons
+        userCanEdit={userCanEdit}
+        handleClickLabel={() => setVisibleLabelScrim(true)}
+      />
+      <ManageLabelBox
+        handleClose={() => setVisibleLabelScrim(false)}
+        isVisible={visibleLabelScrim}
+        process={project as vsmProject}
+      />
       <LiveIndicator
         live={socketConnected}
         title={
@@ -176,9 +188,11 @@ export default function Canvas(): JSX.Element {
             ? "Connection is looking good!\nYour changes should appear immediately for other users."
             : `You are not connected ${
                 socketReason ? `because of ${socketReason}` : ""
-              }`
+              }.`
         }
       />
+      <ToBeToggle />
+      <ResetProcessButton />
       <DeleteVsmObjectDialog
         objectToDelete={selectedObject}
         visible={visibleDeleteScrim}

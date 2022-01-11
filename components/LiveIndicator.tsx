@@ -8,11 +8,11 @@ export function LiveIndicator(props: {
 }): JSX.Element {
   const { live } = props;
   return (
-    <div style={{ position: "absolute", right: 0 }}>
+    <div style={{ position: "absolute", right: 0, top: 124 }}>
       <div
         style={{
-          paddingRight: 24,
-          paddingBottom: 12,
+          paddingRight: 12,
+          margin: 12,
           display: "flex",
           alignItems: "center",
         }}

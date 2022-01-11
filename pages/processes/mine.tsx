@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import commonStyles from "../../styles/common.module.scss";
 import styles from "./FrontPage.module.scss";
 import Head from "next/head";
 import { Layouts } from "../../layouts/LayoutWrapper";
@@ -13,13 +12,14 @@ import { useRouter } from "next/router";
 import { Typography } from "@equinor/eds-core-react";
 import { SortSelect } from "../../components/SortSelect";
 import { SearchField } from "components/SearchField";
+import FilterLabelButton from "components/Labels/FilterLabelButton";
+import ActiveFilterSection from "components/Labels/ActiveFilterSection";
 
 export default function MyProcesses(): JSX.Element {
   const [page, setPage] = useState(1);
   const itemsPerPage = 15;
 
   const router = useRouter();
-  const { searchQuery, orderBy } = router?.query;
 
   //Get my user
   const { accounts } = useMsal();
@@ -30,17 +30,19 @@ export default function MyProcesses(): JSX.Element {
   const myUserId = users?.find((user) => user.userName === shortName)?.pkUser;
 
   const query = useQuery(
-    ["myProjects", page, myUserId, searchQuery || "", orderBy],
+    ["myProjects", page, myUserId, ...Object.values(router.query)],
     () =>
       getProjects({
         page,
         ru: [myUserId],
         items: itemsPerPage,
-        q: searchQuery ? `${searchQuery}` : "",
-        orderBy: orderBy && `${orderBy}`,
+        ...router.query,
       }),
     { enabled: !!myUserId }
   );
+
+  // rl stands for "required label"
+  const labelsID = router.query.rl ? `${router.query.rl}`.split(",") : null;
 
   return (
     <div>
@@ -58,8 +60,16 @@ export default function MyProcesses(): JSX.Element {
             </div>
             <div className={styles.subHeader}>
               <Typography variant="h3">My processes</Typography>
-              <SortSelect />
+              <div className={styles.sortAndFilter}>
+                <FilterLabelButton />
+                <SortSelect />
+              </div>
             </div>
+            {labelsID && (
+              <div className={styles.subHeader}>
+                <ActiveFilterSection labelIDArray={labelsID} />
+              </div>
+            )}
           </div>
           <FrontPageBody
             itemsPerPage={itemsPerPage}

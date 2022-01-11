@@ -7,6 +7,8 @@ import { processLabel } from "./processLabel";
 export interface vsmProject {
   vsmProjectID: number;
   name: string;
+  toBeProcessID?: number;
+  currentProcessId?: number;
   labels: processLabel[];
   created: {
     pkChangeLog: number;

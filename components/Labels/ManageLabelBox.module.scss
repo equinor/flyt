@@ -1,0 +1,45 @@
+@import "styles/variables";
+
+.box {
+  background: #ffffff;
+  border-radius: 4px;
+  padding: 0 20px 25px 20px;
+
+  display: flex;
+  flex-direction: column;
+
+  width: min(90vw, 600px);
+  height: 70vh;
+
+  animation-name: fade-in;
+  animation-duration: 0.5s;
+}
+
+.topSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; //Vertical align the items
+  border-bottom: #dcdcdc solid 1px;
+  margin-bottom: 30px;
+}
+
+.heading {
+  /* Heading/H6 */
+  font-family: Equinor, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.2px;
+  color: $equinor_PROMINENT;
+}
+
+.addSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.labelSection {
+  display: flex;
+  flex-wrap: wrap;
+  overflow: auto;
+  margin-top: 30px;
+}

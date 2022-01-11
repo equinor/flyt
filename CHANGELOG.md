@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.15](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.14...v0.2.15) (2022-01-10)
+
+### Features
+
+- add labels to a process ([60ef48b](https://github.com/equinor/MAD-VSM-WEB/commit/60ef48b1381b1ee2b1085c6019d9fe906ffa86dc)), closes [#159](https://github.com/equinor/MAD-VSM-WEB/issues/159)
+- favourite a process from the canvas ([#334](https://github.com/equinor/MAD-VSM-WEB/issues/334)) ([da46f49](https://github.com/equinor/MAD-VSM-WEB/commit/da46f496cd0d958c281f3cb2380fc9064f250067)), closes [#252](https://github.com/equinor/MAD-VSM-WEB/issues/252)
+
+### [0.2.14](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.13...v0.2.14) (2021-11-30)
+
+### Features
+
+- to-be process ([#270](https://github.com/equinor/MAD-VSM-WEB/issues/270)) ([fdb0062](https://github.com/equinor/MAD-VSM-WEB/commit/fdb006282c24ae4232f0ce5c64edfa6f0b30fc19)), closes [#159](https://github.com/equinor/MAD-VSM-WEB/issues/159) [#192](https://github.com/equinor/MAD-VSM-WEB/issues/192)
+
 ### [0.2.13](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.12...v0.2.13) (2021-11-09)
 
 ### Bug Fixes
@@ -111,24 +124,24 @@ All notable changes to this project will be documented in this file. See [standa
 
 "Multiplayer" support. Users now see changes made by others in real-time
 
-### 06.08.21:
+### 06.08.21
 
 Hiding sidebar when clicking the canvas Tooltip when adding questions, ideas and problems with long text Line shifts are displayed on cards in canvas
 
-### 30.07.21:
+### 30.07.21
 
 Improved layout of the front page Access control: Sharing of write (contributor) and admin access is now available Bug
 fix: Long role names previously messed up the layout on cards; is now constrained to one line. Bug fix: Card text were sometimes lost during save
 
-### 01.07.21:
+### 01.07.21
 
 Added link to Power BI
 
-### 29.06.21:
+### 29.06.21
 
 Bug fix: Problems, questions and ideas did not show on SIPOC cards (blue and green ones). Untitled VSM's are now filtered out in the View mode.
 
-### 18.06.21:
+### 18.06.21
 
 Bug fixes to improve performance Moved toolbar Disabled browser zoom Added link to wiki
 
