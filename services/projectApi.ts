@@ -1,10 +1,11 @@
-import BaseAPIServices from "./BaseAPIServices";
-import { projectTemplatesV1 } from "../assets/projectTemplatesV1";
 import { AxiosPromise, AxiosResponse } from "axios";
-import { vsmProject } from "../interfaces/VsmProject";
+
+import BaseAPIServices from "./BaseAPIServices";
+import { Process } from "interfaces/generated";
 import { createUrlParams } from "../utils/createUrlParams";
 import { processLabel } from "interfaces/processLabel";
-import { Process } from "interfaces/generated";
+import { projectTemplatesV1 } from "../assets/projectTemplatesV1";
+import { vsmProject } from "../interfaces/VsmProject";
 
 const baseUrl = "/api/v1.0";
 //Project aka. VSM aka. Flyt or Flow

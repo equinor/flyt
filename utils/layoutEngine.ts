@@ -1,7 +1,7 @@
 import { Process, TasksEntity } from "interfaces/generated";
+import { createGraph, mockProcessGraph } from "./createGraph";
 
 import { calculateEdgePositions } from "./calculateEdgePositions";
-import { createGraph } from "./createGraph";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
 
 export interface GraphNode {
@@ -64,7 +64,7 @@ export class Graph {
   users: Array<User>;
 
   constructor(process: Process) {
-    const graph = createGraph(process);
+    const graph = mockProcessGraph(process);
     this.nodes = graph.nodes;
     this.edges = graph.edges;
   }

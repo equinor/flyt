@@ -216,19 +216,19 @@ export function addCardsToCanvas(
             if (closestToCenterBottom) {
               closest = centerBottom;
               arrow.rotation = Math.PI / 2;
-              console.log("bottom");
+              // console.log("bottom");
             } else if (closestToCenterLeft) {
               arrow.rotation = Math.PI;
               closest = centerLeft;
-              console.log("left");
+              // console.log("left");
             } else if (closestToCenterRight) {
               arrow.rotation = 0;
               closest = centerRight;
-              console.log("right");
+              // console.log("right");
             } else if (closestToCenterTop) {
               arrow.rotation = -Math.PI / 2;
               closest = centerTop;
-              console.log("top");
+              // console.log("top");
             }
             // move the arrow to indicate where we may drop a new node
             arrow.x = closest.x;
