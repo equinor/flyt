@@ -21,9 +21,16 @@ export const getProjects = (filter?: {
     (value) => {
       return {
         projects: value.data,
-        totalItems: parseInt(value.headers.totalitems, 10),
+        totalItems: parseInt(value.headers.totalitems, 10)
       };
     }
+  );
+
+export const searchUser = (
+  userName: string
+): Promise<Array<{ pkUser: number; userName: string }>> =>
+  BaseAPIServices.get(`${baseUrl}/useraccess/usersearch?q=${userName}`).then(
+    (value) => value.data
   );
 
 export const createProject = (
