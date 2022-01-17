@@ -2,5 +2,5 @@
 . "$(dirname "$0")/_/husky.sh"
 
 yarn lint
-echo "Checking for typescript errors" && tsc
+echo "Checking for typescript errors" && npx tsc
 yarn postinstall

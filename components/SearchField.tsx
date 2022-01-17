@@ -1,9 +1,10 @@
-import { useRouter } from "next/router";
-import { Search } from "@equinor/eds-core-react";
-import { debounce } from "../utils/debounce";
+import { Label, Search } from "@equinor/eds-core-react";
+
 import React from "react";
-import styles from "./SearchField.module.scss";
+import { debounce } from "../utils/debounce";
 import removeEmpty from "utils/removeEmpty";
+import styles from "./SearchField.module.scss";
+import { useRouter } from "next/router";
 
 export function SearchField(): JSX.Element {
   const router = useRouter();
@@ -15,10 +16,8 @@ export function SearchField(): JSX.Element {
 
   return (
     <Search
-      aria-label="search"
-      id="searchProjects"
-      placeholder="Search by username or title"
-      className={styles.searchField}
+      aria-label="Search for process with name"
+      placeholder="Search by process name"
       defaultValue={router.query.q}
       onChange={(e) => {
         debounce(() => handleSearch(`${e.target.value}`), 500, "projectSearch");
