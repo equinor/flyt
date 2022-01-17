@@ -41,7 +41,7 @@ export function mockProcessGraph(process): {
     edges: Array<GraphEdge>(),
   };
   // add nodes 1 through 4
-  for (let i = 1; i <= 8; i++) {
+  for (let i = 1; i <= 20; i++) {
     graph.nodes.push({
       id: i,
       type: vsmObjectTypes.subActivity,
@@ -49,6 +49,7 @@ export function mockProcessGraph(process): {
       name: `${i}`,
       width: defaultNodeWidth,
       height: defaultNodeHeight,
+      // hidden: i === 1,
     } as GraphNode);
   }
 
@@ -74,10 +75,12 @@ export function mockProcessGraph(process): {
   graph.edges.push({
     from: 1,
     to: 2,
+    // hidden: true,
   });
   graph.edges.push({
     from: 1,
     to: 3,
+    // hidden: true,
   });
   // 2-> 4,5 -> 8
   graph.edges.push({
@@ -113,6 +116,37 @@ export function mockProcessGraph(process): {
     from: 7,
     to: 8,
   });
+
+  //1 -> 9 -> 10->11
+  graph.edges.push({
+    from: 1,
+    to: 9,
+    // // hidden: true,
+  });
+  graph.edges.push({
+    from: 9,
+    to: 10,
+  });
+  graph.edges.push({
+    from: 10,
+    to: 11,
+  });
+
+  // 8 & 11 -> 12
+  graph.edges.push({
+    from: 8,
+    to: 12,
+  });
+  graph.edges.push({
+    from: 11,
+    to: 12,
+  });
+
+  // 6 -> 13 // This is an illegal edge.
+  // graph.edges.push({
+  //   from: 6,
+  //   to: 13,
+  // });
 
   positionNodesBeta(graph);
 

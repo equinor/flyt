@@ -1,6 +1,11 @@
 import * as PIXI from "pixi.js";
 
-import { Graph, GraphNode, choiceGroupTypes } from "utils/layoutEngine";
+import {
+  Graph,
+  GraphEdge,
+  GraphNode,
+  choiceGroupTypes,
+} from "utils/layoutEngine";
 
 import { Point } from "pixi.js";
 import { Process } from "interfaces/generated";
@@ -213,10 +218,15 @@ export function addCardsToCanvas(
               distanceToCenterTop < distanceToCenterLeft &&
               distanceToCenterTop < distanceToCenterRight;
 
+            const edges = graph.getNodeEdges(hit.node);
+            unHighlightEdges(edges, viewport);
             if (closestToCenterBottom) {
               closest = centerBottom;
               arrow.rotation = Math.PI / 2;
-              // console.log("bottom");
+
+              // highlight any outgoing edges
+              const outGoingEdges = graph.getOutgoingEdges(hit.node);
+              highlightEdges(outGoingEdges, viewport);
             } else if (closestToCenterLeft) {
               arrow.rotation = Math.PI;
               closest = centerLeft;
@@ -228,7 +238,10 @@ export function addCardsToCanvas(
             } else if (closestToCenterTop) {
               arrow.rotation = -Math.PI / 2;
               closest = centerTop;
-              // console.log("top");
+
+              // highlight any incoming edges
+              const incomingEdges = graph.getIncomingEdges(hit.node);
+              highlightEdges(incomingEdges, viewport);
             }
             // move the arrow to indicate where we may drop a new node
             arrow.x = closest.x;
@@ -271,6 +284,7 @@ export function addCardsToCanvas(
           arrow.visible = false;
           // change cursor to default
           viewport.cursor = "default";
+          unHighlightEdges(edges, viewport);
         }
         if (config.drawLineFromCursorToClosestNode) {
           // draw a line from the cursor to the closest card
@@ -319,7 +333,7 @@ export function addCardsToCanvas(
     });
 
     let cursorTimer = setTimeout(null, 0);
-    //Hittest the cursor against the nodes and edges
+    //Hit-test the cursor against the nodes and edges
     viewport.on("pointerdown", (e) => {
       //animate the cursor
       clickAnimation(cursor, e);
@@ -390,6 +404,20 @@ export function addCardsToCanvas(
   }
   const endTime = performance.now();
   console.log(`Graph rendering took ${endTime - startTime} ms`);
+}
+
+function highlightEdges(edges: GraphEdge[], viewport: Viewport) {
+  edges.forEach((edge) => {
+    edge.highlighted = true;
+    drawGraphEdges([edge], viewport);
+  });
+}
+
+function unHighlightEdges(edges: GraphEdge[], viewport: Viewport) {
+  edges.forEach((edge) => {
+    edge.highlighted = false;
+    drawGraphEdges([edge], viewport);
+  });
 }
 
 function clickAnimation(cursor: PIXI.Graphics, e: any): void {
