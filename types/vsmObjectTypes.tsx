@@ -9,4 +9,5 @@ export enum vsmObjectTypes {
   output,
   customer,
   choice,
+  error,
 }

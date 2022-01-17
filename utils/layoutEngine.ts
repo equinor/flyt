@@ -30,6 +30,7 @@ export enum choiceGroupTypes {
   Center = "Center",
 }
 export interface GraphEdge {
+  highlighted?: boolean;
   from: number; //vsmObjectID
   to: number; //vsmObjectID
   position?: {
@@ -58,6 +59,12 @@ type User = {
 };
 
 export class Graph {
+  getIncomingEdges(node: GraphNode) {
+    return this.edges.filter((edge) => edge.to === node.id);
+  }
+  getOutgoingEdges(node: GraphNode) {
+    return this.edges.filter((edge) => edge.from === node.id);
+  }
   process: Process;
   nodes: Array<GraphNode>;
   edges: Array<GraphEdge>;

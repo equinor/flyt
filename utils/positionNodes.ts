@@ -12,17 +12,6 @@ export function positionNodes(graph: {
   console.log("positionNodes");
   const nodesByLevel = groupBy(graph.nodes, "level");
 
-  // // // All nodes with multiple children need to be positioned so that they are not overlapping
-  // const nodesWithMultipleChildren = graph.nodes.filter(
-  //   (node) => node.children.length > 1
-  // );
-  // nodesWithMultipleChildren.reverse().forEach((node) => {
-  //   node.position = {
-  //     x: node.children.length * (defaultNodeWidth + padding),
-  //     y: defaultNodeHeight, //We use the default node height for the level height so that it is always the same height
-  //   };
-  // });
-
   // traverse through level 1 and place each card in a column
   Object.keys(nodesByLevel).forEach((level) => {
     const nodes = nodesByLevel[level];
@@ -221,42 +210,118 @@ export function positionNodesBeta(graph: {
     });
   }
 
-  console.log({ nodesGroupedByLevel });
-
   const cellWidth = 170; // width of each grid cell
   const cellHeight = 170; // height of each grid cell
 
   // placing nodes in a grid
-  nodesGroupedByLevel.forEach((nodes, level) => {
-    console.log(`Level ${level}`);
-    nodes.forEach((node, index) => {
-      console.log(
-        `Placing node ${node.id} (${index + 1} out of ${nodes.length})`
-      );
-      if (node.position) {
-        console.log(`${node.id} is already positioned`); // already positioned once
-      } else {
-        node.position = {
-          x: index * cellWidth,
-          y: level * cellHeight,
-        };
-      }
-    });
-  });
+  placeNodesInAGrid(nodesGroupedByLevel, cellWidth, cellHeight);
 
-  // nodesGroupedByLevel.sort((a, b) => b.length - a.length) // sort by length of level
-  //   .forEach((nodes, index) => {
-  //     if (index === 0) return; // skip the first level
-  //     const previousLevel = nodesGroupedByLevel[index - 1];
-  //     const previousLevelWidth = (previousLevel.length + 1) * cellWidth;
-  //     const previousLevelCenter = previousLevelWidth / 2;
-  //     const currentLevelCenter = (nodes.length + 1) * cellWidth / 2;
-  //     nodes.forEach((node) => {
-  //       node.position.x += previousLevelCenter - currentLevelCenter;
-  //     });
+  // // for each edge out from the first node, find the path to the leaf node
+  // const firstNodeEdges = graph.edges.filter(
+  //   (edge) => edge.from === firstNode.id
+  // );
+
+  // firstNodeEdges.forEach((edge) => {
+  //   const toNode = graph.nodes.find((node) => node.id === edge.to);
+  //   if (!toNode) throw new Error("Could not find toNode. Dangling edge?");
+  //   const paths = getPathsFromNodeToLeafNode(toNode, graph);
+  //   console.log(`Paths from node ${toNode.id} to the leaf node`, paths);
+
+  //   // find the node that is furthest right
+  //   const lastPath = paths[paths.length - 1];
+  //   let maxX = 0;
+  //   lastPath.forEach((node) => {
+  //     if (node.position && node.position.x > maxX) maxX = node.position.x;
   //   });
+  //   console.log({ maxX })
+  // });
+
+  // const paths = getPathsFromNodeToLeafNode(firstNode, graph);
+  // console.log({ paths })
+
+  // if a node has multiple edges going into it, place it in the middle of the edges
+  // graph.nodes.forEach((node) => {
+  //   const incomingEdges = graph.edges.filter(
+  //     (edge) => edge.to === node.id
+  //   );
+  //   if (incomingEdges.length > 1) {
+  //     const x = incomingEdges.reduce((acc, edge) => {
+  //       const fromNode = graph.nodes.find((node) => node.id === edge.from);
+  //       if (!fromNode) throw new Error("Could not find fromNode. Dangling edge?");
+  //       return acc + fromNode.position.x;
+  //     }, 0);
+  //     console.log(`${node.id} has multiple incoming edges`, x);
+  //     node.position.x = x / incomingEdges.length;
+  //   } else {
+  //     if (incomingEdges && incomingEdges.length === 1) {
+  //       const fromNode = graph.nodes.find((node) => node.id === incomingEdges[0].from);
+  //       const siblings = graph.edges.filter((edge) => edge.from === fromNode.id);
+  //       if (siblings) {
+  //         const numberOfSiblings = siblings.length;
+  //         console.log(`${node.id} has ${numberOfSiblings} siblings`);
+  //       } else {
+  //         node.position.x = fromNode.position.x;
+  //       }
+  //     }
+  //   }
+  // });
 
   // position the edges
+  positionEdges(graph);
+
+  // const pathStrings = paths.map((path) => {
+  //   return path.map((node) => node.id).join(" -> ");
+  // });
+  // console.log(pathStrings);
+
+  placeNodesWithNoEdges(graph, cellWidth, cellHeight);
+}
+
+export const getPathsFromNodeToLeafNode = (
+  node: GraphNode,
+  graph: { nodes: any; edges: any }
+): GraphNode[][] => {
+  const paths = [];
+  getPathToLeafNode(node);
+  // for each node, walk the graph and find the path to the leaf node
+  function getPathToLeafNode(node: GraphNode, path = []): void {
+    const outgoingEdges = graph.edges.filter((edge) => edge.from === node.id);
+    if (outgoingEdges.length === 0) {
+      paths.push([...path, node]);
+      return;
+    }
+    outgoingEdges.forEach((edge) => {
+      const toNode = graph.nodes.find((node) => node.id === edge.to);
+      if (!toNode) throw new Error("Could not find toNode. Dangling edge?");
+      getPathToLeafNode(toNode, [...path, node]);
+    });
+  }
+  return paths;
+};
+/**
+ * Place nodes that have no edges
+ * @param graph
+ * @param cellWidth
+ * @param cellHeight
+ */
+function placeNodesWithNoEdges(
+  graph: { nodes: GraphNode[]; edges: GraphEdge[] },
+  cellWidth: number,
+  cellHeight: number
+) {
+  graph.nodes
+    .filter((n) => !n.position)
+    .forEach((node, index) => {
+      node.position = {
+        x: index * cellWidth,
+        y: -cellHeight - padding,
+      };
+      node.name = `Node ${node.id} is not connected to anything`;
+      node.type = vsmObjectTypes.error;
+    });
+}
+
+function positionEdges(graph: { nodes: GraphNode[]; edges: GraphEdge[] }) {
   graph.edges.forEach((edge) => {
     const fromNode = graph.nodes.find((node) => node.id === edge.from);
     const toNode = graph.nodes.find((node) => node.id === edge.to);
@@ -268,6 +333,16 @@ export function positionNodesBeta(graph: {
     if (!toNode.position)
       throw new Error(`toNode ${toNode.id} is not positioned`);
 
+    // edge.position = { start: null, end: null };
+    // edge.position.start = {
+    //   x: fromNode.position.x,
+    //   y: fromNode.position.y,
+    // };
+    // edge.position.end = {
+    //   x: toNode.position.x,
+    //   y: toNode.position.y,
+    // };
+
     edge.position = {
       start: {
         x: fromNode.position.x + fromNode.width / 2,
@@ -278,5 +353,52 @@ export function positionNodesBeta(graph: {
         y: toNode.position.y,
       },
     };
+  });
+}
+
+/**
+ * Move a node
+ * @param node - the node to move
+ * @param edges - edges in the graph. (or just the connected edges)
+ * @param position - the new position
+ */
+function moveNode(
+  node: GraphNode,
+  edges: GraphEdge[],
+  position: { x: number; y: number }
+): void {
+  node.position = position;
+
+  // Whenever we move a node, we need to re-calculate the positions of all the edges that are connected to it
+  edges.forEach((edge) => {
+    if (edge.to === node.id) {
+      edge.position.end = position;
+    }
+    if (edge.from === node.id) {
+      // move outgoing edge start position
+      edge.position.start = { x: position.x, y: position.y + node.height };
+    }
+  });
+}
+
+function placeNodesInAGrid(
+  nodesGroupedByLevel: GraphNode[][],
+  cellWidth: number,
+  cellHeight: number
+) {
+  nodesGroupedByLevel.forEach((nodes, level) => {
+    console.log(`Level ${level}`);
+    nodes.forEach((node, index) => {
+      console.log(
+        `Placing node ${node.id} (${index + 1} out of ${nodes.length})`
+      );
+      // if (node.position) {
+      // console.log(`${node.id} is already positioned`); // already positioned once
+      // } else {
+      node.position = {
+        x: index * cellWidth,
+        y: level * cellHeight,
+      };
+    });
   });
 }
