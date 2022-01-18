@@ -19,9 +19,18 @@ export function drawGraphEdges(edges: GraphEdge[], viewport: Viewport): void {
     if (!edgeCache[key]) {
       // create line
       const line = new PIXI.Graphics();
+      //bezier curve line
       line.lineStyle(2, 0x000000, edge.highlighted ? 1 : 0.1);
       line.moveTo(edge.position.start.x, edge.position.start.y);
-      line.lineTo(edge.position.end.x, edge.position.end.y);
+      line.bezierCurveTo(
+        edge.position.start.x,
+        edge.position.start.y + 20,
+        edge.position.end.x,
+        edge.position.end.y - 20,
+        edge.position.end.x,
+        edge.position.end.y
+      );
+
       viewport.addChild(line);
       edgeCache[key] = line;
     } else {
@@ -29,7 +38,14 @@ export function drawGraphEdges(edges: GraphEdge[], viewport: Viewport): void {
       edgeCache[key].clear();
       edgeCache[key].lineStyle(2, 0x000000, edge.highlighted ? 1 : 0.1);
       edgeCache[key].moveTo(edge.position.start.x, edge.position.start.y);
-      edgeCache[key].lineTo(edge.position.end.x, edge.position.end.y);
+      edgeCache[key].bezierCurveTo(
+        edge.position.start.x,
+        edge.position.start.y + 20,
+        edge.position.end.x,
+        edge.position.end.y - 20,
+        edge.position.end.x,
+        edge.position.end.y
+      );
     }
 
     // label

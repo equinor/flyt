@@ -5,7 +5,7 @@ import { AddNodesAndEdges } from "./AddNodesAndEdges";
 import { PositionNodesAndEdges } from "./PositionNodesAndEdges";
 import { calculateTaskSectionWidth } from "./calculateTaskSectionWidth";
 import { getTouchingNodes } from "./getTouchingNodes";
-import { positionNodesBeta } from "./positionNodes";
+import { positionNodes } from "./positionNodes";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
 
 export const defaultNodeWidth = 126;
@@ -132,23 +132,45 @@ export function mockProcessGraph(process): {
     to: 11,
   });
 
-  // 8 & 11 -> 12
+  // 8 -> 14,15
   graph.edges.push({
     from: 8,
+    to: 14,
+  });
+  graph.edges.push({
+    from: 8,
+    to: 15,
+  });
+
+  // 14,15 -> 12
+  graph.edges.push({
+    from: 14,
     to: 12,
   });
   graph.edges.push({
-    from: 11,
+    from: 15,
     to: 12,
   });
 
-  // 6 -> 13 // This is an illegal edge.
-  // graph.edges.push({
-  //   from: 6,
-  //   to: 13,
-  // });
+  // 11 -> 13
+  graph.edges.push({
+    from: 11,
+    to: 13,
+  });
 
-  positionNodesBeta(graph);
+  // 13 -> 16
+  graph.edges.push({
+    from: 13,
+    to: 16,
+  });
+
+  // 16 -> 12
+  graph.edges.push({
+    from: 16,
+    to: 12,
+  });
+
+  positionNodes(graph);
 
   return graph;
 }
