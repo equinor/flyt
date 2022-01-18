@@ -59,21 +59,34 @@ type User = {
 };
 
 export class Graph {
-  getIncomingEdges(node: GraphNode) {
-    return this.edges.filter((edge) => edge.to === node.id);
-  }
-  getOutgoingEdges(node: GraphNode) {
-    return this.edges.filter((edge) => edge.from === node.id);
-  }
   process: Process;
-  nodes: Array<GraphNode>;
-  edges: Array<GraphEdge>;
+  private _nodes: Array<GraphNode>;
+  public get nodes(): Array<GraphNode> {
+    return this._nodes;
+  }
+  private set nodes(value: Array<GraphNode>) {
+    this._nodes = value;
+  }
+  private _edges: Array<GraphEdge>;
+  public get edges(): Array<GraphEdge> {
+    return this._edges;
+  }
+  private set edges(value: Array<GraphEdge>) {
+    this._edges = value;
+  }
   users: Array<User>;
 
   constructor(process: Process) {
     const graph = mockProcessGraph(process);
     this.nodes = graph.nodes;
     this.edges = graph.edges;
+  }
+
+  getIncomingEdges(node: GraphNode) {
+    return this.edges.filter((edge) => edge.to === node.id);
+  }
+  getOutgoingEdges(node: GraphNode) {
+    return this.edges.filter((edge) => edge.from === node.id);
   }
   navigateRight(): GraphNode {
     // debugger;

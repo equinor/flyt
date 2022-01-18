@@ -1,11 +1,6 @@
 import * as PIXI from "pixi.js";
 
-import {
-  Graph,
-  GraphEdge,
-  GraphNode,
-  choiceGroupTypes,
-} from "utils/layoutEngine";
+import { Graph, GraphEdge, GraphNode } from "utils/layoutEngine";
 
 import { Point } from "pixi.js";
 import { Process } from "interfaces/generated";
@@ -14,7 +9,6 @@ import { assetFactory } from "./AssetFactory";
 import { drawGraphEdges } from "./drawGraphEdges";
 import { drawGraphNodes } from "./drawGraphNodes";
 import { getColor } from "utils/getColor";
-import { vsmObjectTypes } from "types/vsmObjectTypes";
 
 /**
  * Config object for testing out different features while developing
