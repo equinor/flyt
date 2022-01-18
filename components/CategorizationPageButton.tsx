@@ -24,10 +24,11 @@ export const CategorizationPageButton = (props: {
   const router = useRouter();
   const windowSize: WindowSize = useWindowSize();
 
-  const projectId = router.query.id as string;
-  const versionHistoryDates = useQuery(["versionHistoryDates", projectId], () =>
-    getProjectUpdateTimes(projectId)
-  );
+  //Todo:
+  // const projectId = router.query.id as string;
+  // const versionHistoryDates = useQuery(["versionHistoryDates", projectId], () =>
+  //   getProjectUpdateTimes(projectId)
+  // );
 
   function getLeft() {
     const bigScreen = windowSize.width >= 768;
@@ -68,9 +69,10 @@ export const VersionHistoryButton = (props: {
 }): JSX.Element => {
   const router = useRouter();
   const projectId = router.query.id as string;
-  const { data } = useQuery(["versionHistoryDates", projectId], () =>
-    getProjectUpdateTimes(projectId)
-  );
+  //Todo:
+  // const { data } = useQuery(["versionHistoryDates", projectId], () =>
+  //   getProjectUpdateTimes(projectId)
+  // );
   const windowSize: WindowSize = useWindowSize();
 
   const [showVersionHistoryBottomSheet, setShowVersionHistoryBottomSheet] =
@@ -157,9 +159,10 @@ export const ProcessTimelineCanvas = (props: { processId: string }) => {
   const canvasRef = useRef(null);
   const windowSize = useWindowSize();
   const router = useRouter();
-  const { data } = useQuery(["versionHistoryDates", props.processId], () =>
-    getProjectUpdateTimes(props.processId)
-  );
+  //todo:
+  // const { data } = useQuery(["versionHistoryDates", props.processId], () =>
+  //   getProjectUpdateTimes(props.processId)
+  // );
 
   function travelToVersion(version: string) {
     if (version === "current") {
@@ -186,22 +189,25 @@ export const ProcessTimelineCanvas = (props: { processId: string }) => {
     context.stroke();
 
     // Draw a dot for each date on the timeline distanced by the time elapsed
-    const dates = data?.map((date: string) => moment(date));
-    if (dates) {
-      dates.forEach((date, index) => {
-        const x = date.diff(dates[0], "days");
-        const y = context.canvas.height / 2;
-        context.beginPath();
-        context.arc(x, y, 5, 0, 2 * Math.PI);
-        context.fillStyle = "#007079";
-        context.fill();
-        context.font = "12px Arial";
-        context.fillText(date.format("DD/MM/YYYY hh:mm"), x - 40, y + 20);
-      });
-    }
+    // const dates = data?.map((date: string) => moment(date));
+    // if (dates) {
+    //   dates.forEach((date, index) => {
+    //     const x = date.diff(dates[0], "days");
+    //     const y = context.canvas.height / 2;
+    //     context.beginPath();
+    //     context.arc(x, y, 5, 0, 2 * Math.PI);
+    //     context.fillStyle = "#007079";
+    //     context.fill();
+    //     context.font = "12px Arial";
+    //     context.fillText(date.format("DD/MM/YYYY hh:mm"), x - 40, y + 20);
+    //   });
+    // }
 
     console.log("RENDER!");
-  }, [data, windowSize.width]);
+  }, [
+    // data,
+    windowSize.width,
+  ]);
 
   return <canvas ref={canvasRef} {...props} />;
 };
@@ -211,9 +217,10 @@ export const ProcessTimeline = (props: { processId: string }) => {
   const canvasRef = useRef(null);
   const windowSize = useWindowSize();
   const router = useRouter();
-  const { data } = useQuery(["versionHistoryDates", props.processId], () =>
-    getProjectUpdateTimes(props.processId)
-  );
+  //Todo:
+  // const { data } = useQuery(["versionHistoryDates", props.processId], () =>
+  //   getProjectUpdateTimes(props.processId)
+  // );
   const [pixiApp, setPixiApp] = React.useState<Application | null>(null);
 
   function travelToVersion(version: string) {
@@ -275,7 +282,7 @@ export const ProcessTimeline = (props: { processId: string }) => {
     // app?.start();
 
     // Draw a dot for each date on the timeline distanced by the time elapsed
-    const dates = data?.map((date: string) => ({
+    const dates = randomAscendingDates?.map((date: string) => ({
       parsed: moment(date),
       original: date,
     }));
