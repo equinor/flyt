@@ -66,3 +66,16 @@ export const unlinkTask = (vsmObjectId: number, taskId: number) =>
     baseUrl + `/task/unlink/${vsmObjectId}/${taskId}`,
     null
   );
+
+// Mark a task as done
+export const solveTask = (
+  vsmObjectId: number,
+  taskId: number,
+  solved: boolean
+) =>
+  BaseAPIServices.put(
+    baseUrl + `/task/solve/${vsmObjectId}/${taskId}`,
+    solved
+  ).then((r) => {
+    return r.data;
+  });

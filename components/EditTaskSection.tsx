@@ -1,5 +1,10 @@
 import { Button, Checkbox, Icon, Tooltip } from "@equinor/eds-core-react";
-import { getTaskTypes, patchTask, unlinkTask } from "../services/taskApi";
+import {
+  getTaskTypes,
+  patchTask,
+  solveTask,
+  unlinkTask,
+} from "../services/taskApi";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQueryClient } from "react-query";
 
@@ -30,11 +35,29 @@ export function EditTaskSection(props: {
   const account = useAccount(accounts[0] || {});
   const queryClient = useQueryClient();
 
-  const patchTaskMutation = useMutation(
-    (patchedTask: taskObject) => patchTask(patchedTask),
+  // const patchTaskMutation = useMutation(
+  //   (patchedTask: taskObject) => patchTask(patchedTask),
+  //   {
+  //     onSuccess() {
+  //       // notifyOthers("Deleted a task", id, account);
+  //       return queryClient.invalidateQueries();
+  //     },
+  //     onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+  //   }
+  // );
+  const solveTaskMutation = useMutation(
+    ({
+      card,
+      solvedTask,
+      solved,
+    }: {
+      card: vsmObject;
+      solvedTask: taskObject;
+      solved: boolean;
+    }) => solveTask(card.vsmObjectID, solvedTask.vsmTaskID, solved),
     {
       onSuccess() {
-        // notifyOthers("Deleted a task", id, account);
+        // todo notify others
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
@@ -73,7 +96,11 @@ export function EditTaskSection(props: {
           title={`${getToggleActionText(task.fkTaskType, task.solved)}`}
           disabled={!props.canEdit}
           onChange={() => {
-            patchTaskMutation.mutate({ ...task, solved: !task.solved });
+            solveTaskMutation.mutate({
+              card: object,
+              solvedTask: task,
+              solved: !task.solved,
+            });
             dispatch.setSnackMessage(
               `Marked ${task.displayIndex} as ${getTaskSolvedText(
                 task.fkTaskType,

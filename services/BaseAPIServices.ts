@@ -1,6 +1,6 @@
+import { APIConfigs } from "../Config";
 import axios from "axios";
 import { getAccessToken } from "../auth/msalHelpers";
-import { APIConfigs } from "../Config";
 
 class BaseApiService {
   async get(path: string) {
@@ -24,6 +24,8 @@ class BaseApiService {
     return axios.put(APIConfigs.url + url, data, {
       headers: {
         Authorization: await getAccessToken(),
+        // content type for sending just a boolean
+        "content-type": "application/text",
       },
     });
   }
