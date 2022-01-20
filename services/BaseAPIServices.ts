@@ -24,8 +24,6 @@ class BaseApiService {
     return axios.put(APIConfigs.url + url, data, {
       headers: {
         Authorization: await getAccessToken(),
-        // content type for sending just a boolean
-        "content-type": "application/text",
       },
     });
   }

@@ -73,9 +73,8 @@ export const solveTask = (
   taskId: number,
   solved: boolean
 ) =>
-  BaseAPIServices.put(
-    baseUrl + `/task/solve/${vsmObjectId}/${taskId}`,
-    solved
-  ).then((r) => {
+  BaseAPIServices.put(baseUrl + `/task/solve/${vsmObjectId}/${taskId}`, {
+    solved,
+  }).then((r) => {
     return r.data;
   });
