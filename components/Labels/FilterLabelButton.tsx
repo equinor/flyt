@@ -1,5 +1,6 @@
 import { Button, Scrim } from "@equinor/eds-core-react";
 import React, { useState } from "react";
+
 import FilterLabelBox from "./FilterLabelBox";
 
 export default function FilterLabelButton(): JSX.Element {
@@ -18,11 +19,13 @@ export default function FilterLabelButton(): JSX.Element {
       >
         Filter by label
       </Button>
-      {visibleScrim && (
-        <Scrim onClose={() => setVisibleScrim(false)} isDismissable>
-          <FilterLabelBox handleClose={() => setVisibleScrim(false)} />
-        </Scrim>
-      )}
+      <Scrim
+        open={visibleScrim}
+        onClose={() => setVisibleScrim(false)}
+        isDismissable
+      >
+        <FilterLabelBox handleClose={() => setVisibleScrim(false)} />
+      </Scrim>
     </>
   );
 }

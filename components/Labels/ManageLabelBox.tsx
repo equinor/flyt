@@ -22,7 +22,7 @@ export default function ManageLabelBox(props: {
   if (!props.isVisible) return null;
 
   return (
-    <Scrim onClose={props.handleClose} isDismissable>
+    <Scrim open onClose={props.handleClose} isDismissable>
       <div className={styles.box} onWheel={(e) => e.stopPropagation()}>
         <TopSection handleClose={props.handleClose} />
         <AddSection process={props.process} />

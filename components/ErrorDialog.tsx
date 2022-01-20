@@ -1,7 +1,8 @@
-import React from "react";
-import { unknownErrorToString } from "utils/isError";
 import { Button, Scrim } from "@equinor/eds-core-react";
+
+import React from "react";
 import { restore } from "@equinor/eds-icons";
+import { unknownErrorToString } from "utils/isError";
 
 export function ErrorDialog({
   visible,
@@ -16,7 +17,7 @@ export function ErrorDialog({
 
   return (
     error && (
-      <Scrim isDismissable onClose={onClose}>
+      <Scrim open isDismissable onClose={onClose}>
         <div
           style={{
             backgroundColor: "white",
