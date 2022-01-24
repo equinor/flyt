@@ -115,7 +115,7 @@ export function EditTaskSection(props: {
           />
         ) : null}
         <Button
-          title={`Delete selected QIP`}
+          title={`Delete selected ${getTaskTypeText(task.fkTaskType)}`}
           disabled={!task || !props.canEdit}
           variant={"ghost_icon"}
           color={"danger"}
@@ -157,5 +157,20 @@ function getTaskSolvedText(type: vsmTaskTypes, solved: boolean) {
       return solved ? "Mitigated" : "Unmitigated";
     default:
       return "";
+  }
+}
+
+function getTaskTypeText(fkTaskType: vsmTaskTypes) {
+  switch (fkTaskType) {
+    case vsmTaskTypes.problem:
+      return "Problem";
+    case vsmTaskTypes.question:
+      return "Question";
+    case vsmTaskTypes.idea:
+      return "Idea";
+    case vsmTaskTypes.risk:
+      return "Risk";
+    default:
+      return "Task";
   }
 }
