@@ -90,25 +90,30 @@ export function EditTaskSection(props: {
           justifyContent: "space-evenly",
         }}
       >
-        <Checkbox
-          key={task.vsmTaskID}
-          defaultChecked={task.solved}
-          title={`${getToggleActionText(task.fkTaskType, task.solved)}`}
-          disabled={!props.canEdit}
-          onChange={() => {
-            solveTaskMutation.mutate({
-              card: object,
-              solvedTask: task,
-              solved: !task.solved,
-            });
-            dispatch.setSnackMessage(
-              `Marked ${task.displayIndex} as ${getTaskSolvedText(
-                task.fkTaskType,
-                !task.solved
-              )}`
-            );
-          }}
-        />
+        {/* Only show checkbox for Problems and risks */}
+        {task &&
+        (task.fkTaskType === vsmTaskTypes.problem ||
+          task.fkTaskType === vsmTaskTypes.risk) ? (
+          <Checkbox
+            key={task.vsmTaskID}
+            defaultChecked={task.solved}
+            title={`${getToggleActionText(task.fkTaskType, task.solved)}`}
+            disabled={!props.canEdit}
+            onChange={() => {
+              solveTaskMutation.mutate({
+                card: object,
+                solvedTask: task,
+                solved: !task.solved,
+              });
+              dispatch.setSnackMessage(
+                `Marked ${task.displayIndex} as ${getTaskSolvedText(
+                  task.fkTaskType,
+                  !task.solved
+                )}`
+              );
+            }}
+          />
+        ) : null}
         <Button
           title={`Delete selected QIP`}
           disabled={!task || !props.canEdit}
@@ -134,7 +139,7 @@ function getToggleActionText(type: vsmTaskTypes, solved: boolean) {
     case vsmTaskTypes.idea:
       return solved ? "Mark as declined" : "Mark as approved";
     case vsmTaskTypes.risk:
-      return solved ? "Mark as not handled" : "Mark as handled";
+      return solved ? "Mark as unmitigated" : "Mark as mitigated";
     default:
       return "";
   }
@@ -149,7 +154,7 @@ function getTaskSolvedText(type: vsmTaskTypes, solved: boolean) {
     case vsmTaskTypes.idea:
       return solved ? "Approved" : "Declined";
     case vsmTaskTypes.risk:
-      return solved ? "Handled" : "Not handled";
+      return solved ? "Mitigated" : "Unmitigated";
     default:
       return "";
   }
