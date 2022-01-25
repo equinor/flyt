@@ -70,9 +70,9 @@ export const VersionHistoryButton = (props: {
   const router = useRouter();
   const projectId = router.query.id as string;
   //Todo:
-  // const { data } = useQuery(["versionHistoryDates", projectId], () =>
-  //   getProjectUpdateTimes(projectId)
-  // );
+  const { data } = useQuery(["versionHistoryDates", projectId], () =>
+    getProjectUpdateTimes(projectId)
+  );
   const windowSize: WindowSize = useWindowSize();
 
   const [showVersionHistoryBottomSheet, setShowVersionHistoryBottomSheet] =
@@ -218,9 +218,9 @@ export const ProcessTimeline = (props: { processId: string }) => {
   const windowSize = useWindowSize();
   const router = useRouter();
   //Todo:
-  // const { data } = useQuery(["versionHistoryDates", props.processId], () =>
-  //   getProjectUpdateTimes(props.processId)
-  // );
+  const { data } = useQuery(["versionHistoryDates", props.processId], () =>
+    getProjectUpdateTimes(props.processId)
+  );
   const [pixiApp, setPixiApp] = React.useState<Application | null>(null);
 
   function travelToVersion(version: string) {
@@ -282,7 +282,7 @@ export const ProcessTimeline = (props: { processId: string }) => {
     // app?.start();
 
     // Draw a dot for each date on the timeline distanced by the time elapsed
-    const dates = randomAscendingDates?.map((date: string) => ({
+    const dates = data?.map((date: string) => ({
       parsed: moment(date),
       original: date,
     }));
