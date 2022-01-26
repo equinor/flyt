@@ -14,7 +14,7 @@
 
 # Background
 
-> TBD: write some background about mapping and what Flyt aims to solve and improve.
+Mission statement: Empower everyone on all levels to improve the way we work - process by process
 
 # Tech stack / Features
 
