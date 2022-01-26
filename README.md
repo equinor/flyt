@@ -10,7 +10,7 @@
 - :zap: [Api-endpoints: See swagger](https://vsm-api-dev.azurewebsites.net/swagger/index.html)
 - :dizzy: [Our development process: Mapped in Flyt itself](https://flyt.equinor.com/projects/172)
 - 🏃 [Running in Radix](https://console.radix.equinor.com/applications/vsm/)
-- :memo: [Arcitecture contract](https://github.com/equinor/architecturecontract/blob/master/contracts/flyt.md)
+- :memo: [Architecture contract](https://github.com/equinor/architecturecontract/blob/master/contracts/flyt.md)
 
 # Background
 
