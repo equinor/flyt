@@ -1,0 +1,44 @@
+.wrapper {
+  background-color: black;
+}
+.editing,
+.highlighting {
+  /* Both elements need the same text and space styling so they are directly on top of each other */
+  margin: 10px;
+  padding: 10px;
+  border: 0;
+  width: calc(100% - 32px);
+  height: 150px;
+}
+
+.editing,
+.highlighting,
+.highlighting * {
+  /* Also add text styles to highlighting tokens */
+  font-size: 15pt;
+  font-family: monospace;
+  line-height: 20pt;
+}
+
+.editing,
+.highlighting {
+  position: absolute;
+  top: 100;
+  left: 0;
+}
+
+/* Move the textarea in front of the result */
+.editing {
+  z-index: 1;
+}
+
+.highlighting {
+  z-index: 0;
+}
+
+/* Make textarea almost completely transparent */
+.editing {
+  color: transparent;
+  background: transparent;
+  caret-color: white; /* Or choose your favorite color */
+}

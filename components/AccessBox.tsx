@@ -1,18 +1,20 @@
-import style from "./AccessBox.module.scss";
+import * as userApi from "../services/userApi";
+
 import { Button, Icon, Input } from "@equinor/eds-core-react";
-import { UserDot } from "./UserDot";
 import React, { useState } from "react";
 import { close, link } from "@equinor/eds-icons";
-import { accessRoles } from "../types/AccessRoles";
-import { vsmProject } from "../interfaces/VsmProject";
-import BaseAPIServices from "../services/BaseAPIServices";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import * as userApi from "../services/userApi";
-import { unknownErrorToString } from "utils/isError";
-import { useStoreDispatch } from "hooks/storeHooks";
-import { useRouter } from "next/router";
-import { notifyOthers } from "../services/notifyOthers";
 import { useAccount, useMsal } from "@azure/msal-react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+
+import BaseAPIServices from "../services/BaseAPIServices";
+import { UserDot } from "./UserDot";
+import { accessRoles } from "../types/AccessRoles";
+import { notifyOthers } from "../services/notifyOthers";
+import style from "./AccessBox.module.scss";
+import { unknownErrorToString } from "utils/isError";
+import { useRouter } from "next/router";
+import { useStoreDispatch } from "hooks/storeHooks";
+import { vsmProject } from "../interfaces/VsmProject";
 
 export function AccessBox(props: {
   project: vsmProject;
