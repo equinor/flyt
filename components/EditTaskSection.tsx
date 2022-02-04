@@ -35,16 +35,8 @@ export function EditTaskSection(props: {
   const account = useAccount(accounts[0] || {});
   const queryClient = useQueryClient();
 
-  // const patchTaskMutation = useMutation(
-  //   (patchedTask: taskObject) => patchTask(patchedTask),
-  //   {
-  //     onSuccess() {
-  //       // notifyOthers("Deleted a task", id, account);
-  //       return queryClient.invalidateQueries();
-  //     },
-  //     onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
-  //   }
-  // );
+  const userName = "Someone"; // Note, we may get their full name by using the account object,
+  // But we have to be careful with regards to the user's privacy settings. So we use "Someone" for now.
   const solveTaskMutation = useMutation(
     ({
       card,
@@ -56,8 +48,16 @@ export function EditTaskSection(props: {
       solved: boolean;
     }) => solveTask(card.vsmObjectID, solvedTask.vsmTaskID, solved),
     {
-      onSuccess() {
-        // todo notify others
+      onSuccess(_data, variables) {
+        const { card, solvedTask, solved } = variables;
+        notifyOthers(
+          `${userName} ${getTaskSolvedText(
+            solvedTask.fkTaskType,
+            solved
+          )} a ${getTaskTypeText(solvedTask.fkTaskType)} in ${card.name}`,
+          id,
+          account
+        );
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
@@ -68,7 +68,11 @@ export function EditTaskSection(props: {
     (task: taskObject) => unlinkTask(object.vsmObjectID, task.vsmTaskID),
     {
       onSuccess() {
-        notifyOthers("Removed Q/I/P from a card", id, account);
+        notifyOthers(
+          `${userName} removed ${getTaskTypeText(task.fkTaskType)} from a card`,
+          id,
+          account
+        );
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
