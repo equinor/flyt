@@ -28,8 +28,6 @@ export function EditTaskSection(props: {
   const account = useAccount(accounts[0] || {});
   const queryClient = useQueryClient();
 
-  const userName = "Someone"; // Note, we may get their full name by using the account object,
-  // But we have to be careful with regards to the user's privacy settings. So we use "Someone" for now.
   const solveTaskMutation = useMutation(
     ({
       card,
@@ -42,12 +40,12 @@ export function EditTaskSection(props: {
     }) => solveTask(card.vsmObjectID, solvedTask.vsmTaskID, solved),
     {
       onSuccess(_data, variables) {
-        const { card, solvedTask, solved } = variables;
+        const { solvedTask, solved } = variables;
         notifyOthers(
-          `${userName} ${getTaskSolvedText(
+          ` ${getTaskSolvedText(
             solvedTask.fkTaskType,
             solved
-          )} a ${getTaskTypeText(solvedTask.fkTaskType)} in ${card.name}`,
+          )} a ${getTaskTypeText(solvedTask.fkTaskType)}`,
           id,
           account
         );
@@ -62,7 +60,7 @@ export function EditTaskSection(props: {
     {
       onSuccess() {
         notifyOthers(
-          `${userName} removed ${getTaskTypeText(task.fkTaskType)} from a card`,
+          `Removed ${getTaskTypeText(task.fkTaskType)} from a card`,
           id,
           account
         );
