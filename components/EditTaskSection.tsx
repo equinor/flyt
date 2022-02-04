@@ -1,19 +1,12 @@
-import { Button, Checkbox, Icon, Tooltip } from "@equinor/eds-core-react";
-import {
-  getTaskTypes,
-  patchTask,
-  solveTask,
-  unlinkTask,
-} from "../services/taskApi";
+import { Button, Checkbox, Icon } from "@equinor/eds-core-react";
+import { solveTask, unlinkTask } from "../services/taskApi";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQueryClient } from "react-query";
 
 import { EditTaskTextField } from "./EditTaskTextField";
 import React from "react";
-import { TooltipImproved } from "./TooltipImproved";
 import { delete_to_trash } from "@equinor/eds-icons";
 import { notifyOthers } from "../services/notifyOthers";
-import styles from "./VSMCanvas.module.scss";
 import { taskObject } from "../interfaces/taskObject";
 import { unknownErrorToString } from "../utils/isError";
 import { useRouter } from "next/router";
