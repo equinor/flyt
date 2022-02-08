@@ -164,13 +164,13 @@ export const ProcessTimelineCanvas = (props: { processId: string }) => {
   //   getProjectUpdateTimes(props.processId)
   // );
 
-  function travelToVersion(version: string) {
-    if (version === "current") {
-      router.push(`/process/${props.processId}`);
-    } else {
-      router.push(`/process/${props.processId}?version=${version}`);
-    }
-  }
+  // function travelToVersion(version: string) {
+  //   if (version === "current") {
+  //     router.push(`/process/${props.processId}`);
+  //   } else {
+  //     router.push(`/process/${props.processId}?version=${version}`);
+  //   }
+  // }
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -221,7 +221,7 @@ export const ProcessTimeline = (props: { processId: string }) => {
   const { data } = useQuery(["versionHistoryDates", props.processId], () =>
     getProjectUpdateTimes(props.processId)
   );
-  const [pixiApp, setPixiApp] = React.useState<Application | null>(null);
+  // const [pixiApp, setPixiApp] = React.useState<Application | null>(null);
 
   function travelToVersion(version: string) {
     if (version === "current") {
@@ -230,29 +230,6 @@ export const ProcessTimeline = (props: { processId: string }) => {
       router.push(`/process/${props.processId}?version=${version}`);
     }
   }
-
-  const randomAscendingDates = [
-    "2022-01-01",
-    "2022-01-02",
-    "2022-01-03",
-    "2022-01-04",
-    "2022-01-05",
-    "2022-01-06",
-    "2022-01-07",
-    "2022-01-08",
-    "2022-01-09",
-    "2022-01-10",
-    // skip a couple of days
-    "2022-01-12",
-    "2022-01-13",
-    "2022-01-14",
-    // skip a couple of days
-    "2022-01-16",
-    "2022-01-17",
-    // skip a couple of days
-    "2022-01-19",
-    "2022-01-20",
-  ];
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -289,13 +266,24 @@ export const ProcessTimeline = (props: { processId: string }) => {
     // const dates = randomAscendingDates?.map((date: string) => ({ parsed: moment(date), original: date }));
     dates?.push({ parsed: moment(), original: "current" });
 
-    // we only want one date per day, drop the rest.
-    const datesFiltered = dates?.reduce((acc: any, curr: any) => {
-      if (!acc.find((d: any) => d.parsed.isSame(curr.parsed, "day"))) {
-        acc.push(curr);
-      }
-      return acc;
-    }, []);
+    const datesGroupedByDay = groupBy(dates, (date) =>
+      date.parsed.format("DD/MM/YYYY")
+    );
+    console.log({ datesGroupedByDay });
+    // select the last date in each day
+    const selectedDatesByDay = Object.keys(datesGroupedByDay).map((day) => {
+      const dates = datesGroupedByDay[day];
+      return dates[dates.length - 1]; // return the last date from that day
+    });
+    const datesFiltered = selectedDatesByDay;
+
+    // // we only want one date per day, drop the rest.
+    // const datesFiltered = dates?.reduce((acc: any, curr: any) => {
+    //   if (!acc.find((d: any) => d.parsed.isSame(curr.parsed, "day"))) {
+    //     acc.push(curr);
+    //   }
+    //   return acc;
+    // }, []);
 
     const primaryColor = 0x007079;
     const highlightColor = 0xdeedee;
@@ -310,15 +298,14 @@ export const ProcessTimeline = (props: { processId: string }) => {
     highlighter.endFill();
     highlighter.visible = false;
 
-    const maxDistanceToNextDate = 200;
     if (datesFiltered) {
       const placedElements = datesFiltered.map((date, index) => {
         const x =
           date.parsed.diff(datesFiltered[0].parsed, "days") * spacingMultiplier;
 
-        const previous = datesFiltered[index - 1];
-        const deltaX = date.parsed.diff(datesFiltered[index - 1], "days");
-        console.log({ previous, deltaX }, Math.abs(deltaX));
+        // const previous = datesFiltered[index - 1];
+        // const deltaX = date.parsed.diff(datesFiltered[index - 1], "days");
+        // console.log({ previous, deltaX }, Math.abs(deltaX));
 
         // const x = date.parsed.diff(datesFiltered[0].parsed, "days") * spacingMultiplier;
         const y = app.screen.height / 2; // Center the timeline vertically
@@ -343,7 +330,10 @@ export const ProcessTimeline = (props: { processId: string }) => {
         });
 
         // Draw a text label
-        const text = new Text(date.parsed.format("DD.MM.YY"));
+        const text =
+          date.original === "current"
+            ? new Text("Today")
+            : new Text(date.parsed.format("DD.MM.YY"));
         text.style.fontSize = 12;
         text.style.fontFamily = "Equinor, Arial";
         text.style.fill = textColor;
@@ -358,7 +348,7 @@ export const ProcessTimeline = (props: { processId: string }) => {
           highlighter.visible = true;
           highlighter.x = x;
           highlighter.y = y;
-          // rememeber to scroll this element into view
+          // remember to scroll this element into view
           scrollbox.ensureVisible(x, y, circle.width * 10, circle.height);
         }
         return { circle, text, date };
@@ -390,20 +380,20 @@ export const ProcessTimeline = (props: { processId: string }) => {
       scrollbox.update();
 
       // keyboard navigation
-      window.addEventListener("keydown", (e) => {
-        const currentIndex = placedElements.find(
-          (e) => router.query.version === e.date.original
-        );
-        if (e.key === "ArrowLeft") {
-          if (currentIndex > 0) {
-            travelToVersion(placedElements[currentIndex - 1].date.original);
-          }
-        } else if (e.key === "ArrowRight") {
-          if (currentIndex < placedElements.length - 1) {
-            travelToVersion(placedElements[currentIndex + 1].date.original);
-          }
-        }
-      });
+      // window.addEventListener("keydown", (e) => {
+      //   const currentIndex = placedElements.find(
+      //     (e) => router.query.version === e.date.original
+      //   );
+      //   if (e.key === "ArrowLeft" && currentIndex > 0) {
+      //     travelToVersion(placedElements[currentIndex - 1].date.original);
+      //   }
+      //   if (
+      //     e.key === "ArrowRight" &&
+      //     currentIndex < placedElements.length - 1
+      //   ) {
+      //     travelToVersion(placedElements[currentIndex + 1].date.original);
+      //   }
+      // });
     }
 
     return () => {
@@ -458,3 +448,18 @@ export const ProcessTimeline = (props: { processId: string }) => {
 
   return <div ref={canvasRef} {...props} />;
 };
+// Group by date
+function groupBy(
+  dates: { parsed: moment.Moment; original: string }[],
+  arg1: (date: any) => any
+) {
+  if (!dates) return {};
+  return dates.reduce((acc, date) => {
+    const key = arg1(date);
+    if (!acc[key]) {
+      acc[key] = [];
+    }
+    acc[key].push(date);
+    return acc;
+  }, {});
+}
