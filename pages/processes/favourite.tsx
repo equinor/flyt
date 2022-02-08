@@ -1,32 +1,44 @@
 import React, { useState } from "react";
-import styles from "./FrontPage.module.scss";
+
+import ActiveFilterSection from "components/Labels/ActiveFilterSection";
+import FilterLabelButton from "components/Labels/FilterLabelButton";
+import FilterUserButton from "components/FilterUserButton";
+import FrontPageBody from "components/FrontPageBody";
 import Head from "next/head";
 import { Layouts } from "../../layouts/LayoutWrapper";
-import SideNavBar from "components/SideNavBar";
-import FrontPageBody from "components/FrontPageBody";
-import { useQuery } from "react-query";
-import { getProjects } from "../../services/projectApi";
-import { useRouter } from "next/router";
-import { Typography } from "@equinor/eds-core-react";
-import { SortSelect } from "../../components/SortSelect";
 import { SearchField } from "components/SearchField";
-import FilterLabelButton from "components/Labels/FilterLabelButton";
-import ActiveFilterSection from "components/Labels/ActiveFilterSection";
+import SideNavBar from "components/SideNavBar";
+import { SortSelect } from "../../components/SortSelect";
+import { Typography } from "@equinor/eds-core-react";
+import { getProjects } from "../../services/projectApi";
+import { stringToArray } from "utils/stringToArray";
+import styles from "./FrontPage.module.scss";
+import { useQuery } from "react-query";
+import { useRouter } from "next/router";
 
 export default function FavoriteProcesses(): JSX.Element {
   const [page, setPage] = useState(1);
   const itemsPerPage = 16;
 
   const router = useRouter();
-
   const query = useQuery(
-    ["favProjects", page, "isFavourite", ...Object.values(router.query)],
+    [
+      "favProjects",
+      page,
+      "isFavourite",
+      itemsPerPage,
+      router.query.q,
+      router.query.user,
+      router.query.rl,
+    ],
     () =>
       getProjects({
         page,
         items: itemsPerPage,
         onlyFavorites: true,
-        ...router.query,
+        q: stringToArray(router.query.q),
+        ru: stringToArray(router.query.user),
+        rl: stringToArray(router.query.rl),
       })
   );
 
@@ -50,15 +62,14 @@ export default function FavoriteProcesses(): JSX.Element {
             <div className={styles.subHeader}>
               <Typography variant="h3">My favourite processes</Typography>
               <div className={styles.sortAndFilter}>
+                <FilterUserButton />
                 <FilterLabelButton />
                 <SortSelect />
               </div>
             </div>
-            {labelIdArray && (
-              <div className={styles.subHeader}>
-                <ActiveFilterSection labelIDArray={labelIdArray} />
-              </div>
-            )}
+            <div className={styles.subHeader}>
+              <ActiveFilterSection />
+            </div>
           </div>
           <FrontPageBody
             itemsPerPage={itemsPerPage}

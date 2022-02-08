@@ -106,7 +106,6 @@ function AddSection(props: { process: vsmProject }): JSX.Element {
     <>
       <Search
         aria-label="search"
-        id="searchProjects"
         placeholder="Search labels"
         autoComplete="off"
         className={styles.searchField}

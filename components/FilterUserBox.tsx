@@ -1,30 +1,30 @@
 import { Button, Chip, Icon, Search } from "@equinor/eds-core-react";
-import React, { useState } from "react";
 
 import { close } from "@equinor/eds-icons";
 import { debounce } from "utils/debounce";
-import { getLabels } from "services/labelsApi";
-import { getUpdatedLabel } from "utils/getUpdatedLabel";
-import styles from "./FilterLabelBox.module.scss";
+import { searchUser } from "services/userApi";
+import styles from "./FilterUserBox.module.scss";
+import { toggleQueryParam } from "utils/toggleQueryParam";
 import { unknownErrorToString } from "utils/isError";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
-export default function FilterLabelBox(props: {
+export default function FilterUserBox(props: {
   handleClose: () => void;
 }): JSX.Element {
   const [searchText, setSearchText] = useState("");
   const {
-    data: labels,
+    data: users,
     isLoading,
     error,
-  } = useQuery(["labels", searchText], () => getLabels(searchText));
+  } = useQuery(["users", searchText], () => searchUser(searchText));
 
   return (
     <div className={styles.box}>
       <TopSection handleClose={props.handleClose} />
       <SearchSection setSearchText={setSearchText} />
-      <LabelSection labels={labels} isLoading={isLoading} error={error} />
+      <LabelSection labels={users} isLoading={isLoading} error={error} />
     </div>
   );
 }
@@ -32,7 +32,7 @@ export default function FilterLabelBox(props: {
 function TopSection(props: { handleClose: () => void }): JSX.Element {
   return (
     <div className={styles.topSection}>
-      <p className={styles.heading}>Filter by label</p>
+      <p className={styles.heading}>Filter by user</p>
       <Button variant={"ghost_icon"} onClick={props.handleClose}>
         <Icon data={close} />
       </Button>
@@ -50,14 +50,11 @@ function SearchSection(props: {
     <div className={styles.searchSection}>
       <Search
         aria-label="search"
-        placeholder="Search labels"
+        id="searchProjects"
+        placeholder="Search users"
         autoComplete="off"
         onChange={(e) => {
-          debounce(
-            () => setSearchText(`${e.target.value}`),
-            500,
-            "labelSearch"
-          );
+          debounce(() => setSearchText(`${e.target.value}`), 500, "userSearch");
         }}
       />
       <Button
@@ -65,7 +62,7 @@ function SearchSection(props: {
         variant="ghost"
         onClick={() =>
           router.replace({
-            query: { ...router.query, rl: [] },
+            query: { ...router.query, user: [] },
           })
         }
         style={{ minWidth: "90px" }}
@@ -80,17 +77,9 @@ function LabelSection(props: { labels; isLoading; error }): JSX.Element {
   const { labels, isLoading, error } = props;
   const router = useRouter();
 
-  // rl stands for "required label"
-  const handleClick = (selectedLabelId: string) => {
-    const labelIdArray = getUpdatedLabel(selectedLabelId, router.query.rl);
-    router.replace({
-      query: { ...router.query, rl: labelIdArray },
-    });
-  };
-
   const isActive = (id: string) => {
-    if (router.query.rl) {
-      return `${router.query.rl}`.split(",").some((element) => element == id);
+    if (router.query.user) {
+      return `${router.query.user}`.split(",").some((element) => element == id);
     }
   };
 
@@ -105,23 +94,22 @@ function LabelSection(props: { labels; isLoading; error }): JSX.Element {
   return (
     <div className={styles.labelSection}>
       <p className={styles.labelCounter}>
-        {`${labels.length}`} {labels.length == 1 ? "label" : "labels"}{" "}
-        discovered
+        {`${labels.length}`} {labels.length == 1 ? "user" : "users"} discovered
       </p>
 
       <div className={styles.labelContainer}>
         {labels.map((label) => (
           <button
-            key={label.id}
-            onClick={() => handleClick(label.id.toString())}
+            key={label.pkUser}
+            onClick={() => toggleQueryParam("user", label.pkUser, router)}
             style={{ padding: "0", backgroundColor: "#ffffff", border: "none" }}
             className={styles.button}
           >
             <Chip
-              variant={isActive(label.id.toString()) ? "active" : null}
+              variant={isActive(label.pkUser.toString()) ? "active" : null}
               style={{ marginRight: "5px", marginBottom: "10px" }}
             >
-              {label.text}
+              {label.userName}
             </Chip>
           </button>
         ))}
