@@ -25,11 +25,13 @@ export default function FilterUserButton(): JSX.Element {
         Filter by users
         {numberOfSelectedUsers ? ` (${numberOfSelectedUsers})` : ""}
       </Button>
-      {visibleScrim && (
-        <Scrim onClose={() => setVisibleScrim(false)} isDismissable>
-          <FilterUserBox handleClose={() => setVisibleScrim(false)} />
-        </Scrim>
-      )}
+      <Scrim
+        onClose={() => setVisibleScrim(false)}
+        isDismissable
+        open={visibleScrim}
+      >
+        <FilterUserBox handleClose={() => setVisibleScrim(false)} />
+      </Scrim>
     </>
   );
 }

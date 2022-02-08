@@ -25,11 +25,13 @@ export default function FilterLabelButton(): JSX.Element {
         Filter by label
         {numberOfSelectedLabels ? ` (${numberOfSelectedLabels})` : ""}
       </Button>
-      {visibleScrim && (
-        <Scrim onClose={() => setVisibleScrim(false)} isDismissable>
-          <FilterLabelBox handleClose={() => setVisibleScrim(false)} />
-        </Scrim>
-      )}
+      <Scrim
+        open={visibleScrim}
+        onClose={() => setVisibleScrim(false)}
+        isDismissable
+      >
+        <FilterLabelBox handleClose={() => setVisibleScrim(false)} />
+      </Scrim>
     </>
   );
 }

@@ -119,14 +119,21 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.14.5"
 
-"@babel/runtime@^7.10.2", "@babel/runtime@^7.12.5", "@babel/runtime@^7.13.10", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.7.2", "@babel/runtime@^7.9.2":
+"@babel/runtime@^7.10.2", "@babel/runtime@^7.9.2":
+  version "7.14.6"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.14.6.tgz#535203bc0892efc7dec60bdc27b2ecf6e409062d"
+  integrity sha512-/PCB2uJ7oM44tz8YhC4Z/6PeOKXp4K588f+5M3clr1M4zbqztlo0XEfJ2LEzj/FgwfgGcIdl8n7YYjTCI0BYwg==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
+"@babel/runtime@^7.12.5", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.7.2":
   version "7.15.4"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.15.4.tgz#fd17d16bfdf878e6dd02d19753a39fa8a8d9c84a"
   integrity sha512-99catp6bHCaxr4sJ/DbTGgHS4+Rs2RVd2g7iOap6SLGPDknRK9ztKNsE/Fg6QhSeh1FGE5f6gHGQmvvn3I3xhw==
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.15.4":
+"@babel/runtime@^7.14.8", "@babel/runtime@^7.15.4", "@babel/runtime@^7.16.3":
   version "7.16.7"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.16.7.tgz#03ff99f64106588c9c403c6ecb8c3bafbbdff1fa"
   integrity sha512-9E9FJowqAsytyOY6LG+1KuueckRL+aQW+mKvXRXnuFGyRAyepJPmEo9vgMfXUA6O9u3IeEdv9MAkppFcaQwogQ==
@@ -230,27 +237,28 @@
   resolved "https://registry.yarnpkg.com/@emotion/unitless/-/unitless-0.7.5.tgz#77211291c1900a700b8a78cfafda3160d76949ed"
   integrity sha512-OWORNpfjMsSSUBVrRBVGECkhWcULOAJz9ZW8uK9qgxD+87M7jHRcvh/A96XXNhXTLmKcoYSQtBEX7lHMO7YRwg==
 
-"@equinor/eds-core-react@^0.13.1":
-  version "0.13.1"
-  resolved "https://registry.yarnpkg.com/@equinor/eds-core-react/-/eds-core-react-0.13.1.tgz#a0e7de08105f3961783f996d23b95d39f96e1e3c"
-  integrity sha512-tmEMe7H1/OCI63Z6NRQ2lmnVJahfStr85e8nuvigK531InAuvpT6oh/ZzjzQzjGkJgOveucWCHZdQSK2+ESp5A==
+"@equinor/eds-core-react@0.17.0":
+  version "0.17.0"
+  resolved "https://registry.yarnpkg.com/@equinor/eds-core-react/-/eds-core-react-0.17.0.tgz#6d1337a745772024bed8c5b6300d22b618a5b0da"
+  integrity sha512-oiZfA+FNu3W/sTHFfUGT/XbfWPH84UovoKsO73C7jhmIfzEvSmIfOPg4eQNWvdZ3P4IphjQBAsI4rnt6HubC+w==
   dependencies:
-    "@equinor/eds-icons" "0.6.2"
-    "@equinor/eds-tokens" "0.6.0"
+    "@babel/runtime" "^7.16.3"
+    "@equinor/eds-icons" "0.10.0"
+    "@equinor/eds-tokens" "0.7.0"
     "@popperjs/core" "2.9.2"
-    downshift "^6.1.3"
+    downshift "^6.1.7"
     react-fast-compare "3.2.0"
     react-popper "2.2.5"
 
-"@equinor/eds-icons@0.6.2":
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/@equinor/eds-icons/-/eds-icons-0.6.2.tgz#7eb981df5b186712e74335a45f16211368911258"
-  integrity sha512-WGYErmaOLRGLbMo5ABPCjlGMFfyKk/PfWUZRhXAvAj7boc/8XVDWUf0lTATXW4wHKWnWCkmHFghN/4OQoFh/ng==
+"@equinor/eds-icons@0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@equinor/eds-icons/-/eds-icons-0.10.0.tgz#3e3227d07b26bba4732feab34af2f4c5f2858032"
+  integrity sha512-oYnbMtBLiwp30TzN8Q/MEJdqhyAQs87oD/x/mHFQ+BpFGlbbrcsWeTOD+rNY6JhxtJl5qfi9mAhJQgRMtauXsA==
 
-"@equinor/eds-tokens@0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@equinor/eds-tokens/-/eds-tokens-0.6.0.tgz#daeac90b4cfdcad99242bb8892ad43b2db6610a8"
-  integrity sha512-Er9Bn5VRlgdyYwgGtubwTb8ejJx6msB8RTbQ1lZ4dWTAjN1XvBQKTSIZMo6NwqJ5N4+5n3YmEbpeGhOetqLyWg==
+"@equinor/eds-tokens@0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@equinor/eds-tokens/-/eds-tokens-0.7.0.tgz#e6fe587e414c7470183b8778bf826aaf909766ba"
+  integrity sha512-QdlX1Ndz6CmgdLMVHAZi+4GBEfU5OOnNGtXX1m7aTQbzWDTdxB6e7c5XxT/UnJHue1i5vT3RKMBDAhE2YjiXYA==
 
 "@eslint/eslintrc@^0.4.3":
   version "0.4.3"
@@ -1749,15 +1757,16 @@ dotgitignore@^2.1.0:
     find-up "^3.0.0"
     minimatch "^3.0.4"
 
-downshift@^6.1.3:
-  version "6.1.3"
-  resolved "https://registry.yarnpkg.com/downshift/-/downshift-6.1.3.tgz#e794b7805d24810968f21e81ad6bdd9f3fdc40da"
-  integrity sha512-RA1MuaNcTbt0j+sVLhSs8R2oZbBXYAtdQP/V+uHhT3DoDteZzJPjlC+LQVm9T07Wpvo84QXaZtUCePLDTDwGXg==
+downshift@^6.1.7:
+  version "6.1.7"
+  resolved "https://registry.yarnpkg.com/downshift/-/downshift-6.1.7.tgz#fdb4c4e4f1d11587985cd76e21e8b4b3fa72e44c"
+  integrity sha512-cVprZg/9Lvj/uhYRxELzlu1aezRcgPWBjTvspiGTVEU64gF5pRdSRKFVLcxqsZC637cLAGMbL40JavEfWnqgNg==
   dependencies:
-    "@babel/runtime" "^7.13.10"
+    "@babel/runtime" "^7.14.8"
     compute-scroll-into-view "^1.0.17"
     prop-types "^15.7.2"
     react-is "^17.0.2"
+    tslib "^2.3.0"
 
 earcut@^2.2.2:
   version "2.2.2"

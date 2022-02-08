@@ -1,7 +1,8 @@
-import { getDefaultTextSprite } from "./GetDefaultTextSprite";
-import { getTimeText } from "./GetTimeText";
 import * as PIXI from "pixi.js";
+
+import { getDefaultTextSprite } from "./GetDefaultTextSprite";
 import { getTaskSection } from "./GetTaskSection";
+import { getTimeText } from "./GetTimeText";
 import { vsmObject } from "../../../../interfaces/VsmObject";
 
 export function createWaitingAsset(
@@ -26,20 +27,23 @@ export function createWaitingAsset(
     waitingTaskSectionEdge,
   } = PIXI.Loader.shared.resources;
 
-  const gotTasks = vsmObject.tasks.length > 0;
+  // Remember to not include solved tasks
+  const gotTasks = vsmObject.tasks.filter((task) => !task.solved).length > 0;
   const texture = gotTasks ? waitingStraight.texture : waiting.texture;
   const waitingSprite = new PIXI.Sprite(texture);
 
   const wrapper = new PIXI.Container();
   wrapper.addChild(waitingSprite, textSprite, timeText);
 
-  const taskSection = getTaskSection(
-    2,
-    waitingTaskSection,
-    waitingTaskSectionEdge,
-    vsmObject
-  );
-  if (taskSection) wrapper.addChild(taskSection);
+  if (gotTasks) {
+    const taskSection = getTaskSection(
+      2,
+      waitingTaskSection,
+      waitingTaskSectionEdge,
+      vsmObject
+    );
+    if (taskSection) wrapper.addChild(taskSection);
+  }
 
   return wrapper;
 }

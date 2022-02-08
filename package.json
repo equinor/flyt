@@ -31,7 +31,7 @@
   "dependencies": {
     "@azure/msal-browser": "^2.16.0",
     "@azure/msal-react": "^1.0.1",
-    "@equinor/eds-core-react": "^0.13.1",
+    "@equinor/eds-core-react": "0.17.0",
     "@reach/combobox": "^0.16.4",
     "@thream/socketio-jwt": "2.1.1",
     "@types/node": "^15.0.3",

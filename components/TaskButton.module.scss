@@ -96,3 +96,15 @@ $draftColor: $black;
   color: $draftColor;
   border: dashed 1px $draftColor;
 }
+
+.solved {
+  color: #9ca6ac;
+  background-color: #f7f7f7;
+  border: solid 1px #f7f7f7;
+}
+
+.solved.selected {
+  background-color: #9ca6ac;
+  color: white;
+  border: solid 1px #9ca6ac;
+}
