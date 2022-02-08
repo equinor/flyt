@@ -10,10 +10,11 @@
 - :zap: [Api-endpoints: See swagger](https://vsm-api-dev.azurewebsites.net/swagger/index.html)
 - :dizzy: [Our development process: Mapped in Flyt itself](https://flyt.equinor.com/projects/172)
 - 🏃 [Running in Radix](https://console.radix.equinor.com/applications/vsm/)
+- :memo: [Architecture contract](https://github.com/equinor/architecturecontract/blob/master/contracts/flyt.md)
 
 # Background
 
-> TBD: write some background about mapping and what Flyt aims to solve and improve.
+Mission statement: Empower everyone on all levels to improve the way we work - process by process
 
 # Tech stack / Features
 

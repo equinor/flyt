@@ -1,5 +1,5 @@
-import BaseAPIServices from "./BaseAPIServices";
 import { AxiosPromise } from "axios";
+import BaseAPIServices from "./BaseAPIServices";
 
 /**
  * Give a new user access to a vsm
@@ -48,3 +48,25 @@ export const get = ({ vsmId, userName }) => {
     (res) => res.data
   );
 };
+
+/**
+ * Retrieve registered users or search for a short-name.
+ * @param userName - The short-name of the user to search for.
+ * @returns - Array of users.
+ */
+export const searchUser = (
+  userName: string
+): Promise<Array<{ pkUser: number; userName: string }>> =>
+  BaseAPIServices.get(`/api/v1.0/userAccess/userSearch?q=${userName}`).then(
+    (value) => value.data
+  );
+
+export const getUserById = (
+  userId: number | string
+): Promise<{
+  pkUser: number;
+  userName: string;
+}> =>
+  BaseAPIServices.get(`/api/v1.0/userAccess/userById/${userId}`).then(
+    (res) => res.data
+  );

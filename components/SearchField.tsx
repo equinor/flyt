@@ -14,9 +14,8 @@ export function SearchField(): JSX.Element {
 
   return (
     <Search
-      aria-label="search"
-      id="searchProjects"
-      placeholder="Search by username or title"
+      aria-label="Search for process with name"
+      placeholder="Search by process name"
       defaultValue={router.query.q}
       onChange={(e) => {
         debounce(() => handleSearch(`${e.target.value}`), 500, "projectSearch");

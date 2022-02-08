@@ -1,14 +1,14 @@
 import { Button, Scrim } from "@equinor/eds-core-react";
 import React, { useState } from "react";
 
-import FilterLabelBox from "./FilterLabelBox";
+import FilterUserBox from "./FilterUserBox";
 import { numberOfQueryParams } from "utils/numberOfQueryParams";
 import { useRouter } from "next/router";
 
-export default function FilterLabelButton(): JSX.Element {
+export default function FilterUserButton(): JSX.Element {
   const [visibleScrim, setVisibleScrim] = useState(false);
   const router = useRouter();
-  const numberOfSelectedLabels = numberOfQueryParams(router.query.rl);
+  const numberOfSelectedUsers = numberOfQueryParams(router.query.user);
 
   return (
     <>
@@ -22,15 +22,15 @@ export default function FilterLabelButton(): JSX.Element {
         }}
         onClick={() => setVisibleScrim(true)}
       >
-        Filter by label
-        {numberOfSelectedLabels ? ` (${numberOfSelectedLabels})` : ""}
+        Filter by users
+        {numberOfSelectedUsers ? ` (${numberOfSelectedUsers})` : ""}
       </Button>
       <Scrim
-        open={visibleScrim}
         onClose={() => setVisibleScrim(false)}
         isDismissable
+        open={visibleScrim}
       >
-        <FilterLabelBox handleClose={() => setVisibleScrim(false)} />
+        <FilterUserBox handleClose={() => setVisibleScrim(false)} />
       </Scrim>
     </>
   );
