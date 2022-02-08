@@ -76,6 +76,10 @@
     "standard-version": "^9.3.1",
     "typescript": "4.5.5"
   },
+  "resolutions": {
+    "simple-get": "4.0.1",
+    "node-fetch": "2.6.7"
+  },
   "lint-staged": {
     "*.{ts,js}": [
       "eslint --cache --fix"
