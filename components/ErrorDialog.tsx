@@ -1,7 +1,6 @@
 import { Button, Scrim } from "@equinor/eds-core-react";
 
 import React from "react";
-import { restore } from "@equinor/eds-icons";
 import { unknownErrorToString } from "utils/isError";
 
 export function ErrorDialog({

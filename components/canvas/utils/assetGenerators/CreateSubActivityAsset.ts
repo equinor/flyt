@@ -1,8 +1,9 @@
+import * as PIXI from "pixi.js";
+
 import { getDefaultTextSprite } from "./GetDefaultTextSprite";
 import { getRoleText } from "./GetRoleText";
-import { getTimeText } from "./GetTimeText";
-import * as PIXI from "pixi.js";
 import { getTaskSection } from "./GetTaskSection";
+import { getTimeText } from "./GetTimeText";
 import { vsmObject } from "../../../../interfaces/VsmObject";
 
 export function createSubActivityAsset(
@@ -34,20 +35,23 @@ export function createSubActivityAsset(
     genericTaskSectionEdge,
   } = PIXI.Loader.shared.resources;
 
-  const gotTasks = vsmObject.tasks.length > 0;
+  // Remember to not include solved tasks
+  const gotTasks = vsmObject.tasks.filter((task) => !task.solved).length > 0;
   const texture = gotTasks ? subActivityStraight.texture : subActivity.texture;
   const subActivitySprite = new PIXI.Sprite(texture);
 
   const wrapper = new PIXI.Container();
   wrapper.addChild(subActivitySprite, textSprite, roleText, timeText);
 
-  const taskSection = getTaskSection(
-    4,
-    genericTaskSection,
-    genericTaskSectionEdge,
-    vsmObject
-  );
-  if (taskSection) wrapper.addChild(taskSection);
+  if (gotTasks) {
+    const taskSection = getTaskSection(
+      4,
+      genericTaskSection,
+      genericTaskSectionEdge,
+      vsmObject
+    );
+    if (taskSection) wrapper.addChild(taskSection);
+  }
 
   const mask = new PIXI.Graphics();
   mask.drawRect(0, 0, 126, 88);

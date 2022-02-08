@@ -99,23 +99,8 @@ const CanvasLayout = ({ children }): JSX.Element => {
   const isAdmin = myAccess === "Admin";
 
   const [visibleShareScrim, setVisibleShareScrim] = React.useState(false);
-  const handleCloseShareScrim = (closed?: boolean) => {
-    if (closed) setVisibleShareScrim(closed);
-    else setVisibleShareScrim(!visibleShareScrim);
-  };
-
   const [visibleRenameScrim, setVisibleRenameScrim] = React.useState(false);
-  const handleCloseRenameScrim = (closed?: boolean) => {
-    if (closed) setVisibleRenameScrim(closed);
-    else setVisibleRenameScrim(!visibleRenameScrim);
-  };
-
   const [visibleDeleteScrim, setVisibleDeleteScrim] = React.useState(false);
-  const handleCloseDeleteScrim = (closed?: boolean) => {
-    if (closed) setVisibleDeleteScrim(closed);
-    else setVisibleDeleteScrim(!visibleDeleteScrim);
-    setDeleteError(null);
-  };
 
   const [state, setState] = React.useState<{
     buttonEl: HTMLButtonElement;
@@ -241,7 +226,7 @@ const CanvasLayout = ({ children }): JSX.Element => {
           <div style={{ gridAutoFlow: "row" }} className={styles.centerButton}>
             <div className={styles.centerButton}>
               <Typography variant={"h4"} className={styles.projectName}>
-                {projectTitle || "Untitled VSM"}
+                {projectTitle || "Untitled process"}
               </Typography>
               <Button
                 variant={"ghost"}
@@ -272,8 +257,8 @@ const CanvasLayout = ({ children }): JSX.Element => {
               <Menu.Item
                 title={`${
                   userCannotEdit
-                    ? "Only the creator, admin or a contributor can rename this VSM"
-                    : "Rename the current VSM"
+                    ? "Only the creator, admin or a contributor can rename this process"
+                    : "Rename the current process"
                 }`}
                 disabled={userCannotEdit}
                 onKeyDown={(e) => {
@@ -293,8 +278,8 @@ const CanvasLayout = ({ children }): JSX.Element => {
               <Menu.Item
                 title={`${
                   isAdmin
-                    ? "Delete the current VSM"
-                    : "Only the creator can delete this VSM"
+                    ? "Delete the current process"
+                    : "Only the creator can delete this process"
                 }`}
                 disabled={!isAdmin}
                 onKeyDown={(e) => {
@@ -334,20 +319,20 @@ const CanvasLayout = ({ children }): JSX.Element => {
 
       <Scrim
         open={visibleShareScrim}
-        onClose={() => handleCloseShareScrim()}
+        onClose={() => setVisibleShareScrim(false)}
         onWheel={(e) => e.stopPropagation()}
         isDismissable
       >
         <AccessBox
           project={project}
-          handleClose={handleCloseShareScrim}
+          handleClose={() => setVisibleShareScrim(false)}
           isAdmin={isAdmin}
         />
       </Scrim>
 
       <Scrim
         open={visibleRenameScrim}
-        onClose={() => handleCloseRenameScrim()}
+        onClose={() => setVisibleRenameScrim(false)}
         onWheel={(e) => e.stopPropagation()}
         isDismissable
       >
@@ -378,7 +363,7 @@ const CanvasLayout = ({ children }): JSX.Element => {
 
       <Scrim
         open={visibleDeleteScrim}
-        onClose={() => handleCloseDeleteScrim()}
+        onClose={() => setVisibleDeleteScrim(false)}
         onWheel={(e) => e.stopPropagation()}
         isDismissable
       >
@@ -412,7 +397,7 @@ const CanvasLayout = ({ children }): JSX.Element => {
                 <Button
                   autoFocus
                   variant={"outlined"}
-                  onClick={() => handleCloseDeleteScrim(false)}
+                  onClick={() => setVisibleDeleteScrim(false)}
                 >
                   Cancel
                 </Button>

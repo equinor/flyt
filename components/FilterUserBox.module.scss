@@ -1,0 +1,66 @@
+@import "styles/variables";
+
+.box {
+  background: #ffffff;
+  border-radius: 4px;
+  padding: 0 20px 25px 20px;
+
+  display: flex;
+  flex-direction: column;
+
+  width: min(90vw, 600px);
+  height: 80vh;
+
+  animation-name: fade-in;
+  animation-duration: 0.5s;
+}
+
+.topSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; //Vertical align the items
+  border-bottom: #dcdcdc solid 1px;
+  margin-bottom: 30px;
+}
+
+.heading {
+  /* Heading/H6 */
+  font-family: Equinor, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.2px;
+  color: $equinor_PROMINENT;
+}
+
+.searchSection {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.labelSection {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  overflow: auto;
+}
+
+.labelCounter {
+  font-size: 16px;
+}
+
+.labelContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.button:hover {
+  cursor: pointer;
+}
+
+.chip:focus {
+  background-color: green;
+}
+
+.activeLabel {
+  background-color: green;
+}

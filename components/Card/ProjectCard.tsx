@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from "react-query";
 
 import { AccessBox } from "components/AccessBox";
 import Heart from "components/Heart";
-import Labels from "../Labels/Labels";
+import Labels from "components/Labels/Labels";
 import ManageLabelBox from "components/Labels/ManageLabelBox";
 import ProjectCardHeader from "./ProjectCardHeader";
 import { UserDots } from "./UserDots";
