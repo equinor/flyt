@@ -1,25 +1,29 @@
 import React, { useState } from "react";
-import commonStyles from "../../styles/common.module.scss";
-import styles from "./FrontPage.module.scss";
+import { useAccount, useMsal } from "@azure/msal-react";
+
+import ActiveFilterSection from "components/Labels/ActiveFilterSection";
+import FilterLabelButton from "components/Labels/FilterLabelButton";
+import FilterUserButton from "components/FilterUserButton";
+import FrontPageBody from "components/FrontPageBody";
 import Head from "next/head";
 import { Layouts } from "../../layouts/LayoutWrapper";
-import FrontPageBody from "components/FrontPageBody";
-import SideNavBar from "components/SideNavBar";
-import { useQuery } from "react-query";
-import { getProjects, searchUser } from "../../services/projectApi";
-import { getUserShortName } from "../../utils/getUserShortName";
-import { useAccount, useMsal } from "@azure/msal-react";
-import { useRouter } from "next/router";
-import { Typography } from "@equinor/eds-core-react";
-import { SortSelect } from "../../components/SortSelect";
 import { SearchField } from "components/SearchField";
+import SideNavBar from "components/SideNavBar";
+import { SortSelect } from "../../components/SortSelect";
+import { Typography } from "@equinor/eds-core-react";
+import { getProjects } from "../../services/projectApi";
+import { getUserShortName } from "../../utils/getUserShortName";
+import { searchUser } from "services/userApi";
+import { stringToArray } from "utils/stringToArray";
+import styles from "./FrontPage.module.scss";
+import { useQuery } from "react-query";
+import { useRouter } from "next/router";
 
 export default function MyProcesses(): JSX.Element {
   const [page, setPage] = useState(1);
   const itemsPerPage = 15;
 
   const router = useRouter();
-  const { searchQuery, orderBy } = router?.query;
 
   //Get my user
   const { accounts } = useMsal();
@@ -27,20 +31,32 @@ export default function MyProcesses(): JSX.Element {
   const shortName = getUserShortName(account);
 
   const { data: users } = useQuery(["userName"], () => searchUser(shortName));
-  const myUserId = users?.find((user) => user.userName === shortName)?.pkUser;
 
+  const myUserId = users?.find((user) => user.userName === shortName)?.pkUser;
+  const requiredUsers = stringToArray(router.query.user);
   const query = useQuery(
-    ["myProjects", page, myUserId, searchQuery || "", orderBy],
+    [
+      "myProjects",
+      page,
+      myUserId,
+      itemsPerPage,
+      router.query.q,
+      requiredUsers,
+      router.query.rl,
+    ],
     () =>
       getProjects({
         page,
-        ru: [myUserId],
         items: itemsPerPage,
-        q: searchQuery ? `${searchQuery}` : "",
-        orderBy: orderBy && `${orderBy}`,
+        q: stringToArray(router.query.q),
+        ru: requiredUsers ? [...requiredUsers, myUserId] : [myUserId],
+        rl: stringToArray(router.query.rl),
       }),
     { enabled: !!myUserId }
   );
+
+  // rl stands for "required label"
+  const labelsID = router.query.rl ? `${router.query.rl}`.split(",") : null;
 
   return (
     <div>
@@ -58,7 +74,14 @@ export default function MyProcesses(): JSX.Element {
             </div>
             <div className={styles.subHeader}>
               <Typography variant="h3">My processes</Typography>
-              <SortSelect />
+              <div className={styles.sortAndFilter}>
+                <FilterUserButton />
+                <FilterLabelButton />
+                <SortSelect />
+              </div>
+            </div>
+            <div className={styles.subHeader}>
+              <ActiveFilterSection />
             </div>
           </div>
           <FrontPageBody

@@ -10,15 +10,25 @@ export function createUrlParams(params: {
 
   // Create a string of params
   return (
-    `?` +
-    Object.keys(params)
-      .map((key) => {
+    (
+      `?` +
+      Object.keys(params).map((key) => {
         const value = params[key];
         if (Array.isArray(value)) {
-          return value.map((v) => `${key}=${encodeURIComponent(v)}`).join("&");
+          return value.map((v) => `${key}=${encodeURIComponent(v)}`);
         }
         return `${key}=${encodeURIComponent(value)}`;
       })
-      .join("&")
+    )
+      .split(",") // Make an array
+      .filter((v) => v) // Remove empty strings
+      // remove duplicates
+      .reduce((acc, curr) => {
+        if (acc.indexOf(curr) < 0) {
+          acc.push(curr);
+        }
+        return acc;
+      }, [])
+      .join("&") // Join array with `&` (string concatenation)
   );
 }

@@ -11,7 +11,6 @@ export default function SideNavBarElement(props: {
 }): JSX.Element {
   const router = useRouter();
   const pathname = router.pathname;
-  const { searchQuery, orderBy } = router.query;
   const isOnCurrentPage = pathname == props.pathname;
 
   return (
@@ -23,7 +22,7 @@ export default function SideNavBarElement(props: {
         onClick={() =>
           router.push({
             pathname: props.pathname,
-            query: { orderBy, searchQuery },
+            query: router.query,
           })
         }
       >

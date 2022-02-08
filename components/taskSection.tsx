@@ -1,10 +1,10 @@
-import { taskObject } from "../interfaces/taskObject";
-import { useRouter } from "next/router";
-import { useQuery } from "react-query";
-import { getTasksForProject } from "../services/taskApi";
-import { unknownErrorToString } from "../utils/isError";
 import { QipCard } from "./QipCard";
 import React from "react";
+import { getTasksForProject } from "../services/taskApi";
+import { taskObject } from "../interfaces/taskObject";
+import { unknownErrorToString } from "../utils/isError";
+import { useQuery } from "react-query";
+import { useRouter } from "next/router";
 
 export function TaskSection(props: {
   filterFunction: (t: taskObject) => boolean;
@@ -27,7 +27,7 @@ export function TaskSection(props: {
       )}
       {!isLoadingTasks && errorTasks && (
         <div>
-          <h1>Error loading PQIs for project</h1>
+          <h1>Error loading PQIRs for project</h1>
           <p>{unknownErrorToString(errorTasks)}</p>
         </div>
       )}
@@ -39,6 +39,7 @@ export function TaskSection(props: {
         }}
       >
         {tasks
+          ?.filter((task) => !task.solved) // filter out solved tasks
           ?.filter(props.filterFunction)
           .sort((a, b) => a.fkTaskType - b.fkTaskType)
           .map((task) => (

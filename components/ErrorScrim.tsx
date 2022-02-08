@@ -1,4 +1,5 @@
 import { Button, Dialog, Scrim, Typography } from "@equinor/eds-core-react";
+
 import React from "react";
 
 export function ErrorScrim(props: {
@@ -9,7 +10,7 @@ export function ErrorScrim(props: {
 }): JSX.Element {
   if (!props.visible) return null;
   return (
-    <Scrim onClose={props.handleClose}>
+    <Scrim open={true} onClose={props.handleClose}>
       <Dialog>
         <Dialog.Title>{props.title || "Error"}</Dialog.Title>
         <Dialog.CustomContent scrollable>

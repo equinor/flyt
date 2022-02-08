@@ -1,6 +1,6 @@
+import { APIConfigs } from "../Config";
 import axios from "axios";
 import { getAccessToken } from "../auth/msalHelpers";
-import { APIConfigs } from "../Config";
 
 class BaseApiService {
   async get(path: string) {

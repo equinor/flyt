@@ -1,31 +1,43 @@
 import React, { useState } from "react";
-import commonStyles from "../../styles/common.module.scss";
-import styles from "./FrontPage.module.scss";
+
+import ActiveFilterSection from "components/Labels/ActiveFilterSection";
+import FilterLabelButton from "components/Labels/FilterLabelButton";
+import FilterUserButton from "components/FilterUserButton";
+import FrontPageBody from "components/FrontPageBody";
 import Head from "next/head";
 import { Layouts } from "../../layouts/LayoutWrapper";
-import SideNavBar from "components/SideNavBar";
-import FrontPageBody from "components/FrontPageBody";
-import { useQuery } from "react-query";
-import { getProjects } from "../../services/projectApi";
-import { useRouter } from "next/router";
-import { Typography } from "@equinor/eds-core-react";
-import { SortSelect } from "../../components/SortSelect";
 import { SearchField } from "components/SearchField";
+import SideNavBar from "components/SideNavBar";
+import { SortSelect } from "../../components/SortSelect";
+import { Typography } from "@equinor/eds-core-react";
+import { getProjects } from "../../services/projectApi";
+import { stringToArray } from "utils/stringToArray";
+import styles from "./FrontPage.module.scss";
+import { useQuery } from "react-query";
+import { useRouter } from "next/router";
 
 export default function AllProcesses(): JSX.Element {
   const [page, setPage] = useState(1);
   const itemsPerPage = 15;
 
   const router = useRouter();
-  const { searchQuery, orderBy } = router?.query;
-
-  const query = useQuery(["projects", page, searchQuery || "", orderBy], () =>
-    getProjects({
+  const query = useQuery(
+    [
+      "projects",
       page,
-      items: itemsPerPage,
-      q: searchQuery ? `${searchQuery}` : "",
-      orderBy: orderBy && `${orderBy}`,
-    })
+      itemsPerPage,
+      router.query.q,
+      router.query.user,
+      router.query.rl,
+    ],
+    () =>
+      getProjects({
+        page,
+        items: itemsPerPage,
+        q: stringToArray(router.query.q),
+        ru: stringToArray(router.query.user),
+        rl: stringToArray(router.query.rl),
+      })
   );
 
   return (
@@ -44,7 +56,14 @@ export default function AllProcesses(): JSX.Element {
             </div>
             <div className={styles.subHeader}>
               <Typography variant="h3">All processes</Typography>
-              <SortSelect />
+              <div className={styles.sortAndFilter}>
+                <FilterUserButton />
+                <FilterLabelButton />
+                <SortSelect />
+              </div>
+            </div>
+            <div className={styles.subHeader}>
+              <ActiveFilterSection />
             </div>
           </div>
           <FrontPageBody

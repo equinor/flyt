@@ -1,5 +1,6 @@
+import { Button, Scrim } from "@equinor/eds-core-react";
+
 import React from "react";
-import { Scrim, Button } from "@equinor/eds-core-react";
 import style from "./ResetProcessDialog.module.scss";
 
 export const ResetProcessDialog = ({
@@ -13,7 +14,7 @@ export const ResetProcessDialog = ({
 }): JSX.Element => {
   if (!visible) return null;
   return (
-    <Scrim isDismissable onClose={onClose}>
+    <Scrim open={true} isDismissable onClose={onClose}>
       <div className={style.resetDialog}>
         <h1 className={style.resetDialogTitle}>Reset To be version</h1>
         <div className={style.resetDialogContent}>
