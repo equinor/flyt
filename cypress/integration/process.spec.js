@@ -32,6 +32,7 @@ describe("Managing a process", () => {
     );
   });
 
+  // todo: Do-not use data-test-ids. Use what a user sees instead.
   const randomHash = Math.random().toString(36).substring(2, 15);
   const newName = `Random process name ${randomHash}`;
   it("can rename the process", () => {
