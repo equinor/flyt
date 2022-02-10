@@ -93,7 +93,7 @@ export default function CategoriesPage(): JSX.Element {
   return (
     <>
       <Head>
-        <title>{projectTitle || "Untitled VSM"} - Categorisation</title>
+        <title>{projectTitle || "Untitled process"} - Categorisation</title>
       </Head>
       <div
         style={{

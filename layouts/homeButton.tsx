@@ -9,7 +9,7 @@ export function HomeButton(): JSX.Element {
   return (
     <div className={styles.homeButton}>
       <Link href={"/"}>
-        <Button variant={"ghost"}>
+        <Button variant={"ghost"} aria-label={"Go to home page"}>
           <Image
             src={"/greenLogo.png"}
             alt={"Logo"}
