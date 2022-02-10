@@ -7,19 +7,19 @@ export default function SideNavBar(): JSX.Element {
   return (
     <div className={styles.elements}>
       <SideNavBarElement
-        testId={"allProcessesButton"}
+        ariaLabel={"All processes"}
         icon={dashboard}
         title="See all processes"
         pathname="/processes"
       />
       <SideNavBarElement
-        testId={"myProcessesButton"}
+        ariaLabel={"My processes"}
         icon={person}
         title="See my processes"
         pathname="/processes/mine"
       />
       <SideNavBarElement
-        testId={"myFavoriteProcessesButton"}
+        ariaLabel={"My favorite processes"}
         icon={favorite_outlined}
         title="See my favourite processes"
         pathname="/processes/favourite"

@@ -24,7 +24,7 @@ export default function Heart(props: {
   if (props.isFavourite) {
     return (
       <button
-        data-test={"buttonHeart"}
+        aria-label="Remove from favourites"
         className={styles.favedHeart}
         onClick={handleClick}
       >
@@ -34,7 +34,7 @@ export default function Heart(props: {
   }
   return (
     <button
-      data-test={"buttonHeart"}
+      aria-label="Add to favourites"
       className={styles.heart}
       onClick={handleClick}
     >

@@ -7,7 +7,7 @@ export default function SideNavBarElement(props: {
   icon;
   title: string;
   pathname: string;
-  testId: string;
+  ariaLabel: string;
 }): JSX.Element {
   const router = useRouter();
   const pathname = router.pathname;
@@ -16,7 +16,7 @@ export default function SideNavBarElement(props: {
   return (
     <Tooltip title={props.title} placement="right">
       <button
-        data-test={props.testId}
+        aria-label={props.ariaLabel}
         style={{ backgroundColor: isOnCurrentPage && "#E6FAEC" }}
         className={styles.iconContainer}
         onClick={() =>

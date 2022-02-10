@@ -77,7 +77,7 @@ function TopSection(props: { title: string; handleClose }) {
       <Button
         variant={"ghost_icon"}
         onClick={props.handleClose}
-        data-test={"shareButtonClose"}
+        aria-label={"close"}
       >
         <Icon data={close} />
       </Button>
@@ -198,7 +198,7 @@ function MiddleSection(props: {
     <>
       <form className={style.emailSection} onSubmit={handleSubmit}>
         <Input
-          data-test={"shareInput"}
+          aria-label={"shortname"}
           disabled={!props.isAdmin}
           autoFocus
           type={"text"}
@@ -212,7 +212,7 @@ function MiddleSection(props: {
           type={"submit"}
           variant={"contained"}
           disabled={!props.isAdmin}
-          data-test={"shareButtonAdd"}
+          aria-label={"add"}
         >
           {props.loading ? "Adding..." : "Add"}
         </Button>

@@ -99,21 +99,10 @@ const CanvasLayout = ({ children }): JSX.Element => {
   const isAdmin = myAccess === "Admin";
 
   const [visibleShareScrim, setVisibleShareScrim] = React.useState(false);
-  const handleCloseShareScrim = (closed) => {
-    if (closed) setVisibleShareScrim(closed);
-    else setVisibleShareScrim(!visibleShareScrim);
-  };
-
   const [visibleRenameScrim, setVisibleRenameScrim] = React.useState(false);
-  const handleCloseRenameScrim = (closed) => {
-    if (closed) setVisibleRenameScrim(closed);
-    else setVisibleRenameScrim(!visibleRenameScrim);
-  };
-
   const [visibleDeleteScrim, setVisibleDeleteScrim] = React.useState(false);
-  const handleCloseDeleteScrim = (closed) => {
-    if (closed) setVisibleDeleteScrim(closed);
-    else setVisibleDeleteScrim(!visibleDeleteScrim);
+  const handleCloseDeleteScrim = () => {
+    setVisibleDeleteScrim(false);
     setDeleteError(null);
   };
 
@@ -197,8 +186,6 @@ const CanvasLayout = ({ children }): JSX.Element => {
       .then(() => router.push("/"))
       .catch((reason) => {
         setDeleteError(reason);
-      })
-      .finally(() => {
         setIsDeleting(false);
       });
   }
@@ -240,16 +227,18 @@ const CanvasLayout = ({ children }): JSX.Element => {
         <div className={styles.center}>
           <div style={{ gridAutoFlow: "row" }} className={styles.centerButton}>
             <div className={styles.centerButton}>
-              <Typography variant={"h4"} className={styles.projectName}>
+              <Typography
+                data-test={"processName"}
+                variant={"h4"}
+                className={styles.projectName}
+              >
                 {projectTitle || "Untitled process"}
               </Typography>
               <Button
                 variant={"ghost"}
                 onClick={(e) => (isOpen ? closeMenu() : openMenu(e, null))}
                 onKeyDown={onKeyPress}
-                data-test="processMenuButton"
-                aria-controls="menu-on-button"
-                aria-haspopup="true"
+                aria-label={"menu"}
                 aria-expanded={isOpen}
               >
                 <Icon data={chevron_down} title="chevron-down" size={16} />
@@ -270,7 +259,7 @@ const CanvasLayout = ({ children }): JSX.Element => {
               focus={focus}
             >
               <Menu.Item
-                data-test={`renameButton`}
+                aria-label={"rename"}
                 title={`${
                   userCannotEdit
                     ? "Only the creator, admin or a contributor can rename this process"
@@ -292,7 +281,7 @@ const CanvasLayout = ({ children }): JSX.Element => {
                 </Typography>
               </Menu.Item>
               <Menu.Item
-                data-test={"deleteButton"}
+                aria-label={"delete"}
                 title={`${
                   isAdmin
                     ? "Delete the current process"
@@ -337,20 +326,20 @@ const CanvasLayout = ({ children }): JSX.Element => {
 
       <Scrim
         open={visibleShareScrim}
-        onClose={() => handleCloseShareScrim(!visibleShareScrim)}
+        onClose={() => setVisibleShareScrim(false)}
         onWheel={(e) => e.stopPropagation()}
         isDismissable
       >
         <AccessBox
           project={project}
-          handleClose={handleCloseShareScrim}
+          handleClose={() => setVisibleShareScrim(false)}
           isAdmin={isAdmin}
         />
       </Scrim>
 
       <Scrim
         open={visibleRenameScrim}
-        onClose={() => handleCloseRenameScrim(!visibleRenameScrim)}
+        onClose={() => setVisibleRenameScrim(false)}
         onWheel={(e) => e.stopPropagation()}
         isDismissable
       >
@@ -360,6 +349,7 @@ const CanvasLayout = ({ children }): JSX.Element => {
             <Button
               variant={"ghost_icon"}
               onClick={() => setVisibleRenameScrim(false)}
+              aria-label={"close"}
             >
               <Icon data={close} title="Close" />
             </Button>
@@ -373,7 +363,7 @@ const CanvasLayout = ({ children }): JSX.Element => {
               variant={"default"}
               defaultValue={project?.name}
               onChange={(e) => updateProjectName(e.target.value)}
-              id={"vsmObjectDescription"}
+              id={"rename-process-text-field"}
             />
           </div>
         </div>
@@ -381,7 +371,7 @@ const CanvasLayout = ({ children }): JSX.Element => {
 
       <Scrim
         open={visibleDeleteScrim}
-        onClose={() => handleCloseDeleteScrim(!visibleDeleteScrim)}
+        onClose={() => handleCloseDeleteScrim()}
         onWheel={(e) => e.stopPropagation()}
         isDismissable
       >
@@ -415,7 +405,8 @@ const CanvasLayout = ({ children }): JSX.Element => {
                 <Button
                   autoFocus
                   variant={"outlined"}
-                  onClick={() => handleCloseDeleteScrim(false)}
+                  onClick={() => handleCloseDeleteScrim()}
+                  aria-label={`Cancel`}
                 >
                   Cancel
                 </Button>
@@ -423,6 +414,7 @@ const CanvasLayout = ({ children }): JSX.Element => {
                   variant={"contained"}
                   color={"danger"}
                   onClick={() => deleteVSM()}
+                  aria-label={`Delete`}
                 >
                   Delete
                 </Button>

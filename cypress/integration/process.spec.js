@@ -9,19 +9,39 @@ describe("Managing a process", () => {
     cy.visit("localhost:3000");
   });
 
-  // it("Can order by last modified", () => {
+  //todo: create 3 processes and check if they are correctly sorted
+  // it("create, rename and delete 3 processes", () => {
+  //   let testProcesses = [
+  //     `Test Process #1 - ${Math.random().toString(36).substring(2, 15)}`,
+  //     `Test Process #2 - ${Math.random().toString(36).substring(2, 15)}`,
+  //     `Test Process #3 - ${Math.random().toString(36).substring(2, 15)}`,
+  //   ];
+  //   testProcesses.forEach((process) => {
+  //     cy.contains("Create new").click();
+  //     cy.get("[aria-label=menu]").click();
+  //     // cy.wait(1000);
+  //     cy.get("[aria-label=rename").click();
+  //     //   cy.wait(1000);
+  //     cy.get("#rename-process-text-field").type(process);
+  //     // close the menu & go home
+  //     cy.get("[aria-label=close]").click();
+  //     cy.get(`[aria-label="Go to home page"]`).click();
+  //   });
+
+  //   //Todo: check if they are sorted correctly when changing sort order
   //   cy.get("[data-test=sort-select]").select("Last modified");
-  //   //todo: check the order of the process-cards
-  // });
-  //
-  // it("Can order by alphabetically", () => {
   //   cy.get("[data-test=sort-select]").select("Alphabetically");
-  //   //todo: check the order of the process-cards
-  // });
-  //
-  // it("Can order by date created", () => {
   //   cy.get("[data-test=sort-select]").select("Date created");
-  //   //todo: check the order of the process-cards
+
+  //   //delete the processes
+  //   testProcesses.forEach((process) => {
+  //     cy.get(`[aria-label="Search for process with name"]`).type(process);
+  //     cy.wait(1000);
+  //     cy.contains(process).click();
+  //     cy.get("[aria-label=menu]").click();
+  //     cy.contains("Delete process").click();
+  //     cy.get("[aria-label=Delete").click();
+  //   });
   // });
 
   it("can create a new process", () => {
@@ -32,16 +52,16 @@ describe("Managing a process", () => {
     );
   });
 
-  // todo: Do-not use data-test-ids. Use what a user sees instead.
+  // NB: Do-not use data-test-ids. Use what a user sees instead.
   const randomHash = Math.random().toString(36).substring(2, 15);
   const newName = `Random process name ${randomHash}`;
   it("can rename the process", () => {
-    cy.get("[data-test=processMenuButton]").click();
+    cy.get("[aria-label=menu]").click();
     cy.wait(1000);
-    cy.get("[data-test=renameButton]").click();
+    cy.get("[aria-label=rename").click();
     cy.wait(1000);
-    cy.get("[data-test=renameInput]").clear().type(newName);
-    cy.get("[data-test=renameButtonClose]").click();
+    cy.get("#rename-process-text-field").clear().type(newName);
+    cy.get("[aria-label=close]").click();
     cy.wait(1000);
     cy.get("[data-test=processName]").should("contain.text", newName);
   });
@@ -49,41 +69,41 @@ describe("Managing a process", () => {
   it("can give others access to the process", () => {
     cy.get("#shareButton").click();
     cy.wait(1000);
-    cy.get("[data-test=shareInput]")
+    cy.get(`[aria-label=shortname]`)
       .clear()
       .type("mbmu {enter} {selectall} magos {enter} {selectall} joseg");
     //press the add button
-    cy.get("[data-test=shareButtonAdd]").click();
-    cy.wait(4000);
-    cy.get("[data-test=shareButtonClose]").click();
+    cy.get("[aria-label=add]").click();
+    cy.get("[aria-label=close]").click();
   });
 
   it("can find that process in the overview-page", () => {
-    cy.get("[data-test=homeButton]").click();
-    cy.get("[data-test=searchInput]").type(newName);
+    cy.get(`[aria-label="Go to home page"]`).click();
+    cy.get(`[aria-label="All processes"`).click();
+    cy.get(`[aria-label="Search for process with name"]`).type(newName);
     cy.wait(2000);
     cy.contains(newName);
   });
 
   it("can favourite the process", () => {
-    cy.get("[data-test=buttonHeart]").click();
+    cy.get(`[aria-label="Add to favourites"]`).click();
     cy.wait(1000);
   });
 
   it("can find the process in my-favourites page", () => {
-    cy.get("[data-test=myFavoriteProcessesButton]").click();
+    cy.get(`[aria-label="My favorite processes"]`).click();
     cy.wait(1000);
     cy.contains(newName);
   });
 
   it("can un-fave the process", () => {
-    cy.get("[data-test=buttonHeart]").click();
+    cy.get(`[aria-label="Remove from favourites"]`).click();
     cy.wait(1000);
     cy.contains(newName).should("not.exist");
   });
 
   it("can find the process in my-processes page", () => {
-    cy.get("[data-test=myProcessesButton]").click();
+    cy.get(`[aria-label="My processes"]`).click();
     cy.wait(1000);
     cy.contains(newName);
   });
@@ -92,13 +112,13 @@ describe("Managing a process", () => {
     cy.contains(newName).click();
 
     //Can cancel the delete
-    cy.get("[data-test=processMenuButton]").click();
-    cy.get("[data-test=deleteButton]").click();
-    cy.get("[data-test=deleteButtonCancel]").click();
+    cy.get("[aria-label=menu]").click();
+    cy.contains("Delete").click();
+    cy.get("[aria-label=Cancel]").click();
 
     //Can delete the process
-    cy.get("[data-test=processMenuButton]").click();
-    cy.get("[data-test=deleteButton]").click();
-    cy.get("[data-test=deleteButtonApprove]").click();
+    cy.get("[aria-label=menu]").click();
+    cy.contains("Delete").click();
+    cy.get("[aria-label=Delete]").click();
   });
 });
