@@ -10,7 +10,7 @@ export function ErrorScrim(props: {
 }): JSX.Element {
   if (!props.visible) return null;
   return (
-    <Scrim open={true} onClose={props.handleClose}>
+    <Scrim open onClose={props.handleClose}>
       <Dialog>
         <Dialog.Title>{props.title || "Error"}</Dialog.Title>
         <Dialog.CustomContent scrollable>

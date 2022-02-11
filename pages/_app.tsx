@@ -1,13 +1,16 @@
-import React from "react";
 import "../styles/globals.scss";
-import LayoutWrapper from "../layouts/LayoutWrapper";
-import { StoreProvider } from "easy-peasy";
-import store from "../store/store";
+
 import App, { AppContext } from "next/app";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
+
+import { Head } from "next/document";
+import LayoutWrapper from "../layouts/LayoutWrapper";
 import { MsalProvider } from "@azure/msal-react";
+import React from "react";
+import { ReactQueryDevtools } from "react-query/devtools";
+import { StoreProvider } from "easy-peasy";
 import msalInstance from "../auth/msalHelpers";
+import store from "../store/store";
 
 const queryClient = new QueryClient();
 const MyApp = ({ Component, pageProps }) => {

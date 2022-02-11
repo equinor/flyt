@@ -99,23 +99,8 @@ const CanvasLayout = ({ children }): JSX.Element => {
   const isAdmin = myAccess === "Admin";
 
   const [visibleShareScrim, setVisibleShareScrim] = React.useState(false);
-  const handleCloseShareScrim = (closed) => {
-    if (closed) setVisibleShareScrim(closed);
-    else setVisibleShareScrim(!visibleShareScrim);
-  };
-
   const [visibleRenameScrim, setVisibleRenameScrim] = React.useState(false);
-  const handleCloseRenameScrim = (closed) => {
-    if (closed) setVisibleRenameScrim(closed);
-    else setVisibleRenameScrim(!visibleRenameScrim);
-  };
-
   const [visibleDeleteScrim, setVisibleDeleteScrim] = React.useState(false);
-  const handleCloseDeleteScrim = (closed) => {
-    if (closed) setVisibleDeleteScrim(closed);
-    else setVisibleDeleteScrim(!visibleDeleteScrim);
-    setDeleteError(null);
-  };
 
   const [state, setState] = React.useState<{
     buttonEl: HTMLButtonElement;
@@ -334,20 +319,20 @@ const CanvasLayout = ({ children }): JSX.Element => {
 
       <Scrim
         open={visibleShareScrim}
-        onClose={() => handleCloseShareScrim(!visibleShareScrim)}
+        onClose={() => setVisibleShareScrim(false)}
         onWheel={(e) => e.stopPropagation()}
         isDismissable
       >
         <AccessBox
           project={project}
-          handleClose={handleCloseShareScrim}
+          handleClose={() => setVisibleShareScrim(false)}
           isAdmin={isAdmin}
         />
       </Scrim>
 
       <Scrim
         open={visibleRenameScrim}
-        onClose={() => handleCloseRenameScrim(!visibleRenameScrim)}
+        onClose={() => setVisibleRenameScrim(false)}
         onWheel={(e) => e.stopPropagation()}
         isDismissable
       >
@@ -378,7 +363,7 @@ const CanvasLayout = ({ children }): JSX.Element => {
 
       <Scrim
         open={visibleDeleteScrim}
-        onClose={() => handleCloseDeleteScrim(!visibleDeleteScrim)}
+        onClose={() => setVisibleDeleteScrim(false)}
         onWheel={(e) => e.stopPropagation()}
         isDismissable
       >
@@ -412,7 +397,7 @@ const CanvasLayout = ({ children }): JSX.Element => {
                 <Button
                   autoFocus
                   variant={"outlined"}
-                  onClick={() => handleCloseDeleteScrim(false)}
+                  onClick={() => setVisibleDeleteScrim(false)}
                 >
                   Cancel
                 </Button>

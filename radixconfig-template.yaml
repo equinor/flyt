@@ -32,7 +32,6 @@ spec:
           port: 3000
       environmentConfig:
         - environment: dev
-          runAsNonRoot: true
           variables:
             API_BASEURL: ${DEV_API_BASEURL}
             AUDIENCE: ${DEV_AUDIENCE}
@@ -41,7 +40,6 @@ spec:
             ENVIRONMENT: ${DEV_ENVIRONMENT}
             SCOPE: ${DEV_SCOPE}
         - environment: test
-          runAsNonRoot: true
           variables:
             API_BASEURL: ${TEST_API_BASEURL}
             AUDIENCE: ${TEST_AUDIENCE}
@@ -50,7 +48,6 @@ spec:
             ENVIRONMENT: ${TEST_ENVIRONMENT}
             SCOPE: ${TEST_SCOPE}
         - environment: qa
-          runAsNonRoot: true
           variables:
             API_BASEURL: ${QA_API_BASEURL}
             AUDIENCE: ${QA_AUDIENCE}
@@ -59,7 +56,6 @@ spec:
             ENVIRONMENT: ${QA_ENVIRONMENT}
             SCOPE: ${QA_SCOPE}
         - environment: prod
-          runAsNonRoot: true
           variables:
             API_BASEURL: ${PROD_API_BASEURL}
             AUDIENCE: ${PROD_AUDIENCE}

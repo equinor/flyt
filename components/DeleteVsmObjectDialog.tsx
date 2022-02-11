@@ -58,7 +58,7 @@ export function DeleteVsmObjectDialog(props: {
   }
   const confirmMessage = "Delete";
   return (
-    <Scrim open={true} onClose={handleClose} isDismissable>
+    <Scrim open onClose={handleClose} isDismissable>
       <div className={styles.scrimWrapper}>
         {deleteMutation.isLoading ? (
           <Typography>Deleting...</Typography>

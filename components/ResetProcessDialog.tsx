@@ -14,7 +14,7 @@ export const ResetProcessDialog = ({
 }): JSX.Element => {
   if (!visible) return null;
   return (
-    <Scrim open={true} isDismissable onClose={onClose}>
+    <Scrim open isDismissable onClose={onClose}>
       <div className={style.resetDialog}>
         <h1 className={style.resetDialogTitle}>Reset To be version</h1>
         <div className={style.resetDialogContent}>
