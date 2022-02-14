@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.16](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.15...v0.2.16) (2022-02-14)
+
+### Features
+
+- improve filter by users ([#351](https://github.com/equinor/MAD-VSM-WEB/issues/351)) ([f8de72a](https://github.com/equinor/MAD-VSM-WEB/commit/f8de72af1d9212e2f17e83e7d970191fca28be73)), closes [#229](https://github.com/equinor/MAD-VSM-WEB/issues/229)
+- solve PQIRs ([#347](https://github.com/equinor/MAD-VSM-WEB/issues/347)) ([a5c0e11](https://github.com/equinor/MAD-VSM-WEB/commit/a5c0e1158f1bf44de6512519986c7c5955a1e273)), closes [#165](https://github.com/equinor/MAD-VSM-WEB/issues/165)
+
 ### [0.2.15](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.14...v0.2.15) (2022-01-10)
 
 ### Features
