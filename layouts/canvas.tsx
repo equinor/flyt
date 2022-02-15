@@ -100,23 +100,8 @@ const CanvasLayout = ({ children }): JSX.Element => {
   const isAdmin = myAccess === "Admin" || myAccess === "Owner";
 
   const [visibleShareScrim, setVisibleShareScrim] = React.useState(false);
-  const handleCloseShareScrim = (event, closed) => {
-    if (closed) setVisibleShareScrim(closed);
-    else setVisibleShareScrim(!visibleShareScrim);
-  };
-
   const [visibleRenameScrim, setVisibleRenameScrim] = React.useState(false);
-  const handleCloseRenameScrim = (event, closed) => {
-    if (closed) setVisibleRenameScrim(closed);
-    else setVisibleRenameScrim(!visibleRenameScrim);
-  };
-
   const [visibleDeleteScrim, setVisibleDeleteScrim] = React.useState(false);
-  const handleCloseDeleteScrim = (event, closed) => {
-    if (closed) setVisibleDeleteScrim(closed);
-    else setVisibleDeleteScrim(!visibleDeleteScrim);
-    setDeleteError(null);
-  };
 
   const [state, setState] = React.useState<{
     buttonEl: HTMLButtonElement;
@@ -242,7 +227,7 @@ const CanvasLayout = ({ children }): JSX.Element => {
           <div style={{ gridAutoFlow: "row" }} className={styles.centerButton}>
             <div className={styles.centerButton}>
               <Typography variant={"h4"} className={styles.projectName}>
-                {projectTitle || "Untitled VSM"}
+                {projectTitle || "Untitled process"}
               </Typography>
               <Button
                 variant={"ghost"}
@@ -273,8 +258,8 @@ const CanvasLayout = ({ children }): JSX.Element => {
               <Menu.Item
                 title={`${
                   userCannotEdit
-                    ? "Only the creator, admin or a contributor can rename this VSM"
-                    : "Rename the current VSM"
+                    ? "Only the creator, admin or a contributor can rename this process"
+                    : "Rename the current process"
                 }`}
                 disabled={userCannotEdit}
                 onKeyDown={(e) => {
@@ -294,8 +279,8 @@ const CanvasLayout = ({ children }): JSX.Element => {
               <Menu.Item
                 title={`${
                   isAdmin
-                    ? "Delete the current VSM"
-                    : "Only the creator can delete this VSM"
+                    ? "Delete the current process"
+                    : "Only the creator can delete this process"
                 }`}
                 disabled={!isAdmin}
                 onKeyDown={(e) => {
@@ -333,105 +318,102 @@ const CanvasLayout = ({ children }): JSX.Element => {
 
       {children}
 
-      {visibleShareScrim && (
-        <Scrim
-          onClose={handleCloseShareScrim}
-          onWheel={(e) => e.stopPropagation()}
-          isDismissable
-        >
-          <AccessBox
-            project={project}
-            handleClose={handleCloseShareScrim}
-            isAdmin={isAdmin}
-          />
-        </Scrim>
-      )}
+      <Scrim
+        open={visibleShareScrim}
+        onClose={() => setVisibleShareScrim(false)}
+        onWheel={(e) => e.stopPropagation()}
+        isDismissable
+      >
+        <AccessBox
+          project={project}
+          handleClose={() => setVisibleShareScrim(false)}
+          isAdmin={isAdmin}
+        />
+      </Scrim>
 
-      {visibleRenameScrim && (
-        <Scrim
-          onClose={handleCloseRenameScrim}
-          onWheel={(e) => e.stopPropagation()}
-          isDismissable
-        >
-          <div className={styles.scrimWrapper}>
-            <div className={styles.scrimHeaderWrapper}>
-              <div className={styles.scrimTitle}>Rename process</div>
-              <Button
-                variant={"ghost_icon"}
-                onClick={() => setVisibleRenameScrim(false)}
+      <Scrim
+        open={visibleRenameScrim}
+        onClose={() => setVisibleRenameScrim(false)}
+        onWheel={(e) => e.stopPropagation()}
+        isDismissable
+      >
+        <div className={styles.scrimWrapper}>
+          <div className={styles.scrimHeaderWrapper}>
+            <div className={styles.scrimTitle}>Rename process</div>
+            <Button
+              variant={"ghost_icon"}
+              onClick={() => setVisibleRenameScrim(false)}
+            >
+              <Icon data={close} title="Close" />
+            </Button>
+          </div>
+          <div className={styles.scrimContent}>
+            <TextField
+              autoFocus
+              label={"Add title"}
+              // multiline
+              // rows={3}
+              variant={"default"}
+              defaultValue={project?.name}
+              onChange={(e) => updateProjectName(e.target.value)}
+              id={"vsmObjectDescription"}
+            />
+          </div>
+        </div>
+      </Scrim>
+
+      <Scrim
+        open={visibleDeleteScrim}
+        onClose={() => setVisibleDeleteScrim(false)}
+        onWheel={(e) => e.stopPropagation()}
+        isDismissable
+      >
+        <div className={styles.scrimWrapper}>
+          {isDeleting ? (
+            <Typography>Deleting...</Typography>
+          ) : (
+            <>
+              <div className={styles.scrimHeaderWrapper}>
+                <div className={styles.scrimTitle}>Delete process</div>
+              </div>
+              <div className={styles.scrimContent}>
+                {deleteError && (
+                  <Typography color={"warning"} variant={"h4"}>
+                    {`${deleteError}`}
+                  </Typography>
+                )}
+                <p>
+                  Are you sure you want to delete this process? By doing so you
+                  will delete all versions of Current and To-be processes,
+                  neither of which will be recoverable.
+                </p>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: 12,
+                }}
               >
-                <Icon data={close} title="Close" />
-              </Button>
-            </div>
-            <div className={styles.scrimContent}>
-              <TextField
-                autoFocus
-                label={"Add title"}
-                // multiline
-                // rows={3}
-                variant={"default"}
-                defaultValue={project?.name}
-                onChange={(e) => updateProjectName(e.target.value)}
-                id={"vsmObjectDescription"}
-              />
-            </div>
-          </div>
-        </Scrim>
-      )}
-
-      {visibleDeleteScrim && (
-        <Scrim
-          onClose={handleCloseDeleteScrim}
-          onWheel={(e) => e.stopPropagation()}
-          isDismissable
-        >
-          <div className={styles.scrimWrapper}>
-            {isDeleting ? (
-              <Typography>Deleting...</Typography>
-            ) : (
-              <>
-                <div className={styles.scrimHeaderWrapper}>
-                  <div className={styles.scrimTitle}>Delete process</div>
-                </div>
-                <div className={styles.scrimContent}>
-                  {deleteError && (
-                    <Typography color={"warning"} variant={"h4"}>
-                      {`${deleteError}`}
-                    </Typography>
-                  )}
-                  <p>
-                    Are you sure you want to delete this process? By doing so
-                    you will delete all versions of Current and To-be processes,
-                    neither of which will be recoverable.
-                  </p>
-                </div>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    gap: 12,
-                  }}
+                <Button
+                  autoFocus
+                  variant={"outlined"}
+                  onClick={() => setVisibleDeleteScrim(false)}
                 >
-                  <Button
-                    autoFocus
-                    variant={"outlined"}
-                    onClick={(e) => handleCloseDeleteScrim(e, false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    variant={"contained"}
-                    color={"danger"}
-                    onClick={() => deleteVSM()}
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </>
-            )}
-          </div>
-        </Scrim>
-      )}
+                  Cancel
+                </Button>
+                <Button
+                  variant={"contained"}
+                  color={"danger"}
+                  onClick={() => deleteVSM()}
+                >
+                  Delete
+                </Button>
+              </div>
+            </>
+          )}
+        </div>
+      </Scrim>
 
       {snackMessage && (
         <MySnackBar

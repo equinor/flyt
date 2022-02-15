@@ -1,8 +1,9 @@
 import * as PIXI from "pixi.js";
-import { getDefaultTextSprite } from "./GetDefaultTextSprite";
-import { vsmObject } from "../../../../interfaces/VsmObject";
+
 import { defaultTextStyle } from "../AssetFactory";
+import { getDefaultTextSprite } from "./GetDefaultTextSprite";
 import { getTaskSection } from "./GetTaskSection";
+import { vsmObject } from "../../../../interfaces/VsmObject";
 
 export function createGenericCardAsset(
   vsmObject: vsmObject,
@@ -17,19 +18,22 @@ export function createGenericCardAsset(
     genericTaskSectionEdge,
   } = PIXI.Loader.shared.resources;
   //CARD
-  const gotTasks = vsmObject.tasks.length > 0;
+  // Remember to not include solved tasks in the number of tasks per base
+  const gotTasks = vsmObject.tasks.filter((task) => !task.solved).length > 0;
   const texture = gotTasks ? genericStraight.texture : generic.texture;
   const cardSprite = new PIXI.Sprite(texture);
   wrapper.addChild(cardSprite);
 
-  //TASK_SECTION
-  const taskSection = getTaskSection(
-    4,
-    genericTaskSection,
-    genericTaskSectionEdge,
-    vsmObject
-  );
-  if (taskSection) wrapper.addChild(taskSection);
+  if (gotTasks) {
+    //TASK_SECTION
+    const taskSection = getTaskSection(
+      4,
+      genericTaskSection,
+      genericTaskSectionEdge,
+      vsmObject
+    );
+    if (taskSection) wrapper.addChild(taskSection);
+  }
 
   //CARD_TITLE
   if (title) {

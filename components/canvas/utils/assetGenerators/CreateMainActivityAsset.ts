@@ -1,7 +1,8 @@
 import * as PIXI from "pixi.js";
+
 import { getDefaultTextSprite } from "./GetDefaultTextSprite";
-import { vsmObject } from "../../../../interfaces/VsmObject";
 import { getTaskSection } from "./GetTaskSection";
+import { vsmObject } from "../../../../interfaces/VsmObject";
 
 export function createMainActivityAsset(
   vsmObject: vsmObject,
@@ -16,21 +17,24 @@ export function createMainActivityAsset(
     genericTaskSectionEdge,
   } = PIXI.Loader.shared.resources;
   //CARD
-  const gotTasks = vsmObject.tasks.length > 0;
+  // Remember to not include solved tasks
+  const gotTasks = vsmObject.tasks.filter((task) => !task.solved).length > 0;
   const texture = gotTasks
     ? mainActivityStraight.texture
     : mainActivity.texture;
   const cardSprite = new PIXI.Sprite(texture);
 
   wrapper.addChild(cardSprite);
-  //TASK_SECTION
-  const taskSection = getTaskSection(
-    4,
-    genericTaskSection,
-    genericTaskSectionEdge,
-    vsmObject
-  );
-  if (taskSection) wrapper.addChild(taskSection);
+  if (gotTasks) {
+    //TASK_SECTION
+    const taskSection = getTaskSection(
+      4,
+      genericTaskSection,
+      genericTaskSectionEdge,
+      vsmObject
+    );
+    if (taskSection) wrapper.addChild(taskSection);
+  }
 
   const textSprite = getDefaultTextSprite(
     vsmObject,

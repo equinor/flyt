@@ -32,7 +32,6 @@ spec:
           port: 3000
       environmentConfig:
         - environment: dev
-          runAsNonRoot: true
           variables:
             API_BASEURL: https://api.statoil.com/app/vsm/dev
             AUDIENCE: c001f24f-64a7-4f0c-bfe8-bf9c8e7aa74c
@@ -41,7 +40,6 @@ spec:
             ENVIRONMENT: DEV
             SCOPE: c001f24f-64a7-4f0c-bfe8-bf9c8e7aa74c/api.access
         - environment: test
-          runAsNonRoot: true
           variables:
             API_BASEURL: https://api.statoil.com/app/vsm/test
             AUDIENCE: cf7bf606-0fca-498d-9ec5-74d32a6ab4cf
@@ -50,7 +48,6 @@ spec:
             ENVIRONMENT: TEST
             SCOPE: cf7bf606-0fca-498d-9ec5-74d32a6ab4cf/api_access
         - environment: qa
-          runAsNonRoot: true
           variables:
             API_BASEURL: https://api.statoil.com/app/vsm/qa
             AUDIENCE: b78f9306-406d-4fa8-98e5-001dcd933ff4
@@ -58,8 +55,7 @@ spec:
             CLIENT_ID: 7fe4fa03-733a-414d-8d32-0a9358b5eeb9
             ENVIRONMENT: QA
             SCOPE: b78f9306-406d-4fa8-98e5-001dcd933ff4/user_impersonation
-        - environment: prod
-          runAsNonRoot: true
+        - environment: prod          
           variables:
             API_BASEURL: https://api.statoil.com/app/vsm/prod
             AUDIENCE: 93cb35f6-8dd4-4dc1-8f44-d2e8dbd4be48

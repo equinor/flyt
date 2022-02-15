@@ -9,12 +9,13 @@ import { vsmProject } from "../interfaces/VsmProject";
 const baseUrl = "/api/v1.0";
 //Project aka. VSM aka. Flyt or Flow
 export const getProjects = (filter?: {
-  q?: string;
-  ru?: Array<number>;
-  orderBy?: string;
-  page?: number;
-  items?: number;
-  onlyFavorites?: boolean;
+  q?: string | string[]; // Search query
+  ru?: (number | string)[]; // Required user(s)
+  rl?: (number | string)[]; // Required label(s)
+  orderBy?: "name" | "modified" | "created"; // Order by name, modified or created
+  page?: number; // Page number
+  items?: number; // Number of items per page
+  onlyFavorites?: boolean; // Only favorites
 }): Promise<{ projects: vsmProject[]; totalItems: number }> =>
   BaseAPIServices.get(`${baseUrl}/project${createUrlParams(filter)}`).then(
     (value) => {
@@ -23,13 +24,6 @@ export const getProjects = (filter?: {
         totalItems: parseInt(value.headers.totalitems, 10),
       };
     }
-  );
-
-export const searchUser = (
-  userName: string
-): Promise<Array<{ pkUser: number; userName: string }>> =>
-  BaseAPIServices.get(`${baseUrl}/useraccess/usersearch?q=${userName}`).then(
-    (value) => value.data
   );
 
 export const createProject = (

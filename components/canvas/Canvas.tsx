@@ -1,16 +1,12 @@
-import { Button, Dialog, Icon, Scrim } from "@equinor/eds-core-react";
 import React, { useEffect, useRef, useState } from "react";
-import { getProject, resetProcess } from "../../services/projectApi";
+import { getProject, getProjectUpdateTimes } from "../../services/projectApi";
 import { moveVSMObject, postVSMObject } from "../../services/vsmObjectApi";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
-import { CategorizationPageButton } from "../CategorizationPageButton";
 import { DeleteVsmObjectDialog } from "../DeleteVsmObjectDialog";
-import { ErrorDialog } from "components/ErrorDialog";
 import { LiveIndicator } from "../LiveIndicator";
 import { ResetProcessButton } from "components/ResetProcessButton";
-import { ResetProcessDialog } from "components/ResetProcessDialog";
 import { ToBeToggle } from "./ToBeToggle";
 import { VSMSideBar } from "../VSMSideBar";
 import { addCardsToCanvas } from "./utils/AddCardsToCanvas";
@@ -25,13 +21,17 @@ import { io } from "socket.io-client";
 import { loadAssets } from "./utils/LoadAssets";
 import { notifyOthers } from "../../services/notifyOthers";
 import { resetCanvasZoomAndPosition } from "./utils/ResetCanvasZoomAndPosition";
-import { restore } from "@equinor/eds-icons";
+import { CanvasButtons } from "components/CanvasButtons";
+import ManageLabelBox from "components/Labels/ManageLabelBox";
 import style from "../VSMCanvas.module.scss";
 import { toolBox } from "./entities/toolbox/toolbox";
 import { unknownErrorToString } from "utils/isError";
 import { useRouter } from "next/router";
 import { useStoreDispatch } from "../../hooks/storeHooks";
 import { vsmObject } from "interfaces/VsmObject";
+import { Button, Icon } from "@equinor/eds-core-react";
+import { close } from "@equinor/eds-icons";
+import { ProcessTimeline } from "../CategorizationPageButton";
 
 export default function Canvas(): JSX.Element {
   const ref = useRef();
@@ -88,8 +88,8 @@ export default function Canvas(): JSX.Element {
     getProject(id, version)
   );
   const [assetsAreLoaded, setAssetsAreLoaded] = useState(false);
-
   const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
+  const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
   const myAccess = getMyAccess(project, account);
   const userCanEdit = myAccess !== "Reader";
 
@@ -122,7 +122,24 @@ export default function Canvas(): JSX.Element {
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
+  const projectId = router.query.id as string;
+  //Todo:
+  const { data } = useQuery(["versionHistoryDates", projectId], () =>
+    getProjectUpdateTimes(projectId)
+  );
 
+  const [showVersionHistoryBottomSheet, setShowVersionHistoryBottomSheet] =
+    React.useState(!!router.query.version);
+
+  function goToCurrentVersion() {
+    // navigate back to current version
+    router.replace(`/process/${projectId}`);
+  }
+
+  function closeVersionHistoryBottomSheet() {
+    setShowVersionHistoryBottomSheet(false);
+    goToCurrentVersion();
+  }
   // "Constructor"
   useEffect(() => {
     initCanvas(ref);
@@ -168,7 +185,39 @@ export default function Canvas(): JSX.Element {
         backgroundColor: "black",
       }}
     >
-      <CategorizationPageButton userCanEdit={userCanEdit} />
+      {showVersionHistoryBottomSheet && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: "0",
+            zIndex: 1,
+          }}
+        >
+          <Button
+            style={{
+              position: "absolute",
+              right: "0",
+              top: "0",
+            }}
+            variant={"ghost_icon"}
+            onClick={closeVersionHistoryBottomSheet}
+          >
+            <Icon data={close} />
+          </Button>
+          <ProcessTimeline processId={projectId} />
+        </div>
+      )}
+
+      <CanvasButtons
+        userCanEdit={userCanEdit}
+        handleClickLabel={() => setVisibleLabelScrim(true)}
+        handleClickVersionHistory={() => setShowVersionHistoryBottomSheet(true)}
+      />
+      <ManageLabelBox
+        handleClose={() => setVisibleLabelScrim(false)}
+        isVisible={visibleLabelScrim}
+        process={project}
+      />
       <LiveIndicator
         live={socketConnected}
         title={

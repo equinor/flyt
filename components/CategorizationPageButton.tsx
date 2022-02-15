@@ -1,8 +1,8 @@
-import { Application, Circle, Graphics, Point, Text, Ticker } from "pixi.js";
-import { Button, Icon, Tooltip } from "@equinor/eds-core-react";
+import { Application, Circle, Graphics, Text } from "pixi.js";
+import { Button, Icon } from "@equinor/eds-core-react";
 import React, { useEffect, useRef } from "react";
 import { category, timeline } from "@equinor/eds-icons";
-import { close, link } from "@equinor/eds-icons";
+import { close } from "@equinor/eds-icons";
 import useWindowSize, { WindowSize } from "../hooks/useWindowSize";
 
 import { GlowFilter } from "pixi-filters";
@@ -10,9 +10,9 @@ import { Scrollbox } from "pixi-scrollbox";
 import { TooltipImproved } from "./TooltipImproved";
 import { getProjectUpdateTimes } from "services/projectApi";
 import moment from "moment";
-import style from "./ParkingLotButton.module.scss";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
+import { ButtonWrapper } from "./Labels/ButtonWrapper";
 
 /**
  * NB. Currently only adjusted for use in the canvas. path: "baseURL/process/{id}"
@@ -22,50 +22,20 @@ export const CategorizationPageButton = (props: {
   userCanEdit: boolean;
 }): JSX.Element => {
   const router = useRouter();
-  const windowSize: WindowSize = useWindowSize();
 
-  //Todo:
-  // const projectId = router.query.id as string;
-  // const versionHistoryDates = useQuery(["versionHistoryDates", projectId], () =>
-  //   getProjectUpdateTimes(projectId)
-  // );
-
-  function getLeft() {
-    const bigScreen = windowSize.width >= 768;
-
-    const iconWidth = 54;
-    const rightSide = windowSize.width - iconWidth - 50;
-    const center = windowSize.width / 2;
-
-    if (!props.userCanEdit) {
-      return bigScreen ? rightSide : center - iconWidth / 2;
-    }
-
-    // Make sure to factor in the toolbox
-    const toolBoxPadding = 100;
-    return bigScreen ? rightSide : center + toolBoxPadding;
-  }
-
+  if (!props.userCanEdit) return <></>;
   return (
-    <div>
-      <VersionHistoryButton userCanEdit={props.userCanEdit} />
-      <TooltipImproved title="Categorize PQIR's">
-        <div
-          style={{ left: getLeft() }}
-          onClick={() => router.push(`${router.asPath}/categories`)}
-          className={style.wrapper}
-        >
-          <div className={style.iconBorder}>
-            <Icon data={category} color={"#007079"} />
-          </div>
-        </div>
-      </TooltipImproved>
-    </div>
+    <ButtonWrapper
+      icon={category}
+      title={"Categorize PQIR's"}
+      onClick={() => router.push(`${router.asPath}/categories`)}
+    />
   );
 };
 
 export const VersionHistoryButton = (props: {
   userCanEdit: boolean;
+  handleVersionHistoryClick: () => void;
 }): JSX.Element => {
   const router = useRouter();
   const projectId = router.query.id as string;
@@ -73,78 +43,15 @@ export const VersionHistoryButton = (props: {
   const { data } = useQuery(["versionHistoryDates", projectId], () =>
     getProjectUpdateTimes(projectId)
   );
-  const windowSize: WindowSize = useWindowSize();
-
-  const [showVersionHistoryBottomSheet, setShowVersionHistoryBottomSheet] =
-    React.useState(!!router.query.version);
-
-  function getLeft() {
-    const bigScreen = windowSize.width >= 768;
-
-    const iconWidth = 54;
-    const rightSide = windowSize.width - iconWidth - 50;
-    const center = windowSize.width / 2;
-
-    if (!props.userCanEdit) {
-      return bigScreen ? rightSide : center - iconWidth / 2;
-    }
-
-    // Make sure to factor in the toolbox
-    const toolBoxPadding = 100;
-    return bigScreen ? rightSide : center + toolBoxPadding;
-  }
-
-  function handleVersionHistoryClick() {
-    setShowVersionHistoryBottomSheet(true);
-  }
-
-  function goToCurrentVersion() {
-    // navigate back to current version
-    router.replace(`/process/${projectId}`);
-  }
-
-  function closeVersionHistoryBottomSheet() {
-    setShowVersionHistoryBottomSheet(false);
-    goToCurrentVersion();
-  }
 
   return (
     <>
-      {showVersionHistoryBottomSheet && (
-        <div
-          // onWheel={(event) => event.stopPropagation()}
-          className={style.versionHistoryBottomSheet}
-          style={{
-            position: "absolute",
-            bottom: "0",
-            zIndex: 1,
-          }}
-        >
-          <Button
-            style={{
-              position: "absolute",
-              right: "0",
-              top: "0",
-            }}
-            variant={"ghost_icon"}
-            onClick={closeVersionHistoryBottomSheet}
-          >
-            <Icon data={close} />
-          </Button>
-          <ProcessTimeline processId={projectId} />
-        </div>
-      )}
-      <TooltipImproved title="Show version history">
-        <div
-          style={{ left: getLeft() - 50 }}
-          onClick={handleVersionHistoryClick}
-          className={style.wrapper}
-        >
-          <div className={style.iconBorder}>
-            <Icon data={timeline} color={"#007079"} />
-          </div>
-        </div>
-      </TooltipImproved>
+      {/*Todo: Move this out from the button. Some size issues.*/}
+      <ButtonWrapper
+        icon={timeline}
+        title={"Show version history"}
+        onClick={props.handleVersionHistoryClick}
+      />
     </>
   );
 };
@@ -221,6 +128,7 @@ export const ProcessTimeline = (props: { processId: string }) => {
   const { data } = useQuery(["versionHistoryDates", props.processId], () =>
     getProjectUpdateTimes(props.processId)
   );
+
   // const [pixiApp, setPixiApp] = React.useState<Application | null>(null);
 
   function travelToVersion(version: string) {
@@ -448,6 +356,7 @@ export const ProcessTimeline = (props: { processId: string }) => {
 
   return <div ref={canvasRef} {...props} />;
 };
+
 // Group by date
 function groupBy(
   dates: { parsed: moment.Moment; original: string }[],

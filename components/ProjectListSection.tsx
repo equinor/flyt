@@ -1,13 +1,14 @@
-import styles from "./ProjectListSection.module.scss";
-import { vsmProject } from "../interfaces/VsmProject";
-import React from "react";
-import { NewProjectButton } from "./NewProjectButton";
-import { Typography } from "@equinor/eds-core-react";
-import Masonry from "react-masonry-css";
 import {
   placeholderProjectCardsArray,
   projectCardsArray,
 } from "../utils/getProjectCardsArray";
+
+import Masonry from "react-masonry-css";
+import { NewProjectButton } from "./NewProjectButton";
+import React from "react";
+import { Typography } from "@equinor/eds-core-react";
+import styles from "./ProjectListSection.module.scss";
+import { vsmProject } from "../interfaces/VsmProject";
 
 export function ProjectListSection(props: {
   projects: Array<vsmProject>;
@@ -26,7 +27,7 @@ export function ProjectListSection(props: {
     return (
       <div className={styles.emptyVsmCardContainer}>
         <Typography variant="h4" style={{ marginBottom: "30px" }}>
-          There are no projects to show.
+          No processes match your search criteria.
         </Typography>
         {showNewProjectButton && <NewProjectButton />}
       </div>

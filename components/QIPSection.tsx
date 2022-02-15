@@ -1,12 +1,13 @@
-import { vsmObject } from "../interfaces/VsmObject";
 import React, { useState } from "react";
-import styles from "./VSMCanvas.module.scss";
-import { taskSorter } from "../utils/taskSorter";
-import { taskObject } from "../interfaces/taskObject";
-import { TaskButton } from "./TaskButton";
-import { EditTaskSection } from "./EditTaskSection";
+
 import { CircleButton } from "./CircleButton";
+import { EditTaskSection } from "./EditTaskSection";
+import { TaskButton } from "./TaskButton";
 import { Typography } from "@equinor/eds-core-react";
+import styles from "./VSMCanvas.module.scss";
+import { taskObject } from "../interfaces/taskObject";
+import { taskSorter } from "../utils/taskSorter";
+import { vsmObject } from "../interfaces/VsmObject";
 
 const NewTaskButton = (props: { onClick: () => void; disabled: boolean }) => (
   <div>
