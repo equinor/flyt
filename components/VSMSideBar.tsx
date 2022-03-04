@@ -4,6 +4,7 @@ import React from "react";
 import { vsmObject } from "../interfaces/VsmObject";
 import { useQuery } from "react-query";
 import { getVSMObject } from "../services/vsmObjectApi";
+import { useRouter } from "next/router";
 
 export function VSMSideBar(props: {
   onClose: () => void;
@@ -13,12 +14,20 @@ export function VSMSideBar(props: {
 }): JSX.Element {
   const selectedObject = props.selectedObject;
 
-  // Fetch selected vsmObjects
+  // Only fetch the selected object if we are showing the "now" version
+  // We can figure that out by checking if the router query includes a version value.
+  // (It should not be present if we are showing the "now" version)
+  const router = useRouter();
+  const shouldFetch = !(router.query.version as string);
+
+  // Fetch selected fetchedVSMObject
   const vsmObjectId = selectedObject?.vsmObjectID;
-  const { data: vsmObject, isLoading } = useQuery(
+  const { data: fetchedVSMObject, isLoading } = useQuery(
     ["selectedObject", vsmObjectId],
-    () => getVSMObject(vsmObjectId)
-    // { enabled: vsmObjectId  }
+    () => getVSMObject(vsmObjectId),
+    {
+      enabled: shouldFetch,
+    }
   );
 
   const nothingSelected = !selectedObject;
@@ -36,8 +45,8 @@ export function VSMSideBar(props: {
             onClose={props.onClose}
             onDelete={props.onDelete}
             canEdit={props.canEdit}
-            selectedObject={vsmObject}
-            isLoading={isLoading}
+            selectedObject={shouldFetch ? fetchedVSMObject : selectedObject}
+            isLoading={shouldFetch && isLoading}
           />
         </div>
       </div>

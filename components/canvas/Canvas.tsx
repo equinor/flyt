@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { getProject, getProjectUpdateTimes } from "../../services/projectApi";
+import { getProject } from "../../services/projectApi";
 import { moveVSMObject, postVSMObject } from "../../services/vsmObjectApi";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -31,7 +31,7 @@ import { useStoreDispatch } from "../../hooks/storeHooks";
 import { vsmObject } from "interfaces/VsmObject";
 import { Button, Icon } from "@equinor/eds-core-react";
 import { close } from "@equinor/eds-icons";
-import { ProcessTimeline } from "../CategorizationPageButton";
+import { ProcessTimeline } from "../ProcessTimeline";
 
 export default function Canvas(): JSX.Element {
   const ref = useRef();
@@ -91,7 +91,7 @@ export default function Canvas(): JSX.Element {
   const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
   const myAccess = getMyAccess(project, account);
-  const userCanEdit = myAccess !== "Reader";
+  const userCanEdit = !version && myAccess !== "Reader";
 
   const queryClient = useQueryClient();
   const vsmObjectMutation = useMutation(
@@ -123,11 +123,6 @@ export default function Canvas(): JSX.Element {
     }
   );
   const projectId = router.query.id as string;
-  //Todo:
-  const { data } = useQuery(["versionHistoryDates", projectId], () =>
-    getProjectUpdateTimes(projectId)
-  );
-
   const [showVersionHistoryBottomSheet, setShowVersionHistoryBottomSheet] =
     React.useState(!!router.query.version);
 
@@ -140,6 +135,7 @@ export default function Canvas(): JSX.Element {
     setShowVersionHistoryBottomSheet(false);
     goToCurrentVersion();
   }
+
   // "Constructor"
   useEffect(() => {
     initCanvas(ref);
@@ -187,10 +183,12 @@ export default function Canvas(): JSX.Element {
     >
       {showVersionHistoryBottomSheet && (
         <div
+          onWheel={(e) => e.stopPropagation()}
           style={{
             position: "absolute",
             bottom: "0",
             zIndex: 1,
+            width: "100%",
           }}
         >
           <Button

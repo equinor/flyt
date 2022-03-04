@@ -1,5 +1,7 @@
+export type userAccessRole = "Owner" | "Admin" | "Contributor" | "Reader";
+
 export interface userAccess {
   accessId: number;
   user: string;
-  role: "Owner" | "Admin" | "Contributor" | "Reader";
+  role: userAccessRole;
 }

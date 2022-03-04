@@ -41,12 +41,12 @@ export const createProject = (
 /**
  * Get project by id
  * @param id project id
- * @param asOf Get the project in a previous version by setting this to a historical time.
+ * @param asOf? Get the project in a previous version by setting this to a historical time.
  * @returns VSM Process
  */
 export const getProject = (
   id: string | string[],
-  asOf?: string | string[]
+  asOf?: number | string | string[]
 ): Promise<vsmProject> => {
   if (asOf) {
     return BaseAPIServices.get(`${baseUrl}/project/${id}?asOf=${asOf}`).then(

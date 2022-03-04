@@ -1,6 +1,6 @@
 import React from "react";
 import { tag } from "@equinor/eds-icons";
-import { ButtonWrapper } from "./ButtonWrapper";
+import { ButtonWrapper } from "../ButtonWrapper";
 
 /**
  * NB. Currently only adjusted for use in the canvas. path: "baseURL/process/{id}"

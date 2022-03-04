@@ -1,23 +1,11 @@
-.wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.button {
   width: 54px;
   height: 54px;
   border: none;
   background-color: #ffffff;
-  padding: 0;
 }
 
-.wrapper:hover {
+.button:hover {
   cursor: pointer;
   background-color: #deedee;
-}
-
-.iconBorder {
-  width: 24px;
-  height: 24px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }

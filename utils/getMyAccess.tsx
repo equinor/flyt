@@ -1,5 +1,6 @@
 import { getUserShortName } from "./getUserShortName";
 import { vsmProject } from "../interfaces/VsmProject";
+import { userAccessRole } from "../interfaces/UserAccess";
 
 /**
  * Get my access in a project
@@ -9,7 +10,7 @@ import { vsmProject } from "../interfaces/VsmProject";
 export function getMyAccess(
   project: vsmProject,
   account: { username: string }
-): "Owner" | "Admin" | "Contributor" | "Reader" {
+): userAccessRole {
   //If not given a role, we default to "Reader"
   const defaultRole = "Reader";
   if (!project || !account) return defaultRole;

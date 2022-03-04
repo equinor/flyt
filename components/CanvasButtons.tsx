@@ -1,13 +1,11 @@
 import React from "react";
-import {
-  CategorizationPageButton,
-  VersionHistoryButton,
-} from "./CategorizationPageButton";
+import { CategorizationPageButton } from "./CategorizationPageButton";
 import styles from "./CanvasButtons.module.scss";
 import { ManageLabelButton } from "./Labels/ManageLabelButton";
+import { VersionHistoryButton } from "./VersionHistoryButton";
 
 /**
- * NB. Currently only adjusted for use in the canvas. path: "baseURL/process/{id}"
+ * NB. Currently, only adjusted for use in the canvas. path: "baseURL/process/{id}"
  * @constructor
  */
 export const CanvasButtons = (props: {
@@ -20,9 +18,8 @@ export const CanvasButtons = (props: {
       {props.userCanEdit && (
         <ManageLabelButton handleClickLabel={props.handleClickLabel} />
       )}
-      <CategorizationPageButton userCanEdit={props.userCanEdit} />
+      <CategorizationPageButton />
       <VersionHistoryButton
-        userCanEdit={props.userCanEdit}
         handleVersionHistoryClick={props.handleClickVersionHistory}
       />
     </div>
