@@ -5,6 +5,7 @@ import { UserDot } from "../UserDot";
 import { getUserShortName } from "../../utils/getUserShortName";
 import packageJson from "../../package.json";
 import Link from "next/dist/client/link";
+import { commitHash, commitHashUrl } from "../../commitHash";
 
 const UserMenu: React.FC = () => {
   const { instance, accounts } = useMsal();
@@ -68,6 +69,9 @@ const UserMenu: React.FC = () => {
         <Menu.Item disabled>{account?.username}</Menu.Item>
         <Link href={"/changelog"}>
           <Menu.Item>Version {packageJson.version}</Menu.Item>
+        </Link>
+        <Link href={commitHashUrl}>
+          <Menu.Item>Git hash: {commitHash}</Menu.Item>
         </Link>
         <Link href={"/settings"}>
           <Menu.Item>Settings</Menu.Item>
