@@ -32,6 +32,7 @@ import { debounce } from "../utils/debounce";
 import { disableKeyboardZoomShortcuts } from "../utils/disableKeyboardZoomShortcuts";
 import { disableMouseWheelZoom } from "../utils/disableMouseWheelZoom";
 import { getMyAccess } from "../utils/getMyAccess";
+import { getOwner } from "utils/getOwner";
 import { notifyOthers } from "../services/notifyOthers";
 import packageJson from "../package.json";
 import styles from "./default.layout.module.scss";
@@ -94,9 +95,9 @@ const CanvasLayout = ({ children }): JSX.Element => {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
   const myAccess = getMyAccess(project, account);
-  const userCanEdit = myAccess === "Admin" || myAccess === "Contributor";
+  const userCanEdit = myAccess !== "Reader";
   const userCannotEdit = !userCanEdit;
-  const isAdmin = myAccess === "Admin";
+  const isAdmin = myAccess === "Admin" || myAccess === "Owner";
 
   const [visibleShareScrim, setVisibleShareScrim] = React.useState(false);
   const [visibleRenameScrim, setVisibleRenameScrim] = React.useState(false);
@@ -293,7 +294,7 @@ const CanvasLayout = ({ children }): JSX.Element => {
               </Menu.Item>
               <Menu.Item disabled>
                 <Typography group="navigation" variant="menu_title" as="span">
-                  Owner: {project?.created.userIdentity}
+                  Owner: {getOwner(project)}
                 </Typography>
               </Menu.Item>
             </Menu>

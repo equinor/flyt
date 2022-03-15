@@ -1,5 +1,6 @@
-import { Viewport } from "pixi-viewport";
 import * as PIXI from "pixi.js";
+
+import { Viewport } from "pixi-viewport";
 
 const pixiViewport: Viewport = new Viewport({
   ticker: PIXI.Ticker.shared,

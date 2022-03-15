@@ -1,18 +1,22 @@
-import style from "./AccessBox.module.scss";
+import * as userApi from "../services/userApi";
+
 import { Button, Icon, Input } from "@equinor/eds-core-react";
-import { UserDot } from "./UserDot";
 import React, { useState } from "react";
 import { close, link } from "@equinor/eds-icons";
-import { accessRoles } from "../types/AccessRoles";
-import { vsmProject } from "../interfaces/VsmProject";
-import BaseAPIServices from "../services/BaseAPIServices";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import * as userApi from "../services/userApi";
-import { unknownErrorToString } from "utils/isError";
-import { useStoreDispatch } from "hooks/storeHooks";
-import { useRouter } from "next/router";
-import { notifyOthers } from "../services/notifyOthers";
 import { useAccount, useMsal } from "@azure/msal-react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+
+import BaseAPIServices from "../services/BaseAPIServices";
+import { UserDot } from "./UserDot";
+import { accessRoles } from "../types/AccessRoles";
+import { getOwner } from "utils/getOwner";
+import { notifyOthers } from "../services/notifyOthers";
+import style from "./AccessBox.module.scss";
+import { unknownErrorToString } from "utils/isError";
+import { useRouter } from "next/router";
+import { useStoreDispatch } from "hooks/storeHooks";
+import { userAccess } from "interfaces/UserAccess";
+import { vsmProject } from "../interfaces/VsmProject";
 
 export function AccessBox(props: {
   project: vsmProject;
@@ -33,12 +37,11 @@ export function AccessBox(props: {
   if (!props.project) return <p>Missing project</p>;
   const { created, vsmProjectID } = props.project;
 
-  const owner = created.userIdentity;
   return (
     <div className={style.box}>
       <TopSection title={"User access"} handleClose={props.handleClose} />
       <MiddleSection
-        owner={owner}
+        owner={getOwner(props.project)}
         users={userAccesses}
         vsmId={vsmProjectID}
         loading={isLoading}
@@ -119,14 +122,14 @@ function OwnerItem(props: { owner: string }) {
         {/*Todo: If you are the owner, add "(You)" to the paragraph under  */}
         <p className={style.userText}>{props.owner}</p>
       </div>
-      <p className={style.accessText}>owner</p>
+      <p className={style.accessText}>Owner</p>
     </div>
   );
 }
 
 function MiddleSection(props: {
   owner: string;
-  users: { accessId: number; user: string; role: string }[];
+  users: userAccess[];
   vsmId: number;
   loading: boolean;
   isAdmin: boolean;
@@ -214,21 +217,29 @@ function MiddleSection(props: {
       )}
       <div className={style.middleSection}>
         <div className={style.userListSection}>
+          {/* 
+            Filter away the owner. 
+            This could be changed to support giving away ownership of a process.
+          */}
           <OwnerItem owner={props.owner} />
-          {props.users?.map((user) => (
-            <UserItem
-              key={user.accessId}
-              user={user}
-              onRoleChange={(role) => changeUserMutation.mutate({ user, role })}
-              onRemove={() =>
-                removeUserMutation.mutate({
-                  accessId: user.accessId,
-                  vsmId: props.vsmId,
-                })
-              }
-              disabled={!props.isAdmin}
-            />
-          ))}
+          {props.users
+            ?.filter((user) => user.user !== props.owner)
+            .map((user) => (
+              <UserItem
+                key={user.accessId}
+                user={user}
+                onRoleChange={(role) =>
+                  changeUserMutation.mutate({ user, role })
+                }
+                onRemove={() =>
+                  removeUserMutation.mutate({
+                    accessId: user.accessId,
+                    vsmId: props.vsmId,
+                  })
+                }
+                disabled={!props.isAdmin}
+              />
+            ))}
         </div>
       </div>
     </>

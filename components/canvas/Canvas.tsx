@@ -1,44 +1,44 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useStoreDispatch } from "../../hooks/storeHooks";
-import { VSMSideBar } from "../VSMSideBar";
-import style from "../VSMCanvas.module.scss";
-import { DeleteVsmObjectDialog } from "../DeleteVsmObjectDialog";
+import { getProject } from "../../services/projectApi";
+import { moveVSMObject, postVSMObject } from "../../services/vsmObjectApi";
 import { useAccount, useMsal } from "@azure/msal-react";
-import { loadAssets } from "./utils/LoadAssets";
-import { toolBox } from "./entities/toolbox/toolbox";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+
+import { DeleteVsmObjectDialog } from "../DeleteVsmObjectDialog";
+import { LiveIndicator } from "../LiveIndicator";
+import { ResetProcessButton } from "components/ResetProcessButton";
+import { ToBeToggle } from "./ToBeToggle";
+import { VSMSideBar } from "../VSMSideBar";
+import { addCardsToCanvas } from "./utils/AddCardsToCanvas";
+import { assets } from "./utils/AssetFactory";
+import { draggable } from "./utils/draggable";
+import { getAccessToken } from "../../auth/msalHelpers";
 import { getApp } from "./utils/PixiApp";
+import { getMyAccess } from "../../utils/getMyAccess";
 import { getViewPort } from "./utils/PixiViewport";
 import { initCanvas } from "./utils/InitCanvas";
-import { draggable } from "./utils/draggable";
-import { addCardsToCanvas } from "./utils/AddCardsToCanvas";
-import { getMyAccess } from "../../utils/getMyAccess";
-import { assets } from "./utils/AssetFactory";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { getProject, resetProcess } from "../../services/projectApi";
-import { useRouter } from "next/router";
-import { moveVSMObject, postVSMObject } from "../../services/vsmObjectApi";
-import { vsmObject } from "interfaces/VsmObject";
-import { unknownErrorToString } from "utils/isError";
 import { io } from "socket.io-client";
+import { loadAssets } from "./utils/LoadAssets";
 import { notifyOthers } from "../../services/notifyOthers";
-import { getAccessToken } from "../../auth/msalHelpers";
-import { LiveIndicator } from "../LiveIndicator";
 import { resetCanvasZoomAndPosition } from "./utils/ResetCanvasZoomAndPosition";
 import { CanvasButtons } from "components/CanvasButtons";
 import ManageLabelBox from "components/Labels/ManageLabelBox";
-import { ToBeToggle } from "./ToBeToggle";
-import { Button, Dialog, Icon, Scrim } from "@equinor/eds-core-react";
-import { restore } from "@equinor/eds-icons";
-import { ResetProcessDialog } from "components/ResetProcessDialog";
-import { ErrorDialog } from "components/ErrorDialog";
-import { ResetProcessButton } from "components/ResetProcessButton";
+import style from "../VSMCanvas.module.scss";
+import { toolBox } from "./entities/toolbox/toolbox";
+import { unknownErrorToString } from "utils/isError";
+import { useRouter } from "next/router";
+import { useStoreDispatch } from "../../hooks/storeHooks";
+import { vsmObject } from "interfaces/VsmObject";
+import { Button, Icon } from "@equinor/eds-core-react";
+import { close } from "@equinor/eds-icons";
+import { ProcessTimeline } from "../ProcessTimeline";
 
 export default function Canvas(): JSX.Element {
   const ref = useRef();
   const [selectedObject, setSelectedObject] = useState(null);
   const dispatch = useStoreDispatch();
   const router = useRouter();
-  const { id } = router.query;
+  const { id, version } = router.query;
 
   const [socketConnected, setSocketConnected] = useState(false);
   const [socketReason, setSocketReason] = useState("");
@@ -84,13 +84,14 @@ export default function Canvas(): JSX.Element {
     });
   }, []);
 
-  const { data: project } = useQuery(["project", id], () => getProject(id));
+  const { data: project } = useQuery(["project", id, version], () =>
+    getProject(id, version)
+  );
   const [assetsAreLoaded, setAssetsAreLoaded] = useState(false);
-
   const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
   const myAccess = getMyAccess(project, account);
-  const userCanEdit = myAccess === "Admin" || myAccess === "Contributor";
+  const userCanEdit = !version && myAccess !== "Reader";
 
   const queryClient = useQueryClient();
   const vsmObjectMutation = useMutation(
@@ -121,6 +122,19 @@ export default function Canvas(): JSX.Element {
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
+  const projectId = router.query.id as string;
+  const [showVersionHistoryBottomSheet, setShowVersionHistoryBottomSheet] =
+    React.useState(!!router.query.version);
+
+  function goToCurrentVersion() {
+    // navigate back to current version
+    router.replace(`/process/${projectId}`);
+  }
+
+  function closeVersionHistoryBottomSheet() {
+    setShowVersionHistoryBottomSheet(false);
+    goToCurrentVersion();
+  }
 
   // "Constructor"
   useEffect(() => {
@@ -167,9 +181,35 @@ export default function Canvas(): JSX.Element {
         backgroundColor: "black",
       }}
     >
+      {showVersionHistoryBottomSheet && (
+        <div
+          onWheel={(e) => e.stopPropagation()}
+          style={{
+            position: "absolute",
+            bottom: "0",
+            zIndex: 1,
+            width: "100%",
+          }}
+        >
+          <Button
+            style={{
+              position: "absolute",
+              right: "0",
+              top: "0",
+            }}
+            variant={"ghost_icon"}
+            onClick={closeVersionHistoryBottomSheet}
+          >
+            <Icon data={close} />
+          </Button>
+          <ProcessTimeline processId={projectId} />
+        </div>
+      )}
+
       <CanvasButtons
         userCanEdit={userCanEdit}
         handleClickLabel={() => setVisibleLabelScrim(true)}
+        handleClickVersionHistory={() => setShowVersionHistoryBottomSheet(true)}
       />
       <ManageLabelBox
         handleClose={() => setVisibleLabelScrim(false)}
