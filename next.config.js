@@ -1,4 +1,6 @@
-module.exports = {
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const removeImports = require("next-remove-imports")();
+module.exports = removeImports({
   serverRuntimeConfig: {
     // Will only be available on the server side
     AUTH_SECRET: process.env.AUTH_SECRET, // "authentication secret or public key, used for validating user requests in pages/api",
@@ -23,4 +25,4 @@ module.exports = {
     ];
   },
   optimizeFonts: false,
-};
+});
