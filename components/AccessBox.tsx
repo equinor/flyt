@@ -183,11 +183,18 @@ function MiddleSection(props: {
    */
   function handleSubmit(e) {
     e.preventDefault();
-    addUserMutation.mutate({
-      user: userInput,
-      vsmId: props.vsmId,
-      role: accessRoles.Contributor,
-    });
+    userInput
+      .split(",") // Split by comma
+      .filter((user) => !!user.trim()) // remove empty strings
+      .map((user) => user.trim()) // remove whitespace
+      .forEach((user) => {
+        // add each user
+        addUserMutation.mutate({
+          user: user,
+          vsmId: props.vsmId,
+          role: accessRoles.Contributor,
+        });
+      });
   }
 
   if (props.loading) {
