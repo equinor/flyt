@@ -12,6 +12,7 @@ module.exports = {
     CLIENT_ID: process.env.CLIENT_ID,
     ENVIRONMENT: process.env.ENVIRONMENT,
     SCOPE: process.env.SCOPE,
+    RADIX_GIT_COMMIT_HASH: process.env.RADIX_GIT_COMMIT_HASH,
   },
   async redirects() {
     return [
