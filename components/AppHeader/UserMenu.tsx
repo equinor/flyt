@@ -5,11 +5,15 @@ import { UserDot } from "../UserDot";
 import { getUserShortName } from "../../utils/getUserShortName";
 import packageJson from "../../package.json";
 import Link from "next/dist/client/link";
-import { commitHash, commitHashUrl } from "../../commitHash";
+import getConfig from "next/config";
+import { MenuItem } from "@equinor/eds-core-react/dist/types/components/Menu/MenuItem";
 
 const UserMenu: React.FC = () => {
   const { instance, accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
+  const { publicRuntimeConfig } = getConfig();
+  const commitHash = publicRuntimeConfig.RADIX_GIT_COMMIT_HASH;
+
   const [state, setState] = React.useState<{
     buttonEl: HTMLButtonElement;
     focus: "first" | "last";
@@ -62,7 +66,7 @@ const UserMenu: React.FC = () => {
         id="menu-on-button"
         aria-labelledby="menuButton"
         focus={focus}
-        open={Boolean(buttonEl)}
+        open={!!buttonEl}
         anchorEl={buttonEl}
         onClose={closeMenu}
       >
@@ -70,9 +74,15 @@ const UserMenu: React.FC = () => {
         <Link href={"/changelog"}>
           <Menu.Item>Version {packageJson.version}</Menu.Item>
         </Link>
-        <Link href={commitHashUrl}>
-          <Menu.Item>Git hash: {commitHash}</Menu.Item>
-        </Link>
+        {!!commitHash ? (
+          <Link
+            href={`https://github.com/equinor/MAD-VSM-WEB/commits/${commitHash}`}
+          >
+            <Menu.Item>Commit {commitHash.slice(0, 7)}</Menu.Item>
+          </Link>
+        ) : (
+          <Menu.Item disabled>Commit not available</Menu.Item>
+        )}
         <Link href={"/settings"}>
           <Menu.Item>Settings</Menu.Item>
         </Link>
