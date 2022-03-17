@@ -29,6 +29,7 @@ export default function AllProcesses(): JSX.Element {
       router.query.q,
       router.query.user,
       router.query.rl,
+      router.query.orderBy,
     ],
     () =>
       getProjects({
@@ -37,6 +38,7 @@ export default function AllProcesses(): JSX.Element {
         q: stringToArray(router.query.q),
         ru: stringToArray(router.query.user),
         rl: stringToArray(router.query.rl),
+        orderBy: `${router.query.orderBy}`,
       })
   );
 

@@ -12,7 +12,7 @@ export const getProjects = (filter?: {
   q?: string | string[]; // Search query
   ru?: (number | string)[]; // Required user(s)
   rl?: (number | string)[]; // Required label(s)
-  orderBy?: "name" | "modified" | "created"; // Order by name, modified or created
+  orderBy?: "name" | "modified" | "created" | string; // Order by name, modified or created
   page?: number; // Page number
   items?: number; // Number of items per page
   onlyFavorites?: boolean; // Only favorites

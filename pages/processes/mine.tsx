@@ -43,6 +43,7 @@ export default function MyProcesses(): JSX.Element {
       router.query.q,
       requiredUsers,
       router.query.rl,
+      router.query.orderBy,
     ],
     () =>
       getProjects({
@@ -51,6 +52,7 @@ export default function MyProcesses(): JSX.Element {
         q: stringToArray(router.query.q),
         ru: requiredUsers ? [...requiredUsers, myUserId] : [myUserId],
         rl: stringToArray(router.query.rl),
+        orderBy: `${router.query.orderBy}`,
       }),
     { enabled: !!myUserId }
   );
