@@ -1,18 +1,22 @@
-import { Tooltip } from "@equinor/eds-core-react";
 import React from "react";
+import { Tooltip } from "@equinor/eds-core-react";
 import { UserDot } from "../UserDot";
 import styles from "./UserDots.module.scss";
+import { userAccess } from "interfaces/UserAccess";
 
 export function UserDots(props: {
-  users: Array<string>;
+  userAccesses: Array<userAccess>;
   setVisibleScrim: (any: boolean) => void;
 }): JSX.Element {
-  const { users, setVisibleScrim } = props;
-  const shownUsers = users.length > 3 ? users.slice(0, 3) : users;
-  const numberOtherUsers = users.length - shownUsers.length;
+  const { userAccesses, setVisibleScrim } = props;
+  const shownUsers =
+    userAccesses.length > 3 ? userAccesses.slice(0, 3) : userAccesses;
+  const numberOtherUsers = userAccesses.length - shownUsers.length;
 
   return (
-    <Tooltip title={users.join(", ")}>
+    <Tooltip
+      title={userAccesses.map((userAccess) => userAccess.user).join(", ")}
+    >
       <button
         className={styles.buttonUserDots}
         onClick={(e) => {
@@ -29,15 +33,15 @@ export function UserDots(props: {
   );
 }
 
-export function UserDotsAccordion(props: { users: string[] }): JSX.Element {
+export function UserDotsAccordion(props: { users: userAccess[] }): JSX.Element {
   const users = props.users.reverse();
   const width = users.length <= 3 ? 24 * users.length : 72;
 
   return (
     <div className={styles.containerUserDots} style={{ width: width }}>
-      {users.map((name) => (
-        <div key={name}>
-          <UserDot name={name} />
+      {users.map((userAccess) => (
+        <div key={userAccess.user}>
+          <UserDot name={userAccess.user} />
         </div>
       ))}
     </div>
