@@ -1,17 +1,22 @@
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 
-import React from "react";
-import dynamic from "next/dynamic";
-import { useState } from "react";
+import MDEditor, { commands } from "@uiw/react-md-editor";
 
-const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
+import React from "react";
+import { useState } from "react";
 
 export default function MarkdownComponent() {
   const [value, setValue] = useState("**Hello world!!!**");
   return (
     <div>
-      <MDEditor value={value} onChange={setValue} />
+      <MDEditor
+        value={value}
+        onChange={setValue}
+        preview="edit"
+        extraCommands={[]}
+        commands={[commands.link]}
+      />
     </div>
   );
 }
