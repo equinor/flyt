@@ -1,3 +1,3 @@
-export const commitHash = "6bc627b";
+export const commitHash = "a819fe7";
 export const commitHashUrl =
-  "https://github.com/equinor/MAD-VSM-WEB/commits/6bc627b6b8b5b250f499e690fd86632558a22d08";
+  "https://github.com/equinor/MAD-VSM-WEB/commits/a819fe732e4ff43e9a4f2b6e12e30a2ba103dda8";
