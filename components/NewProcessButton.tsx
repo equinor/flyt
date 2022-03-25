@@ -6,10 +6,10 @@ import { Icon } from "@equinor/eds-core-react";
 import { add } from "@equinor/eds-icons";
 import React from "react";
 
-export function NewProjectButton(): JSX.Element {
+export function NewProcessButton(): JSX.Element {
   const router = useRouter();
 
-  const newProjectMutation = useMutation(() =>
+  const newProcessMutation = useMutation(() =>
     createProject().then((value) =>
       router.push(`/process/${value.data.vsmProjectID}`)
     )
@@ -18,10 +18,17 @@ export function NewProjectButton(): JSX.Element {
   return (
     <button
       className={styles.createCard}
-      onClick={() => newProjectMutation.mutate()}
+      onClick={() => newProcessMutation.mutate()}
+      disabled={newProcessMutation.isLoading}
     >
-      <Icon data={add} title="add" />
-      <p>Create new</p>
+      {newProcessMutation.isLoading ? (
+        <p>Creating new process...</p>
+      ) : (
+        <>
+          <Icon data={add} title="add" />
+          <p>Create new</p>
+        </>
+      )}
     </button>
   );
 }

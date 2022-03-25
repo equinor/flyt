@@ -69,7 +69,7 @@ export default function AllProcesses(): JSX.Element {
             </div>
           </div>
           <FrontPageBody
-            showNewProjectButton={true}
+            showNewProcessButton={true}
             itemsPerPage={itemsPerPage}
             query={query}
             onChangePage={(newPage) => setPage(newPage)}
