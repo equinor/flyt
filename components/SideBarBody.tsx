@@ -1,9 +1,13 @@
+import { DurationComponent } from "./DurationComponent";
+import { QIPSection } from "./QIPSection";
+import React from "react";
+import { TextField } from "@equinor/eds-core-react";
+import dynamic from "next/dynamic";
 import { vsmObject } from "../interfaces/VsmObject";
 import { vsmObjectTypes } from "../types/vsmObjectTypes";
-import { TextField } from "@equinor/eds-core-react";
-import { QIPSection } from "./QIPSection";
-import { DurationComponent } from "./DurationComponent";
-import React from "react";
+const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
+  ssr: false,
+});
 
 export function SideBarBody(props: {
   selectedObject: vsmObject;
@@ -14,6 +18,7 @@ export function SideBarBody(props: {
   canEdit: boolean;
 }): JSX.Element {
   const { selectedObject, setShowNewTaskSection } = props;
+  const labelDescription = props.canEdit ? "Add description" : "Description";
 
   switch (selectedObject?.vsmObjectType?.pkObjectType) {
     case vsmObjectTypes.process:
@@ -112,6 +117,13 @@ export function SideBarBody(props: {
     case vsmObjectTypes.mainActivity:
       return (
         <>
+          <MarkdownEditor
+            id={"vsmObjectDescription"}
+            label={labelDescription}
+            //onChange={props.onChangeName}
+            canEdit={props.canEdit}
+            value={selectedObject.name || ""}
+          />
           <TextField
             disabled={!props.canEdit}
             label={"Add description"}
@@ -134,7 +146,7 @@ export function SideBarBody(props: {
         <>
           <TextField
             disabled={!props.canEdit}
-            label={"Add description"}
+            label={labelDescription}
             multiline
             rows={4}
             variant={"default"}

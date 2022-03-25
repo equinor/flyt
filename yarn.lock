@@ -320,14 +320,9 @@
     react-fast-compare "3.2.0"
     react-popper "2.2.5"
 
-"@equinor/eds-icons@0.10.0":
+"@equinor/eds-icons@0.10.0", "@equinor/eds-icons@^0.10.0":
   version "0.10.0"
   resolved "https://registry.npmjs.org/@equinor/eds-icons/-/eds-icons-0.10.0.tgz"
-  integrity sha512-oYnbMtBLiwp30TzN8Q/MEJdqhyAQs87oD/x/mHFQ+BpFGlbbrcsWeTOD+rNY6JhxtJl5qfi9mAhJQgRMtauXsA==
-
-"@equinor/eds-icons@^0.10.0":
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/@equinor/eds-icons/-/eds-icons-0.10.0.tgz#3e3227d07b26bba4732feab34af2f4c5f2858032"
   integrity sha512-oYnbMtBLiwp30TzN8Q/MEJdqhyAQs87oD/x/mHFQ+BpFGlbbrcsWeTOD+rNY6JhxtJl5qfi9mAhJQgRMtauXsA==
 
 "@equinor/eds-tokens@0.7.0":
@@ -6181,6 +6176,15 @@ rehype-rewrite@~3.0.4:
     hast-util-select "~5.0.1"
     unified "~10.1.1"
     unist-util-visit "~4.1.0"
+
+rehype-sanitize@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/rehype-sanitize/-/rehype-sanitize-5.0.1.tgz#dac01a7417bdd329260c74c74449697b4be5eb56"
+  integrity sha512-da/jIOjq8eYt/1r9GN6GwxIR3gde7OZ+WV8pheu1tL8K0D9KxM2AyMh+UEfke+FfdM3PvGHeYJU0Td5OWa7L5A==
+  dependencies:
+    "@types/hast" "^2.0.0"
+    hast-util-sanitize "^4.0.0"
+    unified "^10.0.0"
 
 rehype-sanitize@~5.0.1:
   version "5.0.1"
