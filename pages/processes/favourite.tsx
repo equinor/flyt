@@ -76,7 +76,7 @@ export default function FavoriteProcesses(): JSX.Element {
           <FrontPageBody
             itemsPerPage={itemsPerPage}
             query={query}
-            showNewProjectButton={false}
+            showNewProcessButton={false}
             onChangePage={(pageNumber: number) => setPage(pageNumber)}
           />
         </div>
