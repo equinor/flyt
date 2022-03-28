@@ -75,7 +75,7 @@ export function positionNodes(graph: {
 
 export const getPathsFromNodeToLeafNode = (
   node: GraphNode,
-  graph: { nodes: any; edges: any }
+  graph: { nodes: GraphNode[]; edges: GraphEdge[] }
 ): GraphNode[][] => {
   const paths = [];
   getPathToLeafNode(node);
