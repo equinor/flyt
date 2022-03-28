@@ -1,15 +1,11 @@
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
-
 import { Button, Icon } from "@equinor/eds-core-react";
 import MDEditor, { commands } from "@uiw/react-md-editor";
 import React, { useState } from "react";
-import { edit, check } from "@equinor/eds-icons";
-
+import { check, edit } from "@equinor/eds-icons";
 import { Typography } from "@equinor/eds-core-react";
 import rehypeSanitize from "rehype-sanitize";
-
-type PreviewType = "live" | "preview";
 
 export default function MarkdownEditor(props: {
   canEdit: boolean;
@@ -19,13 +15,8 @@ export default function MarkdownEditor(props: {
   onChange?: (value?: string) => void;
 }) {
   const { canEdit, defaultValue, id, label = "", onChange } = props;
+  const [editMode, setEditMode] = useState(false);
   const [value, setValue] = useState(defaultValue);
-  const [preview, setPreview] = useState<PreviewType>("preview");
-  const disabled = preview === "preview" ? true : false;
-
-  const editIcon = (
-    <Icon data={preview === "preview" ? edit : check} color="#007079" />
-  );
 
   return (
     <div id={id}>
@@ -48,17 +39,17 @@ export default function MarkdownEditor(props: {
         {canEdit && (
           <Button
             onClick={() => {
-              setPreview(disabled ? "live" : "preview");
+              setEditMode(!editMode);
             }}
             style={{
               position: "relative",
               right: "0px",
-              top: disabled ? "48px" : "78px",
+              top: editMode ? "78px" : "48px",
               zIndex: 1,
             }}
             variant="ghost_icon"
           >
-            {editIcon}
+            <Icon data={editMode ? check : edit} color="#007079" />
           </Button>
         )}
       </div>
@@ -69,25 +60,21 @@ export default function MarkdownEditor(props: {
           onChange(value);
           setValue(value);
         }}
-        preview={preview}
+        preview={editMode ? "live" : "preview"}
         extraCommands={[]}
         commands={[commands.link]}
-        hideToolbar={preview === "preview"}
+        hideToolbar={!editMode}
         previewOptions={{
           rehypePlugins: [[rehypeSanitize]],
           style: {
-            backgroundColor: "rgba(255,255,255,1)",
-            border: "1px solid #ECECEC",
             fontSize: "14px",
             padding: "6px 48px 6px 8px",
           },
           linkTarget: "_blank",
         }}
-        textareaProps={{ style: { borderColor: "green" } }}
         style={{
-          borderBottomColor: "#6E6E6E",
-          borderBottomStyle: "solid",
-          borderBottomWidth: disabled ? 0 : "1px",
+          border: "1px solid #ECECEC",
+          borderBottomColor: editMode ? "#6E6E6E" : "#ECECEC",
           borderRadius: 0,
           boxShadow: "none",
         }}

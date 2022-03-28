@@ -39,7 +39,7 @@
     "@types/react": "^17.0.39",
     "@typescript-eslint/eslint-plugin": "^5.11.0",
     "@typescript-eslint/parser": "^5.11.0",
-    "@uiw/react-md-editor": "^3.10.2",
+    "@uiw/react-md-editor": "^3.11.2",
     "axios": "^0.25.0",
     "easy-peasy": "^5.0.4",
     "moment": "^2.29.1",

@@ -4,7 +4,10 @@ export function formatCanvasText(
   removeNewLines = false
 ): string {
   if (!text) return "";
-  let formattedText = text;
+  let formattedText = text.replace(
+    /(\[((?:\[[^\]]*]|[^\[\]])*)]\([ \t]*()<?((?:\([^)]*\)|[^()\s])*?)>?[ \t]*((['"])(.*?)\6[ \t]*)?\))/g,
+    "$2"
+  );
   if (text.length > maxLength) {
     formattedText = `${text?.slice(0, maxLength)}...`;
   }
