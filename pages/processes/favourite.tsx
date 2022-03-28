@@ -30,6 +30,7 @@ export default function FavoriteProcesses(): JSX.Element {
       router.query.q,
       router.query.user,
       router.query.rl,
+      router.query.orderBy,
     ],
     () =>
       getProjects({
@@ -39,6 +40,7 @@ export default function FavoriteProcesses(): JSX.Element {
         q: stringToArray(router.query.q),
         ru: stringToArray(router.query.user),
         rl: stringToArray(router.query.rl),
+        orderBy: `${router.query.orderBy}`,
       })
   );
 
@@ -74,7 +76,7 @@ export default function FavoriteProcesses(): JSX.Element {
           <FrontPageBody
             itemsPerPage={itemsPerPage}
             query={query}
-            showNewProjectButton={false}
+            showNewProcessButton={false}
             onChangePage={(pageNumber: number) => setPage(pageNumber)}
           />
         </div>

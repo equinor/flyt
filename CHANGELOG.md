@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.18](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.18...v0.2.18) (2022-03-18)
+
+### Bug Fixes
+
+- ordering of processes ([#379](https://github.com/equinor/MAD-VSM-WEB/issues/379)) ([5afaaa0](https://github.com/equinor/MAD-VSM-WEB/commit/5afaaa039ef5c83b6ab84dcb9b7972f1864c7be6)), closes [#378](https://github.com/equinor/MAD-VSM-WEB/issues/378)
+
+### [0.2.17](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.16...v0.2.17) (2022-03-16)
+
+### Features
+
+- version history ([2fda5e2](https://github.com/equinor/MAD-VSM-WEB/commit/2fda5e2d448abeeb1835bb4a74fc402fdf12f9ab)), closes [#154](https://github.com/equinor/MAD-VSM-WEB/issues/154)
+- **access:** add multiple users to a process quickly by supplying comma separated string ([#269](https://github.com/equinor/MAD-VSM-WEB/issues/269)) ([a69b090](https://github.com/equinor/MAD-VSM-WEB/commit/a69b09068f1ea4300fc8e97ff95c7da58f33d040)), closes [#268](https://github.com/equinor/MAD-VSM-WEB/issues/268)
+- verify what change is currently running ([#370](https://github.com/equinor/MAD-VSM-WEB/issues/370)) ([469bc8c](https://github.com/equinor/MAD-VSM-WEB/commit/469bc8c6740ec9ed5f40c745f8e7a14097ba9428)), closes [#275](https://github.com/equinor/MAD-VSM-WEB/issues/275)
+
 ### [0.2.16](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.15...v0.2.16) (2022-02-14)
 
 ### Features

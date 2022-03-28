@@ -1,31 +1,44 @@
 .createCard {
-  color: #007079;
+  color: #565656;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  /* Heading/H6 */
+  font-family: "Equinor", sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  /* identical to box height, or 150% */
+  letter-spacing: 0.2px;
 
   height: 100px;
-  max-height: 100px;
-
-  margin-bottom: 16px;
   width: 100%;
-
+  border: 1px dashed #d5dbdd;
   border-radius: 4px;
 
-  margin-right: 16px;
-  margin-bottom: 16px;
+  margin: 0 16px 16px 0;
 
-  border: 1px dashed #007079;
-  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 
   animation-name: fade-in;
   animation-duration: 0.5s;
+
+  background: transparent;
 }
 
 .createCard:hover {
-  background-color: rgb(222, 237, 238);
+  color: #007079;
+  border: 1px solid #007079;
+  cursor: pointer;
+}
+
+.createCard:disabled {
+  background-color: #efefef;
+  color: #858585;
+  border: 1px solid transparent;
+  cursor: not-allowed;
 }
 
 @keyframes fade-in {

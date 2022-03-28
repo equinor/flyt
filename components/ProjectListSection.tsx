@@ -4,7 +4,7 @@ import {
 } from "../utils/getProjectCardsArray";
 
 import Masonry from "react-masonry-css";
-import { NewProjectButton } from "./NewProjectButton";
+import { NewProcessButton } from "./NewProcessButton";
 import React from "react";
 import { Typography } from "@equinor/eds-core-react";
 import styles from "./ProjectListSection.module.scss";
@@ -14,12 +14,12 @@ export function ProjectListSection(props: {
   projects: Array<vsmProject>;
   isLoading: boolean;
   expectedNumberOfProjects: number;
-  showNewProjectButton: boolean;
+  showNewProcessButton: boolean;
 }): JSX.Element {
   const {
     isLoading,
     projects,
-    showNewProjectButton,
+    showNewProcessButton,
     expectedNumberOfProjects,
   } = props;
 
@@ -29,7 +29,7 @@ export function ProjectListSection(props: {
         <Typography variant="h4" style={{ marginBottom: "30px" }}>
           No processes match your search criteria.
         </Typography>
-        {showNewProjectButton && <NewProjectButton />}
+        {showNewProcessButton && <NewProcessButton />}
       </div>
     );
   }
@@ -46,7 +46,7 @@ export function ProjectListSection(props: {
         className={styles.grid}
         columnClassName={styles.gridColumn}
       >
-        {props.showNewProjectButton && <NewProjectButton />}
+        {showNewProcessButton && <NewProcessButton />}
         {isLoading
           ? placeholderProjectCardsArray(expectedNumberOfProjects)
           : projectCardsArray(projects)}

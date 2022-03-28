@@ -5,14 +5,14 @@ import { ProjectListSection } from "./ProjectListSection";
 import { unknownErrorToString } from "../utils/isError";
 
 export default function FrontPageBody(props: {
-  showNewProjectButton: boolean;
+  showNewProcessButton: boolean;
   itemsPerPage: number;
   query;
   onChangePage: (newPage: number) => void;
 }): JSX.Element {
   const [page, setPage] = useState(1);
 
-  const { showNewProjectButton, itemsPerPage, query } = props;
+  const { showNewProcessButton, itemsPerPage, query } = props;
   const { data, isLoading, error } = query;
 
   const [totalItems, setTotalItems] = useState(0);
@@ -40,7 +40,7 @@ export default function FrontPageBody(props: {
         projects={data?.projects}
         isLoading={isLoading}
         expectedNumberOfProjects={itemsPerPage}
-        showNewProjectButton={showNewProjectButton}
+        showNewProcessButton={showNewProcessButton}
       />
       <div className={styles.footer}>
         {itemsPerPage < totalItems && (
