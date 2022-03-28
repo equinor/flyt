@@ -13,12 +13,13 @@ type PreviewType = "live" | "preview";
 
 export default function MarkdownEditor(props: {
   canEdit: boolean;
+  defaultValue: string;
   id: string;
   label?: string;
   onChange?: (value?: string) => void;
-  value?: string;
 }) {
-  const { canEdit, id, label = "", onChange, value } = props;
+  const { canEdit, defaultValue, id, label = "", onChange } = props;
+  const [value, setValue] = useState(defaultValue);
   const [preview, setPreview] = useState<PreviewType>("preview");
   const disabled = preview === "preview" ? true : false;
 
@@ -64,7 +65,10 @@ export default function MarkdownEditor(props: {
       <MDEditor
         id="mdEditor"
         value={value}
-        onChange={onChange}
+        onChange={(value?: string) => {
+          onChange(value);
+          setValue(value);
+        }}
         preview={preview}
         extraCommands={[]}
         commands={[commands.link]}
@@ -72,14 +76,10 @@ export default function MarkdownEditor(props: {
         previewOptions={{
           rehypePlugins: [[rehypeSanitize]],
           style: {
-            paddingTop: "6px",
-            paddingRight: "48px",
-            paddingBottom: "6px",
-            paddingLeft: "8px",
             backgroundColor: "rgba(255,255,255,1)",
-            borderColor: "#ECECEC",
-            borderWidth: "1px",
-            borderStyle: "solid",
+            border: "1px solid #ECECEC",
+            fontSize: "14px",
+            padding: "6px 48px 6px 8px",
           },
           linkTarget: "_blank",
         }}

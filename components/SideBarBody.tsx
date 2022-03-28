@@ -11,41 +11,34 @@ const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
 
 export function SideBarBody(props: {
   selectedObject: vsmObject;
-  onChangeName: (event: { target: { value: string } }) => void;
+  onChangeName: (value?: string) => void;
   onChangeRole: (event: { target: { value: string } }) => void;
   onChangeTime: (e: { time: number; unit: string }) => void;
   setShowNewTaskSection: (boolean) => void;
   canEdit: boolean;
 }): JSX.Element {
   const { selectedObject, setShowNewTaskSection } = props;
-  const labelDescription = props.canEdit ? "Add description" : "Description";
 
   switch (selectedObject?.vsmObjectType?.pkObjectType) {
     case vsmObjectTypes.process:
       return (
-        <TextField
-          disabled={!props.canEdit}
-          label={"Add title"}
-          multiline
-          rows={4}
-          variant={"default"}
+        <MarkdownEditor
+          canEdit={props.canEdit}
           defaultValue={selectedObject.name || ""}
-          onChange={props.onChangeName}
           id={"vsmObjectDescription"}
+          label={"Title"}
+          onChange={props.onChangeName}
         />
       );
     case vsmObjectTypes.supplier:
       return (
         <>
-          <TextField
-            disabled={!props.canEdit}
-            label={"Add supplier(s)"}
-            multiline
-            rows={4}
-            variant={"default"}
+          <MarkdownEditor
+            canEdit={props.canEdit}
             defaultValue={selectedObject.name || ""}
-            onChange={props.onChangeName}
             id={"vsmObjectDescription"}
+            label={"Supplier(s)"}
+            onChange={props.onChangeName}
           />
           <QIPSection
             canEdit={props.canEdit}
@@ -57,15 +50,12 @@ export function SideBarBody(props: {
     case vsmObjectTypes.input:
       return (
         <>
-          <TextField
-            disabled={!props.canEdit}
-            label={"Add input(s)"}
-            multiline
-            rows={4}
-            variant={"default"}
+          <MarkdownEditor
+            canEdit={props.canEdit}
             defaultValue={selectedObject.name || ""}
-            onChange={props.onChangeName}
             id={"vsmObjectDescription"}
+            label={"Input(s)"}
+            onChange={props.onChangeName}
           />
           <QIPSection
             canEdit={props.canEdit}
@@ -77,15 +67,12 @@ export function SideBarBody(props: {
     case vsmObjectTypes.output:
       return (
         <>
-          <TextField
-            disabled={!props.canEdit}
-            label={"Add output(s)"}
-            multiline
-            rows={4}
-            variant={"default"}
+          <MarkdownEditor
+            canEdit={props.canEdit}
             defaultValue={selectedObject.name || ""}
-            onChange={props.onChangeName}
             id={"vsmObjectDescription"}
+            label={"Output(s)"}
+            onChange={props.onChangeName}
           />
           <QIPSection
             canEdit={props.canEdit}
@@ -97,15 +84,12 @@ export function SideBarBody(props: {
     case vsmObjectTypes.customer:
       return (
         <>
-          <TextField
-            disabled={!props.canEdit}
-            label={"Add customer(s)"}
-            multiline
-            rows={4}
-            variant={"default"}
+          <MarkdownEditor
+            canEdit={props.canEdit}
             defaultValue={selectedObject.name || ""}
-            onChange={props.onChangeName}
             id={"vsmObjectDescription"}
+            label={"Customer(s)"}
+            onChange={props.onChangeName}
           />
           <QIPSection
             canEdit={props.canEdit}
@@ -118,21 +102,11 @@ export function SideBarBody(props: {
       return (
         <>
           <MarkdownEditor
-            id={"vsmObjectDescription"}
-            label={labelDescription}
-            //onChange={props.onChangeName}
             canEdit={props.canEdit}
-            value={selectedObject.name || ""}
-          />
-          <TextField
-            disabled={!props.canEdit}
-            label={"Add description"}
-            multiline
-            rows={4}
-            variant={"default"}
             defaultValue={selectedObject.name || ""}
-            onChange={props.onChangeName}
             id={"vsmObjectDescription"}
+            label={"Description"}
+            onChange={props.onChangeName}
           />
           <QIPSection
             canEdit={props.canEdit}
@@ -144,15 +118,12 @@ export function SideBarBody(props: {
     case vsmObjectTypes.subActivity:
       return (
         <>
-          <TextField
-            disabled={!props.canEdit}
-            label={labelDescription}
-            multiline
-            rows={4}
-            variant={"default"}
+          <MarkdownEditor
+            canEdit={props.canEdit}
             defaultValue={selectedObject.name || ""}
-            onChange={props.onChangeName}
             id={"vsmObjectDescription"}
+            label={"Description"}
+            onChange={props.onChangeName}
           />
           <div style={{ paddingTop: 12 }}>
             <TextField
@@ -194,15 +165,12 @@ export function SideBarBody(props: {
       );
     case vsmObjectTypes.choice:
       return (
-        <TextField
-          disabled={!props.canEdit}
-          label={"Define choice"}
-          multiline
-          rows={4}
-          variant={"default"}
-          defaultValue={selectedObject.name}
-          onChange={props.onChangeName}
+        <MarkdownEditor
+          canEdit={props.canEdit}
+          defaultValue={selectedObject.name || ""}
           id={"vsmObjectDescription"}
+          label={"Define choice"}
+          onChange={props.onChangeName}
         />
       );
     default:
