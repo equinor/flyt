@@ -20,7 +20,7 @@ export function addNewVsmObjectToHoveredCard(
   project: StateMapper<
     _Pick<
       vsmProject,
-      "vsmProjectID" | "name" | "created" | "lastUpdated" | "objects"
+      "vsmProjectID" | "name" | "created" | "updated" | "objects"
     >
   >,
   vsmObjectAddMutation,

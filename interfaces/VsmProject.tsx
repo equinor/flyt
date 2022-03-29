@@ -1,8 +1,6 @@
 import { processLabel } from "./processLabel";
 import { userAccess } from "./UserAccess";
 import { vsmObject } from "./VsmObject";
-import { vsmObjectTypes } from "../types/vsmObjectTypes";
-import { vsmTaskTypes } from "../types/vsmTaskTypes";
 
 // Todo: Structure is out of date. Update to match new structure.
 export interface vsmProject {
@@ -11,12 +9,11 @@ export interface vsmProject {
   toBeProcessID?: number;
   currentProcessId?: number;
   labels: processLabel[];
-  created: {
-    userIdentity: string; // date
-  };
-  lastUpdated: string; // date
+  created: string; // date
+  updated: string; // date
+  updatedBy: string;
   objects: Array<vsmObject>;
   userAccesses: Array<userAccess>;
-  duplicateOf?: string;
+  duplicateOf?: number;
   isFavorite?: boolean;
 }

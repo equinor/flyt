@@ -19,7 +19,7 @@ export function createToolboxChoice(
   project: StateMapper<
     _Pick<
       vsmProject,
-      "lastUpdated" | "created" | "objects" | "name" | "vsmProjectID"
+      "updated" | "created" | "objects" | "name" | "vsmProjectID"
     >
   >,
   vsmObjectAddMutation: UseMutationResult<unknown, unknown, vsmObject, unknown>,

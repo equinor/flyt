@@ -1,8 +1,7 @@
-import { lightOrDark } from "../utils/LightOrDark";
 import React from "react";
+import { lightOrDark } from "../utils/LightOrDark";
 import { randomColor } from "../utils/randomColor";
 import styles from "./UserDot.module.scss";
-import { TooltipImproved } from "./TooltipImproved";
 
 // Memoization of names
 const names: Array<{ name: string; color: string }> = [];

@@ -1,11 +1,12 @@
-import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { Layouts } from "../../../layouts/LayoutWrapper";
-import { useMutation, useQuery } from "react-query";
 import { createProject, getProject } from "../../../services/projectApi";
-import { getProjectAsCleanJsonWithoutQIPs } from "../../../utils/DownloadJSON";
-import { vsmProject } from "../../../interfaces/VsmProject";
+import { useMutation, useQuery } from "react-query";
+
+import { Layouts } from "../../../layouts/LayoutWrapper";
 import { debounce } from "../../../utils/debounce";
+import { getProjectAsCleanJsonWithoutQIPs } from "../../../utils/DownloadJSON";
+import { useRouter } from "next/router";
+import { vsmProject } from "../../../interfaces/VsmProject";
 
 export default function DuplicatePage() {
   const router = useRouter();
@@ -32,7 +33,7 @@ export default function DuplicatePage() {
         `${!!project.name ? project.name : "Untitled process"} (Duplicate of ${
           project.vsmProjectID
         })`,
-        `${project.vsmProjectID}`
+        project.vsmProjectID
       );
       if (json) {
         setStatusMessage("Creating new process");

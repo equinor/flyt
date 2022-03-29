@@ -17,7 +17,6 @@ import { useRouter } from "next/router";
 import { vsmProject } from "../../interfaces/VsmProject";
 
 export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
-  const { userIdentity: createdBy } = props.vsm.created;
   const queryClient = useQueryClient();
   const [isMutatingFavourite, setIsMutatingFavourite] = useState(false);
   const router = useRouter();
@@ -83,15 +82,10 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
             <Labels labels={props.vsm.labels} />
           </div>
           <div className={`${styles.section} ${styles.bottomSection}`}>
-            {createdBy && (
-              <UserDots
-                users={[
-                  `${createdBy}`,
-                  ...props.vsm.userAccesses.map((u) => u.user),
-                ]}
-                setVisibleScrim={(any: boolean) => setVisibleScrim(any)}
-              />
-            )}
+            <UserDots
+              userAccesses={props.vsm.userAccesses}
+              setVisibleScrim={(any: boolean) => setVisibleScrim(any)}
+            />
             {userCanEdit && (
               <Tooltip title="Manage process labels" placement="right">
                 <Button

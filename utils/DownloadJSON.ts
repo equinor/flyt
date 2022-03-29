@@ -1,11 +1,11 @@
-import { vsmProject } from "../interfaces/VsmProject";
-import { vsmObjectTypes } from "../types/vsmObjectTypes";
 import { stripGarbage } from "./StripGarbage";
+import { vsmObjectTypes } from "../types/vsmObjectTypes";
+import { vsmProject } from "../interfaces/VsmProject";
 
 export function getProjectAsCleanJsonWithoutQIPs(
   project: vsmProject,
   projectName?: string,
-  duplicateOf?: string
+  duplicateOf?: number
 ) {
   return {
     name: projectName || project.name,
