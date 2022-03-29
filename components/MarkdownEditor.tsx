@@ -19,7 +19,7 @@ export default function MarkdownEditor(props: {
   const [value, setValue] = useState(defaultValue);
 
   return (
-    <div id={id}>
+    <div id={id} data-color-mode="light">
       <div
         style={{
           display: "flex",
