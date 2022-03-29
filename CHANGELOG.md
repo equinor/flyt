@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.19](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.18...v0.2.19) (2022-03-29)
+
+### Bug Fixes
+
+- display user accesses and last updated on front page ([#384](https://github.com/equinor/MAD-VSM-WEB/issues/384)) ([6704515](https://github.com/equinor/MAD-VSM-WEB/commit/67045150c54ca3edef4ed5e7bd0c9b74227ef856)), closes [#383](https://github.com/equinor/MAD-VSM-WEB/issues/383) [#382](https://github.com/equinor/MAD-VSM-WEB/issues/382)
+- Missing loading spinner when creating new project ([#394](https://github.com/equinor/MAD-VSM-WEB/issues/394)) ([b32dbf7](https://github.com/equinor/MAD-VSM-WEB/commit/b32dbf7e879b001652207978363e7dfae488cc63)), closes [#388](https://github.com/equinor/MAD-VSM-WEB/issues/388)
+
 ### [0.2.18](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.18...v0.2.18) (2022-03-18)
 
 ### Bug Fixes
