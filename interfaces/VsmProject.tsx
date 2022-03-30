@@ -12,8 +12,8 @@ export interface vsmProject {
   created: string; // date
   updated: string; // date
   updatedBy: string;
-  objects: Array<vsmObject>;
-  userAccesses: Array<userAccess>;
+  objects: vsmObject[];
+  userAccesses: userAccess[];
   duplicateOf?: number;
   isFavorite?: boolean;
 }

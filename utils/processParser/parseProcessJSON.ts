@@ -1,0 +1,34 @@
+import { ParsedProcess } from "./processParser.test";
+import { vsmProject } from "../../interfaces/VsmProject";
+import { GraphEdge, GraphNode } from "../layoutEngine";
+import { createEdges } from "./helpers/createEdges";
+import { createNodes } from "./helpers/createNodes";
+
+/**
+ * Parse a process JSON object
+ *
+ * ## Background:
+ * The api exposes a lot of the database structure in JSON format... which can be hard to work with.
+ * This function parses the JSON and returns a more usable format.
+ *
+ * The main improvement is that the process is generalized as a graph, with nodes and edges.
+ * > graph = { nodes: [], edges: [], ...metadata }
+ */
+export function parseProcessJSON(process: vsmProject): ParsedProcess {
+  const nodes: GraphNode[] = createNodes(process.objects);
+  const edges: GraphEdge[] = createEdges(process.objects);
+  const metadata = {
+    ...process,
+    // remove objects from the metadata
+    objects: undefined,
+    vsmProjectID: undefined,
+    // add new fields
+    id: process.vsmProjectID,
+  };
+
+  return {
+    nodes,
+    edges,
+    ...metadata,
+  } as ParsedProcess;
+}

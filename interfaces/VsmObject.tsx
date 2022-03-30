@@ -2,6 +2,7 @@ import { vsmObjectTypes } from "../types/vsmObjectTypes";
 import { vsmTaskTypes } from "../types/vsmTaskTypes";
 import { taskObject } from "./taskObject";
 
+//todo update to match api response
 export interface vsmObject {
   vsmObjectID?: number;
   vsmProjectID?: number;
@@ -10,10 +11,10 @@ export interface vsmObject {
   position?: number;
   parent?: number;
   name?: string;
-  fkObjectType?: vsmObjectTypes;
   time?: number;
   timeDefinition?: string;
   role?: string;
+  childIndex?: number;
   childObjects?: Array<vsmObject>;
   vsmObjectType?: {
     pkObjectType: vsmObjectTypes;
