@@ -1,14 +1,14 @@
 import * as PIXI from "pixi.js";
+import { Point } from "pixi.js";
 
 import { Graph, GraphEdge, GraphNode } from "utils/layoutEngine";
-
-import { Point } from "pixi.js";
 import { Process } from "interfaces/generated";
 import { Viewport } from "pixi-viewport";
 import { assetFactory } from "./AssetFactory";
 import { drawGraphEdges } from "./drawGraphEdges";
 import { drawGraphNodes } from "./drawGraphNodes";
 import { getColor } from "utils/getColor";
+import { vsmProject } from "../../../interfaces/VsmProject";
 
 /**
  * Config object for testing out different features while developing
@@ -20,22 +20,34 @@ const config = {
   showTooltip: true, //node name is shown on hover
   throttle: 20, // ms - How often to do expensive operations.
   // Note, higher values might be perceived as the ui lagging behind, depending on what is being drawn.
-  // This is a tradeoff and a higher value might be prefered for performance reasons.
-  drawLineFromCursorToClosestNode: true, // Note: set throttle to ~20 ms for a smoother experience
+  // This is a tradeoff and a higher value might be preferred for performance reasons.
+  // Note: set throttle to ~20 ms for a smoother experience
+  drawLineFromCursorToClosestNode: true, // Draw a line from the cursor to the closest node
 };
+
+/**
+ * Get the distance between two points
+ * @param from - The point to measure from
+ * @param to - The point to measure to
+ */
+export const getDistance = (
+  from: { x: number; y: number },
+  to: { x: number; y: number }
+) => Math.sqrt(Math.pow(to.x - from.x, 2) + Math.pow(to.y - from.y, 2)); // Using the pythagoras theorem
 
 /**
  * Adds the project-cards to our canvas
  * @param viewport
- * @param project
+ * @param process
  * @param userCanEdit
  * @param dispatch
  * @param setSelectedObject
  * @param vsmObjectMutation
+ * @param app
  */
 export function addCardsToCanvas(
   viewport: Viewport,
-  process: Process,
+  process: vsmProject,
   userCanEdit: boolean,
   dispatch,
   setSelectedObject,
@@ -137,8 +149,8 @@ export function addCardsToCanvas(
       tooltip.x = x + 30;
       tooltip.y = y + 5;
 
-      //If hover, show a tooltip
-      // Do not hittest too often (performance)
+      //If hovered, show a tooltip
+      // Do not hit-test too often (performance)
       if (Date.now() - lastHitTest > config.throttle) {
         const hit = graph.hitTest(x, y);
         lastHitTest = Date.now();
@@ -153,7 +165,7 @@ export function addCardsToCanvas(
             tooltipBox.visible = !!tooltip.text;
             tooltip.visible = true;
             // }
-            //toltipbox the size of the text
+            //tooltip-box the size of the text
             tooltipBox.width = tooltip.width + 10;
             tooltipBox.height = tooltip.height + 10;
           }
@@ -180,18 +192,10 @@ export function addCardsToCanvas(
             };
 
             //calculate distance to centers
-            const distanceToCenterLeft = Math.sqrt(
-              Math.pow(centerLeft.x - x, 2) + Math.pow(centerLeft.y - y, 2)
-            );
-            const distanceToCenterRight = Math.sqrt(
-              Math.pow(centerRight.x - x, 2) + Math.pow(centerRight.y - y, 2)
-            );
-            const distanceToCenterTop = Math.sqrt(
-              Math.pow(centerTop.x - x, 2) + Math.pow(centerTop.y - y, 2)
-            );
-            const distanceToCenterBottom = Math.sqrt(
-              Math.pow(centerBottom.x - x, 2) + Math.pow(centerBottom.y - y, 2)
-            );
+            const distanceToCenterLeft = getDistance(centerLeft, { x, y });
+            const distanceToCenterRight = getDistance(centerRight, { x, y });
+            const distanceToCenterTop = getDistance(centerTop, { x, y });
+            const distanceToCenterBottom = getDistance(centerBottom, { x, y });
 
             //todo: make this easier to read
             let closest: { x: number; y: number } = { x: 0, y: 0 };
@@ -224,11 +228,9 @@ export function addCardsToCanvas(
             } else if (closestToCenterLeft) {
               arrow.rotation = Math.PI;
               closest = centerLeft;
-              // console.log("left");
             } else if (closestToCenterRight) {
               arrow.rotation = 0;
               closest = centerRight;
-              // console.log("right");
             } else if (closestToCenterTop) {
               arrow.rotation = -Math.PI / 2;
               closest = centerTop;
@@ -240,36 +242,7 @@ export function addCardsToCanvas(
             // move the arrow to indicate where we may drop a new node
             arrow.x = closest.x;
             arrow.y = closest.y;
-            //only show the arrow if it is a valid drop location
-
-            // if type is MainACtivity
-            // if (
-            //   hit.node.type === vsmObjectTypes.mainActivity &&
-            //   (closestToCenterBottom ||
-            //     closestToCenterLeft ||
-            //     closestToCenterRight)
-            // ) {
-            //   arrow.visible = true;
-            // } else if (
-            //   hit.node.type === vsmObjectTypes.subActivity &&
-            //   (closestToCenterTop || closestToCenterBottom)
-            // ) {
-            //   tooltip.visible = true;
-            // } else if (
-            //   hit.node.type === vsmObjectTypes.input &&
-            //   closestToCenterRight
-            // ) {
-            //   arrow.visible = true;
-            // } else if (
-            //   hit.node.type === vsmObjectTypes.output &&
-            //   closestToCenterLeft
-            // ) {
-            //   arrow.visible = true;
-            // } else {
-            //   arrow.visible = false;
-            // }
-            // console.log(hit.node.type);
-            //if it is a choice node
+            // TODO: only show the arrow if it is a valid drop location
             arrow.visible = true;
           }
         } else {
@@ -318,11 +291,11 @@ export function addCardsToCanvas(
         graph.navigateRight();
         highlightAndMove(graph, highlight);
       } else if (event.key === "Enter") {
-        //highlight the selected node
-        // highlightAndMove(graph, highlight);
         const selectedNode = graph.getSelectedNodes()[0];
         setSelectedObject(selectedNode);
-        // alert("EDIT not yet implemented");
+      } else if (event.key === "Escape") {
+        setSelectedObject(null);
+        clearHighlight(highlight);
       }
     });
 
@@ -344,8 +317,9 @@ export function addCardsToCanvas(
       cursor.visible = true;
       const hit = graph.hitTest(x, y);
       if (hit?.node) {
+        // if we hit a node, select it
         graph.selectNode(hit.node);
-        // highligh the node
+        // highlight the node
         highLightNode(hit.node, highlight);
       } else {
         graph.deselectAllNodes();
@@ -381,6 +355,10 @@ export function addCardsToCanvas(
     }
   }
 
+  function clearHighlight(highlight: PIXI.Graphics) {
+    highlight.visible = false;
+  }
+
   /**
    * Highlight a node
    * @param node - node to be highlighted
@@ -396,6 +374,7 @@ export function addCardsToCanvas(
     highlight.y = node.position.y + node.height / 2;
     highlight.visible = true;
   }
+
   const endTime = performance.now();
   console.log(`Graph rendering took ${endTime - startTime} ms`);
 }
@@ -414,14 +393,17 @@ function unHighlightEdges(edges: GraphEdge[], viewport: Viewport) {
   });
 }
 
-function clickAnimation(cursor: PIXI.Graphics, e: any): void {
+function clickAnimation(
+  cursor: PIXI.Graphics,
+  e: { data: { originalEvent: { buttons: number } } }
+): void {
   const cursorAnimation = new PIXI.Ticker();
   cursorAnimation.autoStart = true;
   cursorAnimation.start();
   cursorAnimation.add((delta) => {
-    // scale with bezier curve
-    cursor.scale.x = 1 + Math.sin(delta * 10) * 0.1;
-    cursor.scale.y = 1 + Math.sin(delta * 10) * 0.1;
+    // scale with Bézier curve
+    const scale = 1 + Math.sin(delta * 10) * 0.1;
+    cursor.scale.set(scale, scale);
 
     // stop the animation when the cursor is released
     if (e.data.originalEvent.buttons === 0) {
@@ -445,6 +427,7 @@ function newCursor(color: number): PIXI.Graphics {
   cursor.endFill();
   return cursor;
 }
+
 function drawCardPalette(stage: PIXI.Container, graph: Graph): void {
   // draw a box with rounded corners
   const cardPalette = new PIXI.Graphics();
@@ -508,6 +491,7 @@ function drawCardPalette(stage: PIXI.Container, graph: Graph): void {
   // placeholderCard.interactive = true;
   // placeholderCard.
 }
+
 function createPlaceholderCard(
   position: Point,
   graph: Graph,

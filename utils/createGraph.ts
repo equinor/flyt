@@ -1,10 +1,8 @@
-import { ChildObjectsEntity, Process } from "interfaces/generated";
-import { GraphEdge, GraphNode, choiceGroupTypes } from "./layoutEngine";
+import { Process } from "interfaces/generated";
+import { GraphEdge, GraphNode } from "./layoutEngine";
 
 import { AddNodesAndEdges } from "./AddNodesAndEdges";
 import { PositionNodesAndEdges } from "./PositionNodesAndEdges";
-import { calculateTaskSectionWidth } from "./calculateTaskSectionWidth";
-import { getTouchingNodes } from "./getTouchingNodes";
 import { positionNodes } from "./positionNodes";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
 
@@ -169,6 +167,28 @@ export function mockProcessGraph(process): {
     from: 16,
     to: 12,
   });
+
+  // // 11 -> 20 -> 13
+  // graph.edges.push({
+  //   from: 11,
+  //   to: 20,
+  // });
+  // graph.edges.push({
+  //   from: 20,
+  //   to: 13,
+  // });
+  //
+  // //Summary of all the edges
+  // // 1 -> 2,3
+  // // 2-> 4,5 -> 8
+  // // 3-> 6,7 -> 8
+  // // 1-> 9 -> 10->11
+  // // 8 -> 14,15
+  // // 14,15 -> 12
+  // // 11 -> 13
+  // // 11 -> 20 -> 13 //<-CRASH, maybe we shouldn't allow this?
+  // // 13 -> 16
+  // // 16 -> 12
 
   positionNodes(graph);
 

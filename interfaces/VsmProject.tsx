@@ -1,5 +1,3 @@
-import { vsmObjectTypes } from "../types/vsmObjectTypes";
-import { vsmTaskTypes } from "../types/vsmTaskTypes";
 import { vsmObject } from "./VsmObject";
 import { userAccess } from "./UserAccess";
 import { processLabel } from "./processLabel";
@@ -7,27 +5,14 @@ import { processLabel } from "./processLabel";
 export interface vsmProject {
   vsmProjectID: number;
   name: string;
-  toBeProcessID?: number;
-  currentProcessId?: number;
+  isFavorite: boolean;
+  duplicateOf: number;
+  toBeProcessID: number;
+  currentProcessId: number;
+  objects: vsmObject[];
+  created: string; // date
+  updated: string; // date
+  updatedBy: string; // user
+  userAccesses: userAccess[];
   labels: processLabel[];
-  created: {
-    pkChangeLog: number;
-    userIdentity: string;
-    changeDate: string;
-    fkVsm: number;
-    fkObject: vsmObjectTypes;
-    fkTask: vsmTaskTypes;
-  };
-  lastUpdated: {
-    pkChangeLog: number;
-    userIdentity: string;
-    changeDate: string;
-    fkVsm: number;
-    fkObject: vsmObjectTypes;
-    fkTask: vsmTaskTypes;
-  };
-  objects: Array<vsmObject>;
-  userAccesses: Array<userAccess>;
-  duplicateOf?: string;
-  isFavorite?: boolean;
 }

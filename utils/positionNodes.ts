@@ -1,9 +1,71 @@
-import { Graph, GraphEdge, GraphNode, choiceGroupTypes } from "./layoutEngine";
-import { defaultNodeHeight, defaultNodeWidth, padding } from "./createGraph";
-
-import { getAllConnectedNodesFromNodeToLeafNode } from "./getAllConnectedNodesFromNodeToLeafNode";
-import { groupBy } from "./groupBy";
+import { GraphEdge, GraphNode } from "./layoutEngine";
+import { padding } from "./createGraph";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
+
+function getParentNodes(
+  node: GraphNode,
+  graph: { nodes: GraphNode[]; edges: GraphEdge[] }
+) {
+  const edges = graph.edges.filter((edge) => edge.to === node.id);
+  return edges.map((edge) => graph.nodes.find((n) => n.id === edge.from));
+}
+
+function getChildNodes(
+  node: GraphNode,
+  graph: { nodes: GraphNode[]; edges: GraphEdge[] }
+) {
+  const edges = graph.edges.filter((edge) => edge.from === node.id);
+  return edges.map((edge) => graph.nodes.find((n) => n.id === edge.to));
+}
+
+function getSiblings(
+  node: GraphNode,
+  graph: { nodes: GraphNode[]; edges: GraphEdge[] }
+) {
+  const parentNodes = getParentNodes(node, graph);
+  return parentNodes.reduce((acc, parent) => {
+    const childNodes = getChildNodes(parent, graph);
+    return [...acc, ...childNodes];
+  }, []);
+}
+
+function positionParents(
+  node: GraphNode,
+  graph: { nodes: GraphNode[]; edges: GraphEdge[] }
+) {
+  const parentNodes = getParentNodes(node, graph);
+  parentNodes.forEach((parentNode) => {
+    const siblings = getSiblings(node, graph);
+    const siblingXPositions = siblings.map((sibling) => sibling?.position?.x);
+
+    const minX = Math.min(...siblingXPositions);
+    const maxX = Math.max(...siblingXPositions);
+
+    parentNode.position.x = (minX + maxX) / 2;
+  });
+}
+
+function positionChildren(
+  node: GraphNode,
+  graph: { nodes: GraphNode[]; edges: GraphEdge[] }
+) {
+  const childNodes = getChildNodes(node, graph);
+  childNodes.forEach((childNode) => {
+    const parents = getParentNodes(childNode, graph);
+    const parentXPositions = parents.map((parent) => parent.position.x);
+
+    // const siblings = getSiblings(childNode, graph);
+
+    const minX = Math.min(...parentXPositions);
+    const maxX = Math.max(...parentXPositions);
+
+    // childNode.position.x = (minX + maxX) / 2 + siblings.length * padding;
+    // siblings.forEach((sibling, index) => {
+    //   sibling.position.x = ((minX + maxX) / 2) * (index + 1);
+    // });
+    childNode.position.x = (minX + maxX) / 2;
+  });
+}
 
 export function positionNodes(graph: {
   nodes: GraphNode[];
@@ -46,28 +108,34 @@ export function positionNodes(graph: {
   // placing nodes in a grid
   placeNodesInAGrid(nodesGroupedByLevel, cellWidth, cellHeight, graph);
 
-  // const levelsSortedByLength = nodesGroupedByLevel.sort((a, b) => {
-  //   return a.length - b.length;
-  // });
-  // const longestLevel = levelsSortedByLength[levelsSortedByLength.length - 1];
-  // // The longest level will define the length of the graph
-  // // So we should readjust the position of the nodes going out of the longest level
+  // The longest level will define the length of the graph
+  // So we should readjust the position of the nodes going out of the longest level
+  const levelsSortedByLength = [...nodesGroupedByLevel].sort((a, b) => {
+    return a.length - b.length;
+  });
+  const longestLevel = levelsSortedByLength[levelsSortedByLength.length - 1];
 
-  // longestLevel.forEach((node) => {
-  //   const connectedNodes = getAllConnectedNodesFromNodeToLeafNode(node, graph);
-  //   connectedNodes.forEach((connectedNode) => {
-  //     connectedNode.position = {
-  //       x: node.position.x,
-  //       y: connectedNode.position.y,
-  //     }
-  //   });
-  // });
+  const indexOfLongestLevel = nodesGroupedByLevel.indexOf(longestLevel);
+  // Position the levels above the longest level
+  nodesGroupedByLevel
+    .slice(
+      0,
+      indexOfLongestLevel + 1 // +1 because we want to include the longest level
+    )
+    .reverse() // reverse because we want to traverse from the bottom to the top
+    .forEach((level) => {
+      level.forEach((node) => {
+        positionParents(node, graph);
+      });
+    });
+  //
+  // Position the levels below the longest level
+  nodesGroupedByLevel.slice(indexOfLongestLevel).forEach((level) => {
+    level.forEach((node) => {
+      positionChildren(node, graph);
+    });
+  });
 
-  // const indexOfLongestLevel = nodesGroupedByLevel.indexOf(longestLevel);
-  traverseAndAdjustPlacement(nodesGroupedByLevel, graph);
-
-  // console.log({ levelsSortedByLength, longestLevel });
-  // position the edges
   positionEdges(graph);
 
   placeNodesWithNoEdges(graph, cellWidth, cellHeight);
@@ -79,6 +147,7 @@ export const getPathsFromNodeToLeafNode = (
 ): GraphNode[][] => {
   const paths = [];
   getPathToLeafNode(node);
+
   // for each node, walk the graph and find the path to the leaf node
   function getPathToLeafNode(node: GraphNode, path = []): void {
     const outgoingEdges = graph.edges.filter((edge) => edge.from === node.id);
@@ -92,8 +161,10 @@ export const getPathsFromNodeToLeafNode = (
       getPathToLeafNode(toNode, [...path, node]);
     });
   }
+
   return paths;
 };
+
 /**
  * Place nodes that have no edges
  * @param graph
@@ -207,6 +278,7 @@ function placeNodesInAGrid(
     });
   });
 }
+
 function traverseAndAdjustPlacement(nodesGroupedByLevel: GraphNode[][], graph) {
   // nodesGroupedByLevel.forEach((nodes, level) => {
   //   const paths = nodes.map((node) => ({ node, paths: getPathsFromNodeToLeafNode(node, graph) }));
