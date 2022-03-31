@@ -7,6 +7,7 @@ import { vsmProject } from "interfaces/VsmProject";
 import { ProjectModel } from "store/store";
 import { _FilterKeys } from "ts-toolbelt/out/Object/FilterKeys";
 import { _Pick } from "ts-toolbelt/out/Object/Pick";
+import { Process } from "../../../interfaces/generated";
 
 /**
  * Handle drag and drop from our toolbox
@@ -18,10 +19,7 @@ import { _Pick } from "ts-toolbelt/out/Object/Pick";
 export function addNewVsmObjectToHoveredCard(
   dragType: vsmObjectTypes,
   project: StateMapper<
-    _Pick<
-      vsmProject,
-      "vsmProjectID" | "name" | "created" | "updated" | "objects"
-    >
+    _Pick<vsmProject, _FilterKeys<Process, ActionTypes, "default">>
   >,
   vsmObjectAddMutation,
   dispatch: Dispatch<ProjectModel>

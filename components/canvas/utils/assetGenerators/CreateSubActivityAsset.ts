@@ -36,7 +36,7 @@ export function createSubActivityAsset(
   } = PIXI.Loader.shared.resources;
 
   // Remember to not include solved tasks
-  const gotTasks = vsmObject.tasks.filter((task) => !task.solved).length > 0;
+  const gotTasks = vsmObject?.tasks?.filter((task) => !task.solved).length > 0;
   const texture = gotTasks ? subActivityStraight.texture : subActivity.texture;
   const subActivitySprite = new PIXI.Sprite(texture);
 

@@ -25,7 +25,7 @@ export const ToBeToggle = (): JSX.Element => {
     return createProject({
       currentProcessId: parseInt(`${id}`),
       ...projectTemplatesV1.defaultProject,
-    } as vsmProject).then((value) =>
+    } as unknown as vsmProject).then((value) =>
       router.push(`/process/${value.data.vsmProjectID}`)
     );
   });

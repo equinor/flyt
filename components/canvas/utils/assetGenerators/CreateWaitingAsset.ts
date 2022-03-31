@@ -28,7 +28,7 @@ export function createWaitingAsset(
   } = PIXI.Loader.shared.resources;
 
   // Remember to not include solved tasks
-  const gotTasks = vsmObject.tasks.filter((task) => !task.solved).length > 0;
+  const gotTasks = vsmObject?.tasks?.filter((task) => !task.solved).length > 0;
   const texture = gotTasks ? waitingStraight.texture : waiting.texture;
   const waitingSprite = new PIXI.Sprite(texture);
 

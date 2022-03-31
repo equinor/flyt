@@ -19,7 +19,7 @@ export function createGenericCardAsset(
   } = PIXI.Loader.shared.resources;
   //CARD
   // Remember to not include solved tasks in the number of tasks per base
-  const gotTasks = vsmObject.tasks.filter((task) => !task.solved).length > 0;
+  const gotTasks = vsmObject?.tasks?.filter((task) => !task.solved).length > 0;
   const texture = gotTasks ? genericStraight.texture : generic.texture;
   const cardSprite = new PIXI.Sprite(texture);
   wrapper.addChild(cardSprite);

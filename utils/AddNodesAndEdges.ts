@@ -1,7 +1,7 @@
 import { ChildObjectsEntity, Process } from "interfaces/generated";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
-import { GraphNode, GraphEdge, choiceGroupTypes } from "./layoutEngine";
-import { defaultNodeWidth, defaultNodeHeight } from "./createGraph";
+import { GraphEdge, GraphNode } from "./layoutEngine";
+import { defaultNodeHeight, defaultNodeWidth } from "./createGraph";
 import { calculateTaskSectionWidth } from "./calculateTaskSectionWidth";
 
 /**
@@ -22,14 +22,14 @@ export function AddNodesAndEdges(
     height: defaultNodeHeight,
     type: vsmObjectTypes.process,
     level: 0,
-    choiceGroup: choiceGroupTypes.Center,
+    choiceGroup: "center",
     tasks: [],
     selected: false,
     children: process.objects[0].childObjects.map(
       (child: ChildObjectsEntity) => child.vsmObjectID
     ),
   };
-  graph.nodes.push(rootNode);
+  graph.nodes.push(rootNode as GraphNode);
 
   // And the children nodes (level 1)
   process.objects[0].childObjects.forEach((child) => {
@@ -41,13 +41,13 @@ export function AddNodesAndEdges(
       type: child.vsmObjectType.pkObjectType,
       tasks: child.tasks,
       level: 1,
-      choiceGroup: choiceGroupTypes.Center,
+      choiceGroup: "center",
       selected: false,
       children: child.childObjects.map(
         (child: ChildObjectsEntity) => child.vsmObjectID
       ),
     };
-    graph.nodes.push(childNode);
+    graph.nodes.push(childNode as GraphNode);
 
     // add the edges
     graph.edges.push({
@@ -97,13 +97,13 @@ export function AddNodesAndEdges(
               level: level,
               type: leftChild.vsmObjectType.pkObjectType,
               tasks: leftChild.tasks,
-              choiceGroup: choiceGroupTypes.Left,
+              choiceGroup: "left",
               selected: false,
               children: leftChild.childObjects.map(
                 (child: ChildObjectsEntity) => child.vsmObjectID
               ),
             };
-            graph.nodes.push(leftChildNode);
+            graph.nodes.push(leftChildNode as GraphNode);
             if (index === 0) {
               // if it is the first child, we need to add an edge from the choice node to the first child
               graph.edges.push({
@@ -132,14 +132,14 @@ export function AddNodesAndEdges(
               height: defaultNodeHeight,
               type: rightChild.vsmObjectType.pkObjectType,
               tasks: rightChild.tasks,
-              choiceGroup: choiceGroupTypes.Right,
+              choiceGroup: "right",
               selected: false,
               children: rightChild.childObjects.map(
                 (child: ChildObjectsEntity) => child.vsmObjectID
               ),
             };
 
-            graph.nodes.push(rightChildNode);
+            graph.nodes.push(rightChildNode as GraphNode);
             if (index === 0) {
               // if it is the first child, we need to add an edge from the choice node to the first child
               graph.edges.push({
@@ -171,13 +171,13 @@ export function AddNodesAndEdges(
             type: grandChild.vsmObjectType.pkObjectType,
             tasks: grandChild.tasks,
             level,
-            choiceGroup: choiceGroupTypes.Center,
+            choiceGroup: "center",
             selected: false,
             children: grandChild.childObjects.map(
               (child: ChildObjectsEntity) => child.vsmObjectID
             ),
           };
-          graph.nodes.push(grandChildNode);
+          graph.nodes.push(grandChildNode as GraphNode);
 
           //if it is the first grandChild, add an edge from the child to the grandChild
           if (index === 0) {

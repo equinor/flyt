@@ -18,7 +18,7 @@ export function createMainActivityAsset(
   } = PIXI.Loader.shared.resources;
   //CARD
   // Remember to not include solved tasks
-  const gotTasks = vsmObject.tasks.filter((task) => !task.solved).length > 0;
+  const gotTasks = vsmObject?.tasks?.filter((task) => !task.solved).length > 0;
   const texture = gotTasks
     ? mainActivityStraight.texture
     : mainActivity.texture;

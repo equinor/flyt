@@ -28,7 +28,7 @@ export function getTaskSection(
   taskSection.addChild(taskSectionEdge);
   taskSection.x = 126;
   // Remember to not include solved tasks
-  const tasks = vsmObject.tasks.filter((task) => !task.solved);
+  const tasks = vsmObject?.tasks?.filter((task) => !task.solved);
   if (tasks?.length > 0) {
     const {
       ideaCircle,

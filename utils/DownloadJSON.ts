@@ -20,7 +20,7 @@ export function getProjectAsCleanJsonWithoutQIPs(
         ),
       },
     ],
-  } as vsmProject;
+  } as unknown as vsmProject;
 }
 
 export function downloadJSON(project: vsmProject): void {

@@ -4,9 +4,10 @@ import { Container, Graphics } from "pixi.js";
 import { createChild } from "./createChild";
 import { Dispatch } from "easy-peasy";
 import { ProjectModel } from "../../../store/store";
+import { vsmProject } from "../../../interfaces/VsmProject";
 
 export function recursiveTree(
-  root: vsmObject,
+  root: vsmProject,
   level = 0,
   userCanEdit: boolean,
   dispatch,

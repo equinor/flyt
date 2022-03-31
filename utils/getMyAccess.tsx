@@ -1,4 +1,6 @@
 import { userAccessRole } from "../interfaces/UserAccess";
+import { vsmProject } from "../interfaces/VsmProject";
+import { getUserShortName } from "./getUserShortName";
 
 /**
  * Get my access in a project
