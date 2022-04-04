@@ -6,7 +6,6 @@ import { useAccount, useMsal } from "@azure/msal-react";
 import { Viewport } from "pixi-viewport";
 import { addCardsToCanvas } from "./utils/AddCardsToCanvas";
 import { assets } from "./utils/AssetFactory";
-import { debounce } from "utils/debounce";
 import { getAccessToken } from "auth/msalHelpers";
 import { getProject } from "services/projectApi";
 import { io } from "socket.io-client";

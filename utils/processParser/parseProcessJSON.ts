@@ -3,6 +3,8 @@ import { vsmProject } from "../../interfaces/VsmProject";
 import { GraphEdge, GraphNode } from "../layoutEngine";
 import { createEdges } from "./helpers/createEdges";
 import { createNodes } from "./helpers/createNodes";
+import { positionNodes } from "../positionNodes";
+import { positionNodesAndEdges } from "../PositionNodesAndEdges";
 
 /**
  * Parse a process JSON object
@@ -17,18 +19,20 @@ import { createNodes } from "./helpers/createNodes";
 export function parseProcessJSON(process: vsmProject): ParsedProcess {
   const nodes: GraphNode[] = createNodes(process.objects);
   const edges: GraphEdge[] = createEdges(process.objects);
-  const metadata = {
-    ...process,
-    // remove objects from the metadata
-    objects: undefined,
-    vsmProjectID: undefined,
-    // add new fields
-    id: process.vsmProjectID,
-  };
 
   return {
     nodes,
     edges,
-    ...metadata,
-  } as ParsedProcess;
+    created: process.created,
+    currentProcessId: process.currentProcessId,
+    duplicateOf: process.duplicateOf,
+    id: process.vsmProjectID,
+    isFavorite: process.isFavorite,
+    labels: process.labels,
+    name: process.name,
+    toBeProcessID: process.toBeProcessID,
+    updated: process.updated,
+    updatedBy: process.updatedBy,
+    userAccesses: process.userAccesses,
+  };
 }

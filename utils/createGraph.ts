@@ -2,8 +2,7 @@ import { Process } from "interfaces/generated";
 import { GraphEdge, GraphNode } from "./layoutEngine";
 
 import { AddNodesAndEdges } from "./AddNodesAndEdges";
-import { PositionNodesAndEdges } from "./PositionNodesAndEdges";
-import { positionNodes } from "./positionNodes";
+import { positionNodesAndEdges } from "./PositionNodesAndEdges";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
 
 export const defaultNodeWidth = 126;
@@ -23,7 +22,7 @@ export function createGraph(process: Process): {
   AddNodesAndEdges(process, graph);
 
   //Calculate positions for the nodes and edges.
-  PositionNodesAndEdges(graph);
+  positionNodesAndEdges(graph);
 
   return graph;
 }
@@ -38,11 +37,19 @@ export function mockProcessGraph(process): {
     nodes: Array<GraphNode>(),
     edges: Array<GraphEdge>(),
   };
+
+  function getType(i: number) {
+    if (i === 1 || i === 2 || i === 3) {
+      return vsmObjectTypes.choice;
+    }
+    return i === 0 ? vsmObjectTypes.process : vsmObjectTypes.subActivity;
+  }
+
   // add nodes 1 through 4
-  for (let i = 1; i <= 20; i++) {
+  for (let i = 0; i <= 20; i++) {
     graph.nodes.push({
       id: i,
-      type: vsmObjectTypes.subActivity,
+      type: getType(i),
       selected: false,
       name: `${i}`,
       width: defaultNodeWidth,
@@ -50,6 +57,12 @@ export function mockProcessGraph(process): {
       // hidden: i === 1,
     } as GraphNode);
   }
+
+  //0 -> 1
+  graph.edges.push({
+    from: 0,
+    to: 1,
+  });
 
   // // 1 -> 2,3 -> 4
   // graph.edges.push({
@@ -190,7 +203,48 @@ export function mockProcessGraph(process): {
   // // 13 -> 16
   // // 16 -> 12
 
-  positionNodes(graph);
+  // Edges
+  // 1 -> 2
+  // 1 -> 3
+  // 2 -> 4
+  // 2 -> 5
+  // 3 -> 6
+  // 3 -> 7
+  // 4 -> 8
+  // 5 -> 8
+  // 6 -> 8
+  // 7 -> 8
+  // 1 -> 9
+  // 9 -> 10
+  // 10 -> 11
+  // 8 -> 14
+  // 8 -> 15
+  // 14 -> 12
+  // 15 -> 12
+  // 11 -> 13
+  // 13 -> 16
+  // 16 -> 12
+
+  // Paths
+  // 1 -> 2 -> 4 -> 8
+  // 1 -> 3 -> 6 -> 8
+  // 1 -> 9 -> 10 -> 11 -> 13 -> 16 -> 12
+  // 1 -> 2 -> 5 -> 8
+  // 1 -> 9 -> 10 -> 11 -> 13 -> 16 -> 12
+  // 1 -> 2 -> 3 -> 6 -> 8
+  // 1 -> 9 -> 10 -> 11 -> 13 -> 16 -> 12
+  // 1 -> 2 -> 3 -> 7 -> 8
+  // 1 -> 9 -> 10 -> 11 -> 13 -> 16 -> 12
+  // 1 -> 2 -> 3 -> 7 -> 8
+  // 1 -> 9 -> 10 -> 11 -> 13 -> 16 -> 12
+  // 1 -> 2 -> 3 -> 7 -> 8
+  // 1 -> 9 -> 10 -> 11 -> 13 -> 16 -> 12
+  // 1 -> 2 -> 3 -> 7 -> 8
+  // 1 -> 9 -> 10 -> 11 -> 13 -> 16 -> 12
+  // 1 -> 2 -> 3 -> 7 -> 8
+  // 1 -> 9 -> 10 -> 11 -> 13 -> 16 -> 12
+
+  // positionNodes(graph);
 
   return graph;
 }

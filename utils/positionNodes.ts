@@ -72,7 +72,10 @@ export function positionNodes(graph: {
   edges: GraphEdge[];
 }): void {
   // put all nodes out on the board in a grid
-  const firstNode = graph.nodes[0];
+  const firstNode = graph.nodes.find(
+    (node) => node.type === vsmObjectTypes.process
+  );
+  if (!firstNode) throw new Error("No first node found");
   firstNode.position = {
     x: 0,
     y: 0,

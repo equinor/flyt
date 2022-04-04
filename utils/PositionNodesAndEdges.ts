@@ -6,7 +6,7 @@ import { positionNodes } from "./positionNodes";
  * Place all nodes and edges in the graph on a x,y grid.
  * @param graph The graph to traverse, containing nodes and edges.
  */
-export function PositionNodesAndEdges(graph: {
+export function positionNodesAndEdges(graph: {
   nodes: GraphNode[];
   edges: GraphEdge[];
 }): void {

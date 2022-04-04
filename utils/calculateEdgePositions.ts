@@ -15,7 +15,7 @@ export function calculateEdgePositions(graph: {
     edge.position = {
       start: {
         x: fromNode.position.x + defaultNodeWidth / 2,
-        y: fromNode.position.y + fromNode.height / 2,
+        y: fromNode.position.y + fromNode.height - 12,
       },
       end: {
         x: toNode.position.x + defaultNodeWidth / 2,

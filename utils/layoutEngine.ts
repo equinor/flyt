@@ -3,6 +3,11 @@ import { mockProcessGraph } from "./createGraph";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
 import { parseProcessJSON } from "./processParser/parseProcessJSON";
 import { vsmProject } from "../interfaces/VsmProject";
+import { characterEntities } from "character-entities";
+import par = characterEntities.par;
+import { positionNodes } from "./positionNodes";
+import { positionNodesAndEdges } from "./PositionNodesAndEdges";
+import { calculateEdgePositions as positionEdges } from "./calculateEdgePositions";
 
 export interface GraphNode {
   notPositionedCorrectly?: boolean;
@@ -60,15 +65,13 @@ export class Graph {
 
   constructor(process: vsmProject) {
     const graph = mockProcessGraph(process);
-    // Todo: remove console.log. Here for debugging purposes
-    const parsedProcess = parseProcessJSON(process);
-    console.log("parsedProcess", {
-      nodes: parsedProcess.nodes,
-      edges: parsedProcess.edges,
-    });
+    const { nodes, edges } = graph;
+    // const parsedProcess = parseProcessJSON(process);
+    // const { nodes, edges } = parsedProcess;
+    positionNodesAndEdges({ nodes, edges });
 
-    this.nodes = graph.nodes;
-    this.edges = graph.edges;
+    this.nodes = nodes;
+    this.edges = edges;
   }
 
   private _nodes: Array<GraphNode>;

@@ -2,13 +2,13 @@ import * as PIXI from "pixi.js";
 import { Point } from "pixi.js";
 
 import { Graph, GraphEdge, GraphNode } from "utils/layoutEngine";
-import { Process } from "interfaces/generated";
 import { Viewport } from "pixi-viewport";
 import { assetFactory } from "./AssetFactory";
 import { drawGraphEdges } from "./drawGraphEdges";
 import { drawGraphNodes } from "./drawGraphNodes";
 import { getColor } from "utils/getColor";
 import { vsmProject } from "../../../interfaces/VsmProject";
+import { drawPerformanceInfo } from "./DrawPerformanceInfo";
 
 /**
  * Config object for testing out different features while developing
@@ -23,6 +23,7 @@ const config = {
   // This is a tradeoff and a higher value might be preferred for performance reasons.
   // Note: set throttle to ~20 ms for a smoother experience
   drawLineFromCursorToClosestNode: true, // Draw a line from the cursor to the closest node
+  showPerformanceInfo: true, // Show performance info
 };
 
 /**
@@ -70,9 +71,12 @@ export function addCardsToCanvas(
     const graph = new Graph(process);
     const { nodes, edges } = graph;
 
-    drawGraphNodes(nodes, setSelectedObject, viewport);
     drawGraphEdges(edges, viewport);
+    drawGraphNodes(nodes, setSelectedObject, viewport);
     drawCardPalette(app.stage, graph);
+    if (config.showPerformanceInfo) {
+      drawPerformanceInfo(app);
+    }
 
     // DECLARE ALL OUR PIXI OBJECTS
 

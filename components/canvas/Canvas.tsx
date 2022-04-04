@@ -106,7 +106,7 @@ export default function Canvas(): JSX.Element {
         notifyOthers("Moved a card", id, account);
         return queryClient.invalidateQueries();
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e))
+      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
   const vsmObjectAddMutation = useMutation(
@@ -120,7 +120,7 @@ export default function Canvas(): JSX.Element {
         notifyOthers("Added a new card", id, account);
         return queryClient.invalidateQueries();
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e))
+      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
   const projectId = router.query.id as string;
@@ -167,8 +167,8 @@ export default function Canvas(): JSX.Element {
       const cleanupToolbox = userCanEdit
         ? toolBox(draggable, project, vsmObjectAddMutation, dispatch)
         : () => {
-          //nothing to clean up
-        };
+            //nothing to clean up
+          };
 
       return () => {
         // Clearing canvas
@@ -181,7 +181,7 @@ export default function Canvas(): JSX.Element {
   return (
     <div
       style={{
-        backgroundColor: "black"
+        backgroundColor: "black",
       }}
     >
       {showVersionHistoryBottomSheet && (
@@ -191,14 +191,14 @@ export default function Canvas(): JSX.Element {
             position: "absolute",
             bottom: "0",
             zIndex: 1,
-            width: "100%"
+            width: "100%",
           }}
         >
           <Button
             style={{
               position: "absolute",
               right: "0",
-              top: "0"
+              top: "0",
             }}
             variant={"ghost_icon"}
             onClick={closeVersionHistoryBottomSheet}
@@ -225,8 +225,8 @@ export default function Canvas(): JSX.Element {
           !!socketConnected
             ? "Connection is looking good!\nYour changes should appear immediately for other users."
             : `You are not connected ${
-              socketReason ? `because of ${socketReason}` : ""
-            }.`
+                socketReason ? `because of ${socketReason}` : ""
+              }.`
         }
       />
       <ToBeToggle />
