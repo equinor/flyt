@@ -243,7 +243,11 @@ export default function Canvas(): JSX.Element {
         canEdit={userCanEdit}
         selectedObject={selectedObject}
       />
-      <div className={style.canvasWrapper} ref={ref} />
+      <div
+        onContextMenu={(e) => e.preventDefault()} // prevent right click menu
+        className={style.canvasWrapper}
+        ref={ref}
+      />
     </div>
   );
 }
