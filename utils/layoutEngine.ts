@@ -8,6 +8,7 @@ import par = characterEntities.par;
 import { positionNodes } from "./positionNodes";
 import { positionNodesAndEdges } from "./PositionNodesAndEdges";
 import { calculateEdgePositions as positionEdges } from "./calculateEdgePositions";
+import { defaultProcess } from "./processParser/testData";
 
 export interface GraphNode {
   notPositionedCorrectly?: boolean;
@@ -64,10 +65,10 @@ export class Graph {
   users: Array<User>;
 
   constructor(process: vsmProject) {
-    const graph = mockProcessGraph(process);
-    const { nodes, edges } = graph;
-    // const parsedProcess = parseProcessJSON(process);
-    // const { nodes, edges } = parsedProcess;
+    // const graph = mockProcessGraph(process);
+    // const { nodes, edges } = graph;
+    const parsedProcess = parseProcessJSON(defaultProcess);
+    const { nodes, edges } = parsedProcess;
     positionNodesAndEdges({ nodes, edges });
 
     this.nodes = nodes;

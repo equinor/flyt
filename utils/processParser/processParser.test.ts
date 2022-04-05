@@ -2,6 +2,7 @@ import {
   allCardTypesProcess,
   bigProcess,
   defaultProcess,
+  defaultProcessWithTasks,
   defaultProcessWithText,
   tProcess,
 } from "./testData";
@@ -193,5 +194,14 @@ describe("Parse a simple process with all card-types", () => {
     it(`should have an edge from ${from} to ${to}`, () => {
       expect(foundEdge).toBeDefined();
     });
+  });
+  it("should retain tasks added to a node", () => {
+    const parsedProcess = parseProcessJSON(defaultProcessWithTasks);
+    const mainActivityId = 7946;
+    const mainActivity = parsedProcess.nodes.find(
+      (n) => n.id === mainActivityId
+    );
+    expect(mainActivity.tasks).toBeDefined();
+    expect(mainActivity.tasks?.length).toBe(4);
   });
 });

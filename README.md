@@ -1,6 +1,6 @@
 ## Flyt - (aka VSM/Value Stream Mapping)
 
-![Flyt canvas (13) - Process feedback on 'Flyt'  - Wednesday, September 15, 2021](https://user-images.githubusercontent.com/3164065/133470524-d6934d90-82ce-4870-aea3-450fd1f4c48f.png)
+![Flyt canvas (13) - Process feedback on 'Flyt' - Wednesday, September 15, 2021](https://user-images.githubusercontent.com/3164065/133470524-d6934d90-82ce-4870-aea3-450fd1f4c48f.png)
 
 # Links
 
@@ -117,8 +117,8 @@ pages. [Read more ...](https://github.com/vercel/next.js/blob/master/errors/opt-
 
 ## Making space for stuff
 
-Put every Main activity and all it's children inside a container. That container width can be used to figure out
-the distance to the next Main Activity etc...
+Put every Main activity and all it's children inside a container. That container width can be used to figure out the
+distance to the next Main Activity etc...
 
 # Defining a process
 
@@ -183,3 +183,33 @@ References:
 - https://www.conventionalcommits.org/
 - https://seesparkbox.com/foundry/semantic_commit_messages
 - http://karma-runner.github.io/1.0/dev/git-commit-msg.html
+
+# Card Placement rules
+
+![Process positions on a x/y axis](documentation/images/default_process_positions.png)
+
+There should be a margin of minimum 16px between the cards. In the example above, the margin between the cards is 16px.
+But that is not enough if we want to draw the edges. So we would need to increase the margins a bit.
+
+## Card dimensions
+
+Cards of the type MainActivity, SubActivity and Waiting can have tasks added to them. The task-side-panel is a
+dynamic-width panel that is placed on the right side of the card.
+
+It increases by `42px` every time it needs to be expanded.
+
+The height of a card is always the same, but the width is determined by the base-width + the width of the
+task-side-panel.
+
+![Default card dimensions](documentation/images/default_card_dimensions.png)
+
+For example, if we have 1 to 4 tasks on a MainActivity, the width of the card will be the base-width of 126px plus the
+width of the task-side-panel of 42px. The height of the card remains constant at 136px. That gives us the
+dimensions `168px x 136px` as you can see in the image below.
+
+![Default card with tasks dimensions](documentation/images/default_card_dimensions_with_tasks.png)
+
+Height is fixed at 136px, so there is space for 4 tasks per new section. That means that the width of the
+task-side-panel for 4 tasks is `42px`, for 5-8 tasks it is `84px`, and for 9-12 it is `126px`, and so on.
+
+See the method `calculateCardWidth` in `utils/cardWidthCalculator/cardWidthCalculator.ts` for more info.
