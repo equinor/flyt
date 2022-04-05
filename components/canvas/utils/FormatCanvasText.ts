@@ -8,8 +8,8 @@ export function formatCanvasText(
     /(\[((?:\[[^\]]*]|[^\[\]])*)]\([ \t]*()<?((?:\([^)]*\)|[^()\s])*?)>?[ \t]*((['"])(.*?)\6[ \t]*)?\))/g,
     "$2"
   );
-  if (text.length > maxLength) {
-    formattedText = `${text?.slice(0, maxLength)}...`;
+  if (formattedText.length > maxLength) {
+    formattedText = `${formattedText?.slice(0, maxLength)}...`;
   }
   if (removeNewLines) return formattedText.replace(/(\r\n|\n|\r)/gm, " ");
   return formattedText;
