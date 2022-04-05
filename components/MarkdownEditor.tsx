@@ -3,7 +3,7 @@ import "@uiw/react-markdown-preview/markdown.css";
 import { Button, Icon } from "@equinor/eds-core-react";
 import MDEditor, { commands } from "@uiw/react-md-editor";
 import React, { useState } from "react";
-import { check, edit } from "@equinor/eds-icons";
+import { check } from "@equinor/eds-icons";
 import { Typography } from "@equinor/eds-core-react";
 import rehypeSanitize from "rehype-sanitize";
 
@@ -36,49 +36,59 @@ export default function MarkdownEditor(props: {
             {label}
           </Typography>
         </label>
-        {canEdit && (
+        {editMode && (
           <Button
-            onClick={() => {
-              setEditMode(!editMode);
-            }}
+            onClick={() => setEditMode(false)}
             style={{
               position: "relative",
               right: "0px",
-              top: editMode ? "78px" : "48px",
+              top: "78px",
               zIndex: 1,
             }}
             variant="ghost_icon"
           >
-            <Icon data={editMode ? check : edit} color="#007079" />
+            <Icon data={check} color="#007079" />
           </Button>
         )}
       </div>
-      <MDEditor
-        id="mdEditor"
-        value={value}
-        onChange={(value?: string) => {
-          onChange(value);
-          setValue(value);
-        }}
-        preview={editMode ? "live" : "preview"}
-        extraCommands={[]}
-        commands={[commands.link]}
-        hideToolbar={!editMode}
-        previewOptions={{
-          rehypePlugins: [[rehypeSanitize]],
-          style: {
-            fontSize: "14px",
-            padding: "6px 48px 6px 8px",
-          },
-          linkTarget: "_blank",
-        }}
-        style={{
-          border: "1px solid #ECECEC",
-          borderBottomColor: editMode ? "#6E6E6E" : "#ECECEC",
-          borderRadius: 0,
-          boxShadow: "none",
-        }}
-      />
+      <div onClick={() => canEdit && setEditMode(true)}>
+        <MDEditor
+          id="mdEditor"
+          value={value}
+          onChange={(value?: string) => {
+            onChange(value);
+            setValue(value);
+          }}
+          preview={editMode ? "edit" : "preview"}
+          extraCommands={[]}
+          commands={[commands.link]}
+          hideToolbar={!editMode}
+          previewOptions={{
+            rehypePlugins: [[rehypeSanitize]],
+            style: {
+              fontSize: "14px",
+              padding: "6px 48px 6px 8px",
+              cursor: canEdit && "cell",
+            },
+            linkTarget: "_blank",
+          }}
+          textareaProps={{
+            onFocus: (e) => {
+              e.target.setSelectionRange(
+                e.target.value.length,
+                e.target.value.length
+              );
+            },
+          }}
+          style={{
+            border: "1px solid #ECECEC",
+            borderBottomColor: editMode ? "#6E6E6E" : "#ECECEC",
+            borderRadius: 0,
+            boxShadow: "none",
+          }}
+          autoFocus
+        />
+      </div>
     </div>
   );
 }
