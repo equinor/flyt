@@ -20,74 +20,65 @@ export default function MarkdownEditor(props: {
 
   return (
     <div id={id} data-color-mode="light">
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-end",
-        }}
-      >
-        <label htmlFor="mdEditor" style={{ marginLeft: "8px" }}>
-          <Typography
-            color={canEdit ? "#6F6F6F" : "rgba(190,190,190,1)"}
-            group="input"
-            variant="label"
-          >
-            {label}
-          </Typography>
-        </label>
+      <label htmlFor="mdEditor" style={{ marginLeft: "8px" }}>
+        <Typography
+          color={canEdit ? "#6F6F6F" : "rgba(190,190,190,1)"}
+          group="input"
+          variant="label"
+        >
+          {label}
+        </Typography>
+      </label>
+      <div style={{ display: "flex", gap: 12 }}>
+        <div onClick={() => canEdit && setEditMode(true)} style={{ flex: 1 }}>
+          <MDEditor
+            id="mdEditor"
+            value={value}
+            onChange={(value?: string) => {
+              onChange(value);
+              setValue(value);
+            }}
+            preview={editMode ? "edit" : "preview"}
+            extraCommands={[]}
+            commands={[commands.link]}
+            hideToolbar={!editMode}
+            previewOptions={{
+              rehypePlugins: [[rehypeSanitize]],
+              style: {
+                fontSize: "14px",
+                padding: "6px 8px",
+                cursor: canEdit && "cell",
+                backgroundColor: canEdit ? "rgba(247,247,247,1" : "white",
+              },
+              linkTarget: "_blank",
+            }}
+            textareaProps={{
+              onFocus: (e) => {
+                e.target.setSelectionRange(
+                  e.target.value.length,
+                  e.target.value.length
+                );
+              },
+            }}
+            style={{
+              border: editMode ? "2px solid #007079" : "1px solid #ECECEC",
+              borderRadius: 0,
+              boxShadow: canEdit && !editMode ? "0 1px 0 0 gray" : "none",
+            }}
+            autoFocus
+          />
+        </div>
         {editMode && (
           <Button
             onClick={() => setEditMode(false)}
             style={{
-              position: "relative",
-              right: "0px",
-              top: "78px",
-              zIndex: 1,
+              minWidth: 48,
             }}
             variant="ghost_icon"
           >
             <Icon data={check} color="#007079" />
           </Button>
         )}
-      </div>
-      <div onClick={() => canEdit && setEditMode(true)}>
-        <MDEditor
-          id="mdEditor"
-          value={value}
-          onChange={(value?: string) => {
-            onChange(value);
-            setValue(value);
-          }}
-          preview={editMode ? "edit" : "preview"}
-          extraCommands={[]}
-          commands={[commands.link]}
-          hideToolbar={!editMode}
-          previewOptions={{
-            rehypePlugins: [[rehypeSanitize]],
-            style: {
-              fontSize: "14px",
-              padding: "6px 48px 6px 8px",
-              cursor: canEdit && "cell",
-            },
-            linkTarget: "_blank",
-          }}
-          textareaProps={{
-            onFocus: (e) => {
-              e.target.setSelectionRange(
-                e.target.value.length,
-                e.target.value.length
-              );
-            },
-          }}
-          style={{
-            border: "1px solid #ECECEC",
-            borderBottomColor: editMode ? "#6E6E6E" : "#ECECEC",
-            borderRadius: 0,
-            boxShadow: "none",
-          }}
-          autoFocus
-        />
       </div>
     </div>
   );
