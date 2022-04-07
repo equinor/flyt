@@ -45,7 +45,10 @@ export default function MarkdownEditor(props: {
             previewOptions={{
               rehypePlugins: [[rehypeSanitize]],
               style: {
-                fontSize: "14px",
+                color: "rgba(61,61,61,1)",
+                fontSize: "1rem",
+                fontWeight: 400,
+                lineHeight: 1.5,
                 padding: "6px 8px",
                 cursor: canEdit && "cell",
                 backgroundColor: canEdit ? "rgba(247,247,247,1" : "white",
