@@ -40,7 +40,7 @@ export function addNewVsmObjectToHoveredCard(
     ) {
       const mainActivityObject: vsmObject = {
         vsmProjectID: project.vsmProjectID,
-        fkObjectType: dragType,
+        // fkObjectType: dragType,
         leftObjectId: hoveredObject?.vsmObjectID,
         parent: hoveredObject.parent,
         childObjects: [],
@@ -70,7 +70,7 @@ export function addNewVsmObjectToHoveredCard(
 
   const genericTypeObject: vsmObject = {
     vsmProjectID: project.vsmProjectID,
-    fkObjectType: dragType,
+    // fkObjectType: dragType,
     leftObjectId: hoveredObject?.vsmObjectID,
     choiceGroup: hoveredObject.choiceGroup, // <- Should be in the same "lane" as the hoveredObject
     parent: getParent(),
@@ -78,20 +78,20 @@ export function addNewVsmObjectToHoveredCard(
   };
   const choiceTypeObject: vsmObject = {
     vsmProjectID: project.vsmProjectID,
-    fkObjectType: dragType,
+    // fkObjectType: dragType,
     leftObjectId: hoveredObject?.vsmObjectID,
     choiceGroup: hoveredObject.choiceGroup, // <- Should be in the same "lane" as the hoveredObject
     parent: getParent(),
     childObjects: [
       {
         vsmProjectID: project.vsmProjectID,
-        fkObjectType: vsmObjectTypes.subActivity,
+        // fkObjectType: vsmObjectTypes.subActivity,
         choiceGroup: "Left",
         childObjects: [],
       },
       {
         vsmProjectID: project.vsmProjectID,
-        fkObjectType: vsmObjectTypes.subActivity,
+        // fkObjectType: vsmObjectTypes.subActivity,
         choiceGroup: "Right",
         childObjects: [],
       },

@@ -24,23 +24,23 @@ export function recursiveTree(
 
     // Remember, we don't display the root node...
     // so let's start laying out our horizontal first row
-    root.childObjects?.forEach((child) => {
-      const c = recursiveTree(
-        child,
-        level + 1,
-        userCanEdit,
-        dispatch,
-        setSelectedObject,
-        vsmObjectMutation
-      );
-      const rectangle = new Graphics()
-        // .beginFill(0xcacaca) //<- Comment out for debugging
-        .drawRect(0, 0, c.width, c.height);
-      const wrapper = new PIXI.Container();
-      wrapper.addChild(rectangle, c);
-      c.x = c.width / 2;
-      container.addChild(wrapper);
-    });
+    // root.childObjects?.forEach((child) => {
+    //   const c = recursiveTree(
+    //     child,
+    //     level + 1,
+    //     userCanEdit,
+    //     dispatch,
+    //     setSelectedObject,
+    //     vsmObjectMutation
+    //   );
+    //   const rectangle = new Graphics()
+    //     // .beginFill(0xcacaca) //<- Comment out for debugging
+    //     .drawRect(0, 0, c.width, c.height);
+    //   const wrapper = new PIXI.Container();
+    //   wrapper.addChild(rectangle, c);
+    //   c.x = c.width / 2;
+    //   container.addChild(wrapper);
+    // });
     // Adjust Layout
     let last = null;
     container.children.forEach((child) => {
@@ -56,53 +56,53 @@ export function recursiveTree(
 
   // Vertical placement for levels > 1
   const containerGroup = new PIXI.Container();
-  containerGroup.addChild(
-    createChild(
-      root,
-      userCanEdit,
-      dispatch,
-      setSelectedObject,
-      vsmObjectMutation
-    )
-  );
+  // containerGroup.addChild(
+  //   createChild(
+  //     root,
+  //     userCanEdit,
+  //     dispatch,
+  //     setSelectedObject,
+  //     vsmObjectMutation
+  //   )
+  // );
 
   const container = new PIXI.Container();
-  let nextY = containerGroup.height + 20; // Generic element y position
-  let nextLeftY = nextY; // Left choiceGroup element y position
-  let nextRightY = nextY; // Right choiceGroup element y position
+  const nextY = containerGroup.height + 20; // Generic element y position
+  const nextLeftY = nextY; // Left choiceGroup element y position
+  const nextRightY = nextY; // Right choiceGroup element y position
 
-  root.childObjects?.forEach((child) => {
-    const c = recursiveTree(
-      child,
-      level + 1,
-      userCanEdit,
-      dispatch,
-      setSelectedObject,
-      vsmObjectMutation
-    );
-    c.y = nextY;
-    nextY = nextY + c.height + 20;
-    const tempChild = createChild(
-      child,
-      userCanEdit,
-      dispatch,
-      setSelectedObject,
-      vsmObjectMutation
-    );
-    if (child.choiceGroup === "Left") {
-      c.pivot.set(tempChild.width, 0);
-      c.x = 126 / 2 - 10;
-      c.y = nextLeftY;
-      nextLeftY = nextLeftY + c.height + 20;
-    }
-    if (child.choiceGroup === "Right") {
-      c.pivot.set(0 / 2, 0);
-      c.x = 126 / 2 + 10;
-      c.y = nextRightY;
-      nextRightY = nextRightY + c.height + 20;
-    }
-    container.addChild(c);
-  });
+  // root.childObjects?.forEach((child) => {
+  //   const c = recursiveTree(
+  //     child,
+  //     level + 1,
+  //     userCanEdit,
+  //     dispatch,
+  //     setSelectedObject,
+  //     vsmObjectMutation
+  //   );
+  //   c.y = nextY;
+  //   nextY = nextY + c.height + 20;
+  //   const tempChild = createChild(
+  //     child,
+  //     userCanEdit,
+  //     dispatch,
+  //     setSelectedObject,
+  //     vsmObjectMutation
+  //   );
+  //   if (child.choiceGroup === "Left") {
+  //     c.pivot.set(tempChild.width, 0);
+  //     c.x = 126 / 2 - 10;
+  //     c.y = nextLeftY;
+  //     nextLeftY = nextLeftY + c.height + 20;
+  //   }
+  //   if (child.choiceGroup === "Right") {
+  //     c.pivot.set(0 / 2, 0);
+  //     c.x = 126 / 2 + 10;
+  //     c.y = nextRightY;
+  //     nextRightY = nextRightY + c.height + 20;
+  //   }
+  //   container.addChild(c);
+  // });
   containerGroup.addChild(container);
   return containerGroup;
 }
