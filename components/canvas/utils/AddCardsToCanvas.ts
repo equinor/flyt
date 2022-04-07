@@ -4,26 +4,27 @@ import { Point } from "pixi.js";
 import { Graph, GraphEdge, GraphNode } from "utils/layoutEngine";
 import { Viewport } from "pixi-viewport";
 import { assetFactory } from "./AssetFactory";
-import { drawGraphEdges } from "./drawGraphEdges";
+import { clearGraphEdges, drawGraphEdges } from "./drawGraphEdges";
 import { drawGraphNodes } from "./drawGraphNodes";
 import { getColor } from "utils/getColor";
 import { vsmProject } from "../../../interfaces/VsmProject";
-import { drawPerformanceInfo } from "./DrawPerformanceInfo";
+import { drawPerformanceInfo, getPerformance } from "./DrawPerformanceInfo";
 
 /**
  * Config object for testing out different features while developing
  * Might be removed in the future when features are stable
  */
 const config = {
-  showDropArrow: true, // Arrows indicating where a card will go when dropped
+  showDropArrow: false, // Arrows indicating where a card will go when dropped
   showCursor: false, // extra round cursor appearing under the mouse-cursor
   showTooltip: true, //node name is shown on hover
   throttle: 20, // ms - How often to do expensive operations.
   // Note, higher values might be perceived as the ui lagging behind, depending on what is being drawn.
   // This is a tradeoff and a higher value might be preferred for performance reasons.
   // Note: set throttle to ~20 ms for a smoother experience
-  drawLineFromCursorToClosestNode: true, // Draw a line from the cursor to the closest node
+  drawLineFromCursorToClosestNode: false, // Draw a line from the cursor to the closest node
   showPerformanceInfo: true, // Show performance info
+  showGraphEdges: true, // Show graph edges
 };
 
 /**
@@ -71,12 +72,22 @@ export function addCardsToCanvas(
     const graph = new Graph(process);
     const { nodes, edges } = graph;
 
-    drawGraphEdges(edges, viewport);
+    const performanceTimer = getPerformance(app, ({ performance }) => {
+      if (performance === "Bad") {
+        console.warn(
+          "Performance is bad, removing edges and adjusting throttle"
+        );
+        config.throttle = 200;
+        config.showGraphEdges = false;
+        clearGraphEdges(viewport);
+        clearInterval(performanceTimer);
+      }
+    });
+
+    if (config.showGraphEdges) drawGraphEdges(edges, viewport);
     drawGraphNodes(nodes, setSelectedObject, viewport);
-    drawCardPalette(app.stage, graph);
-    if (config.showPerformanceInfo) {
-      drawPerformanceInfo(app);
-    }
+    // drawCardPalette(app.stage, graph); // <- NOTE, REALLY BAD PERFORMANCE... todo: improve performance
+    // if (config.showPerformanceInfo) drawPerformanceInfo(app);
 
     // DECLARE ALL OUR PIXI OBJECTS
 
@@ -139,13 +150,13 @@ export function addCardsToCanvas(
     // MAKE IT INTERACTIVE
 
     let lastHitTest = null;
-    //Track mouse positon and update cursor position, keeping scroll position in mind
+    // Track mouse position and update cursor position, keeping scroll position in mind
     viewport.on("mousemove", (e) => {
       const { x, y } = e.data.getLocalPosition(viewport);
       //move the cursor
       cursor.x = x;
       cursor.y = y;
-      cursor.visible = false;
+      cursor.visible = config.showCursor;
 
       //move the tooltip
       tooltipBox.x = x + 25;
@@ -221,14 +232,14 @@ export function addCardsToCanvas(
               distanceToCenterTop < distanceToCenterRight;
 
             const edges = graph.getNodeEdges(hit.node);
-            unHighlightEdges(edges, viewport);
+            unHighlightEdges(edges, viewport); //<- VERY TAXING, UNCOMMENT IF YOU WANT TO UNHIGHLIGHT ALL EDGES
             if (closestToCenterBottom) {
               closest = centerBottom;
               arrow.rotation = Math.PI / 2;
 
               // highlight any outgoing edges
               const outGoingEdges = graph.getOutgoingEdges(hit.node);
-              highlightEdges(outGoingEdges, viewport);
+              highlightEdges(outGoingEdges, viewport); //<- VERY TAXING, UNCOMMENT IF YOU WANT TO UNHIGHLIGHT ALL EDGES
             } else if (closestToCenterLeft) {
               arrow.rotation = Math.PI;
               closest = centerLeft;
@@ -241,7 +252,7 @@ export function addCardsToCanvas(
 
               // highlight any incoming edges
               const incomingEdges = graph.getIncomingEdges(hit.node);
-              highlightEdges(incomingEdges, viewport);
+              highlightEdges(incomingEdges, viewport); //<- VERY TAXING, UNCOMMENT IF YOU WANT TO UNHIGHLIGHT ALL EDGES
             }
             // move the arrow to indicate where we may drop a new node
             arrow.x = closest.x;
@@ -255,7 +266,7 @@ export function addCardsToCanvas(
           arrow.visible = false;
           // change cursor to default
           viewport.cursor = "default";
-          unHighlightEdges(edges, viewport);
+          unHighlightEdges(edges, viewport); //<- VERY TAXING, UNCOMMENT IF YOU WANT TO UNHIGHLIGHT ALL EDGES
         }
         if (config.drawLineFromCursorToClosestNode) {
           // draw a line from the cursor to the closest card
@@ -296,10 +307,17 @@ export function addCardsToCanvas(
         highlightAndMove(graph, highlight);
       } else if (event.key === "Enter") {
         const selectedNode = graph.getSelectedNodes()[0];
+        console.log(selectedNode);
         setSelectedObject(selectedNode);
       } else if (event.key === "Escape") {
         setSelectedObject(null);
         clearHighlight(highlight);
+      }
+
+      //  key to show performance
+      //   commando .
+      else if (event.metaKey && event.key === ".") {
+        drawPerformanceInfo(app);
       }
     });
 
@@ -386,15 +404,15 @@ export function addCardsToCanvas(
 function highlightEdges(edges: GraphEdge[], viewport: Viewport) {
   edges.forEach((edge) => {
     edge.highlighted = true;
-    drawGraphEdges([edge], viewport);
   });
+  // drawGraphEdges(edges, viewport);
 }
 
 function unHighlightEdges(edges: GraphEdge[], viewport: Viewport) {
   edges.forEach((edge) => {
     edge.highlighted = false;
-    drawGraphEdges([edge], viewport);
   });
+  // drawGraphEdges(edges, viewport);
 }
 
 function clickAnimation(

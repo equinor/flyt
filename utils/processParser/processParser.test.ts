@@ -67,7 +67,7 @@ describe("ProcessParser misc tests", () => {
   it("should create the correct number of edges for a big process", () => {
     const parsedProcess = parseProcessJSON(bigProcess);
     // TODO: Figure out how many edges there should be...
-    expect(parsedProcess.edges.length).toBe(53);
+    expect(parsedProcess.edges.length).toBe(55);
   });
 
   it("should retain the name and type of the nodes", () => {

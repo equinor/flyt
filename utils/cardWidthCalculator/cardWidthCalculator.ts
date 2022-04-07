@@ -1,13 +1,13 @@
 import { vsmObjectTypes } from "../../types/vsmObjectTypes";
 
 export function calculateCardWidth(
-  numberOfTasks,
+  numberOfTasks: number,
   type: vsmObjectTypes
 ): number {
-  const baseWidth = 42;
   const defaultCardWidth = 126;
   if (!numberOfTasks) return defaultCardWidth;
 
+  const baseWidth = 42;
   // Tasks are only supported for MainActivity, SubActivity and Waiting-cards
   switch (type) {
     case vsmObjectTypes.mainActivity:

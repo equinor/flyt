@@ -8,6 +8,7 @@ export function drawGraphNodes(
   setSelectedObject: any,
   viewport: Viewport
 ): void {
+  console.info("drawGraphNodes");
   nodes.forEach((node) => {
     if (!node.hidden) {
       const card = assetFactory(

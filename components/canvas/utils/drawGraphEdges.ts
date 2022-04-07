@@ -2,6 +2,8 @@ import * as PIXI from "pixi.js";
 
 import { GraphEdge } from "utils/layoutEngine";
 import { Viewport } from "pixi-viewport";
+import { assetFactory } from "./AssetFactory";
+import { vsmObject } from "../../../interfaces/VsmObject";
 
 let edgeCache: { [key: string]: PIXI.Graphics } = {};
 let labelCache: { [key: string]: PIXI.Text } = {};
@@ -12,6 +14,8 @@ let labelCache: { [key: string]: PIXI.Text } = {};
  * @param viewport - viewport to draw on
  */
 export function drawGraphEdges(edges: GraphEdge[], viewport: Viewport): void {
+  console.info("drawGraphEdges");
+  //Todo: Only draw  edges for the nodes that have changed position
   edges.forEach((edge) => {
     const { from, to } = edge;
     const key = `${from}-${to}`;

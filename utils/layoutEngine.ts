@@ -1,14 +1,10 @@
-import { Process, TasksEntity } from "interfaces/generated";
-import { mockProcessGraph } from "./createGraph";
+import { Process } from "interfaces/generated";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
 import { parseProcessJSON } from "./processParser/parseProcessJSON";
 import { vsmProject } from "../interfaces/VsmProject";
 import { characterEntities } from "character-entities";
-import par = characterEntities.par;
-import { positionNodes } from "./positionNodes";
 import { positionNodesAndEdges } from "./PositionNodesAndEdges";
-import { calculateEdgePositions as positionEdges } from "./calculateEdgePositions";
-import { defaultProcess } from "./processParser/testData";
+import { taskObject } from "../interfaces/taskObject";
 
 export interface GraphNode {
   notPositionedCorrectly?: boolean;
@@ -19,7 +15,7 @@ export interface GraphNode {
   time?: { value: number; unit: string };
   role?: string;
   hidden?: boolean;
-  tasks?: Array<TasksEntity>;
+  tasks?: taskObject[];
   position?: {
     x: number;
     y: number;
@@ -67,7 +63,7 @@ export class Graph {
   constructor(process: vsmProject) {
     // const graph = mockProcessGraph(process);
     // const { nodes, edges } = graph;
-    const parsedProcess = parseProcessJSON(defaultProcess);
+    const parsedProcess = parseProcessJSON(process);
     const { nodes, edges } = parsedProcess;
     positionNodesAndEdges({ nodes, edges });
 

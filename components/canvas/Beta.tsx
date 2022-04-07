@@ -12,6 +12,7 @@ import { io } from "socket.io-client";
 import { loadAssets } from "./utils/LoadAssets";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
+import { debounce } from "../../utils/debounce";
 
 export default function Canvas() {
   const { instance, accounts } = useMsal();
@@ -38,7 +39,7 @@ export default function Canvas() {
       const socket = io({ path: "/api/socket", auth: { token: accessToken } });
       socket.on("connect", () => {
         console.log("connected", socket.id);
-        //   setMyId(socket.id);
+        // setMyId(socket.id);
       });
 
       // New pixi canvas with pixi-viewport setup
@@ -50,29 +51,29 @@ export default function Canvas() {
       if (process && assetsAreLoaded) {
         addCardsToCanvas(viewPort, process, true, null, null, null, app);
       }
-
-      // Note that elements added to the viewPort are affected by the zoom and pan
-      // while elements added to the app.stage are not.
-      // For example, if you want the pointer to stay the same size when you zoom, you add it to the app.stage.
+      //
+      // // Note that elements added to the viewPort are affected by the zoom and pan
+      // // while elements added to the app.stage are not.
+      // // For example, if you want the pointer to stay the same size when you zoom, you add it to the app.stage.
       // const pointer = UserPointer();
       // viewPort.addChild(pointer);
-      // pointer.visible = false; // note we are currently not displaying this pointer since we already are displaying the pointer created in AddCardsToCanvas class
-      // add it to the viewport
+      // pointer.visible = true; // note we are currently not displaying this pointer since we already are displaying the pointer created in AddCardsToCanvas class
+      // // add it to the viewport
       // viewPort.addChild(pointer);
-
-      // //Todo Emit pointer position to other users
+      //
+      // // //Todo Emit pointer position to other users
       // let lastPointerEvent = 0;
       // // listen for pointer move events
-      // viewPort.on("pointermove", (event) => {
+      // viewPort.on("mousemove", (event) => {
       //   //get the pointer position
       //   const { x, y } = viewPort.toLocal(event.data.global);
-
+      //
       //   //let's throttle the amount of events we send to the server
       //   // limit it to once every 100ms
       //   const now = Date.now();
       //   if (now - lastPointerEvent > 100) {
       //     lastPointerEvent = now;
-      //     // socket.emit("pointermove", { x, y, user: userName });
+      //     socket.emit("pointermove", { x, y, user: userName });
       //   } else {
       //     //let's make sure the last position is sent
       //     debounce(
@@ -82,9 +83,9 @@ export default function Canvas() {
       //     );
       //   }
       // });
-
-      // //Todo: handle other people's pointer events
-      // // Pointers
+      //
+      // // //Todo: handle other people's pointer events
+      // // // Pointers
       // const pointers: {
       //   [x: string]: { x: number; y: number; sprite };
       // } = {};
@@ -106,11 +107,11 @@ export default function Canvas() {
       //     pointers[data.user].x = x;
       //     pointers[data.user].y = y;
       //   }
-
+      //
       //   //move the sprite
       //   pointers[data.user].sprite.position.set(x, y);
       // });
-
+      //
       // //show pointer when in ViewPort
       // viewPort.on("pointerover", (event: any) => (pointer.visible = true));
       // //hide pointer when not in ViewPort
