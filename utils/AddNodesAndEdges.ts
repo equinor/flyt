@@ -1,8 +1,8 @@
 import { ChildObjectsEntity, Process } from "interfaces/generated";
-import { vsmObjectTypes } from "types/vsmObjectTypes";
 import { GraphEdge, GraphNode } from "./layoutEngine";
 import { defaultNodeHeight, defaultNodeWidth } from "./createGraph";
 import { calculateTaskSectionWidth } from "./calculateTaskSectionWidth";
+import { vsmObjectTypes } from "../types/vsmObjectTypes";
 
 /**
  * Adds nodes and edges to the graph
