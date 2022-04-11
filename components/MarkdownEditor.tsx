@@ -1,6 +1,6 @@
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
-import { Button, Icon, Label } from "@equinor/eds-core-react";
+import { Button, Icon, Input, Label, Scrim } from "@equinor/eds-core-react";
 import MDEditor, {
   ICommand,
   TextAreaTextApi,
@@ -9,6 +9,31 @@ import MDEditor, {
 import React, { useRef, useState } from "react";
 import { check, link } from "@equinor/eds-icons";
 import rehypeSanitize from "rehype-sanitize";
+
+function URLPrompt(props: { onConfirm: (url: string) => void }) {
+  const [url, setUrl] = useState("");
+
+  const isValid = (text) => {
+    const regex = new RegExp(
+      "^(http[s]?:\\/\\/(www\\.)?|ftp:\\/\\/(www\\.)?|www\\.)([0-9A-Za-z-.@:%_+~#=]+)+((\\.[a-zA-Z]{2,3})+)(/(.)*)?(\\?(.)*)?"
+    );
+    return regex.test(text);
+  };
+
+  return (
+    <div className="url-prompt">
+      <Input
+        type="text"
+        value={url}
+        variant={isValid(url) ? "success" : "error"}
+        onChange={(e) => setUrl(e.target.value)}
+      />
+      <Button onClick={() => props.onConfirm(url)} disabled={!isValid(url)}>
+        <Icon data={check} />
+      </Button>
+    </div>
+  );
+}
 
 export default function MarkdownEditor(props: {
   canEdit: boolean;
@@ -20,21 +45,23 @@ export default function MarkdownEditor(props: {
   const { canEdit, defaultValue, id, label = "", onChange } = props;
   const [editMode, setEditMode] = useState(false);
   const [value, setValue] = useState(defaultValue);
-  //const [selection, setSelection] = useState({ start: 0, end: 0 });
+  const [isOpenUrlPrompt, setIsOpenUrlPrompt] = useState(false);
+  const [selectionInfo, setSelectionInfo] = useState({
+    start: 0,
+    end: 0,
+    linkText: "",
+  });
 
-  // const set = () => (, end, what) {
-  //   return this.substring(0, start) + what + this.substring(end);
-  // };
+  const ref = useRef();
 
-  //console.log("The Hello World Code!".replaceBetween(4, 9, "Hi"));
-  // useEffect(() => {
-  //   const txtarea = document.getElementById(
-  //     "markdown-editor-textarea"
-  //   ) as HTMLTextAreaElement;
-  //   //txtarea.focus();
-  //   txtarea.setSelectionRange(0, 20);
-  // }, [selection]);
-  const ref = useRef<any>();
+  function openLinkPrompt(state: TextState, linkText: string) {
+    setIsOpenUrlPrompt(true);
+    setSelectionInfo({
+      start: state.selection.start,
+      end: state.selection.end,
+      linkText,
+    });
+  }
 
   const markdownLink: ICommand = {
     name: "Markdown link",
@@ -42,41 +69,27 @@ export default function MarkdownEditor(props: {
     buttonProps: { "aria-label": "Markdown link" },
     icon: <Icon data={link} color={"#007079"} size={24} />,
     execute: (state: TextState, api: TextAreaTextApi) => {
-      const startText = state.text.substring(0, state.selection.start);
       const linkText = state.selectedText ? state.selectedText : "text";
-      const endText = state.text.substring(
-        state.selection.end,
-        state.text.length
-      );
-      const modifyText = `${startText}[${linkText}](url)${endText}`;
-      onChange(modifyText);
-      setValue(modifyText);
-      debugger;
-      ref.current.textarea.setSelectionRange(
-        state.selection.start + state.selectedText.length,
-        state.selection.end + 3
-      );
-      //api.setSelectionRange({});
-      //api.replaceSelection(modifyText);
-      //onChange(state.text);
-      //setValue(state.text);
-      //api.setSelectionRange(state.selection);
+      openLinkPrompt(state, linkText);
     },
   };
 
   return (
     <div id={id} data-color-mode="light">
-      {/* <label htmlFor="mdEditor" style={{ marginLeft: "8px" }}>
-        <Typography
-          color={canEdit ? "#6F6F6F" : "rgba(190,190,190,1)"}
-          group="input"
-          variant="label"
-          //style={{ margin: "0 8px" }}
-        >
-          {label}
-        </Typography>
-      </label> */}
-      <Label htmlFor="mdEditor" label={label}></Label>
+      <Scrim open={isOpenUrlPrompt}>
+        <URLPrompt
+          onConfirm={(url) => {
+            const { linkText, start, end } = selectionInfo;
+            const before = value.substring(0, start);
+            const after = value.substring(end);
+            const modifyText = `${before}[${linkText}](${url})${after}`;
+            onChange(modifyText);
+            setValue(modifyText);
+            setIsOpenUrlPrompt(false);
+          }}
+        />
+      </Scrim>
+      <Label htmlFor="mdEditor" label={label} />
       <div style={{ display: "flex", gap: 12 }}>
         <div onClick={() => canEdit && setEditMode(true)} style={{ flex: 1 }}>
           <MDEditor
