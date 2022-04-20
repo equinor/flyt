@@ -141,6 +141,7 @@ export default function MarkdownEditor(props: {
           <style global jsx>{`
             #mdEditor > div.w-md-editor-content > div > div {
               font-size: 1rem;
+              background-color: rgb(247, 247, 247);
             }
           `}</style>
           <MDEditor
