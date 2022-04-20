@@ -6,18 +6,17 @@ import {
   Typography,
 } from "@equinor/eds-core-react";
 import { error_filled } from "@equinor/eds-icons";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { isValidUrl } from "utils/isValidUrl";
-import { transformLink } from "utils/transformLink";
 
 function URLPrompt(props: {
   onConfirm: (url: string) => void;
   linkText: string;
-  setIsOpenUrlPrompt: Dispatch<SetStateAction<boolean>>;
   url: string;
   setUrl: Dispatch<SetStateAction<string>>;
+  onClose: () => void;
 }) {
-  const { onConfirm, linkText, setIsOpenUrlPrompt, url, setUrl } = props;
+  const { onConfirm, linkText, onClose, url, setUrl } = props;
 
   const getColor = (url: string) => {
     if (url.length === 0) return "default";
@@ -42,8 +41,8 @@ function URLPrompt(props: {
         <div style={{ display: "flex", alignItems: "center", marginTop: 8 }}>
           <Icon
             data={error_filled}
-            size={16}
             title="Invalid link"
+            size={16}
             color="rgb(179, 13, 47)"
           />
           <Typography
@@ -65,13 +64,10 @@ function URLPrompt(props: {
           marginTop: 30,
         }}
       >
-        <Button variant="outlined" onClick={() => setIsOpenUrlPrompt(false)}>
+        <Button variant="outlined" onClick={onClose}>
           Cancel
         </Button>
-        <Button
-          onClick={() => onConfirm(transformLink(url))}
-          disabled={!isValidUrl(url)}
-        >
+        <Button onClick={() => onConfirm(url)} disabled={!isValidUrl(url)}>
           Ok
         </Button>
       </div>

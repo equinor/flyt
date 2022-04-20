@@ -20,6 +20,7 @@ import { check } from "@equinor/eds-icons";
 import rehypeSanitize from "rehype-sanitize";
 import styles from "../layouts/default.layout.module.scss";
 import URLPrompt from "./URLPrompt";
+import { transformLink } from "utils/transformLink";
 
 export default function MarkdownEditor(props: {
   canEdit: boolean;
@@ -80,24 +81,29 @@ export default function MarkdownEditor(props: {
   const onConfirmURLPrompt = (url: string) => {
     const { start, end } = selectionInfo;
     const before = value.substring(0, start);
+    const transformedLink = transformLink(url);
     const after = value.substring(end);
     const modifyText = `${before}[${
       selectionInfo.linkText || linkText
-    }](${url})${after}`;
+    }](${transformedLink})${after}`;
     onChange(modifyText);
     setValue(modifyText);
-    setLinkText("");
     setIsOpenUrlPrompt(false);
+    setLinkText("");
+    setUrl("");
+  };
+
+  const onCloseURLPrompt = () => {
+    setIsOpenUrlPrompt(false);
+    setLinkText("");
+    setUrl("");
   };
 
   return (
     <div id={id} data-color-mode="light">
       <Scrim
         open={isOpenUrlPrompt}
-        onClose={() => {
-          setIsOpenUrlPrompt(false);
-          setLinkText("");
-        }}
+        onClose={onCloseURLPrompt}
         isDismissable
         onKeyPress={(e) => {
           if (e.key === "Enter") {
@@ -128,9 +134,9 @@ export default function MarkdownEditor(props: {
                 onConfirmURLPrompt(url);
               }}
               linkText={selectionInfo.linkText}
-              setIsOpenUrlPrompt={setIsOpenUrlPrompt}
               url={url}
               setUrl={setUrl}
+              onClose={onCloseURLPrompt}
             />
           </div>
         </div>
@@ -142,6 +148,7 @@ export default function MarkdownEditor(props: {
             #mdEditor > div.w-md-editor-content > div > div {
               font-size: 1rem;
               background-color: rgb(247, 247, 247);
+              color: #3d3d3d;
             }
           `}</style>
           <MDEditor
