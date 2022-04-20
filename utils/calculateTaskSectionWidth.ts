@@ -1,5 +1,5 @@
 import { ChildObjectsEntity } from "interfaces/generated";
-import { vsmObjectTypes } from "types/vsmObjectTypes";
+import { vsmObjectTypes } from "../types/vsmObjectTypes";
 
 export function calculateTaskSectionWidth(node: ChildObjectsEntity): number {
   const baseWidth = 28;

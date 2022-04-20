@@ -1,6 +1,6 @@
 import { GraphEdge, GraphNode } from "./layoutEngine";
 import { padding } from "./createGraph";
-import { vsmObjectTypes } from "types/vsmObjectTypes";
+import { vsmObjectTypes } from "../types/vsmObjectTypes";
 
 function getParentNodes(
   node: GraphNode,

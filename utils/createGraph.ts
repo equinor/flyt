@@ -3,7 +3,7 @@ import { GraphEdge, GraphNode } from "./layoutEngine";
 
 import { AddNodesAndEdges } from "./AddNodesAndEdges";
 import { positionNodesAndEdges } from "./PositionNodesAndEdges";
-import { vsmObjectTypes } from "types/vsmObjectTypes";
+import { vsmObjectTypes } from "../types/vsmObjectTypes";
 
 export const defaultNodeWidth = 126;
 export const defaultNodeHeight = 136;

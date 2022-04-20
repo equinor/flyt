@@ -13,32 +13,36 @@ class IntelligentNode {
     data: unknown,
     width: number,
     height: number,
-    parents?: IntelligentNode[]
+    parents?: IntelligentNode[],
+    children?: IntelligentNode[]
   ) {
     this._id = id;
     this._data = data;
     this._width = width;
     this._height = height;
-    if (parents) this._parents = parents;
+    if (parents) {
+      this._parents = parents;
+      parents.forEach((parent) => {
+        parent.addChild(this);
+      });
+    }
+    if (children) {
+      this._children = children;
+      children.forEach((child) => {
+        child.addParent(this);
+      });
+    }
+
+    this._position = {
+      x: 0,
+      y: 0,
+    };
   }
 
   private _parents: IntelligentNode[];
 
   get parents() {
     return this._parents;
-  }
-
-  set parents(parents: IntelligentNode[]) {
-    this._parents = parents;
-    if (this._parents.length > 0) {
-      const firstParent = this._parents[0];
-      const lastParent = this._parents[this._parents.length - 1];
-      const x =
-        (firstParent.position.x + lastParent.position.x + lastParent._width) /
-        2;
-      const y = firstParent.position.y;
-      this.position = { x, y };
-    }
   }
 
   private _children: IntelligentNode[] = [];
@@ -57,43 +61,79 @@ class IntelligentNode {
     this._position = position;
   }
 
+  addParent(parent: IntelligentNode) {
+    if (!this._parents) {
+      this._parents = [parent];
+      parent.addChild(this);
+    }
+    if (!this._parents.includes(parent)) {
+      this._parents.push(parent);
+      parent.addChild(this);
+    }
+    // position this node
+    const firstParent = this._parents[0];
+    let x = firstParent.position.x;
+    let y = firstParent.position.y + firstParent._height + padding;
+    if (this._parents.length > 1) {
+      // If there are multiple parents, position this node at the middle of the parents
+      // Also, Make sure we position the node below any of the parents
+      const lastParent = this._parents[this._parents.length - 1];
+      if (lastParent) {
+        x =
+          (firstParent.position.x + lastParent.position.x + lastParent._width) /
+          2;
+        const maxY = Math.max(
+          ...this._parents.map((parent) => parent.position.y)
+        );
+        const furthestDownParent = this._parents.find(
+          (p) => p.position.y === maxY
+        );
+        y = maxY + furthestDownParent._height + padding;
+      }
+    }
+    this.position = { x, y };
+  }
+
+  getSiblings() {
+    let myIndex;
+    const siblings: IntelligentNode[] = []; // Siblings of this node
+    const allSiblings: IntelligentNode[] = []; // All siblings, including this node
+
+    if (this.parents) {
+      this.parents.forEach((parent, parentIndex, parentArray) => {
+        parent.children.forEach((child, index) => {
+          if (child === this) {
+            myIndex = index;
+          } else {
+            siblings.push(child);
+          }
+          allSiblings.push(child);
+        });
+      });
+    }
+    return { siblings, myIndex, allSiblings };
+  }
+
   addChild(child: IntelligentNode) {
     if (!this._children) this._children = [];
-    if (!this._children.includes(child)) {
-      const previousChild = this._children[this._children.length - 1];
-      this._children.push(child);
+    if (this._children.includes(child)) return; // already added, do not add again
+    this._children.push(child);
+    child.addParent(this);
 
-      // Set the child's position
-      if (previousChild) {
-        // If there is a previous child, set the child's position to the right of the previous child
-        child.position = {
-          x: previousChild.position.x + previousChild._width + padding,
-          y: this.position.y + this._height + padding,
-        };
-      } else {
-        // If there is no previous child, set the child's position straight down from the parent
-        child.position = {
-          x: this.position.x,
-          y: this.position.y + this._height + padding,
-        };
-      }
-
-      // Update this nodes position
-      let x = this.position.x;
-      if (this._children.length > 1) {
-        const firstChild = this._children[0];
-        const lastChild = this._children[this._children.length - 1];
-        x = (firstChild.position.x + lastChild.position.x) / 2;
-      }
-      this.position = {
-        x,
-        y: this.position.y, // Keep the y position
-      };
+    let x = this.position.x;
+    if (this._children.length > 1) {
+      const firstChild = this._children[0];
+      const lastChild = this._children[this._children.length - 1];
+      x = (firstChild.position.x + lastChild.position.x + lastChild._width) / 2;
     }
+    this.position = {
+      x,
+      y: this.position.y, // Keep the y position
+    };
   }
 }
 
-describe("A node that can follow position rules", function () {
+describe("A intelligent node", function () {
   it("should have a position", function () {
     const node = new IntelligentNode(1, {}, 100, 100);
     expect(node.position).toEqual({ x: 0, y: 0 });
@@ -102,14 +142,13 @@ describe("A node that can follow position rules", function () {
   it("can add a child", function () {
     const node = new IntelligentNode(1, {}, 100, 100);
     const child = new IntelligentNode(2, {}, 100, 100, [node]);
-    node.addChild(child);
     expect(node.children).toEqual([child]);
     expect(child.parents).toEqual([node]);
   });
 
   it("should place the child under itself", function () {
     const node = new IntelligentNode(1, {}, 100, 100);
-    const child = new IntelligentNode(2, {}, 100, 100, [node]);
+    const child = new IntelligentNode(2, {}, 100, 100);
     node.addChild(child);
     expect(node.position).toEqual({ x: 0, y: 0 });
     expect(child.position).toEqual({ x: 0, y: 100 + padding });
@@ -121,9 +160,13 @@ describe("A node that can follow position rules", function () {
       new IntelligentNode(2, {}, 100, 100, [parent]),
       new IntelligentNode(3, {}, 100, 100, [parent]),
     ].forEach((child) => parent.addChild(child));
+
+    expect(parent.children[0].position).toEqual({ x: 0, y: 100 + padding });
+    expect(parent.children[1].position).toEqual({
+      x: 100 + padding,
+      y: 100 + padding,
+    });
     expect(parent.position).toEqual({ x: 58, y: 0 });
-    expect(parent.children[0].position).toEqual({ x: 0, y: 116 });
-    expect(parent.children[1].position).toEqual({ x: 116, y: 116 });
   });
 
   it("should update its position after adding three children", () => {
@@ -152,11 +195,31 @@ describe("A node that can follow position rules", function () {
     const parent = new IntelligentNode(1, {}, 100, 100);
     const child = new IntelligentNode(2, {}, 100, 100, [parent]);
     const grandchild = new IntelligentNode(3, {}, 100, 100, [child]);
-    parent.addChild(child);
-    child.addChild(grandchild);
+
     expect(parent.position).toEqual({ x: 0, y: 0 });
     expect(child.position).toEqual({ x: 0, y: 100 + padding });
     expect(grandchild.position).toEqual({ x: 0, y: 200 + padding + padding });
+  });
+
+  it("can name its siblings", () => {
+    const parent = new IntelligentNode(1, {}, 100, 100);
+    const child1 = new IntelligentNode(2, {}, 100, 100);
+    const child2 = new IntelligentNode(3, {}, 100, 100);
+
+    parent.addChild(child1);
+    parent.addChild(child2);
+
+    // expect child1 to be sibling to child2, and vice versa
+    expect(child1.getSiblings().siblings).toEqual([child2]);
+    expect(child2.getSiblings().siblings).toEqual([child1]);
+
+    //all siblings
+    expect(child1.getSiblings().allSiblings).toEqual([child1, child2]);
+    expect(child2.getSiblings().allSiblings).toEqual([child1, child2]);
+
+    // check index
+    expect(child1.getSiblings().myIndex).toEqual(0);
+    expect(child2.getSiblings().myIndex).toEqual(1);
   });
 
   it("handles a split joining back again", () => {
