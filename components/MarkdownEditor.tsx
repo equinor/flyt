@@ -14,7 +14,7 @@ import MDEditor, {
   TextAreaTextApi,
   TextState,
 } from "@uiw/react-md-editor";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { check } from "@equinor/eds-icons";
 import rehypeSanitize from "rehype-sanitize";
@@ -43,13 +43,37 @@ export default function MarkdownEditor(props: {
 
   const ref = useRef();
 
-  const openLinkPrompt = (state: TextState, linkText: string) => {
-    setIsOpenUrlPrompt(true);
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (editMode && (e.metaKey || e.ctrlKey) && e.key === "k") {
+        const selection = window.getSelection();
+        const selectedText = selection.toString();
+        const textArea = selection.getRangeAt(0).commonAncestorContainer
+          .lastChild as HTMLTextAreaElement;
+        const selectionObject = {
+          start: textArea.selectionStart,
+          end: textArea.selectionEnd,
+          linkText: selectedText,
+        };
+        openLinkPrompt(selectionObject);
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [editMode]);
+
+  const openLinkPrompt = (selection: {
+    start: number;
+    end: number;
+    linkText: string;
+  }) => {
+    const { start, end, linkText } = selection;
     setSelectionInfo({
-      start: state.selection.start,
-      end: state.selection.end,
-      linkText,
+      start: start,
+      end: end,
+      linkText: linkText,
     });
+    setIsOpenUrlPrompt(true);
   };
 
   const markdownLink: ICommand = {
@@ -74,7 +98,12 @@ export default function MarkdownEditor(props: {
     ),
     execute: (state: TextState, api: TextAreaTextApi) => {
       const linkText = state.selectedText ? state.selectedText : "";
-      openLinkPrompt(state, linkText);
+      const selection = {
+        start: state.selection.start,
+        end: state.selection.end,
+        linkText: linkText,
+      };
+      openLinkPrompt(selection);
     },
   };
 
@@ -88,15 +117,13 @@ export default function MarkdownEditor(props: {
     }](${transformedLink})${after}`;
     onChange(modifyText);
     setValue(modifyText);
-    setIsOpenUrlPrompt(false);
-    setLinkText("");
-    setUrl("");
+    onCloseURLPrompt();
   };
 
   const onCloseURLPrompt = () => {
-    setIsOpenUrlPrompt(false);
     setLinkText("");
     setUrl("");
+    setIsOpenUrlPrompt(false);
   };
 
   return (
@@ -109,6 +136,16 @@ export default function MarkdownEditor(props: {
           if (e.key === "Enter") {
             onConfirmURLPrompt(url);
           }
+        }}
+        style={{
+          overflow: "hidden",
+          backgroundColor: "white",
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          zIndex: 1000,
+          display: "block",
+          width: "100%",
         }}
       >
         <div className={styles.scrimWrapper}>
