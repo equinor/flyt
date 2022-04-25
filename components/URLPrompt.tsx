@@ -30,7 +30,6 @@ function URLPrompt(props: {
         id="url-input"
         name="url"
         autoFocus={!!linkText}
-        placeholder="equinor.com"
         type="text"
         value={url}
         variant={getColor(url)}

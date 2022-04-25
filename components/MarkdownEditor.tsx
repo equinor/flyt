@@ -46,6 +46,7 @@ export default function MarkdownEditor(props: {
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (editMode && (e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
         const selection = window.getSelection();
         const selectedText = selection.toString();
         const textArea = selection.getRangeAt(0).commonAncestorContainer
