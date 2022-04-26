@@ -14,7 +14,7 @@ import MDEditor, {
   TextAreaTextApi,
   TextState,
 } from "@uiw/react-md-editor";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { check } from "@equinor/eds-icons";
 import rehypeSanitize from "rehype-sanitize";
@@ -22,52 +22,51 @@ import styles from "../layouts/default.layout.module.scss";
 import URLPrompt from "./URLPrompt";
 import { transformLink } from "utils/transformLink";
 
+interface SelectionInfo {
+  start: number;
+  end: number;
+  linkText: string;
+}
+
 export default function MarkdownEditor(props: {
   canEdit: boolean;
   defaultValue: string;
-  id: string;
   label?: string;
   onChange?: (value?: string) => void;
 }) {
-  const { canEdit, defaultValue, id, label = "", onChange } = props;
+  const { canEdit, defaultValue, label = "", onChange } = props;
   const [editMode, setEditMode] = useState(false);
   const [value, setValue] = useState(defaultValue);
   const [isOpenUrlPrompt, setIsOpenUrlPrompt] = useState(false);
-  const [selectionInfo, setSelectionInfo] = useState({
+  const [selectionInfo, setSelectionInfo] = useState<SelectionInfo>({
     start: 0,
     end: 0,
     linkText: "",
   });
-  const [linkText, setLinkText] = useState("");
   const [url, setUrl] = useState("");
-
-  const ref = useRef();
 
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (editMode && (e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault();
-        const selection = window.getSelection();
-        const selectedText = selection.toString();
-        const textArea = selection.getRangeAt(0).commonAncestorContainer
+        e.preventDefault(); // prevent ctrl+k from opening the browser's address bar
+        const textArea = window.getSelection().anchorNode
           .lastChild as HTMLTextAreaElement;
-        const selectionObject = {
+
+        openLinkPrompt({
           start: textArea.selectionStart,
           end: textArea.selectionEnd,
-          linkText: selectedText,
-        };
-        openLinkPrompt(selectionObject);
+          linkText: textArea.value.substring(
+            textArea.selectionStart,
+            textArea.selectionEnd
+          ),
+        });
       }
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [editMode]);
 
-  const openLinkPrompt = (selection: {
-    start: number;
-    end: number;
-    linkText: string;
-  }) => {
+  const openLinkPrompt = (selection: SelectionInfo) => {
     const { start, end, linkText } = selection;
     setSelectionInfo({
       start: start,
@@ -109,26 +108,24 @@ export default function MarkdownEditor(props: {
   };
 
   const onConfirmURLPrompt = (url: string) => {
-    const { start, end } = selectionInfo;
+    const { start, end, linkText } = selectionInfo;
     const before = value.substring(0, start);
     const transformedLink = transformLink(url);
     const after = value.substring(end);
-    const modifyText = `${before}[${
-      selectionInfo.linkText || linkText
-    }](${transformedLink})${after}`;
+    const modifyText = `${before}[${linkText}](${transformedLink})${after}`;
     onChange(modifyText);
     setValue(modifyText);
     onCloseURLPrompt();
   };
 
   const onCloseURLPrompt = () => {
-    setLinkText("");
+    setSelectionInfo({ ...selectionInfo, linkText: "" });
     setUrl("");
     setIsOpenUrlPrompt(false);
   };
 
   return (
-    <div id={id} data-color-mode="light">
+    <div data-color-mode="light">
       <Scrim
         open={isOpenUrlPrompt}
         onClose={onCloseURLPrompt}
@@ -159,10 +156,11 @@ export default function MarkdownEditor(props: {
           <TextField
             autoFocus={!selectionInfo.linkText}
             label={"Text"}
-            disabled={!!selectionInfo.linkText}
             variant={"default"}
-            defaultValue={selectionInfo.linkText || linkText}
-            onChange={(e) => setLinkText(e.target.value)}
+            defaultValue={selectionInfo.linkText}
+            onChange={(e) =>
+              setSelectionInfo({ ...selectionInfo, linkText: e.target.value })
+            }
             id={"linkText"}
             autoComplete="off"
           />
@@ -191,7 +189,6 @@ export default function MarkdownEditor(props: {
           `}</style>
           <MDEditor
             id="mdEditor"
-            ref={ref}
             value={value}
             onChange={(value?: string) => {
               onChange(value);
@@ -215,7 +212,6 @@ export default function MarkdownEditor(props: {
               linkTarget: "_blank",
             }}
             textareaProps={{
-              id: "markdown-editor-textarea",
               onFocus: (e) => {
                 e.target.setSelectionRange(
                   e.target.value.length,
