@@ -10,7 +10,7 @@ import { clearSprites } from "./AssetFactory";
  */
 export function loadAssets(
   assets: { [s: string]: unknown } | ArrayLike<unknown>,
-  onComplete: { (): void; (): unknown }
+  onComplete: () => void
 ): () => void {
   const loader = PIXI.Loader.shared;
   Object.entries(assets).forEach((asset) => {
@@ -21,11 +21,7 @@ export function loadAssets(
     }
   });
 
-  // loader.onLoad.add((value) => {} );
-  // loader.onError.add((value) => {} );
-  // loader.onProgress.add(() => {});
-  // loader.onComplete.add(() => {});
-  loader.load(() => onComplete());
+  loader.load(onComplete);
   return () => {
     //Removing assets
     clearSprites();

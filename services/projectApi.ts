@@ -21,7 +21,7 @@ export const getProjects = (filter?: {
     (value) => {
       return {
         projects: value.data,
-        totalItems: parseInt(value.headers.totalitems, 10)
+        totalItems: parseInt(value.headers.totalitems, 10),
       };
     }
   );
@@ -52,7 +52,7 @@ export const createProject = (
  * @returns VSM Process
  */
 export const getProject = (
-  id: string | string[],
+  id: number | string | string[],
   asOf?: number | string | string[]
 ): Promise<vsmProject> => {
   if (asOf) {
@@ -71,10 +71,10 @@ export const updateProject = (data) =>
 export const deleteProject = (id: string | string[]) =>
   BaseAPIServices.delete(`${baseUrl}/project/${id}`);
 
-export const faveProject = (id: number) =>
+export const faveProcess = (id: number) =>
   BaseAPIServices.put(`${baseUrl}/project/${id}/favorite`, null);
 
-export const unfaveProject = (id: number) =>
+export const unFaveProcess = (id: number) =>
   BaseAPIServices.delete(`${baseUrl}/project/${id}/favorite`);
 
 export const getLabels = (id: number): Promise<processLabel> =>

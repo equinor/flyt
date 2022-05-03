@@ -2,6 +2,7 @@ import { expect } from "@jest/globals";
 
 export const padding = 16;
 
+//Todo: decide if we want to go with this or not (vs. calculateNodePositions)
 class IntelligentNode {
   private _id: number;
   private _data: unknown;

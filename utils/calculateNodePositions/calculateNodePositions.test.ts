@@ -8,8 +8,8 @@ import { vsmObjectTypes } from "../../types/vsmObjectTypes";
 import { ParsedProcess } from "../processParser/processParser.test";
 import { GraphNode } from "../layoutEngine";
 
-describe("Position cards on the canvas", function () {
-  it("should handle one card", function () {
+describe("Position cards on the canvas", () => {
+  it("should handle one card", () => {
     const process: ParsedProcess = {
       nodes: [
         {
@@ -45,7 +45,7 @@ describe("Position cards on the canvas", function () {
       },
     ]);
   });
-  it("should handle a parent and child", function () {
+  it("should handle a parent and child", () => {
     const process: ParsedProcess = {
       nodes: [
         {
@@ -92,7 +92,7 @@ describe("Position cards on the canvas", function () {
       },
     ]);
   });
-  it("should handle a parent with two children", function () {
+  it("should handle a parent with two children", () => {
     const process: ParsedProcess = {
       created: "",
       currentProcessId: 0,
@@ -155,7 +155,7 @@ describe("Position cards on the canvas", function () {
       },
     ]);
   });
-  it("should handle a parent with three children", function () {
+  it("should handle a parent with three children", () => {
     const process: ParsedProcess = {
       created: "",
       currentProcessId: 0,
@@ -233,7 +233,7 @@ describe("Position cards on the canvas", function () {
     ]);
   });
 
-  it("should handle a parent with two children that joins back together after the split", function () {
+  it("should handle a parent with two children that joins back together after the split", () => {
     const process: ParsedProcess = {
       edges: [
         { from: 1, to: 2 },
@@ -311,7 +311,7 @@ describe("Position cards on the canvas", function () {
       },
     ]);
   });
-  it("should position the default process correctly", function () {
+  it("should position the default process correctly", () => {
     const parsedProcess = parseProcessJSON(defaultProcess);
     expect(calculateNodePositions(parsedProcess)).toStrictEqual([
       {
@@ -370,7 +370,7 @@ describe("Position cards on the canvas", function () {
       },
     ]);
   });
-  it("should position the default process correctly after adding tasks to the MainActivity", function () {
+  it("should position the default process correctly after adding tasks to the MainActivity", () => {
     const parsedProcess = parseProcessJSON(defaultProcessWithTasks);
     expect(calculateNodePositions(parsedProcess)).toStrictEqual([
       {

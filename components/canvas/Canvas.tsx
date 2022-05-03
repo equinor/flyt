@@ -33,6 +33,7 @@ import { Button, Icon } from "@equinor/eds-core-react";
 import { close } from "@equinor/eds-icons";
 import { ProcessTimeline } from "../ProcessTimeline";
 import { vsmProject } from "../../interfaces/VsmProject";
+import CanvasImposter from "../canvasImposter";
 
 export default function Canvas(): JSX.Element {
   const ref = useRef();
@@ -138,45 +139,45 @@ export default function Canvas(): JSX.Element {
   }
 
   // "Constructor"
-  useEffect(() => {
-    initCanvas(ref);
-    const cleanupAssets = loadAssets(assets, () => setAssetsAreLoaded(true));
-    return () => {
-      cleanupAssets();
-      getApp().stage.removeChildren();
-      getApp()?.stop();
-    };
-  }, []);
+  // useEffect(() => {
+  //   initCanvas(ref);
+  //   const cleanupAssets = loadAssets(assets, () => setAssetsAreLoaded(true));
+  //   return () => {
+  //     cleanupAssets();
+  //     getApp().stage.removeChildren();
+  //     getApp()?.stop();
+  //   };
+  // }, []);
 
   // "Renderer"
-  useEffect(() => {
-    if (project && assetsAreLoaded) {
-      const app = getApp();
-      const viewport = getViewPort();
-      addCardsToCanvas(
-        viewport,
-        project,
-        userCanEdit,
-        dispatch,
-        setSelectedObject,
-        vsmObjectMutation,
-        app
-      );
-
-      //Todo: Only show toolbox if userCanEdit. ref: https://equinor-sds-si.atlassian.net/browse/VSM-143
-      const cleanupToolbox = userCanEdit
-        ? toolBox(draggable, project, vsmObjectAddMutation, dispatch)
-        : () => {
-            //nothing to clean up
-          };
-
-      return () => {
-        // Clearing canvas
-        viewport.removeChildren();
-        cleanupToolbox();
-      };
-    }
-  }, [project, assetsAreLoaded]);
+  // useEffect(() => {
+  //   if (project && assetsAreLoaded) {
+  //     const app = getApp();
+  //     const viewport = getViewPort();
+  //     addCardsToCanvas(
+  //       viewport,
+  //       project,
+  //       userCanEdit,
+  //       dispatch,
+  //       setSelectedObject,
+  //       vsmObjectMutation,
+  //       app
+  //     );
+  //
+  //     //Todo: Only show toolbox if userCanEdit. ref: https://equinor-sds-si.atlassian.net/browse/VSM-143
+  //     const cleanupToolbox = userCanEdit
+  //       ? toolBox(draggable, project, vsmObjectAddMutation, dispatch)
+  //       : () => {
+  //           //nothing to clean up
+  //         };
+  //
+  //     return () => {
+  //       // Clearing canvas
+  //       viewport.removeChildren();
+  //       cleanupToolbox();
+  //     };
+  //   }
+  // }, [project, assetsAreLoaded]);
 
   return (
     <div
@@ -247,6 +248,7 @@ export default function Canvas(): JSX.Element {
         selectedObject={selectedObject}
       />
       <div className={style.canvasWrapper} ref={ref} />
+      {/*<NoCanvas onClickCard={(cardId) => setSelectedObject(cardId)} />*/}
     </div>
   );
 }

@@ -64,7 +64,6 @@
   background-color: white;
   border-radius: 2px;
   padding: 24px;
-  max-width: 80vw;
   max-height: 80vh;
 
   display: flex;
@@ -73,7 +72,7 @@
   max-width: 450px;
 }
 .scrimContent {
-  font-family: Equinor;
+  font-family: Equinor, sans-serif;
   font-size: 16px;
   line-height: 24px;
   letter-spacing: 0em;
@@ -85,16 +84,16 @@
     padding: 0 !important;
   }
 
-  .homeButtonText {
-    display: none;
-  }
+  //.homeButtonText {
+  //  display: none;
+  //}
 
-  .homeButton {
-    overflow: hidden;
-    white-space: nowrap;
-    min-width: 40px;
-    padding: 3px;
-  }
+  //.homeButton {
+  //  overflow: hidden;
+  //  white-space: nowrap;
+  //  min-width: 40px;
+  //  padding: 3px;
+  //}
 
   .userCircle {
     display: none;

@@ -1,6 +1,6 @@
 import { Button, Icon, Scrim, Tooltip } from "@equinor/eds-core-react";
 import React, { useState } from "react";
-import { faveProject, unfaveProject } from "services/projectApi";
+import { faveProcess, unFaveProcess } from "services/projectApi";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQueryClient } from "react-query";
 
@@ -37,7 +37,7 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
   const faveMutation = useMutation(
     () => {
       setIsMutatingFavourite(true);
-      return faveProject(props.vsm.vsmProjectID);
+      return faveProcess(props.vsm.vsmProjectID);
     },
     {
       onSettled: handleSettled,
@@ -47,7 +47,7 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
   const unfaveMutation = useMutation(
     () => {
       setIsMutatingFavourite(true);
-      return unfaveProject(props.vsm.vsmProjectID);
+      return unFaveProcess(props.vsm.vsmProjectID);
     },
     {
       onSettled: handleSettled,
@@ -74,7 +74,7 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
             <Heart
               isFavourite={props.vsm.isFavorite}
               fave={() => faveMutation.mutate()}
-              unfave={() => unfaveMutation.mutate()}
+              unFave={() => unfaveMutation.mutate()}
               isLoading={isMutatingFavourite}
             />
           </div>

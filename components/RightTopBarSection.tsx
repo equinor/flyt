@@ -1,20 +1,36 @@
-import { TopBar } from "@equinor/eds-core-react";
+import { Button, Menu, TopBar } from "@equinor/eds-core-react";
 import styles from "../layouts/default.layout.module.scss";
 import UserMenu from "./AppHeader/UserMenu";
 import React from "react";
 import { bar_chart, comment_important, info_circle } from "@equinor/eds-icons";
 import { LinkIcon } from "./LinkIcon";
+import { useIsAuthenticated } from "@azure/msal-react";
 
 export function RightTopBarSection(props: {
-  isAuthenticated: boolean;
+  smallScreen?: boolean;
 }): JSX.Element {
+  const isAuthenticated = useIsAuthenticated();
+
+  const [open, setOpen] = React.useState(false);
+  const anchorEl = React.useRef<HTMLButtonElement>(null);
+  if (props.smallScreen) {
+    return (
+      <>
+        <Button ref={anchorEl} onClick={() => setOpen(!open)}>
+          Menu
+        </Button>
+        <Menu
+          anchorEl={anchorEl.current}
+          open={open}
+          onBlur={() => setOpen(false)}
+        >
+          <Menu.Item>PowerBI Dashboard</Menu.Item>
+        </Menu>
+      </>
+    );
+  }
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "flex-end",
-      }}
-    >
+    <TopBar.Actions>
       <LinkIcon
         helpText="Open Power BI Dashboard"
         icon={bar_chart}
@@ -33,13 +49,13 @@ export function RightTopBarSection(props: {
         link="https://forms.office.com/Pages/ResponsePage.aspx?id=NaKkOuK21UiRlX_PBbRZsGXJ18p1yVhOjLvQbqMNiVBUQUQyVUFYMkZRVUZPUk5TWjBESERGMFVUTiQlQCN0PWcu"
         style={{ marginRight: 8 }}
       />
-      {props.isAuthenticated && (
+      {isAuthenticated && (
         <div className={styles.userCircle}>
           <TopBar.Actions>
             <UserMenu />
           </TopBar.Actions>
         </div>
       )}
-    </div>
+    </TopBar.Actions>
   );
 }

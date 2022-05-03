@@ -3,8 +3,6 @@ import { vsmProject } from "../../interfaces/VsmProject";
 import { GraphEdge, GraphNode } from "../layoutEngine";
 import { createEdges } from "./helpers/createEdges";
 import { createNodes } from "./helpers/createNodes";
-import { positionNodes } from "../positionNodes";
-import { positionNodesAndEdges } from "../PositionNodesAndEdges";
 
 /**
  * Parse a process JSON object

@@ -52,21 +52,31 @@ export const getPerformance = (app: Application, callBack, ms = 100) => {
  * Draws performance info to the screen.
  * fps - frames per second
  * @param app
+ * @param options
  */
-export function drawPerformanceInfo(app: PIXI.Application) {
+export function drawPerformanceInfo(
+  app: PIXI.Application,
+  options: { position: { x: number; y: number } } = { position: { x: 0, y: 0 } }
+) {
   const style = new PIXI.TextStyle({
     fill: "white",
   });
 
   const background = new PIXI.Graphics();
   background.beginFill(0x000000, 0.8);
-  background.drawRoundedRect(0, 0, 180, 170, 10);
+  background.drawRoundedRect(
+    options.position.x,
+    options.position.y,
+    180,
+    170,
+    10
+  );
   background.endFill();
   app.stage.addChild(background);
 
   const text = new PIXI.Text("", style);
-  text.x = 20;
-  text.y = 10;
+  text.x = options.position.x + 20;
+  text.y = options.position.y + 10;
   app.stage.addChild(text);
 
   const interval = getPerformance(

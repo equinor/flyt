@@ -10,7 +10,7 @@ export function SideBarBody(props: {
   onChangeName: (event: { target: { value: string } }) => void;
   onChangeRole: (event: { target: { value: string } }) => void;
   onChangeTime: (e: { time: number; unit: string }) => void;
-  setShowNewTaskSection: (boolean) => void;
+  setShowNewTaskSection: (value: boolean) => void;
   canEdit: boolean;
 }): JSX.Element {
   const { selectedObject, setShowNewTaskSection } = props;

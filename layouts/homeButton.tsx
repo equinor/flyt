@@ -16,10 +16,10 @@ export function HomeButton(): JSX.Element {
             width={12.53}
             height={25}
           />
-          <span style={{ padding: 4 }} />
-          <Typography className={styles.homeButtonText} variant={"h4"}>
-            Flyt
-          </Typography>
+          {/*<span style={{ padding:  4 }} />*/}
+          {/*<Typography className={styles.homeButtonText} variant={"h4"}>*/}
+          {/*  Flyt*/}
+          {/*</Typography>*/}
         </Button>
       </Link>
     </div>

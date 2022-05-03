@@ -93,7 +93,7 @@ export function addCardsToCanvas(
 
     const hexColor = getColor("HSJO@equinor.com"); //Todo: get user color
     //Get user color
-    // convert hexcolor to number
+    // convert hex-color to number
     const color = parseInt(hexColor.slice(1), 16);
 
     // add a user-cursor to the canvas
@@ -231,8 +231,8 @@ export function addCardsToCanvas(
               distanceToCenterTop < distanceToCenterLeft &&
               distanceToCenterTop < distanceToCenterRight;
 
-            const edges = graph.getNodeEdges(hit.node);
-            unHighlightEdges(edges, viewport); //<- VERY TAXING, UNCOMMENT IF YOU WANT TO UNHIGHLIGHT ALL EDGES
+            // const edges = graph.getNodeEdges(hit.node);
+            // unHighlightEdges(edges, viewport); //<- VERY TAXING, UNCOMMENT IF YOU WANT TO UNHIGHLIGHT ALL EDGES
             if (closestToCenterBottom) {
               closest = centerBottom;
               arrow.rotation = Math.PI / 2;
@@ -292,6 +292,7 @@ export function addCardsToCanvas(
     });
 
     window.addEventListener("keydown", (event) => {
+      console.log("keydown", event.key);
       //todo: Remove eventListener on destroy
       if (event.key === "ArrowDown") {
         graph.navigateDown();
@@ -307,46 +308,54 @@ export function addCardsToCanvas(
         highlightAndMove(graph, highlight);
       } else if (event.key === "Enter") {
         const selectedNode = graph.getSelectedNodes()[0];
-        console.log(selectedNode);
         setSelectedObject(selectedNode);
       } else if (event.key === "Escape") {
         setSelectedObject(null);
         clearHighlight(highlight);
       }
+      const selectedNode = graph.getSelectedNodes()[0];
+      setSelectedObject(selectedNode);
 
       //  key to show performance
-      //   commando .
-      else if (event.metaKey && event.key === ".") {
-        drawPerformanceInfo(app);
+      if (event.metaKey && event.key === ".") {
+        drawPerformanceInfo(app, { position: { x: 0, y: 64 } });
       }
     });
 
-    let cursorTimer = setTimeout(null, 0);
+    // const cursorTimer = setTimeout(null, 0);
     //Hit-test the cursor against the nodes and edges
     viewport.on("pointerdown", (e) => {
       //animate the cursor
-      clickAnimation(cursor, e);
+      // clickAnimation(cursor, e);
 
       const { x, y } = e.data.getLocalPosition(viewport);
       //move cursor to the position of the click
-      clearTimeout(cursorTimer);
-      cursorTimer = setTimeout(() => {
-        // fadeOut(cursor);
-        cursor.visible = false;
-      }, 1000);
-      cursor.x = x;
-      cursor.y = y;
-      cursor.visible = true;
-      const hit = graph.hitTest(x, y);
-      if (hit?.node) {
-        // if we hit a node, select it
-        graph.selectNode(hit.node);
-        // highlight the node
-        highLightNode(hit.node, highlight);
-      } else {
-        graph.deselectAllNodes();
-        highlight.visible = false;
+      // clearTimeout(cursorTimer);
+      // cursorTimer = setTimeout(() => {
+      //   // fadeOut(cursor);
+      //   cursor.visible = false;
+      // }, 1000);
+      // cursor.x = x;
+      // cursor.y = y;
+      // cursor.visible = true;
+      const hitTestEnabled = true;
+      if (hitTestEnabled) {
+        const hit = graph.hitTest(x, y);
+        console.log("hit", hit);
+        if (hit?.node) {
+          // if we hit a node, select it
+          graph.selectNode(hit.node);
+          // highlight the node
+          highLightNode(hit.node, highlight);
+        } else {
+          graph.deselectAllNodes();
+          highlight.visible = false;
+        }
       }
+
+      // Open the card if we hit a node, else close it
+      const selectedNode = graph.getSelectedNodes()[0];
+      setSelectedObject(selectedNode);
     });
   }
 
@@ -361,19 +370,16 @@ export function addCardsToCanvas(
     selectedNodes.forEach((node) => {
       highLightNode(node, highlight);
     });
-    if (selectedNodes.length > 0) {
-      // Move the viewport to the first selected node
-      const firstSelectedNode = selectedNodes[0];
-      if (firstSelectedNode) {
-        viewport.animate({
-          position: new Point(
-            firstSelectedNode.position.x + firstSelectedNode.width / 2,
-            firstSelectedNode.position.y + firstSelectedNode.height / 2
-          ),
-          time: 500,
-          ease: "easeOutQuad",
-        });
-      }
+    const firstSelectedNode = selectedNodes[0];
+    if (firstSelectedNode) {
+      viewport.animate({
+        position: new Point(
+          firstSelectedNode.position.x + firstSelectedNode.width / 2,
+          firstSelectedNode.position.y + firstSelectedNode.height / 2
+        ),
+        time: 500,
+        ease: "easeOutQuad",
+      });
     }
   }
 

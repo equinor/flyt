@@ -6,37 +6,31 @@ import styles from "./Heart.module.scss";
 export default function Heart(props: {
   isFavourite: boolean;
   isLoading: boolean;
-  fave: () => void;
-  unfave: () => void;
+  fave?: () => void;
+  unFave?: () => void;
 }): JSX.Element {
   const handleClick = (e) => {
     e.stopPropagation();
-    props.isFavourite ? props.unfave() : props.fave();
+    props.isFavourite ? props.unFave() : props.fave();
   };
 
   if (props.isLoading) {
     return (
-      <div>
-        <button className={styles.heart} onClick={handleClick}>
-          <Icon data={favorite_filled} />
-        </button>
+      <div className={styles.heart}>
+        <Icon data={favorite_filled} />
       </div>
     );
   }
   if (props.isFavourite) {
     return (
-      <div>
-        <button className={styles.favedHeart} onClick={handleClick}>
-          <Icon data={favorite_filled} />
-        </button>
-      </div>
+      <button className={styles.filledHeart} onClick={handleClick}>
+        <Icon data={favorite_filled} />
+      </button>
     );
   }
   return (
-    <div>
-      <button className={styles.heart} onClick={handleClick}>
-        <Icon data={favorite_outlined} />
-      </button>
-    </div>
+    <button className={styles.heart} onClick={handleClick}>
+      <Icon data={favorite_outlined} />
+    </button>
   );
 }

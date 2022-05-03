@@ -4,6 +4,7 @@ import { GraphEdge, GraphNode } from "./layoutEngine";
 import { AddNodesAndEdges } from "./AddNodesAndEdges";
 import { positionNodesAndEdges } from "./PositionNodesAndEdges";
 import { vsmObjectTypes } from "../types/vsmObjectTypes";
+import { positionNodes } from "./positionNodes";
 
 export const defaultNodeWidth = 126;
 export const defaultNodeHeight = 136;
@@ -27,7 +28,7 @@ export function createGraph(process: Process): {
   return graph;
 }
 
-export function mockProcessGraph(process): {
+export function mockProcessGraph(): {
   nodes: Array<GraphNode>;
   edges: Array<GraphEdge>;
 } {
@@ -244,7 +245,7 @@ export function mockProcessGraph(process): {
   // 1 -> 2 -> 3 -> 7 -> 8
   // 1 -> 9 -> 10 -> 11 -> 13 -> 16 -> 12
 
-  // positionNodes(graph);
+  positionNodes(graph);
 
   return graph;
 }

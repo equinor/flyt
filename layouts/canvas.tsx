@@ -10,9 +10,9 @@ import {
 import React, { useEffect, useState } from "react";
 import { chevron_down, close, share } from "@equinor/eds-icons";
 import {
-  faveProject,
+  faveProcess,
   getProject,
-  unfaveProject,
+  unFaveProcess,
   updateProject,
 } from "../services/projectApi";
 import { useAccount, useIsAuthenticated, useMsal } from "@azure/msal-react";
@@ -69,7 +69,7 @@ const CanvasLayout = ({ children }): JSX.Element => {
   const faveMutation = useMutation(
     () => {
       setIsMutatingFavourite(true);
-      return faveProject(project?.vsmProjectID);
+      return faveProcess(project?.vsmProjectID);
     },
     {
       onSettled: handleSettled,
@@ -79,7 +79,7 @@ const CanvasLayout = ({ children }): JSX.Element => {
   const unfaveMutation = useMutation(
     () => {
       setIsMutatingFavourite(true);
-      return unfaveProject(project?.vsmProjectID);
+      return unFaveProcess(project?.vsmProjectID);
     },
     {
       onSettled: handleSettled,
@@ -243,7 +243,7 @@ const CanvasLayout = ({ children }): JSX.Element => {
               <Heart
                 isFavourite={project?.isFavorite}
                 fave={() => faveMutation.mutate()}
-                unfave={() => unfaveMutation.mutate()}
+                unFave={() => unfaveMutation.mutate()}
                 isLoading={isMutatingFavourite}
               />
             </div>
