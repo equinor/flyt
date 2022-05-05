@@ -5,10 +5,10 @@ import { Button, Icon, Label, Tooltip } from "@equinor/eds-core-react";
 import MDEditor, { ICommand, TextState } from "@uiw/react-md-editor";
 import React, { useEffect, useState } from "react";
 
+import { SelectionInfo } from "interfaces/SelectionInfo";
+import UrlPrompt from "./URLPrompt";
 import { check } from "@equinor/eds-icons";
 import rehypeSanitize from "rehype-sanitize";
-import UrlPrompt from "./UrlPrompt";
-import { SelectionInfo } from "interfaces/SelectionInfo";
 
 export default function MarkdownEditor(props: {
   canEdit?: boolean;
