@@ -24,7 +24,7 @@ export function SideBarBody(props: {
       return (
         <MarkdownEditor
           canEdit={props.canEdit}
-          defaultValue={selectedObject.name || ""}
+          defaultText={selectedObject.name || ""}
           label={"Title"}
           onChange={props.onChangeName}
         />
@@ -34,7 +34,7 @@ export function SideBarBody(props: {
         <>
           <MarkdownEditor
             canEdit={props.canEdit}
-            defaultValue={selectedObject.name || ""}
+            defaultText={selectedObject.name || ""}
             label={"Supplier(s)"}
             onChange={props.onChangeName}
           />
@@ -50,7 +50,7 @@ export function SideBarBody(props: {
         <>
           <MarkdownEditor
             canEdit={props.canEdit}
-            defaultValue={selectedObject.name || ""}
+            defaultText={selectedObject.name || ""}
             label={"Input(s)"}
             onChange={props.onChangeName}
           />
@@ -66,7 +66,7 @@ export function SideBarBody(props: {
         <>
           <MarkdownEditor
             canEdit={props.canEdit}
-            defaultValue={selectedObject.name || ""}
+            defaultText={selectedObject.name || ""}
             label={"Output(s)"}
             onChange={props.onChangeName}
           />
@@ -82,7 +82,7 @@ export function SideBarBody(props: {
         <>
           <MarkdownEditor
             canEdit={props.canEdit}
-            defaultValue={selectedObject.name || ""}
+            defaultText={selectedObject.name || ""}
             label={"Customer(s)"}
             onChange={props.onChangeName}
           />
@@ -98,7 +98,7 @@ export function SideBarBody(props: {
         <>
           <MarkdownEditor
             canEdit={props.canEdit}
-            defaultValue={selectedObject.name || ""}
+            defaultText={selectedObject.name || ""}
             label={"Description"}
             onChange={props.onChangeName}
           />
@@ -114,7 +114,7 @@ export function SideBarBody(props: {
         <>
           <MarkdownEditor
             canEdit={props.canEdit}
-            defaultValue={selectedObject.name || ""}
+            defaultText={selectedObject.name || ""}
             label={"Description"}
             onChange={props.onChangeName}
           />
@@ -160,7 +160,7 @@ export function SideBarBody(props: {
       return (
         <MarkdownEditor
           canEdit={props.canEdit}
-          defaultValue={selectedObject.name || ""}
+          defaultText={selectedObject.name || ""}
           label={"Define choice"}
           onChange={props.onChangeName}
         />

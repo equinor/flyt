@@ -1,58 +1,41 @@
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 
-import {
-  Button,
-  Icon,
-  Label,
-  Scrim,
-  TextField,
-  Tooltip,
-} from "@equinor/eds-core-react";
-import MDEditor, {
-  ICommand,
-  TextAreaTextApi,
-  TextState,
-} from "@uiw/react-md-editor";
+import { Button, Icon, Label, Tooltip } from "@equinor/eds-core-react";
+import MDEditor, { ICommand, TextState } from "@uiw/react-md-editor";
 import React, { useEffect, useState } from "react";
 
 import { check } from "@equinor/eds-icons";
 import rehypeSanitize from "rehype-sanitize";
-import styles from "../layouts/default.layout.module.scss";
-import URLPrompt from "./URLPrompt";
-import { transformLink } from "utils/transformLink";
-
-interface SelectionInfo {
-  start: number;
-  end: number;
-  linkText: string;
-}
+import UrlPrompt from "./UrlPrompt";
+import { SelectionInfo } from "interfaces/SelectionInfo";
 
 export default function MarkdownEditor(props: {
-  canEdit: boolean;
-  defaultValue: string;
-  label?: string;
+  canEdit?: boolean;
+  defaultText: string;
+  label: string;
   onChange?: (value?: string) => void;
 }) {
-  const { canEdit, defaultValue, label = "", onChange } = props;
+  const { canEdit, defaultText, label, onChange } = props;
   const [editMode, setEditMode] = useState(false);
-  const [value, setValue] = useState(defaultValue);
   const [isOpenUrlPrompt, setIsOpenUrlPrompt] = useState(false);
   const [selectionInfo, setSelectionInfo] = useState<SelectionInfo>({
     start: 0,
     end: 0,
     linkText: "",
   });
-  const [url, setUrl] = useState("");
+  // The "text"-state is used for displaying the changing text instantly
+  const [text, setText] = useState(defaultText);
 
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    // Open UrlPrompt on ctrl + k
+    const handleKeyDown = (e: KeyboardEvent) => {
       if (editMode && (e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault(); // prevent ctrl+k from opening the browser's address bar
+        e.preventDefault(); // prevent ctrl + k from opening the browser's address bar
         const textArea = window.getSelection().anchorNode
           .lastChild as HTMLTextAreaElement;
 
-        openLinkPrompt({
+        openUrlPrompt({
           start: textArea.selectionStart,
           end: textArea.selectionEnd,
           linkText: textArea.value.substring(
@@ -66,16 +49,23 @@ export default function MarkdownEditor(props: {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [editMode]);
 
-  const openLinkPrompt = (selection: SelectionInfo) => {
-    const { start, end, linkText } = selection;
+  const openUrlPrompt = (selection: SelectionInfo) => {
     setSelectionInfo({
-      start: start,
-      end: end,
-      linkText: linkText,
+      start: selection.start,
+      end: selection.end,
+      linkText: selection.linkText,
     });
     setIsOpenUrlPrompt(true);
   };
 
+  // Sets local state to display text instantly and updates the API
+  const setAndPatchText = (text: string) => {
+    // Patching the text via the API is debounced in the onChange
+    onChange(text);
+    setText(text);
+  };
+
+  // Custom link-command for the MDEditor toolbar
   const markdownLink: ICommand = {
     name: "link",
     keyCommand: "link",
@@ -96,90 +86,34 @@ export default function MarkdownEditor(props: {
         </svg>
       </Tooltip>
     ),
-    execute: (state: TextState, api: TextAreaTextApi) => {
-      const linkText = state.selectedText ? state.selectedText : "";
-      const selection = {
+    execute: (state: TextState) => {
+      openUrlPrompt({
         start: state.selection.start,
         end: state.selection.end,
-        linkText: linkText,
-      };
-      openLinkPrompt(selection);
+        linkText: state.selectedText,
+      });
     },
   };
 
-  const onConfirmURLPrompt = (url: string) => {
-    const { start, end, linkText } = selectionInfo;
-    const before = value.substring(0, start);
-    const transformedLink = transformLink(url);
-    const after = value.substring(end);
-    const modifyText = `${before}[${linkText}](${transformedLink})${after}`;
-    onChange(modifyText);
-    setValue(modifyText);
-    onCloseURLPrompt();
-  };
-
-  const onCloseURLPrompt = () => {
-    setSelectionInfo({ ...selectionInfo, linkText: "" });
-    setUrl("");
-    setIsOpenUrlPrompt(false);
-  };
+  if (isOpenUrlPrompt) {
+    return (
+      <UrlPrompt
+        selectionInfo={selectionInfo}
+        setIsOpenUrlPrompt={setIsOpenUrlPrompt}
+        setSelectionInfo={setSelectionInfo}
+        setAndPatchText={setAndPatchText}
+        text={text}
+      />
+    );
+  }
 
   return (
+    // data-color-mode property is for MDEditor color theme
     <div data-color-mode="light">
-      <Scrim
-        open={isOpenUrlPrompt}
-        onClose={onCloseURLPrompt}
-        isDismissable
-        onKeyPress={(e) => {
-          if (e.key === "Enter") {
-            onConfirmURLPrompt(url);
-          }
-        }}
-        style={{
-          overflow: "hidden",
-          backgroundColor: "white",
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          zIndex: 1000,
-          display: "block",
-          width: "100%",
-        }}
-      >
-        <div className={styles.scrimWrapper}>
-          <div
-            className={styles.scrimHeaderWrapper}
-            style={{ marginBottom: 16 }}
-          >
-            <div className={styles.scrimTitle}>Add link</div>
-          </div>
-          <TextField
-            autoFocus={!selectionInfo.linkText}
-            label={"Text"}
-            variant={"default"}
-            defaultValue={selectionInfo.linkText}
-            onChange={(e) =>
-              setSelectionInfo({ ...selectionInfo, linkText: e.target.value })
-            }
-            id={"linkText"}
-            autoComplete="off"
-          />
-          <div className={styles.scrimContent}>
-            <URLPrompt
-              onConfirm={(url) => {
-                onConfirmURLPrompt(url);
-              }}
-              linkText={selectionInfo.linkText}
-              url={url}
-              setUrl={setUrl}
-              onClose={onCloseURLPrompt}
-            />
-          </div>
-        </div>
-      </Scrim>
       <Label htmlFor="mdEditor" label={label} />
       <div style={{ display: "flex", gap: 12 }}>
         <div onClick={() => canEdit && setEditMode(true)} style={{ flex: 1 }}>
+          {/* Override MDEditor default styles */}
           <style global jsx>{`
             #mdEditor > div.w-md-editor-content > div > div {
               font-size: 1rem;
@@ -189,11 +123,8 @@ export default function MarkdownEditor(props: {
           `}</style>
           <MDEditor
             id="mdEditor"
-            value={value}
-            onChange={(value?: string) => {
-              onChange(value);
-              setValue(value);
-            }}
+            value={text}
+            onChange={setAndPatchText}
             preview={editMode ? "edit" : "preview"}
             extraCommands={[]}
             commands={[markdownLink]}
@@ -201,17 +132,18 @@ export default function MarkdownEditor(props: {
             previewOptions={{
               rehypePlugins: [[rehypeSanitize]],
               style: {
+                backgroundColor: canEdit ? "rgba(247,247,247,1" : "white",
                 color: "rgba(61,61,61,1)",
+                cursor: canEdit && "cell",
                 fontSize: "1rem",
                 fontWeight: 400,
                 lineHeight: 1.5,
                 padding: "6px 8px",
-                cursor: canEdit && "cell",
-                backgroundColor: canEdit ? "rgba(247,247,247,1" : "white",
               },
               linkTarget: "_blank",
             }}
             textareaProps={{
+              // Set cursor at the end of text when focusing on the textarea
               onFocus: (e) => {
                 e.target.setSelectionRange(
                   e.target.value.length,
