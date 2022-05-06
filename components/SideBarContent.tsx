@@ -127,9 +127,7 @@ export function SideBarContent(props: {
       />
       <SideBarBody
         selectedObject={selectedObject}
-        onChangeName={(e) =>
-          patchCard(selectedObject, { name: e.target.value })
-        }
+        onChangeName={(name) => patchCard(selectedObject, { name })}
         onChangeRole={(e) =>
           patchCard(selectedObject, { role: e.target.value })
         }
