@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.20](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.19...v0.2.20) (2022-05-06)
+
+### Features
+
+- right click and drag around in canvas ([#403](https://github.com/equinor/MAD-VSM-WEB/issues/403)) ([e88f726](https://github.com/equinor/MAD-VSM-WEB/commit/e88f726c9bfeef35296d8d98d714aa4a463547fc)), closes [#399](https://github.com/equinor/MAD-VSM-WEB/issues/399)
+- Support for links in cards ([#397](https://github.com/equinor/MAD-VSM-WEB/issues/397)) ([6772901](https://github.com/equinor/MAD-VSM-WEB/commit/6772901dd6390636c3e423c406c2326c15c4c937)), closes [#175](https://github.com/equinor/MAD-VSM-WEB/issues/175)
+
 ### [0.2.19](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.18...v0.2.19) (2022-03-29)
 
 ### Bug Fixes
