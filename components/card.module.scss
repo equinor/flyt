@@ -1,0 +1,105 @@
+.cardWrapper {
+  //background-color: #008f75;
+  display: flex;
+  //justify-content: center;
+}
+
+.card {
+  width: 126px - 8px;
+  height: 136px - 8px;
+  overflow: hidden;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-family: "Equinor", sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.2px;
+  color: #3d3d3d;
+  //animation: fade-in 1s;
+  margin: 12px;
+  padding: 8px;
+
+  align-self: center;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translate(0, 10px);
+  }
+}
+
+.card:hover {
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.1);
+}
+
+.supplier {
+  @extend .card;
+  background-color: #40d38f;
+  align-self: auto;
+}
+
+.process {
+  @extend .card;
+  display: none;
+}
+
+.input {
+  @extend .card;
+  background-color: #40d38f;
+  align-self: auto;
+}
+
+.mainActivity {
+  @extend .card;
+  background-color: #52c0ff;
+}
+
+.subActivity {
+  @extend .card;
+  background-color: #fdd835;
+}
+
+.text {
+  @extend .card;
+}
+
+.waiting {
+  @extend .card;
+  background-color: #ff8f00;
+  height: 61px;
+}
+
+.output {
+  @extend .card;
+  background-color: #40d38f;
+  align-self: auto;
+}
+
+.customer {
+  @extend .card;
+  background-color: #40d38f;
+  align-self: auto;
+}
+
+.choice {
+  @extend .card;
+  background-color: #fdd835;
+  width: 90px;
+  height: 90px;
+  transform: rotate(45deg);
+  margin: 20px auto; // center
+}
+
+.choice > p {
+  // rotate text back to normal... feels like a hack
+  transform: rotate(-45deg);
+}
+
+.error {
+  @extend .card;
+  background-color: #eb0037;
+}

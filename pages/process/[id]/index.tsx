@@ -3,16 +3,55 @@ import Head from "next/head";
 import { Typography } from "@equinor/eds-core-react";
 import { useRouter } from "next/router";
 import React from "react";
-import dynamic from "next/dynamic";
 import { Layouts } from "../../../layouts/LayoutWrapper";
 import { useQuery } from "react-query";
 import { getProject } from "../../../services/projectApi";
 import { unknownErrorToString } from "../../../utils/isError";
+import { Loading } from "../../../components/loading";
+import { ErrorMessage } from "../../../components/errorMessage";
+import { vsmObject } from "../../../interfaces/VsmObject";
+import { DraggableMainActivity } from "../../../components/card";
 
-const DynamicComponentWithNoSSR = dynamic(
-  () => import("../../../components/canvas/Canvas"),
-  { ssr: false }
-);
+function Process(props: { processId: string | string[] }) {
+  const { processId: id } = props;
+  const {
+    data: process,
+    error,
+    isLoading,
+  } = useQuery(["project", id], () => getProject(id), {
+    enabled: !!id,
+  });
+  if (isLoading) {
+    return <Loading />;
+  }
+  if (error) {
+    return <ErrorMessage error={error} />;
+  }
+  if (!process) {
+    return <ErrorMessage error={"No process found"} />;
+  }
+
+  return (
+    <div>
+      <Head>
+        <title>{process.name}</title>
+      </Head>
+      <div
+        style={{
+          // backgroundColor: "blueviolet",
+          paddingTop: 64,
+          display: "flex",
+          border: "1px solid rgba(0,0,0,0.05)",
+          borderRadius: "5px",
+        }}
+      >
+        {process.objects[0].childObjects.map((child) => (
+          <DraggableMainActivity key={child.vsmObjectID} child={child} />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function Project() {
   const router = useRouter();
@@ -51,7 +90,7 @@ export default function Project() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <DynamicComponentWithNoSSR />
+        <Process processId={id} />
       </main>
     </div>
   );

@@ -1,6 +1,9 @@
 import React from "react";
 import { ToggleButton } from "./ToggleButton";
-export const ToggleButtonGroup = (props: {
+export const ToggleButtonGroup = ({
+  children,
+  style,
+}: {
   children: {
     props: {
       name: string;
@@ -10,10 +13,11 @@ export const ToggleButtonGroup = (props: {
       disabledTooltip: string;
     };
   }[];
+  style?: React.CSSProperties;
 }): JSX.Element => {
   return (
-    <>
-      {props.children.map((child, index) => (
+    <div style={style}>
+      {children.map((child, index) => (
         <ToggleButton
           key={child.props.name}
           name={child.props.name}
@@ -22,9 +26,9 @@ export const ToggleButtonGroup = (props: {
           onClick={child.props.onClick}
           disabledTooltip={child.props.disabledTooltip}
           first={index === 0}
-          last={index === props.children.length - 1}
+          last={index === children.length - 1}
         />
       ))}
-    </>
+    </div>
   );
 };

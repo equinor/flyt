@@ -135,7 +135,10 @@ export default function Project() {
           canEdit={canEdit}
         />
         {/*<Canvas />*/}
-        <CanvasImposter onClickCard={(cardId) => setSelectedCard(cardId)} />
+        <CanvasImposter
+          onClickCard={(cardId) => console.log(cardId)}
+          // onClickCard={(cardId) => setSelectedCard(cardId)}
+        />
       </main>
     </div>
   );

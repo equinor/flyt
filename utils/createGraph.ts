@@ -56,7 +56,7 @@ export function mockProcessGraph(): {
       width: defaultNodeWidth,
       height: defaultNodeHeight,
       // hidden: i === 1,
-    } as GraphNode);
+    });
   }
 
   //0 -> 1
@@ -245,7 +245,7 @@ export function mockProcessGraph(): {
   // 1 -> 2 -> 3 -> 7 -> 8
   // 1 -> 9 -> 10 -> 11 -> 13 -> 16 -> 12
 
-  positionNodes(graph);
+  // positionNodes(graph);
 
   return graph;
 }

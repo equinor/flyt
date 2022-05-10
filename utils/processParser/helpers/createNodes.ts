@@ -13,6 +13,8 @@ export function createNodes(objects: vsmObject[]): GraphNode[] {
       width: defaultNodeWidth,
       height: defaultNodeHeight,
       tasks: object.tasks,
+      role: object.role,
+      // time: object.time,
     };
     if (object.childObjects) nodes.push(...createNodes(object.childObjects));
     nodes.push(node);

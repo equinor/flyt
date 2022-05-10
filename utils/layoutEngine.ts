@@ -65,7 +65,7 @@ export class Graph {
     // const { nodes, edges } = graph;
     const parsedProcess = parseProcessJSON(process);
     const { nodes, edges } = parsedProcess;
-    positionNodesAndEdges({ nodes, edges });
+    // positionNodesAndEdges({ nodes, edges });
 
     this.nodes = nodes;
     this.edges = edges;
