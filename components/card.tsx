@@ -1,12 +1,11 @@
 import { GraphNode } from "../utils/layoutEngine";
 import { vsmObjectTypes } from "../types/vsmObjectTypes";
-import React from "react";
+import React, { CSSProperties } from "react";
 import styles from "./card.module.scss";
 import { Reorder } from "framer-motion";
-import { useDraggable } from "@dnd-kit/core";
-import { CSS } from "@dnd-kit/utilities";
+import { useDraggable, useDroppable } from "@dnd-kit/core";
 import { vsmObject } from "../interfaces/VsmObject";
-import { getColor } from "../utils/getColor";
+import { CSS } from "@dnd-kit/utilities";
 
 function getStyle(type: vsmObjectTypes) {
   switch (type) {
@@ -85,93 +84,140 @@ export function Card(props: { node: GraphNode; onClick: (event) => void }) {
   );
 }
 
-function DraggableChildActivity(props: { child: vsmObject }) {
+function DraggableChildActivity(props: {
+  child: vsmObject;
+  onClickCard: (event) => void;
+  direction: "horizontal" | "vertical";
+}) {
   const { child } = props;
   const { name, role, time, vsmObjectType } = child;
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: `drag-${child.vsmObjectID}`,
+  });
+  const style: CSSProperties = {
+    transform: CSS.Translate.toString(transform),
+    backgroundColor: "rgba(0,0,0,0.01)",
+    borderRadius: "5px",
+    display: "flex",
+    flexDirection: "column",
+    margin: "8px", // consider making smaller
+  };
+  //
+
+  const { setNodeRef: setDropNodeRef } = useDroppable({
+    id: `drop-${props.child.vsmObjectID}`,
+  });
   return (
-    <div
-      style={{
-        backgroundColor: "rgba(0,0,0,0.05)",
-        borderRadius: "5px",
-        display: "flex",
-        flexDirection: "column",
-        margin: "10px",
-      }}
-    >
-      <button className={getStyle(vsmObjectType.pkObjectType)}>
-        <p>{name}</p>
+    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
+      <button
+        className={getStyle(vsmObjectType.pkObjectType)}
+        onClick={props.onClickCard}
+        title={name}
+      >
+        <p>{name || child.vsmObjectType.name}</p>
         <p>{role}</p>
         <p>{time}</p>
       </button>
-      {child.childObjects.length ? (
-        <div style={{ display: "flex" }}>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              // backgroundColor: "rgba(0,0,0,0.05)",
-              // border: "solid rgba(0,0,0,0.05)",
-              borderRadius: "5px",
-            }}
-          >
-            {child.childObjects
-              .filter((child) => child.choiceGroup === "Left")
-              .map((child) => (
-                <DraggableChildActivity key={child.vsmObjectID} child={child} />
-              ))}
-          </div>
 
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              // backgroundColor: "rgba(0,0,0,0.05)",
-              // border: "solid rgba(0,0,0,0.05)",
-              borderRadius: "5px",
-            }}
-          >
-            {child.childObjects
-              .filter((child) => child.choiceGroup === "Right")
-              .map((child) => (
-                <DraggableChildActivity key={child.vsmObjectID} child={child} />
-              ))}
-          </div>
+      {child.vsmObjectType.pkObjectType === vsmObjectTypes.choice ? (
+        <div
+          style={{
+            display: "flex",
+          }}
+        >
+          {["Left", "Right"].map((choiceGroup) => (
+            <div
+              key={choiceGroup}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                backgroundColor: "rgba(0,0,0,0.01)",
+                borderRadius: "5px",
+                // keep some space for dropZone if no children
+                minWidth: 118,
+                minHeight: 128,
+              }}
+            >
+              {child.childObjects
+                .filter((child) => child.choiceGroup === choiceGroup)
+                .map((child) => (
+                  <DraggableChildActivity
+                    key={child.vsmObjectID}
+                    child={child}
+                    onClickCard={props.onClickCard}
+                    direction={props.direction}
+                  />
+                ))}
+            </div>
+          ))}
         </div>
       ) : null}
     </div>
   );
 }
 
-export function DraggableMainActivity(props: { child: vsmObject }) {
-  const { child } = props;
-  const { name, role, time, vsmObjectType } = child;
-
+export function MyCard(props: { vsmObject: vsmObject }) {
+  if (!props.vsmObject) {
+    return (
+      <div className={getStyle(vsmObjectTypes.error)}>
+        No vsmObject provided to this component
+      </div>
+    );
+  }
+  const { name, role, time, vsmObjectType } = props.vsmObject;
   return (
-    <div
-      style={{
-        // backgroundColor: "rgba(0,0,0,0.05)",
-        borderRadius: "5px",
-        display: "flex",
-        padding: "10px",
-        flexDirection: "column",
-      }}
-    >
-      <button className={getStyle(vsmObjectType.pkObjectType)}>
-        <p>{name}</p>
-        <p>{role}</p>
-        <p>{time}</p>
-      </button>
+    <button className={getStyle(vsmObjectType.pkObjectType)} title={name}>
+      <p>{name || vsmObjectType.name}</p>
+      <p>{role}</p>
+      <p>{time}</p>
+    </button>
+  );
+}
+
+export function MainActivityContainer(props: {
+  child: vsmObject;
+  onClickCard: (event) => void;
+  direction: "horizontal" | "vertical";
+}) {
+  const { child } = props;
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    // transition, // Only for sortable
+  } = useDraggable({
+    id: `${child.vsmObjectID}`,
+  });
+  const style: CSSProperties = {
+    transform: CSS.Transform.toString(transform),
+    // transition,
+    backgroundColor: "rgba(0,0,0,0.01)",
+    borderRadius: "5px",
+    display: "flex",
+    padding: "10px",
+    flexDirection: "column",
+    margin: "10px",
+  };
+  return (
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      <MyCard vsmObject={child} />
       {child.childObjects.length ? (
         <div
           style={{
             display: "flex",
             flexDirection: "column",
-            backgroundColor: "rgba(0,0,0,0.05)",
-            // borderRadius: "5px",
+            backgroundColor: "rgba(0,0,0,0.01)",
+            borderRadius: "5px",
           }}
         >
           {child.childObjects.map((child) => (
-            <DraggableChildActivity key={child.vsmObjectID} child={child} />
+            <DraggableChildActivity
+              key={child.vsmObjectID}
+              child={child}
+              onClickCard={props.onClickCard}
+              direction={props.direction}
+            />
           ))}
         </div>
       ) : null}

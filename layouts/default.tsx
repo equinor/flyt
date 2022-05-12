@@ -26,7 +26,7 @@ const DefaultLayout = ({ children }) => {
         <TopBar className={styles.topBar}>
           <HomeButton />
           <div />
-          <RightTopBarSection isAuthenticated={isAuthenticated} />
+          <RightTopBarSection />
         </TopBar>
 
         {children}
@@ -47,7 +47,7 @@ const DefaultLayout = ({ children }) => {
       <TopBar className={styles.topBar}>
         <HomeButton />
         <div />
-        <RightTopBarSection isAuthenticated={isAuthenticated} />
+        <RightTopBarSection />
       </TopBar>
       <ServiceMessageBanner />
 

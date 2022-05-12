@@ -312,7 +312,7 @@ const CanvasLayout = ({ children }): JSX.Element => {
               <Icon data={share} />
             </Button>
           </TooltipImproved>
-          <RightTopBarSection isAuthenticated={isAuthenticated} />
+          <RightTopBarSection />
         </div>
       </TopBar>
 
