@@ -35,27 +35,6 @@ yarn-error.log*
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-
-# production
-/build
-
-# misc
-.env
-.env.development.local
-.env.test.local
-.env.production.local
-
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
 .eslintcache
 
 # Created by https://www.toptal.com/developers/gitignore/api/react,macos,windows,linux,intellij,vscode
@@ -181,7 +160,6 @@ fabric.properties
 
 ### macOS ###
 # General
-.DS_Store
 .AppleDouble
 .LSOverride
 
@@ -261,5 +239,6 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/react,macos,windows,linux,intellij,vscode
 
 .idea
-
+# Next.js generates its own .tsbuildinfo at .next/cache. So, I guess you don't commit tsconfig.tsbuildinfo to version control.
+# Ref: https://github.com/vercel/next.js/discussions/30815#discussioncomment-1614404
 tsconfig.tsbuildinfo
