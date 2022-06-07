@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.21](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.21) (2022-06-07)
+
+### Bug Fixes
+
+- Owner cannot delegate roles from landing page ([#425](https://github.com/equinor/MAD-VSM-WEB/issues/425)) ([78b1dea](https://github.com/equinor/MAD-VSM-WEB/commit/78b1deaf70891c3b128f1cf77e95c7ec876d88bc)), closes [#410](https://github.com/equinor/MAD-VSM-WEB/issues/410)
+
 ### [0.2.20](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.19...v0.2.20) (2022-05-06)
 
 ### Features
