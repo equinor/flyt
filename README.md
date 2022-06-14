@@ -5,7 +5,7 @@
 # Links
 
 - :inbox_tray: [Bug and feature tracker](https://github.com/orgs/equinor/projects/87/views/8)
-- :1234: [Feature backlog (and prioritisation)](https://github.com/equinor/MAD-VSM-WEB/projects/2)
+- :1234: [Feature backlog (and prioritisation)](https://github.com/orgs/equinor/projects/141/)
 - :art: [Figma design & prototype](https://www.figma.com/file/IkHwmIQrsT0iR34f5R5UnZ/vsm)
 - :zap: [Api-endpoints: See swagger](https://vsm-api-dev.azurewebsites.net/swagger/index.html)
 - :dizzy: [Our development process: Mapped in Flyt itself](https://flyt.equinor.com/projects/172)
