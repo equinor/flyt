@@ -1,30 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
-import { getProject } from "../../services/projectApi";
+import "reactflow/dist/style.css";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { moveVSMObject, postVSMObject } from "../../services/vsmObjectApi";
 import { useAccount, useMsal } from "@azure/msal-react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 
 import { DeleteVsmObjectDialog } from "../DeleteVsmObjectDialog";
 import { LiveIndicator } from "../LiveIndicator";
 import { ResetProcessButton } from "components/ResetProcessButton";
 import { ToBeToggle } from "./ToBeToggle";
 import { VSMSideBar } from "../VSMSideBar";
-import { addCardsToCanvas } from "./utils/AddCardsToCanvas";
-import { assets } from "./utils/AssetFactory";
-import { draggable } from "./utils/draggable";
-import { getAccessToken } from "../../auth/msalHelpers";
-import { getApp } from "./utils/PixiApp";
 import { getMyAccess } from "../../utils/getMyAccess";
-import { getViewPort } from "./utils/PixiViewport";
-import { initCanvas } from "./utils/InitCanvas";
-import { io } from "socket.io-client";
-import { loadAssets } from "./utils/LoadAssets";
 import { notifyOthers } from "../../services/notifyOthers";
-import { resetCanvasZoomAndPosition } from "./utils/ResetCanvasZoomAndPosition";
 import { CanvasButtons } from "components/CanvasButtons";
 import ManageLabelBox from "components/Labels/ManageLabelBox";
-import style from "../VSMCanvas.module.scss";
-import { toolBox } from "./entities/toolbox/toolbox";
 import { unknownErrorToString } from "utils/isError";
 import { useRouter } from "next/router";
 import { useStoreDispatch } from "../../hooks/storeHooks";
@@ -32,13 +20,20 @@ import { vsmObject } from "interfaces/VsmObject";
 import { Button, Icon } from "@equinor/eds-core-react";
 import { close } from "@equinor/eds-icons";
 import { ProcessTimeline } from "../ProcessTimeline";
+import ReactFlow, {
+  ReactFlowProvider,
+  applyNodeChanges,
+  applyEdgeChanges,
+} from "reactflow";
+import useLayout from "./hooks/useLayout";
+import nodeTypes from "./NodeTypes";
 
-export default function Canvas(): JSX.Element {
-  const ref = useRef();
+function Canvas(props): JSX.Element {
   const [selectedObject, setSelectedObject] = useState(null);
   const dispatch = useStoreDispatch();
   const router = useRouter();
   const { id, version } = router.query;
+  const { project } = props;
 
   const [socketConnected, setSocketConnected] = useState(false);
   const [socketReason, setSocketReason] = useState("");
@@ -46,48 +41,16 @@ export default function Canvas(): JSX.Element {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
 
-  useEffect(() => resetCanvasZoomAndPosition(), []);
+  const rootNode = {
+    id: project.objects[0].vsmObjectID.toString(),
+    data: {},
+    position: { x: 0, y: 0 },
+    type: "rootCard",
+  };
 
-  useEffect(() => {
-    getAccessToken().then((accessToken) => {
-      const socket = io({ path: "/api/socket", auth: { token: accessToken } });
+  const [nodes, setNodes] = useState([rootNode]);
+  const [edges, setEdges] = useState([]);
 
-      socket.on("connect", () => {
-        setSocketConnected(true);
-      });
-
-      socket.on("disconnect", (reason) => {
-        dispatch.setSnackMessage(`Socket disconnected because ${reason}`);
-        setSocketConnected(false);
-        setSocketReason(`${reason}`);
-      });
-
-      socket.on("connect_error", (error) => {
-        // if (error.data.type === "UnauthorizedError") {
-        console.log("Error", error);
-        setSocketConnected(false);
-        setSocketReason(error.message);
-        // }
-      });
-
-      socket.on(`room-${id}`, (payload) => {
-        if (payload.user !== account.username?.split("@")[0]) {
-          dispatch.setSnackMessage(
-            `${payload.user ? payload.user : "Someone"} ${payload.msg}`
-          );
-        }
-        queryClient.invalidateQueries();
-      });
-      // Handling token expiration
-
-      return () => socket.disconnect();
-    });
-  }, []);
-
-  const { data: project } = useQuery(["project", id, version], () =>
-    getProject(id, version)
-  );
-  const [assetsAreLoaded, setAssetsAreLoaded] = useState(false);
   const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
   const myAccess = getMyAccess(project, account);
@@ -136,51 +99,156 @@ export default function Canvas(): JSX.Element {
     goToCurrentVersion();
   }
 
-  // "Constructor"
-  useEffect(() => {
-    initCanvas(ref);
-    const cleanupAssets = loadAssets(assets, () => setAssetsAreLoaded(true));
-    return () => {
-      cleanupAssets();
-      getApp().stage.removeChildren();
-      getApp()?.stop();
-    };
-  }, []);
+  const getCardById = (id) =>
+    project.objects.find((vsmObj) => vsmObj.vsmObjectID === id);
 
-  // "Renderer"
-  useEffect(() => {
-    if (project && assetsAreLoaded) {
-      const viewport = getViewPort();
-      addCardsToCanvas(
-        viewport,
-        project,
-        userCanEdit,
-        dispatch,
-        setSelectedObject,
-        vsmObjectMutation
-      );
+  const addCardChildren = (card, cbNode, cbEdge, parentCard = null) => {
+    if (parentCard) {
+      cbNode({
+        id: card.vsmObjectID.toString(),
+        data: {
+          card,
+          handleClick: (card) => setSelectedObject(card),
+        },
+        position: { x: 0, y: 0 },
+        type: card.vsmObjectType.pkObjectType,
+        extent: "parent",
+      });
 
-      //Todo: Only show toolbox if userCanEdit. ref: https://equinor-sds-si.atlassian.net/browse/VSM-143
-      const cleanupToolbox = userCanEdit
-        ? toolBox(draggable, project, vsmObjectAddMutation, dispatch)
-        : () => {
-            //nothing to clean up
-          };
-
-      return () => {
-        // Clearing canvas
-        viewport.removeChildren();
-        cleanupToolbox();
-      };
+      cbEdge({
+        id: `${parentCard.vsmObjectID}=>${card.vsmObjectID}`,
+        source: parentCard.vsmObjectID.toString(),
+        target: card.vsmObjectID.toString(),
+      });
     }
-  }, [project, assetsAreLoaded]);
+
+    card.childObjects.forEach((childCardId) => {
+      const childCard = getCardById(childCardId);
+      addCardChildren(childCard, cbNode, cbEdge, card);
+    });
+  };
+
+  useEffect(() => {
+    const initNodes = [];
+    const initEdges = [];
+    addCardChildren(
+      project.objects[0],
+      (node) => {
+        initNodes.push(node);
+      },
+      (edge) => {
+        initEdges.push(edge);
+      }
+    );
+    setNodes([rootNode, ...initNodes]);
+    setEdges(initEdges);
+  }, [project]);
+
+  const dragRef = useRef(null);
+  const [target, setTarget] = useState(null);
+  const [source, setSource] = useState(null);
+
+  const isValidDrop = (source, target) => {
+    const sourceType = source.type;
+    const targetType = target.type;
+    // const sourceType = source.data.card.vsmObjectType.pkObjectType;
+    // const targetType = target.data.card.vsmObjectType.pkObjectType;
+    if (
+      ((sourceType === 10 || sourceType === 5 || sourceType === 7) &&
+        (targetType === 10 ||
+          targetType === 5 ||
+          targetType === 7 ||
+          targetType === 4)) ||
+      (sourceType === 4 && targetType === 4)
+    ) {
+      return true;
+    }
+    return false;
+  };
+
+  const onNodeDragStart = (evt, nodeDragging) => {
+    // TODO: Drag children aswell
+    dragRef.current = nodeDragging;
+    setNodes((nodes) =>
+      nodes.map((node) => {
+        if (node.id == nodeDragging.id) {
+          node.data = { ...node.data, isDragging: true };
+        } else if (isValidDrop(nodeDragging, node)) {
+          node.data = { ...node.data, isValidDropTarget: true };
+        } else {
+          node.data = { ...node.data, isValidDropTarget: false };
+        }
+        return node;
+      })
+    );
+    setSource(nodeDragging);
+  };
+
+  const onNodeDrag = (evt, node) => {
+    // Check edges instead?
+    const centerX = node.position.x + node.width / 2;
+    const centerY = node.position.y + node.height / 2;
+
+    const targetNode = nodes.find(
+      (n) =>
+        centerX > n.position.x &&
+        centerX < n.position.x + 130 &&
+        centerY > n.position.y &&
+        centerY < n.position.y + 140 &&
+        n.id !== node.id
+    );
+
+    setTarget(targetNode);
+  };
+
+  useEffect(() => {
+    setNodes((nodes) =>
+      nodes.map((node) => {
+        if (node.id === target?.id && isValidDrop(node, target)) {
+          node.data = { ...node.data, isDropTarget: true };
+        } else {
+          node.data = { ...node.data, isDropTarget: false };
+        }
+        return node;
+      })
+    );
+  }, [target]);
+
+  const onNodeDragStop = (evt, node) => {
+    if (!target || !isValidDrop(node, target)) {
+      setNodes((nodes) =>
+        nodes.map((n) => {
+          if (n.id === node?.id) {
+            n = source;
+          }
+          return n;
+        })
+      );
+    } else {
+      setTarget(null);
+      dragRef.current = null;
+    }
+    setNodes((nodes) =>
+      nodes.map((node) => {
+        node.data = { ...node.data, isValidDropTarget: undefined };
+        return node;
+      })
+    );
+  };
+
+  useLayout();
+
+  const onNodesChange = useCallback(
+    (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
+    [setNodes]
+  );
+  const onEdgesChange = useCallback(
+    (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
+    [setEdges]
+  );
 
   return (
-    <div
-      style={{
-        backgroundColor: "black",
-      }}
-    >
+    <div style={{ width: "100vw", height: "100vh" }}>
       {showVersionHistoryBottomSheet && (
         <div
           onWheel={(e) => e.stopPropagation()}
@@ -236,18 +304,37 @@ export default function Canvas(): JSX.Element {
           setSelectedObject(null);
         }}
       />
-
       <VSMSideBar
         onClose={() => setSelectedObject(null)}
         onDelete={() => setVisibleDeleteScrim(true)}
         canEdit={userCanEdit}
         selectedObject={selectedObject}
       />
-      <div
-        onContextMenu={(e) => e.preventDefault()} // prevent right click menu
-        className={style.canvasWrapper}
-        ref={ref}
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        fitView
+        nodeTypes={nodeTypes}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onPaneClick={() => setSelectedObject(null)}
+        minZoom={0.2}
+        nodesDraggable={true}
+        nodesConnectable={false}
+        zoomOnDoubleClick={false}
+        onNodeDragStart={onNodeDragStart}
+        onNodeDrag={onNodeDrag}
+        onNodeDragStop={onNodeDragStop}
+        attributionPosition="top-left"
       />
     </div>
+  );
+}
+
+export function CanvasWrapper(props) {
+  return (
+    <ReactFlowProvider>
+      <Canvas {...props} />
+    </ReactFlowProvider>
   );
 }

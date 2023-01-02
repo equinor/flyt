@@ -3,16 +3,12 @@ import Head from "next/head";
 import { Typography } from "@equinor/eds-core-react";
 import { useRouter } from "next/router";
 import React from "react";
-import dynamic from "next/dynamic";
 import { Layouts } from "../../../layouts/LayoutWrapper";
 import { useQuery } from "react-query";
 import { getProject } from "../../../services/projectApi";
 import { unknownErrorToString } from "../../../utils/isError";
-
-const DynamicComponentWithNoSSR = dynamic(
-  () => import("../../../components/canvas/Canvas"),
-  { ssr: false }
-);
+import { CanvasWrapper } from "../../../components/canvas/Canvas";
+import { mockApi } from "components/canvas/NodeTypes/MockApi";
 
 export default function Project() {
   const router = useRouter();
@@ -44,17 +40,22 @@ export default function Project() {
       </div>
     );
   }
-  return (
-    <div className={commonStyles.container}>
-      <Head>
-        <title>{project?.name || `Flyt | Process ${id}`}</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <main>
-        <DynamicComponentWithNoSSR />
-      </main>
-    </div>
-  );
+
+  if (project) {
+    return (
+      <div className={commonStyles.container}>
+        <Head>
+          <title>{project?.name || `Flyt | Process ${id}`}</title>
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <main>
+          <CanvasWrapper project={mockApi} />
+        </main>
+      </div>
+    );
+  }
+  // TODO: Add project loader
+  return <div>Loading</div>;
 }
 
 Project.layout = Layouts.Canvas;

@@ -34,6 +34,7 @@ export const ToBeToggle = (): JSX.Element => {
     <div
       style={{
         position: "absolute",
+        zIndex: 20,
         right: 0,
         margin: 12,
         padding: 12,

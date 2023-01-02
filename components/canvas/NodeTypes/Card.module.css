@@ -1,0 +1,98 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 130px;
+  height: 140px;
+  background-color: #ffff;
+  border-radius: 4px;
+  line-height: 20px;
+  color: #565656;
+
+  animation-name: fade-in;
+  transition: all 0.2s ease-in-out;
+  filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.14));
+}
+
+.card:hover {
+  /*opacity: 0.85;*/
+  filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.44));
+}
+
+.card--generic {
+  background-color: #00d889;
+}
+
+.card--mainactivity {
+  background-color: #00c1ff;
+}
+
+.card--subactivity {
+  background-color: #fdd835;
+}
+
+.card--waiting {
+  background-color: #ff8f00;
+  height: 65px;
+}
+
+.card--choice {
+  animation-name: fade-in;
+  transition: all 0.2s ease-in-out;
+  filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.14));
+}
+
+.card--choice:hover {
+  /*opacity: 0.85;*/
+  filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.44));
+}
+
+.title {
+  font-family: Equinor, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  color: #6f6f6f;
+}
+
+.card__description-container {
+  padding: 7.5px 10px;
+  overflow-wrap: break-word;
+  overflow: hidden;
+}
+
+.card__role-container {
+  margin-top: auto;
+  height: 13px;
+  padding: 5px 10px;
+  background-image: linear-gradient(rgb(0 0 0/5%) 0 0);
+}
+
+.card__time-container {
+  height: 13px;
+  padding: 5px 10px;
+  background-image: linear-gradient(rgb(0 0 0/10%) 0 0);
+}
+
+.card__waitingtime-container {
+  display: flex;
+  align-items: center;
+  padding: 0px 10px;
+}
+
+.handle {
+  visibility: hidden;
+}
+
+.text {
+  font-family: "Equinor";
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 15px;
+  letter-spacing: 0.2px;
+  margin: 0;
+}
+
+.text--placeholder {
+  opacity: 0.4;
+}
