@@ -18,6 +18,7 @@ const validateToken = async (
     if (!matchingKey) return reject("Token does not match keys");
 
     const publicKeyCertificate =
+      // deepcode ignore HardcodedSecret: Public keys are designed for sharing
       "-----BEGIN CERTIFICATE-----\n" +
       matchingKey.x5c +
       "\n-----END CERTIFICATE-----";
