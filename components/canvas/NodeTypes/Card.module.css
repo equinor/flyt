@@ -4,8 +4,7 @@
   width: 130px;
   height: 140px;
   background-color: #ffff;
-  border-radius: 4px;
-  line-height: 20px;
+  /*line-height: 20px;*/
   color: #565656;
 
   animation-name: fade-in;
@@ -13,7 +12,12 @@
   filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.14));
 }
 
-.card:hover {
+.container {
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.container--hover {
   /*opacity: 0.85;*/
   filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.44));
 }
@@ -32,7 +36,6 @@
 
 .card--waiting {
   background-color: #ff8f00;
-  height: 65px;
 }
 
 .card--choice {

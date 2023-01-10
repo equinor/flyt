@@ -1,31 +1,22 @@
-import * as PIXI from "pixi.js";
-import { Graphics } from "pixi.js";
+import React from "react";
 
-export function TextCircle(
-  text = "?",
-  background: PIXI.ILoaderResource,
-  textResolution = 2
-): PIXI.Container {
-  const diameter = 26; // <- Must be the same as the circle sprite
-  const circle = new PIXI.Sprite(background.texture);
-
-  const circleText = new PIXI.Text(text, {
-    fontFamily: "Equinor",
-    fontSize: 12,
-    fontStyle: "normal",
-    fontWeight: "500",
-    lineHeight: 15,
-    letterSpacing: 0,
-    fill: "white",
-  });
-  circleText.resolution = textResolution;
-
-  // Center text
-  circleText.anchor.set(0.5);
-  circleText.y = diameter / 2;
-  circleText.x = diameter / 2;
-
-  const circleContainer = new PIXI.Container();
-  circleContainer.addChild(circle, circleText);
-  return circleContainer;
-}
+export const TextCircle = (props) => (
+  <div
+    style={{
+      height: "30px",
+      width: "30px",
+      background: props.color,
+      color: "white",
+      fontFamily: "Equinor",
+      fontSize: 12,
+      fontStyle: "normal",
+      fontWeight: "500",
+      borderRadius: "50%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    }}
+  >
+    {props.text}
+  </div>
+);

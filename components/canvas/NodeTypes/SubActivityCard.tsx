@@ -8,10 +8,12 @@ import { SubActivityButton } from "./SubActivityButton";
 import { CardButtonsContainer } from "./CardButtonsContainer";
 import { ChoiceButton } from "./ChoiceButton";
 import { WaitingButton } from "./WaitingButton";
+import { QIPRContainer } from "./QIPRContainer";
 
-export function SubActivityCard(props) {
+export const SubActivityCard = (props) => {
   const [hovering, setHovering] = useState(false);
-  const { name, role, time, timeDefinition, vsmObjectType } = props.data.card;
+  const { name, role, time, timeDefinition, vsmObjectType, tasks } =
+    props.data.card;
   const { isDropTarget, isValidDropTarget, isDragging } = props.data;
 
   const handleClick = () => {};
@@ -24,38 +26,67 @@ export function SubActivityCard(props) {
     <div
       onMouseEnter={() => !isDragging && setHovering(true)}
       onMouseLeave={() => setHovering(false)}
+      style={{
+        display: "flex",
+        justifyContent: "row",
+      }}
     >
       <div
-        onClick={() => props.data.handleClick(props.data.card)}
-        className={`${styles.card} ${styles["card--subactivity"]}`}
-        style={{
-          filter:
-            isDropTarget && isValidDropTarget
-              ? "brightness(1.85)"
-              : isValidDropTarget === false
-              ? "brightness(0.85)"
-              : "",
-        }}
+        className={`${styles.container} ${
+          hovering && styles["container--hover"]
+        }`}
+        style={{ display: "flex" }}
       >
-        <div className={styles["card__description-container"]}>
-          {name ? (
-            <p className={styles.text}>{formatCanvasText(name, 70)}</p>
-          ) : (
-            <p className={`${styles.text} ${styles["text--placeholder"]}`}>
-              {formatCanvasText(vsmObjectType.name, 70)}
+        <div
+          onClick={() => props.data.handleClick(props.data.card)}
+          className={`${styles.card} ${styles["card--subactivity"]}`}
+          style={{
+            filter:
+              isDropTarget && isValidDropTarget
+                ? "brightness(1.85)"
+                : isValidDropTarget === false
+                ? "brightness(0.85)"
+                : "",
+          }}
+        >
+          <div className={styles["card__description-container"]}>
+            {name ? (
+              <p className={styles.text}>{formatCanvasText(name, 70)}</p>
+            ) : (
+              <p className={`${styles.text} ${styles["text--placeholder"]}`}>
+                {formatCanvasText(vsmObjectType.name, 70)}
+              </p>
+            )}
+          </div>
+          <div className={styles["card__role-container"]}>
+            <p className={styles.text}>
+              {formatCanvasText(role ?? "", 16, true)}
             </p>
-          )}
+          </div>
+          <div className={styles["card__time-container"]}>
+            <p className={styles.text}>
+              {formatCanvasText(formatDuration(time, timeDefinition), 12, true)}
+            </p>
+          </div>
+          <Handle
+            className={styles.handle}
+            type="target"
+            position={Position.Top}
+            isConnectable={false}
+          />
+          <Handle
+            className={styles.handle}
+            type="source"
+            position={Position.Bottom}
+            isConnectable={false}
+          />
         </div>
-        <div className={styles["card__role-container"]}>
-          <p className={styles.text}>
-            {formatCanvasText(role ?? "", 16, true)}
-          </p>
-        </div>
-        <div className={styles["card__time-container"]}>
-          <p className={styles.text}>
-            {formatCanvasText(formatDuration(time, timeDefinition), 12, true)}
-          </p>
-        </div>
+        {tasks?.length > 0 && (
+          <QIPRContainer
+            onClick={() => props.data.handleClick(props.data.card)}
+            tasks={tasks}
+          />
+        )}
       </div>
       {hovering && (
         <>
@@ -71,18 +102,6 @@ export function SubActivityCard(props) {
           </CardButtonsContainer>
         </>
       )}
-      <Handle
-        className={styles.handle}
-        type="target"
-        position={Position.Top}
-        isConnectable={false}
-      />
-      <Handle
-        className={styles.handle}
-        type="source"
-        position={Position.Bottom}
-        isConnectable={false}
-      />
     </div>
   );
-}
+};

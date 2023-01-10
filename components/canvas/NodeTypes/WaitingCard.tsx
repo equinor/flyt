@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Handle, Position } from "reactflow";
 import { formatCanvasText } from "../utils/FormatCanvasText";
 import { formatDuration } from "types/timeDefinitions";
@@ -10,41 +10,78 @@ import { CardButtonsContainer } from "./CardButtonsContainer";
 import { SubActivityButton } from "./SubActivityButton";
 import { ChoiceButton } from "./ChoiceButton";
 import { WaitingButton } from "./WaitingButton";
+import { QIPRContainer } from "./QIPRContainer";
 
-export function WaitingCard(props) {
+export const WaitingCard = (props) => {
   const [hovering, setHovering] = useState(false);
-  const { time, timeDefinition, vsmObjectType } = props.data.card;
-  const { isDropTarget, isValidDropTarget } = props.data;
+  const { time, timeDefinition, vsmObjectType, tasks } = props.data.card;
+  const { isDropTarget, isValidDropTarget, isDragging } = props.data;
 
   const handleClick = () => {};
 
+  useEffect(() => {
+    setHovering(false);
+  }, [isDragging]);
+
   return (
     <div
-      onClick={() => props.data.handleClick(props.data.card)}
-      className={`${styles.card} ${styles["card--waiting"]}`}
-      onMouseEnter={() => setHovering(true)}
+      onMouseEnter={() => !isDragging && setHovering(true)}
       onMouseLeave={() => setHovering(false)}
       style={{
-        filter:
-          isDropTarget && isValidDropTarget
-            ? "brightness(1.85)"
-            : isValidDropTarget === false
-            ? "brightness(0.85)"
-            : "",
+        display: "flex",
+        justifyContent: "row",
       }}
     >
-      <div className={styles["card__description-container"]}>
-        <p className={`${styles.text} ${styles["text--placeholder"]}`}>
-          {formatCanvasText(vsmObjectType.name, 70)}
-        </p>
-      </div>
-      <div>
-        <p
-          className={`${styles.text} ${styles["card__waitingtime-container"]}`}
+      <div
+        className={`${styles.container} ${
+          hovering && styles["container--hover"]
+        }`}
+        style={{ display: "flex" }}
+      >
+        <div
+          onClick={() => props.data.handleClick(props.data.card)}
+          className={`${styles.card} ${styles["card--waiting"]}`}
+          style={{
+            filter:
+              isDropTarget && isValidDropTarget
+                ? "brightness(1.85)"
+                : isValidDropTarget === false
+                ? "brightness(0.85)"
+                : "",
+          }}
         >
-          <Icon data={timeIcon} size={24} style={{ marginRight: 5 }} />
-          {formatDuration(time, timeDefinition)}
-        </p>
+          <div className={styles["card__description-container"]}>
+            <p className={`${styles.text} ${styles["text--placeholder"]}`}>
+              {formatCanvasText(vsmObjectType.name, 70)}
+            </p>
+          </div>
+          <div>
+            <p
+              className={`${styles.text} ${styles["card__waitingtime-container"]}`}
+            >
+              <Icon data={timeIcon} size={24} style={{ marginRight: 5 }} />
+              {formatDuration(time, timeDefinition)}
+            </p>
+          </div>
+          <Handle
+            className={styles.handle}
+            type="target"
+            position={Position.Top}
+            isConnectable={false}
+          />
+          <Handle
+            className={styles.handle}
+            type="source"
+            position={Position.Bottom}
+            isConnectable={false}
+          />
+        </div>
+        {tasks?.length > 0 && (
+          <QIPRContainer
+            onClick={() => props.data.handleClick(props.data.card)}
+            tasks={tasks}
+          />
+        )}
       </div>
       {hovering && (
         <>
@@ -60,18 +97,6 @@ export function WaitingCard(props) {
           </CardButtonsContainer>
         </>
       )}
-      <Handle
-        className={styles.handle}
-        type="target"
-        position={Position.Top}
-        isConnectable={false}
-      />
-      <Handle
-        className={styles.handle}
-        type="source"
-        position={Position.Bottom}
-        isConnectable={false}
-      />
     </div>
   );
-}
+};

@@ -1,0 +1,6 @@
+.QIPRContainer {
+  background-color: rgb(235, 235, 235);
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(4, auto);
+}
