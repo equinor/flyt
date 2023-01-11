@@ -34,7 +34,6 @@
     "@azure/msal-react": "^1.5.1",
     "@equinor/eds-core-react": "0.17.0",
     "@equinor/eds-icons": "^0.10.0",
-    "@thream/socketio-jwt": "3.0.1",
     "@types/jsonwebtoken": "^9.0.0",
     "@types/node": "^18.11.18",
     "@types/node-fetch": "^2.6.2",
