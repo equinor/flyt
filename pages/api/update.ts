@@ -1,7 +1,8 @@
 import { NextApiRequest } from "next";
 import { NextApiResponseServerIO } from "../../types/next";
-import validateJWTToken from "validate-azure-token";
+import validateJWTToken from "../../services/validate-azure-token";
 import getConfig from "next/config";
+import { Algorithm } from "jsonwebtoken";
 
 export default (req: NextApiRequest, res: NextApiResponseServerIO) => {
   return new Promise<void>((resolve) => {
@@ -14,10 +15,10 @@ export default (req: NextApiRequest, res: NextApiResponseServerIO) => {
         }
         const { serverRuntimeConfig } = getConfig();
         const verifyOptions = {
-          algorithms: ["RS256"],
+          algorithms: ["RS256"] as Algorithm[],
           audience: serverRuntimeConfig.AUDIENCE,
           issuer:
-            "https://sts.windows.net/3aa4a235-b6e2-48d5-9195-7fcf05b459b0/",
+            "https://login.microsoftonline.com/3aa4a235-b6e2-48d5-9195-7fcf05b459b0/v2.0",
         };
         return validateJWTToken(token, verifyOptions)
           .then(() => {
