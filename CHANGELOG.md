@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.23](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.22...v0.2.23) (2023-01-13)
+
+### Security
+
+- Patch vulnerabilities ([#469](https://github.com/equinor/MAD-VSM-WEB/issues/469)) ([0dea302](https://github.com/equinor/MAD-VSM-WEB/commit/0dea3020fda44c87867aa1a0045c88f09ef1366a)), closes [#468](https://github.com/equinor/MAD-VSM-WEB/issues/468)
+
 ### [0.2.22](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.21...v0.2.22) (2023-01-11)
 
 ### Security
