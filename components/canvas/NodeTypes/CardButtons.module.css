@@ -2,15 +2,6 @@
   height: 20px;
   width: 18px;
   border: 1px dashed #6f6f6f;
-}
-
-.cardButton--mainactivity:hover {
-  background-color: #00c1ff;
-  cursor: pointer;
-}
-
-.cardButton--subactivity:hover {
-  background-color: #fdd835;
   cursor: pointer;
 }
 
@@ -18,28 +9,28 @@
   transform: rotate(45deg);
   height: 16px;
   width: 16px;
-  align-self: center;
 }
 
-.cardButton--choice:hover {
+.cardButton--mainactivity--hover {
+  background-color: #00c1ff;
+}
+
+.cardButton--subactivity--hover {
   background-color: #fdd835;
-  cursor: pointer;
 }
 
-.cardButton--waiting {
-  height: 10px;
-  align-self: center;
+.cardButton--choice--hover {
+  background-color: #fdd835;
 }
 
-.cardButton--waiting:hover {
+.cardButton--waiting--hover {
   background-color: #ff8f00;
-  cursor: pointer;
 }
 
 .cardButtonContainer {
   display: flex;
   flex-direction: row;
-  flex: 2 0 33%;
+  flex: 0 0 33%;
   justify-content: center;
   align-items: center;
 }
@@ -49,6 +40,8 @@
   flex-wrap: wrap;
   width: 115px;
   padding: 7.5px;
+  row-gap: 15px;
+  justify-content: center;
 }
 
 .cardButtonsContainer--top {

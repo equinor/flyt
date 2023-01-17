@@ -21,12 +21,13 @@ import { Button, Icon } from "@equinor/eds-core-react";
 import { close } from "@equinor/eds-icons";
 import { ProcessTimeline } from "../ProcessTimeline";
 import ReactFlow, {
+  useNodesState,
+  useEdgesState,
   ReactFlowProvider,
-  applyNodeChanges,
-  applyEdgeChanges,
 } from "reactflow";
 import useLayout from "./hooks/useLayout";
 import nodeTypes from "./NodeTypes";
+import { vsmObjectTypes } from "types/vsmObjectTypes";
 
 function Canvas(props): JSX.Element {
   const [selectedObject, setSelectedObject] = useState(null);
@@ -48,8 +49,8 @@ function Canvas(props): JSX.Element {
     type: "rootCard",
   };
 
-  const [nodes, setNodes] = useState([rootNode]);
-  const [edges, setEdges] = useState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState([rootNode]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
@@ -102,13 +103,74 @@ function Canvas(props): JSX.Element {
   const getCardById = (id) =>
     project.objects.find((vsmObj) => vsmObj.vsmObjectID === id);
 
+  let nodesToMerge = [];
+  let mergeGroupId = null;
+
+  const handleMergeClick = (mergeGroupId, nodeId) => {
+    nodesToMerge.push(nodeId);
+    setNodes((nodes) =>
+      nodes.map((node) => {
+        if (node.id == nodeId) {
+          node.data = { ...node.data, mergeInitiator: true };
+        } else if (node.data.mergeGroupId == mergeGroupId) {
+          node.data = { ...node.data, mergeOption: true };
+        } else {
+          node.data = {
+            ...node.data,
+            mergeInitiator: false,
+            mergeOption: false,
+          };
+        }
+        return node;
+      })
+    );
+  };
+
+  const handleCancelMerge = (mergeGroupId, nodeId) => {
+    setNodes((nodes) =>
+      nodes.map((node) => {
+        if (node.id == nodeId) {
+          node.data = { ...node.data, mergeInitiator: false };
+        } else if (node.data.mergeGroupId == mergeGroupId) {
+          node.data = { ...node.data, mergeOption: false };
+        }
+        return node;
+      })
+    );
+    nodesToMerge = [];
+  };
+
+  const handleMergeOption = (vsmObjectID) =>
+    nodesToMerge.includes(vsmObjectID)
+      ? nodesToMerge.splice(nodesToMerge.indexOf(vsmObjectID), 1)
+      : nodesToMerge.push(vsmObjectID);
+
+  const handleConfirmMerge = (vsmObjectType) => {
+    console.log(vsmObjectType);
+    console.log(nodesToMerge);
+    console.log("MERGE");
+  };
+
   const addCardChildren = (card, cbNode, cbEdge, parentCard = null) => {
     if (parentCard) {
+      if (
+        card.vsmObjectType.pkObjectType === vsmObjectTypes.mainActivity ||
+        card.vsmObjectType.pkObjectType === vsmObjectTypes.output
+      ) {
+        mergeGroupId = card.vsmObjectID;
+      }
       cbNode({
         id: card.vsmObjectID.toString(),
         data: {
           card,
           handleClick: (card) => setSelectedObject(card),
+          onClickMergeButton: (mergeGroupId, vsmObjectID) =>
+            handleMergeClick(mergeGroupId, vsmObjectID),
+          onClickMergeOption: () => handleMergeOption(card.vsmObjectID),
+          confirmMerge: (vsmObjectType) => handleConfirmMerge(vsmObjectType),
+          cancelMerge: (mergeGroupId, vsmObjectID) =>
+            handleCancelMerge(mergeGroupId, vsmObjectID),
+          mergeGroupId: card.childObjects.length == 0 ? mergeGroupId : null,
         },
         position: { x: 0, y: 0 },
         type: card.vsmObjectType.pkObjectType,
@@ -237,15 +299,6 @@ function Canvas(props): JSX.Element {
   };
 
   useLayout();
-
-  const onNodesChange = useCallback(
-    (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
-    [setNodes]
-  );
-  const onEdgesChange = useCallback(
-    (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
-    [setEdges]
-  );
 
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
