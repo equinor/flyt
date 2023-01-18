@@ -9,6 +9,7 @@ import { getProject } from "../../../services/projectApi";
 import { unknownErrorToString } from "../../../utils/isError";
 import { CanvasWrapper } from "../../../components/canvas/Canvas";
 import { mockApi } from "components/canvas/NodeTypes/MockApi";
+import { CircularProgress } from "@equinor/eds-core-react";
 
 export default function Project() {
   const router = useRouter();
@@ -54,8 +55,8 @@ export default function Project() {
       </div>
     );
   }
-  // TODO: Add project loader
-  return <div>Loading</div>;
+
+  return <CircularProgress size={48} style={{ margin: "50%" }} />;
 }
 
 Project.layout = Layouts.Canvas;

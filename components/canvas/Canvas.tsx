@@ -107,6 +107,7 @@ function Canvas(props): JSX.Element {
   let mergeGroupId = null;
 
   const handleMergeClick = (mergeGroupId, nodeId) => {
+    nodesToMerge = [];
     nodesToMerge.push(nodeId);
     setNodes((nodes) =>
       nodes.map((node) => {
@@ -127,6 +128,7 @@ function Canvas(props): JSX.Element {
   };
 
   const handleCancelMerge = (mergeGroupId, nodeId) => {
+    nodesToMerge = [];
     setNodes((nodes) =>
       nodes.map((node) => {
         if (node.id == nodeId) {
@@ -137,7 +139,6 @@ function Canvas(props): JSX.Element {
         return node;
       })
     );
-    nodesToMerge = [];
   };
 
   const handleMergeOption = (vsmObjectID) =>
@@ -149,6 +150,7 @@ function Canvas(props): JSX.Element {
     console.log(vsmObjectType);
     console.log(nodesToMerge);
     console.log("MERGE");
+    nodesToMerge = [];
   };
 
   const addCardChildren = (card, cbNode, cbEdge, parentCard = null) => {
