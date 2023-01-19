@@ -74,11 +74,6 @@ export function ChoiceCard(props) {
       </div>
       {hovering && (
         <>
-          <CardButtonsContainer position={Position.Bottom}>
-            <SubActivityButton onClick={handleClick} />
-            <ChoiceButton onClick={handleClick} />
-            <WaitingButton onClick={handleClick} />
-          </CardButtonsContainer>
           <CardButtonsContainer position={Position.Top}>
             <SubActivityButton onClick={handleClick} />
             <ChoiceButton onClick={handleClick} />

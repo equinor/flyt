@@ -104,16 +104,16 @@ function Canvas(props): JSX.Element {
     project.objects.find((vsmObj) => vsmObj.vsmObjectID === id);
 
   let nodesToMerge = [];
-  let mergeGroupId = null;
+  let columnId = null;
 
-  const handleMergeClick = (mergeGroupId, nodeId) => {
+  const handleMergeClick = (columnId, nodeId) => {
     nodesToMerge = [];
     nodesToMerge.push(nodeId);
     setNodes((nodes) =>
       nodes.map((node) => {
         if (node.id == nodeId) {
           node.data = { ...node.data, mergeInitiator: true };
-        } else if (node.data.mergeGroupId == mergeGroupId) {
+        } else if (node.data.columnId == columnId && node.data.mergeable) {
           node.data = { ...node.data, mergeOption: true };
         } else {
           node.data = {
@@ -127,13 +127,13 @@ function Canvas(props): JSX.Element {
     );
   };
 
-  const handleCancelMerge = (mergeGroupId, nodeId) => {
+  const handleCancelMerge = (columnId, nodeId) => {
     nodesToMerge = [];
     setNodes((nodes) =>
       nodes.map((node) => {
         if (node.id == nodeId) {
           node.data = { ...node.data, mergeInitiator: false };
-        } else if (node.data.mergeGroupId == mergeGroupId) {
+        } else if (node.data.columnId == columnId) {
           node.data = { ...node.data, mergeOption: false };
         }
         return node;
@@ -157,22 +157,26 @@ function Canvas(props): JSX.Element {
     if (parentCard) {
       if (
         card.vsmObjectType.pkObjectType === vsmObjectTypes.mainActivity ||
-        card.vsmObjectType.pkObjectType === vsmObjectTypes.output
+        card.vsmObjectType.pkObjectType === vsmObjectTypes.output ||
+        card.vsmObjectType.pkObjectType === vsmObjectTypes.supplier ||
+        card.vsmObjectType.pkObjectType === vsmObjectTypes.input ||
+        card.vsmObjectType.pkObjectType === vsmObjectTypes.customer
       ) {
-        mergeGroupId = card.vsmObjectID;
+        columnId = card.vsmObjectID;
       }
       cbNode({
         id: card.vsmObjectID.toString(),
         data: {
           card,
           handleClick: (card) => setSelectedObject(card),
-          onClickMergeButton: (mergeGroupId, vsmObjectID) =>
-            handleMergeClick(mergeGroupId, vsmObjectID),
+          onClickMergeButton: (columnId, vsmObjectID) =>
+            handleMergeClick(columnId, vsmObjectID),
           onClickMergeOption: () => handleMergeOption(card.vsmObjectID),
           confirmMerge: (vsmObjectType) => handleConfirmMerge(vsmObjectType),
-          cancelMerge: (mergeGroupId, vsmObjectID) =>
-            handleCancelMerge(mergeGroupId, vsmObjectID),
-          mergeGroupId: card.childObjects.length == 0 ? mergeGroupId : null,
+          cancelMerge: (columnId, vsmObjectID) =>
+            handleCancelMerge(columnId, vsmObjectID),
+          mergeable: card.childObjects.length === 0,
+          columnId,
         },
         position: { x: 0, y: 0 },
         type: card.vsmObjectType.pkObjectType,

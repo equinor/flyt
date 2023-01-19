@@ -5,9 +5,12 @@ import { timer } from "d3-timer";
 
 const layout = tree<Node>()
   .nodeSize([200, 200])
-  .separation(() => 1.25);
+  .separation(() => 0.83);
 
 const options = { duration: 300 };
+const columnsEndPosX = new Map();
+const columnsStartPosX = new Map();
+const columnsOffsetX = new Map();
 
 function layoutNodes(nodes: Node[], edges: Edge[]): Node[] {
   const hierarchy = stratify<Node>()
@@ -18,10 +21,45 @@ function layoutNodes(nodes: Node[], edges: Edge[]): Node[] {
 
   const root = layout(hierarchy);
 
-  return root
-    .descendants()
-    .map((d) => ({ ...d.data, position: { x: d.x, y: d.y } }));
+  root.descendants().forEach((d) => {
+    const columnId = d.data.data.columnId;
+    const type = d?.data?.data?.card?.vsmObjectType?.name;
+    if (type) {
+      if (
+        !columnsStartPosX.has(columnId) ||
+        columnsStartPosX.get(columnId) > d.x
+      ) {
+        columnsStartPosX.set(columnId, d.x);
+      }
+      if (!columnsEndPosX.has(columnId) || columnsEndPosX.get(columnId) < d.x) {
+        columnsEndPosX.set(columnId, d.x);
+      }
+    }
+  });
+
+  return root.descendants().map((d) => {
+    return { ...d.data, position: { x: d.x, y: d.y } };
+  });
 }
+
+const setColumnsOffsetX = () => {
+  let index = 0;
+  let totalOffsetX = 0;
+  let offsetX;
+  columnsStartPosX.forEach((value, key) => {
+    if (index === 0) {
+      columnsOffsetX.set(key, 0);
+    } else {
+      offsetX =
+        value -
+        columnsEndPosX.get(Array.from(columnsEndPosX.keys())[index - 1]);
+      // 167 or less is the offset where columns starts to overlap
+      totalOffsetX += offsetX < 167 ? 167 - offsetX : offsetX;
+      columnsOffsetX.set(key, totalOffsetX);
+    }
+    index++;
+  });
+};
 
 const nodeCountSelector = (state: ReactFlowState) => state.nodeInternals.size;
 
@@ -37,6 +75,7 @@ function useLayout() {
     const nodes = getNodes();
     const edges = getEdges();
     const targetNodes = layoutNodes(nodes, edges);
+    setColumnsOffsetX();
 
     const transitions = targetNodes.map((node) => {
       return {
@@ -69,7 +108,7 @@ function useLayout() {
           return {
             id: node.id,
             position: {
-              x: to.x,
+              x: to.x + columnsOffsetX.get(node.data.columnId),
               y: to.y,
             },
             data: { ...node.data },

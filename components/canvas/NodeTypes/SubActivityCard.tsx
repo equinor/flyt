@@ -29,13 +29,14 @@ export const SubActivityCard = (props) => {
     isDropTarget,
     isValidDropTarget,
     isDragging,
-    mergeGroupId,
+    columnId,
     onClickMergeButton,
     mergeOption,
     mergeInitiator,
     confirmMerge,
     cancelMerge,
     onClickMergeOption,
+    mergeable,
   } = props.data;
 
   useEffect(() => {
@@ -62,10 +63,10 @@ export const SubActivityCard = (props) => {
             <Checkbox
               checked
               readOnly
-              onClick={() => cancelMerge(mergeGroupId, vsmObjectID)}
+              onClick={() => cancelMerge(columnId, vsmObjectID)}
             />
             <MergeButton
-              onClick={() => cancelMerge(mergeGroupId, vsmObjectID)}
+              onClick={() => cancelMerge(columnId, vsmObjectID)}
               active
             />
           </div>
@@ -102,9 +103,9 @@ export const SubActivityCard = (props) => {
             <SubActivityButton />
             <ChoiceButton />
             <WaitingButton />
-            {mergeGroupId && (
+            {mergeable && (
               <MergeButton
-                onClick={() => onClickMergeButton(mergeGroupId, vsmObjectID)}
+                onClick={() => onClickMergeButton(columnId, vsmObjectID)}
               />
             )}
           </CardButtonsContainer>
