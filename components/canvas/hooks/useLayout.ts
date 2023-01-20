@@ -93,7 +93,9 @@ function useLayout() {
         return {
           id: node.id,
           position: {
-            x: from.x + (to.x - from.x) * s,
+            x:
+              from.x +
+              (to.x + columnsOffsetX.get(node.data.columnId) - from.x) * s,
             y: from.y + (to.y - from.y) * s,
           },
           data: { ...node.data },
