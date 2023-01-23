@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import styles from "./CardButtons.module.css";
+import { CardButton } from "../../../interfaces/CardButton";
 
-export const MainActivityButton = (props) => {
+export const MainActivityButton = (props: CardButton) => {
   const [hovering, setHovering] = useState(false);
 
   return (

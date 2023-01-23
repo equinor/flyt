@@ -1,5 +1,5 @@
 import "reactflow/dist/style.css";
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { moveVSMObject, postVSMObject } from "../../services/vsmObjectApi";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQueryClient } from "react-query";
@@ -24,13 +24,16 @@ import ReactFlow, {
   useNodesState,
   useEdgesState,
   ReactFlowProvider,
+  Edge,
+  Node,
 } from "reactflow";
 import useLayout from "./hooks/useLayout";
 import nodeTypes from "./NodeTypes";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
+import { NodeData } from "interfaces/NodeData";
 
 function Canvas(props): JSX.Element {
-  const [selectedObject, setSelectedObject] = useState(null);
+  const [selectedObject, setSelectedObject] = useState<vsmObject>(null);
   const dispatch = useStoreDispatch();
   const router = useRouter();
   const { id, version } = router.query;
@@ -42,14 +45,14 @@ function Canvas(props): JSX.Element {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
 
-  const rootNode = {
+  const rootNode: Node = {
     id: project.objects[0].vsmObjectID.toString(),
     data: {},
     position: { x: 0, y: 0 },
     type: "rootCard",
   };
 
-  const [nodes, setNodes, onNodesChange] = useNodesState([rootNode]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<NodeData>([rootNode]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
@@ -90,23 +93,22 @@ function Canvas(props): JSX.Element {
   const [showVersionHistoryBottomSheet, setShowVersionHistoryBottomSheet] =
     React.useState(!!router.query.version);
 
-  function goToCurrentVersion() {
+  function goToCurrentVersion(): void {
     // navigate back to current version
     router.replace(`/process/${projectId}`);
   }
 
-  function closeVersionHistoryBottomSheet() {
+  function closeVersionHistoryBottomSheet(): void {
     setShowVersionHistoryBottomSheet(false);
     goToCurrentVersion();
   }
 
-  const getCardById = (id) =>
-    project.objects.find((vsmObj) => vsmObj.vsmObjectID === id);
+  const getCardById = (id: number): vsmObject =>
+    project.objects.find((vsmObj: vsmObject) => vsmObj.vsmObjectID === id);
 
-  let nodesToMerge = [];
-  let columnId = null;
+  let nodesToMerge: string[] = [];
 
-  const handleMergeClick = (columnId, nodeId) => {
+  const handleMergeClick = (columnId: number, nodeId: string): void => {
     nodesToMerge = [];
     nodesToMerge.push(nodeId);
     setNodes((nodes) =>
@@ -127,7 +129,7 @@ function Canvas(props): JSX.Element {
     );
   };
 
-  const handleCancelMerge = (columnId, nodeId) => {
+  const handleCancelMerge = (columnId: number, nodeId: string): void => {
     nodesToMerge = [];
     setNodes((nodes) =>
       nodes.map((node) => {
@@ -141,19 +143,27 @@ function Canvas(props): JSX.Element {
     );
   };
 
-  const handleMergeOption = (vsmObjectID) =>
+  const handleMergeOption = (vsmObjectID: string): void => {
     nodesToMerge.includes(vsmObjectID)
       ? nodesToMerge.splice(nodesToMerge.indexOf(vsmObjectID), 1)
       : nodesToMerge.push(vsmObjectID);
+  };
 
-  const handleConfirmMerge = (vsmObjectType) => {
+  const handleConfirmMerge = (vsmObjectType: string): void => {
     console.log(vsmObjectType);
     console.log(nodesToMerge);
     console.log("MERGE");
     nodesToMerge = [];
   };
 
-  const addCardChildren = (card, cbNode, cbEdge, parentCard = null) => {
+  let columnId: number = null;
+
+  const addCardChildren = (
+    card: vsmObject,
+    cbNode: (x: Node<NodeData>) => void,
+    cbEdge: (x: Edge) => void,
+    parentCard: vsmObject = null
+  ): void => {
     if (parentCard) {
       if (
         card.vsmObjectType.pkObjectType === vsmObjectTypes.mainActivity ||
@@ -168,18 +178,19 @@ function Canvas(props): JSX.Element {
         id: card.vsmObjectID.toString(),
         data: {
           card,
-          handleClick: (card) => setSelectedObject(card),
-          onClickMergeButton: (columnId, vsmObjectID) =>
-            handleMergeClick(columnId, vsmObjectID),
-          onClickMergeOption: () => handleMergeOption(card.vsmObjectID),
+          handleClick: () => setSelectedObject(card),
+          onClickMergeButton: (columnId: number) =>
+            handleMergeClick(columnId, card.vsmObjectID.toString()),
+          onClickMergeOption: () =>
+            handleMergeOption(card.vsmObjectID.toString()),
           confirmMerge: (vsmObjectType) => handleConfirmMerge(vsmObjectType),
-          cancelMerge: (columnId, vsmObjectID) =>
-            handleCancelMerge(columnId, vsmObjectID),
+          cancelMerge: (columnId) =>
+            handleCancelMerge(columnId, card.vsmObjectID.toString()),
           mergeable: card.childObjects.length === 0,
           columnId,
         },
         position: { x: 0, y: 0 },
-        type: card.vsmObjectType.pkObjectType,
+        type: card.vsmObjectType.pkObjectType.toString(),
         extent: "parent",
       });
 
@@ -197,8 +208,8 @@ function Canvas(props): JSX.Element {
   };
 
   useEffect(() => {
-    const initNodes = [];
-    const initEdges = [];
+    const initNodes: Node<NodeData>[] = [];
+    const initEdges: Edge[] = [];
     addCardChildren(
       project.objects[0],
       (node) => {
@@ -212,36 +223,35 @@ function Canvas(props): JSX.Element {
     setEdges(initEdges);
   }, [project]);
 
-  const dragRef = useRef(null);
-  const [target, setTarget] = useState(null);
-  const [source, setSource] = useState(null);
+  const dragRef = useRef<Node<NodeData>>(null);
+  const [target, setTarget] = useState<Node<NodeData>>(null);
+  const [source, setSource] = useState<Node<NodeData>>(null);
 
-  const isValidDrop = (source, target) => {
+  const isValidDrop = (
+    source: Node<NodeData>,
+    target: Node<NodeData>
+  ): boolean => {
     const sourceType = source.type;
     const targetType = target.type;
-    // const sourceType = source.data.card.vsmObjectType.pkObjectType;
-    // const targetType = target.data.card.vsmObjectType.pkObjectType;
-    if (
-      ((sourceType === 10 || sourceType === 5 || sourceType === 7) &&
-        (targetType === 10 ||
-          targetType === 5 ||
-          targetType === 7 ||
-          targetType === 4)) ||
-      (sourceType === 4 && targetType === 4)
-    ) {
-      return true;
-    }
-    return false;
+    return (
+      ((sourceType === "10" || sourceType === "5" || sourceType === "7") &&
+        (targetType === "10" ||
+          targetType === "5" ||
+          targetType === "7" ||
+          targetType === "4")) ||
+      (sourceType === "4" && targetType === "4")
+    );
   };
 
-  const onNodeDragStart = (evt, nodeDragging) => {
+  const onNodeDragStart = (
+    evt: React.MouseEvent<Element, MouseEvent>,
+    nodeDragging: Node<NodeData>
+  ): void => {
     // TODO: Drag children aswell
     dragRef.current = nodeDragging;
     setNodes((nodes) =>
       nodes.map((node) => {
-        if (node.id == nodeDragging.id) {
-          node.data = { ...node.data, isDragging: true };
-        } else if (isValidDrop(nodeDragging, node)) {
+        if (isValidDrop(nodeDragging, node)) {
           node.data = { ...node.data, isValidDropTarget: true };
         } else {
           node.data = { ...node.data, isValidDropTarget: false };
@@ -252,7 +262,10 @@ function Canvas(props): JSX.Element {
     setSource(nodeDragging);
   };
 
-  const onNodeDrag = (evt, node) => {
+  const onNodeDrag = (
+    evt: React.MouseEvent<Element, MouseEvent>,
+    node: Node<NodeData>
+  ): void => {
     // Check edges instead?
     const centerX = node.position.x + node.width / 2;
     const centerY = node.position.y + node.height / 2;
@@ -282,7 +295,10 @@ function Canvas(props): JSX.Element {
     );
   }, [target]);
 
-  const onNodeDragStop = (evt, node) => {
+  const onNodeDragStop = (
+    evt: React.MouseEvent<Element, MouseEvent>,
+    node: Node<NodeData>
+  ): void => {
     if (!target || !isValidDrop(node, target)) {
       setNodes((nodes) =>
         nodes.map((n) => {
@@ -298,7 +314,7 @@ function Canvas(props): JSX.Element {
     }
     setNodes((nodes) =>
       nodes.map((node) => {
-        node.data = { ...node.data, isValidDropTarget: undefined };
+        node.data = { ...node.data, isValidDropTarget: null };
         return node;
       })
     );

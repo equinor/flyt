@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import MergeIcon from "./MergeIcon.svg";
 import MergeIconOutlined from "./MergeIconOutlined.svg";
 import styles from "./CardButtons.module.css";
+import { CardButton } from "../../../interfaces/CardButton";
 
-export const MergeButton = (props) => {
+export const MergeButton = (props: CardButton) => {
   const [hovering, setHovering] = useState(false);
 
   return (

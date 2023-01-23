@@ -14,7 +14,7 @@ export interface vsmObject {
   time?: number;
   timeDefinition?: string;
   role?: string;
-  childObjects?: Array<vsmObject>;
+  childObjects?: Array<number>;
   vsmObjectType?: {
     pkObjectType: vsmObjectTypes;
     name?: string;

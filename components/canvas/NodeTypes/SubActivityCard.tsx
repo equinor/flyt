@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Handle, Position } from "reactflow";
 import { formatCanvasText } from "../utils/FormatCanvasText";
 import { formatDuration } from "types/timeDefinitions";
@@ -11,24 +11,17 @@ import { WaitingButton } from "./WaitingButton";
 import { QIPRContainer } from "./QIPRContainer";
 import { MergeButton } from "./MergeButton";
 import { Button, Checkbox } from "@equinor/eds-core-react";
+import { NodeData } from "interfaces/NodeData";
+import { Node } from "reactflow";
 
-export const SubActivityCard = (props) => {
+export const SubActivityCard = (props: Node<NodeData>) => {
   const [hovering, setHovering] = useState(false);
-  const [selectedButton, setSelectedButton] = useState(null);
+  const [selectedButton, setSelectedButton] = useState<string>(null);
 
   const {
-    name,
-    role,
-    time,
-    timeDefinition,
-    vsmObjectType,
-    tasks,
-    vsmObjectID,
-  } = props.data.card;
-  const {
+    card: { name, role, time, timeDefinition, vsmObjectType, tasks },
     isDropTarget,
     isValidDropTarget,
-    isDragging,
     columnId,
     onClickMergeButton,
     mergeOption,
@@ -40,8 +33,8 @@ export const SubActivityCard = (props) => {
   } = props.data;
 
   useEffect(() => {
-    //setHovering(false);
-  }, [isDragging]);
+    setHovering(false);
+  }, [props.dragging]);
 
   useEffect(() => {
     setSelectedButton(null);
@@ -60,15 +53,8 @@ export const SubActivityCard = (props) => {
               alignItems: "center",
             }}
           >
-            <Checkbox
-              checked
-              readOnly
-              onClick={() => cancelMerge(columnId, vsmObjectID)}
-            />
-            <MergeButton
-              onClick={() => cancelMerge(columnId, vsmObjectID)}
-              active
-            />
+            <Checkbox checked readOnly onClick={() => cancelMerge(columnId)} />
+            <MergeButton onClick={() => cancelMerge(columnId)} active />
           </div>
           <SubActivityButton
             onClick={() => setSelectedButton("SubActivity")}
@@ -104,9 +90,7 @@ export const SubActivityCard = (props) => {
             <ChoiceButton />
             <WaitingButton />
             {mergeable && (
-              <MergeButton
-                onClick={() => onClickMergeButton(columnId, vsmObjectID)}
-              />
+              <MergeButton onClick={() => onClickMergeButton(columnId)} />
             )}
           </CardButtonsContainer>
           <CardButtonsContainer position={Position.Top}>
@@ -121,7 +105,7 @@ export const SubActivityCard = (props) => {
 
   return (
     <div
-      onMouseEnter={() => !isDragging && setHovering(true)}
+      onMouseEnter={() => !props.dragging && setHovering(true)}
       onMouseLeave={() => setHovering(false)}
       style={{
         display: "flex",
@@ -135,7 +119,7 @@ export const SubActivityCard = (props) => {
         style={{ display: "flex" }}
       >
         <div
-          onClick={() => props.data.handleClick(props.data.card)}
+          onClick={() => props.data.handleClick()}
           className={`${styles.card} ${styles["card--subactivity"]}`}
           style={{
             filter:

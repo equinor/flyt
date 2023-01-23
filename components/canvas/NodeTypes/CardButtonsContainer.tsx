@@ -3,11 +3,12 @@ import { Position } from "reactflow";
 
 import styles from "./CardButtons.module.css";
 
-export const CardButtonsContainer = (props) => {
-  const { position } = props;
-
+export const CardButtonsContainer = (props: {
+  position: Position;
+  children: JSX.Element | JSX.Element[];
+}) => {
   const getClassName = () => {
-    switch (position) {
+    switch (props.position) {
       case Position.Top:
         return "cardButtonsContainer--top";
       case Position.Right:
