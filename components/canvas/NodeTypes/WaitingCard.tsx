@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Handle, Position } from "reactflow";
 import { formatCanvasText } from "../utils/FormatCanvasText";
 import { formatDuration } from "types/timeDefinitions";
-import { Icon } from "@equinor/eds-core-react";
+import { Checkbox, Icon } from "@equinor/eds-core-react";
 import { time as timeIcon } from "@equinor/eds-icons";
 
 import styles from "./Card.module.css";
@@ -11,44 +11,97 @@ import { SubActivityButton } from "./SubActivityButton";
 import { ChoiceButton } from "./ChoiceButton";
 import { WaitingButton } from "./WaitingButton";
 import { QIPRContainer } from "./QIPRContainer";
+import { MergeButtons } from "./MergeButtons";
+import { MergeButton } from "./MergeButton";
 
 export const WaitingCard = (props) => {
   const [hovering, setHovering] = useState(false);
-  const { time, timeDefinition, vsmObjectType, tasks } = props.data.card;
-  const { isDropTarget, isValidDropTarget, isDragging } = props.data;
 
-  const handleClick = () => {};
+  const {
+    card: { time, timeDefinition, vsmObjectType, tasks },
+    isValidDropTarget,
+    isDropTarget,
+    columnId,
+    mergeable,
+    mergeInitiator,
+    mergeOption,
+    handleClickCard,
+    handleClickMergeInit,
+    handleClickMergeOptionCheckbox,
+    handleClickConfirmMerge,
+    handleClickCancelMerge,
+  } = props.data;
 
   useEffect(() => {
     setHovering(false);
-  }, [isDragging]);
+  }, [props.dragging]);
+
+  const handleClick = () => {
+    console.log("Click");
+  };
+
+  const renderCardButtons = () => {
+    if (mergeInitiator) {
+      return (
+        <CardButtonsContainer position={Position.Bottom}>
+          <MergeButtons
+            handleClickConfirmMerge={(selectedType) =>
+              handleClickConfirmMerge(selectedType)
+            }
+            handleClickCancelMerge={() => handleClickCancelMerge(columnId)}
+            mergeInitiator={mergeInitiator}
+          />
+        </CardButtonsContainer>
+      );
+    } else if (mergeOption) {
+      return (
+        <CardButtonsContainer position={Position.Bottom}>
+          <Checkbox onClick={() => handleClickMergeOptionCheckbox()} />
+        </CardButtonsContainer>
+      );
+    } else if (hovering) {
+      return (
+        <>
+          <CardButtonsContainer position={Position.Bottom}>
+            <SubActivityButton onClick={() => handleClick()} />
+            <ChoiceButton onClick={() => handleClick()} />
+            <WaitingButton onClick={() => handleClick()} />
+            {mergeable && (
+              <MergeButton onClick={() => handleClickMergeInit(columnId)} />
+            )}
+          </CardButtonsContainer>
+          <CardButtonsContainer position={Position.Top}>
+            <SubActivityButton onClick={() => handleClick()} />
+            <ChoiceButton onClick={() => handleClick()} />
+            <WaitingButton onClick={() => handleClick()} />
+          </CardButtonsContainer>
+        </>
+      );
+    }
+  };
 
   return (
     <div
-      onMouseEnter={() => !isDragging && setHovering(true)}
+      onMouseEnter={() => !props.dragging && setHovering(true)}
       onMouseLeave={() => setHovering(false)}
-      style={{
-        display: "flex",
-        justifyContent: "row",
-      }}
     >
       <div
         className={`${styles.container} ${
-          hovering && styles["container--hover"]
+          hovering ? styles["container--hover"] : ""
         }`}
         style={{ display: "flex" }}
       >
         <div
-          onClick={() => props.data.handleClick(props.data.card)}
-          className={`${styles.card} ${styles["card--waiting"]}`}
-          style={{
-            filter:
+          onClick={() => handleClickCard()}
+          className={`${styles.card} ${styles["card--waiting"]} ${
+            styles[
               isDropTarget && isValidDropTarget
-                ? "brightness(1.85)"
+                ? "card--validDropTarget"
                 : isValidDropTarget === false
-                ? "brightness(0.85)"
-                : "",
-          }}
+                ? "card--invalidDropTarget"
+                : ""
+            ]
+          }`}
         >
           <div className={styles["card__description-container"]}>
             <p className={`${styles.text} ${styles["text--placeholder"]}`}>
@@ -77,26 +130,10 @@ export const WaitingCard = (props) => {
           />
         </div>
         {tasks?.length > 0 && (
-          <QIPRContainer
-            onClick={() => props.data.handleClick(props.data.card)}
-            tasks={tasks}
-          />
+          <QIPRContainer onClick={() => handleClickCard()} tasks={tasks} />
         )}
       </div>
-      {hovering && (
-        <>
-          <CardButtonsContainer position={Position.Bottom}>
-            <SubActivityButton onClick={handleClick} />
-            <ChoiceButton onClick={handleClick} />
-            <WaitingButton onClick={handleClick} />
-          </CardButtonsContainer>
-          <CardButtonsContainer position={Position.Top}>
-            <SubActivityButton onClick={handleClick} />
-            <ChoiceButton onClick={handleClick} />
-            <WaitingButton onClick={handleClick} />
-          </CardButtonsContainer>
-        </>
-      )}
+      {renderCardButtons()}
     </div>
   );
 };

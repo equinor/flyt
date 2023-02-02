@@ -1,25 +1,21 @@
-.card {
-  display: flex;
-  flex-direction: column;
-  width: 130px;
-  height: 140px;
-  background-color: #ffff;
-  /*line-height: 20px;*/
-  color: #565656;
-
-  animation-name: fade-in;
-  transition: all 0.2s ease-in-out;
-  filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.14));
-}
-
 .container {
   border-radius: 4px;
   overflow: hidden;
 }
 
 .container--hover {
-  /*opacity: 0.85;*/
+  animation-name: fade-in;
+  transition: all 0.2s ease-in-out;
   filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.44));
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 130px;
+  height: 140px;
+  background-color: #ffff;
+  color: #565656;
 }
 
 .card--generic {
@@ -38,15 +34,14 @@
   background-color: #ff8f00;
 }
 
-.card--choice {
-  animation-name: fade-in;
-  transition: all 0.2s ease-in-out;
-  filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.14));
+/* Choice card color is set in the component */
+
+.card--validDropTarget {
+  filter: brightness(1.15);
 }
 
-.card--choice:hover {
-  /*opacity: 0.85;*/
-  filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.44));
+.card--invalidDropTarget {
+  filter: brightness(0.85);
 }
 
 .title {

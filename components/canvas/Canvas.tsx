@@ -108,7 +108,7 @@ function Canvas(props): JSX.Element {
 
   let nodesToMerge: string[] = [];
 
-  const handleMergeClick = (columnId: number, nodeId: string): void => {
+  const handleClickMergeInit = (columnId: number, nodeId: string): void => {
     nodesToMerge = [];
     nodesToMerge.push(nodeId);
     setNodes((nodes) =>
@@ -129,7 +129,7 @@ function Canvas(props): JSX.Element {
     );
   };
 
-  const handleCancelMerge = (columnId: number, nodeId: string): void => {
+  const handleClickCancelMerge = (columnId: number, nodeId: string): void => {
     nodesToMerge = [];
     setNodes((nodes) =>
       nodes.map((node) => {
@@ -143,13 +143,13 @@ function Canvas(props): JSX.Element {
     );
   };
 
-  const handleMergeOption = (vsmObjectID: string): void => {
+  const handleClickMergeOptionCheckbox = (vsmObjectID: string): void => {
     nodesToMerge.includes(vsmObjectID)
       ? nodesToMerge.splice(nodesToMerge.indexOf(vsmObjectID), 1)
       : nodesToMerge.push(vsmObjectID);
   };
 
-  const handleConfirmMerge = (vsmObjectType: string): void => {
+  const handleClickConfirmMerge = (vsmObjectType: string): void => {
     console.log(vsmObjectType);
     console.log(nodesToMerge);
     console.log("MERGE");
@@ -158,10 +158,10 @@ function Canvas(props): JSX.Element {
 
   let columnId: number = null;
 
-  const addCardChildren = (
+  const addCardsToCanvas = (
     card: vsmObject,
-    cbNode: (x: Node<NodeData>) => void,
-    cbEdge: (x: Edge) => void,
+    cbAddNode: (x: Node<NodeData>) => void,
+    cbAddEdge: (x: Edge) => void,
     parentCard: vsmObject = null
   ): void => {
     if (parentCard) {
@@ -174,27 +174,27 @@ function Canvas(props): JSX.Element {
       ) {
         columnId = card.vsmObjectID;
       }
-      cbNode({
+      cbAddNode({
         id: card.vsmObjectID.toString(),
         data: {
           card,
-          handleClick: () => setSelectedObject(card),
-          onClickMergeButton: (columnId: number) =>
-            handleMergeClick(columnId, card.vsmObjectID.toString()),
-          onClickMergeOption: () =>
-            handleMergeOption(card.vsmObjectID.toString()),
-          confirmMerge: (vsmObjectType) => handleConfirmMerge(vsmObjectType),
-          cancelMerge: (columnId) =>
-            handleCancelMerge(columnId, card.vsmObjectID.toString()),
+          handleClickCard: () => setSelectedObject(card),
+          handleClickMergeInit: (columnId: number) =>
+            handleClickMergeInit(columnId, card.vsmObjectID.toString()),
+          handleClickMergeOptionCheckbox: () =>
+            handleClickMergeOptionCheckbox(card.vsmObjectID.toString()),
+          handleClickConfirmMerge: (vsmObjectType) =>
+            handleClickConfirmMerge(vsmObjectType),
+          handleClickCancelMerge: (columnId) =>
+            handleClickCancelMerge(columnId, card.vsmObjectID.toString()),
           mergeable: card.childObjects.length === 0,
           columnId,
         },
         position: { x: 0, y: 0 },
         type: card.vsmObjectType.pkObjectType.toString(),
-        extent: "parent",
       });
 
-      cbEdge({
+      cbAddEdge({
         id: `${parentCard.vsmObjectID}=>${card.vsmObjectID}`,
         source: parentCard.vsmObjectID.toString(),
         target: card.vsmObjectID.toString(),
@@ -203,14 +203,14 @@ function Canvas(props): JSX.Element {
 
     card.childObjects.forEach((childCardId) => {
       const childCard = getCardById(childCardId);
-      addCardChildren(childCard, cbNode, cbEdge, card);
+      addCardsToCanvas(childCard, cbAddNode, cbAddEdge, card);
     });
   };
 
   useEffect(() => {
     const initNodes: Node<NodeData>[] = [];
     const initEdges: Edge[] = [];
-    addCardChildren(
+    addCardsToCanvas(
       project.objects[0],
       (node) => {
         initNodes.push(node);

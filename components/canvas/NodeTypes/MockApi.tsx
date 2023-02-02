@@ -314,7 +314,7 @@ export const mockApi = {
       role: null,
       childIndex: 17527,
       choiceGroup: null,
-      childObjects: [19605, 19621],
+      childObjects: [19605, 19627],
       name: "",
       vsmObjectType: {
         pkObjectType: 10,
@@ -346,13 +346,13 @@ export const mockApi = {
     {
       vsmObjectID: 19621,
       vsmProjectID: 3414,
-      parent: 19598,
+      parent: 19627,
       timeDefinition: null,
       time: null,
       role: null,
       childIndex: 17530,
       choiceGroup: null,
-      childObjects: [19627],
+      childObjects: [19628, 19686, 19687, 19653],
       name: "1 test test test teeeeeeest testestestestest testestestestestestest",
       vsmObjectType: {
         pkObjectType: 10,
@@ -371,7 +371,7 @@ export const mockApi = {
       role: null,
       childIndex: 17531,
       choiceGroup: null,
-      childObjects: [19628, 19686, 19687, 19653],
+      childObjects: [19621],
       name: "6 (merge 1)",
       vsmObjectType: {
         pkObjectType: 5,

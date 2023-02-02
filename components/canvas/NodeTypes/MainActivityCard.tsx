@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Handle, Position, NodeToolbar } from "reactflow";
 import { formatCanvasText } from "../utils/FormatCanvasText";
 import { MainActivityButton } from "./MainActivityButton";
@@ -8,98 +8,95 @@ import { WaitingButton } from "./WaitingButton";
 import { CardButtonsContainer } from "./CardButtonsContainer";
 
 import styles from "./Card.module.css";
+import { QIPRContainer } from "./QIPRContainer";
 
 export function MainActivityCard(props) {
   const [hovering, setHovering] = useState(false);
-  const { name, vsmObjectType } = props.data.card;
-  const { isDropTarget, isValidDropTarget } = props.data;
 
-  const handleClick = () => {};
+  const {
+    card: { name, vsmObjectType, tasks },
+    isValidDropTarget,
+    isDropTarget,
+    handleClickCard,
+  } = props.data;
+
+  useEffect(() => {
+    setHovering(false);
+  }, [props.dragging]);
+
+  const handleClick = () => {
+    console.log("Click");
+  };
 
   return (
-    <>
+    <div
+      onMouseEnter={() => !props.dragging && setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
+      style={{
+        display: "flex",
+        justifyContent: "row",
+      }}
+    >
       <div
-        onClick={() => props.data.handleClick(props.data.card)}
-        className={`${styles.card} ${styles["card--mainactivity"]}`}
-        onMouseEnter={() => setHovering(true)}
-        onMouseLeave={() => setHovering(false)}
-        style={{
-          filter:
-            isDropTarget && isValidDropTarget
-              ? "brightness(1.85)"
-              : isValidDropTarget === false
-              ? "brightness(0.85)"
-              : "",
-        }}
+        className={`${styles.container} ${
+          hovering ? styles["container--hover"] : ""
+        }`}
+        style={{ display: "flex" }}
       >
-        <div className={styles["card__description-container"]}>
-          {name ? (
-            <p className={styles.text}>{formatCanvasText(name, 70)}</p>
-          ) : (
-            <p className={`${styles.text} ${styles["text--placeholder"]}`}>
-              {formatCanvasText(vsmObjectType.name, 70)}
-            </p>
-          )}
+        <div
+          onClick={() => handleClickCard()}
+          className={`${styles.card} ${styles["card--mainactivity"]} ${
+            styles[
+              isDropTarget && isValidDropTarget
+                ? "card--validDropTarget"
+                : isValidDropTarget === false
+                ? "card--invalidDropTarget"
+                : ""
+            ]
+          }`}
+        >
+          <div className={styles["card__description-container"]}>
+            {name ? (
+              <p className={styles.text}>{formatCanvasText(name, 70)}</p>
+            ) : (
+              <p className={`${styles.text} ${styles["text--placeholder"]}`}>
+                {formatCanvasText(vsmObjectType.name, 70)}
+              </p>
+            )}
+          </div>
+
+          <Handle
+            className={styles.handle}
+            type="target"
+            position={Position.Top}
+            isConnectable={false}
+          />
+          <Handle
+            className={styles.handle}
+            type="source"
+            position={Position.Bottom}
+            isConnectable={false}
+          />
         </div>
-        {hovering && (
-          <>
-            <CardButtonsContainer position={Position.Left}>
-              <MainActivityButton onClick={handleClick} />
-            </CardButtonsContainer>
-            <CardButtonsContainer position={Position.Right}>
-              <MainActivityButton onClick={handleClick} />
-            </CardButtonsContainer>
-            <CardButtonsContainer position={Position.Bottom}>
-              <SubActivityButton onClick={handleClick} />
-              <ChoiceButton onClick={handleClick} />
-              <WaitingButton onClick={handleClick} />
-            </CardButtonsContainer>
-          </>
+        {tasks?.length > 0 && (
+          <QIPRContainer onClick={() => handleClickCard()} tasks={tasks} />
         )}
       </div>
-      <Handle
-        className={styles.handle}
-        type="target"
-        position={Position.Top}
-        isConnectable={false}
-      />
-      <Handle
-        className={styles.handle}
-        type="source"
-        position={Position.Bottom}
-        isConnectable={false}
-      />
-      {/* <CardButtonsContainer position={Position.Bottom}>
-        <SubActivityButton onClick={handleClick} />
-        <ChoiceButton onClick={handleClick} />
-        <WaitingButton onClick={handleClick} />
-      </CardButtonsContainer> */}
-
-      {/* <CardButtonsContainer position={Position.Right}>
-        <SubActivityButton onClick={handleClick} />
-        <ChoiceButton onClick={handleClick} />
-        <WaitingButton onClick={handleClick} />
-      </CardButtonsContainer>
-      <CardButtonsContainer position={Position.Top}>
-        <SubActivityButton onClick={handleClick} />
-        <ChoiceButton onClick={handleClick} />
-        <WaitingButton onClick={handleClick} />
-      </CardButtonsContainer> */}
-      {/* <NodeToolbar isVisible={true} position={Position.Right}>
-        <MainActivityButton onClick={handleClick} />
-      </NodeToolbar>
-      <NodeToolbar isVisible={true} position={Position.Left}>
-        <MainActivityButton onClick={handleClick} />
-      </NodeToolbar>
-      <NodeToolbar
-        isVisible={true}
-        position={Position.Bottom}
-        style={{ display: "flex", width: 100, justifyContent: "space-between" }}
-      >
-        <SubActivityButton onClick={handleClick} />
-        <ChoiceButton onClick={handleClick} />
-        <WaitingButton onClick={handleClick} />
-      </NodeToolbar> */}
-    </>
+      {hovering && (
+        <>
+          <CardButtonsContainer position={Position.Left}>
+            <MainActivityButton onClick={() => handleClick()} />
+          </CardButtonsContainer>
+          <CardButtonsContainer position={Position.Right}>
+            <MainActivityButton onClick={() => handleClick()} />
+          </CardButtonsContainer>
+          <CardButtonsContainer position={Position.Bottom}>
+            <SubActivityButton onClick={() => handleClick()} />
+            <ChoiceButton onClick={() => handleClick()} />
+            <WaitingButton onClick={() => handleClick()} />
+          </CardButtonsContainer>
+        </>
+      )}
+    </div>
   );
 }
