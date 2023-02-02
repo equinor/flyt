@@ -28,7 +28,11 @@ export const ServiceMessageBanner = () => {
         </div>
         {data?.urlString && (
           <Banner.Actions>
-            <a href={data?.urlString} target="_blank" rel="noopener noreferrer">
+            <a
+              href={encodeURI(data.urlString)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Button variant={"ghost"}>Read more</Button>
             </a>
           </Banner.Actions>

@@ -31,7 +31,6 @@ export default function QipsPage(): JSX.Element {
     });
 
     socket.on(`room-${id}`, (message) => {
-      console.log(`room-${id} | We got an update!`, message);
       queryClient.invalidateQueries(message?.queryKey);
     });
 

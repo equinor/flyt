@@ -2,7 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [0.2.21](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.1...v0.2.21) (2022-06-07)
+### [0.2.23](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.22...v0.2.23) (2023-01-13)
+
+### Security
+
+- Patch vulnerabilities ([#469](https://github.com/equinor/MAD-VSM-WEB/issues/469)) ([0dea302](https://github.com/equinor/MAD-VSM-WEB/commit/0dea3020fda44c87867aa1a0045c88f09ef1366a)), closes [#468](https://github.com/equinor/MAD-VSM-WEB/issues/468)
+
+### [0.2.22](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.21...v0.2.22) (2023-01-11)
+
+### Security
+
+- Patch vulnerabilities ([#462](https://github.com/equinor/MAD-VSM-WEB/issues/462)) ([2cbddb6](https://github.com/equinor/MAD-VSM-WEB/commit/2cbddb68e2b1e1d96e74c09a6b2a413e8db16ef5)), closes [#456](https://github.com/equinor/MAD-VSM-WEB/issues/456)
+
+### [0.2.21](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.20...v0.2.21) (2022-06-07)
 
 ### Bug Fixes
 
@@ -22,7 +34,7 @@ All notable changes to this project will be documented in this file. See [standa
 - display user accesses and last updated on front page ([#384](https://github.com/equinor/MAD-VSM-WEB/issues/384)) ([6704515](https://github.com/equinor/MAD-VSM-WEB/commit/67045150c54ca3edef4ed5e7bd0c9b74227ef856)), closes [#383](https://github.com/equinor/MAD-VSM-WEB/issues/383) [#382](https://github.com/equinor/MAD-VSM-WEB/issues/382)
 - Missing loading spinner when creating new project ([#394](https://github.com/equinor/MAD-VSM-WEB/issues/394)) ([b32dbf7](https://github.com/equinor/MAD-VSM-WEB/commit/b32dbf7e879b001652207978363e7dfae488cc63)), closes [#388](https://github.com/equinor/MAD-VSM-WEB/issues/388)
 
-### [0.2.18](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.18...v0.2.18) (2022-03-18)
+### [0.2.18](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.17...v0.2.18) (2022-03-18)
 
 ### Bug Fixes
 
