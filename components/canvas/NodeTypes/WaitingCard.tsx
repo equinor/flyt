@@ -30,6 +30,7 @@ export const WaitingCard = (props) => {
     handleClickMergeOptionCheckbox,
     handleClickConfirmMerge,
     handleClickCancelMerge,
+    isChoiceChild,
   } = props.data;
 
   useEffect(() => {
@@ -75,6 +76,20 @@ export const WaitingCard = (props) => {
             <ChoiceButton onClick={() => handleClick()} />
             <WaitingButton onClick={() => handleClick()} />
           </CardButtonsContainer>
+          {isChoiceChild && (
+            <>
+              <CardButtonsContainer position={Position.Right}>
+                <SubActivityButton onClick={() => handleClick()} />
+                <ChoiceButton onClick={() => handleClick()} />
+                <WaitingButton onClick={() => handleClick()} />
+              </CardButtonsContainer>
+              <CardButtonsContainer position={Position.Left}>
+                <SubActivityButton onClick={() => handleClick()} />
+                <ChoiceButton onClick={() => handleClick()} />
+                <WaitingButton onClick={() => handleClick()} />
+              </CardButtonsContainer>
+            </>
+          )}
         </>
       );
     }

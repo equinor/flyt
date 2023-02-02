@@ -13,4 +13,5 @@ export type NodeData = {
   handleClickMergeOptionCheckbox?: () => void;
   handleClickCard?: () => void;
   mergeable?: boolean;
+  isChoiceChild: boolean;
 };

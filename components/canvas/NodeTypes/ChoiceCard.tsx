@@ -16,6 +16,7 @@ export function ChoiceCard(props) {
     isDropTarget,
     isValidDropTarget,
     handleClickCard,
+    isChoiceChild,
   } = props.data;
 
   const size = 132;
@@ -107,6 +108,20 @@ export function ChoiceCard(props) {
             <ChoiceButton onClick={() => handleClick()} />
             <WaitingButton onClick={() => handleClick()} />
           </CardButtonsContainer>
+          {isChoiceChild && (
+            <>
+              <CardButtonsContainer position={Position.Right}>
+                <SubActivityButton onClick={() => handleClick()} />
+                <ChoiceButton onClick={() => handleClick()} />
+                <WaitingButton onClick={() => handleClick()} />
+              </CardButtonsContainer>
+              <CardButtonsContainer position={Position.Left}>
+                <SubActivityButton onClick={() => handleClick()} />
+                <ChoiceButton onClick={() => handleClick()} />
+                <WaitingButton onClick={() => handleClick()} />
+              </CardButtonsContainer>
+            </>
+          )}
         </>
       )}
     </div>

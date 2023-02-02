@@ -32,10 +32,6 @@ export function MainActivityCard(props) {
     <div
       onMouseEnter={() => !props.dragging && setHovering(true)}
       onMouseLeave={() => setHovering(false)}
-      style={{
-        display: "flex",
-        justifyContent: "row",
-      }}
     >
       <div
         className={`${styles.container} ${

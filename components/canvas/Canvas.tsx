@@ -189,6 +189,7 @@ function Canvas(props): JSX.Element {
             handleClickCancelMerge(columnId, card.vsmObjectID.toString()),
           mergeable: card.childObjects.length === 0,
           columnId,
+          isChoiceChild: parentCard.vsmObjectType.name === "Choice",
         },
         position: { x: 0, y: 0 },
         type: card.vsmObjectType.pkObjectType.toString(),
