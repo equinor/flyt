@@ -198,6 +198,7 @@ function Canvas(props): JSX.Element {
         id: `${parentCard.vsmObjectID}=>${card.vsmObjectID}`,
         source: parentCard.vsmObjectID.toString(),
         target: card.vsmObjectID.toString(),
+        hidden: parentCard.vsmObjectType.name !== "Choice",
       });
     }
 
