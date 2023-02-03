@@ -11,11 +11,9 @@ import { WaitingButton } from "./WaitingButton";
 import { QIPRContainer } from "./QIPRContainer";
 import { MergeButton } from "./MergeButton";
 import { Checkbox } from "@equinor/eds-core-react";
-import { NodeData } from "interfaces/NodeData";
-import { Node } from "reactflow";
 import { MergeButtons } from "./MergeButtons";
 
-export const SubActivityCard = (props: Node<NodeData>) => {
+export const SubActivityCard = (props) => {
   const [hovering, setHovering] = useState(false);
 
   const {

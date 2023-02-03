@@ -132,8 +132,13 @@ const projectModel: ProjectModel = {
      */
     function patchNodeInTree(node: vsmObject, tree: vsmObject) {
       if (node.vsmObjectID === tree.vsmObjectID) patchNode(tree, node);
-      tree.childObjects?.forEach((child) => {
-        patchNodeInTree(node, child);
+      tree.childObjects?.forEach((id) => {
+        patchNodeInTree(
+          node,
+          state.project.objects.find(
+            (vsmObj: vsmObject) => vsmObj.vsmObjectID === id
+          )
+        );
       });
     }
 

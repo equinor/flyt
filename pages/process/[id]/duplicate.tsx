@@ -4,7 +4,7 @@ import { useMutation, useQuery } from "react-query";
 
 import { Layouts } from "../../../layouts/LayoutWrapper";
 import { debounce } from "../../../utils/debounce";
-import { getProjectAsCleanJsonWithoutQIPs } from "../../../utils/DownloadJSON";
+//import { getProjectAsCleanJsonWithoutQIPs } from "../../../utils/DownloadJSON";
 import { useRouter } from "next/router";
 import { vsmProject } from "../../../interfaces/VsmProject";
 
@@ -28,13 +28,15 @@ export default function DuplicatePage() {
   useEffect(() => {
     if (project) {
       setStatusMessage("Preparing process");
-      const json = getProjectAsCleanJsonWithoutQIPs(
-        project,
-        `${!!project.name ? project.name : "Untitled process"} (Duplicate of ${
-          project.vsmProjectID
-        })`,
-        project.vsmProjectID
-      );
+      const json = false;
+      //TODO migrate to new data structure
+      // getProjectAsCleanJsonWithoutQIPs(
+      //   project,
+      //   `${!!project.name ? project.name : "Untitled process"} (Duplicate of ${
+      //     project.vsmProjectID
+      //   })`,
+      //   project.vsmProjectID
+      // );
       if (json) {
         setStatusMessage("Creating new process");
         debounce(
