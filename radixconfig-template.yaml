@@ -20,9 +20,6 @@ spec:
     - alias: flyt.equinor.com
       environment: prod
       component: web
-    - alias: vsm.equinor.com
-      environment: prod
-      component: web
   components:
     - name: web
       dockerfileName: Dockerfile
