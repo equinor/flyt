@@ -14,7 +14,7 @@ export const QIPRContainer = (props: {
         key={index}
         style={{ margin: 2.5, marginLeft: index >= 4 ? 0 : 2.5 }}
       >
-        <TextCircle text={task.displayIndex} color={getTaskColor(task)} />
+        <TextCircle text={""} color={getTaskColor(task)} />
       </div>
     ))}
   </div>

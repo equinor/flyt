@@ -6,6 +6,7 @@ import React from "react";
 import { Layouts } from "../../../layouts/LayoutWrapper";
 import { useQuery } from "react-query";
 import { getProject } from "../../../services/projectApi";
+import { getGraph } from "services/graphApi";
 import { unknownErrorToString } from "../../../utils/isError";
 import { CanvasWrapper } from "../../../components/canvas/Canvas";
 import { mockApi } from "components/canvas/NodeTypes/MockApi";
@@ -20,6 +21,16 @@ export default function Project() {
     () => getProject(id),
     {
       enabled: !!id,
+    }
+  );
+
+  const projectId = project?.vsmProjectID;
+
+  const { data: graph } = useQuery(
+    ["graph", projectId],
+    () => getGraph(projectId),
+    {
+      enabled: !!projectId,
     }
   );
 
@@ -42,7 +53,7 @@ export default function Project() {
     );
   }
 
-  if (project) {
+  if (project && graph) {
     return (
       <div className={commonStyles.container}>
         <Head>
@@ -50,7 +61,7 @@ export default function Project() {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <main>
-          <CanvasWrapper project={mockApi} />
+          <CanvasWrapper project={project} graph={graph} />
         </main>
       </div>
     );

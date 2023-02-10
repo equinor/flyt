@@ -12,7 +12,7 @@ export function ChoiceCard(props) {
   const [hovering, setHovering] = useState(false);
 
   const {
-    card: { name, vsmObjectType },
+    card: { description, type },
     isDropTarget,
     isValidDropTarget,
     handleClickCard,
@@ -72,19 +72,19 @@ export function ChoiceCard(props) {
             height: "100%",
           }}
         >
-          {name ? (
+          {description ? (
             <p
               style={{ width: 100, marginLeft: 15, overflowWrap: "break-word" }}
               className={styles.text}
             >
-              {formatCanvasText(name, 50)}
+              {formatCanvasText(description, 50)}
             </p>
           ) : (
             <p
               style={{ width: 100, marginLeft: 15 }}
               className={`${styles.text} ${styles["text--placeholder"]}`}
             >
-              {formatCanvasText(vsmObjectType.name)}
+              {formatCanvasText(type)}
             </p>
           )}
         </div>

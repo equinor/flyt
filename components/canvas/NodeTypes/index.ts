@@ -7,16 +7,15 @@ import { WaitingCard } from "./WaitingCard";
 import { RootCard } from "./RootCard";
 
 const nodeTypes: NodeTypes = {
-  rootCard: RootCard,
-  1: GenericCard, // Process
-  2: GenericCard, // Supplier
-  3: GenericCard, // Input
-  4: MainActivityCard,
-  5: SubActivityCard,
-  7: WaitingCard,
-  8: GenericCard, // Output
-  9: GenericCard, // Customer
-  10: ChoiceCard,
+  Root: RootCard,
+  Supplier: GenericCard,
+  Input: GenericCard,
+  MainActivity: MainActivityCard,
+  Output: GenericCard,
+  Customer: GenericCard,
+  SubActivity: SubActivityCard,
+  Waiting: WaitingCard,
+  Choice: ChoiceCard,
 };
 
 export default nodeTypes;

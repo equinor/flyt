@@ -18,10 +18,10 @@ export function VSMSideBar(props: {
   // We can figure that out by checking if the router query includes a version value.
   // (It should not be present if we are showing the "now" version)
   const router = useRouter();
-  const shouldFetch = !(router.query.version as string);
+  const shouldFetch = false; //!(router.query.version as string);
 
   // Fetch selected fetchedVSMObject
-  const vsmObjectId = selectedObject?.vsmObjectID;
+  const vsmObjectId = selectedObject?.id;
   const { data: fetchedVSMObject, isLoading } = useQuery(
     ["selectedObject", vsmObjectId],
     () => getVSMObject(vsmObjectId),

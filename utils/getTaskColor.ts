@@ -2,14 +2,14 @@ import { taskObject } from "../interfaces/taskObject";
 import { vsmTaskTypes } from "../types/vsmTaskTypes";
 
 export function getTaskColor(task: taskObject): string {
-  switch (task?.fkTaskType) {
-    case vsmTaskTypes.problem:
+  switch (task?.type) {
+    case "Problem":
       return "#eb0000";
-    case vsmTaskTypes.question:
+    case "Question":
       return "#ad6200";
-    case vsmTaskTypes.idea:
+    case "Idea":
       return "#00977b";
-    case vsmTaskTypes.risk:
+    case "Risk":
       return "#ff9101";
   }
   return "#000000";

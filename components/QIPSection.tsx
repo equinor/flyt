@@ -30,7 +30,7 @@ export const QIPSection = (props: {
 
   // Show the edit task section if the selected task relates to the selected vsm object
   const showEditTaskSection = selectedObject.tasks.some(
-    (task) => task.vsmTaskID === selectedTask?.vsmTaskID
+    (task) => task.id === selectedTask?.id
   );
 
   return (

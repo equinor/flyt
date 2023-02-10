@@ -1,3 +1,4 @@
+import { NodeData } from "interfaces/NodeData";
 import React, { useState } from "react";
 import { Handle, Position } from "reactflow";
 import { formatCanvasText } from "../utils/FormatCanvasText";
@@ -6,12 +7,13 @@ import styles from "./Card.module.css";
 import { CardButtonsContainer } from "./CardButtonsContainer";
 import { MainActivityButton } from "./MainActivityButton";
 import { QIPRContainer } from "./QIPRContainer";
+import { Node } from "reactflow";
 
-export function GenericCard(props) {
+export function GenericCard(props: Node<NodeData>) {
   const [hovering, setHovering] = useState(false);
 
   const {
-    card: { name, vsmObjectType, tasks },
+    card: { name, type, tasks },
     isValidDropTarget,
     isDropTarget,
     handleClickCard,
@@ -23,13 +25,13 @@ export function GenericCard(props) {
 
   const renderCardButtons = () => {
     if (hovering) {
-      if (vsmObjectType.pkObjectType === 3) {
+      if (type === "Output") {
         return (
           <CardButtonsContainer position={Position.Right}>
             <MainActivityButton onClick={() => handleClick()} />
           </CardButtonsContainer>
         );
-      } else if (vsmObjectType.pkObjectType === 8) {
+      } else if (type === "Input") {
         return (
           <CardButtonsContainer position={Position.Left}>
             <MainActivityButton onClick={() => handleClick()} />
@@ -71,7 +73,7 @@ export function GenericCard(props) {
               <p className={styles.text}>{formatCanvasText(name, 70)}</p>
             ) : (
               <p className={`${styles.text} ${styles["text--placeholder"]}`}>
-                {formatCanvasText(vsmObjectType.name, 70)}
+                {formatCanvasText(type, 70)}
               </p>
             )}
           </div>

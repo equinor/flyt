@@ -23,7 +23,7 @@ function layoutNodes(nodes: Node[], edges: Edge[]): Node[] {
 
   root.descendants().forEach((d) => {
     const columnId = d.data.data.columnId;
-    const type = d?.data?.data?.card?.vsmObjectType?.name;
+    const type = d?.data?.data?.card?.type;
     if (type) {
       if (
         !columnsStartPosX.has(columnId) ||

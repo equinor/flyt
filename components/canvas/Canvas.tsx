@@ -31,13 +31,14 @@ import useLayout from "./hooks/useLayout";
 import nodeTypes from "./NodeTypes";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
 import { NodeData } from "interfaces/NodeData";
+import { postGraph } from "../../services/graphApi";
 
 function Canvas(props): JSX.Element {
   const [selectedObject, setSelectedObject] = useState<vsmObject>(null);
   const dispatch = useStoreDispatch();
   const router = useRouter();
   const { id, version } = router.query;
-  const { project } = props;
+  const { project, graph } = props;
 
   const [socketConnected, setSocketConnected] = useState(false);
   const [socketReason, setSocketReason] = useState("");
@@ -46,10 +47,10 @@ function Canvas(props): JSX.Element {
   const account = useAccount(accounts[0] || {});
 
   const rootNode: Node = {
-    id: project.objects[0].vsmObjectID.toString(),
+    id: graph[0]?.id,
     data: {},
     position: { x: 0, y: 0 },
-    type: "rootCard",
+    type: "Root",
   };
 
   const [nodes, setNodes, onNodesChange] = useNodesState<NodeData>([rootNode]);
@@ -103,8 +104,8 @@ function Canvas(props): JSX.Element {
     goToCurrentVersion();
   }
 
-  const getCardById = (id: number): vsmObject =>
-    project.objects.find((vsmObj: vsmObject) => vsmObj.vsmObjectID === id);
+  const getCardById = (id: string): vsmObject =>
+    graph.find((vsmObj: vsmObject) => vsmObj.id.toString() === id);
 
   let nodesToMerge: string[] = [];
 
@@ -156,6 +157,25 @@ function Canvas(props): JSX.Element {
     nodesToMerge = [];
   };
 
+  // const handleClickAddCard = (parentId, type) => {
+  //   postGraph({ type }, projectId, parentId);
+  // };
+
+  const handleClickAddCard = useMutation(
+    ({ parentId, type }) => {
+      dispatch.setSnackMessage("⏳ Adding new card...");
+      return postGraph({ type }, parentId, parentId);
+    },
+    {
+      onSuccess: () => {
+        dispatch.setSnackMessage("✅ Card added!");
+        notifyOthers("Added a new card", id, account);
+        return queryClient.invalidateQueries();
+      },
+      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+    }
+  );
+
   let columnId: number = null;
 
   const addCardsToCanvas = (
@@ -166,44 +186,46 @@ function Canvas(props): JSX.Element {
   ): void => {
     if (parentCard) {
       if (
-        card.vsmObjectType.pkObjectType === vsmObjectTypes.mainActivity ||
-        card.vsmObjectType.pkObjectType === vsmObjectTypes.output ||
-        card.vsmObjectType.pkObjectType === vsmObjectTypes.supplier ||
-        card.vsmObjectType.pkObjectType === vsmObjectTypes.input ||
-        card.vsmObjectType.pkObjectType === vsmObjectTypes.customer
+        card.type === "MainActivity" ||
+        card.type === "Output" ||
+        card.type === "Supplier" ||
+        card.type === "Input" ||
+        card.type === "Customer"
       ) {
-        columnId = card.vsmObjectID;
+        columnId = card.id;
       }
       cbAddNode({
-        id: card.vsmObjectID.toString(),
+        id: card.id.toString(),
         data: {
           card,
           handleClickCard: () => setSelectedObject(card),
+          handleClickAddCard: (id, type) =>
+            handleClickAddCard.mutate({ parentId: id, type }),
           handleClickMergeInit: (columnId: number) =>
-            handleClickMergeInit(columnId, card.vsmObjectID.toString()),
+            handleClickMergeInit(columnId, card.id.toString()),
           handleClickMergeOptionCheckbox: () =>
-            handleClickMergeOptionCheckbox(card.vsmObjectID.toString()),
-          handleClickConfirmMerge: (vsmObjectType) =>
-            handleClickConfirmMerge(vsmObjectType),
+            handleClickMergeOptionCheckbox(card.id.toString()),
+          handleClickConfirmMerge: (type) => handleClickConfirmMerge(type),
           handleClickCancelMerge: (columnId) =>
-            handleClickCancelMerge(columnId, card.vsmObjectID.toString()),
-          mergeable: card.childObjects.length === 0,
+            handleClickCancelMerge(columnId, card.id.toString()),
+          mergeable: card.children.length === 0,
           columnId,
-          isChoiceChild: parentCard.vsmObjectType.name === "Choice",
+          parentCard,
+          isChoiceChild: parentCard.type === "Choice",
         },
         position: { x: 0, y: 0 },
-        type: card.vsmObjectType.pkObjectType.toString(),
+        type: card.type,
       });
 
       cbAddEdge({
-        id: `${parentCard.vsmObjectID}=>${card.vsmObjectID}`,
-        source: parentCard.vsmObjectID.toString(),
-        target: card.vsmObjectID.toString(),
-        hidden: parentCard.vsmObjectType.name !== "Choice",
+        id: `${parentCard.id}=>${card.id}`,
+        source: parentCard.id.toString(),
+        target: card.id.toString(),
+        // hidden: parentCard.type !== "Choice",
       });
     }
 
-    card.childObjects.forEach((childCardId) => {
+    card.children.forEach((childCardId) => {
       const childCard = getCardById(childCardId);
       addCardsToCanvas(childCard, cbAddNode, cbAddEdge, card);
     });
@@ -212,8 +234,9 @@ function Canvas(props): JSX.Element {
   useEffect(() => {
     const initNodes: Node<NodeData>[] = [];
     const initEdges: Edge[] = [];
+
     addCardsToCanvas(
-      project.objects[0],
+      graph[0],
       (node) => {
         initNodes.push(node);
       },

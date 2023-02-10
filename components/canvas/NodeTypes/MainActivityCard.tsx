@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Handle, Position, NodeToolbar } from "reactflow";
+import { Handle, Position } from "reactflow";
 import { formatCanvasText } from "../utils/FormatCanvasText";
 import { MainActivityButton } from "./MainActivityButton";
 import { SubActivityButton } from "./SubActivityButton";
@@ -9,12 +9,14 @@ import { CardButtonsContainer } from "./CardButtonsContainer";
 
 import styles from "./Card.module.css";
 import { QIPRContainer } from "./QIPRContainer";
+import { NodeData } from "interfaces/NodeData";
+import { Node } from "reactflow";
 
-export function MainActivityCard(props) {
+export function MainActivityCard(props: Node<NodeData>) {
   const [hovering, setHovering] = useState(false);
 
   const {
-    card: { name, vsmObjectType, tasks },
+    card: { description, type, tasks },
     isValidDropTarget,
     isDropTarget,
     handleClickCard,
@@ -52,11 +54,11 @@ export function MainActivityCard(props) {
           }`}
         >
           <div className={styles["card__description-container"]}>
-            {name ? (
-              <p className={styles.text}>{formatCanvasText(name, 70)}</p>
+            {description ? (
+              <p className={styles.text}>{formatCanvasText(description, 70)}</p>
             ) : (
               <p className={`${styles.text} ${styles["text--placeholder"]}`}>
-                {formatCanvasText(vsmObjectType.name, 70)}
+                {formatCanvasText(type, 70)}
               </p>
             )}
           </div>

@@ -13,12 +13,14 @@ import { WaitingButton } from "./WaitingButton";
 import { QIPRContainer } from "./QIPRContainer";
 import { MergeButtons } from "./MergeButtons";
 import { MergeButton } from "./MergeButton";
+import { NodeData } from "interfaces/NodeData";
+import { Node } from "reactflow";
 
-export const WaitingCard = (props) => {
+export const WaitingCard = (props: Node<NodeData>) => {
   const [hovering, setHovering] = useState(false);
 
   const {
-    card: { time, timeDefinition, vsmObjectType, tasks },
+    card: { time, timeDefinition, type, tasks },
     isValidDropTarget,
     isDropTarget,
     columnId,
@@ -120,7 +122,7 @@ export const WaitingCard = (props) => {
         >
           <div className={styles["card__description-container"]}>
             <p className={`${styles.text} ${styles["text--placeholder"]}`}>
-              {formatCanvasText(vsmObjectType.name, 70)}
+              {formatCanvasText(type, 70)}
             </p>
           </div>
           <div>

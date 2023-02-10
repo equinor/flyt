@@ -6,7 +6,7 @@ import { processLabel } from "interfaces/processLabel";
 import { projectTemplatesV1 } from "../assets/projectTemplatesV1";
 import { vsmProject } from "../interfaces/VsmProject";
 
-const baseUrl = "/api/v1.0";
+const baseUrl = "/api/v2.0";
 //Project aka. VSM aka. Flyt or Flow
 export const getProjects = (filter?: {
   q?: string | string[]; // Search query

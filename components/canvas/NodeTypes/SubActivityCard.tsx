@@ -12,12 +12,14 @@ import { QIPRContainer } from "./QIPRContainer";
 import { MergeButton } from "./MergeButton";
 import { Checkbox } from "@equinor/eds-core-react";
 import { MergeButtons } from "./MergeButtons";
+import { NodeData } from "interfaces/NodeData";
+import { Node } from "reactflow";
 
-export const SubActivityCard = (props) => {
+export const SubActivityCard = (props: Node<NodeData>) => {
   const [hovering, setHovering] = useState(false);
 
   const {
-    card: { name, role, time, timeDefinition, vsmObjectType, tasks },
+    card: { description, role, time, timeDefinition, type, tasks, id },
     isValidDropTarget,
     isDropTarget,
     columnId,
@@ -29,7 +31,8 @@ export const SubActivityCard = (props) => {
     handleClickMergeOptionCheckbox,
     handleClickConfirmMerge,
     handleClickCancelMerge,
-    isChoiceChild,
+    parentCard,
+    handleClickAddCard,
   } = props.data;
 
   useEffect(() => {
@@ -63,19 +66,25 @@ export const SubActivityCard = (props) => {
       return (
         <>
           <CardButtonsContainer position={Position.Bottom}>
-            <SubActivityButton onClick={() => handleClick()} />
-            <ChoiceButton onClick={() => handleClick()} />
+            <SubActivityButton
+              onClick={() => handleClickAddCard(id, "SubActivity")}
+            />
+            <ChoiceButton
+              onClick={() => handleClickAddCard(id, "ChoiceButton")}
+            />
             <WaitingButton onClick={() => handleClick()} />
             {mergeable && (
               <MergeButton onClick={() => handleClickMergeInit(columnId)} />
             )}
           </CardButtonsContainer>
           <CardButtonsContainer position={Position.Top}>
-            <SubActivityButton onClick={() => handleClick()} />
+            <SubActivityButton
+              onClick={() => handleClickAddCard(parentCard.id, "SubActivity")}
+            />
             <ChoiceButton onClick={() => handleClick()} />
             <WaitingButton onClick={() => handleClick()} />
           </CardButtonsContainer>
-          {isChoiceChild && (
+          {parentCard.type === "Choice" && (
             <>
               <CardButtonsContainer position={Position.Right}>
                 <SubActivityButton onClick={() => handleClick()} />
@@ -118,11 +127,11 @@ export const SubActivityCard = (props) => {
           }`}
         >
           <div className={styles["card__description-container"]}>
-            {name ? (
-              <p className={styles.text}>{formatCanvasText(name, 70)}</p>
+            {description ? (
+              <p className={styles.text}>{formatCanvasText(description, 70)}</p>
             ) : (
               <p className={`${styles.text} ${styles["text--placeholder"]}`}>
-                {formatCanvasText(vsmObjectType.name, 70)}
+                {formatCanvasText(type, 70)}
               </p>
             )}
           </div>

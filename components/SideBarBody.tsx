@@ -19,8 +19,8 @@ export function SideBarBody(props: {
 }): JSX.Element {
   const { selectedObject, setShowNewTaskSection } = props;
 
-  switch (selectedObject?.vsmObjectType?.pkObjectType) {
-    case vsmObjectTypes.process:
+  switch (selectedObject?.type) {
+    case "Process":
       return (
         <MarkdownEditor
           canEdit={props.canEdit}
@@ -29,7 +29,7 @@ export function SideBarBody(props: {
           onChange={props.onChangeName}
         />
       );
-    case vsmObjectTypes.supplier:
+    case "Supplier":
       return (
         <>
           <MarkdownEditor
@@ -45,7 +45,7 @@ export function SideBarBody(props: {
           />
         </>
       );
-    case vsmObjectTypes.input:
+    case "Input":
       return (
         <>
           <MarkdownEditor
@@ -61,7 +61,7 @@ export function SideBarBody(props: {
           />
         </>
       );
-    case vsmObjectTypes.output:
+    case "Output":
       return (
         <>
           <MarkdownEditor
@@ -77,7 +77,7 @@ export function SideBarBody(props: {
           />
         </>
       );
-    case vsmObjectTypes.customer:
+    case "Customer":
       return (
         <>
           <MarkdownEditor
@@ -93,7 +93,7 @@ export function SideBarBody(props: {
           />
         </>
       );
-    case vsmObjectTypes.mainActivity:
+    case "MainActivity":
       return (
         <>
           <MarkdownEditor
@@ -109,7 +109,7 @@ export function SideBarBody(props: {
           />
         </>
       );
-    case vsmObjectTypes.subActivity:
+    case "SubActivity":
       return (
         <>
           <MarkdownEditor
@@ -141,7 +141,7 @@ export function SideBarBody(props: {
           />
         </>
       );
-    case vsmObjectTypes.waiting:
+    case "Waiting":
       return (
         <>
           <DurationComponent
@@ -156,7 +156,7 @@ export function SideBarBody(props: {
           />
         </>
       );
-    case vsmObjectTypes.choice:
+    case "Choice":
       return (
         <MarkdownEditor
           canEdit={props.canEdit}
@@ -166,6 +166,7 @@ export function SideBarBody(props: {
         />
       );
     default:
+      console.log(selectedObject);
       return <p>Invalid process type</p>;
   }
 }
