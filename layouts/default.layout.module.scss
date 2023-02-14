@@ -58,6 +58,12 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  border: none;
+  color: rgb(61, 61, 61);
+  font-family: Equinor !important;
+  font-size: 1.25rem;
+  outline: none;
+  text-align: right;
 }
 
 .scrimWrapper {
