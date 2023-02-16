@@ -27,6 +27,7 @@ export function DurationComponent(props: {
         label={"Duration"}
         type={"number"}
         id={"vsmObjectTime"}
+        min={"0"}
         value={`${time}`}
         onChange={(event) => {
           setTime(parseFloat(event.target.value));
