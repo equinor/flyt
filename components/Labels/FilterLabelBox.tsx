@@ -1,5 +1,5 @@
-import { Button, Chip, Icon, Search } from "@equinor/eds-core-react";
 import React, { useState } from "react";
+import { Button, Chip, Icon, Search } from "@equinor/eds-core-react";
 
 import { close } from "@equinor/eds-icons";
 import { debounce } from "utils/debounce";
@@ -9,6 +9,7 @@ import styles from "./FilterLabelBox.module.scss";
 import { unknownErrorToString } from "utils/isError";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
+import Draggable from "react-draggable";
 
 export default function FilterLabelBox(props: {
   handleClose: () => void;
@@ -21,17 +22,32 @@ export default function FilterLabelBox(props: {
   } = useQuery(["labels", searchText], () => getLabels(searchText));
 
   return (
-    <div className={styles.box}>
-      <TopSection handleClose={props.handleClose} />
-      <SearchSection setSearchText={setSearchText} />
-      <LabelSection labels={labels} isLoading={isLoading} error={error} />
+    <div
+      style={{
+        height: "100vh",
+        width: "100vw",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+      onClick={(e) => {
+        e.currentTarget === e.target && props.handleClose();
+      }}
+    >
+      <Draggable handle=".dragHandle" bounds="parent">
+        <div className={styles.box}>
+          <TopSection handleClose={props.handleClose} />
+          <SearchSection setSearchText={setSearchText} />
+          <LabelSection labels={labels} isLoading={isLoading} error={error} />
+        </div>
+      </Draggable>
     </div>
   );
 }
 
 function TopSection(props: { handleClose: () => void }): JSX.Element {
   return (
-    <div className={styles.topSection}>
+    <div className={`${styles.topSection} dragHandle`}>
       <p className={styles.heading}>Filter by label</p>
       <Button variant={"ghost_icon"} onClick={props.handleClose}>
         <Icon data={close} />
