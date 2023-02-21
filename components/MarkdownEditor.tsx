@@ -10,6 +10,10 @@ import UrlPrompt from "./URLPrompt";
 import { check, link } from "@equinor/eds-icons";
 import rehypeSanitize from "rehype-sanitize";
 
+import colors from "theme/colors";
+
+Icon.add({ link });
+
 export default function MarkdownEditor(props: {
   canEdit?: boolean;
   defaultText: string;
@@ -26,7 +30,6 @@ export default function MarkdownEditor(props: {
   });
   // The "text"-state is used for displaying the changing text instantly
   const [text, setText] = useState(defaultText);
-  Icon.add({ link });
 
   useEffect(() => {
     // Open UrlPrompt on ctrl + k
@@ -73,7 +76,11 @@ export default function MarkdownEditor(props: {
     buttonProps: { "aria-label": "Add link" },
     icon: (
       <Tooltip title="Add link" placement="top">
-        <Icon data={link} size={16} />
+        <Icon
+          data={link}
+          color={colors.EQUINOR_PROMINENT}
+          style={{ width: 12, height: 12 }}
+        />
       </Tooltip>
     ),
     execute: (state: TextState) => {
@@ -142,7 +149,9 @@ export default function MarkdownEditor(props: {
               },
             }}
             style={{
-              border: editMode ? "2px solid #007079" : "1px solid #ECECEC",
+              border: editMode
+                ? "2px solid " + colors.EQUINOR_PROMINENT
+                : "1px solid " + colors.EQUINOR_DISABLED,
               borderRadius: 0,
               boxShadow: canEdit && !editMode ? "0 1px 0 0 gray" : "none",
             }}
@@ -157,7 +166,7 @@ export default function MarkdownEditor(props: {
             }}
             variant="ghost_icon"
           >
-            <Icon data={check} color="#007079" />
+            <Icon data={check} color={colors.EQUINOR_PROMINENT} />
           </Button>
         )}
       </div>
