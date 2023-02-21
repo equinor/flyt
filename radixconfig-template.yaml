@@ -7,9 +7,6 @@ spec:
     - name: dev
       build:
         from: DEV
-    - name: dev-graph-poc
-      build:
-        from: 446-migrate-to-reactflow
     - name: test
       build:
         from: TEST
@@ -39,14 +36,6 @@ spec:
             CLIENT_ID: ${DEV_CLIENT_ID}
             ENVIRONMENT: ${DEV_ENVIRONMENT}
             SCOPE: ${DEV_SCOPE}
-        - environment: dev-graph-poc
-          variables:
-            API_BASEURL: ${DEV-GRAPH-POC_API_BASEURL}
-            AUDIENCE: ${DEV-GRAPH-POC_AUDIENCE}
-            AUTHORITY: ${DEV-GRAPH-POC_AUTHORITY}
-            CLIENT_ID: ${DEV-GRAPH-POC_CLIENT_ID}
-            ENVIRONMENT: ${DEV-GRAPH-POC_ENVIRONMENT}
-            SCOPE: ${DEV-GRAPH-POC_SCOPE}
         - environment: test
           variables:
             API_BASEURL: ${TEST_API_BASEURL}
