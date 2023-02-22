@@ -76,11 +76,7 @@ export default function MarkdownEditor(props: {
     buttonProps: { "aria-label": "Add link" },
     icon: (
       <Tooltip title="Add link" placement="top">
-        <Icon
-          data={link}
-          color={colors.EQUINOR_PROMINENT}
-          style={{ width: 12, height: 12 }}
-        />
+        <Icon data={link} color={colors.EQUINOR_PROMINENT} size={16} />
       </Tooltip>
     ),
     execute: (state: TextState) => {
@@ -116,6 +112,9 @@ export default function MarkdownEditor(props: {
               font-size: 1rem;
               background-color: rgb(247, 247, 247);
               color: #3d3d3d;
+            }
+            .w-md-editor-toolbar li > button {
+              height: 24px;
             }
           `}</style>
           <MDEditor
