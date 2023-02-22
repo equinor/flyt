@@ -149,8 +149,8 @@ export default function MarkdownEditor(props: {
             }}
             style={{
               border: editMode
-                ? "2px solid " + colors.EQUINOR_PROMINENT
-                : "1px solid " + colors.EQUINOR_DISABLED,
+                ? `2px solid ${colors.EQUINOR_PROMINENT}`
+                : `1px solid ${colors.EQUINOR_DISABLED}`,
               borderRadius: 0,
               boxShadow: canEdit && !editMode ? "0 1px 0 0 gray" : "none",
             }}
