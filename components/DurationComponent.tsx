@@ -30,9 +30,12 @@ export function DurationComponent(props: {
         min={0}
         value={`${time}`}
         onChange={(event) => {
-          setTime(parseFloat(event.target.value));
+          const newTime = event.target.value
+            ? parseFloat(event.target.value)
+            : 0;
+          setTime(newTime);
           props.onChangeTime({
-            time: parseFloat(event.target.value),
+            time: newTime,
             unit: unit,
           });
         }}
@@ -40,14 +43,19 @@ export function DurationComponent(props: {
       <div style={{ padding: 8 }} />
       <SingleSelect
         disabled={props.disabled}
+        label="Unit"
+        value={getTimeDefinitionDisplayName(unit)}
         items={getTimeDefinitionValues()}
         handleSelectedItemChange={(i) => {
-          const apiValue = getTimeDefinitionValue(i.selectedItem);
-          setUnit(apiValue);
-          props.onChangeTime({ time: time, unit: apiValue });
+          const selectedUnit = i.selectedItem
+            ? getTimeDefinitionValue(i.selectedItem)
+            : "";
+          setUnit(selectedUnit);
+          props.onChangeTime({
+            time: time,
+            unit: selectedUnit,
+          });
         }}
-        value={getTimeDefinitionDisplayName(unit)}
-        label="Unit"
       />
     </div>
   );
