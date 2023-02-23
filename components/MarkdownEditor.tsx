@@ -113,7 +113,7 @@ export default function MarkdownEditor(props: {
               background-color: rgb(247, 247, 247);
               color: #3d3d3d;
             }
-            .w-md-editor-toolbar li > button {
+            .w-md-editor-toolbar button[data-name="link"] {
               height: 24px;
             }
           `}</style>
