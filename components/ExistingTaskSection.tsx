@@ -28,17 +28,17 @@ export function ExistingTaskSection(props: {
     error: fetchingTasksError,
     isLoading: fetchingTasks,
   } = useQuery(
-    `tasks - ${selectedObject.vsmProjectID}/${existingTaskFilter}`,
+    `tasks - ${selectedObject.projectId}/${existingTaskFilter}`,
     () =>
       BaseAPIServices.get(
-        `/api/v1.0/task/list/${selectedObject.vsmProjectID}/${existingTaskFilter}`
+        `/api/v1.0/task/list/${selectedObject.projectId}/${existingTaskFilter}`
       ).then((r) => r.data),
     { enabled: !!existingTaskFilter }
   );
   const router = useRouter();
   const { id } = router.query;
   const taskLinkMutation = useMutation(
-    (task: taskObject) => linkTask(selectedObject.vsmObjectID, task.vsmTaskID),
+    (task: taskObject) => linkTask(selectedObject.id, task.vsmTaskID),
     {
       onSuccess: () => {
         notifyOthers("Added a Q/I/P to a card", id, account);
@@ -48,8 +48,7 @@ export function ExistingTaskSection(props: {
     }
   );
   const taskUnlinkMutation = useMutation(
-    (task: taskObject) =>
-      unlinkTask(selectedObject.vsmObjectID, task.vsmTaskID),
+    (task: taskObject) => unlinkTask(selectedObject.id, task.vsmTaskID),
     {
       onSuccess() {
         notifyOthers("Removed Q/I/P from a card", id, account);

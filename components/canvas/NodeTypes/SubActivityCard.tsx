@@ -81,8 +81,12 @@ export const SubActivityCard = (props: Node<NodeData>) => {
             <SubActivityButton
               onClick={() => handleClickAddCard(parentCard.id, "SubActivity")}
             />
-            <ChoiceButton onClick={() => handleClick()} />
-            <WaitingButton onClick={() => handleClick()} />
+            <ChoiceButton
+              onClick={() => handleClickAddCard(parentCard.id, "Choice")}
+            />
+            <WaitingButton
+              onClick={() => handleClickAddCard(parentCard.id, "Waiting")}
+            />
           </CardButtonsContainer>
           {parentCard.type === "Choice" && (
             <>

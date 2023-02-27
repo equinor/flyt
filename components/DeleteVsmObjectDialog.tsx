@@ -26,23 +26,19 @@ export function DeleteVsmObjectDialog(props: {
   const { id } = router.query;
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
-  const deleteMutation = useMutation(
-    (vsmObjectID: number) => deleteVSMObject(vsmObjectID),
-    {
-      onSuccess() {
-        handleClose();
-        notifyOthers("Deleted a card", id, account);
-        return queryClient.invalidateQueries();
-      },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
-    }
-  );
+  const deleteMutation = useMutation((id: string) => deleteVSMObject(id), {
+    onSuccess() {
+      handleClose();
+      notifyOthers("Deleted a card", id, account);
+      return queryClient.invalidateQueries();
+    },
+    onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+  });
 
   if (!props.visible) return null;
 
   const handleClose = () => props.onClose();
-  const handleDelete = () =>
-    deleteMutation.mutate(props.objectToDelete.vsmObjectID);
+  const handleDelete = () => deleteMutation.mutate(props.objectToDelete.id);
 
   const { pkObjectType: type } = props.objectToDelete.vsmObjectType;
   const { choice, mainActivity } = vsmObjectTypes;

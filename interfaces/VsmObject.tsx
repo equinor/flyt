@@ -3,8 +3,10 @@ import { vsmTaskTypes } from "../types/vsmTaskTypes";
 import { taskObject } from "./taskObject";
 
 export interface vsmObject {
-  vsmObjectID?: number;
-  vsmProjectID?: number;
+  id?: string;
+  type: string;
+  projectId?: string;
+  description: string;
   leftObjectId?: number;
   choiceGroup?: "Left" | "Right";
   position?: number;

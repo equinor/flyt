@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import "reactflow/dist/style.css";
 import React, { useEffect, useRef, useState } from "react";
 import { moveVSMObject, postVSMObject } from "../../services/vsmObjectApi";
@@ -29,7 +30,6 @@ import ReactFlow, {
 } from "reactflow";
 import useLayout from "./hooks/useLayout";
 import nodeTypes from "./NodeTypes";
-import { vsmObjectTypes } from "types/vsmObjectTypes";
 import { NodeData } from "interfaces/NodeData";
 import { postGraph } from "../../services/graphApi";
 
@@ -109,7 +109,7 @@ function Canvas(props): JSX.Element {
 
   let nodesToMerge: string[] = [];
 
-  const handleClickMergeInit = (columnId: number, nodeId: string): void => {
+  const handleClickMergeInit = (columnId: string, nodeId: string): void => {
     nodesToMerge = [];
     nodesToMerge.push(nodeId);
     setNodes((nodes) =>
@@ -130,7 +130,7 @@ function Canvas(props): JSX.Element {
     );
   };
 
-  const handleClickCancelMerge = (columnId: number, nodeId: string): void => {
+  const handleClickCancelMerge = (columnId: string, nodeId: string): void => {
     nodesToMerge = [];
     setNodes((nodes) =>
       nodes.map((node) => {
@@ -162,9 +162,10 @@ function Canvas(props): JSX.Element {
   // };
 
   const handleClickAddCard = useMutation(
+    // @ts-ignore
     ({ parentId, type }) => {
       dispatch.setSnackMessage("⏳ Adding new card...");
-      return postGraph({ type }, parentId, parentId);
+      return postGraph({ type }, projectId, parentId);
     },
     {
       onSuccess: () => {
@@ -176,7 +177,7 @@ function Canvas(props): JSX.Element {
     }
   );
 
-  let columnId: number = null;
+  let columnId: string = null;
 
   const addCardsToCanvas = (
     card: vsmObject,
@@ -195,19 +196,20 @@ function Canvas(props): JSX.Element {
         columnId = card.id;
       }
       cbAddNode({
-        id: card.id.toString(),
+        id: card.id,
         data: {
           card,
           handleClickCard: () => setSelectedObject(card),
           handleClickAddCard: (id, type) =>
+            // @ts-ignore
             handleClickAddCard.mutate({ parentId: id, type }),
-          handleClickMergeInit: (columnId: number) =>
-            handleClickMergeInit(columnId, card.id.toString()),
+          handleClickMergeInit: (columnId) =>
+            handleClickMergeInit(columnId, card.id),
           handleClickMergeOptionCheckbox: () =>
-            handleClickMergeOptionCheckbox(card.id.toString()),
+            handleClickMergeOptionCheckbox(card.id),
           handleClickConfirmMerge: (type) => handleClickConfirmMerge(type),
           handleClickCancelMerge: (columnId) =>
-            handleClickCancelMerge(columnId, card.id.toString()),
+            handleClickCancelMerge(columnId, card.id),
           mergeable: card.children.length === 0,
           columnId,
           parentCard,

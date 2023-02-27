@@ -57,12 +57,14 @@ export function SideBarContent(props: {
     debounce(
       () => {
         vsmObjectMutation.mutate({
-          vsmObjectID: selectedObject.vsmObjectID,
+          id: selectedObject.id,
           ...updates,
+          type: "",
+          description: "",
         });
       },
       1500,
-      `update ${Object.keys(updates)[0]} - ${selectedObject.vsmObjectID}`
+      `update ${Object.keys(updates)[0]} - ${selectedObject.id}`
     );
   }
 
@@ -118,7 +120,7 @@ export function SideBarContent(props: {
     );
 
   return (
-    <React.Fragment key={selectedObject?.vsmObjectID}>
+    <React.Fragment key={selectedObject?.id}>
       <SideBarHeader
         object={selectedObject}
         onClose={props.onClose}

@@ -50,12 +50,11 @@ function getVSMObjectTypeColor(vsmObjectType: vsmObjectTypes) {
   }
 }
 
-function VSMObjectCard(props: { vsmObjectId: number }) {
+function VSMObjectCard(props: { id: string }) {
   const router = useRouter();
   const { id } = router.query;
-  const { data, isLoading, error } = useQuery(
-    ["vsmObject", props.vsmObjectId],
-    () => getVSMObject(props.vsmObjectId)
+  const { data, isLoading, error } = useQuery(["vsmObject", props.id], () =>
+    getVSMObject(props.id)
   );
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>{unknownErrorToString(error)}</p>;
@@ -169,7 +168,7 @@ export default function Category(): JSX.Element {
             ? task.objects.map((o) => {
                 return (
                   <SideBarBody
-                    key={o.vsmObjectID}
+                    key={o.id}
                     selectedObject={o}
                     onChangeName={(e) => console.log(e)}
                     onChangeRole={(e) => console.log(e)}
@@ -179,12 +178,7 @@ export default function Category(): JSX.Element {
                   />
                 );
               })
-            : task.objects.map((o) => (
-                <VSMObjectCard
-                  key={o.vsmObjectID}
-                  vsmObjectId={o.vsmObjectID}
-                />
-              ))}
+            : task.objects.map((o) => <VSMObjectCard key={o.id} id={o.id} />)}
         </div>
       </div>
     </div>

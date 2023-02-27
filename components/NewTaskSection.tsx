@@ -81,7 +81,7 @@ export function NewTaskSection(props: {
         handleSelectedItemChange={(e) => {
           if (!selectedObject) throw new Error("No selected object");
           const t = {
-            objects: [{ fkObject: selectedObject.vsmObjectID } as vsmObject],
+            objects: [{ fkObject: selectedObject.id } as unknown as vsmObject],
             fkProject: selectedObject.vsmProjectID,
             description: newTask?.description ?? "", // Let's not overwrite description if we change the type midways
           } as taskObject;

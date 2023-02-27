@@ -52,7 +52,7 @@ export const patchTask = (data: taskObject) =>
   BaseAPIServices.patch(baseUrl + `/task`, data);
 
 //Link a task to a vsmObject (card)
-export const linkTask = (vsmObjectId: number, taskId: number) =>
+export const linkTask = (vsmObjectId: string, taskId: number) =>
   BaseAPIServices.put(
     baseUrl + `/task/link/${vsmObjectId}/${taskId}`,
     null
@@ -61,7 +61,7 @@ export const linkTask = (vsmObjectId: number, taskId: number) =>
   });
 
 //Remove a link between a task and a vsmObject (card)
-export const unlinkTask = (vsmObjectId: number, taskId: number) =>
+export const unlinkTask = (vsmObjectId: string, taskId: number) =>
   BaseAPIServices.delete(
     baseUrl + `/task/unlink/${vsmObjectId}/${taskId}`,
     null
@@ -69,7 +69,7 @@ export const unlinkTask = (vsmObjectId: number, taskId: number) =>
 
 // Mark a task as done
 export const solveTask = (
-  vsmObjectId: number,
+  vsmObjectId: string,
   taskId: number,
   solved: boolean
 ) =>

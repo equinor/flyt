@@ -16,10 +16,11 @@ export function MainActivityCard(props: Node<NodeData>) {
   const [hovering, setHovering] = useState(false);
 
   const {
-    card: { description, type, tasks },
+    card: { description, type, tasks, id },
     isValidDropTarget,
     isDropTarget,
     handleClickCard,
+    handleClickAddCard,
   } = props.data;
 
   useEffect(() => {
@@ -89,9 +90,11 @@ export function MainActivityCard(props: Node<NodeData>) {
             <MainActivityButton onClick={() => handleClick()} />
           </CardButtonsContainer>
           <CardButtonsContainer position={Position.Bottom}>
-            <SubActivityButton onClick={() => handleClick()} />
-            <ChoiceButton onClick={() => handleClick()} />
-            <WaitingButton onClick={() => handleClick()} />
+            <SubActivityButton
+              onClick={() => handleClickAddCard(id, "SubActivity")}
+            />
+            <ChoiceButton onClick={() => handleClickAddCard(id, "Choice")} />
+            <WaitingButton onClick={() => handleClickAddCard(id, "Waiting")} />
           </CardButtonsContainer>
         </>
       )}

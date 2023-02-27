@@ -34,20 +34,20 @@ export interface ProjectModel {
   addObject: Thunk<ProjectModel, vsmObject>;
   moveVSMObject: Thunk<
     ProjectModel,
-    { vsmProjectID; vsmObjectID; parent; leftObjectId; choiceGroup }
+    { projectId; id; parent; leftObjectId; choiceGroup }
   >;
   deleteVSMObject: Thunk<ProjectModel, vsmObject>;
   fetchProject: Thunk<ProjectModel, { id: string | string[] | number }>;
   updateProjectName: Thunk<
     ProjectModel,
-    { vsmProjectID: number; name: string; rootObjectId: number }
+    { projectId: number; name: string; rootObjectId: number }
   >;
   updateVSMObject: Thunk<ProjectModel, vsmObject>;
   addTask: Thunk<ProjectModel, taskObject>;
   updateTask: Thunk<ProjectModel, taskObject>;
   linkTask: Thunk<
     ProjectModel,
-    { projectId: number; vsmObjectId: number; taskId: number; task: taskObject }
+    { projectId: number; id: number; taskId: number; task: taskObject }
   >;
   unlinkTask: Thunk<ProjectModel, { task: taskObject; object: vsmObject }>;
 }
@@ -131,13 +131,11 @@ const projectModel: ProjectModel = {
      * @param tree
      */
     function patchNodeInTree(node: vsmObject, tree: vsmObject) {
-      if (node.vsmObjectID === tree.vsmObjectID) patchNode(tree, node);
-      tree.childObjects?.forEach((id) => {
+      if (node.id === tree.id) patchNode(tree, node);
+      tree.children?.forEach((id) => {
         patchNodeInTree(
           node,
-          state.project.objects.find(
-            (vsmObj: vsmObject) => vsmObj.vsmObjectID === id
-          )
+          state.project.objects.find((vsmObj: vsmObject) => vsmObj.id === id)
         );
       });
     }
@@ -149,12 +147,12 @@ const projectModel: ProjectModel = {
     });
   }),
   updateProjectName: thunk((actions, payload) => {
-    const { vsmProjectID, name, rootObjectId } = payload;
+    const { projectId, name, rootObjectId } = payload;
     actions.setProjectName(payload);
     debounce(
       () => {
         return BaseAPIServices.post(`/api/v1.0/project`, {
-          vsmProjectID,
+          projectId,
           name,
         })
           .then(() => actions.setSnackMessage("✅ Saved title"))
@@ -168,7 +166,7 @@ const projectModel: ProjectModel = {
       debounce(
         () => {
           return BaseAPIServices.patch(`/api/v1.0/VSMObject`, {
-            vsmObjectID: rootObjectId,
+            id: rootObjectId,
             name,
           }).catch((reason) => actions.setErrorProject(reason));
         },
@@ -185,14 +183,14 @@ const projectModel: ProjectModel = {
     }
   }),
   deleteVSMObject: thunk(async (actions, payload) => {
-    const { vsmObjectID, vsmProjectID } = payload;
+    const { id, projectId } = payload;
 
     if (canDeleteVSMObject(payload)) {
-      BaseAPIServices.delete(`/api/v1.0/VSMObject/${vsmObjectID}`)
+      BaseAPIServices.delete(`/api/v1.0/VSMObject/${id}`)
         .then(() => {
           // Todo: delete the object locally
           //  Until then, just refresh the whole project
-          actions.fetchProject({ id: vsmProjectID });
+          actions.fetchProject({ id: projectId });
           actions.setSelectedObject(null);
           return actions.setSnackMessage("Deleted object");
         })
@@ -243,15 +241,12 @@ const projectModel: ProjectModel = {
     actions.setErrorProject(null);
 
     const { object, task } = payload;
-    const { vsmProjectID: projectId, vsmObjectID: vsmObjectId } = object;
+    const { projectId, id } = object;
     const { vsmTaskID: taskId } = task;
 
-    // const { projectId, vsmObjectId, taskId } = payload;
+    // const { projectId, id, taskId } = payload;
     //Not really deleting, but rather unlinking the task.
-    BaseAPIServices.delete(
-      `/api/v1.0/task/unlink/${vsmObjectId}/${taskId}`,
-      payload
-    )
+    BaseAPIServices.delete(`/api/v1.0/task/unlink/${id}/${taskId}`, payload)
       .then(() => {
         actions.setSnackMessage("✅ Unlinked task!");
         // actions.removeTaskFromSelectedObject(response.data);
@@ -268,9 +263,9 @@ const projectModel: ProjectModel = {
     //Tasks aka. QIP ( Questions Ideas & Problems )
     actions.setErrorProject(null);
 
-    const { projectId, vsmObjectId, taskId, task } = payload;
+    const { projectId, id, taskId, task } = payload;
     //Not really deleting, but rather unlinking the task.
-    BaseAPIServices.put(`/api/v1.0/task/link/${vsmObjectId}/${taskId}`, payload)
+    BaseAPIServices.put(`/api/v1.0/task/link/${id}/${taskId}`, payload)
       .then(() => {
         actions.setSnackMessage("✅ Linked task!");
         // actions.removeTaskFromSelectedObject(response.data);
@@ -289,7 +284,7 @@ const projectModel: ProjectModel = {
     //We need to update the newObject in the API, but the Parent (with the newObject) in our local state
     const apiObject = {
       ...newObject,
-      vsmObjectID: newObject.vsmObjectID ?? 0, // use 0 when it is a new card
+      id: newObject.id ?? 0, // use 0 when it is a new card
     } as vsmObject;
 
     actions.setSnackMessage("Adding new card...");
@@ -297,7 +292,7 @@ const projectModel: ProjectModel = {
       .then((response) => {
         actions.setSnackMessage("Card added!");
         //Todo: local update with response object instead of fetching the whole project again
-        actions.fetchProject({ id: response.data.vsmProjectID });
+        actions.fetchProject({ id: response.data.projectId });
       })
       .catch((reason) => {
         actions.setSnackMessage(reason);
@@ -311,13 +306,13 @@ const projectModel: ProjectModel = {
     // We store the VSM title in the name-field and in the root-node.
     // So if the process ( aka the root node ) title is updated, let's update the vsm title as well.
     // ** Update project title if type is process **
-    const { vsmProjectID, name, vsmObjectType } = payload;
+    const { projectId, name, vsmObjectType } = payload;
     if (vsmObjectType?.pkObjectType === vsmObjectTypes.process) {
       actions.setProjectName(payload);
       debounce(
         () => {
           return BaseAPIServices.post(`/api/v1.0/project`, {
-            vsmProjectID,
+            projectId,
             name,
           })
             .then(() => actions.setSnackMessage("✅ Saved title"))
@@ -349,19 +344,18 @@ const projectModel: ProjectModel = {
     actions.setErrorProject(null);
     actions.setSnackMessage("⏳ Moving card...");
 
-    const { vsmProjectID, vsmObjectID, parent, leftObjectId, choiceGroup } =
-      newVsmObject;
+    const { projectId, id, parent, leftObjectId, choiceGroup } = newVsmObject;
 
     // Send the object-update to api
     return BaseAPIServices.patch(`/api/v1.0/VSMObject`, {
-      vsmProjectID,
-      vsmObjectID,
+      projectId,
+      id,
       parent,
       leftObjectId,
       choiceGroup,
     })
       .then(() => {
-        actions.fetchProject({ id: vsmProjectID });
+        actions.fetchProject({ id: projectId });
         actions.setSnackMessage("✅ Moved card!");
       })
       .catch((reason) => {

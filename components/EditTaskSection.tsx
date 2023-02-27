@@ -37,7 +37,7 @@ export function EditTaskSection(props: {
       card: vsmObject;
       solvedTask: taskObject;
       solved: boolean;
-    }) => solveTask(card.vsmObjectID, solvedTask.vsmTaskID, solved),
+    }) => solveTask(card.id, solvedTask.vsmTaskID, solved),
     {
       onSuccess(_data, variables) {
         const { solvedTask, solved } = variables;
@@ -56,7 +56,7 @@ export function EditTaskSection(props: {
   );
 
   const taskUnlinkMutation = useMutation(
-    (task: taskObject) => unlinkTask(object.vsmObjectID, task.vsmTaskID),
+    (task: taskObject) => unlinkTask(object.id, task.vsmTaskID),
     {
       onSuccess() {
         notifyOthers(

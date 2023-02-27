@@ -10,9 +10,9 @@ export const getGraph = (projectId: number): Promise<vsmObject> => {
 };
 
 export const postGraph = (
-  data: vsmObject,
-  projectId: number,
-  parentId: number
+  data: { type: string },
+  projectId: string,
+  parentId: string
 ): Promise<unknown> =>
   BaseAPIServices.post(
     `${baseUrl}/graph/${projectId}/vertices/${parentId}`,
