@@ -47,7 +47,7 @@ function Canvas(props): JSX.Element {
   const account = useAccount(accounts[0] || {});
 
   const rootNode: Node = {
-    id: graph[0]?.id,
+    id: graph.find((card: vsmObject) => card.type === "Root").id,
     data: {},
     position: { x: 0, y: 0 },
     type: "Root",
@@ -105,7 +105,7 @@ function Canvas(props): JSX.Element {
   }
 
   const getCardById = (id: string): vsmObject =>
-    graph.find((vsmObj: vsmObject) => vsmObj.id.toString() === id);
+    graph.find((card: vsmObject) => card.id === id);
 
   let nodesToMerge: string[] = [];
 
@@ -213,7 +213,6 @@ function Canvas(props): JSX.Element {
           mergeable: card.children.length === 0,
           columnId,
           parentCard,
-          isChoiceChild: parentCard.type === "Choice",
         },
         position: { x: 0, y: 0 },
         type: card.type,
@@ -221,8 +220,8 @@ function Canvas(props): JSX.Element {
 
       cbAddEdge({
         id: `${parentCard.id}=>${card.id}`,
-        source: parentCard.id.toString(),
-        target: card.id.toString(),
+        source: parentCard.id,
+        target: card.id,
         // hidden: parentCard.type !== "Choice",
       });
     }
@@ -238,7 +237,7 @@ function Canvas(props): JSX.Element {
     const initEdges: Edge[] = [];
 
     addCardsToCanvas(
-      graph[0],
+      graph.find((card: vsmObject) => card.type === "Root"),
       (node) => {
         initNodes.push(node);
       },

@@ -32,7 +32,7 @@ export const WaitingCard = (props: Node<NodeData>) => {
     handleClickMergeOptionCheckbox,
     handleClickConfirmMerge,
     handleClickCancelMerge,
-    isChoiceChild,
+    parentCard,
   } = props.data;
 
   useEffect(() => {
@@ -78,7 +78,7 @@ export const WaitingCard = (props: Node<NodeData>) => {
             <ChoiceButton onClick={() => handleClick()} />
             <WaitingButton onClick={() => handleClick()} />
           </CardButtonsContainer>
-          {isChoiceChild && (
+          {parentCard.type === "Choice" && (
             <>
               <CardButtonsContainer position={Position.Right}>
                 <SubActivityButton onClick={() => handleClick()} />

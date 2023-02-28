@@ -15,5 +15,4 @@ export type NodeData = {
   handleClickCard?: () => void;
   handleClickAddCard?: (arg0: string, arg1: string) => void;
   mergeable?: boolean;
-  isChoiceChild: boolean;
 };
