@@ -53,6 +53,8 @@ function Canvas(props): JSX.Element {
     type: "Root",
   };
 
+  const initNodes: Node<NodeData>[] = [];
+  const initEdges: Edge[] = [];
   const [nodes, setNodes, onNodesChange] = useNodesState<NodeData>([rootNode]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
@@ -195,6 +197,17 @@ function Canvas(props): JSX.Element {
       ) {
         columnId = card.id;
       }
+      cbAddEdge({
+        id: `${parentCard.id}=>${card.id}`,
+        source: parentCard.id,
+        target: card.id,
+        // hidden: parentCard.type !== "Choice",
+      });
+
+      if (initNodes.find((node) => node.id === card.id)) {
+        return;
+      }
+
       cbAddNode({
         id: card.id,
         data: {
@@ -217,13 +230,6 @@ function Canvas(props): JSX.Element {
         position: { x: 0, y: 0 },
         type: card.type,
       });
-
-      cbAddEdge({
-        id: `${parentCard.id}=>${card.id}`,
-        source: parentCard.id,
-        target: card.id,
-        // hidden: parentCard.type !== "Choice",
-      });
     }
 
     card.children.forEach((childCardId) => {
@@ -233,9 +239,6 @@ function Canvas(props): JSX.Element {
   };
 
   useEffect(() => {
-    const initNodes: Node<NodeData>[] = [];
-    const initEdges: Edge[] = [];
-
     addCardsToCanvas(
       graph.find((card: vsmObject) => card.type === "Root"),
       (node) => {
