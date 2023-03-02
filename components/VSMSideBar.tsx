@@ -2,7 +2,7 @@ import styles from "./VSMCanvas.module.scss";
 import { SideBarContent } from "./SideBarContent";
 import React from "react";
 import { vsmObject } from "../interfaces/VsmObject";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { getVSMObject } from "../services/vsmObjectApi";
 import { useRouter } from "next/router";
 
@@ -13,6 +13,7 @@ export function VSMSideBar(props: {
   selectedObject: vsmObject;
 }): JSX.Element {
   const selectedObject = props.selectedObject;
+  const queryClient = useQueryClient();
 
   // Only fetch the selected object if we are showing the "now" version
   // We can figure that out by checking if the router query includes a version value.
@@ -42,7 +43,10 @@ export function VSMSideBar(props: {
       >
         <div className={styles.letItBreath}>
           <SideBarContent
-            onClose={props.onClose}
+            onClose={() => {
+              queryClient.invalidateQueries("selectedObject");
+              props.onClose();
+            }}
             onDelete={props.onDelete}
             canEdit={props.canEdit}
             selectedObject={shouldFetch ? fetchedVSMObject : selectedObject}
