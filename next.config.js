@@ -1,5 +1,25 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const removeImports = require("next-remove-imports")();
+
+const securityHeaders = [
+  {
+    key: "Referrer-Policy",
+    value: "strict-origin-when-cross-origin",
+  },
+  {
+    key: "Strict-Transport-Security",
+    value: "max-age=63072000; includeSubDomains",
+  },
+  {
+    key: "X-Content-Type-Options",
+    value: "nosniff",
+  },
+  {
+    key: "X-Frame-Options",
+    value: "SAMEORIGIN",
+  },
+];
+
 module.exports = removeImports({
   serverRuntimeConfig: {
     // Will only be available on the server side
@@ -26,4 +46,14 @@ module.exports = removeImports({
     ];
   },
   optimizeFonts: false,
+  async headers() {
+    return [
+      {
+        // Apply these headers to all routes
+        source: "/:path*",
+        headers: securityHeaders,
+      },
+    ];
+  },
+  poweredByHeader: false,
 });
