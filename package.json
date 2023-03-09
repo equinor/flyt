@@ -44,6 +44,7 @@
     "@typescript-eslint/parser": "^5.48.0",
     "@uiw/react-md-editor": "3.11.2",
     "axios": "^0.25.0",
+    "d3-flextree": "^2.1.2",
     "d3-hierarchy": "^3.1.2",
     "d3-timer": "^3.0.1",
     "easy-peasy": "^5.2.0",

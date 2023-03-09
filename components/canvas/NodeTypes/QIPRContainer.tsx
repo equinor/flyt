@@ -14,7 +14,7 @@ export const QIPRContainer = (props: {
     className={styles.QIPRContainer}
     onClick={props.onClick}
     style={{
-      width: (((props.tasks?.length / 4) >> 0) + 1) * 33,
+      width: (((props.tasks?.length / 4) >> 0) + 1) * 33 + 2.5,
     }}
   >
     {props.tasks

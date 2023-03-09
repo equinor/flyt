@@ -1,11 +1,15 @@
 import { useEffect, useRef } from "react";
 import { useReactFlow, useStore, Node, Edge, ReactFlowState } from "reactflow";
-import { stratify, tree } from "d3-hierarchy";
+import { stratify } from "d3-hierarchy";
 import { timer } from "d3-timer";
+import { flextree } from "d3-flextree";
 
-const layout = tree<Node>()
-  .nodeSize([200, 200])
-  .separation(() => 0.83);
+const layout = flextree({
+  nodeSize: (node) => {
+    const { width, height } = node?.data?.data;
+    return [width, height];
+  },
+});
 
 const options = { duration: 300 };
 const columnsEndPosX = new Map();
@@ -19,11 +23,12 @@ function layoutNodes(nodes: Node[], edges: Edge[]): Node[] {
     nodes
   );
 
-  const root = layout(hierarchy);
+  const tree = layout.hierarchy(hierarchy);
+  const root = layout(tree);
 
   root.descendants().forEach((d) => {
-    const columnId = d.data.data.columnId;
-    const type = d?.data?.data?.card?.type;
+    const columnId = d.data.data.data.columnId;
+    const type = d?.data?.data?.data?.card?.type;
     if (type) {
       if (
         !columnsStartPosX.has(columnId) ||
@@ -31,14 +36,17 @@ function layoutNodes(nodes: Node[], edges: Edge[]): Node[] {
       ) {
         columnsStartPosX.set(columnId, d.x);
       }
-      if (!columnsEndPosX.has(columnId) || columnsEndPosX.get(columnId) < d.x) {
-        columnsEndPosX.set(columnId, d.x);
+      if (
+        !columnsEndPosX.has(columnId) ||
+        columnsEndPosX.get(columnId) < d.x + d?.data?.data?.width
+      ) {
+        columnsEndPosX.set(columnId, d.x + d?.data?.data?.width);
       }
     }
   });
 
   return root.descendants().map((d) => {
-    return { ...d.data, position: { x: d.x, y: d.y } };
+    return { ...d.data.data, position: { x: d.x, y: d.y } };
   });
 }
 
@@ -53,8 +61,7 @@ const setColumnsOffsetX = () => {
       offsetX =
         value -
         columnsEndPosX.get(Array.from(columnsEndPosX.keys())[index - 1]);
-      // 167 or less is the offset where columns starts to overlap
-      totalOffsetX += offsetX < 167 ? 167 - offsetX : offsetX;
+      totalOffsetX += offsetX < 0 ? 0 - offsetX : offsetX;
       columnsOffsetX.set(key, totalOffsetX);
     }
     index++;

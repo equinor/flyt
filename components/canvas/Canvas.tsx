@@ -50,6 +50,8 @@ function Canvas(props): JSX.Element {
     id: graph.find((card: vsmObject) => card.type === "Root").id,
     data: {},
     position: { x: 0, y: 0 },
+    width: 0,
+    height: 0,
     type: "Root",
   };
 
@@ -229,6 +231,12 @@ function Canvas(props): JSX.Element {
         },
         position: { x: 0, y: 0 },
         type: card.type,
+        width:
+          200 +
+          (card?.tasks?.length > 0
+            ? (((card?.tasks?.length / 4) >> 0) + 1) * 33 + 2.5 // 33 = QIPR circle width. 2.5 = margin
+            : 0),
+        height: 200,
       });
     }
 
@@ -249,7 +257,7 @@ function Canvas(props): JSX.Element {
       }
     );
     setNodes([rootNode, ...initNodes]);
-    setEdges(initEdges);
+    setEdges(initEdges.sort((a, b) => Number(b.source) - Number(a.source)));
   }, [project]);
 
   const dragRef = useRef<Node<NodeData>>(null);
