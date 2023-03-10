@@ -16,25 +16,25 @@ export default function Project() {
   const router = useRouter();
   const { id } = router.query;
 
-  const { data: project, error } = useQuery(
+  const { data: project, error: errorProject } = useQuery(
     ["project", id],
     () => getProject(id),
     {
       enabled: !!id,
+      refetchOnWindowFocus: false,
     }
   );
 
-  const projectId = project?.vsmProjectID;
-
-  const { data: graph } = useQuery(
-    ["graph", projectId],
-    () => getGraph(projectId),
+  const { data: graph, error: errorGraph } = useQuery(
+    ["graph", id],
+    () => getGraph(id),
     {
-      enabled: !!projectId,
+      enabled: !!id,
+      refetchOnWindowFocus: false,
     }
   );
 
-  if (error) {
+  if (errorProject || errorGraph) {
     return (
       <div className={commonStyles.container}>
         <Head>
@@ -43,7 +43,9 @@ export default function Project() {
         </Head>
 
         <main className={commonStyles.main}>
-          <Typography variant="h1">{unknownErrorToString(error)}</Typography>
+          <Typography variant="h1">
+            {unknownErrorToString(errorProject || errorGraph)}
+          </Typography>
           <p>
             We have some troubles with this process. Please try to refresh the
             page.

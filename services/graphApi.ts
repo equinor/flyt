@@ -3,7 +3,7 @@ const baseUrl = "/api/v2.0";
 import BaseAPIServices from "./BaseAPIServices";
 import { vsmObject } from "../interfaces/VsmObject";
 
-export const getGraph = (projectId: number): Promise<vsmObject> => {
+export const getGraph = (projectId: string | string[]): Promise<vsmObject> => {
   return BaseAPIServices.get(`${baseUrl}/graph/${projectId}/vertices`).then(
     (value) => value.data
   );
