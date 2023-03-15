@@ -69,9 +69,7 @@ export const SubActivityCard = (props: Node<NodeData>) => {
             <SubActivityButton
               onClick={() => handleClickAddCard(id, "SubActivity")}
             />
-            <ChoiceButton
-              onClick={() => handleClickAddCard(id, "ChoiceButton")}
-            />
+            <ChoiceButton onClick={() => handleClickAddCard(id, "Choice")} />
             <WaitingButton onClick={() => handleClickAddCard(id, "Waiting")} />
             {mergeable && (
               <MergeButton onClick={() => handleClickMergeInit(columnId)} />

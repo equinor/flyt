@@ -17,6 +17,7 @@ export function ChoiceCard(props) {
     isValidDropTarget,
     handleClickCard,
     parentCard,
+    handleClickAddCard,
   } = props.data;
 
   const size = 132;
@@ -104,9 +105,15 @@ export function ChoiceCard(props) {
       {hovering && (
         <>
           <CardButtonsContainer position={Position.Top}>
-            <SubActivityButton onClick={() => handleClick()} />
-            <ChoiceButton onClick={() => handleClick()} />
-            <WaitingButton onClick={() => handleClick()} />
+            <SubActivityButton
+              onClick={() => handleClickAddCard(parentCard.id, "SubActivity")}
+            />
+            <ChoiceButton
+              onClick={() => handleClickAddCard(parentCard.id, "Choice")}
+            />
+            <WaitingButton
+              onClick={() => handleClickAddCard(parentCard.id, "Waiting")}
+            />
           </CardButtonsContainer>
           {parentCard.type === "Choice" && (
             <>

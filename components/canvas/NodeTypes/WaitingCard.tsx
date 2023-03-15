@@ -20,7 +20,7 @@ export const WaitingCard = (props: Node<NodeData>) => {
   const [hovering, setHovering] = useState(false);
 
   const {
-    card: { time, timeDefinition, type, tasks },
+    card: { id, time, timeDefinition, type, tasks },
     isValidDropTarget,
     isDropTarget,
     columnId,
@@ -33,6 +33,7 @@ export const WaitingCard = (props: Node<NodeData>) => {
     handleClickConfirmMerge,
     handleClickCancelMerge,
     parentCard,
+    handleClickAddCard,
   } = props.data;
 
   useEffect(() => {
@@ -66,17 +67,25 @@ export const WaitingCard = (props: Node<NodeData>) => {
       return (
         <>
           <CardButtonsContainer position={Position.Bottom}>
-            <SubActivityButton onClick={() => handleClick()} />
-            <ChoiceButton onClick={() => handleClick()} />
-            <WaitingButton onClick={() => handleClick()} />
+            <SubActivityButton
+              onClick={() => handleClickAddCard(id, "SubActivity")}
+            />
+            <ChoiceButton onClick={() => handleClickAddCard(id, "Choice")} />
+            <WaitingButton onClick={() => handleClickAddCard(id, "Waiting")} />
             {mergeable && (
               <MergeButton onClick={() => handleClickMergeInit(columnId)} />
             )}
           </CardButtonsContainer>
           <CardButtonsContainer position={Position.Top}>
-            <SubActivityButton onClick={() => handleClick()} />
-            <ChoiceButton onClick={() => handleClick()} />
-            <WaitingButton onClick={() => handleClick()} />
+            <SubActivityButton
+              onClick={() => handleClickAddCard(parentCard.id, "SubActivity")}
+            />
+            <ChoiceButton
+              onClick={() => handleClickAddCard(parentCard.id, "Choice")}
+            />
+            <WaitingButton
+              onClick={() => handleClickAddCard(parentCard.id, "Waiting")}
+            />
           </CardButtonsContainer>
           {parentCard.type === "Choice" && (
             <>
