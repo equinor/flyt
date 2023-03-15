@@ -3,7 +3,7 @@ import "reactflow/dist/style.css";
 import React, { useEffect, useRef, useState } from "react";
 import { moveVSMObject, postVSMObject } from "../../services/vsmObjectApi";
 import { useAccount, useMsal } from "@azure/msal-react";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import { DeleteVsmObjectDialog } from "../DeleteVsmObjectDialog";
 import { LiveIndicator } from "../LiveIndicator";
@@ -28,7 +28,7 @@ import ReactFlow, {
   Edge,
   Node,
 } from "reactflow";
-import useLayout from "./hooks/useLayout";
+import { setLayout } from "./hooks/useLayout";
 import nodeTypes from "./NodeTypes";
 import { NodeData } from "interfaces/NodeData";
 import { postGraph } from "../../services/graphApi";
@@ -53,6 +53,7 @@ function Canvas(props): JSX.Element {
     width: 0,
     height: 0,
     type: "Root",
+    hidden: true,
   };
 
   const initNodes: Node<NodeData>[] = [];
@@ -247,18 +248,21 @@ function Canvas(props): JSX.Element {
   };
 
   useEffect(() => {
-    addCardsToCanvas(
-      graph.find((card: vsmObject) => card.type === "Root"),
-      (node) => {
-        initNodes.push(node);
-      },
-      (edge) => {
-        initEdges.push(edge);
-      }
-    );
-    setNodes([rootNode, ...initNodes]);
-    setEdges(initEdges.sort((a, b) => Number(b.source) - Number(a.source)));
-  }, [project]);
+    if (graph) {
+      addCardsToCanvas(
+        graph.find((card: vsmObject) => card.type === "Root"),
+        (node) => {
+          initNodes.push(node);
+        },
+        (edge) => {
+          initEdges.push(edge);
+        }
+      );
+      const finalNodes = setLayout([rootNode, ...initNodes], initEdges);
+      setNodes(finalNodes);
+      setEdges(initEdges);
+    }
+  }, [graph]);
 
   const dragRef = useRef<Node<NodeData>>(null);
   const [target, setTarget] = useState<Node<NodeData>>(null);
@@ -357,8 +361,6 @@ function Canvas(props): JSX.Element {
     );
   };
 
-  useLayout();
-
   return (
     <div style={{ width: "100vw", height: "100vh" }}>
       {showVersionHistoryBottomSheet && (
@@ -425,7 +427,6 @@ function Canvas(props): JSX.Element {
       <ReactFlow
         nodes={nodes}
         edges={edges}
-        fitView
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}

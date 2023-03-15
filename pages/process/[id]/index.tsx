@@ -18,21 +18,18 @@ export default function Project() {
 
   const { data: project, error: errorProject } = useQuery(
     ["project", id],
-    () => getProject(id),
+    () => {
+      return getProject(id);
+    },
     {
       enabled: !!id,
       refetchOnWindowFocus: false,
     }
   );
 
-  const { data: graph, error: errorGraph } = useQuery(
-    ["graph", id],
-    () => getGraph(id),
-    {
-      enabled: !!id,
-      refetchOnWindowFocus: false,
-    }
-  );
+  const { data: graph, error: errorGraph } = useQuery(["graph", id], () => {
+    return getGraph(id);
+  });
 
   if (errorProject || errorGraph) {
     return (

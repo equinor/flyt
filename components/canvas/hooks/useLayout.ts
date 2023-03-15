@@ -1,7 +1,5 @@
-import { useEffect, useRef } from "react";
-import { useReactFlow, useStore, Node, Edge, ReactFlowState } from "reactflow";
+import { Node, Edge } from "reactflow";
 import { stratify } from "d3-hierarchy";
-import { timer } from "d3-timer";
 import { flextree } from "d3-flextree";
 
 const layout = flextree({
@@ -11,7 +9,6 @@ const layout = flextree({
   },
 });
 
-const options = { duration: 300 };
 const columnsEndPosX = new Map();
 const columnsStartPosX = new Map();
 const columnsOffsetX = new Map();
@@ -68,76 +65,22 @@ const setColumnsOffsetX = () => {
   });
 };
 
-const nodeCountSelector = (state: ReactFlowState) => state.nodeInternals.size;
+export const setLayout = (nodes, edges) => {
+  const targetNodes = layoutNodes(
+    nodes,
+    edges.sort((a, b) => Number(b.source) - Number(a.source))
+  );
+  setColumnsOffsetX();
 
-function useLayout() {
-  const initial = useRef(true);
-
-  const nodeCount = useStore(nodeCountSelector);
-
-  const { getNodes, getNode, setNodes, setEdges, getEdges, fitView } =
-    useReactFlow();
-
-  useEffect(() => {
-    const nodes = getNodes();
-    const edges = getEdges();
-    const targetNodes = layoutNodes(nodes, edges);
-    setColumnsOffsetX();
-
-    const transitions = targetNodes.map((node) => {
-      return {
-        id: node.id,
-        from: getNode(node.id)?.position || node.position,
-        to: node.position,
-        node,
-      };
-    });
-
-    const t = timer((elapsed: number) => {
-      const s = elapsed / options.duration;
-
-      const currNodes = transitions.map(({ node, from, to }) => {
-        return {
-          id: node.id,
-          position: {
-            x:
-              from.x +
-              (to.x + columnsOffsetX.get(node.data.columnId) - from.x) * s,
-            y: from.y + (to.y - from.y) * s,
-          },
-          data: { ...node.data },
-          type: node.type,
-        };
-      });
-
-      setNodes(currNodes);
-
-      if (elapsed > options.duration) {
-        const finalNodes = transitions.map(({ node, to }) => {
-          return {
-            id: node.id,
-            position: {
-              x: to.x + columnsOffsetX.get(node.data.columnId),
-              y: to.y,
-            },
-            data: { ...node.data },
-            type: node.type,
-          };
-        });
-        setNodes(finalNodes);
-        t.stop();
-
-        if (!initial.current) {
-          fitView({ duration: 200, padding: 0.2 });
-        }
-        initial.current = false;
-      }
-    });
-
-    return () => {
-      t.stop();
+  return targetNodes.map((node) => {
+    return {
+      id: node.id,
+      position: {
+        x: node.position.x + columnsOffsetX.get(node.data.columnId),
+        y: node.position.y,
+      },
+      data: { ...node.data },
+      type: node.type,
     };
-  }, [nodeCount, getEdges, getNodes, getNode, setNodes, fitView, setEdges]);
-}
-
-export default useLayout;
+  });
+};
