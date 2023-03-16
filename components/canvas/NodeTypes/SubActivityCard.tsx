@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Handle, Position } from "reactflow";
 import { formatCanvasText } from "../utils/FormatCanvasText";
-import { formatDuration } from "types/timeDefinitions";
+import { formatDuration } from "types/unitDefinitions";
 
 import styles from "./Card.module.css";
 import { SubActivityButton } from "./SubActivityButton";
@@ -19,7 +19,7 @@ export const SubActivityCard = (props: Node<NodeData>) => {
   const [hovering, setHovering] = useState(false);
 
   const {
-    card: { description, role, time, timeDefinition, type, tasks, id },
+    card: { description, role, duration, unit, type, tasks, id },
     isValidDropTarget,
     isDropTarget,
     columnId,
@@ -144,7 +144,7 @@ export const SubActivityCard = (props: Node<NodeData>) => {
           </div>
           <div className={styles["card__time-container"]}>
             <p className={styles.text}>
-              {formatCanvasText(formatDuration(time, timeDefinition), 12, true)}
+              {formatCanvasText(formatDuration(duration, unit), 12, true)}
             </p>
           </div>
           <Handle

@@ -21,10 +21,10 @@ export function VSMSideBar(props: {
   const shouldFetch = false; //!(router.query.version as string);
 
   // Fetch selected fetchedVSMObject
-  const vsmObjectId = selectedObject?.id;
+  const id = selectedObject?.id;
   const { data: fetchedVSMObject, isLoading } = useQuery(
-    ["selectedObject", vsmObjectId],
-    () => getVSMObject(vsmObjectId),
+    ["selectedObject", id],
+    () => getVSMObject(id),
     {
       enabled: shouldFetch,
     }

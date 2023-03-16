@@ -4,40 +4,13 @@ import { taskObject } from "./taskObject";
 
 export interface vsmObject {
   id?: string;
-  type: string;
-  projectId?: string;
-  description: string;
-  leftObjectId?: number;
-  choiceGroup?: "Left" | "Right";
-  position?: number;
-  parent?: number;
-  name?: string;
-  fkObjectType?: vsmObjectTypes;
-  time?: number;
-  timeDefinition?: string;
-  role?: string;
   children?: Array<string>;
-  vsmObjectType?: {
-    pkObjectType: vsmObjectTypes;
-    name?: string;
-    description?: null;
-    hidden?: boolean;
-  };
-  tasks?: taskObject[];
-  created?: {
-    pkChangeLog: number;
-    userIdentity: string;
-    changeDate: string;
-    fkVsm: number;
-    fkObject: vsmObjectTypes;
-    fkTask: vsmTaskTypes;
-  };
-  lastUpdated?: {
-    pkChangeLog: number;
-    userIdentity: string;
-    changeDate: string;
-    fkVsm: number;
-    fkObject: vsmObjectTypes;
-    fkTask: vsmTaskTypes;
-  };
+  type?: string;
+  projectId?: string;
+  index?: string;
+  description?: string;
+  role?: string;
+  duration?: number;
+  unit?: string;
+  tasks?: Array<taskObject>;
 }

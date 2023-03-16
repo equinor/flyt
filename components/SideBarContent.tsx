@@ -4,7 +4,7 @@ import { NewTaskSection } from "./NewTaskSection";
 import { SideBarBody } from "./SideBarBody";
 import { useMutation, useQueryClient } from "react-query";
 import { vsmObject } from "../interfaces/VsmObject";
-import { patchVSMObject } from "../services/vsmObjectApi";
+import { patchGraph } from "services/graphApi";
 import { debounce } from "../utils/debounce";
 import styles from "./VSMCanvas.module.scss";
 import { Button, Icon, Typography } from "@equinor/eds-core-react";
@@ -35,7 +35,8 @@ export function SideBarContent(props: {
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
   const vsmObjectMutation = useMutation(
-    (patchedObject: vsmObject) => patchVSMObject(patchedObject),
+    (patchedObject: vsmObject) =>
+      patchGraph(patchedObject, id, patchedObject.id),
     {
       onSuccess() {
         notifyOthers("Updated a card", id, account);
@@ -48,19 +49,17 @@ export function SideBarContent(props: {
   function patchCard(
     selectedObject: vsmObject,
     updates: {
-      name?: string;
+      description?: string;
       role?: string;
-      time?: number;
-      timeDefinition?: string;
+      duration?: number;
+      unit?: string;
     }
   ) {
     debounce(
       () => {
         vsmObjectMutation.mutate({
           id: selectedObject.id,
-          ...updates,
-          type: "",
-          description: "",
+          ...{ ...selectedObject, ...updates },
         });
       },
       1500,
@@ -129,12 +128,14 @@ export function SideBarContent(props: {
       />
       <SideBarBody
         selectedObject={selectedObject}
-        onChangeName={(name) => patchCard(selectedObject, { name })}
+        onChangeDescription={(description) =>
+          patchCard(selectedObject, { description })
+        }
         onChangeRole={(e) =>
           patchCard(selectedObject, { role: e.target.value })
         }
-        onChangeTime={(e) =>
-          patchCard(selectedObject, { time: e.time, timeDefinition: e.unit })
+        onChangeDuration={(e) =>
+          patchCard(selectedObject, { duration: e.duration, unit: e.unit })
         }
         setShowNewTaskSection={setShowNewTaskSection}
         canEdit={props.canEdit}

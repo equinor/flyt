@@ -7,8 +7,8 @@ import { vsmObject } from "../../../interfaces/VsmObject";
  *  - name
  *  - role
  *  - tasks
- *  - time
- *  - timeDefinition
+ *  - duration
+ *  - unit
  *
  * @param oldObject
  * @param newObject
@@ -18,10 +18,10 @@ export function nothingHasChangedOfImportanceForRenderingThisCard(
   newObject: vsmObject
 ): boolean {
   return (
-    oldObject.name === newObject.name &&
+    oldObject.description === newObject.description &&
     oldObject.role === newObject.role &&
     oldObject.tasks === newObject.tasks &&
-    oldObject.time === newObject.time &&
-    oldObject.timeDefinition === newObject.timeDefinition
+    oldObject.duration === newObject.duration &&
+    oldObject.unit === newObject.unit
   );
 }

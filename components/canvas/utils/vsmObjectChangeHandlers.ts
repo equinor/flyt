@@ -3,17 +3,17 @@ import { ProjectModel } from "../../../store/store";
 import { debounce } from "../../../utils/debounce";
 import { vsmObject } from "../../../interfaces/VsmObject";
 
-export function getOnChangeTimeDefinition(
+export function getOnChangeUnit(
   dispatch: Actions<ProjectModel>,
   selectedObject
 ) {
-  return (timeDefinition: string) => {
-    dispatch.setSelectedObject({ ...selectedObject, timeDefinition });
+  return (unit: string) => {
+    dispatch.setSelectedObject({ ...selectedObject, unit });
     debounce(
       () => {
         dispatch.updateVSMObject({
           ...selectedObject,
-          timeDefinition,
+          unit,
         } as vsmObject);
       },
       1000,
@@ -62,19 +62,19 @@ export function getOnChangeRole(
   };
 }
 
-export function getOnChangeTime(
+export function getOnChangeDuration(
   dispatch: Actions<ProjectModel>,
   selectedObject
 ) {
   return (event) => {
-    let time = parseInt(event.target.value);
-    if (time < 0) time = 0;
-    dispatch.setSelectedObject({ ...selectedObject, time });
+    let duration = parseInt(event.target.value);
+    if (duration < 0) duration = 0;
+    dispatch.setSelectedObject({ ...selectedObject, duration });
     debounce(
       () => {
         dispatch.updateVSMObject({
           ...selectedObject,
-          time,
+          duration,
         } as vsmObject);
       },
       1000,

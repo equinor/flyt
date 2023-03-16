@@ -1,4 +1,4 @@
-export const timeDefinitions = [
+export const units = [
   { value: "Minute", displayName: "Minute(s)" },
   { value: "Hour", displayName: "Hour(s)" },
   { value: "Day", displayName: "Day(s)" },
@@ -7,15 +7,15 @@ export const timeDefinitions = [
   { value: "Year", displayName: "Year(s)" },
 ];
 
-export const getTimeDefinitionValues = (): Array<string> =>
-  timeDefinitions.map((item) => item.displayName);
+export const getUnitValues = (): Array<string> =>
+  units.map((item) => item.displayName);
 
-export const getTimeDefinitionValue = (displayName: string): string =>
-  timeDefinitions.find((item) => item.displayName === displayName).value;
+export const getUnitValue = (displayName: string): string =>
+  units.find((item) => item.displayName === displayName).value;
 
-export const getTimeDefinitionDisplayName = (value: string): string => {
+export const getUnitDisplayName = (value: string): string => {
   if (!value) return "";
-  return timeDefinitions.find((item) => item.value === value).displayName;
+  return units.find((item) => item.value === value).displayName;
 };
 
 /**

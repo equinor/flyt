@@ -4,16 +4,15 @@ import React from "react";
 import { TextField } from "@equinor/eds-core-react";
 import dynamic from "next/dynamic";
 import { vsmObject } from "../interfaces/VsmObject";
-import { vsmObjectTypes } from "../types/vsmObjectTypes";
 const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
   ssr: false,
 });
 
 export function SideBarBody(props: {
   selectedObject: vsmObject;
-  onChangeName: (value?: string) => void;
+  onChangeDescription: (value?: string) => void;
   onChangeRole: (event: { target: { value: string } }) => void;
-  onChangeTime: (e: { time: number; unit: string }) => void;
+  onChangeDuration: (e: { duration: number; unit: string }) => void;
   setShowNewTaskSection: (boolean) => void;
   canEdit: boolean;
 }): JSX.Element {
@@ -24,9 +23,9 @@ export function SideBarBody(props: {
       return (
         <MarkdownEditor
           canEdit={props.canEdit}
-          defaultText={selectedObject.name || ""}
+          defaultText={selectedObject.description || ""}
           label={"Title"}
-          onChange={props.onChangeName}
+          onChange={props.onChangeDescription}
         />
       );
     case "Supplier":
@@ -34,9 +33,9 @@ export function SideBarBody(props: {
         <>
           <MarkdownEditor
             canEdit={props.canEdit}
-            defaultText={selectedObject.name || ""}
+            defaultText={selectedObject.description || ""}
             label={"Supplier(s)"}
-            onChange={props.onChangeName}
+            onChange={props.onChangeDescription}
           />
           <QIPSection
             canEdit={props.canEdit}
@@ -50,9 +49,9 @@ export function SideBarBody(props: {
         <>
           <MarkdownEditor
             canEdit={props.canEdit}
-            defaultText={selectedObject.name || ""}
+            defaultText={selectedObject.description || ""}
             label={"Input(s)"}
-            onChange={props.onChangeName}
+            onChange={props.onChangeDescription}
           />
           <QIPSection
             canEdit={props.canEdit}
@@ -66,9 +65,9 @@ export function SideBarBody(props: {
         <>
           <MarkdownEditor
             canEdit={props.canEdit}
-            defaultText={selectedObject.name || ""}
+            defaultText={selectedObject.description || ""}
             label={"Output(s)"}
-            onChange={props.onChangeName}
+            onChange={props.onChangeDescription}
           />
           <QIPSection
             canEdit={props.canEdit}
@@ -82,9 +81,9 @@ export function SideBarBody(props: {
         <>
           <MarkdownEditor
             canEdit={props.canEdit}
-            defaultText={selectedObject.name || ""}
+            defaultText={selectedObject.description || ""}
             label={"Customer(s)"}
-            onChange={props.onChangeName}
+            onChange={props.onChangeDescription}
           />
           <QIPSection
             canEdit={props.canEdit}
@@ -98,9 +97,9 @@ export function SideBarBody(props: {
         <>
           <MarkdownEditor
             canEdit={props.canEdit}
-            defaultText={selectedObject.name || ""}
+            defaultText={selectedObject.description || ""}
             label={"Description"}
-            onChange={props.onChangeName}
+            onChange={props.onChangeDescription}
           />
           <QIPSection
             canEdit={props.canEdit}
@@ -114,9 +113,9 @@ export function SideBarBody(props: {
         <>
           <MarkdownEditor
             canEdit={props.canEdit}
-            defaultText={selectedObject.name || ""}
+            defaultText={selectedObject.description || ""}
             label={"Description"}
-            onChange={props.onChangeName}
+            onChange={props.onChangeDescription}
           />
           <div style={{ paddingTop: 12 }}>
             <TextField
@@ -130,7 +129,7 @@ export function SideBarBody(props: {
             <div style={{ padding: 8 }} />
             <DurationComponent
               disabled={!props.canEdit}
-              onChangeTime={props.onChangeTime}
+              onChangeDuration={props.onChangeDuration}
               selectedObject={selectedObject}
             />
           </div>
@@ -160,13 +159,12 @@ export function SideBarBody(props: {
       return (
         <MarkdownEditor
           canEdit={props.canEdit}
-          defaultText={selectedObject.name || ""}
+          defaultText={selectedObject.description || ""}
           label={"Define choice"}
-          onChange={props.onChangeName}
+          onChange={props.onChangeDescription}
         />
       );
     default:
-      console.log(selectedObject);
       return <p>Invalid process type</p>;
   }
 }

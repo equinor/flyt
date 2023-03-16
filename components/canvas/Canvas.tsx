@@ -249,6 +249,8 @@ function Canvas(props): JSX.Element {
 
   useEffect(() => {
     if (graph) {
+      if (selectedObject)
+        setSelectedObject(graph.find((node) => node.id === selectedObject.id));
       addCardsToCanvas(
         graph.find((card: vsmObject) => card.type === "Root"),
         (node) => {

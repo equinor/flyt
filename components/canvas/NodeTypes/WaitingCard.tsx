@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Handle, Position } from "reactflow";
 import { formatCanvasText } from "../utils/FormatCanvasText";
-import { formatDuration } from "types/timeDefinitions";
+import { formatDuration } from "types/unitDefinitions";
 import { Checkbox, Icon } from "@equinor/eds-core-react";
 import { time as timeIcon } from "@equinor/eds-icons";
 
@@ -20,7 +20,7 @@ export const WaitingCard = (props: Node<NodeData>) => {
   const [hovering, setHovering] = useState(false);
 
   const {
-    card: { id, time, timeDefinition, type, tasks },
+    card: { id, duration, unit, type, tasks },
     isValidDropTarget,
     isDropTarget,
     columnId,
@@ -139,7 +139,7 @@ export const WaitingCard = (props: Node<NodeData>) => {
               className={`${styles.text} ${styles["card__waitingtime-container"]}`}
             >
               <Icon data={timeIcon} size={24} style={{ marginRight: 5 }} />
-              {formatDuration(time, timeDefinition)}
+              {formatDuration(duration, unit)}
             </p>
           </div>
           <Handle

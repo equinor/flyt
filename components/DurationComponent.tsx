@@ -1,23 +1,23 @@
 import { vsmObject } from "../interfaces/VsmObject";
 import { SingleSelect, TextField } from "@equinor/eds-core-react";
 import {
-  getTimeDefinitionDisplayName,
-  getTimeDefinitionValue,
-  getTimeDefinitionValues,
-} from "../types/timeDefinitions";
+  getUnitDisplayName,
+  getUnitValue,
+  getUnitValues,
+} from "../types/unitDefinitions";
 import React, { useEffect, useState } from "react";
 
 export function DurationComponent(props: {
   selectedObject: vsmObject;
-  onChangeTime: (e: { time: number; unit: string }) => void;
+  onChangeDuration: (e: { duration: number; unit: string }) => void;
   disabled: boolean;
 }): JSX.Element {
-  const [time, setTime] = useState(props.selectedObject.time);
-  const [unit, setUnit] = useState(props.selectedObject.timeDefinition);
+  const [duration, setDuration] = useState(props.selectedObject.duration);
+  const [unit, setUnit] = useState(props.selectedObject.unit);
 
   useEffect(() => {
-    setTime(props.selectedObject.time);
-    setUnit(props.selectedObject.timeDefinition);
+    setDuration(props.selectedObject.duration);
+    setUnit(props.selectedObject.unit);
   }, [props.selectedObject]);
 
   return (
@@ -28,11 +28,11 @@ export function DurationComponent(props: {
         type={"number"}
         id={"vsmObjectTime"}
         min={0}
-        value={`${time}`}
+        value={`${duration}`}
         onChange={(event) => {
-          setTime(parseFloat(event.target.value));
-          props.onChangeTime({
-            time: parseFloat(event.target.value),
+          setDuration(parseFloat(event.target.value));
+          props.onChangeDuration({
+            duration: parseFloat(event.target.value),
             unit: unit,
           });
         }}
@@ -40,13 +40,13 @@ export function DurationComponent(props: {
       <div style={{ padding: 8 }} />
       <SingleSelect
         disabled={props.disabled}
-        items={getTimeDefinitionValues()}
+        items={getUnitValues()}
         handleSelectedItemChange={(i) => {
-          const apiValue = getTimeDefinitionValue(i.selectedItem);
+          const apiValue = getUnitValue(i.selectedItem);
           setUnit(apiValue);
-          props.onChangeTime({ time: time, unit: apiValue });
+          props.onChangeDuration({ duration, unit: apiValue });
         }}
-        value={getTimeDefinitionDisplayName(unit)}
+        value={getUnitDisplayName(unit)}
         label="Unit"
       />
     </div>
