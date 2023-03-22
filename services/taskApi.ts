@@ -63,6 +63,12 @@ export const updateTask = (
   taskId: string
 ) => BaseAPIServices.put(`${baseUrl}/graph/${projectId}/tasks/${taskId}`, data);
 
+// Saves or updates a task, if the taskId is present it updates the task otherwise a new task is created
+export const getTasks = (projectId: string | string[], vertexId: string) =>
+  BaseAPIServices.get(
+    `${baseUrl}/graph/${projectId}/vertices/${vertexId}/tasks`
+  );
+
 //Perform a patch on one or more of the task properties, omit the properties not to update
 export const patchTask = (data: taskObject) =>
   BaseAPIServices.patch(baseUrl + `/task`, data);

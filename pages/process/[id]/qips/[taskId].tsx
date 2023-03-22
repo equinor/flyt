@@ -50,81 +50,81 @@ import { arrow_back } from "@equinor/eds-icons";
 //   }
 // }
 
-function VSMObjectCard(props: { id: string }) {
-  //   const router = useRouter();
-  //   const { id } = router.query;
-  //   const { data, isLoading, error } = useQuery(["vsmObject", props.id], () =>
-  //     getVSMObject(props.id)
-  //   );
-  //   if (isLoading) return <p>Loading...</p>;
-  //   if (error) return <p>{unknownErrorToString(error)}</p>;
-  //   return (
-  //     <div>
-  //       <div style={{ display: "flex" }}>
-  //         <div
-  //           style={{
-  //             marginLeft: 8,
-  //             paddingLeft: 8,
-  //             paddingTop: 1,
-  //             borderBottomLeftRadius: 6,
-  //             borderTopLeftRadius: 6,
-  //             width: 126,
-  //             height: 136,
-  //             minWidth: 126,
-  //             minHeight: 136,
-  //             backgroundColor: getVSMObjectTypeColor(data.type),
-  //             resize: "both",
-  //             overflow: "scroll",
-  //           }}
-  //         >
-  //           <p style={{ opacity: 0.4 }}>{data.vsmObjectType.name}</p>
-  //           <ReactMarkdown remarkPlugins={[gfm]}>{data.name}</ReactMarkdown>
-  //           <p style={{ opacity: 0.8 }}>{data.role}</p>
-  //           <p>{!!data.time && `${data.time}${data.timeDefinition}`}</p>
-  //         </div>
-  //         <div
-  //           style={{
-  //             backgroundColor: "white",
-  //             borderLeft: "none",
-  //             borderBottomRightRadius: 6,
-  //             borderTopRightRadius: 6,
-  //             marginRight: 8,
-  //             paddingLeft: 8,
-  //             paddingTop: 1,
-  //             padding: 8,
-  //             display: "flex",
-  //             flexDirection: "column",
-  //             flexWrap: "wrap",
-  //           }}
-  //         >
-  //           {data.tasks.map((task) => (
-  //             <div
-  //               key={task.vsmTaskID}
-  //               onClick={() =>
-  //                 router.push(`/process/${id}/qips/${task.vsmTaskID}`)
-  //               }
-  //             >
-  //               <TaskButton task={task} selected={true} draft={false} />
-  //             </div>
-  //           ))}
-  //         </div>
-  //       </div>
-  //     </div>
-  //   );
-  // }
+// function VSMObjectCard(props: { id: string }) {
+//   const router = useRouter();
+//   const { id } = router.query;
+//   const { data, isLoading, error } = useQuery(["vsmObject", props.id], () =>
+//     getVSMObject(props.id)
+//   );
+//   if (isLoading) return <p>Loading...</p>;
+//   if (error) return <p>{unknownErrorToString(error)}</p>;
+//   return (
+//     <div>
+//       <div style={{ display: "flex" }}>
+//         <div
+//           style={{
+//             marginLeft: 8,
+//             paddingLeft: 8,
+//             paddingTop: 1,
+//             borderBottomLeftRadius: 6,
+//             borderTopLeftRadius: 6,
+//             width: 126,
+//             height: 136,
+//             minWidth: 126,
+//             minHeight: 136,
+//             backgroundColor: getVSMObjectTypeColor(data.type),
+//             resize: "both",
+//             overflow: "scroll",
+//           }}
+//         >
+//           <p style={{ opacity: 0.4 }}>{data.vsmObjectType.name}</p>
+//           <ReactMarkdown remarkPlugins={[gfm]}>{data.name}</ReactMarkdown>
+//           <p style={{ opacity: 0.8 }}>{data.role}</p>
+//           <p>{!!data.time && `${data.time}${data.timeDefinition}`}</p>
+//         </div>
+//         <div
+//           style={{
+//             backgroundColor: "white",
+//             borderLeft: "none",
+//             borderBottomRightRadius: 6,
+//             borderTopRightRadius: 6,
+//             marginRight: 8,
+//             paddingLeft: 8,
+//             paddingTop: 1,
+//             padding: 8,
+//             display: "flex",
+//             flexDirection: "column",
+//             flexWrap: "wrap",
+//           }}
+//         >
+//           {data.tasks.map((task) => (
+//             <div
+//               key={task.vsmTaskID}
+//               onClick={() =>
+//                 router.push(`/process/${id}/qips/${task.vsmTaskID}`)
+//               }
+//             >
+//               <TaskButton task={task} selected={true} draft={false} />
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
 
-  // export default function Category(): JSX.Element {
-  //   console.log(1)
-  //   const router = useRouter();
-  //   const { id, taskId } = router.query;
-  //   const {
-  //     data: task,
-  //     isLoading,
-  //     error,
-  //   } = useQuery(["task", id, taskId], () => getTask(id, taskId));
+export default function Category(): JSX.Element {
+  // console.log(1);
+  // const router = useRouter();
+  // const { id, taskId } = router.query;
+  // const {
+  //   data: task,
+  //   isLoading,
+  //   error,
+  // } = useQuery(["task", id, taskId], () => getTask(id, taskId));
 
-  //   if (isLoading) return <p>Loading...</p>;
-  //   if (error) return <p>{unknownErrorToString(error)}</p>;
+  // if (isLoading) return <p>Loading...</p>;
+  // if (error) return <p>{unknownErrorToString(error)}</p>;
 
   return (
     <div>

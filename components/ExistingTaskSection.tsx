@@ -2,7 +2,6 @@ import { taskObject } from "../interfaces/taskObject";
 import { Checkbox } from "@equinor/eds-core-react";
 import React from "react";
 import { useStoreDispatch } from "../hooks/storeHooks";
-import BaseAPIServices from "../services/BaseAPIServices";
 import styles from "./ExistingTaskSection.module.scss";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { linkTask, unlinkTask } from "../services/taskApi";
@@ -11,6 +10,8 @@ import { unknownErrorToString } from "utils/isError";
 import { useRouter } from "next/router";
 import { notifyOthers } from "../services/notifyOthers";
 import { useAccount, useMsal } from "@azure/msal-react";
+import { getTasks } from "../services/taskApi";
+import { getTaskShorthand } from "utils/getTaskShorthand";
 
 export function ExistingTaskSection(props: {
   visible: boolean;
@@ -30,9 +31,7 @@ export function ExistingTaskSection(props: {
   } = useQuery(
     `tasks - ${selectedObject.projectId}/${existingTaskFilter}`,
     () =>
-      BaseAPIServices.get(
-        `/api/v1.0/task/list/${selectedObject.projectId}/${existingTaskFilter}`
-      ).then((r) => r.data),
+      getTasks(selectedObject.projectId, selectedObject.id).then((r) => r.data),
     { enabled: !!existingTaskFilter }
   );
   const router = useRouter();
@@ -75,6 +74,7 @@ export function ExistingTaskSection(props: {
           <p>Loading...</p>
         </div>
       )}
+      {console.log(existingTasks, "aaaa")}
       {!fetchingTasks && existingTasks.length < 1 && (
         <div
           style={{
@@ -93,7 +93,7 @@ export function ExistingTaskSection(props: {
             <li key={t.id} title={t.description}>
               <Checkbox
                 defaultChecked={tasks.some((task) => task?.id === t?.id)}
-                label={`${t.type} - ${t.description}`}
+                label={`${getTaskShorthand(t)} - ${t.description}`}
                 onChange={(event) =>
                   event.target.checked
                     ? taskLinkMutation.mutate(t)
