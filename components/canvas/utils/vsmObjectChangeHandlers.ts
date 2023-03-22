@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import { Actions } from "easy-peasy";
 import { ProjectModel } from "../../../store/store";
 import { debounce } from "../../../utils/debounce";

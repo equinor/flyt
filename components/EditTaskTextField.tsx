@@ -17,19 +17,19 @@ export function EditTaskTextField(props: {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
 
-  const { description, vsmTaskID } = props.task;
+  const { description, id } = props.task;
   const dispatch = useStoreDispatch();
 
   const router = useRouter();
-  const { id } = router.query;
+  const { projectId } = router.query;
   const queryClient = useQueryClient();
   const updateTaskMutation = useMutation(
     (newObject: taskObject) => {
-      return updateTask(newObject);
+      return updateTask(newObject, projectId, id);
     },
     {
       onSuccess: () => {
-        notifyOthers("Updated a Q/I/P", id, account);
+        notifyOthers("Updated a Q/I/P", projectId, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
@@ -42,7 +42,7 @@ export function EditTaskTextField(props: {
       label={"Task description"}
       variant={"default"}
       defaultValue={description} //Since we set a default value and not a value, it only updates on init
-      id={`taskDescription-${vsmTaskID}`}
+      id={`taskDescription-${id}`}
       onChange={(event) => {
         const updatedTask: taskObject = {
           ...props.task,

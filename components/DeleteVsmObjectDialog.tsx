@@ -40,7 +40,7 @@ export function DeleteVsmObjectDialog(props: {
   const handleClose = () => props.onClose();
   const handleDelete = () => deleteMutation.mutate(props.objectToDelete.id);
 
-  const { pkObjectType: type } = props.objectToDelete.vsmObjectType;
+  const { type } = props.objectToDelete;
   const { choice, mainActivity } = vsmObjectTypes;
 
   const header = `Delete "${getVsmTypeName(type)}"`;

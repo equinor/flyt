@@ -13,7 +13,7 @@ export function GenericCard(props: Node<NodeData>) {
   const [hovering, setHovering] = useState(false);
 
   const {
-    card: { name, type, tasks },
+    card: { description, type, tasks },
     isValidDropTarget,
     isDropTarget,
     handleClickCard,
@@ -69,8 +69,8 @@ export function GenericCard(props: Node<NodeData>) {
           }`}
         >
           <div className={styles["card__description-container"]}>
-            {name ? (
-              <p className={styles.text}>{formatCanvasText(name, 70)}</p>
+            {description ? (
+              <p className={styles.text}>{formatCanvasText(description, 70)}</p>
             ) : (
               <p className={`${styles.text} ${styles["text--placeholder"]}`}>
                 {formatCanvasText(type, 70)}

@@ -3,6 +3,7 @@ import styles from "./QIPRContainer.module.css";
 import { getTaskColor } from "utils/getTaskColor";
 import { TextCircle } from "../entities/TextCircle";
 import { taskObject } from "interfaces/taskObject";
+import { getTaskShorthand } from "utils/getTaskShorthand";
 
 const sortOrder = ["Problem", "Question", "Idea", "Risk"];
 
@@ -14,7 +15,7 @@ export const QIPRContainer = (props: {
     className={styles.QIPRContainer}
     onClick={props.onClick}
     style={{
-      width: (((props.tasks?.length / 4) >> 0) + 1) * 33 + 2.5,
+      width: (((props.tasks?.length / 4.00001) >> 0) + 1) * 33 + 2.5,
     }}
   >
     {props.tasks
@@ -29,7 +30,7 @@ export const QIPRContainer = (props: {
           style={{ margin: 2.5, marginLeft: index >= 4 ? 0 : 2.5 }}
         >
           <TextCircle
-            text={task.type.slice(0, 1) + (task.number + 1)}
+            text={getTaskShorthand(task)}
             color={getTaskColor(task)}
           />
         </div>

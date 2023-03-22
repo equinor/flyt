@@ -2,12 +2,12 @@ import { vsmObjectTypes } from "../types/vsmObjectTypes";
 import { vsmObject } from "../interfaces/VsmObject";
 
 export const canDeleteVSMObject = (vsmObject: vsmObject): boolean => {
-  if (!vsmObject || !vsmObject.vsmObjectType) return false;
-  const { pkObjectType } = vsmObject.vsmObjectType;
+  if (!vsmObject || !vsmObject.type) return false;
+  const { type } = vsmObject;
   return (
-    pkObjectType === vsmObjectTypes.mainActivity ||
-    pkObjectType === vsmObjectTypes.subActivity ||
-    pkObjectType === vsmObjectTypes.waiting ||
-    pkObjectType === vsmObjectTypes.choice
+    type === vsmObjectTypes.mainActivity ||
+    type === vsmObjectTypes.subActivity ||
+    type === vsmObjectTypes.waiting ||
+    type === vsmObjectTypes.choice
   );
 };

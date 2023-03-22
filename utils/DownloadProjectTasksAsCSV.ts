@@ -9,7 +9,7 @@ export function downloadProjectTasksAsCSV(
 ): void {
   const csvHeaders = `id,Description\n`;
   const csvFileData = tasks.map((o) => {
-    const id = o.displayIndex;
+    const id = o.id;
     const description = `"${o.description}"`;
 
     return [id, description];

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import "reactflow/dist/style.css";
 import React, { useEffect, useRef, useState } from "react";
-import { moveVSMObject, postVSMObject } from "../../services/vsmObjectApi";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
@@ -67,34 +66,34 @@ function Canvas(props): JSX.Element {
   const userCanEdit = !version && myAccess !== "Reader";
 
   const queryClient = useQueryClient();
-  const vsmObjectMutation = useMutation(
-    (newObject: vsmObject) => {
-      dispatch.setSnackMessage("⏳ Moving card...");
-      return moveVSMObject(newObject);
-    },
-    {
-      onSuccess: () => {
-        dispatch.setSnackMessage("✅ Moved card!");
-        notifyOthers("Moved a card", id, account);
-        return queryClient.invalidateQueries();
-      },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
-    }
-  );
-  const vsmObjectAddMutation = useMutation(
-    (newObject: vsmObject) => {
-      dispatch.setSnackMessage("⏳ Adding new card...");
-      return postVSMObject(newObject);
-    },
-    {
-      onSuccess: () => {
-        dispatch.setSnackMessage("✅ Card added!");
-        notifyOthers("Added a new card", id, account);
-        return queryClient.invalidateQueries();
-      },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
-    }
-  );
+  // const vsmObjectMutation = useMutation(
+  //   (newObject: vsmObject) => {
+  //     dispatch.setSnackMessage("⏳ Moving card...");
+  //     return moveVSMObject(newObject);
+  //   },
+  //   {
+  //     onSuccess: () => {
+  //       dispatch.setSnackMessage("✅ Moved card!");
+  //       notifyOthers("Moved a card", id, account);
+  //       return queryClient.invalidateQueries();
+  //     },
+  //     onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+  //   }
+  // );
+  // const vsmObjectAddMutation = useMutation(
+  //   (newObject: vsmObject) => {
+  //     dispatch.setSnackMessage("⏳ Adding new card...");
+  //     return postVSMObject(newObject);
+  //   },
+  //   {
+  //     onSuccess: () => {
+  //       dispatch.setSnackMessage("✅ Card added!");
+  //       notifyOthers("Added a new card", id, account);
+  //       return queryClient.invalidateQueries();
+  //     },
+  //     onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+  //   }
+  // );
   const projectId = router.query.id as string;
   const [showVersionHistoryBottomSheet, setShowVersionHistoryBottomSheet] =
     React.useState(!!router.query.version);
@@ -406,6 +405,7 @@ function Canvas(props): JSX.Element {
           !!socketConnected
             ? "Connection is looking good!\nYour changes should appear immediately for other users."
             : `You are not connected ${
+                // eslint-disable-next-line sonarjs/no-nested-template-literals
                 socketReason ? `because of ${socketReason}` : ""
               }.`
         }

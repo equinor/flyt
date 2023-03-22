@@ -5,6 +5,7 @@ import { taskObject } from "../interfaces/taskObject";
 import { unknownErrorToString } from "../utils/isError";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
+import { vsmTaskTypes } from "types/vsmTaskTypes";
 
 export function TaskSection(props: {
   filterFunction: (t: taskObject) => boolean;
@@ -41,9 +42,11 @@ export function TaskSection(props: {
         {tasks
           ?.filter((task) => !task.solved) // filter out solved tasks
           ?.filter(props.filterFunction)
-          .sort((a, b) => a.fkTaskType - b.fkTaskType)
+          .sort((a, b) => {
+            return vsmTaskTypes[b.type] - vsmTaskTypes[a.type];
+          })
           .map((task) => (
-            <QipCard key={task.vsmTaskID} task={task} />
+            <QipCard key={task.id} task={task} />
           ))}
       </div>
     </>

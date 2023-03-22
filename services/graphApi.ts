@@ -21,7 +21,7 @@ export const postGraph = (
 
 export const patchGraph = (
   data: vsmObject,
-  projectId: string,
+  projectId: string | string[],
   vertexId: string
 ): Promise<vsmObject> =>
   BaseAPIServices.put(

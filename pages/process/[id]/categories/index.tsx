@@ -25,7 +25,7 @@ export default function CategoriesPage(): JSX.Element {
   const [riskChecked, setRiskChecked] = useState(true);
 
   const taskTypeIsChecked = (t: taskObject) => {
-    switch (t.taskType.vsmTaskTypeID) {
+    switch (t.type) {
       case vsmTaskTypes.problem:
         return problemChecked;
       case vsmTaskTypes.question:
@@ -48,6 +48,8 @@ export default function CategoriesPage(): JSX.Element {
     // Display it if checkbox is checked but no categories are selected.
     if (!selectedCategories.length) return true;
     // If task contains a category that is selected, display it!
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     return t.categories.some((taskCategory) =>
       selectedCategories.some(
         (selectedCategory) => selectedCategory.id === taskCategory.id

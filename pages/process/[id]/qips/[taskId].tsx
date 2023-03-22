@@ -17,119 +17,118 @@ import { TaskButton } from "../../../../components/TaskButton";
 import Link from "next/link";
 import { arrow_back } from "@equinor/eds-icons";
 
-function getTaskTypeString(vsmTaskTypeID: vsmTaskTypes) {
-  switch (vsmTaskTypeID) {
-    case vsmTaskTypes.problem:
-      return "problem";
-    case vsmTaskTypes.question:
-      return "question";
-    case vsmTaskTypes.idea:
-      return "idea";
-    case vsmTaskTypes.unknown:
-      return "unknown thing";
-  }
-}
+// function getTaskTypeString(vsmTaskTypeID: vsmTaskTypes) {
+//   switch (vsmTaskTypeID) {
+//     case vsmTaskTypes.problem:
+//       return "problem";
+//     case vsmTaskTypes.question:
+//       return "question";
+//     case vsmTaskTypes.idea:
+//       return "idea";
+//     case vsmTaskTypes.unknown:
+//       return "unknown thing";
+//   }
+// }
 
-function getVSMObjectTypeColor(vsmObjectType: vsmObjectTypes) {
-  switch (vsmObjectType) {
-    case vsmObjectTypes.mainActivity:
-      return "#00c1ff";
-    case vsmObjectTypes.subActivity:
-      return "#FDD835";
-    case vsmObjectTypes.waiting:
-    case vsmObjectTypes.choice:
-      return "#FF8F00";
-    case vsmObjectTypes.process:
-    case vsmObjectTypes.supplier:
-    case vsmObjectTypes.input:
-    case vsmObjectTypes.output:
-    case vsmObjectTypes.customer:
-      return "#00d889";
-    default:
-      return "#FAFAFA";
-  }
-}
+// function getVSMObjectTypeColor(vsmObjectType: vsmObjectTypes) {
+//   switch (vsmObjectType) {
+//     case vsmObjectTypes.mainActivity:
+//       return "#00c1ff";
+//     case vsmObjectTypes.subActivity:
+//       return "#FDD835";
+//     case vsmObjectTypes.waiting:
+//     case vsmObjectTypes.choice:
+//       return "#FF8F00";
+//     case vsmObjectTypes.process:
+//     case vsmObjectTypes.supplier:
+//     case vsmObjectTypes.input:
+//     case vsmObjectTypes.output:
+//     case vsmObjectTypes.customer:
+//       return "#00d889";
+//     default:
+//       return "#FAFAFA";
+//   }
+// }
 
 function VSMObjectCard(props: { id: string }) {
-  const router = useRouter();
-  const { id } = router.query;
-  const { data, isLoading, error } = useQuery(["vsmObject", props.id], () =>
-    getVSMObject(props.id)
-  );
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>{unknownErrorToString(error)}</p>;
+  //   const router = useRouter();
+  //   const { id } = router.query;
+  //   const { data, isLoading, error } = useQuery(["vsmObject", props.id], () =>
+  //     getVSMObject(props.id)
+  //   );
+  //   if (isLoading) return <p>Loading...</p>;
+  //   if (error) return <p>{unknownErrorToString(error)}</p>;
+  //   return (
+  //     <div>
+  //       <div style={{ display: "flex" }}>
+  //         <div
+  //           style={{
+  //             marginLeft: 8,
+  //             paddingLeft: 8,
+  //             paddingTop: 1,
+  //             borderBottomLeftRadius: 6,
+  //             borderTopLeftRadius: 6,
+  //             width: 126,
+  //             height: 136,
+  //             minWidth: 126,
+  //             minHeight: 136,
+  //             backgroundColor: getVSMObjectTypeColor(data.type),
+  //             resize: "both",
+  //             overflow: "scroll",
+  //           }}
+  //         >
+  //           <p style={{ opacity: 0.4 }}>{data.vsmObjectType.name}</p>
+  //           <ReactMarkdown remarkPlugins={[gfm]}>{data.name}</ReactMarkdown>
+  //           <p style={{ opacity: 0.8 }}>{data.role}</p>
+  //           <p>{!!data.time && `${data.time}${data.timeDefinition}`}</p>
+  //         </div>
+  //         <div
+  //           style={{
+  //             backgroundColor: "white",
+  //             borderLeft: "none",
+  //             borderBottomRightRadius: 6,
+  //             borderTopRightRadius: 6,
+  //             marginRight: 8,
+  //             paddingLeft: 8,
+  //             paddingTop: 1,
+  //             padding: 8,
+  //             display: "flex",
+  //             flexDirection: "column",
+  //             flexWrap: "wrap",
+  //           }}
+  //         >
+  //           {data.tasks.map((task) => (
+  //             <div
+  //               key={task.vsmTaskID}
+  //               onClick={() =>
+  //                 router.push(`/process/${id}/qips/${task.vsmTaskID}`)
+  //               }
+  //             >
+  //               <TaskButton task={task} selected={true} draft={false} />
+  //             </div>
+  //           ))}
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+  // }
+
+  // export default function Category(): JSX.Element {
+  //   console.log(1)
+  //   const router = useRouter();
+  //   const { id, taskId } = router.query;
+  //   const {
+  //     data: task,
+  //     isLoading,
+  //     error,
+  //   } = useQuery(["task", id, taskId], () => getTask(id, taskId));
+
+  //   if (isLoading) return <p>Loading...</p>;
+  //   if (error) return <p>{unknownErrorToString(error)}</p>;
+
   return (
     <div>
-      <div style={{ display: "flex" }}>
-        <div
-          style={{
-            marginLeft: 8,
-            paddingLeft: 8,
-            paddingTop: 1,
-            borderBottomLeftRadius: 6,
-            borderTopLeftRadius: 6,
-            width: 126,
-            height: 136,
-            minWidth: 126,
-            minHeight: 136,
-            backgroundColor: getVSMObjectTypeColor(
-              data.vsmObjectType.pkObjectType
-            ),
-            resize: "both",
-            overflow: "scroll",
-          }}
-        >
-          <p style={{ opacity: 0.4 }}>{data.vsmObjectType.name}</p>
-          <ReactMarkdown remarkPlugins={[gfm]}>{data.name}</ReactMarkdown>
-          <p style={{ opacity: 0.8 }}>{data.role}</p>
-          <p>{!!data.time && `${data.time}${data.timeDefinition}`}</p>
-        </div>
-        <div
-          style={{
-            backgroundColor: "white",
-            borderLeft: "none",
-            borderBottomRightRadius: 6,
-            borderTopRightRadius: 6,
-            marginRight: 8,
-            paddingLeft: 8,
-            paddingTop: 1,
-            padding: 8,
-            display: "flex",
-            flexDirection: "column",
-            flexWrap: "wrap",
-          }}
-        >
-          {data.tasks.map((task) => (
-            <div
-              key={task.vsmTaskID}
-              onClick={() =>
-                router.push(`/process/${id}/qips/${task.vsmTaskID}`)
-              }
-            >
-              <TaskButton task={task} selected={true} draft={false} />
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default function Category(): JSX.Element {
-  const router = useRouter();
-  const { id, taskId } = router.query;
-  const {
-    data: task,
-    isLoading,
-    error,
-  } = useQuery(["task", id, taskId], () => getTask(id, taskId));
-
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>{unknownErrorToString(error)}</p>;
-
-  return (
-    <div>
-      <Link href={`/process/${id}/qips`}>
+      {/* <Link href={`/process/${id}/qips`}>
         <Button variant={"ghost_icon"} title={"back"}>
           <Icon data={arrow_back} />
         </Button>
@@ -172,7 +171,7 @@ export default function Category(): JSX.Element {
                     selectedObject={o}
                     onChangeName={(e) => console.log(e)}
                     onChangeRole={(e) => console.log(e)}
-                    onChangeTime={(e) => console.log(e)}
+                    onChangeDuration={(e) => console.log(e)}
                     setShowNewTaskSection={(e) => console.log(e)}
                     canEdit={false}
                   />
@@ -180,10 +179,10 @@ export default function Category(): JSX.Element {
               })
             : task.objects.map((o) => <VSMObjectCard key={o.id} id={o.id} />)}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
 
-CategoriesPage.layout = Layouts.Empty;
-Category.auth = true;
+// CategoriesPage.layout = Layouts.Empty;
+// Category.auth = true;

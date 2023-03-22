@@ -7,7 +7,6 @@ import { vsmObjectTypes } from "../types/vsmObjectTypes";
 import { taskObject } from "../interfaces/taskObject";
 import { canDeleteVSMObject } from "../utils/CanDeleteVSMObect";
 import { original } from "immer";
-
 // General pattern Thunk -> Actions -> Set state
 
 export interface ProjectModel {
@@ -21,13 +20,13 @@ export interface ProjectModel {
   //someAction: Action<model, payload>;
   addTaskToSelectedObject: Action<ProjectModel, taskObject>;
   updateTaskDescriptionInSelectedObject: Action<ProjectModel, taskObject>;
-  removeTaskFromSelectedObject: Action<ProjectModel, number>;
+  removeTaskFromSelectedObject: Action<ProjectModel, string>;
   setSelectedObject: Action<ProjectModel, vsmObject | null>;
   patchLocalObject: Action<ProjectModel, vsmObject>;
   setErrorProject: Action<ProjectModel, Record<string, unknown>>;
   setFetchingProject: Action<ProjectModel, boolean>;
   setProject: Action<ProjectModel, vsmProject>;
-  setProjectName: Action<ProjectModel, { name?: string }>;
+  //setProjectName: Action<ProjectModel, { name?: string }>;
   setSnackMessage: Action<ProjectModel, string>;
   //// THUNKS ///////////////////
   //someThunk: Thunk<Model,Payload,Injections,StoreModel,Result>;
@@ -38,11 +37,11 @@ export interface ProjectModel {
   >;
   deleteVSMObject: Thunk<ProjectModel, vsmObject>;
   fetchProject: Thunk<ProjectModel, { id: string | string[] | number }>;
-  updateProjectName: Thunk<
-    ProjectModel,
-    { projectId: number; name: string; rootObjectId: number }
-  >;
-  updateVSMObject: Thunk<ProjectModel, vsmObject>;
+  // updateProjectName: Thunk<
+  //   ProjectModel,
+  //   { projectId: number; name: string; rootObjectId: number }
+  // >;
+  //updateVSMObject: Thunk<ProjectModel, vsmObject>;
   addTask: Thunk<ProjectModel, taskObject>;
   updateTask: Thunk<ProjectModel, taskObject>;
   linkTask: Thunk<
@@ -75,16 +74,14 @@ const projectModel: ProjectModel = {
   updateTaskDescriptionInSelectedObject: action((state, newTask) => {
     const { selectedObject } = state;
     if (selectedObject && selectedObject.tasks) {
-      const oldTask = selectedObject.tasks.find(
-        (t) => t.vsmTaskID === newTask.vsmTaskID
-      );
+      const oldTask = selectedObject.tasks.find((t) => t.id === newTask.id);
       if (oldTask) oldTask.description = newTask.description;
     }
   }),
   removeTaskFromSelectedObject: action((state, taskId) => {
     const { selectedObject } = state;
     selectedObject.tasks = original(selectedObject.tasks).filter(
-      (t) => t?.vsmTaskID !== taskId
+      (t) => t?.id !== taskId
     );
   }),
   setFetchingProject: action((state, payload) => {
@@ -146,42 +143,42 @@ const projectModel: ProjectModel = {
       patchNodeInTree(payload, child);
     });
   }),
-  updateProjectName: thunk((actions, payload) => {
-    const { projectId, name, rootObjectId } = payload;
-    actions.setProjectName(payload);
-    debounce(
-      () => {
-        return BaseAPIServices.post(`/api/v1.0/project`, {
-          projectId,
-          name,
-        })
-          .then(() => actions.setSnackMessage("✅ Saved title"))
-          .catch((reason) => actions.setErrorProject(reason));
-      },
-      1000,
-      "updateVSMTitle"
-    );
-    if (rootObjectId) {
-      // Update the root object with the name as well
-      debounce(
-        () => {
-          return BaseAPIServices.patch(`/api/v1.0/VSMObject`, {
-            id: rootObjectId,
-            name,
-          }).catch((reason) => actions.setErrorProject(reason));
-        },
-        1000,
-        "updateVSMObject"
-      );
-    }
-  }),
-  setProjectName: action((state, payload) => {
-    state.project.name = payload.name;
-    //Update our root node ( Null check that we actually have some children)
-    if (state.project.objects?.length > 0) {
-      state.project.objects[0].name = payload.name;
-    }
-  }),
+  // updateProjectName: thunk((actions, payload) => {
+  //   const { projectId, name, rootObjectId } = payload;
+  //   actions.setProjectName(payload);
+  //   debounce(
+  //     () => {
+  //       return BaseAPIServices.post(`/api/v1.0/project`, {
+  //         projectId,
+  //         name,
+  //       })
+  //         .then(() => actions.setSnackMessage("✅ Saved title"))
+  //         .catch((reason) => actions.setErrorProject(reason));
+  //     },
+  //     1000,
+  //     "updateVSMTitle"
+  //   );
+  //   if (rootObjectId) {
+  //     // Update the root object with the name as well
+  //     debounce(
+  //       () => {
+  //         return BaseAPIServices.patch(`/api/v1.0/VSMObject`, {
+  //           id: rootObjectId,
+  //           name,
+  //         }).catch((reason) => actions.setErrorProject(reason));
+  //       },
+  //       1000,
+  //       "updateVSMObject"
+  //     );
+  //   }
+  // }),
+  // setProjectName: action((state, payload) => {
+  //   state.project.name = payload.name;
+  //   //Update our root node ( Null check that we actually have some children)
+  //   if (state.project.objects?.length > 0) {
+  //     state.project.objects[0].name = payload.name;
+  //   }
+  // }),
   deleteVSMObject: thunk(async (actions, payload) => {
     const { id, projectId } = payload;
 
@@ -242,7 +239,7 @@ const projectModel: ProjectModel = {
 
     const { object, task } = payload;
     const { projectId, id } = object;
-    const { vsmTaskID: taskId } = task;
+    const { id: taskId } = task;
 
     // const { projectId, id, taskId } = payload;
     //Not really deleting, but rather unlinking the task.
@@ -250,7 +247,7 @@ const projectModel: ProjectModel = {
       .then(() => {
         actions.setSnackMessage("✅ Unlinked task!");
         // actions.removeTaskFromSelectedObject(response.data);
-        actions.removeTaskFromSelectedObject(taskId);
+        actions.removeTaskFromSelectedObject(id);
         //Todo: locally update before api-update?
         actions.fetchProject({ id: projectId });
       })
@@ -299,47 +296,47 @@ const projectModel: ProjectModel = {
         return actions.setErrorProject(reason);
       });
   }),
-  updateVSMObject: thunk(async (actions, payload) => {
-    actions.patchLocalObject(payload);
-    actions.setErrorProject(null);
+  // updateVSMObject: thunk(async (actions, payload) => {
+  //   actions.patchLocalObject(payload);
+  //   actions.setErrorProject(null);
 
-    // We store the VSM title in the name-field and in the root-node.
-    // So if the process ( aka the root node ) title is updated, let's update the vsm title as well.
-    // ** Update project title if type is process **
-    const { projectId, name, vsmObjectType } = payload;
-    if (vsmObjectType?.pkObjectType === vsmObjectTypes.process) {
-      actions.setProjectName(payload);
-      debounce(
-        () => {
-          return BaseAPIServices.post(`/api/v1.0/project`, {
-            projectId,
-            name,
-          })
-            .then(() => actions.setSnackMessage("✅ Saved title"))
-            .catch((reason) => {
-              actions.setSnackMessage(reason);
-              return actions.setErrorProject(reason);
-            });
-        },
-        1000,
-        "updateVSMTitle"
-      );
-    }
+  //   // We store the VSM title in the name-field and in the root-node.
+  //   // So if the process ( aka the root node ) title is updated, let's update the vsm title as well.
+  //   // ** Update project title if type is process **
+  //   const { projectId, name, vsmObjectType } = payload;
+  //   if (vsmObjectType?.pkObjectType === vsmObjectTypes.process) {
+  //     actions.setProjectName(payload);
+  //     debounce(
+  //       () => {
+  //         return BaseAPIServices.post(`/api/v1.0/project`, {
+  //           projectId,
+  //           name,
+  //         })
+  //           .then(() => actions.setSnackMessage("✅ Saved title"))
+  //           .catch((reason) => {
+  //             actions.setSnackMessage(reason);
+  //             return actions.setErrorProject(reason);
+  //           });
+  //       },
+  //       1000,
+  //       "updateVSMTitle"
+  //     );
+  //   }
 
-    // Send the object-update to api
-    debounce(
-      () => {
-        return BaseAPIServices.patch(`/api/v1.0/VSMObject`, payload)
-          .then(() => actions.setSnackMessage("✅ Saved"))
-          .catch((reason) => {
-            actions.setSnackMessage(reason);
-            return actions.setErrorProject(reason);
-          });
-      },
-      1000,
-      "updateVSMObject"
-    );
-  }),
+  //   // Send the object-update to api
+  //   debounce(
+  //     () => {
+  //       return BaseAPIServices.patch(`/api/v1.0/VSMObject`, payload)
+  //         .then(() => actions.setSnackMessage("✅ Saved"))
+  //         .catch((reason) => {
+  //           actions.setSnackMessage(reason);
+  //           return actions.setErrorProject(reason);
+  //         });
+  //     },
+  //     1000,
+  //     "updateVSMObject"
+  //   );
+  // }),
   moveVSMObject: thunk(async (actions, newVsmObject) => {
     actions.setErrorProject(null);
     actions.setSnackMessage("⏳ Moving card...");

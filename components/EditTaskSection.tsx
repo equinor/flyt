@@ -1,5 +1,5 @@
 import { Button, Checkbox, Icon } from "@equinor/eds-core-react";
-import { solveTask, unlinkTask } from "../services/taskApi";
+import { solveTask, deleteTask } from "../services/taskApi";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQueryClient } from "react-query";
 
@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import { useStoreDispatch } from "../hooks/storeHooks";
 import { vsmObject } from "../interfaces/VsmObject";
 import { vsmTaskTypes } from "types/vsmTaskTypes";
+import { getTaskShorthand } from "utils/getTaskShorthand";
 
 export function EditTaskSection(props: {
   task: taskObject;
@@ -37,15 +38,14 @@ export function EditTaskSection(props: {
       card: vsmObject;
       solvedTask: taskObject;
       solved: boolean;
-    }) => solveTask(card.id, solvedTask.vsmTaskID, solved),
+    }) => solveTask(card.id, solvedTask.id, solved),
     {
       onSuccess(_data, variables) {
         const { solvedTask, solved } = variables;
         notifyOthers(
-          ` ${getTaskSolvedText(
-            solvedTask.fkTaskType,
-            solved
-          )} a ${getTaskTypeText(solvedTask.fkTaskType)}`,
+          ` ${getTaskSolvedText(solvedTask.type, solved)} a ${getTaskTypeText(
+            solvedTask.type
+          )}`,
           id,
           account
         );
@@ -55,12 +55,12 @@ export function EditTaskSection(props: {
     }
   );
 
-  const taskUnlinkMutation = useMutation(
-    (task: taskObject) => unlinkTask(object.id, task.vsmTaskID),
+  const taskDeleteMutation = useMutation(
+    (task: taskObject) => deleteTask(object.projectId, object.id, task.id),
     {
       onSuccess() {
         notifyOthers(
-          `Removed ${getTaskTypeText(task.fkTaskType)} from a card`,
+          `Removed ${getTaskTypeText(task.type)} from a card`,
           id,
           account
         );
@@ -73,11 +73,7 @@ export function EditTaskSection(props: {
   return (
     <div style={{ display: "flex" }}>
       {/*  Important to have a key so that it triggers a re-render when needed */}
-      <EditTaskTextField
-        disabled={!props.canEdit}
-        key={task.vsmTaskID}
-        task={task}
-      />
+      <EditTaskTextField disabled={!props.canEdit} key={task.id} task={task} />
       <div
         style={{
           display: "flex",
@@ -87,12 +83,12 @@ export function EditTaskSection(props: {
       >
         {/* Only show checkbox for Problems and risks */}
         {task &&
-        (task.fkTaskType === vsmTaskTypes.problem ||
-          task.fkTaskType === vsmTaskTypes.risk) ? (
+        (task.type === vsmTaskTypes.problem ||
+          task.type === vsmTaskTypes.risk) ? (
           <Checkbox
-            key={task.vsmTaskID}
+            key={task.id}
             defaultChecked={task.solved}
-            title={`${getToggleActionText(task.fkTaskType, task.solved)}`}
+            title={`${getToggleActionText(task.type, task.solved)}`}
             disabled={!props.canEdit}
             onChange={() => {
               solveTaskMutation.mutate({
@@ -101,8 +97,8 @@ export function EditTaskSection(props: {
                 solved: !task.solved,
               });
               dispatch.setSnackMessage(
-                `Marked ${task.displayIndex} as ${getTaskSolvedText(
-                  task.fkTaskType,
+                `Marked ${getTaskShorthand(task)} as ${getTaskSolvedText(
+                  task.type,
                   !task.solved
                 )}`
               );
@@ -110,12 +106,12 @@ export function EditTaskSection(props: {
           />
         ) : null}
         <Button
-          title={`Delete selected ${getTaskTypeText(task.fkTaskType)}`}
+          title={`Delete selected ${getTaskTypeText(task.type)}`}
           disabled={!task || !props.canEdit}
           variant={"ghost_icon"}
           color={"danger"}
           onClick={() => {
-            taskUnlinkMutation.mutate(task);
+            taskDeleteMutation.mutate(task);
           }}
         >
           <Icon data={delete_to_trash} size={24} />
@@ -155,8 +151,8 @@ function getTaskSolvedText(type: vsmTaskTypes, solved: boolean) {
   }
 }
 
-function getTaskTypeText(fkTaskType: vsmTaskTypes) {
-  switch (fkTaskType) {
+function getTaskTypeText(type: vsmTaskTypes) {
+  switch (type) {
     case vsmTaskTypes.problem:
       return "Problem";
     case vsmTaskTypes.question:

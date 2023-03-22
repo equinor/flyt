@@ -2,6 +2,7 @@ import React from "react";
 import style from "./TaskButton.module.scss";
 import { taskObject } from "../interfaces/taskObject";
 import { vsmTaskTypes } from "../types/vsmTaskTypes";
+import { getTaskShorthand } from "utils/getTaskShorthand";
 
 export function TaskButton({
   task,
@@ -26,12 +27,12 @@ export function TaskButton({
   return (
     <div
       className={`
-        ${getStyle(task.fkTaskType)}
+        ${getStyle(task.type)}
         ${selected && style.selected} ${draft && style.draft} ${
         task.solved && style.solved
       }`}
     >
-      <p>{task.displayIndex}</p>
+      <p>{getTaskShorthand(task)}</p>
     </div>
   );
 }

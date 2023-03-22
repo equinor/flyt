@@ -38,7 +38,7 @@ export function ExistingTaskSection(props: {
   const router = useRouter();
   const { id } = router.query;
   const taskLinkMutation = useMutation(
-    (task: taskObject) => linkTask(selectedObject.id, task.vsmTaskID),
+    (task: taskObject) => linkTask(selectedObject.id, task.id),
     {
       onSuccess: () => {
         notifyOthers("Added a Q/I/P to a card", id, account);
@@ -48,7 +48,7 @@ export function ExistingTaskSection(props: {
     }
   );
   const taskUnlinkMutation = useMutation(
-    (task: taskObject) => unlinkTask(selectedObject.id, task.vsmTaskID),
+    (task: taskObject) => unlinkTask(selectedObject.id, task.id),
     {
       onSuccess() {
         notifyOthers("Removed Q/I/P from a card", id, account);
@@ -90,12 +90,10 @@ export function ExistingTaskSection(props: {
       <div>
         <ul className={styles.taskList}>
           {existingTasks?.map((t: taskObject) => (
-            <li key={t.vsmTaskID} title={t.description}>
+            <li key={t.id} title={t.description}>
               <Checkbox
-                defaultChecked={tasks.some(
-                  (task) => task?.vsmTaskID === t?.vsmTaskID
-                )}
-                label={`${t.displayIndex} - ${t.description}`}
+                defaultChecked={tasks.some((task) => task?.id === t?.id)}
+                label={`${t.type} - ${t.description}`}
                 onChange={(event) =>
                   event.target.checked
                     ? taskLinkMutation.mutate(t)

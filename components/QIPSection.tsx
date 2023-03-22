@@ -69,13 +69,13 @@ export const QIPSection = (props: {
             return (
               <div
                 title={`${task?.description}`} //<- hover tooltip
-                key={`${task?.vsmTaskID}`}
+                key={`${task?.id}`}
                 onClick={() => setSelectedTask(task)}
               >
                 <TaskButton
-                  key={`${task?.vsmTaskID}`}
+                  key={`${task?.id}`}
                   task={task}
-                  selected={selectedTask?.vsmTaskID === task?.vsmTaskID}
+                  selected={selectedTask?.id === task?.id}
                   draft={false}
                 />
               </div>

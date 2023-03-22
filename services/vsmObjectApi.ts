@@ -37,17 +37,17 @@ export const getVSMObjectTypes = (): Promise<unknown> =>
     (value) => value.data
   );
 
-export const moveVSMObject = ({
-  projectId,
-  id,
-  parent,
-  leftObjectId,
-  choiceGroup,
-}: vsmObject): Promise<vsmObject> =>
-  BaseAPIServices.patch(`/api/v1.0/VSMObject`, {
-    projectId,
-    id,
-    parent,
-    leftObjectId,
-    choiceGroup,
-  }).then((r) => r.data);
+// export const moveVSMObject = ({
+//   projectId,
+//   id,
+//   parent,
+//   leftObjectId,
+//   choiceGroup,
+// }: vsmObject): Promise<vsmObject> =>
+//   BaseAPIServices.patch(`/api/v1.0/VSMObject`, {
+//     projectId,
+//     id,
+//     parent,
+//     leftObjectId,
+//     choiceGroup,
+//   }).then((r) => r.data);

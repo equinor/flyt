@@ -19,6 +19,8 @@ export function QipCard(props: {
   onClick?: () => void;
 }): JSX.Element {
   const task = props.task;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const { displayIndex, description, categories, vsmTaskID, solved } = task;
   const taskColor = getTaskColor(task);
   const [isLoading, setIsLoading] = useState(false);

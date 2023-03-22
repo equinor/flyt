@@ -28,14 +28,18 @@ export function NewTaskSection(props: {
   const { id } = router.query;
 
   const queryClient = useQueryClient();
-  const taskMutations = useMutation((task: taskObject) => createTask(task), {
-    onSuccess: () => {
-      clearAndCloseAddTaskSection();
-      notifyOthers(`Created a new Q/I/P`, id, account);
-      return queryClient.invalidateQueries();
-    },
-    onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
-  });
+  const taskMutations = useMutation(
+    (task: taskObject) =>
+      createTask(task, selectedObject.projectId, selectedObject.id),
+    {
+      onSuccess: () => {
+        clearAndCloseAddTaskSection();
+        notifyOthers(`Created a new Q/I/P/R`, id, account);
+        return queryClient.invalidateQueries();
+      },
+      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+    }
+  );
   const [newTask, setNewTask] = useState(null);
 
   const [existingTaskFilter, setExistingTaskFilter] = useState(null);
@@ -81,29 +85,28 @@ export function NewTaskSection(props: {
         handleSelectedItemChange={(e) => {
           if (!selectedObject) throw new Error("No selected object");
           const t = {
-            objects: [{ fkObject: selectedObject.id } as unknown as vsmObject],
-            fkProject: selectedObject.vsmProjectID,
+            type: newTask?.type,
             description: newTask?.description ?? "", // Let's not overwrite description if we change the type midways
           } as taskObject;
 
           switch (e.selectedItem) {
             case "Problem":
-              t.fkTaskType = vsmTaskTypes.problem;
+              t.type = vsmTaskTypes.problem;
               setNewTask(t);
               setShowExistingTaskSection(false);
               break;
             case "Idea":
-              t.fkTaskType = vsmTaskTypes.idea;
+              t.type = vsmTaskTypes.idea;
               setNewTask(t);
               setShowExistingTaskSection(false);
               break;
             case "Question":
-              t.fkTaskType = vsmTaskTypes.question;
+              t.type = vsmTaskTypes.question;
               setNewTask(t);
               setShowExistingTaskSection(false);
               break;
             case "Risk":
-              t.fkTaskType = vsmTaskTypes.risk;
+              t.type = vsmTaskTypes.risk;
               setNewTask(t);
               setShowExistingTaskSection(false);
               break;
