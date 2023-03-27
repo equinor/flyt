@@ -36,3 +36,12 @@ export const deleteVertice = (
   BaseAPIServices.delete(
     `${baseUrl}/graph/${projectId}/vertices/${vertexId}`
   ).then((r) => r.data);
+
+export const moveVertice = (
+  data: { vertexToMoveId: string; vertexDestinationParentId: string },
+  projectId: string
+): Promise<unknown> =>
+  BaseAPIServices.post(
+    `${baseUrl}/graph/${projectId}/vertices/move-vertex`,
+    data
+  ).then((r) => r.data);

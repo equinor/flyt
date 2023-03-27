@@ -30,7 +30,8 @@ import ReactFlow, {
 import { setLayout } from "./hooks/useLayout";
 import nodeTypes from "./NodeTypes";
 import { NodeData } from "interfaces/NodeData";
-import { postGraph } from "../../services/graphApi";
+import { moveVertice, postGraph } from "../../services/graphApi";
+import { vsmObjectTypes } from "types/vsmObjectTypes";
 
 function Canvas(props): JSX.Element {
   const [selectedObject, setSelectedObject] = useState<vsmObject>(null);
@@ -181,6 +182,25 @@ function Canvas(props): JSX.Element {
     }
   );
 
+  const handleMoveCard = useMutation(
+    // @ts-ignore
+    ({ cardId, parentId }) => {
+      dispatch.setSnackMessage("⏳ Moving card...");
+      return moveVertice(
+        { vertexToMoveId: cardId, vertexDestinationParentId: parentId },
+        projectId
+      );
+    },
+    {
+      onSuccess: () => {
+        dispatch.setSnackMessage("✅ Moved card!");
+        notifyOthers("Moved a card", id, account);
+        return queryClient.invalidateQueries();
+      },
+      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+    }
+  );
+
   let columnId: string = null;
 
   const addCardsToCanvas = (
@@ -276,12 +296,15 @@ function Canvas(props): JSX.Element {
     const sourceType = source.type;
     const targetType = target.type;
     return (
-      ((sourceType === "10" || sourceType === "5" || sourceType === "7") &&
-        (targetType === "10" ||
-          targetType === "5" ||
-          targetType === "7" ||
-          targetType === "4")) ||
-      (sourceType === "4" && targetType === "4")
+      ((sourceType === vsmObjectTypes.choice ||
+        sourceType === vsmObjectTypes.subActivity ||
+        sourceType === vsmObjectTypes.waiting) &&
+        (targetType === vsmObjectTypes.choice ||
+          targetType === vsmObjectTypes.subActivity ||
+          targetType === vsmObjectTypes.waiting ||
+          targetType === vsmObjectTypes.mainActivity)) ||
+      (sourceType === vsmObjectTypes.mainActivity &&
+        targetType === vsmObjectTypes.mainActivity)
     );
   };
 
@@ -351,6 +374,8 @@ function Canvas(props): JSX.Element {
         })
       );
     } else {
+      // @ts-ignore
+      handleMoveCard.mutate({ cardId: node.id, parentId: target.id });
       setTarget(null);
       dragRef.current = null;
     }
@@ -404,9 +429,9 @@ function Canvas(props): JSX.Element {
         title={
           !!socketConnected
             ? "Connection is looking good!\nYour changes should appear immediately for other users."
-            : `You are not connected ${
+            : `You are not connected${
                 // eslint-disable-next-line sonarjs/no-nested-template-literals
-                socketReason ? `because of ${socketReason}` : ""
+                socketReason ? ` because of ${socketReason}` : ""
               }.`
         }
       />
