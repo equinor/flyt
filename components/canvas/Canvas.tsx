@@ -4,8 +4,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
+import { getAccessToken } from "../../auth/msalHelpers";
 import { DeleteVsmObjectDialog } from "../DeleteVsmObjectDialog";
 import { LiveIndicator } from "../LiveIndicator";
+import { io } from "socket.io-client";
 import { ResetProcessButton } from "components/ResetProcessButton";
 import { ToBeToggle } from "./ToBeToggle";
 import { VSMSideBar } from "../VSMSideBar";
@@ -67,37 +69,45 @@ function Canvas(props): JSX.Element {
   const userCanEdit = !version && myAccess !== "Reader";
 
   const queryClient = useQueryClient();
-  // const vsmObjectMutation = useMutation(
-  //   (newObject: vsmObject) => {
-  //     dispatch.setSnackMessage("⏳ Moving card...");
-  //     return moveVSMObject(newObject);
-  //   },
-  //   {
-  //     onSuccess: () => {
-  //       dispatch.setSnackMessage("✅ Moved card!");
-  //       notifyOthers("Moved a card", id, account);
-  //       return queryClient.invalidateQueries();
-  //     },
-  //     onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
-  //   }
-  // );
-  // const vsmObjectAddMutation = useMutation(
-  //   (newObject: vsmObject) => {
-  //     dispatch.setSnackMessage("⏳ Adding new card...");
-  //     return postVSMObject(newObject);
-  //   },
-  //   {
-  //     onSuccess: () => {
-  //       dispatch.setSnackMessage("✅ Card added!");
-  //       notifyOthers("Added a new card", id, account);
-  //       return queryClient.invalidateQueries();
-  //     },
-  //     onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
-  //   }
-  // );
   const projectId = router.query.id as string;
   const [showVersionHistoryBottomSheet, setShowVersionHistoryBottomSheet] =
     React.useState(!!router.query.version);
+
+  useEffect(() => {
+    getAccessToken().then((accessToken) => {
+      const socket = io({ path: "/api/socket", auth: { token: accessToken } });
+
+      socket.on("connect", () => {
+        setSocketConnected(true);
+      });
+
+      socket.on("disconnect", (reason) => {
+        dispatch.setSnackMessage(`Socket disconnected because ${reason}`);
+        setSocketConnected(false);
+        setSocketReason(`${reason}`);
+      });
+
+      socket.on("connect_error", (error) => {
+        // if (error.data.type === "UnauthorizedError") {
+        console.log("Error", error);
+        setSocketConnected(false);
+        setSocketReason(error.message);
+        // }
+      });
+
+      socket.on(`room-${id}`, (payload) => {
+        if (payload.user !== account.username?.split("@")[0]) {
+          dispatch.setSnackMessage(
+            `${payload.user ? payload.user : "Someone"} ${payload.msg}`
+          );
+        }
+        queryClient.invalidateQueries();
+      });
+      // Handling token expiration
+
+      return () => socket.disconnect();
+    });
+  }, []);
 
   function goToCurrentVersion(): void {
     // navigate back to current version
