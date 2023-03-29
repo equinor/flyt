@@ -1,25 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { Handle, Position } from "reactflow";
-import { formatCanvasText } from "../utils/FormatCanvasText";
+import { formatCanvasText } from "./utils/FormatCanvasText";
 import { formatDuration } from "types/unitDefinitions";
+import { Checkbox, Icon } from "@equinor/eds-core-react";
+import { time as timeIcon } from "@equinor/eds-icons";
 
-import styles from "./Card.module.css";
-import { SubActivityButton } from "./SubActivityButton";
+import styles from "./Card.module.scss";
 import { CardButtonsContainer } from "./CardButtonsContainer";
+import { SubActivityButton } from "./SubActivityButton";
 import { ChoiceButton } from "./ChoiceButton";
 import { WaitingButton } from "./WaitingButton";
 import { QIPRContainer } from "./QIPRContainer";
-import { MergeButton } from "./MergeButton";
-import { Checkbox } from "@equinor/eds-core-react";
 import { MergeButtons } from "./MergeButtons";
+import { MergeButton } from "./MergeButton";
 import { NodeData } from "interfaces/NodeData";
 import { Node } from "reactflow";
 
-export const SubActivityCard = (props: Node<NodeData>) => {
+export const WaitingCard = (props: Node<NodeData>) => {
   const [hovering, setHovering] = useState(false);
 
   const {
-    card: { description, role, duration, unit, type, tasks, id },
+    card: { id, duration, unit, type, tasks },
     isValidDropTarget,
     isDropTarget,
     columnId,
@@ -118,7 +119,7 @@ export const SubActivityCard = (props: Node<NodeData>) => {
       >
         <div
           onClick={() => handleClickCard()}
-          className={`${styles.card} ${styles["card--subactivity"]} ${
+          className={`${styles.card} ${styles["card--waiting"]} ${
             styles[
               isDropTarget && isValidDropTarget
                 ? "card--validDropTarget"
@@ -129,22 +130,16 @@ export const SubActivityCard = (props: Node<NodeData>) => {
           }`}
         >
           <div className={styles["card__description-container"]}>
-            {description ? (
-              <p className={styles.text}>{formatCanvasText(description, 70)}</p>
-            ) : (
-              <p className={`${styles.text} ${styles["text--placeholder"]}`}>
-                {formatCanvasText(type, 70)}
-              </p>
-            )}
-          </div>
-          <div className={styles["card__role-container"]}>
-            <p className={styles.text}>
-              {formatCanvasText(role ?? "", 16, true)}
+            <p className={`${styles.text} ${styles["text--placeholder"]}`}>
+              {formatCanvasText(type, 70)}
             </p>
           </div>
-          <div className={styles["card__time-container"]}>
-            <p className={styles.text}>
-              {formatCanvasText(formatDuration(duration, unit), 12, true)}
+          <div>
+            <p
+              className={`${styles.text} ${styles["card__waitingtime-container"]}`}
+            >
+              <Icon data={timeIcon} size={24} style={{ marginRight: 5 }} />
+              {formatDuration(duration, unit)}
             </p>
           </div>
           <Handle

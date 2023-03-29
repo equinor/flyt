@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Handle, Position } from "reactflow";
-import { formatCanvasText } from "../utils/FormatCanvasText";
+import { formatCanvasText } from "./utils/FormatCanvasText";
 
-import styles from "./Card.module.css";
+import styles from "./Card.module.scss";
 import { CardButtonsContainer } from "./CardButtonsContainer";
 import { SubActivityButton } from "./SubActivityButton";
 import { ChoiceButton } from "./ChoiceButton";

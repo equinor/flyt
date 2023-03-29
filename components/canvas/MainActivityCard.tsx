@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Handle, Position } from "reactflow";
-import { formatCanvasText } from "../utils/FormatCanvasText";
+import { formatCanvasText } from "./utils/FormatCanvasText";
 import { MainActivityButton } from "./MainActivityButton";
 import { SubActivityButton } from "./SubActivityButton";
 import { ChoiceButton } from "./ChoiceButton";
 import { WaitingButton } from "./WaitingButton";
 import { CardButtonsContainer } from "./CardButtonsContainer";
 
-import styles from "./Card.module.css";
+import styles from "./Card.module.scss";
 import { QIPRContainer } from "./QIPRContainer";
 import { NodeData } from "interfaces/NodeData";
 import { Node } from "reactflow";

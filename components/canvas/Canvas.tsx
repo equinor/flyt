@@ -2,7 +2,7 @@
 import "reactflow/dist/style.css";
 import React, { useEffect, useRef, useState } from "react";
 import { useAccount, useMsal } from "@azure/msal-react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 
 import { getAccessToken } from "../../auth/msalHelpers";
 import { DeleteVsmObjectDialog } from "../DeleteVsmObjectDialog";
@@ -30,7 +30,7 @@ import ReactFlow, {
   Node,
 } from "reactflow";
 import { setLayout } from "./hooks/useLayout";
-import nodeTypes from "./NodeTypes";
+import { nodeTypes } from "./NodeTypes";
 import { NodeData } from "interfaces/NodeData";
 import { moveVertice, postGraph } from "../../services/graphApi";
 import { vsmObjectTypes } from "types/vsmObjectTypes";

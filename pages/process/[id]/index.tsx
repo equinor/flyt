@@ -9,7 +9,6 @@ import { getProject } from "../../../services/projectApi";
 import { getGraph } from "services/graphApi";
 import { unknownErrorToString } from "../../../utils/isError";
 import { CanvasWrapper } from "../../../components/canvas/Canvas";
-import { mockApi } from "components/canvas/NodeTypes/MockApi";
 import { CircularProgress } from "@equinor/eds-core-react";
 
 export default function Project() {

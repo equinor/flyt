@@ -8,7 +8,7 @@ import { WaitingCard } from "./WaitingCard";
 import { RootCard } from "./RootCard";
 import { NodeTypes } from "reactflow";
 
-const nodeTypes: NodeTypes = {
+export const nodeTypes: NodeTypes = {
   Root: RootCard,
   Supplier: GenericCard,
   Input: GenericCard,
@@ -19,5 +19,3 @@ const nodeTypes: NodeTypes = {
   Waiting: WaitingCard,
   Choice: ChoiceCard,
 };
-
-export default nodeTypes;

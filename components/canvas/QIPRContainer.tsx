@@ -1,7 +1,7 @@
 import React from "react";
-import styles from "./QIPRContainer.module.css";
+import styles from "./QIPRContainer.module.scss";
 import { getTaskColor } from "utils/getTaskColor";
-import { TextCircle } from "../entities/TextCircle";
+import { TextCircle } from "./entities/TextCircle";
 import { taskObject } from "interfaces/taskObject";
 import { getTaskShorthand } from "utils/getTaskShorthand";
 

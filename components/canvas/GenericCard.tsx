@@ -1,9 +1,9 @@
 import { NodeData } from "interfaces/NodeData";
 import React, { useState } from "react";
 import { Handle, Position } from "reactflow";
-import { formatCanvasText } from "../utils/FormatCanvasText";
+import { formatCanvasText } from "./utils/FormatCanvasText";
 
-import styles from "./Card.module.css";
+import styles from "./Card.module.scss";
 import { CardButtonsContainer } from "./CardButtonsContainer";
 import { MainActivityButton } from "./MainActivityButton";
 import { QIPRContainer } from "./QIPRContainer";

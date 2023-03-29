@@ -3,7 +3,7 @@ import { download_tree_as_png } from "./canvas/utils/downloadVSMImage";
 import React, { useEffect, useState } from "react";
 //import { loadAssets } from "./canvas/utils/LoadAssets";
 //import { assets } from "./canvas/utils/AssetFactory";
-import { getApp } from "./canvas/utils/PixiApp";
+// import { getApp } from "./canvas/utils/PixiApp";
 //import { recursiveTree } from "./canvas/utils/recursiveTree";
 import { useQuery } from "react-query";
 import { getProject } from "../services/projectApi";
