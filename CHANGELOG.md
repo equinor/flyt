@@ -2,15 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.26](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.25...v0.2.26) (2023-04-13)
+
+### Bug Fixes
+
+- Add link prompt visual bug ([#496](https://github.com/equinor/MAD-VSM-WEB/issues/496)) ([b05f9ed](https://github.com/equinor/MAD-VSM-WEB/commit/b05f9edba4ec54618e6a19a165c31e03aa5ad0b9)), closes [#419](https://github.com/equinor/MAD-VSM-WEB/issues/419)
+- Card description in sidepanel is lagging behind ([#505](https://github.com/equinor/MAD-VSM-WEB/issues/505)) ([84c6bfc](https://github.com/equinor/MAD-VSM-WEB/commit/84c6bfc3f788b863914bcbd4d45206d586ef229a)), closes [#411](https://github.com/equinor/MAD-VSM-WEB/issues/411)
+
+### Security
+
+- Adjust HTTP headers to improve security ([#507](https://github.com/equinor/MAD-VSM-WEB/issues/507)) ([2b01128](https://github.com/equinor/MAD-VSM-WEB/commit/2b011286c42ff9cc123ceea75024aeddacd75b04)), closes [#506](https://github.com/equinor/MAD-VSM-WEB/issues/506)
+- Patch vulnerabilities ([#512](https://github.com/equinor/MAD-VSM-WEB/issues/512)) ([16131dc](https://github.com/equinor/MAD-VSM-WEB/commit/16131dc94ccb16a6a4af40ca94253eb0cc0fef56)), closes [#511](https://github.com/equinor/MAD-VSM-WEB/issues/511)
+
 ### [0.2.25](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.24...v0.2.25) (2023-02-20)
 
 ### Bug Fixes
 
-- Set minimum duration ([#493](https://github.com/equinor/MAD-VSM-WEB/issues/493)) ([2c130b9](https://github.com/equinor/MAD-VSM-WEB/commit/2c130b966972de1599629926f401425b709811b9))
+- Set minimum duration ([#493](https://github.com/equinor/MAD-VSM-WEB/issues/493)) ([2c130b9](https://github.com/equinor/MAD-VSM-WEB/commit/2c130b966972de1599629926f401425b709811b9)), closes [#490](https://github.com/equinor/MAD-VSM-WEB/issues/490)
 
 ### Security
 
-- Patch vulnerabilities ([#498](https://github.com/equinor/MAD-VSM-WEB/issues/477)) ([043959e](https://github.com/equinor/MAD-VSM-WEB/commit/043959e7d72d90e89a83e6a1cca0461c2532f71d)), closes [#497](https://github.com/equinor/MAD-VSM-WEB/issues/407)
+- Patch vulnerabilities ([#498](https://github.com/equinor/MAD-VSM-WEB/issues/498)) ([043959e](https://github.com/equinor/MAD-VSM-WEB/commit/043959e7d72d90e89a83e6a1cca0461c2532f71d)), closes [#497](https://github.com/equinor/MAD-VSM-WEB/issues/497)
 
 ### [0.2.24](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.23...v0.2.24) (2023-02-07)
 
@@ -18,7 +30,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 - Patch vulnerabilities ([#477](https://github.com/equinor/MAD-VSM-WEB/issues/477)) ([e77b4b4](https://github.com/equinor/MAD-VSM-WEB/commit/e77b4b46db946a64c33c23f3ff681030dab3a2ca)), closes [#476](https://github.com/equinor/MAD-VSM-WEB/issues/476)
 
-### [0.2.23](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.22...v0.2.23) (2023-01-13)
+### [0.2.23](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.22...v0.2.23) (2023-01-16)
 
 ### Security
 
