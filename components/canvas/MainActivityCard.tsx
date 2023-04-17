@@ -27,10 +27,6 @@ export function MainActivityCard(props: Node<NodeData>) {
     setHovering(false);
   }, [props.dragging]);
 
-  const handleClick = () => {
-    console.log("Click");
-  };
-
   return (
     <div
       onMouseEnter={() => !props.dragging && setHovering(true)}
@@ -84,17 +80,31 @@ export function MainActivityCard(props: Node<NodeData>) {
       {hovering && (
         <>
           <CardButtonsContainer position={Position.Left}>
-            <MainActivityButton onClick={() => handleClick()} />
+            <MainActivityButton
+              onClick={() =>
+                handleClickAddCard(id, "MainActivity", Position.Left)
+              }
+            />
           </CardButtonsContainer>
           <CardButtonsContainer position={Position.Right}>
-            <MainActivityButton onClick={() => handleClick()} />
+            <MainActivityButton
+              onClick={() =>
+                handleClickAddCard(id, "MainActivity", Position.Right)
+              }
+            />
           </CardButtonsContainer>
           <CardButtonsContainer position={Position.Bottom}>
             <SubActivityButton
-              onClick={() => handleClickAddCard(id, "SubActivity")}
+              onClick={() =>
+                handleClickAddCard(id, "SubActivity", Position.Bottom)
+              }
             />
-            <ChoiceButton onClick={() => handleClickAddCard(id, "Choice")} />
-            <WaitingButton onClick={() => handleClickAddCard(id, "Waiting")} />
+            <ChoiceButton
+              onClick={() => handleClickAddCard(id, "Choice", Position.Bottom)}
+            />
+            <WaitingButton
+              onClick={() => handleClickAddCard(id, "Waiting", Position.Bottom)}
+            />
           </CardButtonsContainer>
         </>
       )}

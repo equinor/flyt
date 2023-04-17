@@ -9,7 +9,7 @@ export const getGraph = (projectId: string | string[]): Promise<vsmObject> => {
   );
 };
 
-export const postGraph = (
+export const addVertice = (
   data: { type: string },
   projectId: string,
   parentId: string
@@ -43,5 +43,34 @@ export const moveVertice = (
 ): Promise<unknown> =>
   BaseAPIServices.post(
     `${baseUrl}/graph/${projectId}/vertices/move-vertex`,
+    data
+  ).then((r) => r.data);
+
+export const addVerticeLeft = (
+  data: { type: string },
+  projectId: string,
+  neighbourId: string
+): Promise<unknown> =>
+  BaseAPIServices.post(
+    `${baseUrl}/graph/${projectId}/vertices/${neighbourId}/left`,
+    data
+  ).then((r) => r.data);
+
+export const addVerticeRight = (
+  data: { type: string },
+  projectId: string,
+  neighbourId: string
+): Promise<unknown> =>
+  BaseAPIServices.post(
+    `${baseUrl}/graph/${projectId}/vertices/${neighbourId}/right`,
+    data
+  ).then((r) => r.data);
+
+export const addVerticeMultipleParents = (
+  data: { type: string; parents: Array<string> },
+  projectId: string
+): Promise<unknown> =>
+  BaseAPIServices.post(
+    `${baseUrl}/graph/${projectId}/vertices/multiple-parents`,
     data
   ).then((r) => r.data);

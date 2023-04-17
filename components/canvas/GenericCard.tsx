@@ -13,28 +13,33 @@ export function GenericCard(props: Node<NodeData>) {
   const [hovering, setHovering] = useState(false);
 
   const {
-    card: { description, type, tasks },
+    card: { id, description, type, tasks },
     isValidDropTarget,
     isDropTarget,
     handleClickCard,
+    handleClickAddCard,
   } = props.data;
-
-  const handleClick = () => {
-    console.log("Click");
-  };
 
   const renderCardButtons = () => {
     if (hovering) {
-      if (type === "Output") {
+      if (type === "Input") {
         return (
           <CardButtonsContainer position={Position.Right}>
-            <MainActivityButton onClick={() => handleClick()} />
+            <MainActivityButton
+              onClick={() =>
+                handleClickAddCard(id, "MainActivity", Position.Right)
+              }
+            />
           </CardButtonsContainer>
         );
-      } else if (type === "Input") {
+      } else if (type === "Output") {
         return (
           <CardButtonsContainer position={Position.Left}>
-            <MainActivityButton onClick={() => handleClick()} />
+            <MainActivityButton
+              onClick={() =>
+                handleClickAddCard(id, "MainActivity", Position.Left)
+              }
+            />
           </CardButtonsContainer>
         );
       }

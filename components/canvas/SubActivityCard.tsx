@@ -39,10 +39,6 @@ export const SubActivityCard = (props: Node<NodeData>) => {
     setHovering(false);
   }, [props.dragging]);
 
-  const handleClick = () => {
-    console.log("Click");
-  };
-
   const renderCardButtons = () => {
     if (mergeInitiator) {
       return (
@@ -67,15 +63,21 @@ export const SubActivityCard = (props: Node<NodeData>) => {
         <>
           <CardButtonsContainer position={Position.Bottom}>
             <SubActivityButton
-              onClick={() => handleClickAddCard(id, "SubActivity")}
+              onClick={() =>
+                handleClickAddCard(id, "SubActivity", Position.Bottom)
+              }
             />
-            <ChoiceButton onClick={() => handleClickAddCard(id, "Choice")} />
-            <WaitingButton onClick={() => handleClickAddCard(id, "Waiting")} />
+            <ChoiceButton
+              onClick={() => handleClickAddCard(id, "Choice", Position.Bottom)}
+            />
+            <WaitingButton
+              onClick={() => handleClickAddCard(id, "Waiting", Position.Bottom)}
+            />
             {mergeable && (
               <MergeButton onClick={() => handleClickMergeInit(columnId)} />
             )}
           </CardButtonsContainer>
-          <CardButtonsContainer position={Position.Top}>
+          {/* <CardButtonsContainer position={Position.Top}>
             <SubActivityButton
               onClick={() => handleClickAddCard(parentCard.id, "SubActivity")}
             />
@@ -85,18 +87,42 @@ export const SubActivityCard = (props: Node<NodeData>) => {
             <WaitingButton
               onClick={() => handleClickAddCard(parentCard.id, "Waiting")}
             />
-          </CardButtonsContainer>
+          </CardButtonsContainer> */}
           {parentCard.type === "Choice" && (
             <>
               <CardButtonsContainer position={Position.Right}>
-                <SubActivityButton onClick={() => handleClick()} />
-                <ChoiceButton onClick={() => handleClick()} />
-                <WaitingButton onClick={() => handleClick()} />
+                <SubActivityButton
+                  onClick={() =>
+                    handleClickAddCard(id, "SubActivity", Position.Right)
+                  }
+                />
+                <ChoiceButton
+                  onClick={() =>
+                    handleClickAddCard(id, "Choice", Position.Right)
+                  }
+                />
+                <WaitingButton
+                  onClick={() =>
+                    handleClickAddCard(id, "Waiting", Position.Right)
+                  }
+                />
               </CardButtonsContainer>
               <CardButtonsContainer position={Position.Left}>
-                <SubActivityButton onClick={() => handleClick()} />
-                <ChoiceButton onClick={() => handleClick()} />
-                <WaitingButton onClick={() => handleClick()} />
+                <SubActivityButton
+                  onClick={() =>
+                    handleClickAddCard(id, "SubActivity", Position.Left)
+                  }
+                />
+                <ChoiceButton
+                  onClick={() =>
+                    handleClickAddCard(id, "Choice", Position.Left)
+                  }
+                />
+                <WaitingButton
+                  onClick={() =>
+                    handleClickAddCard(id, "Waiting", Position.Left)
+                  }
+                />
               </CardButtonsContainer>
             </>
           )}

@@ -28,11 +28,19 @@ import ReactFlow, {
   ReactFlowProvider,
   Edge,
   Node,
+  useReactFlow,
+  Position,
 } from "reactflow";
 import { setLayout } from "./hooks/useLayout";
 import { nodeTypes } from "./NodeTypes";
 import { NodeData } from "interfaces/NodeData";
-import { moveVertice, postGraph } from "../../services/graphApi";
+import {
+  moveVertice,
+  addVertice,
+  addVerticeLeft,
+  addVerticeRight,
+  addVerticeMultipleParents,
+} from "../../services/graphApi";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
 
 function Canvas(props): JSX.Element {
@@ -58,10 +66,12 @@ function Canvas(props): JSX.Element {
     hidden: true,
   };
 
+  const rfInstance = useReactFlow();
   const initNodes: Node<NodeData>[] = [];
   const initEdges: Edge[] = [];
   const [nodes, setNodes, onNodesChange] = useNodesState<NodeData>([rootNode]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodesToMerge, setNodesToMerge] = useState([]);
 
   const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
@@ -122,11 +132,8 @@ function Canvas(props): JSX.Element {
   const getCardById = (id: string): vsmObject =>
     graph.find((card: vsmObject) => card.id === id);
 
-  let nodesToMerge: string[] = [];
-
   const handleClickMergeInit = (columnId: string, nodeId: string): void => {
-    nodesToMerge = [];
-    nodesToMerge.push(nodeId);
+    setNodesToMerge([nodeId]);
     setNodes((nodes) =>
       nodes.map((node) => {
         if (node.id == nodeId) {
@@ -146,7 +153,7 @@ function Canvas(props): JSX.Element {
   };
 
   const handleClickCancelMerge = (columnId: string, nodeId: string): void => {
-    nodesToMerge = [];
+    setNodesToMerge([]);
     setNodes((nodes) =>
       nodes.map((node) => {
         if (node.id == nodeId) {
@@ -161,26 +168,50 @@ function Canvas(props): JSX.Element {
 
   const handleClickMergeOptionCheckbox = (vsmObjectID: string): void => {
     nodesToMerge.includes(vsmObjectID)
-      ? nodesToMerge.splice(nodesToMerge.indexOf(vsmObjectID), 1)
-      : nodesToMerge.push(vsmObjectID);
+      ? setNodesToMerge((oldState) => [
+          ...oldState,
+          oldState.splice(nodesToMerge.indexOf(vsmObjectID), 1),
+        ])
+      : setNodesToMerge((oldArray) => [...oldArray, vsmObjectID]);
   };
 
-  const handleClickConfirmMerge = (vsmObjectType: string): void => {
-    console.log(vsmObjectType);
-    console.log(nodesToMerge);
-    console.log("MERGE");
-    nodesToMerge = [];
-  };
-
-  // const handleClickAddCard = (parentId, type) => {
-  //   postGraph({ type }, projectId, parentId);
-  // };
+  const handleClickConfirmMerge = useMutation(
+    ({ type }: { type: string }) => {
+      dispatch.setSnackMessage("⏳ Merging cards...");
+      return addVerticeMultipleParents(
+        { type, parents: nodesToMerge },
+        projectId
+      );
+    },
+    {
+      onSuccess: () => {
+        dispatch.setSnackMessage("✅ Cards merged!");
+        notifyOthers("Added a new card", id, account);
+        return queryClient.invalidateQueries();
+      },
+      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+    }
+  );
 
   const handleClickAddCard = useMutation(
-    // @ts-ignore
-    ({ parentId, type }) => {
+    ({
+      parentId,
+      type,
+      position,
+    }: {
+      parentId: string;
+      type: string;
+      position: Position;
+    }) => {
       dispatch.setSnackMessage("⏳ Adding new card...");
-      return postGraph({ type }, projectId, parentId);
+      switch (position) {
+        case Position.Bottom:
+          return addVertice({ type }, projectId, parentId);
+        case Position.Left:
+          return addVerticeLeft({ type }, projectId, parentId);
+        case Position.Right:
+          return addVerticeRight({ type }, projectId, parentId);
+      }
     },
     {
       onSuccess: () => {
@@ -193,8 +224,7 @@ function Canvas(props): JSX.Element {
   );
 
   const handleMoveCard = useMutation(
-    // @ts-ignore
-    ({ cardId, parentId }) => {
+    ({ cardId, parentId }: { cardId: string; parentId: string }) => {
       dispatch.setSnackMessage("⏳ Moving card...");
       return moveVertice(
         { vertexToMoveId: cardId, vertexDestinationParentId: parentId },
@@ -245,14 +275,15 @@ function Canvas(props): JSX.Element {
         data: {
           card,
           handleClickCard: () => setSelectedObject(card),
-          handleClickAddCard: (id, type) =>
+          handleClickAddCard: (id, type, position) =>
             // @ts-ignore
-            handleClickAddCard.mutate({ parentId: id, type }),
+            handleClickAddCard.mutate({ parentId: id, type, position }),
           handleClickMergeInit: (columnId) =>
             handleClickMergeInit(columnId, card.id),
           handleClickMergeOptionCheckbox: () =>
             handleClickMergeOptionCheckbox(card.id),
-          handleClickConfirmMerge: (type) => handleClickConfirmMerge(type),
+          handleClickConfirmMerge: (type) =>
+            handleClickConfirmMerge.mutate({ type }),
           handleClickCancelMerge: (columnId) =>
             handleClickCancelMerge(columnId, card.id),
           mergeable: card.children.length === 0,
@@ -262,7 +293,7 @@ function Canvas(props): JSX.Element {
         position: { x: 0, y: 0 },
         type: card.type,
         width:
-          200 +
+          200 + // 200 = base card width
           (card?.tasks?.length > 0
             ? (((card?.tasks?.length / 4) >> 0) + 1) * 33 + 2.5 // 33 = QIPR circle width. 2.5 = margin
             : 0),
@@ -292,6 +323,7 @@ function Canvas(props): JSX.Element {
       const finalNodes = setLayout([rootNode, ...initNodes], initEdges);
       setNodes(finalNodes);
       setEdges(initEdges);
+      rfInstance.fitView({ includeHiddenNodes: false, duration: 200 });
     }
   }, [graph]);
 

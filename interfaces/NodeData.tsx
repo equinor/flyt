@@ -1,3 +1,4 @@
+import { Position } from "reactflow";
 import { vsmObject } from "./VsmObject";
 
 export type NodeData = {
@@ -13,6 +14,6 @@ export type NodeData = {
   handleClickCancelMerge?: (arg0: string) => void;
   handleClickMergeOptionCheckbox?: () => void;
   handleClickCard?: () => void;
-  handleClickAddCard?: (arg0: string, arg1: string) => void;
+  handleClickAddCard?: (arg0: string, arg1: string, arg2: Position) => void;
   mergeable?: boolean;
 };
