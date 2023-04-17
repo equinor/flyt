@@ -2,12 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [0.2.26](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.25...v0.2.26) (2023-04-13)
+### [0.2.26](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.25...v0.2.26) (2023-04-17)
 
 ### Bug Fixes
 
 - Add link prompt visual bug ([#496](https://github.com/equinor/MAD-VSM-WEB/issues/496)) ([b05f9ed](https://github.com/equinor/MAD-VSM-WEB/commit/b05f9edba4ec54618e6a19a165c31e03aa5ad0b9)), closes [#419](https://github.com/equinor/MAD-VSM-WEB/issues/419)
-- Card description in sidepanel is lagging behind ([#505](https://github.com/equinor/MAD-VSM-WEB/issues/505)) ([84c6bfc](https://github.com/equinor/MAD-VSM-WEB/commit/84c6bfc3f788b863914bcbd4d45206d586ef229a)), closes [#411](https://github.com/equinor/MAD-VSM-WEB/issues/411)
 
 ### Security
 
