@@ -6,6 +6,7 @@ import {
   TextField,
   TopBar,
   Typography,
+  DotProgress,
 } from "@equinor/eds-core-react";
 import React, { useEffect, useState } from "react";
 import { chevron_down, close, share } from "@equinor/eds-icons";
@@ -38,6 +39,7 @@ import packageJson from "../package.json";
 import styles from "./default.layout.module.scss";
 import { unknownErrorToString } from "../utils/isError";
 import { useRouter } from "next/router";
+import { EditableTitle } from "components/EditableTitle";
 
 const CanvasLayout = ({ children }): JSX.Element => {
   const isAuthenticated = useIsAuthenticated();
@@ -226,9 +228,15 @@ const CanvasLayout = ({ children }): JSX.Element => {
         <div className={styles.center}>
           <div style={{ gridAutoFlow: "row" }} className={styles.centerButton}>
             <div className={styles.centerButton}>
-              <Typography variant={"h4"} className={styles.projectName}>
-                {projectTitle || "Untitled process"}
-              </Typography>
+              {projectTitle !== undefined ? (
+                <EditableTitle
+                  defaultValue={projectTitle || "Untitled process"}
+                  readOnly={!userCanEdit}
+                  onConfirm={(text) => updateProjectName(text)}
+                />
+              ) : (
+                <DotProgress size={32} color={"primary"} />
+              )}
               <Button
                 variant={"ghost"}
                 onClick={(e) => (isOpen ? closeMenu() : openMenu(e, null))}
