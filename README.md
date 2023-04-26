@@ -9,7 +9,7 @@
 - :art: [Figma design & prototype](https://www.figma.com/file/IkHwmIQrsT0iR34f5R5UnZ/vsm)
 - :zap: [Api-endpoints: See swagger](https://vsm-api-dev.azurewebsites.net/swagger/index.html)
 - :dizzy: [Our development process: Mapped in Flyt itself](https://flyt.equinor.com/projects/172)
-- 🏃 [Running in Radix](https://console.radix.equinor.com/applications/vsm/)
+- 🏃 [Running in Radix](https://console.radix.equinor.com/applications/flyt/)
 - :memo: [Architecture contract](https://github.com/equinor/architecturecontract/blob/master/contracts/flyt.md)
 
 # Background
@@ -68,12 +68,12 @@ For example; Run `yarn release-dev` to tag DEV and push tags to GitHub.
 
 | Environment | Release script          | Deploy status                                                                                                                  | URL                                     | Who should test what?       | Comments                                                                         |
 | ----------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------- | --------------------------- | -------------------------------------------------------------------------------- |
-| DEV         | Run `yarn release-dev`  | ![DEV environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/vsm/environments/dev/buildstatus)   | https://web-vsm-dev.radix.equinor.com/  | Developer                   | Developer is free to use this environment however they want to                   |
-| TEST        | Run `yarn release-test` | ![TEST environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/vsm/environments/test/buildstatus) | https://web-vsm-test.radix.equinor.com/ | Internal testing            | Developer tags what needs to be tested for QA-tester in the team                 |
-| QA          | Run `yarn release-qa`   | ![QA environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/vsm/environments/qa/buildstatus)     | https://web-vsm-qa.radix.equinor.com/   | "Product Owner" or Customer | When said feature is ready, it gets released into QA so our PO can give feedback |
-| PROD        | Run `yarn release-prod` | ![PROD environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/vsm/environments/prod/buildstatus) | https://web-vsm-prod.radix.equinor.com/ | End-users                   | We wait with deploying to prod until everyone is happy                           |
+| DEV         | Run `yarn release-dev`  | ![DEV environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/flyt/environments/dev/buildstatus)   | <https://web-flyt-dev.radix.equinor.com/>  | Developer                   | Developer is free to use this environment however they want to                   |
+| TEST        | Run `yarn release-test` | ![TEST environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/flyt/environments/test/buildstatus) | <https://web-flyt-test.radix.equinor.com/> | Internal testing            | Developer tags what needs to be tested for QA-tester in the team                 |
+| QA          | Run `yarn release-qa`   | ![QA environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/flyt/environments/qa/buildstatus)     | <https://web-flyt-qa.radix.equinor.com/>   | "Product Owner" or Customer | When said feature is ready, it gets released into QA so our PO can give feedback |
+| PROD        | Run `yarn release-prod` | ![PROD environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/flyt/environments/prod/buildstatus) | <https://web-flyt-prod.radix.equinor.com/> | End-users                   | We wait with deploying to prod until everyone is happy                           |
 
-> **Note:** When running `yarn release-<environment>` we are starting a new build in Radix. If we already have a working build and want to release it to another environment, we may "promote" it to a different environment via the [Radix-console](https://console.radix.equinor.com/applications/vsm).
+> **Note:** When running `yarn release-<environment>` we are starting a new build in Radix. If we already have a working build and want to release it to another environment, we may "promote" it to a different environment via the [Radix-console](https://console.radix.equinor.com/applications/flyt).
 
 ## Docker
 
@@ -149,7 +149,7 @@ Structure of an entity
 
 # Semantic Commit Messages
 
-> Copied from https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716
+> Copied from <https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716>
 
 See how a minor change to your commit message style can make you a better programmer.
 
@@ -180,6 +180,6 @@ More Examples:
 
 References:
 
-- https://www.conventionalcommits.org/
-- https://seesparkbox.com/foundry/semantic_commit_messages
-- http://karma-runner.github.io/1.0/dev/git-commit-msg.html
+- <https://www.conventionalcommits.org/>
+- <https://seesparkbox.com/foundry/semantic_commit_messages>
+- <http://karma-runner.github.io/1.0/dev/git-commit-msg.html>
