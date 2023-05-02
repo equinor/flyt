@@ -518,7 +518,10 @@ function Canvas(props): JSX.Element {
         fitView
         fitViewOptions={{ includeHiddenNodes: true }}
       >
-        <Controls fitViewOptions={{ includeHiddenNodes: true }} />
+        <Controls
+          showInteractive={false}
+          fitViewOptions={{ includeHiddenNodes: true }}
+        />
       </ReactFlow>
     </div>
   );
