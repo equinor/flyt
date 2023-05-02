@@ -30,6 +30,7 @@ import ReactFlow, {
   Node,
   useReactFlow,
   Position,
+  Controls,
 } from "reactflow";
 import { setLayout } from "./hooks/useLayout";
 import { nodeTypes } from "./NodeTypes";
@@ -514,7 +515,11 @@ function Canvas(props): JSX.Element {
         onNodeDrag={onNodeDrag}
         onNodeDragStop={onNodeDragStop}
         attributionPosition="top-left"
-      />
+        fitView
+        fitViewOptions={{ includeHiddenNodes: true }}
+      >
+        <Controls fitViewOptions={{ includeHiddenNodes: true }} />
+      </ReactFlow>
     </div>
   );
 }
