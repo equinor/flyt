@@ -289,7 +289,7 @@ function Canvas(props): JSX.Element {
             handleClickCancelMerge(columnId, card.id),
           mergeable: card.children.length === 0,
           columnId,
-          parentCard,
+          userCanEdit,
         },
         position: { x: 0, y: 0 },
         type: card.type,
@@ -508,7 +508,7 @@ function Canvas(props): JSX.Element {
         onEdgesChange={onEdgesChange}
         onPaneClick={() => setSelectedObject(null)}
         minZoom={0.2}
-        nodesDraggable={true}
+        nodesDraggable={userCanEdit}
         nodesConnectable={false}
         zoomOnDoubleClick={false}
         onNodeDragStart={onNodeDragStart}

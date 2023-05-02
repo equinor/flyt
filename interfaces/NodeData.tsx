@@ -16,4 +16,5 @@ export type NodeData = {
   handleClickCard?: () => void;
   handleClickAddCard?: (arg0: string, arg1: string, arg2: Position) => void;
   mergeable?: boolean;
+  userCanEdit?: boolean;
 };

@@ -21,6 +21,7 @@ export function MainActivityCard(props: Node<NodeData>) {
     isDropTarget,
     handleClickCard,
     handleClickAddCard,
+    userCanEdit,
   } = props.data;
 
   useEffect(() => {
@@ -77,7 +78,7 @@ export function MainActivityCard(props: Node<NodeData>) {
           <QIPRContainer onClick={() => handleClickCard()} tasks={tasks} />
         )}
       </div>
-      {hovering && (
+      {hovering && userCanEdit && (
         <>
           <CardButtonsContainer position={Position.Left}>
             <MainActivityButton

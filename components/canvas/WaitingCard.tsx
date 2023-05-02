@@ -34,6 +34,7 @@ export const WaitingCard = (props: Node<NodeData>) => {
     handleClickCancelMerge,
     parentCard,
     handleClickAddCard,
+    userCanEdit,
   } = props.data;
 
   useEffect(() => {
@@ -189,7 +190,7 @@ export const WaitingCard = (props: Node<NodeData>) => {
           <QIPRContainer onClick={() => handleClickCard()} tasks={tasks} />
         )}
       </div>
-      {renderCardButtons()}
+      {userCanEdit && renderCardButtons()}
     </div>
   );
 };

@@ -18,6 +18,7 @@ export function GenericCard(props: Node<NodeData>) {
     isDropTarget,
     handleClickCard,
     handleClickAddCard,
+    userCanEdit,
   } = props.data;
 
   const renderCardButtons = () => {
@@ -93,7 +94,7 @@ export function GenericCard(props: Node<NodeData>) {
           <QIPRContainer onClick={() => handleClickCard()} tasks={tasks} />
         )}
       </div>
-      {renderCardButtons()}
+      {userCanEdit && renderCardButtons()}
     </div>
   );
 }

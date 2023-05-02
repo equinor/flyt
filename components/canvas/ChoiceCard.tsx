@@ -18,6 +18,7 @@ export function ChoiceCard(props) {
     handleClickCard,
     parentCard,
     handleClickAddCard,
+    userCanEdit,
   } = props.data;
 
   const size = 132;
@@ -98,7 +99,7 @@ export function ChoiceCard(props) {
           isConnectable={false}
         />
       </div>
-      {hovering && (
+      {hovering && userCanEdit && (
         <>
           {/* <CardButtonsContainer position={Position.Top}>
             <SubActivityButton
