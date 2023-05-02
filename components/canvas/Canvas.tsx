@@ -338,8 +338,12 @@ function Canvas(props): JSX.Element {
   ): boolean => {
     const sourceType = source.type;
     const targetType = target.type;
+    const targetIsParent = source?.data?.parentCards?.find(
+      (parentCard) => parentCard.id === target.id
+    );
     return (
-      ((sourceType === vsmObjectTypes.choice ||
+      !targetIsParent &&
+      (((sourceType === vsmObjectTypes.choice ||
         sourceType === vsmObjectTypes.subActivity ||
         sourceType === vsmObjectTypes.waiting) &&
         (targetType === vsmObjectTypes.choice ||
@@ -347,7 +351,7 @@ function Canvas(props): JSX.Element {
           targetType === vsmObjectTypes.waiting ||
           targetType === vsmObjectTypes.mainActivity)) ||
       (sourceType === vsmObjectTypes.mainActivity &&
-        targetType === vsmObjectTypes.mainActivity)
+          targetType === vsmObjectTypes.mainActivity))
     );
   };
 
