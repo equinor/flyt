@@ -338,9 +338,8 @@ function Canvas(props): JSX.Element {
   ): boolean => {
     const sourceType = source.type;
     const targetType = target.type;
-    const targetIsParent = source?.data?.parentCards?.find(
-      (parentCard) => parentCard.id === target.id
-    );
+    const targetIsParent = source?.data?.parentCard?.id === target.id;
+
     return (
       !targetIsParent &&
       (((sourceType === vsmObjectTypes.choice ||
