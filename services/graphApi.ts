@@ -74,3 +74,13 @@ export const addVerticeMultipleParents = (
     `${baseUrl}/graph/${projectId}/vertices/multiple-parents`,
     data
   ).then((r) => r.data);
+
+export const moveVerticeRightOfTarget = (
+  data: { vertexId: string },
+  targetId: string,
+  projectId: string
+): Promise<unknown> =>
+  BaseAPIServices.put(
+    `${baseUrl}/graph/${projectId}/vertices/${targetId}/right`,
+    data
+  ).then((r) => r.data);

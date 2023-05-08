@@ -41,6 +41,7 @@ import {
   addVerticeLeft,
   addVerticeRight,
   addVerticeMultipleParents,
+  moveVerticeRightOfTarget,
 } from "../../services/graphApi";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
 
@@ -225,12 +226,22 @@ function Canvas(props): JSX.Element {
   );
 
   const handleMoveCard = useMutation(
-    ({ cardId, parentId }: { cardId: string; parentId: string }) => {
+    ({
+      cardId,
+      targetId,
+      position,
+    }: {
+      cardId: string;
+      targetId: string;
+      position: Position;
+    }) => {
       dispatch.setSnackMessage("⏳ Moving card...");
-      return moveVertice(
-        { vertexToMoveId: cardId, vertexDestinationParentId: parentId },
+      return position === Position.Bottom
+        ? moveVertice(
+            { vertexToMoveId: cardId, vertexDestinationParentId: targetId },
         projectId
-      );
+          )
+        : moveVerticeRightOfTarget({ vertexId: cardId }, targetId, projectId);
     },
     {
       onSuccess: () => {
@@ -420,8 +431,14 @@ function Canvas(props): JSX.Element {
         })
       );
     } else {
-      // @ts-ignore
-      handleMoveCard.mutate({ cardId: node.id, parentId: target.id });
+      handleMoveCard.mutate({
+        cardId: node.id,
+        targetId: target.id,
+        position:
+          node.type === "MainActivity" && target.type === "MainActivity"
+            ? Position.Right
+            : Position.Bottom,
+      });
       setTarget(null);
       dragRef.current = null;
     }

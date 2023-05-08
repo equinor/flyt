@@ -63,7 +63,7 @@
     "react-masonry-css": "^1.0.16",
     "react-query": "^3.39.2",
     "react-table": "^7.8.0",
-    "reactflow": "11.3.3",
+    "reactflow": "11.7.0",
     "rehype-sanitize": "^5.0.1",
     "remark-gfm": "^3.0.1",
     "sass": "^1.57.1",
