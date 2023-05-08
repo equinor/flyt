@@ -30,8 +30,8 @@ export const patchGraph = (
   ).then((r) => r.data);
 
 export const deleteVertice = (
-  projectId: number,
-  vertexId: number
+  vertexId: string,
+  projectId: string
 ): Promise<unknown> =>
   BaseAPIServices.delete(
     `${baseUrl}/graph/${projectId}/vertices/${vertexId}`

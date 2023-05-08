@@ -4,7 +4,6 @@ import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQueryClient } from "react-query";
 
 import React from "react";
-import { deleteVSMObject } from "../services/vsmObjectApi";
 import { getVsmTypeName } from "../utils/GetVsmTypeName";
 import { notifyOthers } from "../services/notifyOthers";
 import styles from "../layouts/default.layout.module.scss";
@@ -13,6 +12,7 @@ import { useRouter } from "next/router";
 import { useStoreDispatch } from "hooks/storeHooks";
 import { vsmObject } from "../interfaces/VsmObject";
 import { vsmObjectTypes } from "../types/vsmObjectTypes";
+import { deleteVertice } from "services/graphApi";
 
 export function DeleteVsmObjectDialog(props: {
   objectToDelete: vsmObject;
@@ -26,19 +26,27 @@ export function DeleteVsmObjectDialog(props: {
   const { id } = router.query;
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
-  const deleteMutation = useMutation((id: string) => deleteVSMObject(id), {
-    onSuccess() {
-      handleClose();
-      notifyOthers("Deleted a card", id, account);
-      return queryClient.invalidateQueries();
-    },
-    onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
-  });
+  const deleteMutation = useMutation(
+    ({ id, projectId }: { id: string; projectId: string }) =>
+      deleteVertice(id, projectId),
+    {
+      onSuccess() {
+        handleClose();
+        notifyOthers("Deleted a card", id, account);
+        return queryClient.invalidateQueries();
+      },
+      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+    }
+  );
 
   if (!props.visible) return null;
 
   const handleClose = () => props.onClose();
-  const handleDelete = () => deleteMutation.mutate(props.objectToDelete.id);
+  const handleDelete = () =>
+    deleteMutation.mutate({
+      id: props.objectToDelete.id,
+      projectId: props.objectToDelete.projectId,
+    });
 
   const { type } = props.objectToDelete;
   const { choice, mainActivity } = vsmObjectTypes;
