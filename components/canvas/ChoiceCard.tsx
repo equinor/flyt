@@ -16,7 +16,7 @@ export function ChoiceCard(props) {
     isDropTarget,
     isValidDropTarget,
     handleClickCard,
-    parentCard,
+    parentCards,
     handleClickAddCard,
     userCanEdit,
   } = props.data;
@@ -112,7 +112,7 @@ export function ChoiceCard(props) {
               onClick={() => handleClickAddCard(parentCard.id, "Waiting")}
             />
           </CardButtonsContainer> */}
-          {parentCard.type === "Choice" && (
+          {parentCards[0]?.type === "Choice" && (
             <>
               <CardButtonsContainer position={Position.Right}>
                 <SubActivityButton

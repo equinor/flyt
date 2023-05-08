@@ -28,7 +28,6 @@ import ReactFlow, {
   ReactFlowProvider,
   Edge,
   Node,
-  useReactFlow,
   Position,
   Controls,
 } from "reactflow";
@@ -68,8 +67,7 @@ function Canvas(props): JSX.Element {
     hidden: true,
   };
 
-  const rfInstance = useReactFlow();
-  const initNodes: Node<NodeData>[] = [];
+  let initNodes: Node<NodeData>[] = [];
   const initEdges: Edge[] = [];
   const [nodes, setNodes, onNodesChange] = useNodesState<NodeData>([rootNode]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -239,7 +237,7 @@ function Canvas(props): JSX.Element {
       return position === Position.Bottom
         ? moveVertice(
             { vertexToMoveId: cardId, vertexDestinationParentId: targetId },
-        projectId
+            projectId
           )
         : moveVerticeRightOfTarget({ vertexId: cardId }, targetId, projectId);
     },
@@ -278,7 +276,17 @@ function Canvas(props): JSX.Element {
         // hidden: parentCard.type !== "Choice",
       });
 
-      if (initNodes.find((node) => node.id === card.id)) {
+      // Occurs when a node has multiple parents
+      const duplicateNode = initNodes.find((node) => node.id === card.id);
+      if (duplicateNode) {
+        initNodes = initNodes.map((node) => {
+          if (node.id === card.id) {
+            const newData = node.data;
+            newData.parentCards.push(parentCard);
+            return { ...node, data: newData };
+          }
+          return node;
+        });
         return;
       }
 
@@ -300,6 +308,7 @@ function Canvas(props): JSX.Element {
             handleClickCancelMerge(columnId, card.id),
           mergeable: card.children.length === 0,
           columnId,
+          parentCards: [parentCard],
           userCanEdit,
         },
         position: { x: 0, y: 0 },
@@ -335,7 +344,6 @@ function Canvas(props): JSX.Element {
       const finalNodes = setLayout([rootNode, ...initNodes], initEdges);
       setNodes(finalNodes);
       setEdges(initEdges);
-      rfInstance.fitView({ includeHiddenNodes: false, duration: 200 });
     }
   }, [graph]);
 
@@ -349,7 +357,9 @@ function Canvas(props): JSX.Element {
   ): boolean => {
     const sourceType = source.type;
     const targetType = target.type;
-    const targetIsParent = source?.data?.parentCard?.id === target.id;
+    const targetIsParent = source?.data?.parentCards?.find(
+      (node) => node.id === target.id
+    );
 
     return (
       !targetIsParent &&
@@ -360,7 +370,7 @@ function Canvas(props): JSX.Element {
           targetType === vsmObjectTypes.subActivity ||
           targetType === vsmObjectTypes.waiting ||
           targetType === vsmObjectTypes.mainActivity)) ||
-      (sourceType === vsmObjectTypes.mainActivity &&
+        (sourceType === vsmObjectTypes.mainActivity &&
           targetType === vsmObjectTypes.mainActivity))
     );
   };

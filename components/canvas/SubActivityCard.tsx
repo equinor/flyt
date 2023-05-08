@@ -31,7 +31,7 @@ export const SubActivityCard = (props: Node<NodeData>) => {
     handleClickMergeOptionCheckbox,
     handleClickConfirmMerge,
     handleClickCancelMerge,
-    parentCard,
+    parentCards,
     handleClickAddCard,
     userCanEdit,
   } = props.data;
@@ -89,7 +89,7 @@ export const SubActivityCard = (props: Node<NodeData>) => {
               onClick={() => handleClickAddCard(parentCard.id, "Waiting")}
             />
           </CardButtonsContainer> */}
-          {parentCard.type === "Choice" && (
+          {parentCards[0].type === "Choice" && (
             <>
               <CardButtonsContainer position={Position.Right}>
                 <SubActivityButton

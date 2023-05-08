@@ -3,7 +3,7 @@ import { vsmObject } from "./VsmObject";
 
 export type NodeData = {
   card?: vsmObject;
-  parentCard?: vsmObject;
+  parentCards?: Array<vsmObject>;
   isDropTarget?: boolean;
   isValidDropTarget?: boolean;
   columnId?: string;

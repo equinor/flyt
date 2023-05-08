@@ -32,7 +32,7 @@ export const WaitingCard = (props: Node<NodeData>) => {
     handleClickMergeOptionCheckbox,
     handleClickConfirmMerge,
     handleClickCancelMerge,
-    parentCard,
+    parentCards,
     handleClickAddCard,
     userCanEdit,
   } = props.data;
@@ -40,10 +40,6 @@ export const WaitingCard = (props: Node<NodeData>) => {
   useEffect(() => {
     setHovering(false);
   }, [props.dragging]);
-
-  const handleClick = () => {
-    console.log("Click");
-  };
 
   const renderCardButtons = () => {
     if (mergeInitiator) {
@@ -94,7 +90,7 @@ export const WaitingCard = (props: Node<NodeData>) => {
               onClick={() => handleClickAddCard(parentCard.id, "Waiting")}
             />
           </CardButtonsContainer> */}
-          {parentCard.type === "Choice" && (
+          {parentCards[0].type === "Choice" && (
             <>
               <CardButtonsContainer position={Position.Right}>
                 <SubActivityButton
