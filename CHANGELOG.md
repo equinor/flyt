@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.27](https://github.com/equinor/flyt/compare/v0.2.26...v0.2.27) (2023-05-10)
+
+### Security
+
+- Patch vulnerabilities ([#538](https://github.com/equinor/MAD-VSM-WEB/issues/538)) ([d9d128f](https://github.com/equinor/MAD-VSM-WEB/commit/d9d128f98ff2f5df524b59b105c004278f49070f)), closes [#537](https://github.com/equinor/MAD-VSM-WEB/issues/537)
+
 ### [0.2.26](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.25...v0.2.26) (2023-04-17)
 
 ### Bug Fixes
