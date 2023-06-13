@@ -29,7 +29,8 @@
     "rename": "sh scripts/changeName.sh",
     "genRadix": "sh scripts/generateRadixConfig.sh",
     "prepare": "husky install",
-    "postinstall": "sh scripts/postInstall.sh"
+    "postinstall": "sh scripts/postInstall.sh",
+    "fresh-install": "rm -rf package-lock.json && rm -rf node_modules && npm install"
   },
   "dependencies": {
     "@azure/msal-browser": "^2.32.1",
