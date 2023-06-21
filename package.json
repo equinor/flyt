@@ -30,7 +30,7 @@
     "genRadix": "sh scripts/generateRadixConfig.sh",
     "prepare": "husky install",
     "postinstall": "sh scripts/postInstall.sh",
-    "fresh-install": "rm -rf package-lock.json && rm -rf node_modules && npm install"
+    "genLockfile": "rm yarn.lock && rm -rf node_modules && yarn"
   },
   "dependencies": {
     "@azure/msal-browser": "^2.32.1",
