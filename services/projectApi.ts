@@ -38,6 +38,10 @@ export const createProject = (
   );
 };
 
+export const createToBeProject = (id?: string | string[]) => {
+  return BaseAPIServices.post(`${baseUrl}/project/${id}/tobe`, null);
+};
+
 /**
  * Get project by id
  * @param id project id
@@ -78,7 +82,7 @@ export const getLabels = (id: number): Promise<processLabel> =>
 export const resetProcess = (
   id: number | string | string[]
 ): Promise<AxiosResponse> =>
-  BaseAPIServices.patch(`${baseUrl}/project/${id}/reset`, null);
+  BaseAPIServices.post(`${baseUrl}/project/${id}/reset`, null);
 
 // Check at what datetimes the given project has been updated.
 export const getProjectUpdateTimes = (

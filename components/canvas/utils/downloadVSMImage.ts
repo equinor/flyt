@@ -44,5 +44,5 @@ export const download_tree_as_png = (
     day: "numeric",
   });
   const fileName = `Flyt canvas (${vsmProjectID}) - ${name} - ${date}.png`;
-  download_sprite_as_png(renderer, tree, fileName);
+  //download_sprite_as_png(renderer, tree, fileName);
 };

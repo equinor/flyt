@@ -58,6 +58,7 @@ export const ResetProcessButton = () => {
           position: "absolute",
           left: 0,
           margin: 24,
+          zIndex: 1,
         }}
         onClick={() => {
           setShowResetScrim(true);

@@ -34,7 +34,10 @@ export const updateTaskCategory = (projectId: string | string[], category) => {
   );
 };
 
-export const deleteTaskCategory = (projectId: string, id: number) => {
+export const deleteTaskCategory = (
+  projectId: string | string[],
+  id: number
+) => {
   return BaseAPIServices.delete(
     `${baseUrl}/graph/${projectId}/categories/${id}`
   );
