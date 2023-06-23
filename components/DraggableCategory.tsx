@@ -13,7 +13,7 @@ import colors from "../theme/colors";
 import { useMutation, useQueryClient } from "react-query";
 import {
   deleteTaskCategory,
-  patchTaskCategory,
+  updateTaskCategory,
 } from "../services/taskCategoriesApi";
 import { taskCategory } from "../interfaces/taskCategory";
 import { ErrorScrim } from "./ErrorScrim";
@@ -22,11 +22,13 @@ export function DraggableCategory(props: {
   category: taskCategory;
   onClick: () => void;
   checked: boolean;
-  projectId: number | string | string[];
+  projectId: string | string[];
 }): JSX.Element {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButtonRef = useRef();
-  const [categoryName, setCategoryName] = useState(`${props.category.name}`);
+  const [categoryName, setCategoryName] = useState(
+    `${props.category.description}`
+  );
   const [editText, setEditText] = useState(() => !props.category.id);
   const [isLoading, setIsLoading] = useState(false);
   const [visibleScrim, setVisibleScrim] = useState(false);
@@ -39,13 +41,16 @@ export function DraggableCategory(props: {
       .then(() => {
         setIsLoading(false);
       });
-    setCategoryName(props.category.name);
+    setCategoryName(props.category.description);
   };
 
   const patchTaskCategoryMutation = useMutation(
     (category: taskCategory) => {
       setIsLoading(true);
-      return patchTaskCategory({ name: category.name, id: category.id });
+      return updateTaskCategory(props.projectId, {
+        description: category.description,
+        id: category.id,
+      });
     },
     {
       onSettled: () => {
@@ -77,7 +82,7 @@ export function DraggableCategory(props: {
   const deleteTaskCategoryMutation = useMutation(
     (category: taskCategory) => {
       setIsLoading(true);
-      return deleteTaskCategory(category.id);
+      return deleteTaskCategory(props.projectId, category.id);
     },
     {
       onSettled: () => getCategories(),
@@ -87,7 +92,7 @@ export function DraggableCategory(props: {
         if (statusCode === 409) {
           //Error 409-Conflict is given when you try to delete something that is still linked to a project
           errorMessage = [
-            `Could not delete category "${taskCategory.name}".`,
+            `Could not delete category "${taskCategory.description}".`,
             "Make sure that it is not added to any PQIs.",
           ];
         } else {
@@ -106,7 +111,7 @@ export function DraggableCategory(props: {
     const name = categoryName.trim();
     if (!!name) {
       patchTaskCategoryMutation.mutate({
-        name: name,
+        description: name,
         id: props.category.id,
       });
     }
@@ -138,7 +143,7 @@ export function DraggableCategory(props: {
           <Input
             autoFocus
             defaultValue={categoryName}
-            placeholder={props.category.name}
+            placeholder={props.category.description}
             onClick={(event) => event.stopPropagation()}
             onChange={(e) => setCategoryName(e.target.value)}
             onKeyDown={(e) => {

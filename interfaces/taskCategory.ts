@@ -1,5 +1,5 @@
 export interface taskCategory {
-  name: string;
+  description: string;
   id?: number;
   fkProject?: number | string | string[];
 }

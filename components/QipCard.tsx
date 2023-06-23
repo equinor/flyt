@@ -13,6 +13,7 @@ import {
 } from "../services/taskCategoriesApi";
 import { taskCategory } from "../interfaces/taskCategory";
 import { useRouter } from "next/router";
+import { getTaskShorthand } from "utils/getTaskShorthand";
 
 export function QipCard(props: {
   task: taskObject;
@@ -21,7 +22,7 @@ export function QipCard(props: {
   const task = props.task;
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const { displayIndex, description, categories, vsmTaskID, solved } = task;
+  const { description, category: categories, id: taskId, solved } = task;
   const taskColor = getTaskColor(task);
   const [isLoading, setIsLoading] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
@@ -32,7 +33,7 @@ export function QipCard(props: {
   const linkTaskMutation = useMutation(
     (p: { categoryId; taskId }) => {
       setIsLoading(true);
-      return linkTaskCategory(p.categoryId, p.taskId);
+      return linkTaskCategory(id, p.categoryId, p.taskId);
     },
     {
       onSuccess: (message) => console.log(message),
@@ -47,9 +48,9 @@ export function QipCard(props: {
   );
 
   const unlinkTaskMutation = useMutation(
-    (p: { categoryId: number; taskId: number }) => {
+    (p: { categoryId: number; taskId: string }) => {
       setIsLoading(true);
-      return unlinkTaskCategory(p.categoryId, p.taskId);
+      return unlinkTaskCategory(id, p.categoryId, p.taskId);
     },
     {
       onSettled: () => {
@@ -63,6 +64,8 @@ export function QipCard(props: {
   function getAlreadyThere(data: { text: string; color: string; id: number }) {
     return categories?.some((c) => c.id === data.id);
   }
+
+  console.log(categories, 2);
 
   return (
     <div
@@ -82,7 +85,7 @@ export function QipCard(props: {
         } else {
           linkTaskMutation.mutate({
             categoryId: data.id,
-            taskId: vsmTaskID,
+            taskId: taskId,
           });
         }
       }}
@@ -104,7 +107,7 @@ export function QipCard(props: {
       {solved && <span className={styles.stamp}>Solved</span>}
       <div className={styles.qipCardTop}>
         <ColorDot color={taskColor} />
-        <p>{displayIndex || "?"}</p>
+        <p>{getTaskShorthand(task) || "?"}</p>
       </div>
       <ReactMarkdown remarkPlugins={[gfm]}>{description}</ReactMarkdown>
       <div className={styles.qipCardCategorySection}>
@@ -115,7 +118,7 @@ export function QipCard(props: {
             onClickRemove={() => {
               unlinkTaskMutation.mutate({
                 categoryId: category.id,
-                taskId: vsmTaskID,
+                taskId: taskId,
               });
             }}
           />

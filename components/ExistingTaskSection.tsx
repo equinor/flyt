@@ -74,7 +74,6 @@ export function ExistingTaskSection(props: {
           <p>Loading...</p>
         </div>
       )}
-      {console.log(existingTasks, "aaaa")}
       {!fetchingTasks && existingTasks.length < 1 && (
         <div
           style={{
