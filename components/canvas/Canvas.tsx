@@ -269,15 +269,18 @@ function Canvas(props): JSX.Element {
       ) {
         columnId = card.id;
       }
+      // Occurs when a node has multiple parents
+      const duplicateNode = initNodes.find((node) => node.id === card.id);
+
       cbAddEdge({
         id: `${parentCard.id}=>${card.id}`,
         source: parentCard.id,
         target: card.id,
+        type: "straight",
+        //data: { rootParent: !duplicateNode },
         // hidden: parentCard.type !== "Choice",
       });
 
-      // Occurs when a node has multiple parents
-      const duplicateNode = initNodes.find((node) => node.id === card.id);
       if (duplicateNode) {
         initNodes = initNodes.map((node) => {
           if (node.id === card.id) {
