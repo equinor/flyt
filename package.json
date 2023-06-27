@@ -46,6 +46,7 @@
     "axios": "^0.25.0",
     "d3-flextree": "^2.1.2",
     "d3-hierarchy": "^3.1.2",
+    "dagre": "^0.8.5",
     "easy-peasy": "^5.2.0",
     "jsonwebtoken": "^9.0.0",
     "moment": "^2.29.4",
