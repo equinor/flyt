@@ -18,10 +18,11 @@ export function EditTaskTextField(props: {
   const account = useAccount(accounts[0] || {});
 
   const { description, id } = props.task;
+  console.log(props.task, 1, id);
   const dispatch = useStoreDispatch();
 
   const router = useRouter();
-  const { projectId } = router.query;
+  const { id: projectId } = router.query;
   const queryClient = useQueryClient();
   const updateTaskMutation = useMutation(
     (newObject: taskObject) => {

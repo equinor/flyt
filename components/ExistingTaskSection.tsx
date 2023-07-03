@@ -4,13 +4,12 @@ import React from "react";
 import { useStoreDispatch } from "../hooks/storeHooks";
 import styles from "./ExistingTaskSection.module.scss";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { linkTask, unlinkTask } from "../services/taskApi";
+import { getTasksForProject, linkTask, unlinkTask } from "../services/taskApi";
 import { vsmObject } from "../interfaces/VsmObject";
 import { unknownErrorToString } from "utils/isError";
 import { useRouter } from "next/router";
 import { notifyOthers } from "../services/notifyOthers";
 import { useAccount, useMsal } from "@azure/msal-react";
-import { getTasks } from "../services/taskApi";
 import { getTaskShorthand } from "utils/getTaskShorthand";
 
 export function ExistingTaskSection(props: {
@@ -30,14 +29,13 @@ export function ExistingTaskSection(props: {
     isLoading: fetchingTasks,
   } = useQuery(
     `tasks - ${selectedObject.projectId}/${existingTaskFilter}`,
-    () =>
-      getTasks(selectedObject.projectId, selectedObject.id).then((r) => r.data),
+    () => getTasksForProject(selectedObject.projectId).then((r) => r),
     { enabled: !!existingTaskFilter }
   );
   const router = useRouter();
   const { id } = router.query;
   const taskLinkMutation = useMutation(
-    (task: taskObject) => linkTask(selectedObject.id, task.id),
+    (task: taskObject) => linkTask(id, selectedObject.id, task.id),
     {
       onSuccess: () => {
         notifyOthers("Added a Q/I/P to a card", id, account);
@@ -88,19 +86,23 @@ export function ExistingTaskSection(props: {
       )}
       <div>
         <ul className={styles.taskList}>
-          {existingTasks?.map((t: taskObject) => (
-            <li key={t.id} title={t.description}>
-              <Checkbox
-                defaultChecked={tasks.some((task) => task?.id === t?.id)}
-                label={`${getTaskShorthand(t)} - ${t.description}`}
-                onChange={(event) =>
-                  event.target.checked
-                    ? taskLinkMutation.mutate(t)
-                    : taskUnlinkMutation.mutate(t)
-                }
-              />
-            </li>
-          ))}
+          {existingTasks?.map((t: taskObject) => {
+            if (t.type === existingTaskFilter) {
+              return (
+                <li key={t.id} title={t.description}>
+                  <Checkbox
+                    defaultChecked={tasks.some((task) => task?.id === t?.id)}
+                    label={`${getTaskShorthand(t)} - ${t.description}`}
+                    onChange={(event) =>
+                      event.target.checked
+                        ? taskLinkMutation.mutate(t)
+                        : taskUnlinkMutation.mutate(t)
+                    }
+                  />
+                </li>
+              );
+            }
+          })}
         </ul>
       </div>
     </div>

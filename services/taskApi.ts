@@ -1,7 +1,7 @@
 import BaseAPIServices from "./BaseAPIServices";
 import { taskObject } from "../interfaces/taskObject";
 
-const baseUrl = "/api/v1.0";
+const baseUrl = "/api/v2.0";
 
 //Questions, Ideas & Problems aka. Tasks
 // Gets a list of task types registered
@@ -74,9 +74,13 @@ export const patchTask = (data: taskObject) =>
   BaseAPIServices.patch(baseUrl + `/task`, data);
 
 //Link a task to a vsmObject (card)
-export const linkTask = (vsmObjectId: string, taskId: string) =>
+export const linkTask = (
+  projectId: string | string[],
+  vertexId: string,
+  taskId: string
+) =>
   BaseAPIServices.put(
-    baseUrl + `/task/link/${vsmObjectId}/${taskId}`,
+    baseUrl + `/graph/${projectId}/vertices/${vertexId}/tasks/${taskId}`,
     null
   ).then((r) => {
     return r.data;
@@ -91,12 +95,16 @@ export const unlinkTask = (vsmObjectId: string, taskId: string) =>
 
 // Mark a task as done
 export const solveTask = (
-  vsmObjectId: string,
+  projectId: string | string[],
+  vertexId: string,
   taskId: string,
   solved: boolean
 ) =>
-  BaseAPIServices.put(baseUrl + `/task/solve/${vsmObjectId}/${taskId}`, {
-    solved,
-  }).then((r) => {
+  BaseAPIServices.post(
+    baseUrl + `/graph/${projectId}/vertices/${vertexId}/tasks/${taskId}`,
+    {
+      solved,
+    }
+  ).then((r) => {
     return r.data;
   });

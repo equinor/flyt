@@ -38,7 +38,7 @@ export function EditTaskSection(props: {
       card: vsmObject;
       solvedTask: taskObject;
       solved: boolean;
-    }) => solveTask(card.id, solvedTask.id, solved),
+    }) => solveTask(id, card.id, solvedTask.id, solved),
     {
       onSuccess(_data, variables) {
         const { solvedTask, solved } = variables;
