@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { createProject, getProject } from "../../../services/projectApi";
+import { duplicateProject, getProject } from "../../../services/projectApi";
 import { useMutation, useQuery } from "react-query";
-
 import { Layouts } from "../../../layouts/LayoutWrapper";
-import { debounce } from "../../../utils/debounce";
-//import { getProjectAsCleanJsonWithoutQIPs } from "../../../utils/DownloadJSON";
 import { useRouter } from "next/router";
-import { vsmProject } from "../../../interfaces/VsmProject";
 
 export default function DuplicatePage() {
   const router = useRouter();
@@ -19,33 +15,17 @@ export default function DuplicatePage() {
   } = useQuery(["project", id], () => getProject(id));
 
   const [statusMessage, setStatusMessage] = useState("");
-  const newProjectMutation = useMutation((project: vsmProject) =>
-    createProject(project).then((value) =>
-      router.replace(`/process/${value.data.vsmProjectID}`)
-    )
+  const newProjectMutation = useMutation((projectId: number) =>
+    duplicateProject(projectId).then((value) => {
+      console.log(123, value);
+      return router.replace(`/process/${value}`);
+    })
   );
 
   useEffect(() => {
     if (project) {
-      setStatusMessage("Preparing process");
-      const json = false;
-      //TODO migrate to new data structure
-      // getProjectAsCleanJsonWithoutQIPs(
-      //   project,
-      //   `${!!project.name ? project.name : "Untitled process"} (Duplicate of ${
-      //     project.vsmProjectID
-      //   })`,
-      //   project.vsmProjectID
-      // );
-      if (json) {
-        setStatusMessage("Creating new process");
-        debounce(
-          //Hack to stop sending multiple requests when the project-object changes
-          () => newProjectMutation.mutate(json),
-          1000,
-          "CreateNewProject"
-        );
-      }
+      setStatusMessage("Creating new process");
+      newProjectMutation.mutate(project.vsmProjectID);
     }
   }, [project]);
 

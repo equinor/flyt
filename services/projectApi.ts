@@ -68,6 +68,11 @@ export const updateProject = (projectId, data) =>
 export const deleteProject = (id: string | string[]) =>
   BaseAPIServices.delete(`${baseUrl}/project/${id}`);
 
+export const duplicateProject = (id: number): Promise<processLabel> =>
+  BaseAPIServices.post(`${baseUrl}/project/${id}/duplicate`, null).then(
+    (value) => value.data
+  );
+
 export const faveProject = (id: number) =>
   BaseAPIServices.put(`${baseUrl}/project/${id}/favorite`, null);
 
