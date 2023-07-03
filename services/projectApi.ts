@@ -62,8 +62,8 @@ export const getProject = (
   );
 };
 
-export const updateProject = (data) =>
-  BaseAPIServices.post(`${baseUrl}/project`, data);
+export const updateProject = (projectId, data) =>
+  BaseAPIServices.patch(`${baseUrl}/project/${projectId}`, data);
 
 export const deleteProject = (id: string | string[]) =>
   BaseAPIServices.delete(`${baseUrl}/project/${id}`);

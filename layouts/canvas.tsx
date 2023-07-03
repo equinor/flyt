@@ -49,8 +49,8 @@ const CanvasLayout = ({ children }): JSX.Element => {
 
   const queryClient = useQueryClient();
   const projectMutation = useMutation(
-    (updatedProject: { vsmProjectID: number; name: string }) => {
-      return updateProject(updatedProject);
+    (updatedProject: [{ op: string; path: string; value: string }]) => {
+      return updateProject(id, updatedProject);
     },
     {
       onSuccess: () => {
@@ -179,7 +179,7 @@ const CanvasLayout = ({ children }): JSX.Element => {
   function deleteVSM() {
     setIsDeleting(true);
     setDeleteError(null);
-    BaseAPIServices.delete(`/api/v1.0/project/${project.vsmProjectID}`)
+    BaseAPIServices.delete(`/api/v2.0/project/${project.vsmProjectID}`)
       .then(() => router.push("/"))
       .catch((reason) => {
         setDeleteError(reason);
@@ -192,10 +192,13 @@ const CanvasLayout = ({ children }): JSX.Element => {
   function updateProjectName(name: string) {
     debounce(
       () => {
-        projectMutation.mutate({
-          vsmProjectID: project.vsmProjectID,
-          name,
-        });
+        projectMutation.mutate([
+          {
+            op: "replace",
+            path: "/Name",
+            value: name,
+          },
+        ]);
       },
       1000,
       "updateProjectName"
