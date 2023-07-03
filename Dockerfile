@@ -6,7 +6,7 @@ COPY scripts scripts
 ENV NODE_ENV=production
 RUN yarn install --frozen-lockfile
 
-FROM node:18.16.0-alpine3.17 AS builder
+FROM node:18.16.1-alpine3.18 AS builder
 ENV NODE_ENV=production
 WORKDIR /opt/app
 COPY . .
