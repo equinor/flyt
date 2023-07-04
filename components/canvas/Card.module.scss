@@ -34,6 +34,10 @@
   background-color: #ff8f00;
 }
 
+.card--empty {
+  opacity: 0;
+}
+
 /* Choice card color is set in the component */
 
 .card--validDropTarget {

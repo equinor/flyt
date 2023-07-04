@@ -68,7 +68,7 @@ function Canvas(props): JSX.Element {
   };
 
   let initNodes: Node<NodeData>[] = [];
-  const initEdges: Edge[] = [];
+  let initEdges: Edge[] = [];
   const [nodes, setNodes, onNodesChange] = useNodesState<NodeData>([rootNode]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [nodesToMerge, setNodesToMerge] = useState([]);
@@ -253,6 +253,57 @@ function Canvas(props): JSX.Element {
 
   let columnId: string = null;
 
+  const fillEmptyCards = (
+    cbAddNode: (x: Node<NodeData>) => void,
+    cbAddEdge: (x: Edge) => void,
+    cbDeleteEdge: (x: Edge[]) => void
+  ) => {
+    initNodes.forEach((node) => {
+      if (node?.data?.parentCards?.length > 1) {
+        let deepestCard = 0;
+        node?.data?.parentCards?.forEach((card) => {
+          if (card?.depth > deepestCard) deepestCard = card.depth;
+        });
+        node?.data?.parentCards?.forEach((parentCard) => {
+          if (parentCard.depth < deepestCard) {
+            cbDeleteEdge(
+              initEdges.filter(
+                (edge) =>
+                  edge.source !== parentCard.id || edge.target !== node.id
+              )
+            );
+            let parentId = parentCard.id;
+            for (let i = parentCard.depth; i < deepestCard; i++) {
+              const id = Math.random().toString(11).slice(2);
+              cbAddNode({
+                id,
+                data: {},
+                position: { x: 0, y: 0 },
+                type: "Empty",
+                width: 200,
+                height: 200,
+              });
+              cbAddEdge({
+                id: `${parentId}=>${id}`,
+                source: parentId,
+                target: id,
+                type: "straight",
+              });
+              parentId = id;
+            }
+
+            cbAddEdge({
+              id: `${parentId}=>${node.id}`,
+              source: parentId,
+              target: node.id,
+              type: "straight",
+            });
+          }
+        });
+      }
+    });
+  };
+
   const addCardsToCanvas = (
     card: vsmObject,
     cbAddNode: (x: Node<NodeData>) => void,
@@ -268,6 +319,9 @@ function Canvas(props): JSX.Element {
         card.type === "Customer"
       ) {
         columnId = card.id;
+        card.depth = 1;
+      } else {
+        card.depth = parentCard?.depth + 1;
       }
       // Occurs when a node has multiple parents
       const duplicateNode = initNodes.find((node) => node.id === card.id);
@@ -313,6 +367,7 @@ function Canvas(props): JSX.Element {
           columnId,
           parentCards: [parentCard],
           userCanEdit,
+          depth: parentCard.depth + 1,
         },
         position: { x: 0, y: 0 },
         type: card.type,
@@ -344,6 +399,19 @@ function Canvas(props): JSX.Element {
           initEdges.push(edge);
         }
       );
+      fillEmptyCards(
+        (node) => {
+          initNodes.push(node);
+        },
+        (edge) => {
+          initEdges.push(edge);
+        },
+        (edges) => {
+          initEdges = edges;
+        }
+      );
+      console.log(initNodes);
+      console.log(initEdges);
       const finalNodes = setLayout([rootNode, ...initNodes], initEdges);
       setNodes(finalNodes);
       setEdges(initEdges);
