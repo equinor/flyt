@@ -57,19 +57,9 @@ function Canvas(props): JSX.Element {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
 
-  const rootNode: Node = {
-    id: graph.find((card: vsmObject) => card.type === "Root").id,
-    data: {},
-    position: { x: 0, y: 0 },
-    width: 0,
-    height: 0,
-    type: "Root",
-    hidden: true,
-  };
-
   let initNodes: Node<NodeData>[] = [];
   let initEdges: Edge[] = [];
-  const [nodes, setNodes, onNodesChange] = useNodesState<NodeData>([rootNode]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<NodeData>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [nodesToMerge, setNodesToMerge] = useState([]);
 
@@ -260,7 +250,7 @@ function Canvas(props): JSX.Element {
   ) => {
     initNodes.forEach((node) => {
       if (node?.data?.parentCards?.length > 1) {
-        let deepestCard = 0;
+        let deepestCard = node.data.parentCards[0].depth;
         node?.data?.parentCards?.forEach((card) => {
           if (card?.depth > deepestCard) deepestCard = card.depth;
         });
@@ -282,12 +272,14 @@ function Canvas(props): JSX.Element {
                 type: "Empty",
                 width: 200,
                 height: 200,
+                draggable: false,
               });
               cbAddEdge({
                 id: `${parentId}=>${id}`,
                 source: parentId,
                 target: id,
                 type: "straight",
+                interactionWidth: 0,
               });
               parentId = id;
             }
@@ -297,11 +289,58 @@ function Canvas(props): JSX.Element {
               source: parentId,
               target: node.id,
               type: "straight",
+              interactionWidth: 0,
             });
           }
         });
       }
     });
+  };
+
+  const mergedNodes = new Map();
+  let mergedNodesReady = [];
+
+  const loopFromNode = (nodeId, fullNodes, parentDepth) => {
+    const node = fullNodes.find((node) => node.id === nodeId);
+    if (node?.data?.parentCards?.length > 1) {
+      if (mergedNodes.has(nodeId)) {
+        const nodeDuplicate = mergedNodes.get(nodeId)[0];
+        const numLoops = mergedNodes.get(nodeId)[1];
+        if (nodeDuplicate.data.card.depth <= parentDepth) {
+          nodeDuplicate.data.card.depth = parentDepth + 1;
+        }
+        mergedNodes.set(nodeId, [nodeDuplicate, numLoops + 1]);
+        if (nodeDuplicate.data.parentCards.length === numLoops + 1) {
+          mergedNodesReady.push(nodeDuplicate);
+          mergedNodes.delete(nodeId);
+        }
+      } else {
+        mergedNodes.set(nodeId, [node, 1]);
+        node.data.card.depth = parentDepth + 1;
+      }
+    } else {
+      node.data.card.depth = parentDepth + 1;
+      node?.data?.card?.children?.forEach((child) => {
+        loopFromNode(child, fullNodes, node.data.card.depth);
+      });
+    }
+  };
+
+  const assignDepth = (root, nodes) => {
+    root.children.forEach((childId) => {
+      loopFromNode(childId, nodes, 0);
+    });
+    while (mergedNodesReady.length !== 0) {
+      if (mergedNodesReady.length > 0) {
+        const dupeMergedNodesReady = mergedNodesReady;
+        mergedNodesReady = [];
+        dupeMergedNodesReady.forEach((node) => {
+          node.data.card.children.forEach((child) => {
+            loopFromNode(child, nodes, node.data.card.depth);
+          });
+        });
+      }
+    }
   };
 
   const addCardsToCanvas = (
@@ -319,9 +358,6 @@ function Canvas(props): JSX.Element {
         card.type === "Customer"
       ) {
         columnId = card.id;
-        card.depth = 1;
-      } else {
-        card.depth = parentCard?.depth + 1;
       }
       // Occurs when a node has multiple parents
       const duplicateNode = initNodes.find((node) => node.id === card.id);
@@ -330,6 +366,7 @@ function Canvas(props): JSX.Element {
         id: `${parentCard.id}=>${card.id}`,
         source: parentCard.id,
         target: card.id,
+        interactionWidth: 0,
         type: "straight",
         //data: { rootParent: !duplicateNode },
         // hidden: parentCard.type !== "Choice",
@@ -367,7 +404,6 @@ function Canvas(props): JSX.Element {
           columnId,
           parentCards: [parentCard],
           userCanEdit,
-          depth: parentCard.depth + 1,
         },
         position: { x: 0, y: 0 },
         type: card.type,
@@ -390,8 +426,9 @@ function Canvas(props): JSX.Element {
     if (graph) {
       if (selectedObject)
         setSelectedObject(graph.find((node) => node.id === selectedObject.id));
+      const root = graph.find((card: vsmObject) => card.type === "Root");
       addCardsToCanvas(
-        graph.find((card: vsmObject) => card.type === "Root"),
+        root,
         (node) => {
           initNodes.push(node);
         },
@@ -399,6 +436,7 @@ function Canvas(props): JSX.Element {
           initEdges.push(edge);
         }
       );
+      assignDepth(root, initNodes);
       fillEmptyCards(
         (node) => {
           initNodes.push(node);
@@ -410,9 +448,7 @@ function Canvas(props): JSX.Element {
           initEdges = edges;
         }
       );
-      console.log(initNodes);
-      console.log(initEdges);
-      const finalNodes = setLayout([rootNode, ...initNodes], initEdges);
+      const finalNodes = setLayout(initNodes, initEdges);
       setNodes(finalNodes);
       setEdges(initEdges);
     }
