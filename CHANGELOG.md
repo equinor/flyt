@@ -1,13 +1,11 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
-
-## [0.3.0](https://github.com/equinor/flyt/compare/v0.2.27...v0.3.0) (2023-07-06)
+## [0.2.29](https://github.com/equinor/flyt/compare/v0.2.28...v0.2.29) (2023-07-06)
 
 
-### Features
+### Bug Fixes
 
-* Custom domain names for dev, test and qa ([#541](https://github.com/equinor/flyt/issues/541)) ([2999e03](https://github.com/equinor/flyt/commit/2999e03bb483c23bf99b9d7f4513c5aff12260eb))
+* Patch vulnerabilities ([#541](https://github.com/equinor/flyt/issues/573)) ([b1981fd](https://github.com/equinor/flyt/commit/b1981fdd34420f446e4e10106c3fb692f51a860b))
 
 ### [0.2.28](https://github.com/equinor/MAD-VSM-WEB/compare/v0.2.27...v0.2.28) (2023-06-23)
 
