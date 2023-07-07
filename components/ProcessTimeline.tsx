@@ -8,7 +8,7 @@ import { getDateTimeOption } from "../utils/GetDateTimeOption";
 
 // ProcessTimeline - display process updates in a horizontal timeline
 // Selecting a timeline item will navigate to the corresponding version-specific page
-// Ref: https://github.com/equinor/MAD-VSM-WEB/issues/154
+// Ref: https://github.com/equinor/flyt/issues/154
 export function ProcessTimeline(props: { processId: number | string }) {
   const { processId } = props;
   const router = useRouter();
