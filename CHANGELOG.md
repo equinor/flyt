@@ -1,10 +1,10 @@
 # Changelog
 
-## [0.2.29](https://github.com/equinor/flyt/compare/v0.2.28...v0.2.29) (2023-07-06)
+## [0.2.29](https://github.com/equinor/flyt/compare/v0.2.28...v0.2.29) (2023-07-04)
 
 ### Bug Fixes
 
-* Patch vulnerabilities ([#541](https://github.com/equinor/flyt/issues/573)) ([b1981fd](https://github.com/equinor/flyt/commit/b1981fdd34420f446e4e10106c3fb692f51a860b))
+* **deps:** Patch vulnerabilities ([#573](https://github.com/equinor/flyt/issues/573)) ([b1981fd](https://github.com/equinor/flyt/commit/b1981fdd34420f446e4e10106c3fb692f51a860b))
 
 ### [0.2.28](https://github.com/equinor/flyt/compare/v0.2.27...v0.2.28) (2023-06-23)
 
