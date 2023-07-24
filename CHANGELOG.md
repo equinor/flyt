@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.30](https://github.com/equinor/flyt/compare/v0.2.29...v0.2.30) (2023-07-24)
+
+
+### Bug Fixes
+
+* **deps:** Patch vulnerabilities ([#586](https://github.com/equinor/flyt/issues/586)) ([1f4bed4](https://github.com/equinor/flyt/commit/1f4bed4be70ac5b43fe5dfb3c46a8ef29d2e2817)), closes [#585](https://github.com/equinor/flyt/issues/585)
+
 ## [0.2.29](https://github.com/equinor/flyt/compare/v0.2.28...v0.2.29) (2023-07-04)
 
 ### Bug Fixes
