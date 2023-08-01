@@ -249,13 +249,18 @@ function Canvas(props): JSX.Element {
     cbDeleteEdge: (x: Edge[]) => void
   ) => {
     initNodes.forEach((node) => {
-      if (node?.data?.parentCards?.length > 1) {
-        let deepestCard = node.data.parentCards[0].depth;
-        node?.data?.parentCards?.forEach((card) => {
-          if (card?.depth > deepestCard) deepestCard = card.depth;
+      if (node?.data?.parentCardIDs?.length > 1) {
+        let deepestCard = initNodes.find(
+          (card) => card.id === node.data.parentCardIDs[0]
+        ).data.depth;
+        node?.data?.parentCardIDs?.forEach((parentCardID) => {
+          const parentCard = initNodes.find((node) => node.id === parentCardID);
+          if (parentCard?.data.depth > deepestCard)
+            deepestCard = parentCard.data.depth;
         });
-        node?.data?.parentCards?.forEach((parentCard) => {
-          if (parentCard.depth < deepestCard) {
+        node?.data?.parentCardIDs?.forEach((parentCardID) => {
+          const parentCard = initNodes.find((node) => node.id === parentCardID);
+          if (parentCard.data.depth < deepestCard) {
             cbDeleteEdge(
               initEdges.filter(
                 (edge) =>
@@ -263,11 +268,13 @@ function Canvas(props): JSX.Element {
               )
             );
             let parentId = parentCard.id;
-            for (let i = parentCard.depth; i < deepestCard; i++) {
+            for (let i = parentCard.data.depth; i < deepestCard; i++) {
               const id = Math.random().toString(11).slice(2);
               cbAddNode({
                 id,
-                data: {},
+                data: {
+                  columnId: parentCard.data.columnId,
+                },
                 position: { x: 0, y: 0 },
                 type: "Empty",
                 width: 200,
@@ -288,7 +295,6 @@ function Canvas(props): JSX.Element {
               id: `${parentId}=>${node.id}`,
               source: parentId,
               target: node.id,
-              type: "straight",
               interactionWidth: 0,
             });
           }
@@ -302,26 +308,26 @@ function Canvas(props): JSX.Element {
 
   const loopFromNode = (nodeId, fullNodes, parentDepth) => {
     const node = fullNodes.find((node) => node.id === nodeId);
-    if (node?.data?.parentCards?.length > 1) {
+    if (node?.data?.parentCardIDs?.length > 1) {
       if (mergedNodes.has(nodeId)) {
         const nodeDuplicate = mergedNodes.get(nodeId)[0];
         const numLoops = mergedNodes.get(nodeId)[1];
-        if (nodeDuplicate.data.card.depth <= parentDepth) {
-          nodeDuplicate.data.card.depth = parentDepth + 1;
+        if (nodeDuplicate.data.depth <= parentDepth) {
+          nodeDuplicate.data.depth = parentDepth + 1;
         }
         mergedNodes.set(nodeId, [nodeDuplicate, numLoops + 1]);
-        if (nodeDuplicate.data.parentCards.length === numLoops + 1) {
+        if (nodeDuplicate.data.parentCardIDs.length === numLoops + 1) {
           mergedNodesReady.push(nodeDuplicate);
           mergedNodes.delete(nodeId);
         }
       } else {
         mergedNodes.set(nodeId, [node, 1]);
-        node.data.card.depth = parentDepth + 1;
+        node.data.depth = parentDepth + 1;
       }
     } else {
-      node.data.card.depth = parentDepth + 1;
-      node?.data?.card?.children?.forEach((child) => {
-        loopFromNode(child, fullNodes, node.data.card.depth);
+      node.data.depth = parentDepth + 1;
+      node?.data?.children?.forEach((child) => {
+        loopFromNode(child, fullNodes, node.data.depth);
       });
     }
   };
@@ -335,8 +341,8 @@ function Canvas(props): JSX.Element {
         const dupeMergedNodesReady = mergedNodesReady;
         mergedNodesReady = [];
         dupeMergedNodesReady.forEach((node) => {
-          node.data.card.children.forEach((child) => {
-            loopFromNode(child, nodes, node.data.card.depth);
+          node.data.children.forEach((child) => {
+            loopFromNode(child, nodes, node.data.depth);
           });
         });
       }
@@ -367,27 +373,29 @@ function Canvas(props): JSX.Element {
         source: parentCard.id,
         target: card.id,
         interactionWidth: 0,
-        type: "straight",
-        //data: { rootParent: !duplicateNode },
-        // hidden: parentCard.type !== "Choice",
       });
 
       if (duplicateNode) {
         initNodes = initNodes.map((node) => {
+          const newData = node.data;
           if (node.id === card.id) {
-            const newData = node.data;
-            newData.parentCards.push(parentCard);
+            newData.parentCardIDs.push(parentCard.id);
             return { ...node, data: newData };
+          }
+          if (parentCard.type === "Choice") {
+            newData.isChoiceChild = true;
           }
           return node;
         });
         return;
       }
 
+      card.columnId = columnId;
+
       cbAddNode({
         id: card.id,
         data: {
-          card,
+          ...card,
           handleClickCard: () => setSelectedObject(card),
           handleClickAddCard: (id, type, position) =>
             // @ts-ignore
@@ -401,9 +409,9 @@ function Canvas(props): JSX.Element {
           handleClickCancelMerge: (columnId) =>
             handleClickCancelMerge(columnId, card.id),
           mergeable: card.children.length === 0,
-          columnId,
-          parentCards: [parentCard],
+          parentCardIDs: [parentCard.id],
           userCanEdit,
+          isChoiceChild: parentCard.type === "Choice",
         },
         position: { x: 0, y: 0 },
         type: card.type,
@@ -464,8 +472,8 @@ function Canvas(props): JSX.Element {
   ): boolean => {
     const sourceType = source.type;
     const targetType = target.type;
-    const targetIsParent = source?.data?.parentCards?.find(
-      (node) => node.id === target.id
+    const targetIsParent = source?.data?.parentCardIDs?.find(
+      (id) => id === target.id
     );
 
     return (

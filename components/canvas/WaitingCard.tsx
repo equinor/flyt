@@ -20,7 +20,11 @@ export const WaitingCard = (props: Node<NodeData>) => {
   const [hovering, setHovering] = useState(false);
 
   const {
-    card: { id, duration, unit, type, tasks },
+    id,
+    duration,
+    unit,
+    type,
+    tasks,
     isValidDropTarget,
     isDropTarget,
     columnId,
@@ -32,7 +36,7 @@ export const WaitingCard = (props: Node<NodeData>) => {
     handleClickMergeOptionCheckbox,
     handleClickConfirmMerge,
     handleClickCancelMerge,
-    parentCards,
+    isChoiceChild,
     handleClickAddCard,
     userCanEdit,
   } = props.data;
@@ -90,7 +94,7 @@ export const WaitingCard = (props: Node<NodeData>) => {
               onClick={() => handleClickAddCard(parentCard.id, "Waiting")}
             />
           </CardButtonsContainer> */}
-          {parentCards[0].type === "Choice" && (
+          {isChoiceChild && (
             <>
               <CardButtonsContainer position={Position.Right}>
                 <SubActivityButton

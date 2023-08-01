@@ -17,7 +17,6 @@ export default function DuplicatePage() {
   const [statusMessage, setStatusMessage] = useState("");
   const newProjectMutation = useMutation((projectId: number) =>
     duplicateProject(projectId).then((value) => {
-      console.log(123, value);
       return router.replace(`/process/${value}`);
     })
   );

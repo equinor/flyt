@@ -13,7 +13,10 @@ export function GenericCard(props: Node<NodeData>) {
   const [hovering, setHovering] = useState(false);
 
   const {
-    card: { id, description, type, tasks },
+    id,
+    description,
+    type,
+    tasks,
     isValidDropTarget,
     isDropTarget,
     handleClickCard,

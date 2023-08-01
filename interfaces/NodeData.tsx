@@ -2,8 +2,7 @@ import { Position } from "reactflow";
 import { vsmObject } from "./VsmObject";
 
 export type NodeData = {
-  card?: vsmObject;
-  parentCards?: Array<vsmObject>;
+  parentCardIDs?: Array<string>;
   isDropTarget?: boolean;
   isValidDropTarget?: boolean;
   columnId?: string;
@@ -18,4 +17,5 @@ export type NodeData = {
   mergeable?: boolean;
   userCanEdit?: boolean;
   depth?: number;
-};
+  isChoiceChild?: boolean;
+} & vsmObject;

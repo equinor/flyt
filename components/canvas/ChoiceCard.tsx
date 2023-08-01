@@ -12,11 +12,13 @@ export function ChoiceCard(props) {
   const [hovering, setHovering] = useState(false);
 
   const {
-    card: { id, description, type },
+    id,
+    description,
+    type,
     isDropTarget,
     isValidDropTarget,
     handleClickCard,
-    parentCards,
+    isChoiceChild,
     handleClickAddCard,
     userCanEdit,
   } = props.data;
@@ -112,7 +114,7 @@ export function ChoiceCard(props) {
               onClick={() => handleClickAddCard(parentCard.id, "Waiting")}
             />
           </CardButtonsContainer> */}
-          {parentCards[0]?.type === "Choice" && (
+          {isChoiceChild && (
             <>
               <CardButtonsContainer position={Position.Right}>
                 <SubActivityButton

@@ -13,5 +13,6 @@ export interface vsmObject {
   duration?: number;
   unit?: string;
   tasks?: Array<taskObject>;
-  depth: number;
+  depth?: number;
+  columnId?: string;
 }

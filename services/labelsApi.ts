@@ -2,7 +2,7 @@ import { AxiosResponse } from "axios";
 import BaseAPIServices from "./BaseAPIServices";
 import { processLabel } from "interfaces/processLabel";
 
-const baseUrl = "/api/v1.0";
+const baseUrl = "/api/v2.0";
 
 // getLabels will return labels with sorting field "linkCount", from most used label to least used label
 export const getLabels = (

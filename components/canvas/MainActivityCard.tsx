@@ -16,7 +16,10 @@ export function MainActivityCard(props: Node<NodeData>) {
   const [hovering, setHovering] = useState(false);
 
   const {
-    card: { description, type, tasks, id },
+    description,
+    type,
+    tasks,
+    id,
     isValidDropTarget,
     isDropTarget,
     handleClickCard,

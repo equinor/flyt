@@ -65,8 +65,6 @@ export function QipCard(props: {
     return categories?.some((c) => c.id === data.id);
   }
 
-  console.log(categories, 2);
-
   return (
     <div
       style={{
