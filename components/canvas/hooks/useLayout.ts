@@ -39,6 +39,9 @@ const setColumnsOffsetX = () => {
 };
 
 export function setLayout(nodes: Node[], edges: Edge[]): Node[] {
+  columnsEndPosX.clear();
+  columnsStartPosX.clear();
+  columnsOffsetX.clear();
   const dagreGraph = new dagre.graphlib.Graph();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
   dagreGraph.setGraph({ rankdir: "TB", nodesep: 0, edgesep: 0, ranksep: 1 });
