@@ -26,9 +26,19 @@ export function DeleteVsmObjectDialog(props: {
   const { id } = router.query;
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
+  const { choice, mainActivity } = vsmObjectTypes;
+
   const deleteMutation = useMutation(
-    ({ id, projectId }: { id: string; projectId: string }) =>
-      deleteVertice(id, projectId),
+    ({
+      id,
+      projectId,
+      type,
+    }: {
+      id: string;
+      projectId: string;
+      type: string;
+    }) =>
+      deleteVertice(id, projectId, type === mainActivity || type === choice),
     {
       onSuccess() {
         handleClose();
@@ -46,10 +56,10 @@ export function DeleteVsmObjectDialog(props: {
     deleteMutation.mutate({
       id: props.objectToDelete.id,
       projectId: props.objectToDelete.projectId,
+      type: props.objectToDelete.type,
     });
 
   const { type } = props.objectToDelete;
-  const { choice, mainActivity } = vsmObjectTypes;
 
   const header = `Delete "${getVsmTypeName(type)}"`;
   let warningMessage = "This will delete the selected object.";

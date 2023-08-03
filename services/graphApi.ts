@@ -31,10 +31,11 @@ export const patchGraph = (
 
 export const deleteVertice = (
   vertexId: string,
-  projectId: string
-): Promise<unknown> =>
+  projectId: string,
+  includeChildren = false
+): Promise<string> =>
   BaseAPIServices.delete(
-    `${baseUrl}/graph/${projectId}/vertices/${vertexId}`
+    `${baseUrl}/graph/${projectId}/vertices/${vertexId}?includeSubTree=${includeChildren}`
   ).then((r) => r.data);
 
 export const moveVertice = (
