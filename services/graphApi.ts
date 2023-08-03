@@ -43,7 +43,7 @@ export const moveVertice = (
   projectId: string
 ): Promise<unknown> =>
   BaseAPIServices.post(
-    `${baseUrl}/graph/${projectId}/vertices/move-vertex`,
+    `${baseUrl}/graph/${projectId}/vertices/move-vertex?includeChildren=true`,
     data
   ).then((r) => r.data);
 
