@@ -438,6 +438,7 @@ function Canvas(props): JSX.Element {
     source: Node<NodeData>,
     target: Node<NodeData>
   ): boolean => {
+    if (!target) return false;
     const sourceType = source.type;
     const targetType = target.type;
     const targetIsParent = source?.data?.parentCardIDs?.find(
@@ -514,16 +515,7 @@ function Canvas(props): JSX.Element {
     evt: React.MouseEvent<Element, MouseEvent>,
     node: Node<NodeData>
   ): void => {
-    if (!target || !validDropTarget(node, target)) {
-      setNodes((nodes) =>
-        nodes.map((n) => {
-          if (n.id === node?.id) {
-            n = source;
-          }
-          return n;
-        })
-      );
-    } else {
+    if (validDropTarget(node, target)) {
       handleMoveCard.mutate({
         cardId: node.id,
         targetId: target.id,
@@ -537,9 +529,12 @@ function Canvas(props): JSX.Element {
       dragRef.current = null;
     }
     setNodes((nodes) =>
-      nodes.map((node) => {
-        node.data = { ...node.data, isValidDropTarget: null };
-        return node;
+      nodes.map((n) => {
+        n.data = { ...n.data, isValidDropTarget: null };
+        if (n.id === node?.id) {
+          n = source;
+        }
+        return n;
       })
     );
   };
