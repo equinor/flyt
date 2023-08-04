@@ -5,7 +5,7 @@ export const projectTemplatesV1 = {
     objects: [
       {
         parent: 0,
-        fkObjectType: vsmObjectTypes.process,
+        fkObjectType: vsmObjectTypes.root,
         childObjects: [
           { fkObjectType: vsmObjectTypes.supplier },
           { fkObjectType: vsmObjectTypes.input },

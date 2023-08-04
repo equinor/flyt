@@ -8,6 +8,7 @@ import { CardButtonsContainer } from "./CardButtonsContainer";
 import { MainActivityButton } from "./MainActivityButton";
 import { QIPRContainer } from "./QIPRContainer";
 import { Node } from "reactflow";
+import { vsmObjectTypes } from "types/vsmObjectTypes";
 
 export function GenericCard(props: Node<NodeData>) {
   const [hovering, setHovering] = useState(false);
@@ -31,7 +32,11 @@ export function GenericCard(props: Node<NodeData>) {
           <CardButtonsContainer position={Position.Right}>
             <MainActivityButton
               onClick={() =>
-                handleClickAddCard(id, "MainActivity", Position.Right)
+                handleClickAddCard(
+                  id,
+                  vsmObjectTypes.mainActivity,
+                  Position.Right
+                )
               }
             />
           </CardButtonsContainer>
@@ -41,7 +46,11 @@ export function GenericCard(props: Node<NodeData>) {
           <CardButtonsContainer position={Position.Left}>
             <MainActivityButton
               onClick={() =>
-                handleClickAddCard(id, "MainActivity", Position.Left)
+                handleClickAddCard(
+                  id,
+                  vsmObjectTypes.mainActivity,
+                  Position.Left
+                )
               }
             />
           </CardButtonsContainer>

@@ -11,7 +11,7 @@ export type NodeData = {
   mergeInitiator?: boolean;
   handleClickConfirmMerge?: (arg0: string) => void;
   handleClickCancelMerge?: (arg0: string) => void;
-  handleClickMergeOptionCheckbox?: () => void;
+  handleClickMergeOption?: () => void;
   handleClickCard?: () => void;
   handleClickAddCard?: (arg0: string, arg1: string, arg2: Position) => void;
   mergeable?: boolean;

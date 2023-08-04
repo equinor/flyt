@@ -15,6 +15,7 @@ import { MergeButtons } from "./MergeButtons";
 import { MergeButton } from "./MergeButton";
 import { NodeData } from "interfaces/NodeData";
 import { Node } from "reactflow";
+import { vsmObjectTypes } from "types/vsmObjectTypes";
 
 export const WaitingCard = (props: Node<NodeData>) => {
   const [hovering, setHovering] = useState(false);
@@ -33,7 +34,7 @@ export const WaitingCard = (props: Node<NodeData>) => {
     mergeOption,
     handleClickCard,
     handleClickMergeInit,
-    handleClickMergeOptionCheckbox,
+    handleClickMergeOption: handleClickMergeOptionCheckbox,
     handleClickConfirmMerge,
     handleClickCancelMerge,
     isChoiceChild,
@@ -70,14 +71,22 @@ export const WaitingCard = (props: Node<NodeData>) => {
           <CardButtonsContainer position={Position.Bottom}>
             <SubActivityButton
               onClick={() =>
-                handleClickAddCard(id, "SubActivity", Position.Bottom)
+                handleClickAddCard(
+                  id,
+                  vsmObjectTypes.subActivity,
+                  Position.Bottom
+                )
               }
             />
             <ChoiceButton
-              onClick={() => handleClickAddCard(id, "Choice", Position.Bottom)}
+              onClick={() =>
+                handleClickAddCard(id, vsmObjectTypes.choice, Position.Bottom)
+              }
             />
             <WaitingButton
-              onClick={() => handleClickAddCard(id, "Waiting", Position.Bottom)}
+              onClick={() =>
+                handleClickAddCard(id, vsmObjectTypes.waiting, Position.Bottom)
+              }
             />
             {mergeable && (
               <MergeButton onClick={() => handleClickMergeInit(columnId)} />
@@ -99,34 +108,54 @@ export const WaitingCard = (props: Node<NodeData>) => {
               <CardButtonsContainer position={Position.Right}>
                 <SubActivityButton
                   onClick={() =>
-                    handleClickAddCard(id, "SubActivity", Position.Right)
+                    handleClickAddCard(
+                      id,
+                      vsmObjectTypes.subActivity,
+                      Position.Right
+                    )
                   }
                 />
                 <ChoiceButton
                   onClick={() =>
-                    handleClickAddCard(id, "Choice", Position.Right)
+                    handleClickAddCard(
+                      id,
+                      vsmObjectTypes.choice,
+                      Position.Right
+                    )
                   }
                 />
                 <WaitingButton
                   onClick={() =>
-                    handleClickAddCard(id, "Waiting", Position.Right)
+                    handleClickAddCard(
+                      id,
+                      vsmObjectTypes.waiting,
+                      Position.Right
+                    )
                   }
                 />
               </CardButtonsContainer>
               <CardButtonsContainer position={Position.Left}>
                 <SubActivityButton
                   onClick={() =>
-                    handleClickAddCard(id, "SubActivity", Position.Left)
+                    handleClickAddCard(
+                      id,
+                      vsmObjectTypes.subActivity,
+                      Position.Left
+                    )
                   }
                 />
                 <ChoiceButton
                   onClick={() =>
-                    handleClickAddCard(id, "Choice", Position.Left)
+                    handleClickAddCard(id, vsmObjectTypes.choice, Position.Left)
                   }
                 />
                 <WaitingButton
                   onClick={() =>
-                    handleClickAddCard(id, "Waiting", Position.Left)
+                    handleClickAddCard(
+                      id,
+                      vsmObjectTypes.waiting,
+                      Position.Left
+                    )
                   }
                 />
               </CardButtonsContainer>

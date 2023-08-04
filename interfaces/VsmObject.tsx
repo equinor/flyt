@@ -1,5 +1,3 @@
-import { vsmObjectTypes } from "../types/vsmObjectTypes";
-import { vsmTaskTypes } from "../types/vsmTaskTypes";
 import { taskObject } from "./taskObject";
 
 export interface vsmObject {
@@ -14,5 +12,4 @@ export interface vsmObject {
   unit?: string;
   tasks?: Array<taskObject>;
   depth?: number;
-  columnId?: string;
 }

@@ -1,5 +1,5 @@
 export enum vsmObjectTypes {
-  process = "Root",
+  root = "Root",
   supplier = "Supplier",
   input = "Input",
   mainActivity = "MainActivity",
@@ -9,4 +9,5 @@ export enum vsmObjectTypes {
   output = "Output",
   customer = "Customer",
   choice = "Choice",
+  empty = "Empty",
 }

@@ -11,6 +11,7 @@ import styles from "./Card.module.scss";
 import { QIPRContainer } from "./QIPRContainer";
 import { NodeData } from "interfaces/NodeData";
 import { Node } from "reactflow";
+import { vsmObjectTypes } from "types/vsmObjectTypes";
 
 export function MainActivityCard(props: Node<NodeData>) {
   const [hovering, setHovering] = useState(false);
@@ -86,28 +87,44 @@ export function MainActivityCard(props: Node<NodeData>) {
           <CardButtonsContainer position={Position.Left}>
             <MainActivityButton
               onClick={() =>
-                handleClickAddCard(id, "MainActivity", Position.Left)
+                handleClickAddCard(
+                  id,
+                  vsmObjectTypes.mainActivity,
+                  Position.Left
+                )
               }
             />
           </CardButtonsContainer>
           <CardButtonsContainer position={Position.Right}>
             <MainActivityButton
               onClick={() =>
-                handleClickAddCard(id, "MainActivity", Position.Right)
+                handleClickAddCard(
+                  id,
+                  vsmObjectTypes.mainActivity,
+                  Position.Right
+                )
               }
             />
           </CardButtonsContainer>
           <CardButtonsContainer position={Position.Bottom}>
             <SubActivityButton
               onClick={() =>
-                handleClickAddCard(id, "SubActivity", Position.Bottom)
+                handleClickAddCard(
+                  id,
+                  vsmObjectTypes.subActivity,
+                  Position.Bottom
+                )
               }
             />
             <ChoiceButton
-              onClick={() => handleClickAddCard(id, "Choice", Position.Bottom)}
+              onClick={() =>
+                handleClickAddCard(id, vsmObjectTypes.choice, Position.Bottom)
+              }
             />
             <WaitingButton
-              onClick={() => handleClickAddCard(id, "Waiting", Position.Bottom)}
+              onClick={() =>
+                handleClickAddCard(id, vsmObjectTypes.waiting, Position.Bottom)
+              }
             />
           </CardButtonsContainer>
         </>

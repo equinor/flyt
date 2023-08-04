@@ -4,6 +4,7 @@ import { ChoiceButton } from "./ChoiceButton";
 import { MergeButton } from "./MergeButton";
 import { SubActivityButton } from "./SubActivityButton";
 import { WaitingButton } from "./WaitingButton";
+import { vsmObjectTypes } from "types/vsmObjectTypes";
 
 export const MergeButtons = (props) => {
   const [selectedButton, setSelectedButton] = useState<string>(null);
@@ -28,16 +29,16 @@ export const MergeButtons = (props) => {
         <MergeButton onClick={() => handleClickCancelMerge()} active />
       </div>
       <SubActivityButton
-        onClick={() => setSelectedButton("SubActivity")}
-        active={selectedButton === "SubActivity"}
+        onClick={() => setSelectedButton(vsmObjectTypes.subActivity)}
+        active={selectedButton === vsmObjectTypes.subActivity}
       />
       <ChoiceButton
-        onClick={() => setSelectedButton("Choice")}
-        active={selectedButton === "Choice"}
+        onClick={() => setSelectedButton(vsmObjectTypes.choice)}
+        active={selectedButton === vsmObjectTypes.choice}
       />
       <WaitingButton
-        onClick={() => setSelectedButton("Waiting")}
-        active={selectedButton === "Waiting"}
+        onClick={() => setSelectedButton(vsmObjectTypes.waiting)}
+        active={selectedButton === vsmObjectTypes.waiting}
       />
       <Button
         onClick={() => handleClickConfirmMerge(selectedButton)}

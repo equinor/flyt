@@ -2,7 +2,7 @@ import { vsmObjectTypes } from "../types/vsmObjectTypes";
 
 export function getVsmTypeName(type: string): string {
   switch (type) {
-    case vsmObjectTypes.process:
+    case vsmObjectTypes.root:
       return "process";
     case vsmObjectTypes.supplier:
       return "supplier";
