@@ -75,7 +75,12 @@ export function ChoiceCard(props) {
         >
           {description ? (
             <p
-              style={{ width: 100, marginLeft: 15, overflowWrap: "break-word" }}
+              style={{
+                width: 90,
+                marginLeft: 20,
+                overflowWrap: "break-word",
+                whiteSpace: "pre-line",
+              }}
               className={styles.text}
             >
               {formatCanvasText(description, 50)}
