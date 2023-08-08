@@ -22,9 +22,11 @@ export function ChoiceCard(props) {
     isChoiceChild,
     handleClickAddCard,
     userCanEdit,
+    children,
   } = props.data;
 
   const size = 132;
+  const lastChild = children[children?.length - 1];
 
   useEffect(() => {
     setHovering(false);
@@ -109,6 +111,35 @@ export function ChoiceCard(props) {
       </div>
       {hovering && userCanEdit && (
         <>
+          <CardButtonsContainer position={Position.Bottom}>
+            <SubActivityButton
+              onClick={() =>
+                handleClickAddCard(
+                  lastChild || id,
+                  vsmObjectTypes.subActivity,
+                  lastChild ? Position.Right : Position.Bottom
+                )
+              }
+            />
+            <ChoiceButton
+              onClick={() =>
+                handleClickAddCard(
+                  lastChild || id,
+                  vsmObjectTypes.choice,
+                  lastChild ? Position.Right : Position.Bottom
+                )
+              }
+            />
+            <WaitingButton
+              onClick={() =>
+                handleClickAddCard(
+                  lastChild || id,
+                  vsmObjectTypes.waiting,
+                  lastChild ? Position.Right : Position.Bottom
+                )
+              }
+            />
+          </CardButtonsContainer>
           {/* <CardButtonsContainer position={Position.Top}>
             <SubActivityButton
               onClick={() => handleClickAddCard(parentCard.id, "SubActivity")}
