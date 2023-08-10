@@ -81,7 +81,6 @@ export function ChoiceCard(props) {
                 width: 90,
                 marginLeft: 20,
                 overflowWrap: "break-word",
-                whiteSpace: "pre-line",
               }}
               className={styles.text}
             >
