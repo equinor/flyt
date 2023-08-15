@@ -4,8 +4,7 @@ import { getTaskColor } from "utils/getTaskColor";
 import { TextCircle } from "./entities/TextCircle";
 import { taskObject } from "interfaces/taskObject";
 import { getTaskShorthand } from "utils/getTaskShorthand";
-
-const sortOrder = ["Problem", "Question", "Idea", "Risk"];
+import { taskSorter } from "utils/taskSorter";
 
 export const QIPRContainer = (props: {
   onClick?(): void;
@@ -18,22 +17,20 @@ export const QIPRContainer = (props: {
       width: (((props.tasks?.length / 4.00001) >> 0) + 1) * 33 + 2.5,
     }}
   >
-    {props.tasks
-      .sort((a, b) =>
-        a.type !== b.type
-          ? sortOrder.indexOf(a.type) - sortOrder.indexOf(b.type)
-          : a.number - b.number
-      )
-      .map((task, index) => (
-        <div
-          key={index}
-          style={{ margin: 2.5, marginLeft: index >= 4 ? 0 : 2.5 }}
-        >
-          <TextCircle
-            text={getTaskShorthand(task)}
-            color={getTaskColor(task)}
-          />
-        </div>
-      ))}
+    {props.tasks.sort(taskSorter()).map((task, index) => {
+      if (!task.solved) {
+        return (
+          <div
+            key={index}
+            style={{ margin: 2.5, marginLeft: index >= 4 ? 0 : 2.5 }}
+          >
+            <TextCircle
+              text={getTaskShorthand(task)}
+              color={getTaskColor(task)}
+            />
+          </div>
+        );
+      }
+    })}
   </div>
 );

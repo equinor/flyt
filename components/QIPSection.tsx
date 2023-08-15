@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { CircleButton } from "./CircleButton";
 import { EditTaskSection } from "./EditTaskSection";
@@ -32,6 +32,15 @@ export const QIPSection = (props: {
   const showEditTaskSection = selectedObject.tasks.some(
     (task) => task.id === selectedTask?.id
   );
+
+  useEffect(() => {
+    if (selectedTask) {
+      const updatedTask = selectedObject.tasks.find(
+        (task) => task.id === selectedTask.id
+      );
+      setSelectedTask(updatedTask);
+    }
+  }, [selectedObject]);
 
   return (
     <div className={styles.QIPContainer}>

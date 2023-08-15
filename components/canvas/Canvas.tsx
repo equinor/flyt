@@ -421,6 +421,12 @@ function Canvas(props): JSX.Element {
       const root = graph.find(
         (card: vsmObject) => card.type === vsmObjectTypes.root
       );
+      if (selectedObject) {
+        const updatedSelectedObject = graph.find(
+          (node) => node.id === selectedObject.id
+        );
+        setSelectedObject(updatedSelectedObject);
+      }
       createNodes(root);
       setAllNodesDepth(root);
       createFillerNodes();

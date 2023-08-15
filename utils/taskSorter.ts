@@ -1,5 +1,6 @@
 import { taskObject } from "../interfaces/taskObject";
 import { vsmTaskTypes } from "types/vsmTaskTypes";
+
 /**
  * Sort tasks by type.
  * If the task is solved or its type is not found, it will be added to the end of the list.
@@ -13,5 +14,8 @@ export const taskSorter =
     if (a.solved && !b.solved) return 1;
     if (!a.solved && b.solved) return -1;
 
-    return vsmTaskTypes[b.type] - vsmTaskTypes[a.type];
+    return (
+      Object.keys(vsmTaskTypes).indexOf(a.type.toLocaleLowerCase()) -
+      Object.keys(vsmTaskTypes).indexOf(b.type.toLocaleLowerCase())
+    );
   };

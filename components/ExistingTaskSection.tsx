@@ -45,7 +45,7 @@ export function ExistingTaskSection(props: {
     }
   );
   const taskUnlinkMutation = useMutation(
-    (task: taskObject) => unlinkTask(selectedObject.id, task.id),
+    (task: taskObject) => unlinkTask(id, selectedObject.id, task.id),
     {
       onSuccess() {
         notifyOthers("Removed Q/I/P from a card", id, account);

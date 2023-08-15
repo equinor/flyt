@@ -9,16 +9,17 @@ import { updateTask } from "../services/taskApi";
 import { useRouter } from "next/router";
 import { notifyOthers } from "../services/notifyOthers";
 import { useAccount, useMsal } from "@azure/msal-react";
+import { vsmObject } from "interfaces/VsmObject";
 
 export function EditTaskTextField(props: {
   task: taskObject;
   disabled: boolean;
+  vsmObject: vsmObject;
 }): JSX.Element {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
 
   const { description, id } = props.task;
-  console.log(props.task, 1, id);
   const dispatch = useStoreDispatch();
 
   const router = useRouter();
@@ -26,7 +27,7 @@ export function EditTaskTextField(props: {
   const queryClient = useQueryClient();
   const updateTaskMutation = useMutation(
     (newObject: taskObject) => {
-      return updateTask(newObject, projectId, id);
+      return updateTask(newObject, projectId, id, props.vsmObject.id);
     },
     {
       onSuccess: () => {

@@ -73,7 +73,12 @@ export function EditTaskSection(props: {
   return (
     <div style={{ display: "flex" }}>
       {/*  Important to have a key so that it triggers a re-render when needed */}
-      <EditTaskTextField disabled={!props.canEdit} key={task.id} task={task} />
+      <EditTaskTextField
+        disabled={!props.canEdit}
+        key={task.id}
+        task={task}
+        vsmObject={object}
+      />
       <div
         style={{
           display: "flex",
