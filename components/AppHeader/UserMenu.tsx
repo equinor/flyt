@@ -75,7 +75,7 @@ const UserMenu: React.FC = () => {
         </Link>
         {!!commitHash ? (
           <Link
-            href={`https://github.com/equinor/MAD-VSM-WEB/commits/${commitHash}`}
+            href={`https://github.com/equinor/flyt/commits/${commitHash}`}
           >
             <Menu.Item>Commit {commitHash.slice(0, 7)}</Menu.Item>
           </Link>

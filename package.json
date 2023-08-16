@@ -1,7 +1,7 @@
 {
   "name": "flyt",
   "radix-name": "vsm",
-  "version": "0.2.25",
+  "version": "0.2.30",
   "private": true,
   "scripts": {
     "dev": "NODE_OPTIONS='--inspect' next dev",
@@ -29,7 +29,8 @@
     "rename": "sh scripts/changeName.sh",
     "genRadix": "sh scripts/generateRadixConfig.sh",
     "prepare": "husky install",
-    "postinstall": "sh scripts/postInstall.sh"
+    "postinstall": "sh scripts/postInstall.sh",
+    "genLockfile": "rm yarn.lock && rm -rf node_modules && yarn"
   },
   "dependencies": {
     "@azure/msal-browser": "^2.32.1",
@@ -65,8 +66,8 @@
     "remark-gfm": "^3.0.1",
     "sass": "^1.57.1",
     "sharp": "^0.30.7",
-    "socket.io": "4.5.4",
-    "socket.io-client": "4.5.4",
+    "socket.io": "4.6.1",
+    "socket.io-client": "4.6.1",
     "styled-components": "5.3.3"
   },
   "devDependencies": {
