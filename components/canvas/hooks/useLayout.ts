@@ -44,7 +44,7 @@ export function setLayout(nodes: Node[], edges: Edge[]): Node[] {
   columnsOffsetX.clear();
   const dagreGraph = new dagre.graphlib.Graph();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
-  dagreGraph.setGraph({ rankdir: "TB", nodesep: 0, edgesep: 0, ranksep: 1 });
+  dagreGraph.setGraph({ rankdir: "TB", nodesep: 0, edgesep: 0, ranksep: 50 });
 
   nodes.forEach((node) => {
     dagreGraph.setNode(node.id, {

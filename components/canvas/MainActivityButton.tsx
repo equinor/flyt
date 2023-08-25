@@ -1,24 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./CardButtons.module.scss";
 import { CardButton } from "./../../interfaces/CardButton";
+import MainButtonIcon from "../../public/MainButton/MainButtonIcon.svg";
 
-export const MainActivityButton = (props: CardButton) => {
-  const [hovering, setHovering] = useState(false);
-
-  return (
-    <div className={styles.cardButtonContainer}>
-      <div
-        onMouseEnter={() => setHovering(true)}
-        onMouseLeave={() => setHovering(false)}
-        className={`${styles.cardButton} ${
-          styles["cardButton--mainactivity"]
-        }  ${
-          (hovering || props.active) &&
-          styles["cardButton--mainactivity--hover"]
-        }`}
-        onClick={() => props.onClick()}
-        title="Main Activity"
-      />
-    </div>
-  );
-};
+export const MainActivityButton = (props: CardButton) => (
+  <div className={styles.cardButtonContainer}>
+    <img
+      src={MainButtonIcon.src}
+      onClick={() => props.onClick()}
+      title="Main Activity"
+      className={styles.cardButton}
+    />
+  </div>
+);

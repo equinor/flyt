@@ -1,6 +1,5 @@
 import React from "react";
 import { Position } from "reactflow";
-
 import styles from "./CardButtons.module.scss";
 
 export const CardButtonsContainer = (props: {

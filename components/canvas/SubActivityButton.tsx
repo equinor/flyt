@@ -1,23 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./CardButtons.module.scss";
 import { CardButton } from "./../../interfaces/CardButton";
+import SubActivityButtonIcon from "../../public/SubActivityButton/SubActivityButtonIcon.svg";
 
-export const SubActivityButton = (props: CardButton) => {
-  const [hovering, setHovering] = useState(false);
-
-  return (
-    <div className={styles.cardButtonContainer}>
-      <div
-        onMouseEnter={() => setHovering(true)}
-        onMouseLeave={() => setHovering(false)}
-        className={`${styles.cardButton} ${
-          styles["cardButton--subactivity"]
-        }  ${
-          (hovering || props.active) && styles["cardButton--subactivity--hover"]
-        }`}
-        onClick={() => props.onClick()}
-        title="Sub Activity"
-      />
-    </div>
-  );
-};
+export const SubActivityButton = (props: CardButton) => (
+  <div className={styles.cardButtonContainer}>
+    <img
+      src={SubActivityButtonIcon.src}
+      onClick={() => props.onClick()}
+      title="Sub Activity"
+      className={styles.cardButton}
+    />
+  </div>
+);

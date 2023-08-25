@@ -1,21 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./CardButtons.module.scss";
 import { CardButton } from "./../../interfaces/CardButton";
+import WaitingButtonIcon from "../../public/WaitingButton/WaitingButtonIcon.svg";
 
-export const WaitingButton = (props: CardButton) => {
-  const [hovering, setHovering] = useState(false);
-
-  return (
-    <div className={styles.cardButtonContainer}>
-      <div
-        onMouseEnter={() => setHovering(true)}
-        onMouseLeave={() => setHovering(false)}
-        className={`${styles.cardButton} ${styles["cardButton--waiting"]}  ${
-          (hovering || props.active) && styles["cardButton--waiting--hover"]
-        }`}
-        onClick={() => props.onClick()}
-        title="Waiting"
-      />
-    </div>
-  );
-};
+export const WaitingButton = (props: CardButton) => (
+  <div className={styles.cardButtonContainer}>
+    <img
+      src={WaitingButtonIcon.src}
+      onClick={() => props.onClick()}
+      title="Waiting"
+      className={styles.cardButton}
+    />
+  </div>
+);
