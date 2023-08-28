@@ -50,7 +50,10 @@ export const SubActivityCard = (props: Node<NodeData>) => {
   const renderCardButtons = () => {
     if (mergeInitiator) {
       return (
-        <CardButtonsContainer position={Position.Bottom}>
+        <CardButtonsContainer
+          position={Position.Bottom}
+          hideAddCardButton={true}
+        >
           <MergeButtons
             handleClickConfirmMerge={(selectedType) =>
               handleClickConfirmMerge(selectedType)
@@ -62,7 +65,10 @@ export const SubActivityCard = (props: Node<NodeData>) => {
       );
     } else if (mergeOption) {
       return (
-        <CardButtonsContainer position={Position.Bottom}>
+        <CardButtonsContainer
+          position={Position.Bottom}
+          hideAddCardButton={true}
+        >
           <Checkbox onClick={() => handleClickMergeOptionCheckbox()} />
         </CardButtonsContainer>
       );

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import MergeIcon from "../../public/Merge/MergeIcon.svg";
-import MergeIconOutlined from "../../public/Merge/MergeIconOutlined.svg";
+import MergeButtonIcon from "../../public/CardButtons/MergeButtonIcon.svg";
+import MergeButtonIconOutlined from "../../public/CardButtons/MergeButtonIconOutlined.svg";
 import styles from "./CardButtons.module.scss";
 import { CardButton } from "../../interfaces/CardButton";
 
@@ -16,7 +16,7 @@ export const MergeButton = (props: CardButton) => {
       onClick={() => props.onClick()}
     >
       <img
-        src={props.active || hovering ? MergeIcon.src : MergeIconOutlined.src}
+        src={hovering ? MergeButtonIcon.src : MergeButtonIconOutlined.src}
         title="Merge"
       />
     </div>

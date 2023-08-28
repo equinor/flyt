@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./CardButtons.module.scss";
 import { CardButton } from "./../../interfaces/CardButton";
-import SubActivityButtonIcon from "../../public/SubActivityButton/SubActivityButtonIcon.svg";
+import SubActivityButtonIcon from "../../public/CardButtons/SubActivityButtonIcon.svg";
 
 export const SubActivityButton = (props: CardButton) => (
   <div className={styles.cardButtonContainer}>
