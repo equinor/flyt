@@ -218,16 +218,19 @@ function Canvas(props): JSX.Element {
       cardId,
       targetId,
       position,
+      includeChildren,
     }: {
       cardId: string;
       targetId: string;
       position: Position;
+      includeChildren: boolean;
     }) => {
       dispatch.setSnackMessage("⏳ Moving card...");
       return position === Position.Bottom
         ? moveVertice(
             { vertexToMoveId: cardId, vertexDestinationParentId: targetId },
-            projectId
+            projectId,
+            includeChildren
           )
         : moveVerticeRightOfTarget({ vertexId: cardId }, targetId, projectId);
     },
@@ -469,7 +472,6 @@ function Canvas(props): JSX.Element {
     evt: React.MouseEvent<Element, MouseEvent>,
     nodeDragging: Node<NodeData>
   ): void => {
-    // TODO: Drag children aswell
     dragRef.current = nodeDragging;
     setNodes((nodes) =>
       nodes.map((node) => {
@@ -488,7 +490,6 @@ function Canvas(props): JSX.Element {
     evt: React.MouseEvent<Element, MouseEvent>,
     node: Node<NodeData>
   ): void => {
-    // Check edges instead?
     const centerX = node.position.x + node.width / 2;
     const centerY = node.position.y + node.height / 2;
 
@@ -530,6 +531,7 @@ function Canvas(props): JSX.Element {
           target.type === vsmObjectTypes.mainActivity
             ? Position.Right
             : Position.Bottom,
+        includeChildren: target.data.children.length === 0,
       });
       setTarget(null);
       dragRef.current = null;

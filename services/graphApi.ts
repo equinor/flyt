@@ -39,11 +39,15 @@ export const deleteVertice = (
   ).then((r) => r.data);
 
 export const moveVertice = (
-  data: { vertexToMoveId: string; vertexDestinationParentId: string },
-  projectId: string
+  data: {
+    vertexToMoveId: string;
+    vertexDestinationParentId: string;
+  },
+  projectId: string,
+  includeChildren: boolean
 ): Promise<unknown> =>
   BaseAPIServices.post(
-    `${baseUrl}/graph/${projectId}/vertices/move-vertex?includeChildren=true`,
+    `${baseUrl}/graph/${projectId}/vertices/move-vertex?includeChildren=${includeChildren}`,
     data
   ).then((r) => r.data);
 
