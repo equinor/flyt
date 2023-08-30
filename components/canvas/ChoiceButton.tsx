@@ -4,12 +4,10 @@ import { CardButton } from "./../../interfaces/CardButton";
 import ChoiceButtonIcon from "../../public/CardButtons/ChoiceButtonIcon.svg";
 
 export const ChoiceButton = (props: CardButton) => (
-  <div className={styles.cardButtonContainer}>
-    <img
-      src={ChoiceButtonIcon.src}
-      onClick={() => props.onClick()}
-      title="Choice"
-      className={styles.cardButton}
-    />
-  </div>
+  <img
+    src={ChoiceButtonIcon.src}
+    className={styles.cardButton}
+    onClick={() => props.onClick()}
+    title="Choice"
+  />
 );

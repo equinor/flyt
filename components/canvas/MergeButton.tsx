@@ -8,17 +8,13 @@ export const MergeButton = (props: CardButton) => {
   const [hovering, setHovering] = useState(false);
 
   return (
-    <div
-      className={styles.cardButtonContainer}
-      style={{ cursor: "pointer" }}
+    <img
+      src={hovering ? MergeButtonIcon.src : MergeButtonIconOutlined.src}
+      className={styles.cardButton}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
       onClick={() => props.onClick()}
-    >
-      <img
-        src={hovering ? MergeButtonIcon.src : MergeButtonIconOutlined.src}
-        title="Merge"
-      />
-    </div>
+      title="Merge"
+    />
   );
 };
