@@ -1,25 +1,52 @@
+@import "styles/_variables.scss";
+
 .cardButton {
   cursor: pointer;
-}
-
-.cardButton:hover {
-  filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.4));
+  height: 30px;
+  width: 30px;
 }
 
 .cardButton:active {
   filter: brightness(75%);
 }
 
+.cardButton--container:hover .cardButton {
+  filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.4));
+}
+
+.cardButton--container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 4px;
+}
+
+.cardButton--container:hover {
+  cursor: pointer;
+  background-color: #deedee;
+}
+
+.cardButton--container--merge {
+  flex: 100%;
+}
+
+.cardButton--container--merge:hover {
+  background-color: transparent;
+}
+
 .cardButtonsContainer {
   display: flex;
   flex-wrap: wrap;
-  padding: 10px;
   justify-content: center;
-  gap: 10px;
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  z-index: -1;
 }
 
 .cardButtonsContainer--top {
-  position: absolute;
   top: 0px;
   width: 160px;
   transform: translateY(-100%);
@@ -27,26 +54,59 @@
 }
 
 .cardButtonsContainer--bottom {
-  position: absolute;
   width: 160px;
-  margin-left: -25px;
-  gap: 15px;
+  margin-left: -20px;
+  padding: 0px 5px 0px 5px;
 }
 
 .cardButtonsContainer--right {
-  position: absolute;
   transform: translateX(100%) translateY(-100%);
   right: 1px;
-  height: 140px;
+  height: 150px;
   flex-direction: column;
-  padding-bottom: 0px;
+  padding: 5px 0px 0px 0px;
 }
 
 .cardButtonsContainer--left {
-  position: absolute;
   transform: translateX(-100%) translateY(-100%);
   left: 1px;
-  height: 140px;
+  height: 150px;
   flex-direction: column;
-  padding-bottom: 0px;
+  padding: 5px 0px 0px 0px;
+}
+
+.handle--merge-start {
+  width: 12px;
+  height: 12px;
+  background-color: $equinor_PROMINENT;
+  position: relative;
+  border: 18px solid #f7f7f7;
+  // Reset values from react-flow handle class
+  top: 0;
+  left: 0;
+  bottom: 0;
+  transform: none;
+}
+
+.handle--merge-start:hover {
+  cursor: grab;
+  height: 18px;
+  width: 18px;
+  border-width: 15px;
+}
+
+.handle--merge-end {
+  width: 10px;
+  height: 10px;
+  border: 2px solid $equinor_PROMINENT;
+  background-color: white;
+  top: -7.5px;
+}
+
+.handle--hidden {
+  visibility: hidden;
+}
+
+.handle {
+  visibility: hidden;
 }

@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Handle, Position } from "reactflow";
-import { formatCanvasText } from "./utils/FormatCanvasText";
+import { Connection, Handle, Position, useStore } from "reactflow";
+import { formatCardText } from "./utils/FormatCardText";
 
 import styles from "./Card.module.scss";
+import stylesCardButtons from "./CardButtons.module.scss";
 import { CardButtonsContainer } from "./CardButtonsContainer";
 import { SubActivityButton } from "./SubActivityButton";
 import { ChoiceButton } from "./ChoiceButton";
 import { WaitingButton } from "./WaitingButton";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
+import { MergeEndButton } from "./MergeEndButton";
+import { MergeStartButton } from "./MergeStartButton";
 
 export function ChoiceCard(props) {
   const [hovering, setHovering] = useState(false);
+  const connectionNodeId = useStore((state) => state.connectionNodeId);
 
   const {
     id,
@@ -23,6 +27,9 @@ export function ChoiceCard(props) {
     handleClickAddCard,
     userCanEdit,
     children,
+    mergeOption,
+    merging,
+    handleConfirmMerge,
   } = props.data;
 
   const size = 132;
@@ -30,7 +37,7 @@ export function ChoiceCard(props) {
 
   useEffect(() => {
     setHovering(false);
-  }, [props.dragging]);
+  }, [props.dragging, connectionNodeId]);
 
   return (
     <div
@@ -41,7 +48,7 @@ export function ChoiceCard(props) {
     >
       <div
         onClick={() => handleClickCard()}
-        className={`${hovering ? styles["container--hover"] : ""} ${
+        className={`${hovering && !merging && styles["container--hover"]} ${
           styles[
             isDropTarget && isValidDropTarget
               ? "card--validDropTarget"
@@ -84,31 +91,27 @@ export function ChoiceCard(props) {
               }}
               className={styles.text}
             >
-              {formatCanvasText(description, 50)}
+              {formatCardText(description, 50)}
             </p>
           ) : (
             <p
               style={{ width: 100, marginLeft: 15 }}
               className={`${styles.text} ${styles["text--placeholder"]}`}
             >
-              {formatCanvasText(type)}
+              {formatCardText(type)}
             </p>
           )}
         </div>
+        <MergeEndButton hidden={!mergeOption} />
         <Handle
-          className={styles.handle}
-          type="target"
-          position={Position.Top}
-          isConnectable={false}
-        />
-        <Handle
-          className={styles.handle}
+          className={stylesCardButtons.handle}
           type="source"
           position={Position.Bottom}
           isConnectable={false}
+          isConnectableEnd={false}
         />
       </div>
-      {hovering && userCanEdit && (
+      {hovering && userCanEdit && !merging && (
         <>
           <CardButtonsContainer position={Position.Bottom}>
             <SubActivityButton
@@ -136,6 +139,11 @@ export function ChoiceCard(props) {
                   vsmObjectTypes.waiting,
                   lastChild ? Position.Right : Position.Bottom
                 )
+              }
+            />
+            <MergeStartButton
+              onConnect={(e: Connection) =>
+                handleConfirmMerge(e.source, e.target)
               }
             />
           </CardButtonsContainer>

@@ -6,15 +6,12 @@ export type NodeData = {
   isDropTarget?: boolean;
   isValidDropTarget?: boolean;
   columnId?: string;
-  handleClickMergeInit?: (arg0: string) => void;
   mergeOption?: boolean;
-  mergeInitiator?: boolean;
-  handleClickConfirmMerge?: (arg0: string) => void;
-  handleClickCancelMerge?: (arg0: string) => void;
-  handleClickMergeOption?: () => void;
+  handleConfirmMerge?: (sourceId: string, targetId: string) => void;
   handleClickCard?: () => void;
   handleClickAddCard?: (arg0: string, arg1: string, arg2: Position) => void;
   mergeable?: boolean;
+  merging?: boolean;
   userCanEdit?: boolean;
   depth?: number;
   isChoiceChild?: boolean;

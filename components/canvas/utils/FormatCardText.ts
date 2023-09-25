@@ -1,4 +1,4 @@
-export function formatCanvasText(
+export function formatCardText(
   text: string | null,
   maxLength = 100,
   removeNewLines = false

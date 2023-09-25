@@ -1,9 +1,10 @@
 import { NodeData } from "interfaces/NodeData";
 import React, { useState } from "react";
 import { Handle, Position } from "reactflow";
-import { formatCanvasText } from "./utils/FormatCanvasText";
+import { formatCardText } from "./utils/FormatCardText";
 
 import styles from "./Card.module.scss";
+import stylesCardButtons from "./CardButtons.module.scss";
 import { CardButtonsContainer } from "./CardButtonsContainer";
 import { MainActivityButton } from "./MainActivityButton";
 import { QIPRContainer } from "./QIPRContainer";
@@ -63,10 +64,6 @@ export function GenericCard(props: Node<NodeData>) {
     <div
       onMouseEnter={() => !props.dragging && setHovering(true)}
       onMouseLeave={() => setHovering(false)}
-      // style={{
-      //   display: "flex",
-      //   alignItems: "center",
-      // }}
     >
       <div
         className={`${styles.container} ${
@@ -88,15 +85,15 @@ export function GenericCard(props: Node<NodeData>) {
         >
           <div className={styles["card__description-container"]}>
             {description ? (
-              <p className={styles.text}>{formatCanvasText(description, 70)}</p>
+              <p className={styles.text}>{formatCardText(description, 70)}</p>
             ) : (
               <p className={`${styles.text} ${styles["text--placeholder"]}`}>
-                {formatCanvasText(type, 70)}
+                {formatCardText(type, 70)}
               </p>
             )}
           </div>
           <Handle
-            className={styles.handle}
+            className={stylesCardButtons["handle--hidden"]}
             type="target"
             position={Position.Top}
             isConnectable={false}

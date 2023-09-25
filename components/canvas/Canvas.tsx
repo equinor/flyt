@@ -30,6 +30,7 @@ import ReactFlow, {
   Node,
   Position,
   Controls,
+  useStore,
 } from "reactflow";
 import { setLayout } from "./hooks/useLayout";
 import { nodeTypes } from "./NodeTypes";
@@ -39,7 +40,6 @@ import {
   addVertice,
   addVerticeLeft,
   addVerticeRight,
-  addVerticeMultipleParents,
   moveVerticeRightOfTarget,
 } from "../../services/graphApi";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
@@ -61,7 +61,6 @@ function Canvas(props): JSX.Element {
   let initEdges: Edge[] = [];
   const [nodes, setNodes, onNodesChange] = useNodesState<NodeData>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [nodesToMerge, setNodesToMerge] = useState([]);
 
   const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
@@ -72,6 +71,9 @@ function Canvas(props): JSX.Element {
   const projectId = router.query.id as string;
   const [showVersionHistoryBottomSheet, setShowVersionHistoryBottomSheet] =
     React.useState(!!router.query.version);
+
+  const connectionNodeIdSelector = (state) => state.connectionNodeId;
+  const connectionNodeId = useStore(connectionNodeIdSelector);
 
   useEffect(() => {
     getAccessToken().then((accessToken) => {
@@ -109,6 +111,14 @@ function Canvas(props): JSX.Element {
     });
   }, []);
 
+  useEffect(() => {
+    if (connectionNodeId) {
+      handleMergeInit(connectionNodeId);
+    } else {
+      handleMergeCancel(connectionNodeId);
+    }
+  }, [connectionNodeId]);
+
   function goToCurrentVersion(): void {
     // navigate back to current version
     router.replace(`/process/${projectId}`);
@@ -122,56 +132,49 @@ function Canvas(props): JSX.Element {
   const getCardById = (id: string): vsmObject =>
     graph.find((card: vsmObject) => card.id === id);
 
-  const handleClickMergeInit = (columnId: string, nodeId: string): void => {
-    setNodesToMerge([nodeId]);
+  const handleMergeInit = (nodeId: string): void => {
+    const initNode = nodes.find((node) => node.id === nodeId);
+    const columnId = initNode?.data?.columnId;
     setNodes((nodes) =>
       nodes.map((node) => {
         if (node.id == nodeId) {
-          node.data = { ...node.data, mergeInitiator: true };
-        } else if (node.data.columnId == columnId && node.data.mergeable) {
+          node.data = { ...node.data };
+        } else if (
+          node.data.columnId == columnId &&
+          !initNode.data.children.find((nodeId) => nodeId === node.id)
+        ) {
           node.data = { ...node.data, mergeOption: true };
         } else {
           node.data = {
             ...node.data,
-            mergeInitiator: false,
             mergeOption: false,
           };
         }
+        node.data.merging = true;
         return node;
       })
     );
   };
 
-  const handleClickCancelMerge = (columnId: string, nodeId: string): void => {
-    setNodesToMerge([]);
+  const handleMergeCancel = (nodeId: string): void => {
     setNodes((nodes) =>
       nodes.map((node) => {
         if (node.id == nodeId) {
-          node.data = { ...node.data, mergeInitiator: false };
-        } else if (node.data.columnId == columnId) {
+          node.data = { ...node.data };
+        } else {
           node.data = { ...node.data, mergeOption: false };
         }
+        node.data.merging = false;
         return node;
       })
     );
   };
 
-  const handleClickMergeOption = (vsmObjectID: string): void => {
-    nodesToMerge.includes(vsmObjectID)
-      ? setNodesToMerge((oldState) => [
-          ...oldState,
-          oldState.splice(nodesToMerge.indexOf(vsmObjectID), 1),
-        ])
-      : setNodesToMerge((oldArray) => [...oldArray, vsmObjectID]);
-  };
-
-  const handleClickConfirmMerge = useMutation(
-    ({ type }: { type: string }) => {
+  const handleConfirmMerge = useMutation(
+    // @ts-ignore
+    ({ sourceId, targetId }: { sourceId: string; targetId: string }) => {
       dispatch.setSnackMessage("⏳ Merging cards...");
-      return addVerticeMultipleParents(
-        { type, parents: nodesToMerge },
-        projectId
-      );
+      console.log("TODO", sourceId, targetId);
     },
     {
       onSuccess: () => {
@@ -290,14 +293,11 @@ function Canvas(props): JSX.Element {
           handleClickCard: () => setSelectedObject(card),
           handleClickAddCard: (id, type, position) =>
             handleClickAddCard.mutate({ parentId: id, type, position }),
-          handleClickMergeInit: (columnId) =>
-            handleClickMergeInit(columnId, card.id),
-          handleClickMergeOption: () => handleClickMergeOption(card.id),
-          handleClickConfirmMerge: (type) =>
-            handleClickConfirmMerge.mutate({ type }),
-          handleClickCancelMerge: (columnId) =>
-            handleClickCancelMerge(columnId, card.id),
-          mergeable: card.children.length === 0,
+          handleConfirmMerge: (sourceId, targetId) =>
+            handleConfirmMerge.mutate({ sourceId, targetId }),
+          mergeable:
+            card.children.length === 0 || card.type === vsmObjectTypes.choice,
+          merging: !!connectionNodeId,
           parentCardIDs: [parentCard.id],
           userCanEdit,
           isChoiceChild: parentCard.type === vsmObjectTypes.choice,
@@ -626,7 +626,7 @@ function Canvas(props): JSX.Element {
         onPaneClick={() => setSelectedObject(null)}
         minZoom={0.2}
         nodesDraggable={userCanEdit}
-        nodesConnectable={false}
+        nodesConnectable={true}
         zoomOnDoubleClick={false}
         onNodeDragStart={onNodeDragStart}
         onNodeDrag={onNodeDrag}
@@ -634,6 +634,7 @@ function Canvas(props): JSX.Element {
         attributionPosition="top-left"
         fitView
         fitViewOptions={{ includeHiddenNodes: true }}
+        connectionRadius={100}
       >
         <Controls
           showInteractive={false}

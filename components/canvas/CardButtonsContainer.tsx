@@ -23,7 +23,7 @@ export const CardButtonsContainer = (props: {
     }
   };
 
-  return hovering || props.hideAddCardButton ? (
+  return !hovering || props.hideAddCardButton ? (
     <div
       className={`${styles.cardButtonsContainer} ${styles[getClassName()]}`}
       onMouseLeave={() => setHovering(false)}

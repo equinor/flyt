@@ -1,24 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { Handle, Position } from "reactflow";
-import { formatCanvasText } from "./utils/FormatCanvasText";
+import { Connection, Handle, Position, useStore } from "reactflow";
+import { formatCardText } from "./utils/FormatCardText";
 import { formatDuration } from "types/unitDefinitions";
-import { Checkbox, Icon } from "@equinor/eds-core-react";
+import { Icon } from "@equinor/eds-core-react";
 import { time as timeIcon } from "@equinor/eds-icons";
 
 import styles from "./Card.module.scss";
+import stylesCardButtons from "./CardButtons.module.scss";
 import { CardButtonsContainer } from "./CardButtonsContainer";
 import { SubActivityButton } from "./SubActivityButton";
 import { ChoiceButton } from "./ChoiceButton";
 import { WaitingButton } from "./WaitingButton";
 import { QIPRContainer } from "./QIPRContainer";
-import { MergeButtons } from "./MergeButtons";
-import { MergeButton } from "./MergeButton";
 import { NodeData } from "interfaces/NodeData";
 import { Node } from "reactflow";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
+import { MergeStartButton } from "./MergeStartButton";
+import { MergeEndButton } from "./MergeEndButton";
 
 export const WaitingCard = (props: Node<NodeData>) => {
   const [hovering, setHovering] = useState(false);
+  const connectionNodeId = useStore((state) => state.connectionNodeId);
 
   const {
     id,
@@ -28,15 +30,11 @@ export const WaitingCard = (props: Node<NodeData>) => {
     tasks,
     isValidDropTarget,
     isDropTarget,
-    columnId,
     mergeable,
-    mergeInitiator,
     mergeOption,
     handleClickCard,
-    handleClickMergeInit,
-    handleClickMergeOption: handleClickMergeOptionCheckbox,
-    handleClickConfirmMerge,
-    handleClickCancelMerge,
+    handleConfirmMerge,
+    merging,
     isChoiceChild,
     handleClickAddCard,
     userCanEdit,
@@ -44,34 +42,10 @@ export const WaitingCard = (props: Node<NodeData>) => {
 
   useEffect(() => {
     setHovering(false);
-  }, [props.dragging]);
+  }, [props.dragging, connectionNodeId]);
 
   const renderCardButtons = () => {
-    if (mergeInitiator) {
-      return (
-        <CardButtonsContainer
-          position={Position.Bottom}
-          hideAddCardButton={true}
-        >
-          <MergeButtons
-            handleClickConfirmMerge={(selectedType) =>
-              handleClickConfirmMerge(selectedType)
-            }
-            handleClickCancelMerge={() => handleClickCancelMerge(columnId)}
-            mergeInitiator={mergeInitiator}
-          />
-        </CardButtonsContainer>
-      );
-    } else if (mergeOption) {
-      return (
-        <CardButtonsContainer
-          position={Position.Bottom}
-          hideAddCardButton={true}
-        >
-          <Checkbox onClick={() => handleClickMergeOptionCheckbox()} />
-        </CardButtonsContainer>
-      );
-    } else if (hovering) {
+    if (hovering && !merging) {
       return (
         <>
           <CardButtonsContainer position={Position.Bottom}>
@@ -95,7 +69,11 @@ export const WaitingCard = (props: Node<NodeData>) => {
               }
             />
             {mergeable && (
-              <MergeButton onClick={() => handleClickMergeInit(columnId)} />
+              <MergeStartButton
+                onConnect={(e: Connection) =>
+                  handleConfirmMerge(e.source, e.target)
+                }
+              />
             )}
           </CardButtonsContainer>
           {/* <CardButtonsContainer position={Position.Top}>
@@ -197,7 +175,7 @@ export const WaitingCard = (props: Node<NodeData>) => {
         >
           <div className={styles["card__description-container"]}>
             <p className={`${styles.text} ${styles["text--placeholder"]}`}>
-              {formatCanvasText(type, 70)}
+              {formatCardText(type, 70)}
             </p>
           </div>
           <div>
@@ -208,17 +186,13 @@ export const WaitingCard = (props: Node<NodeData>) => {
               {formatDuration(duration, unit)}
             </p>
           </div>
+          <MergeEndButton hidden={!mergeOption} />
           <Handle
-            className={styles.handle}
-            type="target"
-            position={Position.Top}
-            isConnectable={false}
-          />
-          <Handle
-            className={styles.handle}
+            className={stylesCardButtons["handle--hidden"]}
             type="source"
             position={Position.Bottom}
             isConnectable={false}
+            isConnectableEnd={false}
           />
         </div>
         {tasks?.length > 0 && (

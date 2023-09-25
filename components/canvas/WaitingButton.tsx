@@ -4,10 +4,12 @@ import { CardButton } from "./../../interfaces/CardButton";
 import WaitingButtonIcon from "../../public/CardButtons/WaitingButtonIcon.svg";
 
 export const WaitingButton = (props: CardButton) => (
-  <img
-    src={WaitingButtonIcon.src}
-    className={styles.cardButton}
-    onClick={() => props.onClick()}
-    title="Waiting"
-  />
+  <div className={styles["cardButton--container"]}>
+    <img
+      src={WaitingButtonIcon.src}
+      className={styles.cardButton}
+      onClick={() => props.onClick()}
+      title="Waiting"
+    />
+  </div>
 );

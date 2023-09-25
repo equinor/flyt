@@ -1,3 +1,4 @@
+import React from "react";
 import { Button, Icon, Tooltip, Typography } from "@equinor/eds-core-react";
 import { spellcheck, unfold_less } from "@equinor/eds-icons";
 
