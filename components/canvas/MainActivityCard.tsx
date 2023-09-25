@@ -41,7 +41,7 @@ export function MainActivityCard(props: Node<NodeData>) {
     >
       <div
         className={`${styles.container} ${
-          hovering ? styles["container--hover"] : ""
+          hovering && !merging ? styles["container--hover"] : ""
         }`}
         style={{ display: "flex" }}
       >

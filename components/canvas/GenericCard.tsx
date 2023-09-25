@@ -24,10 +24,11 @@ export function GenericCard(props: Node<NodeData>) {
     handleClickCard,
     handleClickAddCard,
     userCanEdit,
+    merging,
   } = props.data;
 
   const renderCardButtons = () => {
-    if (hovering) {
+    if (hovering && !merging) {
       if (type === "Input") {
         return (
           <CardButtonsContainer position={Position.Right}>
@@ -67,7 +68,7 @@ export function GenericCard(props: Node<NodeData>) {
     >
       <div
         className={`${styles.container} ${
-          hovering ? styles["container--hover"] : ""
+          hovering && !merging ? styles["container--hover"] : ""
         }`}
         style={{ display: "flex" }}
       >
