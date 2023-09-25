@@ -6,6 +6,7 @@ import { Handle, Position, Connection } from "reactflow";
 export const MergeStartButton = (props: CardButton) => (
   <div
     className={`${styles["cardButton--container"]} ${styles["cardButton--container--merge"]}`}
+    title="Merge"
   >
     <Handle
       type="source"
