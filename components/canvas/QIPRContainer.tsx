@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./QIPRContainer.module.scss";
 import { getTaskColor } from "utils/getTaskColor";
+import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
 import { TextCircle } from "./entities/TextCircle";
 import { taskObject } from "interfaces/taskObject";
 import { getTaskShorthand } from "utils/getTaskShorthand";
@@ -14,11 +15,15 @@ export const QIPRContainer = (props: {
     className={styles.QIPRContainer}
     onClick={props.onClick}
     style={{
-      width: (((props.tasks?.length / 4.00001) >> 0) + 1) * 33 + 2.5,
+      width: getQIPRContainerWidth(
+        props.tasks?.filter((task) => !task.solved).length
+      ),
     }}
   >
-    {props.tasks.sort(taskSorter()).map((task, index) => {
-      if (!task.solved) {
+    {props.tasks
+      ?.filter((task) => !task.solved)
+      .sort(taskSorter())
+      .map((task, index) => {
         return (
           <div
             key={index}
@@ -30,7 +35,6 @@ export const QIPRContainer = (props: {
             />
           </div>
         );
-      }
-    })}
+      })}
   </div>
 );

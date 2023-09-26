@@ -6,7 +6,6 @@ import AddCardButtonIcon from "../../public/CardButtons/AddCardButtonIcon.svg";
 export const CardButtonsContainer = (props: {
   position: Position;
   children: JSX.Element | JSX.Element[];
-  hideAddCardButton?: boolean;
 }) => {
   const [hovering, setHovering] = useState(false);
 
@@ -23,7 +22,7 @@ export const CardButtonsContainer = (props: {
     }
   };
 
-  return !hovering || props.hideAddCardButton ? (
+  return hovering ? (
     <div
       className={`${styles.cardButtonsContainer} ${styles[getClassName()]}`}
       onMouseLeave={() => setHovering(false)}

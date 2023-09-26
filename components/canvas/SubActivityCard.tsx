@@ -201,9 +201,7 @@ export const SubActivityCard = (props: Node<NodeData>) => {
             isConnectableEnd={false}
           />
         </div>
-        {tasks?.length > 0 && (
-          <QIPRContainer onClick={() => handleClickCard()} tasks={tasks} />
-        )}
+        <QIPRContainer onClick={() => handleClickCard()} tasks={tasks} />
       </div>
       {userCanEdit && renderCardButtons()}
     </div>

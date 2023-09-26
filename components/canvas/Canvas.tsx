@@ -43,6 +43,7 @@ import {
   moveVerticeRightOfTarget,
 } from "../../services/graphApi";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
+import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
 
 function Canvas(props): JSX.Element {
   const [selectedObject, setSelectedObject] = useState<vsmObject>(null);
@@ -61,6 +62,8 @@ function Canvas(props): JSX.Element {
   let initEdges: Edge[] = [];
   const [nodes, setNodes, onNodesChange] = useNodesState<NodeData>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const nodeWidth = 200;
+  const nodeHeight = 200;
 
   const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
@@ -306,11 +309,11 @@ function Canvas(props): JSX.Element {
         position: { x: 0, y: 0 },
         type: card.type,
         width:
-          200 + // 200 = base card width
-          (card?.tasks?.length > 0
-            ? (((card?.tasks?.length / 4) >> 0) + 1) * 33 + 2.5 // 33 = QIPR circle width. 2.5 = margin
-            : 0),
-        height: 200,
+          nodeWidth +
+          getQIPRContainerWidth(
+            card?.tasks?.filter((task) => !task.solved).length
+          ),
+        height: nodeHeight,
       });
     }
 
@@ -393,8 +396,8 @@ function Canvas(props): JSX.Element {
                 },
                 position: { x: 0, y: 0 },
                 type: vsmObjectTypes.empty,
-                width: 200,
-                height: 200,
+                width: nodeWidth,
+                height: nodeHeight,
                 draggable: false,
               });
               initEdges.push({
