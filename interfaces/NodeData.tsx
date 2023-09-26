@@ -7,7 +7,7 @@ export type NodeData = {
   isValidDropTarget?: boolean;
   columnId?: string;
   mergeOption?: boolean;
-  handleConfirmMerge?: (sourceId: string, targetId: string) => void;
+  handleMerge?: (sourceId: string, targetId: string) => void;
   handleClickCard?: () => void;
   handleClickAddCard?: (arg0: string, arg1: string, arg2: Position) => void;
   mergeable?: boolean;

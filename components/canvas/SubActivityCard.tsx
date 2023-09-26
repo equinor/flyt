@@ -34,7 +34,7 @@ export const SubActivityCard = (props: Node<NodeData>) => {
     merging,
     mergeOption,
     handleClickCard,
-    handleConfirmMerge,
+    handleMerge,
     isChoiceChild,
     handleClickAddCard,
     userCanEdit,
@@ -70,9 +70,7 @@ export const SubActivityCard = (props: Node<NodeData>) => {
             />
             {mergeable && (
               <MergeStartButton
-                onConnect={(e: Connection) =>
-                  handleConfirmMerge(e.source, e.target)
-                }
+                onConnect={(e: Connection) => handleMerge(e.source, e.target)}
               />
             )}
           </CardButtonsContainer>

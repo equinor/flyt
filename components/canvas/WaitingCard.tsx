@@ -33,7 +33,7 @@ export const WaitingCard = (props: Node<NodeData>) => {
     mergeable,
     mergeOption,
     handleClickCard,
-    handleConfirmMerge,
+    handleMerge,
     merging,
     isChoiceChild,
     handleClickAddCard,
@@ -70,9 +70,7 @@ export const WaitingCard = (props: Node<NodeData>) => {
             />
             {mergeable && (
               <MergeStartButton
-                onConnect={(e: Connection) =>
-                  handleConfirmMerge(e.source, e.target)
-                }
+                onConnect={(e: Connection) => handleMerge(e.source, e.target)}
               />
             )}
           </CardButtonsContainer>

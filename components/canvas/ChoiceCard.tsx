@@ -29,7 +29,7 @@ export function ChoiceCard(props) {
     children,
     mergeOption,
     merging,
-    handleConfirmMerge,
+    handleMerge,
   } = props.data;
 
   const size = 132;
@@ -142,9 +142,7 @@ export function ChoiceCard(props) {
               }
             />
             <MergeStartButton
-              onConnect={(e: Connection) =>
-                handleConfirmMerge(e.source, e.target)
-              }
+              onConnect={(e: Connection) => handleMerge(e.source, e.target)}
             />
           </CardButtonsContainer>
           {/* <CardButtonsContainer position={Position.Top}>

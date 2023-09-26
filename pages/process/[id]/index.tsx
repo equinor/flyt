@@ -26,9 +26,9 @@ export default function Project() {
     }
   );
 
-  const { data: graph, error: errorGraph } = useQuery(["graph", id], () => {
-    return getGraph(id);
-  });
+  const { data: graph, error: errorGraph } = useQuery(["graph", id], () =>
+    getGraph(id)
+  );
 
   if (errorProject || errorGraph) {
     return (

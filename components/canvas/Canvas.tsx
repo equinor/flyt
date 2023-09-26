@@ -41,6 +41,7 @@ import {
   addVerticeLeft,
   addVerticeRight,
   moveVerticeRightOfTarget,
+  mergeVertices,
 } from "../../services/graphApi";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
 import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
@@ -173,11 +174,14 @@ function Canvas(props): JSX.Element {
     );
   };
 
-  const handleConfirmMerge = useMutation(
+  const handleMerge = useMutation(
     // @ts-ignore
     ({ sourceId, targetId }: { sourceId: string; targetId: string }) => {
       dispatch.setSnackMessage("⏳ Merging cards...");
-      console.log("TODO", sourceId, targetId);
+      mergeVertices(
+        { fromVertexId: sourceId, toVertexId: targetId },
+        projectId
+      );
     },
     {
       onSuccess: () => {
@@ -278,12 +282,13 @@ function Canvas(props): JSX.Element {
         initNodes = initNodes.map((node) => {
           const newData = node.data;
           if (node.id === card.id) {
+            newData.isChoiceChild = false; // Keep until backend accepts new choice child when card has multiple parents
             newData.parentCardIDs.push(parentCard.id);
             return { ...node, data: newData };
           }
-          if (parentCard.type === vsmObjectTypes.choice) {
-            newData.isChoiceChild = true;
-          }
+          // if (parentCard.type === vsmObjectTypes.choice) {
+          //   newData.isChoiceChild = true;
+          // }
           return node;
         });
         return;
@@ -296,8 +301,8 @@ function Canvas(props): JSX.Element {
           handleClickCard: () => setSelectedObject(card),
           handleClickAddCard: (id, type, position) =>
             handleClickAddCard.mutate({ parentId: id, type, position }),
-          handleConfirmMerge: (sourceId, targetId) =>
-            handleConfirmMerge.mutate({ sourceId, targetId }),
+          handleMerge: (sourceId, targetId) =>
+            handleMerge.mutate({ sourceId, targetId }),
           mergeable:
             card.children.length === 0 || card.type === vsmObjectTypes.choice,
           merging: !!connectionNodeId,
