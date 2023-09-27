@@ -19,9 +19,9 @@ export const CanvasButtons = (props: {
         <ManageLabelButton handleClickLabel={props.handleClickLabel} />
       )}
       <CategorizationPageButton />
-      <VersionHistoryButton
+      {/* <VersionHistoryButton
         handleVersionHistoryClick={props.handleClickVersionHistory}
-      />
+      /> */}
     </div>
   );
 };
