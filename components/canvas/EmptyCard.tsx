@@ -8,7 +8,7 @@ export const EmptyCard = () => (
       <Handle
         className={styles.handle}
         type="target"
-        position={Position.Bottom}
+        position={Position.Top}
         isConnectable={false}
       />
       <Handle

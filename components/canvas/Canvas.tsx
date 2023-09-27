@@ -272,7 +272,6 @@ function Canvas(props): JSX.Element {
         id: `${parentCard.id}=>${card.id}`,
         source: parentCard.id,
         target: card.id,
-        interactionWidth: 0,
       });
 
       // Occurs when a node has multiple parents
@@ -410,7 +409,12 @@ function Canvas(props): JSX.Element {
                 source: parentId,
                 target: id,
                 type: "straight",
-                interactionWidth: 0,
+              });
+              initEdges.push({
+                id: `${id}=>${id}`,
+                source: id,
+                target: id,
+                type: "straight",
               });
               parentId = id;
             }
@@ -419,7 +423,6 @@ function Canvas(props): JSX.Element {
               id: `${parentId}=>${node.id}`,
               source: parentId,
               target: node.id,
-              interactionWidth: 0,
             });
           }
         });
