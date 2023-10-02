@@ -178,7 +178,7 @@ function Canvas(props): JSX.Element {
     // @ts-ignore
     ({ sourceId, targetId }: { sourceId: string; targetId: string }) => {
       dispatch.setSnackMessage("⏳ Merging cards...");
-      mergeVertices(
+      return mergeVertices(
         { fromVertexId: sourceId, toVertexId: targetId },
         projectId
       );
