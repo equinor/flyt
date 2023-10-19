@@ -1,11 +1,11 @@
-import { vsmObject } from "../interfaces/VsmObject";
+import { vsmObject } from "../types/VsmObject";
 import { SingleSelect, TextField } from "@equinor/eds-core-react";
 import {
   getUnitDisplayName,
   getUnitValue,
   getUnitValues,
 } from "../types/unitDefinitions";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export function DurationComponent(props: {
   selectedObject: vsmObject;

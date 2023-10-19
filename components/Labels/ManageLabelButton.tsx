@@ -1,4 +1,3 @@
-import React from "react";
 import { tag } from "@equinor/eds-icons";
 import { ButtonWrapper } from "../ButtonWrapper";
 

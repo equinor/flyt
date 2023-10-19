@@ -1,5 +1,5 @@
-import { NodeData } from "interfaces/NodeData";
-import React, { useState } from "react";
+import { NodeData } from "types/NodeData";
+import { useState } from "react";
 import { Handle, Position } from "reactflow";
 import { formatCardText } from "./utils/FormatCardText";
 
@@ -11,7 +11,7 @@ import { QIPRContainer } from "./QIPRContainer";
 import { Node } from "reactflow";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
 
-export function GenericCard(props: Node<NodeData>) {
+export const GenericCard = (props: Node<NodeData>) => {
   const [hovering, setHovering] = useState(false);
 
   const {
@@ -105,4 +105,4 @@ export function GenericCard(props: Node<NodeData>) {
       {userCanEdit && renderCardButtons()}
     </div>
   );
-}
+};

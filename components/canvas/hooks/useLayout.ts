@@ -1,11 +1,14 @@
 import { Node, Edge } from "reactflow";
-import dagre from "dagre";
+import dagre, { Node as DagreNode } from "dagre";
+import { NodeDataFull } from "types/NodeData";
 
 const columnsEndPosX = new Map();
 const columnsStartPosX = new Map();
 const columnsOffsetX = new Map();
 
-const calcColumnOffset = (node) => {
+type CustomDagreNode = DagreNode<{ columnId: string; type: string }>;
+
+const calcColumnOffset = (node: CustomDagreNode) => {
   const { columnId, type, x, width } = node;
   if (type) {
     if (!columnsStartPosX.has(columnId) || columnsStartPosX.get(columnId) > x) {
@@ -38,11 +41,16 @@ const setColumnsOffsetX = () => {
   });
 };
 
-export function setLayout(nodes: Node[], edges: Edge[]): Node[] {
+export function setLayout(
+  nodes: Node<NodeDataFull>[],
+  edges: Edge[]
+): Node<NodeDataFull>[] {
   columnsEndPosX.clear();
   columnsStartPosX.clear();
   columnsOffsetX.clear();
-  const dagreGraph = new dagre.graphlib.Graph();
+  const dagreGraph = new dagre.graphlib.Graph<CustomDagreNode>({
+    directed: true,
+  });
   dagreGraph.setDefaultEdgeLabel(() => ({}));
   dagreGraph.setGraph({ rankdir: "TB", nodesep: 0, edgesep: 0, ranksep: 50 });
 
@@ -68,12 +76,15 @@ export function setLayout(nodes: Node[], edges: Edge[]): Node[] {
 
   setColumnsOffsetX();
 
+  //TODO: default width and height
   nodes.forEach((node) => {
     const { x, y } = dagreGraph.node(node.id);
-    node.position = {
-      x: x - node.width / 2 + columnsOffsetX.get(node.data.columnId),
-      y: y - node.height / 2,
-    };
+    if (node.width && node.height) {
+      node.position = {
+        x: x - node.width / 2 + columnsOffsetX.get(node.data.columnId),
+        y: y - node.height / 2,
+      };
+    }
 
     return node;
   });

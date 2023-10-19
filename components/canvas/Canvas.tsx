@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import "reactflow/dist/style.css";
-import React, { useEffect, useRef, useState } from "react";
+import { MouseEvent, useEffect, useRef, useState } from "react";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQueryClient } from "react-query";
 
@@ -14,11 +13,11 @@ import { VSMSideBar } from "../VSMSideBar";
 import { getMyAccess } from "../../utils/getMyAccess";
 import { notifyOthers } from "../../services/notifyOthers";
 import { CanvasButtons } from "components/CanvasButtons";
-import ManageLabelBox from "components/Labels/ManageLabelBox";
+import { ManageLabelBox } from "components/Labels/ManageLabelBox";
 import { unknownErrorToString } from "utils/isError";
 import { useRouter } from "next/router";
 import { useStoreDispatch } from "../../hooks/storeHooks";
-import { vsmObject } from "interfaces/VsmObject";
+import { vsmObject } from "types/VsmObject";
 import { Button, Icon } from "@equinor/eds-core-react";
 import { close } from "@equinor/eds-icons";
 import { ProcessTimeline } from "../ProcessTimeline";
@@ -31,10 +30,11 @@ import ReactFlow, {
   Position,
   Controls,
   useStore,
+  ReactFlowState,
 } from "reactflow";
 import { setLayout } from "./hooks/useLayout";
 import { nodeTypes } from "./NodeTypes";
-import { NodeData } from "interfaces/NodeData";
+import { NodeData, NodeDataFull } from "types/NodeData";
 import {
   moveVertice,
   addVertice,
@@ -45,13 +45,22 @@ import {
 } from "../../services/graphApi";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
 import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
+import { uid } from "../../utils/uuid";
+import { vsmProject } from "types/VsmProject";
+import { Graph } from "types/Graph";
 
-function Canvas(props): JSX.Element {
-  const [selectedObject, setSelectedObject] = useState<vsmObject>(null);
+type CanvasProps = {
+  project: vsmProject;
+  graph: Graph;
+};
+
+function Canvas({ graph, project }: CanvasProps): JSX.Element {
+  const [selectedObject, setSelectedObject] = useState<vsmObject | undefined>(
+    undefined
+  );
   const dispatch = useStoreDispatch();
   const router = useRouter();
   const { id, version } = router.query;
-  const { project, graph } = props;
 
   const [socketConnected, setSocketConnected] = useState(false);
   const [socketReason, setSocketReason] = useState("");
@@ -59,12 +68,20 @@ function Canvas(props): JSX.Element {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
 
-  let initNodes: Node<NodeData>[] = [];
+  let initNodes: Node<NodeDataFull>[] = [];
   let initEdges: Edge[] = [];
-  const [nodes, setNodes, onNodesChange] = useNodesState<NodeData>([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<NodeDataFull>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const nodeWidth = 200;
   const nodeHeight = 200;
+
+  const dragRef = useRef<Node<NodeData> | null>(null);
+  const [target, setTarget] = useState<Node<NodeDataFull> | undefined>(
+    undefined
+  );
+  const [source, setSource] = useState<Node<NodeDataFull> | undefined>(
+    undefined
+  );
 
   const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
@@ -74,9 +91,10 @@ function Canvas(props): JSX.Element {
   const queryClient = useQueryClient();
   const projectId = router.query.id as string;
   const [showVersionHistoryBottomSheet, setShowVersionHistoryBottomSheet] =
-    React.useState(!!router.query.version);
+    useState(!!router.query.version);
 
-  const connectionNodeIdSelector = (state) => state.connectionNodeId;
+  const connectionNodeIdSelector = (state: ReactFlowState) =>
+    state.connectionNodeId;
   const connectionNodeId = useStore(connectionNodeIdSelector);
 
   useEffect(() => {
@@ -102,7 +120,7 @@ function Canvas(props): JSX.Element {
       });
 
       socket.on(`room-${id}`, (payload) => {
-        if (payload.user !== account.username?.split("@")[0]) {
+        if (payload.user !== account?.username.split("@")[0]) {
           dispatch.setSnackMessage(
             `${payload.user ? payload.user : "Someone"} ${payload.msg}`
           );
@@ -119,7 +137,7 @@ function Canvas(props): JSX.Element {
     if (connectionNodeId) {
       handleMergeInit(connectionNodeId);
     } else {
-      handleMergeCancel(connectionNodeId);
+      handleMergeCancel();
     }
   }, [connectionNodeId]);
 
@@ -133,19 +151,17 @@ function Canvas(props): JSX.Element {
     goToCurrentVersion();
   }
 
-  const getCardById = (id: string): vsmObject =>
-    graph.find((card: vsmObject) => card.id === id);
-
   const handleMergeInit = (nodeId: string): void => {
     const initNode = nodes.find((node) => node.id === nodeId);
     const columnId = initNode?.data?.columnId;
     setNodes((nodes) =>
       nodes.map((node) => {
-        if (node.id == nodeId) {
-          node.data = { ...node.data };
-        } else if (
+        if (
+          initNode &&
+          initNode.id !== node.id &&
           node.data.columnId == columnId &&
-          !initNode.data.children.find((nodeId) => nodeId === node.id)
+          !initNode.data.children.find((childId) => childId === node.id) &&
+          !initNode.data.parentCardIDs.find((parentId) => node.id === parentId)
         ) {
           node.data = { ...node.data, mergeOption: true };
         } else {
@@ -160,23 +176,26 @@ function Canvas(props): JSX.Element {
     );
   };
 
-  const handleMergeCancel = (nodeId: string): void => {
+  const handleMergeCancel = (): void => {
     setNodes((nodes) =>
       nodes.map((node) => {
-        if (node.id == nodeId) {
-          node.data = { ...node.data };
-        } else {
-          node.data = { ...node.data, mergeOption: false };
-        }
-        node.data.merging = false;
+        node.data = { ...node.data, mergeOption: false, merging: false };
         return node;
       })
     );
   };
 
   const handleMerge = useMutation(
-    // @ts-ignore
-    ({ sourceId, targetId }: { sourceId: string; targetId: string }) => {
+    ({
+      sourceId,
+      targetId,
+    }: {
+      sourceId: string | null;
+      targetId: string | null;
+    }) => {
+      if (!sourceId || !targetId) {
+        throw new Error("Could not connect nodes");
+      }
       dispatch.setSnackMessage("⏳ Merging cards...");
       return mergeVertices(
         { fromVertexId: sourceId, toVertexId: targetId },
@@ -186,7 +205,7 @@ function Canvas(props): JSX.Element {
     {
       onSuccess: () => {
         dispatch.setSnackMessage("✅ Cards merged!");
-        notifyOthers("Added a new card", id, account);
+        id && notifyOthers("Added a new card", id, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
@@ -205,12 +224,12 @@ function Canvas(props): JSX.Element {
     }) => {
       dispatch.setSnackMessage("⏳ Adding new card...");
       switch (position) {
-        case Position.Bottom:
-          return addVertice({ type }, projectId, parentId);
         case Position.Left:
           return addVerticeLeft({ type }, projectId, parentId);
         case Position.Right:
           return addVerticeRight({ type }, projectId, parentId);
+        default:
+          return addVertice({ type }, projectId, parentId);
       }
     },
     {
@@ -247,16 +266,19 @@ function Canvas(props): JSX.Element {
     {
       onSuccess: () => {
         dispatch.setSnackMessage("✅ Moved card!");
-        notifyOthers("Moved a card", id, account);
+        id && notifyOthers("Moved a card", id, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
 
-  let columnId: string = null;
+  let columnId: string | null = null;
 
-  const createNodes = (card: vsmObject, parentCard: vsmObject = null): void => {
+  const createNodes = (
+    card: vsmObject,
+    parentCard: vsmObject | null = null
+  ): void => {
     if (parentCard) {
       if (
         card.type === vsmObjectTypes.mainActivity ||
@@ -278,16 +300,12 @@ function Canvas(props): JSX.Element {
       const duplicateNode = initNodes.find((node) => node.id === card.id);
 
       if (duplicateNode) {
-        initNodes = initNodes.map((node) => {
+        initNodes = initNodes.map((node: Node) => {
           const newData = node.data;
           if (node.id === card.id) {
-            newData.isChoiceChild = false; // Keep until backend accepts new choice child when card has multiple parents
             newData.parentCardIDs.push(parentCard.id);
             return { ...node, data: newData };
           }
-          // if (parentCard.type === vsmObjectTypes.choice) {
-          //   newData.isChoiceChild = true;
-          // }
           return node;
         });
         return;
@@ -301,7 +319,7 @@ function Canvas(props): JSX.Element {
           handleClickAddCard: (id, type, position) =>
             handleClickAddCard.mutate({ parentId: id, type, position }),
           handleMerge: (sourceId, targetId) =>
-            handleMerge.mutate({ sourceId, targetId }),
+            sourceId && targetId && handleMerge.mutate({ sourceId, targetId }),
           mergeable:
             card.children.length === 0 || card.type === vsmObjectTypes.choice,
           merging: !!connectionNodeId,
@@ -322,27 +340,34 @@ function Canvas(props): JSX.Element {
     }
 
     card.children.forEach((childCardId) => {
-      const childCard = getCardById(childCardId);
-      createNodes(childCard, card);
+      const childCard = graph.find(
+        (card: vsmObject) => card.id === childCardId
+      );
+      childCard && createNodes(childCard, card);
     });
   };
 
-  const mergedNodesLooping = new Map();
-  let mergedNodesReady = [];
+  const mergedNodesLooping = new Map<string, [Node<NodeDataFull>, number]>();
+  let mergedNodesReady: Node<NodeDataFull>[] = [];
 
-  const setNodeDepth = (nodeId, fullNodes, parentDepth) => {
+  const setNodeDepth = (
+    nodeId: string,
+    fullNodes: Node<NodeDataFull>[],
+    parentDepth: number
+  ) => {
     const node = fullNodes.find((node) => node.id === nodeId);
+    if (!node) return;
     const { data } = node;
 
     if (data?.parentCardIDs?.length > 1) {
       if (mergedNodesLooping.has(nodeId)) {
-        const nodeDuplicate = mergedNodesLooping.get(nodeId)[0];
-        const loopCount = mergedNodesLooping.get(nodeId)[1];
-        if (nodeDuplicate.data.depth <= parentDepth) {
+        const nodeDuplicate = mergedNodesLooping.get(nodeId)![0];
+        const loopCount = mergedNodesLooping.get(nodeId)![1];
+        if (nodeDuplicate?.data?.depth <= parentDepth) {
           nodeDuplicate.data.depth = parentDepth + 1;
         }
         mergedNodesLooping.set(nodeId, [nodeDuplicate, loopCount + 1]);
-        if (nodeDuplicate.data.parentCardIDs.length === loopCount + 1) {
+        if (nodeDuplicate?.data?.parentCardIDs?.length === loopCount + 1) {
           mergedNodesReady.push(nodeDuplicate);
           mergedNodesLooping.delete(nodeId);
         }
@@ -358,7 +383,7 @@ function Canvas(props): JSX.Element {
     }
   };
 
-  const setAllNodesDepth = (root) => {
+  const setAllNodesDepth = (root: vsmObject) => {
     root.children.forEach((childId) => {
       setNodeDepth(childId, initNodes, 0);
     });
@@ -376,33 +401,43 @@ function Canvas(props): JSX.Element {
   const createFillerNodes = () => {
     initNodes.forEach((node) => {
       if (node?.data?.parentCardIDs?.length > 1) {
-        let deepestCard = initNodes.find(
-          (card) => card.id === node.data.parentCardIDs[0]
-        ).data.depth;
+        let depthDeepestCard: undefined | number = undefined;
         node?.data?.parentCardIDs?.forEach((parentCardID) => {
           const parentCard = initNodes.find((node) => node.id === parentCardID);
-          if (parentCard?.data.depth > deepestCard)
-            deepestCard = parentCard.data.depth;
+          if (
+            parentCard?.data?.depth &&
+            (!depthDeepestCard || parentCard?.data?.depth > depthDeepestCard)
+          )
+            depthDeepestCard = parentCard.data.depth;
         });
         node?.data?.parentCardIDs?.forEach((parentCardID) => {
           const parentCard = initNodes.find((node) => node.id === parentCardID);
-          if (parentCard.data.depth < deepestCard) {
+          if (
+            parentCard &&
+            depthDeepestCard &&
+            parentCard.data.depth < depthDeepestCard
+          ) {
             initEdges = initEdges.filter(
               (edge) => edge.source !== parentCard.id || edge.target !== node.id
             );
             let parentId = parentCard.id;
-            for (let i = parentCard.data.depth; i < deepestCard; i++) {
-              const id = Math.random().toString(11).slice(2);
+            for (let i = parentCard.data.depth; i < depthDeepestCard; i++) {
+              const id = uid();
               initNodes.push({
                 id,
                 data: {
+                  parentCardIDs: [parentId],
                   columnId: parentCard.data.columnId,
+                  depth: i,
+                  //TODO: Add children
+                  children: [],
                 },
                 position: { x: 0, y: 0 },
                 type: vsmObjectTypes.empty,
                 width: nodeWidth,
                 height: nodeHeight,
                 draggable: false,
+                selectable: false,
               });
               initEdges.push({
                 id: `${parentId}=>${id}`,
@@ -435,38 +470,40 @@ function Canvas(props): JSX.Element {
       const root = graph.find(
         (card: vsmObject) => card.type === vsmObjectTypes.root
       );
-      if (selectedObject) {
-        const updatedSelectedObject = graph.find(
-          (node) => node.id === selectedObject.id
-        );
-        setSelectedObject(updatedSelectedObject);
+      if (root) {
+        if (selectedObject) {
+          const updatedSelectedObject = graph.find(
+            (node) => node.id === selectedObject.id
+          );
+          updatedSelectedObject && setSelectedObject(updatedSelectedObject);
+        }
+        createNodes(root);
+        setAllNodesDepth(root);
+        createFillerNodes();
+        const finalNodes = setLayout(initNodes, initEdges);
+        setNodes(finalNodes);
+        setEdges(initEdges);
       }
-      createNodes(root);
-      setAllNodesDepth(root);
-      createFillerNodes();
-      const finalNodes = setLayout(initNodes, initEdges);
-      setNodes(finalNodes);
-      setEdges(initEdges);
     }
   }, [graph]);
 
-  const dragRef = useRef<Node<NodeData>>(null);
-  const [target, setTarget] = useState<Node<NodeData>>(null);
-  const [source, setSource] = useState<Node<NodeData>>(null);
-
   const validDropTarget = (
-    source: Node<NodeData>,
-    target: Node<NodeData>
+    source: Node<NodeDataFull> | undefined,
+    target: Node<NodeDataFull> | undefined
   ): boolean => {
-    if (!target) return false;
+    if (!target || !source) return false;
     const sourceType = source.type;
     const targetType = target.type;
     const targetIsParent = source?.data?.parentCardIDs?.find(
       (id) => id === target.id
     );
+    const targetIsChoiceChild =
+      sourceType === vsmObjectTypes.choice &&
+      target?.data?.parentCardIDs?.find((id) => id === source.id);
 
     return (
       !targetIsParent &&
+      !targetIsChoiceChild &&
       (((sourceType === vsmObjectTypes.choice ||
         sourceType === vsmObjectTypes.subActivity ||
         sourceType === vsmObjectTypes.waiting) &&
@@ -480,9 +517,9 @@ function Canvas(props): JSX.Element {
   };
 
   const onNodeDragStart = (
-    evt: React.MouseEvent<Element, MouseEvent>,
+    evt: MouseEvent<Element>,
     nodeDragging: Node<NodeData>
-  ): void => {
+  ) => {
     dragRef.current = nodeDragging;
     setNodes((nodes) =>
       nodes.map((node) => {
@@ -498,11 +535,11 @@ function Canvas(props): JSX.Element {
   };
 
   const onNodeDrag = (
-    evt: React.MouseEvent<Element, MouseEvent>,
-    node: Node<NodeData>
+    evt: MouseEvent<Element>,
+    node: Node<NodeDataFull>
   ): void => {
-    const centerX = node.position.x + node.width / 2;
-    const centerY = node.position.y + node.height / 2;
+    const centerX = node.position.x + (node.width || nodeWidth) / 2;
+    const centerY = node.position.y + (node.height || nodeHeight) / 2;
 
     const targetNode = nodes.find(
       (n) =>
@@ -530,10 +567,10 @@ function Canvas(props): JSX.Element {
   }, [target]);
 
   const onNodeDragStop = (
-    evt: React.MouseEvent<Element, MouseEvent>,
+    evt: MouseEvent<Element>,
     node: Node<NodeData>
   ): void => {
-    if (validDropTarget(node, target)) {
+    if (target && validDropTarget(node, target)) {
       handleMoveCard.mutate({
         cardId: node.id,
         targetId: target.id,
@@ -542,15 +579,17 @@ function Canvas(props): JSX.Element {
           target.type === vsmObjectTypes.mainActivity
             ? Position.Right
             : Position.Bottom,
-        includeChildren: target.data.children.length === 0,
+        includeChildren:
+          target.data.children.length === 0 ||
+          node?.data?.type === vsmObjectTypes.choice,
       });
-      setTarget(null);
+      setTarget(undefined);
       dragRef.current = null;
     }
     setNodes((nodes) =>
       nodes.map((n) => {
         n.data = { ...n.data, isValidDropTarget: null };
-        if (n.id === node?.id) {
+        if (n.id === node?.id && source) {
           n = source;
         }
         return n;
@@ -590,7 +629,6 @@ function Canvas(props): JSX.Element {
           <ProcessTimeline processId={projectId} />
         </div>
       )}
-
       <CanvasButtons
         userCanEdit={userCanEdit}
         handleClickLabel={() => setVisibleLabelScrim(true)}
@@ -614,16 +652,18 @@ function Canvas(props): JSX.Element {
       />
       <ToBeToggle />
       <ResetProcessButton />
-      <DeleteVsmObjectDialog
-        objectToDelete={selectedObject}
-        visible={visibleDeleteScrim}
-        onClose={() => {
-          setVisibleDeleteScrim(false);
-          setSelectedObject(null);
-        }}
-      />
+      {selectedObject && (
+        <DeleteVsmObjectDialog
+          objectToDelete={selectedObject}
+          visible={visibleDeleteScrim}
+          onClose={() => {
+            setVisibleDeleteScrim(false);
+            setSelectedObject(undefined);
+          }}
+        />
+      )}
       <VSMSideBar
-        onClose={() => setSelectedObject(null)}
+        onClose={() => setSelectedObject(undefined)}
         onDelete={() => setVisibleDeleteScrim(true)}
         canEdit={userCanEdit}
         selectedObject={selectedObject}
@@ -634,7 +674,7 @@ function Canvas(props): JSX.Element {
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        onPaneClick={() => setSelectedObject(null)}
+        onPaneClick={() => setSelectedObject(undefined)}
         minZoom={0.2}
         nodesDraggable={userCanEdit}
         nodesConnectable={true}
@@ -656,7 +696,7 @@ function Canvas(props): JSX.Element {
   );
 }
 
-export function CanvasWrapper(props) {
+export function CanvasWrapper(props: CanvasProps) {
   return (
     <ReactFlowProvider>
       <Canvas {...props} />

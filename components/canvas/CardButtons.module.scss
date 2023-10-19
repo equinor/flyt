@@ -75,13 +75,21 @@
   padding: 5px 0px 0px 0px;
 }
 
+.handle {
+  visibility: hidden;
+}
+
+.handle--hidden {
+  visibility: hidden;
+}
+
 .handle--merge-start {
   width: 12px;
   height: 12px;
   background-color: $equinor_PROMINENT;
   position: relative;
   border: 18px solid #f7f7f7;
-  // Reset values from react-flow handle class
+  // Reset values in react-flow handle class
   top: 0;
   left: 0;
   bottom: 0;
@@ -101,12 +109,4 @@
   border: 2px solid $equinor_PROMINENT;
   background-color: white;
   top: -7.5px;
-}
-
-.handle--hidden {
-  visibility: hidden;
-}
-
-.handle {
-  visibility: hidden;
 }

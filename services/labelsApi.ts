@@ -1,5 +1,5 @@
 import BaseAPIServices from "./BaseAPIServices";
-import { processLabel } from "interfaces/processLabel";
+import { processLabel } from "types/processLabel";
 
 const baseUrl = "/api/v2.0";
 

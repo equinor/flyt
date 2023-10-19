@@ -2,7 +2,6 @@ import { createToBeProject, getProject } from "../../services/projectApi";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQuery } from "react-query";
 
-import React from "react";
 import { ToggleButton } from "components/ToggleButton";
 import { ToggleButtonGroup } from "components/ToggleButtonGroup";
 import { getMyAccess } from "utils/getMyAccess";

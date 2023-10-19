@@ -1,9 +1,9 @@
 import styles from "./AddCategoryButton.module.scss";
 import { Button, Icon, Input } from "@equinor/eds-core-react";
 import { add, check } from "@equinor/eds-icons";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { taskCategory } from "../interfaces/taskCategory";
+import { taskCategory } from "../types/taskCategory";
 import { postTaskCategory } from "../services/taskCategoriesApi";
 import { ErrorScrim } from "./ErrorScrim";
 

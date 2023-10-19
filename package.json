@@ -8,7 +8,6 @@
     "build": "next build",
     "start": "next start",
     "test": "jest --watch",
-    "release": "standard-version",
     "fetch-tags": "git fetch origin --tags --force",
     "release-dev": "yarn fetch-tags &&  git tag -f DEV   && yarn push-tags",
     "release-test": "yarn fetch-tags && git tag -f TEST  && yarn push-tags",
@@ -39,13 +38,10 @@
     "@types/jsonwebtoken": "^9.0.0",
     "@types/node": "^18.11.18",
     "@types/node-fetch": "^2.6.2",
-    "@types/react": "^17.0.52",
-    "@typescript-eslint/eslint-plugin": "^5.48.0",
-    "@typescript-eslint/parser": "^5.48.0",
+    "@types/react": "17.0.58",
+    "@types/react-dom": "17.0.21",
     "@uiw/react-md-editor": "3.11.2",
     "axios": "^0.25.0",
-    "d3-flextree": "^2.1.2",
-    "d3-hierarchy": "^3.1.2",
     "dagre": "^0.8.5",
     "easy-peasy": "^5.2.0",
     "jsonwebtoken": "^9.0.0",
@@ -53,8 +49,6 @@
     "next": "^12.3.4",
     "next-remove-imports": "^1.0.8",
     "node-fetch": "^2.6.7",
-    "pixi-viewport": "^4.38.0",
-    "pixi.js": "6.2.2",
     "react": "^17.0.2",
     "react-device-detect": "^2.1.2",
     "react-dom": "^17.0.2",
@@ -77,21 +71,23 @@
     "@babel/core": "^7.8.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^12.1.5",
+    "@types/dagre": "^0.7.50",
+    "@typescript-eslint/eslint-plugin": "^5.48.0",
+    "@typescript-eslint/parser": "^5.48.0",
     "babel-jest": "^27.5.1",
-    "cz-conventional-changelog": "3.3.0",
-    "eslint": "^8.31.0",
+    "eslint": "^8.51.0",
     "eslint-config-prettier": "^8.6.0",
     "eslint-config-react": "^1.1.7",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-sonarjs": "^0.11.0",
-    "eslint-plugin-you-dont-need-lodash-underscore": "^6.12.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
+    "eslint-plugin-you-dont-need-lodash-underscore": "^6.13.0",
     "husky": ">=6",
     "jest": "^27.5.1",
     "lint-staged": ">=12.3.3",
     "prettier": "^2.8.1",
     "pretty-quick": "^3.1.3",
-    "standard-version": "^9.5.0",
     "typescript": "4.5.5"
   },
   "resolutions": {
@@ -102,10 +98,5 @@
       "eslint --cache --fix"
     ],
     "*.js": "eslint --cache --fix"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
   }
 }

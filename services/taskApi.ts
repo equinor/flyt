@@ -1,21 +1,15 @@
 import BaseAPIServices from "./BaseAPIServices";
-import { taskObject } from "../interfaces/taskObject";
+import { taskObject } from "../types/taskObject";
 
 const baseUrl = "/api/v2.0";
 
 // Get a list of tasks created in the project identified by its projectId (vsmId)
 export const getTasksForProject = (
   projectId: string | string[]
-): Promise<Array<taskObject>> =>
+): Promise<taskObject[]> =>
   BaseAPIServices.get(`${baseUrl}/graph/${projectId}/tasks`).then(
     (value) => value.data
   );
-
-// Gets a list of task types registered
-export const getTaskTypes = (): Promise<
-  Array<{ vsmTaskTypeID: string; name: string; description: string | null }>
-> =>
-  BaseAPIServices.get(baseUrl + "/task/taskTypes").then((value) => value.data);
 
 export const createTask = (
   data: taskObject,
@@ -77,7 +71,11 @@ export const linkTask = (
   });
 
 //Remove a link between a task and a card
-export const unlinkTask = (projectId, vsmObjectId: string, taskId: string) =>
+export const unlinkTask = (
+  projectId: string | string[],
+  vsmObjectId: string,
+  taskId: string
+) =>
   BaseAPIServices.delete(
     baseUrl + `/graph/${projectId}/vertices/${vsmObjectId}/tasks/${taskId}`,
     null

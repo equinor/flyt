@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { MainActivityCard } from "./MainActivityCard";
 import { GenericCard } from "./GenericCard";
 import { SubActivityCard } from "./SubActivityCard";

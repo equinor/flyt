@@ -1,5 +1,5 @@
 import { Button, Chip, Icon, Scrim, Search } from "@equinor/eds-core-react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   addLabelToProcess,
   getLabels,
@@ -9,12 +9,12 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import { close } from "@equinor/eds-icons";
 import { debounce } from "utils/debounce";
-import { processLabel } from "interfaces/processLabel";
+import { processLabel } from "types/processLabel";
 import styles from "./ManageLabelBox.module.scss";
 import { unknownErrorToString } from "utils/isError";
-import { vsmProject } from "interfaces/VsmProject";
+import { vsmProject } from "types/VsmProject";
 
-export default function ManageLabelBox(props: {
+export function ManageLabelBox(props: {
   isVisible: boolean;
   handleClose: () => void;
   process: vsmProject;

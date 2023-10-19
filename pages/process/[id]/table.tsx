@@ -2,14 +2,13 @@ import { useRouter } from "next/router";
 import commonStyles from "../../../styles/common.module.scss";
 import Head from "next/head";
 import { Typography } from "@equinor/eds-core-react";
-import React from "react";
 import { useQuery } from "react-query";
 import { getTasksForProject } from "../../../services/taskApi";
 import { unknownErrorToString } from "../../../utils/isError";
 //import { flattenProject } from "../../../utils/flattenProject";
 import { getProject } from "../../../services/projectApi";
-import ObjectTable from "../../../components/objectTable";
-import TaskTable from "../../../components/taskTable";
+import { ObjectTable } from "../../../components/ObjectTable";
+import { TaskTable } from "../../../components/TaskTable";
 
 export default function TablePage() {
   const router = useRouter();

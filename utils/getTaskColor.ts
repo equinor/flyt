@@ -1,4 +1,4 @@
-import { taskObject } from "../interfaces/taskObject";
+import { taskObject } from "../types/taskObject";
 import { vsmTaskTypes } from "../types/vsmTaskTypes";
 
 export function getTaskColor(task: taskObject): string {

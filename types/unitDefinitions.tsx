@@ -1,4 +1,4 @@
-export const units = [
+const units = [
   { value: "Minute", displayName: "Minute(s)" },
   { value: "Hour", displayName: "Hour(s)" },
   { value: "Day", displayName: "Day(s)" },
@@ -7,7 +7,7 @@ export const units = [
   { value: "Year", displayName: "Year(s)" },
 ];
 
-export const getUnitValues = (): Array<string> =>
+export const getUnitValues = (): string[] =>
   units.map((item) => item.displayName);
 
 export const getUnitValue = (displayName: string): string =>
@@ -22,7 +22,7 @@ export const getUnitDisplayName = (value: string): string => {
  * Capitalize the first letter and lowercase the rest.
  * @param s
  */
-export const capitalizeFirstLetter = (s: string): string =>
+const capitalizeFirstLetter = (s: string): string =>
   `${s}`.charAt(0).toUpperCase() + `${s}`.slice(1).toLowerCase();
 
 /**

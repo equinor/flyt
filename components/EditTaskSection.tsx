@@ -4,14 +4,13 @@ import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQueryClient } from "react-query";
 
 import { EditTaskTextField } from "./EditTaskTextField";
-import React from "react";
 import { delete_to_trash } from "@equinor/eds-icons";
 import { notifyOthers } from "../services/notifyOthers";
-import { taskObject } from "../interfaces/taskObject";
+import { taskObject } from "../types/taskObject";
 import { unknownErrorToString } from "../utils/isError";
 import { useRouter } from "next/router";
 import { useStoreDispatch } from "../hooks/storeHooks";
-import { vsmObject } from "../interfaces/VsmObject";
+import { vsmObject } from "../types/VsmObject";
 import { vsmTaskTypes } from "types/vsmTaskTypes";
 import { getTaskShorthand } from "utils/getTaskShorthand";
 

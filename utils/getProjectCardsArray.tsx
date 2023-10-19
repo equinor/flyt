@@ -1,8 +1,7 @@
 import { WashOutFilter } from "../components/WashOutFilter/WashOutFilter";
 import { LoadingVSMCard } from "../components/Card/LoadingVSMCard";
-import { vsmProject } from "../interfaces/VsmProject";
+import { vsmProject } from "../types/VsmProject";
 import { ProjectCard } from "../components/Card/ProjectCard";
-import React from "react";
 
 export function placeholderProjectCardsArray(
   numberOfCards: number
@@ -14,7 +13,7 @@ export function placeholderProjectCardsArray(
   ));
 }
 
-export function projectCardsArray(projects: Array<vsmProject>): JSX.Element[] {
+export function projectCardsArray(projects: vsmProject[]): JSX.Element[] {
   return projects?.map((vsm: vsmProject) => (
     <ProjectCard key={vsm.vsmProjectID} vsm={vsm} />
   ));

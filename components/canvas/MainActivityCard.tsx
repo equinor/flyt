@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Handle, Position } from "reactflow";
 import { formatCardText } from "./utils/FormatCardText";
 import { MainActivityButton } from "./MainActivityButton";
@@ -10,11 +10,11 @@ import { CardButtonsContainer } from "./CardButtonsContainer";
 import styles from "./Card.module.scss";
 import stylesCardButtons from "./CardButtons.module.scss";
 import { QIPRContainer } from "./QIPRContainer";
-import { NodeData } from "interfaces/NodeData";
+import { NodeData } from "types/NodeData";
 import { Node } from "reactflow";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
 
-export function MainActivityCard(props: Node<NodeData>) {
+export const MainActivityCard = (props: Node<NodeData>) => {
   const [hovering, setHovering] = useState(false);
 
   const {
@@ -131,4 +131,4 @@ export function MainActivityCard(props: Node<NodeData>) {
       )}
     </div>
   );
-}
+};

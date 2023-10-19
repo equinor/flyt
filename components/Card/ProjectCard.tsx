@@ -1,20 +1,20 @@
 import { Button, Icon, Scrim, Tooltip } from "@equinor/eds-core-react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { faveProject, unfaveProject } from "services/projectApi";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQueryClient } from "react-query";
 
 import { AccessBox } from "components/AccessBox";
-import Heart from "components/Heart";
-import Labels from "components/Labels/Labels";
-import ManageLabelBox from "components/Labels/ManageLabelBox";
-import ProjectCardHeader from "./ProjectCardHeader";
+import { Heart } from "components/Heart";
+import { Labels } from "components/Labels/Labels";
+import { ManageLabelBox } from "components/Labels/ManageLabelBox";
+import { ProjectCardHeader } from "./ProjectCardHeader";
 import { UserDots } from "./UserDots";
 import { getMyAccess } from "utils/getMyAccess";
 import styles from "./Card.module.scss";
 import { tag } from "@equinor/eds-icons";
 import { useRouter } from "next/router";
-import { vsmProject } from "../../interfaces/VsmProject";
+import { vsmProject } from "../../types/VsmProject";
 
 export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
   const queryClient = useQueryClient();

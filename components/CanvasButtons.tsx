@@ -1,8 +1,6 @@
-import React from "react";
 import { CategorizationPageButton } from "./CategorizationPageButton";
 import styles from "./CanvasButtons.module.scss";
 import { ManageLabelButton } from "./Labels/ManageLabelButton";
-import { VersionHistoryButton } from "./VersionHistoryButton";
 
 /**
  * NB. Currently, only adjusted for use in the canvas. path: "baseURL/process/{id}"

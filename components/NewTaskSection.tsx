@@ -1,6 +1,6 @@
 import { useStoreDispatch } from "../hooks/storeHooks";
-import React, { useState } from "react";
-import { taskObject } from "../interfaces/taskObject";
+import { useState } from "react";
+import { taskObject } from "../types/taskObject";
 import styles from "./VSMCanvas.module.scss";
 import { Button, Icon, SingleSelect, TextField } from "@equinor/eds-core-react";
 import { vsmTaskTypes } from "../types/vsmTaskTypes";
@@ -9,7 +9,7 @@ import { arrow_back } from "@equinor/eds-icons";
 import { useMutation, useQueryClient } from "react-query";
 import { createTask } from "../services/taskApi";
 import { unknownErrorToString } from "utils/isError";
-import { vsmObject } from "../interfaces/VsmObject";
+import { vsmObject } from "../types/VsmObject";
 import { useRouter } from "next/router";
 import { notifyOthers } from "../services/notifyOthers";
 import { useAccount, useMsal } from "@azure/msal-react";

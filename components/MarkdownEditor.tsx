@@ -3,10 +3,10 @@ import "@uiw/react-markdown-preview/markdown.css";
 
 import { Button, Icon, Label, Tooltip } from "@equinor/eds-core-react";
 import MDEditor, { ICommand, TextState } from "@uiw/react-md-editor";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-import { SelectionInfo } from "interfaces/SelectionInfo";
-import UrlPrompt from "./URLPrompt";
+import { SelectionInfo } from "types/SelectionInfo";
+import { UrlPrompt } from "./UrlPrompt";
 import { check } from "@equinor/eds-icons";
 import rehypeSanitize from "rehype-sanitize";
 

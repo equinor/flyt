@@ -1,14 +1,13 @@
-import React, { useState } from "react";
+import { useState, ReactNode } from "react";
 import { Position } from "reactflow";
 import styles from "./CardButtons.module.scss";
 import AddCardButtonIcon from "../../public/CardButtons/AddCardButtonIcon.svg";
 
 export const CardButtonsContainer = (props: {
   position: Position;
-  children: JSX.Element | JSX.Element[];
+  children: ReactNode;
 }) => {
   const [hovering, setHovering] = useState(false);
-
   const getClassName = () => {
     switch (props.position) {
       case Position.Top:

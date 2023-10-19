@@ -1,6 +1,5 @@
 import { ColorDot } from "./ColorDot";
 import colors from "../theme/colors";
-import React from "react";
 
 export function LiveIndicator(props: {
   live: boolean;

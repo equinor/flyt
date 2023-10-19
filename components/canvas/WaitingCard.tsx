@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Connection, Handle, Position, useStore } from "reactflow";
 import { formatCardText } from "./utils/FormatCardText";
 import { formatDuration } from "types/unitDefinitions";
@@ -12,7 +12,7 @@ import { SubActivityButton } from "./SubActivityButton";
 import { ChoiceButton } from "./ChoiceButton";
 import { WaitingButton } from "./WaitingButton";
 import { QIPRContainer } from "./QIPRContainer";
-import { NodeData } from "interfaces/NodeData";
+import { NodeData } from "types/NodeData";
 import { Node } from "reactflow";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
 import { MergeStartButton } from "./MergeStartButton";
@@ -74,17 +74,6 @@ export const WaitingCard = (props: Node<NodeData>) => {
               />
             )}
           </CardButtonsContainer>
-          {/* <CardButtonsContainer position={Position.Top}>
-            <SubActivityButton
-              onClick={() => handleClickAddCard(parentCard.id, "SubActivity")}
-            />
-            <ChoiceButton
-              onClick={() => handleClickAddCard(parentCard.id, "Choice")}
-            />
-            <WaitingButton
-              onClick={() => handleClickAddCard(parentCard.id, "Waiting")}
-            />
-          </CardButtonsContainer> */}
           {isChoiceChild && (
             <>
               <CardButtonsContainer position={Position.Right}>

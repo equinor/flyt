@@ -1,6 +1,7 @@
 import { getUserShortName } from "./getUserShortName";
-import { vsmProject } from "../interfaces/VsmProject";
-import { userAccessRole } from "../interfaces/UserAccess";
+import { vsmProject } from "../types/VsmProject";
+import { userAccessRole } from "../types/UserAccess";
+import { AccountInfo } from "@azure/msal-browser";
 
 /**
  * Get my access in a project
@@ -9,7 +10,7 @@ import { userAccessRole } from "../interfaces/UserAccess";
  */
 export function getMyAccess(
   project: vsmProject,
-  account: { username: string }
+  account: AccountInfo | null
 ): userAccessRole {
   //If not given a role, we default to "Reader"
   const defaultRole = "Reader";

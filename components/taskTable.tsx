@@ -1,11 +1,6 @@
-import { taskObject } from "../interfaces/taskObject";
-import React from "react";
+import { taskObject } from "../types/taskObject";
 
-export default function TaskTable({
-  tasks,
-}: {
-  tasks: Array<taskObject>;
-}): JSX.Element {
+export function TaskTable({ tasks }: { tasks: taskObject[] }): JSX.Element {
   return (
     <table>
       <thead>

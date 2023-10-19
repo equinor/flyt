@@ -1,6 +1,5 @@
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
-import React from "react";
 import { useQuery } from "react-query";
 import { unknownErrorToString } from "../utils/isError";
 import { Layouts } from "../layouts/LayoutWrapper";

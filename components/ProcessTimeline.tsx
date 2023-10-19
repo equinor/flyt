@@ -1,14 +1,14 @@
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import { getProjectUpdateTimes } from "../services/projectApi";
-import React, { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { NativeSelect } from "@equinor/eds-core-react";
 import { useUrlState } from "../hooks/useUrlState";
 import { getDateTimeOption } from "../utils/GetDateTimeOption";
 
 // ProcessTimeline - display process updates in a horizontal timeline
 // Selecting a timeline item will navigate to the corresponding version-specific page
-// Ref: https://github.com/equinor/MAD-VSM-WEB/issues/154
+// Ref: https://github.com/equinor/flyt/issues/154
 export function ProcessTimeline(props: { processId: number | string }) {
   const { processId } = props;
   const router = useRouter();
@@ -153,14 +153,14 @@ function Dot(props: { selected: boolean }) {
   );
 }
 
-export function TimelineItem(props: {
+function TimelineItem(props: {
   item: TimeLineElement;
   onClick: (item: TimeLineElement) => void;
   numberOfItems: number;
   index: number;
   selectedIndex: number;
 }) {
-  const ref = React.useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const { item, onClick, index, selectedIndex, numberOfItems } = props;
   const isSelected = index === selectedIndex;
   const isFirst = index === 0;
@@ -210,7 +210,7 @@ export function TimelineItem(props: {
   );
 }
 
-export type TimeLineElement = {
+type TimeLineElement = {
   date: Date;
   displayString: string;
 };

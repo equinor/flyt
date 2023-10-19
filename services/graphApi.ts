@@ -1,9 +1,10 @@
 const baseUrl = "/api/v2.0";
 
 import BaseAPIServices from "./BaseAPIServices";
-import { vsmObject } from "../interfaces/VsmObject";
+import { vsmObject } from "../types/VsmObject";
+import { Graph } from "types/Graph";
 
-export const getGraph = (projectId: string | string[]): Promise<vsmObject> => {
+export const getGraph = (projectId: string | string[]): Promise<Graph> => {
   return BaseAPIServices.get(`${baseUrl}/graph/${projectId}/vertices`).then(
     (value) => value.data
   );
@@ -68,15 +69,6 @@ export const addVerticeRight = (
 ): Promise<unknown> =>
   BaseAPIServices.post(
     `${baseUrl}/graph/${projectId}/vertices/${neighbourId}/right`,
-    data
-  ).then((r) => r.data);
-
-export const addVerticeMultipleParents = (
-  data: { type: string; parents: Array<string> },
-  projectId: string
-): Promise<unknown> =>
-  BaseAPIServices.post(
-    `${baseUrl}/graph/${projectId}/vertices/multiple-parents`,
     data
   ).then((r) => r.data);
 

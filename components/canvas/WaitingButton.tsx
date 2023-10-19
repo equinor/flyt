@@ -1,6 +1,5 @@
-import React from "react";
 import styles from "./CardButtons.module.scss";
-import { CardButton } from "./../../interfaces/CardButton";
+import { CardButton } from "../../types/CardButton";
 import WaitingButtonIcon from "../../public/CardButtons/WaitingButtonIcon.svg";
 
 export const WaitingButton = (props: CardButton) => (

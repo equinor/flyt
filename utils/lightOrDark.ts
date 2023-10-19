@@ -4,9 +4,7 @@
  */
 export function lightOrDark(color: string): string {
   // Convert hex to RGB: http://gist.github.com/983661
-  const newColor = +`0x${color
-    .slice(1)
-    .replace(`${color.length < 5 && /./g}`, "$&$&")}`;
+  const newColor = parseInt(`0x${color.slice(1).replace(/./g, "$&$&")}`);
 
   const r = newColor >> 16;
   const g = (newColor >> 8) & 255;

@@ -1,11 +1,10 @@
-import React from "react";
 import { Tooltip } from "@equinor/eds-core-react";
 import { UserDot } from "../UserDot";
 import styles from "./UserDots.module.scss";
-import { userAccess } from "interfaces/UserAccess";
+import { userAccess } from "types/UserAccess";
 
 export function UserDots(props: {
-  userAccesses: Array<userAccess>;
+  userAccesses: userAccess[];
   setVisibleScrim: (any: boolean) => void;
 }): JSX.Element {
   const { userAccesses, setVisibleScrim } = props;
@@ -33,7 +32,7 @@ export function UserDots(props: {
   );
 }
 
-export function UserDotsAccordion(props: { users: userAccess[] }): JSX.Element {
+function UserDotsAccordion(props: { users: userAccess[] }): JSX.Element {
   const users = props.users.reverse();
   const width = users.length <= 3 ? 24 * users.length : 72;
 

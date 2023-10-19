@@ -1,5 +1,5 @@
-import { taskObject } from "../interfaces/taskObject";
-import React, { useState } from "react";
+import { taskObject } from "../types/taskObject";
+import { useState } from "react";
 import { getTaskColor } from "../utils/getTaskColor";
 import styles from "./QipCard.module.scss";
 import { ColorDot } from "./ColorDot";
@@ -11,7 +11,7 @@ import {
   linkTaskCategory,
   unlinkTaskCategory,
 } from "../services/taskCategoriesApi";
-import { taskCategory } from "../interfaces/taskCategory";
+import { taskCategory } from "../types/taskCategory";
 import { useRouter } from "next/router";
 import { getTaskShorthand } from "utils/getTaskShorthand";
 

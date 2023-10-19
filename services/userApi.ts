@@ -58,7 +58,7 @@ export const get = ({ vsmId, userName }) => {
  */
 export const searchUser = (
   userName: string
-): Promise<Array<{ pkUser: number; userName: string }>> =>
+): Promise<{ pkUser: number; userName: string }[]> =>
   BaseAPIServices.get(`${baseUrl}/userAccess/userSearch?q=${userName}`).then(
     (value) => value.data
   );

@@ -1,10 +1,9 @@
-import React from "react";
 import { lightOrDark } from "../utils/LightOrDark";
 import { randomColor } from "../utils/randomColor";
 import styles from "./UserDot.module.scss";
 
 // Memoization of names
-const names: Array<{ name: string; color: string }> = [];
+const names: { name: string; color: string }[] = [];
 
 export function UserDot(props: { name: string }): JSX.Element {
   const existingName = names.find((n) => n.name === props.name);

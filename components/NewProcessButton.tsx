@@ -4,7 +4,6 @@ import { createProject } from "../services/projectApi";
 import styles from "./NewProjectButton.module.scss";
 import { Icon } from "@equinor/eds-core-react";
 import { add } from "@equinor/eds-icons";
-import React from "react";
 
 export function NewProcessButton(): JSX.Element {
   const router = useRouter();

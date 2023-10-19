@@ -1,5 +1,5 @@
 import { Button, Icon } from "@equinor/eds-core-react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { getProject, resetProcess } from "services/projectApi";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQuery, useQueryClient } from "react-query";

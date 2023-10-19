@@ -1,7 +1,6 @@
 import { QipCard } from "./QipCard";
-import React from "react";
 import { getTasksForProject } from "../services/taskApi";
-import { taskObject } from "../interfaces/taskObject";
+import { taskObject } from "../types/taskObject";
 import { unknownErrorToString } from "../utils/isError";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";

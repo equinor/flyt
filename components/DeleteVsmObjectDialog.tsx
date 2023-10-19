@@ -2,15 +2,13 @@ import { Button, Icon, Scrim, Typography } from "@equinor/eds-core-react";
 import { close as closeIcon, delete_forever } from "@equinor/eds-icons";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQueryClient } from "react-query";
-
-import React from "react";
-import { getVsmTypeName } from "../utils/GetVsmTypeName";
+import { getVsmTypeName } from "../utils/getVsmTypeName";
 import { notifyOthers } from "../services/notifyOthers";
 import styles from "../layouts/default.layout.module.scss";
 import { unknownErrorToString } from "../utils/isError";
 import { useRouter } from "next/router";
 import { useStoreDispatch } from "hooks/storeHooks";
-import { vsmObject } from "../interfaces/VsmObject";
+import { vsmObject } from "../types/VsmObject";
 import { vsmObjectTypes } from "../types/vsmObjectTypes";
 import { deleteVertice } from "services/graphApi";
 

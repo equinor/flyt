@@ -1,7 +1,7 @@
 export type userAccessRole = "Owner" | "Admin" | "Contributor" | "Reader";
 
-export interface userAccess {
+export type userAccess = {
   accessId: number;
   role: userAccessRole;
   user: string;
-}
+};

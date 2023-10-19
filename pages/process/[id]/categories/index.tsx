@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Layouts } from "../../../../layouts/LayoutWrapper";
 import { vsmTaskTypes } from "../../../../types/vsmTaskTypes";
-import { taskObject } from "../../../../interfaces/taskObject";
+import { taskObject } from "../../../../types/taskObject";
 import { TaskSection } from "../../../../components/taskSection";
 import { CategorySection } from "../../../../components/CategorySection";
 import { CheckboxImproved } from "../../../../components/CheckboxImproved";

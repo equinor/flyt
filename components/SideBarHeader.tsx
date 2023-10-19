@@ -1,8 +1,7 @@
 import styles from "./VSMCanvas.module.scss";
 import { Button, Icon, Typography } from "@equinor/eds-core-react";
 import { canDeleteVSMObject } from "../utils/CanDeleteVSMObect";
-import React from "react";
-import { vsmObject } from "../interfaces/VsmObject";
+import { vsmObject } from "../types/VsmObject";
 import { close, delete_forever } from "@equinor/eds-icons";
 
 export function SideBarHeader(props: {

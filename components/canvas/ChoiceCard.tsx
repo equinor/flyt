@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Connection, Handle, Position, useStore } from "reactflow";
+import { useEffect, useState } from "react";
+import { Connection, Handle, Node, Position, useStore } from "reactflow";
 import { formatCardText } from "./utils/FormatCardText";
 
 import styles from "./Card.module.scss";
@@ -11,8 +11,9 @@ import { WaitingButton } from "./WaitingButton";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
 import { MergeEndButton } from "./MergeEndButton";
 import { MergeStartButton } from "./MergeStartButton";
+import { NodeData } from "types/NodeData";
 
-export function ChoiceCard(props) {
+export const ChoiceCard = (props: Node<NodeData>) => {
   const [hovering, setHovering] = useState(false);
   const connectionNodeId = useStore((state) => state.connectionNodeId);
 
@@ -30,6 +31,7 @@ export function ChoiceCard(props) {
     mergeOption,
     merging,
     handleMerge,
+    mergeable,
   } = props.data;
 
   const size = 132;
@@ -141,21 +143,12 @@ export function ChoiceCard(props) {
                 )
               }
             />
-            <MergeStartButton
-              onConnect={(e: Connection) => handleMerge(e.source, e.target)}
-            />
+            {mergeable && (
+              <MergeStartButton
+                onConnect={(e: Connection) => handleMerge(e.source, e.target)}
+              />
+            )}
           </CardButtonsContainer>
-          {/* <CardButtonsContainer position={Position.Top}>
-            <SubActivityButton
-              onClick={() => handleClickAddCard(parentCard.id, "SubActivity")}
-            />
-            <ChoiceButton
-              onClick={() => handleClickAddCard(parentCard.id, "Choice")}
-            />
-            <WaitingButton
-              onClick={() => handleClickAddCard(parentCard.id, "Waiting")}
-            />
-          </CardButtonsContainer> */}
           {isChoiceChild && (
             <>
               <CardButtonsContainer position={Position.Right}>
@@ -218,4 +211,4 @@ export function ChoiceCard(props) {
       )}
     </div>
   );
-}
+};

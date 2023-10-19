@@ -1,22 +1,17 @@
-import React from "react";
+import styles from "./TextCircle.module.scss";
 
-export const TextCircle = (props) => (
+type TextCircleProps = {
+  text: string;
+  color: string;
+};
+
+export const TextCircle = ({ text, color }: TextCircleProps) => (
   <div
+    className={styles.container}
     style={{
-      height: "30px",
-      width: "30px",
-      background: props.color,
-      color: "white",
-      fontFamily: "Equinor",
-      fontSize: 12,
-      fontStyle: "normal",
-      fontWeight: "500",
-      borderRadius: "50%",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
+      background: color,
     }}
   >
-    {props.text}
+    {text}
   </div>
 );

@@ -1,6 +1,6 @@
-import React from "react";
+import { CElement } from "react";
 import style from "./TaskButton.module.scss";
-import { taskObject } from "../interfaces/taskObject";
+import { taskObject } from "../types/taskObject";
 import { vsmTaskTypes } from "../types/vsmTaskTypes";
 import { getTaskShorthand } from "utils/getTaskShorthand";
 
@@ -12,7 +12,7 @@ export function TaskButton({
   task: taskObject;
   selected: boolean;
   draft: boolean;
-}): React.CElement<unknown, never> {
+}): CElement<unknown, never> {
   if (!task)
     return (
       <div

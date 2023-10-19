@@ -1,5 +1,5 @@
 import { Button, Chip, Icon, Search } from "@equinor/eds-core-react";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { close } from "@equinor/eds-icons";
 import { debounce } from "utils/debounce";
@@ -10,7 +10,7 @@ import { unknownErrorToString } from "utils/isError";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
 
-export default function FilterLabelBox(props: {
+export function FilterLabelBox(props: {
   handleClose: () => void;
 }): JSX.Element {
   const [searchText, setSearchText] = useState("");

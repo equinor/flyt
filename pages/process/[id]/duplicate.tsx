@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { duplicateProject, getProject } from "../../../services/projectApi";
 import { useMutation, useQuery } from "react-query";
 import { Layouts } from "../../../layouts/LayoutWrapper";

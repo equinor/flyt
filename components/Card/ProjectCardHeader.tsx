@@ -1,11 +1,8 @@
-import React from "react";
 import moment from "moment";
 import styles from "./ProjectCardHeader.module.scss";
-import { vsmProject } from "interfaces/VsmProject";
+import { vsmProject } from "types/VsmProject";
 
-export default function ProjectCardHeader(props: {
-  vsm: vsmProject;
-}): JSX.Element {
+export function ProjectCardHeader(props: { vsm: vsmProject }): JSX.Element {
   return (
     <div className={styles.vsmTitleContainer}>
       <h1 className={styles.vsmTitle}>

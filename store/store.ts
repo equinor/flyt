@@ -1,15 +1,13 @@
 import { Action, action, createStore, Thunk, thunk } from "easy-peasy";
 import BaseAPIServices from "../services/BaseAPIServices";
-import { vsmProject } from "../interfaces/VsmProject";
-import { vsmObject } from "../interfaces/VsmObject";
-import { debounce } from "../utils/debounce";
-import { vsmObjectTypes } from "../types/vsmObjectTypes";
-import { taskObject } from "../interfaces/taskObject";
-import { canDeleteVSMObject } from "../utils/CanDeleteVSMObect";
+import { vsmProject } from "../types/VsmProject";
+import { vsmObject } from "../types/VsmObject";
+import { taskObject } from "../types/taskObject";
+import { canDeleteVSMObject } from "../utils/canDeleteVSMObect";
 import { original } from "immer";
 // General pattern Thunk -> Actions -> Set state
 
-export interface ProjectModel {
+export type ProjectModel = {
   ///// STORE VARIABLES ///////////////
   errorProject: Record<string, unknown>;
   fetchingProject: boolean;
@@ -49,7 +47,7 @@ export interface ProjectModel {
     { projectId: number; id: number; taskId: number; task: taskObject }
   >;
   unlinkTask: Thunk<ProjectModel, { task: taskObject; object: vsmObject }>;
-}
+};
 
 const projectModel: ProjectModel = {
   //State

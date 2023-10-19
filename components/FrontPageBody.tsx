@@ -1,10 +1,10 @@
 import { Pagination, Typography } from "@equinor/eds-core-react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "../pages/processes/FrontPage.module.scss";
 import { ProjectListSection } from "./ProjectListSection";
 import { unknownErrorToString } from "../utils/isError";
 
-export default function FrontPageBody(props: {
+export function FrontPageBody(props: {
   showNewProcessButton: boolean;
   itemsPerPage: number;
   query;

@@ -1,12 +1,10 @@
 import { Button, Dialog, Scrim, Typography } from "@equinor/eds-core-react";
 
-import React from "react";
-
 export function ErrorScrim(props: {
   visible: boolean;
   handleClose: () => void;
   title?: string;
-  messages: Array<string>;
+  messages: string[];
 }): JSX.Element {
   if (!props.visible) return null;
   return (

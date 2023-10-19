@@ -1,6 +1,5 @@
-import { taskObject } from "../interfaces/taskObject";
+import { taskObject } from "../types/taskObject";
 import { useStoreDispatch } from "../hooks/storeHooks";
-import React from "react";
 import { TextField } from "@equinor/eds-core-react";
 import { debounce } from "../utils/debounce";
 import { useMutation, useQueryClient } from "react-query";
@@ -9,7 +8,7 @@ import { updateTask } from "../services/taskApi";
 import { useRouter } from "next/router";
 import { notifyOthers } from "../services/notifyOthers";
 import { useAccount, useMsal } from "@azure/msal-react";
-import { vsmObject } from "interfaces/VsmObject";
+import { vsmObject } from "types/VsmObject";
 
 export function EditTaskTextField(props: {
   task: taskObject;

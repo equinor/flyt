@@ -10,7 +10,7 @@ import { CardButtonsContainer } from "./CardButtonsContainer";
 import { ChoiceButton } from "./ChoiceButton";
 import { WaitingButton } from "./WaitingButton";
 import { QIPRContainer } from "./QIPRContainer";
-import { NodeData } from "interfaces/NodeData";
+import { NodeData } from "types/NodeData";
 import { Node } from "reactflow";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
 import { MergeStartButton } from "./MergeStartButton";
@@ -68,23 +68,10 @@ export const SubActivityCard = (props: Node<NodeData>) => {
                 handleClickAddCard(id, vsmObjectTypes.waiting, Position.Bottom)
               }
             />
-            {mergeable && (
-              <MergeStartButton
-                onConnect={(e: Connection) => handleMerge(e.source, e.target)}
-              />
-            )}
+            <MergeStartButton
+              onConnect={(e: Connection) => handleMerge(e.source, e.target)}
+            />
           </CardButtonsContainer>
-          {/* <CardButtonsContainer position={Position.Top}>
-            <SubActivityButton
-              onClick={() => handleClickAddCard(parentCard.id, "SubActivity")}
-            />
-            <ChoiceButton
-              onClick={() => handleClickAddCard(parentCard.id, "Choice")}
-            />
-            <WaitingButton
-              onClick={() => handleClickAddCard(parentCard.id, "Waiting")}
-            />
-          </CardButtonsContainer> */}
           {isChoiceChild && (
             <>
               <CardButtonsContainer position={Position.Right}>

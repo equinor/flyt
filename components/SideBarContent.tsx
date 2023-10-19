@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import { Fragment, useState } from "react";
 import { SideBarHeader } from "./SideBarHeader";
 import { NewTaskSection } from "./NewTaskSection";
 import { SideBarBody } from "./SideBarBody";
 import { useMutation, useQueryClient } from "react-query";
-import { vsmObject } from "../interfaces/VsmObject";
+import { vsmObject } from "../types/VsmObject";
 import { patchGraph } from "services/graphApi";
 import { debounce } from "../utils/debounce";
 import styles from "./VSMCanvas.module.scss";
@@ -119,7 +119,7 @@ export function SideBarContent(props: {
     );
 
   return (
-    <React.Fragment key={selectedObject?.id}>
+    <Fragment key={selectedObject?.id}>
       <SideBarHeader
         object={selectedObject}
         onClose={props.onClose}
@@ -140,6 +140,6 @@ export function SideBarContent(props: {
         setShowNewTaskSection={setShowNewTaskSection}
         canEdit={props.canEdit}
       />
-    </React.Fragment>
+    </Fragment>
   );
 }

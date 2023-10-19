@@ -1,6 +1,6 @@
 import { vsmObjectTypes } from "../types/vsmObjectTypes";
 
-export function getVsmTypeName(type: string): string {
+export function getVsmTypeName(type: vsmObjectTypes): string {
   switch (type) {
     case vsmObjectTypes.root:
       return "process";
@@ -9,9 +9,9 @@ export function getVsmTypeName(type: string): string {
     case vsmObjectTypes.input:
       return "input";
     case vsmObjectTypes.mainActivity:
-      return "mainActivity";
+      return "main activity";
     case vsmObjectTypes.subActivity:
-      return "subActivity";
+      return "sub activity";
     case vsmObjectTypes.text:
       return "text";
     case vsmObjectTypes.waiting:
@@ -22,5 +22,7 @@ export function getVsmTypeName(type: string): string {
       return "customer";
     case vsmObjectTypes.choice:
       return "choice";
+    default:
+      return "unknown";
   }
 }

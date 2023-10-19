@@ -1,9 +1,8 @@
 import { DurationComponent } from "./DurationComponent";
 import { QIPSection } from "./QIPSection";
-import React from "react";
 import { TextField } from "@equinor/eds-core-react";
 import dynamic from "next/dynamic";
-import { vsmObject } from "../interfaces/VsmObject";
+import { vsmObject } from "../types/VsmObject";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
 const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
   ssr: false,

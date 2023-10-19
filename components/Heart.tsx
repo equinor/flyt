@@ -1,9 +1,8 @@
 import { Icon } from "@equinor/eds-core-react";
-import React from "react";
 import { favorite_filled, favorite_outlined } from "@equinor/eds-icons";
 import styles from "./Heart.module.scss";
 
-export default function Heart(props: {
+export function Heart(props: {
   isFavourite: boolean;
   isLoading: boolean;
   fave: () => void;

@@ -1,7 +1,7 @@
 import { getColor } from "../utils/getColor";
 import styles from "./DraggableCategory.module.scss";
 import { ColorDot } from "./ColorDot";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Button, Icon, Input, Menu } from "@equinor/eds-core-react";
 import {
   check,
@@ -15,7 +15,7 @@ import {
   deleteTaskCategory,
   updateTaskCategory,
 } from "../services/taskCategoriesApi";
-import { taskCategory } from "../interfaces/taskCategory";
+import { taskCategory } from "../types/taskCategory";
 import { ErrorScrim } from "./ErrorScrim";
 
 export function DraggableCategory(props: {

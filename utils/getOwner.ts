@@ -1,4 +1,4 @@
-import { vsmProject } from "interfaces/VsmProject";
+import { vsmProject } from "types/VsmProject";
 
 // Get the owner of a project
 export function getOwner(vsm: vsmProject) {
