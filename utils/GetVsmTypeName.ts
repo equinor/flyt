@@ -1,6 +1,6 @@
 import { vsmObjectTypes } from "../types/vsmObjectTypes";
 
-export function getVsmTypeName(type: vsmObjectTypes): string {
+export const getVsmTypeName = (type: vsmObjectTypes): string => {
   switch (type) {
     case vsmObjectTypes.root:
       return "process";
@@ -25,4 +25,4 @@ export function getVsmTypeName(type: vsmObjectTypes): string {
     default:
       return "unknown";
   }
-}
+};
