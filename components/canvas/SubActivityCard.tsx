@@ -11,12 +11,12 @@ import { ChoiceButton } from "./ChoiceButton";
 import { WaitingButton } from "./WaitingButton";
 import { QIPRContainer } from "./QIPRContainer";
 import { NodeData } from "types/NodeData";
-import { Node } from "reactflow";
+import { NodeProps } from "reactflow";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
 import { MergeStartButton } from "./MergeStartButton";
 import { MergeEndButton } from "./MergeEndButton";
 
-export const SubActivityCard = (props: Node<NodeData>) => {
+export const SubActivityCard = (props: NodeProps<NodeData>) => {
   const [hovering, setHovering] = useState(false);
   const connectionNodeId = useStore((state) => state.connectionNodeId);
 

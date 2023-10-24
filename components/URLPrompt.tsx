@@ -18,7 +18,7 @@ const getInputVariant = (url: string) => {
   return isValidUrl(url) ? "success" : "error";
 };
 
-export function UrlPrompt(props: {
+export function URLPrompt(props: {
   selectionInfo: SelectionInfo;
   setIsOpenUrlPrompt: Dispatch<SetStateAction<boolean>>;
   setSelectionInfo: Dispatch<SetStateAction<SelectionInfo>>;

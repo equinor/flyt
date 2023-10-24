@@ -48,6 +48,8 @@ import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
 import { uid } from "../../utils/uuid";
 import { vsmProject } from "types/VsmProject";
 import { Graph } from "types/Graph";
+import { validDropTarget } from "./utils/validDropTarget";
+import { setNodesDepth } from "./utils/setNodesDepth";
 
 type CanvasProps = {
   project: vsmProject;
@@ -151,40 +153,6 @@ function Canvas({ graph, project }: CanvasProps): JSX.Element {
     goToCurrentVersion();
   }
 
-  const handleMergeInit = (nodeId: string): void => {
-    const initNode = nodes.find((node) => node.id === nodeId);
-    const columnId = initNode?.data?.columnId;
-    setNodes((nodes) =>
-      nodes.map((node) => {
-        if (
-          initNode &&
-          initNode.id !== node.id &&
-          node.data.columnId == columnId &&
-          !initNode.data.children.find((childId) => childId === node.id) &&
-          !initNode.data.parentCardIDs.find((parentId) => node.id === parentId)
-        ) {
-          node.data = { ...node.data, mergeOption: true };
-        } else {
-          node.data = {
-            ...node.data,
-            mergeOption: false,
-          };
-        }
-        node.data.merging = true;
-        return node;
-      })
-    );
-  };
-
-  const handleMergeCancel = (): void => {
-    setNodes((nodes) =>
-      nodes.map((node) => {
-        node.data = { ...node.data, mergeOption: false, merging: false };
-        return node;
-      })
-    );
-  };
-
   const handleMerge = useMutation(
     ({
       sourceId,
@@ -273,6 +241,39 @@ function Canvas({ graph, project }: CanvasProps): JSX.Element {
     }
   );
 
+  const handleMergeInit = (nodeId: string): void => {
+    const initNode = nodes.find((node) => node.id === nodeId);
+    setNodes((nodes) =>
+      nodes.map((node) => {
+        if (
+          initNode &&
+          initNode.id !== node.id &&
+          node.data.columnId == initNode?.data?.columnId &&
+          !initNode.data.children.find((childId) => childId === node.id) &&
+          !initNode.data.parentCardIDs.find((parentId) => node.id === parentId)
+        ) {
+          node.data = { ...node.data, mergeOption: true };
+        } else {
+          node.data = {
+            ...node.data,
+            mergeOption: false,
+          };
+        }
+        node.data.merging = true;
+        return node;
+      })
+    );
+  };
+
+  const handleMergeCancel = (): void => {
+    setNodes((nodes) =>
+      nodes.map((node) => {
+        node.data = { ...node.data, mergeOption: false, merging: false };
+        return node;
+      })
+    );
+  };
+
   let columnId: string | null = null;
 
   const createNodes = (
@@ -337,6 +338,19 @@ function Canvas({ graph, project }: CanvasProps): JSX.Element {
           ),
         height: nodeHeight,
       });
+    } else {
+      initNodes.push({
+        id: card.id,
+        data: {
+          ...card,
+          parentCardIDs: [],
+          columnId: card.id,
+        },
+        position: { x: 0, y: 0 },
+        type: card.type,
+        width: nodeWidth,
+        height: nodeHeight,
+      });
     }
 
     card.children.forEach((childCardId) => {
@@ -345,57 +359,6 @@ function Canvas({ graph, project }: CanvasProps): JSX.Element {
       );
       childCard && createNodes(childCard, card);
     });
-  };
-
-  const mergedNodesLooping = new Map<string, [Node<NodeDataFull>, number]>();
-  let mergedNodesReady: Node<NodeDataFull>[] = [];
-
-  const setNodeDepth = (
-    nodeId: string,
-    fullNodes: Node<NodeDataFull>[],
-    parentDepth: number
-  ) => {
-    const node = fullNodes.find((node) => node.id === nodeId);
-    if (!node) return;
-    const { data } = node;
-
-    if (data?.parentCardIDs?.length > 1) {
-      if (mergedNodesLooping.has(nodeId)) {
-        const nodeDuplicate = mergedNodesLooping.get(nodeId)![0];
-        const loopCount = mergedNodesLooping.get(nodeId)![1];
-        if (nodeDuplicate?.data?.depth <= parentDepth) {
-          nodeDuplicate.data.depth = parentDepth + 1;
-        }
-        mergedNodesLooping.set(nodeId, [nodeDuplicate, loopCount + 1]);
-        if (nodeDuplicate?.data?.parentCardIDs?.length === loopCount + 1) {
-          mergedNodesReady.push(nodeDuplicate);
-          mergedNodesLooping.delete(nodeId);
-        }
-      } else {
-        mergedNodesLooping.set(nodeId, [node, 1]);
-        data.depth = parentDepth + 1;
-      }
-    } else {
-      data.depth = parentDepth + 1;
-      data?.children?.forEach((child) => {
-        setNodeDepth(child, fullNodes, data.depth);
-      });
-    }
-  };
-
-  const setAllNodesDepth = (root: vsmObject) => {
-    root.children.forEach((childId) => {
-      setNodeDepth(childId, initNodes, 0);
-    });
-    while (mergedNodesReady.length > 0) {
-      const dupeMergedNodesReady = mergedNodesReady;
-      mergedNodesReady = [];
-      dupeMergedNodesReady.forEach((node) => {
-        node.data.children.forEach((child) => {
-          setNodeDepth(child, initNodes, node.data.depth);
-        });
-      });
-    }
   };
 
   const createFillerNodes = () => {
@@ -478,7 +441,7 @@ function Canvas({ graph, project }: CanvasProps): JSX.Element {
           updatedSelectedObject && setSelectedObject(updatedSelectedObject);
         }
         createNodes(root);
-        setAllNodesDepth(root);
+        setNodesDepth(initNodes);
         createFillerNodes();
         const finalNodes = setLayout(initNodes, initEdges);
         setNodes(finalNodes);
@@ -486,35 +449,6 @@ function Canvas({ graph, project }: CanvasProps): JSX.Element {
       }
     }
   }, [graph]);
-
-  const validDropTarget = (
-    source: Node<NodeDataFull> | undefined,
-    target: Node<NodeDataFull> | undefined
-  ): boolean => {
-    if (!target || !source) return false;
-    const sourceType = source.type;
-    const targetType = target.type;
-    const targetIsParent = source?.data?.parentCardIDs?.find(
-      (id) => id === target.id
-    );
-    const targetIsChoiceChild =
-      sourceType === vsmObjectTypes.choice &&
-      target?.data?.parentCardIDs?.find((id) => id === source.id);
-
-    return (
-      !targetIsParent &&
-      !targetIsChoiceChild &&
-      (((sourceType === vsmObjectTypes.choice ||
-        sourceType === vsmObjectTypes.subActivity ||
-        sourceType === vsmObjectTypes.waiting) &&
-        (targetType === vsmObjectTypes.choice ||
-          targetType === vsmObjectTypes.subActivity ||
-          targetType === vsmObjectTypes.waiting ||
-          targetType === vsmObjectTypes.mainActivity)) ||
-        (sourceType === vsmObjectTypes.mainActivity &&
-          targetType === vsmObjectTypes.mainActivity))
-    );
-  };
 
   const onNodeDragStart = (
     evt: MouseEvent<Element>,

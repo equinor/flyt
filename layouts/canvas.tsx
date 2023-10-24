@@ -114,12 +114,7 @@ export const CanvasLayout = ({ children }): JSX.Element => {
   const { buttonEl, focus } = state;
   const isOpen = Boolean(buttonEl);
 
-  const openMenu = (
-    e:
-      | MouseEvent<HTMLButtonElement, MouseEvent>
-      | KeyboardEvent<HTMLButtonElement>,
-    focus: "first" | "last"
-  ) => {
+  const openMenu = (e, focus: "first" | "last") => {
     const target = e.target as HTMLButtonElement;
     setState({ ...state, buttonEl: target, focus });
   };

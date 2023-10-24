@@ -1,6 +1,6 @@
 import { NodeData } from "types/NodeData";
 import { useState } from "react";
-import { Handle, Position } from "reactflow";
+import { Handle, NodeProps, Position } from "reactflow";
 import { formatCardText } from "./utils/FormatCardText";
 
 import styles from "./Card.module.scss";
@@ -8,10 +8,9 @@ import stylesCardButtons from "./CardButtons.module.scss";
 import { CardButtonsContainer } from "./CardButtonsContainer";
 import { MainActivityButton } from "./MainActivityButton";
 import { QIPRContainer } from "./QIPRContainer";
-import { Node } from "reactflow";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
 
-export const GenericCard = (props: Node<NodeData>) => {
+export function GenericCard(props: NodeProps<NodeData>) {
   const [hovering, setHovering] = useState(false);
 
   const {
@@ -105,4 +104,4 @@ export const GenericCard = (props: Node<NodeData>) => {
       {userCanEdit && renderCardButtons()}
     </div>
   );
-};
+}

@@ -2,7 +2,7 @@
  * Check if hex color is light or dark
  * @param color (Hex formatted)
  */
-export function lightOrDark(color: string): string {
+export const lightOrDark = (color: string): string => {
   // Convert hex to RGB: http://gist.github.com/983661
   const newColor = parseInt(`0x${color.slice(1).replace(/./g, "$&$&")}`);
 
@@ -18,4 +18,4 @@ export function lightOrDark(color: string): string {
     return "light";
   }
   return "dark";
-}
+};

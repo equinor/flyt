@@ -4,7 +4,7 @@ import { getProjectUpdateTimes } from "../services/projectApi";
 import { useEffect, useRef } from "react";
 import { NativeSelect } from "@equinor/eds-core-react";
 import { useUrlState } from "../hooks/useUrlState";
-import { getDateTimeOption } from "../utils/GetDateTimeOption";
+import { getDateTimeOption } from "../utils/getDateTimeOption";
 
 // ProcessTimeline - display process updates in a horizontal timeline
 // Selecting a timeline item will navigate to the corresponding version-specific page

@@ -1,6 +1,6 @@
 import styles from "./VSMCanvas.module.scss";
 import { Button, Icon, Typography } from "@equinor/eds-core-react";
-import { canDeleteVSMObject } from "../utils/CanDeleteVSMObect";
+import { canDeleteVSMObject } from "../utils/canDeleteVSMObect";
 import { vsmObject } from "../types/VsmObject";
 import { close, delete_forever } from "@equinor/eds-icons";
 

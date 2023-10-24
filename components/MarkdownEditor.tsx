@@ -6,7 +6,7 @@ import MDEditor, { ICommand, TextState } from "@uiw/react-md-editor";
 import { useEffect, useState } from "react";
 
 import { SelectionInfo } from "types/SelectionInfo";
-import { UrlPrompt } from "./UrlPrompt";
+import { URLPrompt } from "./URLPrompt";
 import { check } from "@equinor/eds-icons";
 import rehypeSanitize from "rehype-sanitize";
 
@@ -97,7 +97,7 @@ export default function MarkdownEditor(props: {
 
   if (isOpenUrlPrompt) {
     return (
-      <UrlPrompt
+      <URLPrompt
         selectionInfo={selectionInfo}
         setIsOpenUrlPrompt={setIsOpenUrlPrompt}
         setSelectionInfo={setSelectionInfo}

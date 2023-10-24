@@ -24,11 +24,7 @@ export const UserMenu = () => {
   const { focus, buttonEl } = state;
   const isOpen = Boolean(buttonEl);
 
-  const openMenu = (
-    e:
-      | MouseEvent<HTMLButtonElement, MouseEvent>
-      | KeyboardEvent<HTMLButtonElement>
-  ) => {
+  const openMenu = (e) => {
     const target = e.target as HTMLButtonElement;
     setState({ ...state, buttonEl: target });
   };

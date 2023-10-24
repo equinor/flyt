@@ -7,7 +7,6 @@ import { getTasksForProject } from "../../../services/taskApi";
 import { unknownErrorToString } from "../../../utils/isError";
 //import { flattenProject } from "../../../utils/flattenProject";
 import { getProject } from "../../../services/projectApi";
-import { ObjectTable } from "../../../components/ObjectTable";
 import { TaskTable } from "../../../components/TaskTable";
 
 export default function TablePage() {

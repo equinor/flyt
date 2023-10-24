@@ -11,10 +11,10 @@ import styles from "./Card.module.scss";
 import stylesCardButtons from "./CardButtons.module.scss";
 import { QIPRContainer } from "./QIPRContainer";
 import { NodeData } from "types/NodeData";
-import { Node } from "reactflow";
+import { NodeProps } from "reactflow";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
 
-export const MainActivityCard = (props: Node<NodeData>) => {
+export const MainActivityCard = (props: NodeProps<NodeData>) => {
   const [hovering, setHovering] = useState(false);
 
   const {

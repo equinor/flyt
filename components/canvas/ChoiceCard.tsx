@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Connection, Handle, Node, Position, useStore } from "reactflow";
+import { Connection, Handle, NodeProps, Position, useStore } from "reactflow";
 import { formatCardText } from "./utils/FormatCardText";
 
 import styles from "./Card.module.scss";
@@ -13,7 +13,7 @@ import { MergeEndButton } from "./MergeEndButton";
 import { MergeStartButton } from "./MergeStartButton";
 import { NodeData } from "types/NodeData";
 
-export const ChoiceCard = (props: Node<NodeData>) => {
+export const ChoiceCard = (props: NodeProps<NodeData>) => {
   const [hovering, setHovering] = useState(false);
   const connectionNodeId = useStore((state) => state.connectionNodeId);
 

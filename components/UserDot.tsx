@@ -1,4 +1,4 @@
-import { lightOrDark } from "../utils/LightOrDark";
+import { lightOrDark } from "../utils/lightOrDark";
 import { randomColor } from "../utils/randomColor";
 import styles from "./UserDot.module.scss";
 

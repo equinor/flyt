@@ -54,7 +54,7 @@ export const getProject = (
 };
 
 export const updateProject = (
-  projectId: string,
+  projectId: string | string[],
   data: [{ op: string; path: string; value: string }]
 ) => BaseAPIServices.patch(`${baseUrl}/project/${projectId}`, data);
 
