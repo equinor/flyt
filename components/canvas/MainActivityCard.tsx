@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Handle, Position } from "reactflow";
-import { formatCardText } from "./utils/FormatCardText";
+import { formatNodeText } from "./utils/formatNodeText";
 import { MainActivityButton } from "./MainActivityButton";
 import { SubActivityButton } from "./SubActivityButton";
 import { ChoiceButton } from "./ChoiceButton";
@@ -59,10 +59,10 @@ export const MainActivityCard = (props: NodeProps<NodeData>) => {
         >
           <div className={styles["card__description-container"]}>
             {description ? (
-              <p className={styles.text}>{formatCardText(description, 70)}</p>
+              <p className={styles.text}>{formatNodeText(description, 70)}</p>
             ) : (
               <p className={`${styles.text} ${styles["text--placeholder"]}`}>
-                {formatCardText(type, 70)}
+                {formatNodeText(type, 70)}
               </p>
             )}
           </div>

@@ -3,6 +3,7 @@ const baseUrl = "/api/v2.0";
 import BaseAPIServices from "./BaseAPIServices";
 import { vsmObject } from "../types/VsmObject";
 import { Graph } from "types/Graph";
+import { vsmObjectTypes } from "types/vsmObjectTypes";
 
 export const getGraph = (projectId: string | string[]): Promise<Graph> => {
   return BaseAPIServices.get(`${baseUrl}/graph/${projectId}/vertices`).then(
@@ -11,7 +12,7 @@ export const getGraph = (projectId: string | string[]): Promise<Graph> => {
 };
 
 export const addVertice = (
-  data: { type: string },
+  data: { type: vsmObjectTypes },
   projectId: string,
   parentId: string
 ): Promise<unknown> =>
@@ -53,7 +54,7 @@ export const moveVertice = (
   ).then((r) => r.data);
 
 export const addVerticeLeft = (
-  data: { type: string },
+  data: { type: vsmObjectTypes },
   projectId: string,
   neighbourId: string
 ): Promise<unknown> =>
@@ -63,7 +64,7 @@ export const addVerticeLeft = (
   ).then((r) => r.data);
 
 export const addVerticeRight = (
-  data: { type: string },
+  data: { type: vsmObjectTypes },
   projectId: string,
   neighbourId: string
 ): Promise<unknown> =>

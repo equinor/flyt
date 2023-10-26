@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Connection, Handle, Position, useStore } from "reactflow";
-import { formatCardText } from "./utils/FormatCardText";
+import { formatNodeText } from "./utils/formatNodeText";
 import { formatDuration } from "types/unitDefinitions";
 import { Icon } from "@equinor/eds-core-react";
 import { time as timeIcon } from "@equinor/eds-icons";
@@ -162,7 +162,7 @@ export const WaitingCard = (props: NodeProps<NodeData>) => {
         >
           <div className={styles["card__description-container"]}>
             <p className={`${styles.text} ${styles["text--placeholder"]}`}>
-              {formatCardText(type, 70)}
+              {formatNodeText(type, 70)}
             </p>
           </div>
           <div>

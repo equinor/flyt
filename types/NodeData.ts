@@ -1,15 +1,20 @@
 import { Position } from "reactflow";
 import { vsmObject } from "./VsmObject";
+import { vsmObjectTypes } from "./vsmObjectTypes";
 
 export type NodeData = {
-  parentCardIDs: string[];
+  parents: string[];
   isDropTarget?: boolean;
   isValidDropTarget?: boolean | null;
   columnId: string | null;
   mergeOption?: boolean;
   handleMerge: (sourceId: string | null, targetId: string | null) => void;
   handleClickCard: () => void;
-  handleClickAddCard: (arg0: string, arg1: string, arg2: Position) => void;
+  handleClickAddCard: (
+    nodeId: string,
+    type: vsmObjectTypes,
+    position: Position
+  ) => void;
   mergeable?: boolean;
   merging?: boolean;
   userCanEdit?: boolean;
@@ -19,7 +24,7 @@ export type NodeData = {
 
 export type NodeDataFiller = Pick<
   NodeData,
-  "columnId" | "parentCardIDs" | "depth" | "children" | "merging"
+  "columnId" | "parents" | "depth" | "children" | "merging"
 >;
 
 export type NodeDataFull = NodeData | NodeDataFiller;

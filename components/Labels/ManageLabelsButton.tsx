@@ -5,7 +5,7 @@ import { ButtonWrapper } from "../ButtonWrapper";
  * NB. Currently only adjusted for use in the canvas. path: "baseURL/process/{id}"
  * @constructor
  */
-export const ManageLabelButton = (props: {
+export const ManageLabelsButton = (props: {
   handleClickLabel: () => void;
 }): JSX.Element => {
   return (

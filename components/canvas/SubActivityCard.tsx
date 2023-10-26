@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Connection, Handle, Position, useStore } from "reactflow";
-import { formatCardText } from "./utils/FormatCardText";
+import { formatNodeText } from "./utils/formatNodeText";
 import { formatDuration } from "types/unitDefinitions";
 
 import styles from "./Card.module.scss";
@@ -160,21 +160,21 @@ export const SubActivityCard = (props: NodeProps<NodeData>) => {
         >
           <div className={styles["card__description-container"]}>
             {description ? (
-              <p className={styles.text}>{formatCardText(description, 70)}</p>
+              <p className={styles.text}>{formatNodeText(description, 70)}</p>
             ) : (
               <p className={`${styles.text} ${styles["text--placeholder"]}`}>
-                {formatCardText(type, 70)}
+                {formatNodeText(type, 70)}
               </p>
             )}
           </div>
           <div className={styles["card__role-container"]}>
             <p className={styles.text}>
-              {formatCardText(role ?? "", 16, true)}
+              {formatNodeText(role ?? "", 16, true)}
             </p>
           </div>
           <div className={styles["card__time-container"]}>
             <p className={styles.text}>
-              {formatCardText(formatDuration(duration, unit), 12, true)}
+              {formatNodeText(formatDuration(duration, unit), 12, true)}
             </p>
           </div>
           <MergeEndButton hidden={!mergeOption} />

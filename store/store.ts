@@ -3,7 +3,7 @@ import BaseAPIServices from "../services/BaseAPIServices";
 import { vsmProject } from "../types/VsmProject";
 import { vsmObject } from "../types/VsmObject";
 import { taskObject } from "../types/taskObject";
-import { canDeleteVSMObject } from "../utils/canDeleteVSMObect";
+import { canDeleteVSMObject } from "../utils/canDeleteVSMObject";
 import { original } from "immer";
 // General pattern Thunk -> Actions -> Set state
 

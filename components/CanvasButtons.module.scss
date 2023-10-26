@@ -1,4 +1,4 @@
-.wrapper {
+.container {
   position: absolute;
   bottom: 35px;
   right: 50px;
@@ -12,7 +12,7 @@
 }
 
 @media screen and (max-width: 768px) {
-  .wrapper {
+  .container {
     flex-direction: column;
   }
 }

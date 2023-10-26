@@ -5,7 +5,7 @@ import { getUserShortName } from "../../utils/getUserShortName";
 import packageJson from "../../package.json";
 import Link from "next/dist/client/link";
 import getConfig from "next/config";
-import { KeyboardEvent, MouseEvent, useState } from "react";
+import { KeyboardEvent, useState } from "react";
 
 export const UserMenu = () => {
   const { instance, accounts } = useMsal();
@@ -13,23 +13,16 @@ export const UserMenu = () => {
   const { publicRuntimeConfig } = getConfig();
   const commitHash = publicRuntimeConfig.RADIX_GIT_COMMIT_HASH;
 
-  const [state, setState] = useState<{
-    buttonEl: HTMLButtonElement | null;
-    focus: "first" | "last";
-  }>({
-    focus: "first",
-    buttonEl: null,
-  });
+  const [buttonEl, setButtonEl] = useState<HTMLButtonElement | null>(null);
 
-  const { focus, buttonEl } = state;
   const isOpen = Boolean(buttonEl);
 
   const openMenu = (e) => {
     const target = e.target as HTMLButtonElement;
-    setState({ ...state, buttonEl: target });
+    setButtonEl(target);
   };
 
-  const closeMenu = () => setState({ ...state, buttonEl: null });
+  const closeMenu = () => setButtonEl(null);
 
   const onKeyPress = (e: KeyboardEvent<HTMLButtonElement>) => {
     const { key } = e;
@@ -52,7 +45,7 @@ export const UserMenu = () => {
         aria-controls="menu-on-button"
         aria-haspopup="true"
         aria-expanded={!!buttonEl}
-        onClick={(e: MouseEvent) => (isOpen ? closeMenu() : openMenu(e))}
+        onClick={(e) => (isOpen ? closeMenu() : openMenu(e))}
         onKeyDown={onKeyPress}
       >
         <UserDot name={getUserShortName(account)} />
@@ -60,7 +53,7 @@ export const UserMenu = () => {
       <Menu
         id="menu-on-button"
         aria-labelledby="menuButton"
-        focus={focus}
+        focus="first"
         open={!!buttonEl}
         anchorEl={buttonEl}
         onClose={closeMenu}

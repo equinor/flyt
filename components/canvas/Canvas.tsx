@@ -18,9 +18,6 @@ import { unknownErrorToString } from "utils/isError";
 import { useRouter } from "next/router";
 import { useStoreDispatch } from "../../hooks/storeHooks";
 import { vsmObject } from "types/VsmObject";
-import { Button, Icon } from "@equinor/eds-core-react";
-import { close } from "@equinor/eds-icons";
-import { ProcessTimeline } from "../ProcessTimeline";
 import ReactFlow, {
   useNodesState,
   useEdgesState,
@@ -52,12 +49,12 @@ import { validDropTarget } from "./utils/validDropTarget";
 import { setNodesDepth } from "./utils/setNodesDepth";
 
 type CanvasProps = {
-  project: vsmProject;
   graph: Graph;
+  project: vsmProject;
 };
 
-function Canvas({ graph, project }: CanvasProps): JSX.Element {
-  const [selectedObject, setSelectedObject] = useState<vsmObject | undefined>(
+const Canvas = ({ graph, project }: CanvasProps) => {
+  const [selectedNode, setSelectedNode] = useState<vsmObject | undefined>(
     undefined
   );
   const dispatch = useStoreDispatch();
@@ -70,18 +67,18 @@ function Canvas({ graph, project }: CanvasProps): JSX.Element {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
 
-  let initNodes: Node<NodeDataFull>[] = [];
-  let initEdges: Edge[] = [];
+  let tempNodes: Node<NodeDataFull>[] = [];
+  let tempEdges: Edge[] = [];
   const [nodes, setNodes, onNodesChange] = useNodesState<NodeDataFull>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const nodeWidth = 200;
   const nodeHeight = 200;
 
   const dragRef = useRef<Node<NodeData> | null>(null);
-  const [target, setTarget] = useState<Node<NodeDataFull> | undefined>(
+  const [source, setSource] = useState<Node<NodeDataFull> | undefined>(
     undefined
   );
-  const [source, setSource] = useState<Node<NodeDataFull> | undefined>(
+  const [target, setTarget] = useState<Node<NodeDataFull> | undefined>(
     undefined
   );
 
@@ -92,8 +89,6 @@ function Canvas({ graph, project }: CanvasProps): JSX.Element {
 
   const queryClient = useQueryClient();
   const projectId = router.query.id as string;
-  const [showVersionHistoryBottomSheet, setShowVersionHistoryBottomSheet] =
-    useState(!!router.query.version);
 
   const connectionNodeIdSelector = (state: ReactFlowState) =>
     state.connectionNodeId;
@@ -122,7 +117,7 @@ function Canvas({ graph, project }: CanvasProps): JSX.Element {
       });
 
       socket.on(`room-${id}`, (payload) => {
-        if (payload.user !== account?.username.split("@")[0]) {
+        if (payload.user !== account.username?.split("@")[0]) {
           dispatch.setSnackMessage(
             `${payload.user ? payload.user : "Someone"} ${payload.msg}`
           );
@@ -142,16 +137,6 @@ function Canvas({ graph, project }: CanvasProps): JSX.Element {
       handleMergeCancel();
     }
   }, [connectionNodeId]);
-
-  function goToCurrentVersion(): void {
-    // navigate back to current version
-    router.replace(`/process/${projectId}`);
-  }
-
-  function closeVersionHistoryBottomSheet(): void {
-    setShowVersionHistoryBottomSheet(false);
-    goToCurrentVersion();
-  }
 
   const handleMerge = useMutation(
     ({
@@ -173,21 +158,21 @@ function Canvas({ graph, project }: CanvasProps): JSX.Element {
     {
       onSuccess: () => {
         dispatch.setSnackMessage("✅ Cards merged!");
-        id && notifyOthers("Added a new card", id, account);
+        id && notifyOthers("Merged cards", id, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
 
-  const handleClickAddCard = useMutation(
+  const handleClickAddNode = useMutation(
     ({
       parentId,
       type,
       position,
     }: {
       parentId: string;
-      type: string;
+      type: vsmObjectTypes;
       position: Position;
     }) => {
       dispatch.setSnackMessage("⏳ Adding new card...");
@@ -210,14 +195,14 @@ function Canvas({ graph, project }: CanvasProps): JSX.Element {
     }
   );
 
-  const handleMoveCard = useMutation(
+  const handleMoveNode = useMutation(
     ({
-      cardId,
+      nodeId,
       targetId,
       position,
       includeChildren,
     }: {
-      cardId: string;
+      nodeId: string;
       targetId: string;
       position: Position;
       includeChildren: boolean;
@@ -225,11 +210,11 @@ function Canvas({ graph, project }: CanvasProps): JSX.Element {
       dispatch.setSnackMessage("⏳ Moving card...");
       return position === Position.Bottom
         ? moveVertice(
-            { vertexToMoveId: cardId, vertexDestinationParentId: targetId },
+            { vertexToMoveId: nodeId, vertexDestinationParentId: targetId },
             projectId,
             includeChildren
           )
-        : moveVerticeRightOfTarget({ vertexId: cardId }, targetId, projectId);
+        : moveVerticeRightOfTarget({ vertexId: nodeId }, targetId, projectId);
     },
     {
       onSuccess: () => {
@@ -241,16 +226,16 @@ function Canvas({ graph, project }: CanvasProps): JSX.Element {
     }
   );
 
-  const handleMergeInit = (nodeId: string): void => {
-    const initNode = nodes.find((node) => node.id === nodeId);
+  const handleMergeInit = (nodeId: string) => {
+    const sourceNode = nodes.find((node) => node.id === nodeId);
     setNodes((nodes) =>
       nodes.map((node) => {
         if (
-          initNode &&
-          initNode.id !== node.id &&
-          node.data.columnId == initNode?.data?.columnId &&
-          !initNode.data.children.find((childId) => childId === node.id) &&
-          !initNode.data.parentCardIDs.find((parentId) => node.id === parentId)
+          sourceNode &&
+          sourceNode.id !== node.id &&
+          node.data.columnId == sourceNode?.data?.columnId &&
+          !sourceNode.data.children.find((childId) => childId === node.id) &&
+          !sourceNode.data.parents.find((parentId) => parentId === node.id)
         ) {
           node.data = { ...node.data, mergeOption: true };
         } else {
@@ -265,7 +250,7 @@ function Canvas({ graph, project }: CanvasProps): JSX.Element {
     );
   };
 
-  const handleMergeCancel = (): void => {
+  const handleMergeCancel = () => {
     setNodes((nodes) =>
       nodes.map((node) => {
         node.data = { ...node.data, mergeOption: false, merging: false };
@@ -276,121 +261,121 @@ function Canvas({ graph, project }: CanvasProps): JSX.Element {
 
   let columnId: string | null = null;
 
-  const createNodes = (
-    card: vsmObject,
-    parentCard: vsmObject | null = null
-  ): void => {
-    if (parentCard) {
+  const createNodes = (node: vsmObject, parent: vsmObject | null = null) => {
+    if (parent) {
       if (
-        card.type === vsmObjectTypes.mainActivity ||
-        card.type === vsmObjectTypes.output ||
-        card.type === vsmObjectTypes.supplier ||
-        card.type === vsmObjectTypes.input ||
-        card.type === vsmObjectTypes.customer
+        node.type === vsmObjectTypes.mainActivity ||
+        node.type === vsmObjectTypes.output ||
+        node.type === vsmObjectTypes.supplier ||
+        node.type === vsmObjectTypes.input ||
+        node.type === vsmObjectTypes.customer
       ) {
-        columnId = card.id;
+        columnId = node.id;
       }
 
-      initEdges.push({
-        id: `${parentCard.id}=>${card.id}`,
-        source: parentCard.id,
-        target: card.id,
+      tempEdges.push({
+        id: `${parent.id}=>${node.id}`,
+        source: parent.id,
+        target: node.id,
       });
 
       // Occurs when a node has multiple parents
-      const duplicateNode = initNodes.find((node) => node.id === card.id);
+      const duplicateNode = tempNodes.find(
+        (tempNode) => tempNode.id === node.id
+      );
 
       if (duplicateNode) {
-        initNodes = initNodes.map((node: Node) => {
-          const newData = node.data;
-          if (node.id === card.id) {
-            newData.parentCardIDs.push(parentCard.id);
-            return { ...node, data: newData };
+        tempNodes = tempNodes.map((tempNode) => {
+          const newData = tempNode.data;
+          if (tempNode.id === node.id) {
+            newData.parents.push(parent.id);
+            return { ...tempNode, data: newData };
           }
-          return node;
+          return tempNode;
         });
         return;
       }
 
-      initNodes.push({
-        id: card.id,
+      tempNodes.push({
+        id: node.id,
         data: {
-          ...card,
-          handleClickCard: () => setSelectedObject(card),
+          ...node,
+          handleClickCard: () => setSelectedNode(node),
           handleClickAddCard: (id, type, position) =>
-            handleClickAddCard.mutate({ parentId: id, type, position }),
+            handleClickAddNode.mutate({ parentId: id, type, position }),
           handleMerge: (sourceId, targetId) =>
             sourceId && targetId && handleMerge.mutate({ sourceId, targetId }),
           mergeable:
-            card.children.length === 0 || card.type === vsmObjectTypes.choice,
+            node.children.length === 0 || node.type === vsmObjectTypes.choice,
           merging: !!connectionNodeId,
-          parentCardIDs: [parentCard.id],
+          parents: [parent.id],
           userCanEdit,
-          isChoiceChild: parentCard.type === vsmObjectTypes.choice,
+          isChoiceChild: parent.type === vsmObjectTypes.choice,
           columnId,
         },
         position: { x: 0, y: 0 },
-        type: card.type,
+        type: node.type,
         width:
           nodeWidth +
           getQIPRContainerWidth(
-            card?.tasks?.filter((task) => !task.solved).length
+            node?.tasks?.filter((task) => !task.solved).length
           ),
         height: nodeHeight,
       });
     } else {
-      initNodes.push({
-        id: card.id,
+      tempNodes.push({
+        id: node.id,
         data: {
-          ...card,
-          parentCardIDs: [],
-          columnId: card.id,
+          ...node,
+          parents: [],
+          columnId: node.id,
         },
         position: { x: 0, y: 0 },
-        type: card.type,
+        type: node.type,
         width: nodeWidth,
         height: nodeHeight,
       });
     }
 
-    card.children.forEach((childCardId) => {
-      const childCard = graph.find(
-        (card: vsmObject) => card.id === childCardId
-      );
-      childCard && createNodes(childCard, card);
+    node.children.forEach((childId) => {
+      const childNode = graph.find((node: vsmObject) => node.id === childId);
+      childNode && createNodes(childNode, node);
     });
   };
 
   const createFillerNodes = () => {
-    initNodes.forEach((node) => {
-      if (node?.data?.parentCardIDs?.length > 1) {
-        let depthDeepestCard: undefined | number = undefined;
-        node?.data?.parentCardIDs?.forEach((parentCardID) => {
-          const parentCard = initNodes.find((node) => node.id === parentCardID);
+    tempNodes.forEach((node) => {
+      if (node?.data?.parents?.length > 1) {
+        let depthDeepestNode: undefined | number = undefined;
+        node?.data?.parents?.forEach((parentNodeId) => {
+          const parentNode = tempNodes.find((node) => node.id === parentNodeId);
           if (
-            parentCard?.data?.depth &&
-            (!depthDeepestCard || parentCard?.data?.depth > depthDeepestCard)
+            parentNode?.data?.depth &&
+            (!depthDeepestNode || parentNode?.data?.depth > depthDeepestNode)
           )
-            depthDeepestCard = parentCard.data.depth;
+            depthDeepestNode = parentNode.data.depth;
         });
-        node?.data?.parentCardIDs?.forEach((parentCardID) => {
-          const parentCard = initNodes.find((node) => node.id === parentCardID);
+        node?.data?.parents?.forEach((parentNodeId) => {
+          const tempParentNode = tempNodes.find(
+            (node) => node.id === parentNodeId
+          );
           if (
-            parentCard &&
-            depthDeepestCard &&
-            parentCard.data.depth < depthDeepestCard
+            tempParentNode &&
+            depthDeepestNode &&
+            tempParentNode.data.depth < depthDeepestNode
           ) {
-            initEdges = initEdges.filter(
-              (edge) => edge.source !== parentCard.id || edge.target !== node.id
+            tempEdges = tempEdges.filter(
+              (edge) =>
+                edge.source !== tempParentNode.id || edge.target !== node.id
             );
-            let parentId = parentCard.id;
-            for (let i = parentCard.data.depth; i < depthDeepestCard; i++) {
+            let tempParentNodeId = tempParentNode.id;
+            for (let i = tempParentNode.data.depth; i < depthDeepestNode; i++) {
               const id = uid();
-              initNodes.push({
+              tempNodes.push({
                 id,
                 data: {
-                  parentCardIDs: [parentId],
-                  columnId: parentCard.data.columnId,
+                  parents: [tempParentNodeId],
+                  columnId: tempParentNode.data.columnId,
                   depth: i,
                   //TODO: Add children
                   children: [],
@@ -402,24 +387,24 @@ function Canvas({ graph, project }: CanvasProps): JSX.Element {
                 draggable: false,
                 selectable: false,
               });
-              initEdges.push({
-                id: `${parentId}=>${id}`,
-                source: parentId,
+              tempEdges.push({
+                id: `${tempParentNodeId}=>${id}`,
+                source: tempParentNodeId,
                 target: id,
                 type: "straight",
               });
-              initEdges.push({
+              tempEdges.push({
                 id: `${id}=>${id}`,
                 source: id,
                 target: id,
                 type: "straight",
               });
-              parentId = id;
+              tempParentNodeId = id;
             }
 
-            initEdges.push({
-              id: `${parentId}=>${node.id}`,
-              source: parentId,
+            tempEdges.push({
+              id: `${tempParentNodeId}=>${node.id}`,
+              source: tempParentNodeId,
               target: node.id,
             });
           }
@@ -431,21 +416,21 @@ function Canvas({ graph, project }: CanvasProps): JSX.Element {
   useEffect(() => {
     if (graph) {
       const root = graph.find(
-        (card: vsmObject) => card.type === vsmObjectTypes.root
+        (node: vsmObject) => node.type === vsmObjectTypes.root
       );
       if (root) {
-        if (selectedObject) {
-          const updatedSelectedObject = graph.find(
-            (node) => node.id === selectedObject.id
+        if (selectedNode) {
+          const updatedSelectedNode = graph.find(
+            (node) => node.id === selectedNode.id
           );
-          updatedSelectedObject && setSelectedObject(updatedSelectedObject);
+          updatedSelectedNode && setSelectedNode(updatedSelectedNode);
         }
         createNodes(root);
-        setNodesDepth(initNodes);
+        setNodesDepth(tempNodes);
         createFillerNodes();
-        const finalNodes = setLayout(initNodes, initEdges);
+        const finalNodes = setLayout(tempNodes, tempEdges);
         setNodes(finalNodes);
-        setEdges(initEdges);
+        setEdges(tempEdges);
       }
     }
   }, [graph]);
@@ -468,10 +453,7 @@ function Canvas({ graph, project }: CanvasProps): JSX.Element {
     setSource(nodeDragging);
   };
 
-  const onNodeDrag = (
-    evt: MouseEvent<Element>,
-    node: Node<NodeDataFull>
-  ): void => {
+  const onNodeDrag = (evt: MouseEvent<Element>, node: Node<NodeDataFull>) => {
     const centerX = node.position.x + (node.width || nodeWidth) / 2;
     const centerY = node.position.y + (node.height || nodeHeight) / 2;
 
@@ -500,13 +482,10 @@ function Canvas({ graph, project }: CanvasProps): JSX.Element {
     );
   }, [target]);
 
-  const onNodeDragStop = (
-    evt: MouseEvent<Element>,
-    node: Node<NodeData>
-  ): void => {
+  const onNodeDragStop = (evt: MouseEvent<Element>, node: Node<NodeData>) => {
     if (target && validDropTarget(node, target)) {
-      handleMoveCard.mutate({
-        cardId: node.id,
+      handleMoveNode.mutate({
+        nodeId: node.id,
         targetId: target.id,
         position:
           node.type === vsmObjectTypes.mainActivity &&
@@ -539,34 +518,9 @@ function Canvas({ graph, project }: CanvasProps): JSX.Element {
         overflow: "hidden",
       }}
     >
-      {showVersionHistoryBottomSheet && (
-        <div
-          onWheel={(e) => e.stopPropagation()}
-          style={{
-            position: "absolute",
-            bottom: "0",
-            zIndex: 1,
-            width: "100%",
-          }}
-        >
-          <Button
-            style={{
-              position: "absolute",
-              right: "0",
-              top: "0",
-            }}
-            variant={"ghost_icon"}
-            onClick={closeVersionHistoryBottomSheet}
-          >
-            <Icon data={close} />
-          </Button>
-          <ProcessTimeline processId={projectId} />
-        </div>
-      )}
       <CanvasButtons
         userCanEdit={userCanEdit}
         handleClickLabel={() => setVisibleLabelScrim(true)}
-        handleClickVersionHistory={() => setShowVersionHistoryBottomSheet(true)}
       />
       <ManageLabelBox
         handleClose={() => setVisibleLabelScrim(false)}
@@ -586,21 +540,21 @@ function Canvas({ graph, project }: CanvasProps): JSX.Element {
       />
       <ToBeToggle />
       <ResetProcessButton />
-      {selectedObject && (
+      {selectedNode && (
         <DeleteVsmObjectDialog
-          objectToDelete={selectedObject}
+          objectToDelete={selectedNode}
           visible={visibleDeleteScrim}
           onClose={() => {
             setVisibleDeleteScrim(false);
-            setSelectedObject(undefined);
+            setSelectedNode(undefined);
           }}
         />
       )}
       <VSMSideBar
-        onClose={() => setSelectedObject(undefined)}
+        onClose={() => setSelectedNode(undefined)}
         onDelete={() => setVisibleDeleteScrim(true)}
         canEdit={userCanEdit}
-        selectedObject={selectedObject}
+        selectedObject={selectedNode}
       />
       <ReactFlow
         nodes={nodes}
@@ -608,7 +562,7 @@ function Canvas({ graph, project }: CanvasProps): JSX.Element {
         nodeTypes={nodeTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        onPaneClick={() => setSelectedObject(undefined)}
+        onPaneClick={() => setSelectedNode(undefined)}
         minZoom={0.2}
         nodesDraggable={userCanEdit}
         nodesConnectable={true}
@@ -628,7 +582,7 @@ function Canvas({ graph, project }: CanvasProps): JSX.Element {
       </ReactFlow>
     </div>
   );
-}
+};
 
 export function CanvasWrapper(props: CanvasProps) {
   return (

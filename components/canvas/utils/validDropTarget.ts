@@ -9,12 +9,10 @@ export const validDropTarget = (
   if (!target || !source) return false;
   const sourceType = source.type;
   const targetType = target.type;
-  const targetIsParent = source?.data?.parentCardIDs?.find(
-    (id) => id === target.id
-  );
+  const targetIsParent = source?.data?.parents?.find((id) => id === target.id);
   const targetIsChoiceChild =
     sourceType === vsmObjectTypes.choice &&
-    target?.data?.parentCardIDs?.find((id) => id === source.id);
+    target?.data?.parents?.find((id) => id === source.id);
 
   return (
     !targetIsParent &&

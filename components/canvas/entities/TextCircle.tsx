@@ -1,17 +1,20 @@
+import { Typography } from "@equinor/eds-core-react";
 import styles from "./TextCircle.module.scss";
 
 type TextCircleProps = {
-  text: string;
   color: string;
+  text: string;
 };
 
-export const TextCircle = ({ text, color }: TextCircleProps) => (
+export const TextCircle = ({ color, text }: TextCircleProps) => (
   <div
     className={styles.container}
     style={{
-      background: color,
+      backgroundColor: color,
     }}
   >
-    {text}
+    <Typography variant="body_short" color="white">
+      {text}
+    </Typography>
   </div>
 );

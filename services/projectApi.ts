@@ -76,11 +76,3 @@ export const resetProcess = (
   id: number | string | string[]
 ): Promise<AxiosResponse> =>
   BaseAPIServices.post(`${baseUrl}/project/${id}/reset`, null);
-
-// Check at what datetimes the given project has been updated.
-export const getProjectUpdateTimes = (
-  id: number | string | string[]
-): Promise<string[]> =>
-  BaseAPIServices.get(`${baseUrl}/project/${id}/updates`).then(
-    (value) => value.data
-  );

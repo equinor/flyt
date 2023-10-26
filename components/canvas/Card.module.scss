@@ -40,6 +40,17 @@
   opacity: 0;
 }
 
+.card__choice__container {
+  display: flex;
+  text-align: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
 /* Choice card color is set in the component */
 
 .card--validDropTarget {

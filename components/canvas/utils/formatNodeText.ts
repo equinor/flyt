@@ -1,8 +1,8 @@
-export function formatCardText(
+export const formatNodeText = (
   text: string | null,
   maxLength = 100,
   removeNewLines = false
-): string {
+): string => {
   if (!text) return "";
   let formattedText = text.replace(
     /(\[((?:\[[^\]]*]|[^\[\]])*)]\([ \t]*()<?((?:\([^)]*\)|[^()\s])*?)>?[ \t]*((['"])(.*?)\6[ \t]*)?\))/g,
@@ -13,4 +13,4 @@ export function formatCardText(
   }
   if (removeNewLines) return formattedText.replace(/(\r\n|\n|\r)/gm, " ");
   return formattedText;
-}
+};

@@ -13,7 +13,7 @@ const setSingleNodeDepth = (
   if (!node) return;
   const { data } = node;
 
-  if (data?.parentCardIDs?.length > 1) {
+  if (data?.parents?.length > 1) {
     if (mergedNodesLooping.has(nodeId)) {
       const nodeDuplicate = mergedNodesLooping.get(nodeId)![0];
       const loopCount = mergedNodesLooping.get(nodeId)![1];
@@ -21,7 +21,7 @@ const setSingleNodeDepth = (
         nodeDuplicate.data.depth = parentDepth + 1;
       }
       mergedNodesLooping.set(nodeId, [nodeDuplicate, loopCount + 1]);
-      if (nodeDuplicate?.data?.parentCardIDs?.length === loopCount + 1) {
+      if (nodeDuplicate?.data?.parents?.length === loopCount + 1) {
         mergedNodesReady.push(nodeDuplicate);
         mergedNodesLooping.delete(nodeId);
       }

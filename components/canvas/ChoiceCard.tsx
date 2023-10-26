@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Connection, Handle, NodeProps, Position, useStore } from "reactflow";
-import { formatCardText } from "./utils/FormatCardText";
+import { formatNodeText } from "./utils/formatNodeText";
 
 import styles from "./Card.module.scss";
-import stylesCardButtons from "./CardButtons.module.scss";
+import stylesNodeButtons from "./CardButtons.module.scss";
 import { CardButtonsContainer } from "./CardButtonsContainer";
 import { SubActivityButton } from "./SubActivityButton";
 import { ChoiceButton } from "./ChoiceButton";
@@ -13,7 +13,7 @@ import { MergeEndButton } from "./MergeEndButton";
 import { MergeStartButton } from "./MergeStartButton";
 import { NodeData } from "types/NodeData";
 
-export const ChoiceCard = (props: NodeProps<NodeData>) => {
+export const ChoiceCard = ({ data, dragging }: NodeProps<NodeData>) => {
   const [hovering, setHovering] = useState(false);
   const connectionNodeId = useStore((state) => state.connectionNodeId);
 
@@ -32,19 +32,19 @@ export const ChoiceCard = (props: NodeProps<NodeData>) => {
     merging,
     handleMerge,
     mergeable,
-  } = props.data;
+  } = data;
 
   const size = 132;
   const lastChild = children[children?.length - 1];
 
   useEffect(() => {
     setHovering(false);
-  }, [props.dragging, connectionNodeId]);
+  }, [dragging, connectionNodeId]);
 
   return (
     <div
       onMouseEnter={() => {
-        !props.dragging && setHovering(true);
+        !dragging && setHovering(true);
       }}
       onMouseLeave={() => setHovering(false)}
     >
@@ -72,18 +72,7 @@ export const ChoiceCard = (props: NodeProps<NodeData>) => {
             {...{ fill: "#FDD835" }}
           />
         </svg>
-        <div
-          style={{
-            display: "flex",
-            textAlign: "center",
-            alignItems: "center",
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-          }}
-        >
+        <div className={styles["card__choice__container"]}>
           {description ? (
             <p
               style={{
@@ -93,20 +82,20 @@ export const ChoiceCard = (props: NodeProps<NodeData>) => {
               }}
               className={styles.text}
             >
-              {formatCardText(description, 50)}
+              {formatNodeText(description, 50)}
             </p>
           ) : (
             <p
               style={{ width: 100, marginLeft: 15 }}
               className={`${styles.text} ${styles["text--placeholder"]}`}
             >
-              {formatCardText(type)}
+              {formatNodeText(type)}
             </p>
           )}
         </div>
         <MergeEndButton hidden={!mergeOption} />
         <Handle
-          className={stylesCardButtons.handle}
+          className={stylesNodeButtons.handle}
           type="source"
           position={Position.Bottom}
           isConnectable={false}
