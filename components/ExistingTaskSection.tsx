@@ -14,12 +14,12 @@ import { getTaskShorthand } from "utils/getTaskShorthand";
 export function ExistingTaskSection(props: {
   visible: boolean;
   existingTaskFilter;
-  selectedObject: vsmObject;
+  selectedNode: vsmObject;
 }): JSX.Element {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
-  const { existingTaskFilter, selectedObject } = props;
-  const { tasks } = selectedObject;
+  const { existingTaskFilter, selectedNode } = props;
+  const { tasks } = selectedNode;
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
   const {
@@ -27,14 +27,14 @@ export function ExistingTaskSection(props: {
     error: fetchingTasksError,
     isLoading: fetchingTasks,
   } = useQuery(
-    `tasks - ${selectedObject.projectId}/${existingTaskFilter}`,
-    () => getTasksForProject(selectedObject.projectId).then((r) => r),
+    `tasks - ${selectedNode.projectId}/${existingTaskFilter}`,
+    () => getTasksForProject(selectedNode.projectId).then((r) => r),
     { enabled: !!existingTaskFilter }
   );
   const router = useRouter();
   const { id } = router.query;
   const taskLinkMutation = useMutation(
-    (task: taskObject) => linkTask(id, selectedObject.id, task.id),
+    (task: taskObject) => linkTask(id, selectedNode.id, task.id),
     {
       onSuccess: () => {
         notifyOthers("Added a Q/I/P to a card", id, account);
@@ -44,7 +44,7 @@ export function ExistingTaskSection(props: {
     }
   );
   const taskUnlinkMutation = useMutation(
-    (task: taskObject) => unlinkTask(id, selectedObject.id, task.id),
+    (task: taskObject) => unlinkTask(id, selectedNode.id, task.id),
     {
       onSuccess() {
         notifyOthers("Removed Q/I/P from a card", id, account);

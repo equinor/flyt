@@ -3,14 +3,14 @@ import { useState } from "react";
 import { Handle, NodeProps, Position } from "reactflow";
 import { formatNodeText } from "./utils/formatNodeText";
 
-import styles from "./Card.module.scss";
-import stylesCardButtons from "./CardButtons.module.scss";
-import { CardButtonsContainer } from "./CardButtonsContainer";
+import styles from "./Node.module.scss";
+import stylesNodeButtons from "./NodeButtons.module.scss";
+import { NodeButtonsContainer } from "./NodeButtonsContainer";
 import { MainActivityButton } from "./MainActivityButton";
 import { QIPRContainer } from "./QIPRContainer";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
 
-export function GenericCard(props: NodeProps<NodeData>) {
+export function GenericNode(props: NodeProps<NodeData>) {
   const [hovering, setHovering] = useState(false);
 
   const {
@@ -20,41 +20,41 @@ export function GenericCard(props: NodeProps<NodeData>) {
     tasks,
     isValidDropTarget,
     isDropTarget,
-    handleClickCard,
-    handleClickAddCard,
+    handleClickNode,
+    handleClickAddNode,
     userCanEdit,
     merging,
   } = props.data;
 
-  const renderCardButtons = () => {
+  const renderNodeButtons = () => {
     if (hovering && !merging) {
       if (type === "Input") {
         return (
-          <CardButtonsContainer position={Position.Right}>
+          <NodeButtonsContainer position={Position.Right}>
             <MainActivityButton
               onClick={() =>
-                handleClickAddCard(
+                handleClickAddNode(
                   id,
                   vsmObjectTypes.mainActivity,
                   Position.Right
                 )
               }
             />
-          </CardButtonsContainer>
+          </NodeButtonsContainer>
         );
       } else if (type === "Output") {
         return (
-          <CardButtonsContainer position={Position.Left}>
+          <NodeButtonsContainer position={Position.Left}>
             <MainActivityButton
               onClick={() =>
-                handleClickAddCard(
+                handleClickAddNode(
                   id,
                   vsmObjectTypes.mainActivity,
                   Position.Left
                 )
               }
             />
-          </CardButtonsContainer>
+          </NodeButtonsContainer>
         );
       }
     }
@@ -72,18 +72,18 @@ export function GenericCard(props: NodeProps<NodeData>) {
         style={{ display: "flex" }}
       >
         <div
-          onClick={() => handleClickCard()}
-          className={`${styles.card} ${styles["card--generic"]} ${
+          onClick={() => handleClickNode()}
+          className={`${styles.node} ${styles["node--generic"]} ${
             styles[
               isDropTarget && isValidDropTarget
-                ? "card--validDropTarget"
+                ? "node--validDropTarget"
                 : isValidDropTarget === false
-                ? "card--invalidDropTarget"
+                ? "node--invalidDropTarget"
                 : ""
             ]
           }`}
         >
-          <div className={styles["card__description-container"]}>
+          <div className={styles["node__description-container"]}>
             {description ? (
               <p className={styles.text}>{formatNodeText(description, 70)}</p>
             ) : (
@@ -93,15 +93,15 @@ export function GenericCard(props: NodeProps<NodeData>) {
             )}
           </div>
           <Handle
-            className={stylesCardButtons["handle--hidden"]}
+            className={stylesNodeButtons["handle--hidden"]}
             type="target"
             position={Position.Top}
             isConnectable={false}
           />
         </div>
-        <QIPRContainer onClick={() => handleClickCard()} tasks={tasks} />
+        <QIPRContainer onClick={() => handleClickNode()} tasks={tasks} />
       </div>
-      {userCanEdit && renderCardButtons()}
+      {userCanEdit && renderNodeButtons()}
     </div>
   );
 }

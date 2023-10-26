@@ -11,7 +11,7 @@
   filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.44));
 }
 
-.card {
+.node {
   display: flex;
   flex-direction: column;
   width: 130px;
@@ -20,27 +20,27 @@
   color: #565656;
 }
 
-.card--generic {
+.node--generic {
   background-color: #00d889;
 }
 
-.card--mainactivity {
+.node--mainactivity {
   background-color: #00c1ff;
 }
 
-.card--subactivity {
+.node--subactivity {
   background-color: #fdd835;
 }
 
-.card--waiting {
+.node--waiting {
   background-color: #ff8f00;
 }
 
-.card--empty {
+.node--empty {
   opacity: 0;
 }
 
-.card__choice__container {
+.node__choice__container {
   display: flex;
   text-align: center;
   align-items: center;
@@ -51,36 +51,36 @@
   height: 100%;
 }
 
-/* Choice card color is set in the component */
+/* Choice node color is set in the component */
 
-.card--validDropTarget {
+.node--validDropTarget {
   filter: brightness(1.15);
 }
 
-.card--invalidDropTarget {
+.node--invalidDropTarget {
   filter: brightness(0.85);
 }
 
-.card__description-container {
+.node__description-container {
   padding: 7.5px 10px;
   overflow-wrap: break-word;
   overflow: hidden;
 }
 
-.card__role-container {
+.node__role-container {
   margin-top: auto;
   height: 13px;
   padding: 5px 10px;
   background-image: linear-gradient(rgb(0 0 0/5%) 0 0);
 }
 
-.card__time-container {
+.node__time-container {
   height: 13px;
   padding: 5px 10px;
   background-image: linear-gradient(rgb(0 0 0/10%) 0 0);
 }
 
-.card__waitingtime-container {
+.node__waitingtime-container {
   display: flex;
   align-items: center;
   padding: 0px 10px;

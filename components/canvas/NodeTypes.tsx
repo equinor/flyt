@@ -1,21 +1,21 @@
-import { MainActivityCard } from "./MainActivityCard";
-import { GenericCard } from "./GenericCard";
-import { SubActivityCard } from "./SubActivityCard";
-import { ChoiceCard } from "./ChoiceCard";
-import { WaitingCard } from "./WaitingCard";
-import { RootCard } from "./RootCard";
-import { EmptyCard } from "./EmptyCard";
+import { MainActivityNode } from "./MainActivityNode";
+import { GenericNode } from "./GenericNode";
+import { SubActivityNode } from "./SubActivityNode";
+import { ChoiceNode } from "./ChoiceNode";
+import { WaitingNode } from "./WaitingNode";
+import { RootNode } from "./RootNode";
+import { EmptyNode } from "./EmptyNode";
 import { NodeTypes } from "reactflow";
 
 export const nodeTypes: NodeTypes = {
-  Root: RootCard,
-  Empty: EmptyCard,
-  Supplier: GenericCard,
-  Input: GenericCard,
-  MainActivity: MainActivityCard,
-  Output: GenericCard,
-  Customer: GenericCard,
-  SubActivity: SubActivityCard,
-  Waiting: WaitingCard,
-  Choice: ChoiceCard,
+  Root: RootNode,
+  Empty: EmptyNode,
+  Supplier: GenericNode,
+  Input: GenericNode,
+  MainActivity: MainActivityNode,
+  Output: GenericNode,
+  Customer: GenericNode,
+  SubActivity: SubActivityNode,
+  Waiting: WaitingNode,
+  Choice: ChoiceNode,
 };

@@ -1,10 +1,10 @@
-import styles from "./CardButtons.module.scss";
-import { CardButtonMerge } from "../../types/CardButton";
+import styles from "./NodeButtons.module.scss";
+import { NodeButtonMerge } from "../../types/NodeButton";
 import { Handle, Position, Connection } from "reactflow";
 
-export const MergeStartButton = (props: CardButtonMerge) => (
+export const MergeStartButton = (props: NodeButtonMerge) => (
   <div
-    className={`${styles["cardButton--container"]} ${styles["cardButton--container--merge"]}`}
+    className={`${styles["nodeButton--container"]} ${styles["nodeButton--container--merge"]}`}
     title="Merge"
   >
     <Handle

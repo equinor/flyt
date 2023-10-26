@@ -1,13 +1,13 @@
-import styles from "./CardButtons.module.scss";
-import { CardButton } from "../../types/CardButton";
-import WaitingButtonIcon from "../../public/CardButtons/WaitingButtonIcon.svg";
+import styles from "./NodeButtons.module.scss";
+import { NodeButton } from "../../types/NodeButton";
+import WaitingButtonIcon from "../../public/NodeButtons/WaitingButtonIcon.svg";
 
-export const WaitingButton = (props: CardButton) => (
+export const WaitingButton = (props: NodeButton) => (
   <div
-    className={styles["cardButton--container"]}
+    className={styles["nodeButton--container"]}
     onClick={() => props.onClick()}
     title="Waiting"
   >
-    <img src={WaitingButtonIcon.src} className={styles.cardButton} />
+    <img src={WaitingButtonIcon.src} className={styles.nodeButton} />
   </div>
 );

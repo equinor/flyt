@@ -13,13 +13,13 @@ export type ProjectModel = {
   fetchingProject: boolean;
   project: vsmProject;
   snackMessage: string | null;
-  selectedObject: vsmObject | null;
+  selectedNode: vsmObject | null;
   //// ACTIONS ///////////////////
   //someAction: Action<model, payload>;
-  addTaskToSelectedObject: Action<ProjectModel, taskObject>;
-  updateTaskDescriptionInSelectedObject: Action<ProjectModel, taskObject>;
-  removeTaskFromSelectedObject: Action<ProjectModel, string>;
-  setSelectedObject: Action<ProjectModel, vsmObject | null>;
+  addTaskToselectedNode: Action<ProjectModel, taskObject>;
+  updateTaskDescriptionInselectedNode: Action<ProjectModel, taskObject>;
+  removeTaskFromselectedNode: Action<ProjectModel, string>;
+  setselectedNode: Action<ProjectModel, vsmObject | null>;
   patchLocalObject: Action<ProjectModel, vsmObject>;
   setErrorProject: Action<ProjectModel, Record<string, unknown>>;
   setFetchingProject: Action<ProjectModel, boolean>;
@@ -55,30 +55,30 @@ const projectModel: ProjectModel = {
   errorProject: null,
   project: null,
   snackMessage: null,
-  selectedObject: null,
+  selectedNode: null,
 
-  // selectedObject: computed((state) => {
-  //   const { project, selectedObjectId } = state;
+  // selectedNode: computed((state) => {
+  //   const { project, selectedNodeId } = state;
   //
   // }),
 
   //Actions
-  addTaskToSelectedObject: action((state, payload) => {
-    const { selectedObject } = state;
-    if (selectedObject) {
-      selectedObject.tasks = [...selectedObject.tasks, payload];
+  addTaskToselectedNode: action((state, payload) => {
+    const { selectedNode } = state;
+    if (selectedNode) {
+      selectedNode.tasks = [...selectedNode.tasks, payload];
     }
   }),
-  updateTaskDescriptionInSelectedObject: action((state, newTask) => {
-    const { selectedObject } = state;
-    if (selectedObject && selectedObject.tasks) {
-      const oldTask = selectedObject.tasks.find((t) => t.id === newTask.id);
+  updateTaskDescriptionInselectedNode: action((state, newTask) => {
+    const { selectedNode } = state;
+    if (selectedNode && selectedNode.tasks) {
+      const oldTask = selectedNode.tasks.find((t) => t.id === newTask.id);
       if (oldTask) oldTask.description = newTask.description;
     }
   }),
-  removeTaskFromSelectedObject: action((state, taskId) => {
-    const { selectedObject } = state;
-    selectedObject.tasks = original(selectedObject.tasks).filter(
+  removeTaskFromselectedNode: action((state, taskId) => {
+    const { selectedNode } = state;
+    selectedNode.tasks = original(selectedNode.tasks).filter(
       (t) => t?.id !== taskId
     );
   }),
@@ -94,8 +94,8 @@ const projectModel: ProjectModel = {
   setProject: action((state, payload: vsmProject) => {
     state.project = payload;
   }),
-  setSelectedObject: action((state, payload) => {
-    state.selectedObject = payload;
+  setselectedNode: action((state, payload) => {
+    state.selectedNode = payload;
   }),
   fetchProject: thunk(async (actions, payload) => {
     const { id } = payload;
@@ -186,7 +186,7 @@ const projectModel: ProjectModel = {
           // Todo: delete the object locally
           //  Until then, just refresh the whole project
           actions.fetchProject({ id: projectId });
-          actions.setSelectedObject(null);
+          actions.setselectedNode(null);
           return actions.setSnackMessage("Deleted object");
         })
         .catch((reason) => {
@@ -204,7 +204,7 @@ const projectModel: ProjectModel = {
       .then((response) => {
         actions.setSnackMessage("✅ Task added!");
 
-        actions.addTaskToSelectedObject(response.data);
+        actions.addTaskToselectedNode(response.data);
 
         //Todo: locally update before api-update?
         actions.fetchProject({ id: response.data.fkProject });
@@ -221,7 +221,7 @@ const projectModel: ProjectModel = {
       .then((response) => {
         actions.setSnackMessage("✅ Task updated!");
 
-        actions.updateTaskDescriptionInSelectedObject(response.data);
+        actions.updateTaskDescriptionInselectedNode(response.data);
 
         //Todo: locally update before api-update?
         actions.fetchProject({ id: response.data.fkProject });
@@ -244,8 +244,8 @@ const projectModel: ProjectModel = {
     BaseAPIServices.delete(`/api/v1.0/task/unlink/${id}/${taskId}`, payload)
       .then(() => {
         actions.setSnackMessage("✅ Unlinked task!");
-        // actions.removeTaskFromSelectedObject(response.data);
-        actions.removeTaskFromSelectedObject(id);
+        // actions.removeTaskFromselectedNode(response.data);
+        actions.removeTaskFromselectedNode(id);
         //Todo: locally update before api-update?
         actions.fetchProject({ id: projectId });
       })
@@ -263,9 +263,9 @@ const projectModel: ProjectModel = {
     BaseAPIServices.put(`/api/v1.0/task/link/${id}/${taskId}`, payload)
       .then(() => {
         actions.setSnackMessage("✅ Linked task!");
-        // actions.removeTaskFromSelectedObject(response.data);
+        // actions.removeTaskFromselectedNode(response.data);
         //Todo: a
-        actions.addTaskToSelectedObject(task);
+        actions.addTaskToselectedNode(task);
 
         //Todo: locally update before api-update?
         actions.fetchProject({ id: projectId });

@@ -9,8 +9,8 @@ export type NodeData = {
   columnId: string | null;
   mergeOption?: boolean;
   handleMerge: (sourceId: string | null, targetId: string | null) => void;
-  handleClickCard: () => void;
-  handleClickAddCard: (
+  handleClickNode: () => void;
+  handleClickAddNode: (
     nodeId: string,
     type: vsmObjectTypes,
     position: Position

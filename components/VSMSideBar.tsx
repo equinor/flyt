@@ -6,10 +6,10 @@ export function VSMSideBar(props: {
   onClose: () => void;
   onDelete: () => void;
   canEdit: boolean;
-  selectedObject?: vsmObject;
+  selectedNode?: vsmObject;
 }): JSX.Element {
-  const selectedObject = props.selectedObject;
-  if (!selectedObject) return <></>;
+  const selectedNode = props.selectedNode;
+  if (!selectedNode) return <></>;
   return (
     <div>
       <div
@@ -21,8 +21,8 @@ export function VSMSideBar(props: {
             onClose={props.onClose}
             onDelete={props.onDelete}
             canEdit={props.canEdit}
-            selectedObject={selectedObject}
-            isLoading={!selectedObject}
+            selectedNode={selectedNode}
+            isLoading={!selectedNode}
           />
         </div>
       </div>

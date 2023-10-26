@@ -1,9 +1,9 @@
 import { Handle, Position } from "reactflow";
-import styles from "./Card.module.scss";
+import styles from "./Node.module.scss";
 
-export const EmptyCard = () => (
+export const EmptyNode = () => (
   <div className={styles.container}>
-    <div className={`${styles.card} ${styles["card--empty"]}`}>
+    <div className={`${styles.node} ${styles["node--empty"]}`}>
       <Handle
         className={styles.handle}
         type="target"

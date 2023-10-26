@@ -5,9 +5,9 @@ import { formatDuration } from "types/unitDefinitions";
 import { Icon } from "@equinor/eds-core-react";
 import { time as timeIcon } from "@equinor/eds-icons";
 
-import styles from "./Card.module.scss";
-import stylesCardButtons from "./CardButtons.module.scss";
-import { CardButtonsContainer } from "./CardButtonsContainer";
+import styles from "./Node.module.scss";
+import stylesNodeButtons from "./NodeButtons.module.scss";
+import { NodeButtonsContainer } from "./NodeButtonsContainer";
 import { SubActivityButton } from "./SubActivityButton";
 import { ChoiceButton } from "./ChoiceButton";
 import { WaitingButton } from "./WaitingButton";
@@ -18,7 +18,7 @@ import { vsmObjectTypes } from "types/vsmObjectTypes";
 import { MergeStartButton } from "./MergeStartButton";
 import { MergeEndButton } from "./MergeEndButton";
 
-export const WaitingCard = (props: NodeProps<NodeData>) => {
+export const WaitingNode = (props: NodeProps<NodeData>) => {
   const [hovering, setHovering] = useState(false);
   const connectionNodeId = useStore((state) => state.connectionNodeId);
 
@@ -32,11 +32,11 @@ export const WaitingCard = (props: NodeProps<NodeData>) => {
     isDropTarget,
     mergeable,
     mergeOption,
-    handleClickCard,
+    handleClickNode,
     handleMerge,
     merging,
     isChoiceChild,
-    handleClickAddCard,
+    handleClickAddNode,
     userCanEdit,
   } = props.data;
 
@@ -44,14 +44,14 @@ export const WaitingCard = (props: NodeProps<NodeData>) => {
     setHovering(false);
   }, [props.dragging, connectionNodeId]);
 
-  const renderCardButtons = () => {
+  const renderNodeButtons = () => {
     if (hovering && !merging) {
       return (
         <>
-          <CardButtonsContainer position={Position.Bottom}>
+          <NodeButtonsContainer position={Position.Bottom}>
             <SubActivityButton
               onClick={() =>
-                handleClickAddCard(
+                handleClickAddNode(
                   id,
                   vsmObjectTypes.subActivity,
                   Position.Bottom
@@ -60,12 +60,12 @@ export const WaitingCard = (props: NodeProps<NodeData>) => {
             />
             <ChoiceButton
               onClick={() =>
-                handleClickAddCard(id, vsmObjectTypes.choice, Position.Bottom)
+                handleClickAddNode(id, vsmObjectTypes.choice, Position.Bottom)
               }
             />
             <WaitingButton
               onClick={() =>
-                handleClickAddCard(id, vsmObjectTypes.waiting, Position.Bottom)
+                handleClickAddNode(id, vsmObjectTypes.waiting, Position.Bottom)
               }
             />
             {mergeable && (
@@ -73,13 +73,13 @@ export const WaitingCard = (props: NodeProps<NodeData>) => {
                 onConnect={(e: Connection) => handleMerge(e.source, e.target)}
               />
             )}
-          </CardButtonsContainer>
+          </NodeButtonsContainer>
           {isChoiceChild && (
             <>
-              <CardButtonsContainer position={Position.Right}>
+              <NodeButtonsContainer position={Position.Right}>
                 <SubActivityButton
                   onClick={() =>
-                    handleClickAddCard(
+                    handleClickAddNode(
                       id,
                       vsmObjectTypes.subActivity,
                       Position.Right
@@ -88,7 +88,7 @@ export const WaitingCard = (props: NodeProps<NodeData>) => {
                 />
                 <ChoiceButton
                   onClick={() =>
-                    handleClickAddCard(
+                    handleClickAddNode(
                       id,
                       vsmObjectTypes.choice,
                       Position.Right
@@ -97,18 +97,18 @@ export const WaitingCard = (props: NodeProps<NodeData>) => {
                 />
                 <WaitingButton
                   onClick={() =>
-                    handleClickAddCard(
+                    handleClickAddNode(
                       id,
                       vsmObjectTypes.waiting,
                       Position.Right
                     )
                   }
                 />
-              </CardButtonsContainer>
-              <CardButtonsContainer position={Position.Left}>
+              </NodeButtonsContainer>
+              <NodeButtonsContainer position={Position.Left}>
                 <SubActivityButton
                   onClick={() =>
-                    handleClickAddCard(
+                    handleClickAddNode(
                       id,
                       vsmObjectTypes.subActivity,
                       Position.Left
@@ -117,19 +117,19 @@ export const WaitingCard = (props: NodeProps<NodeData>) => {
                 />
                 <ChoiceButton
                   onClick={() =>
-                    handleClickAddCard(id, vsmObjectTypes.choice, Position.Left)
+                    handleClickAddNode(id, vsmObjectTypes.choice, Position.Left)
                   }
                 />
                 <WaitingButton
                   onClick={() =>
-                    handleClickAddCard(
+                    handleClickAddNode(
                       id,
                       vsmObjectTypes.waiting,
                       Position.Left
                     )
                   }
                 />
-              </CardButtonsContainer>
+              </NodeButtonsContainer>
             </>
           )}
         </>
@@ -149,25 +149,25 @@ export const WaitingCard = (props: NodeProps<NodeData>) => {
         style={{ display: "flex" }}
       >
         <div
-          onClick={() => handleClickCard()}
-          className={`${styles.card} ${styles["card--waiting"]} ${
+          onClick={() => handleClickNode()}
+          className={`${styles.node} ${styles["node--waiting"]} ${
             styles[
               isDropTarget && isValidDropTarget
-                ? "card--validDropTarget"
+                ? "node--validDropTarget"
                 : isValidDropTarget === false
-                ? "card--invalidDropTarget"
+                ? "node--invalidDropTarget"
                 : ""
             ]
           }`}
         >
-          <div className={styles["card__description-container"]}>
+          <div className={styles["node__description-container"]}>
             <p className={`${styles.text} ${styles["text--placeholder"]}`}>
               {formatNodeText(type, 70)}
             </p>
           </div>
           <div>
             <p
-              className={`${styles.text} ${styles["card__waitingtime-container"]}`}
+              className={`${styles.text} ${styles["node__waitingtime-container"]}`}
             >
               <Icon data={timeIcon} size={24} style={{ marginRight: 5 }} />
               {formatDuration(duration, unit)}
@@ -175,16 +175,16 @@ export const WaitingCard = (props: NodeProps<NodeData>) => {
           </div>
           <MergeEndButton hidden={!mergeOption} />
           <Handle
-            className={stylesCardButtons["handle--hidden"]}
+            className={stylesNodeButtons["handle--hidden"]}
             type="source"
             position={Position.Bottom}
             isConnectable={false}
             isConnectableEnd={false}
           />
         </div>
-        <QIPRContainer onClick={() => handleClickCard()} tasks={tasks} />
+        <QIPRContainer onClick={() => handleClickNode()} tasks={tasks} />
       </div>
-      {userCanEdit && renderCardButtons()}
+      {userCanEdit && renderNodeButtons()}
     </div>
   );
 };

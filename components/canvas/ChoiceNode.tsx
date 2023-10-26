@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { Connection, Handle, NodeProps, Position, useStore } from "reactflow";
 import { formatNodeText } from "./utils/formatNodeText";
 
-import styles from "./Card.module.scss";
-import stylesNodeButtons from "./CardButtons.module.scss";
-import { CardButtonsContainer } from "./CardButtonsContainer";
+import styles from "./Node.module.scss";
+import stylesNodeButtons from "./NodeButtons.module.scss";
+import { NodeButtonsContainer } from "./NodeButtonsContainer";
 import { SubActivityButton } from "./SubActivityButton";
 import { ChoiceButton } from "./ChoiceButton";
 import { WaitingButton } from "./WaitingButton";
@@ -13,7 +13,7 @@ import { MergeEndButton } from "./MergeEndButton";
 import { MergeStartButton } from "./MergeStartButton";
 import { NodeData } from "types/NodeData";
 
-export const ChoiceCard = ({ data, dragging }: NodeProps<NodeData>) => {
+export const ChoiceNode = ({ data, dragging }: NodeProps<NodeData>) => {
   const [hovering, setHovering] = useState(false);
   const connectionNodeId = useStore((state) => state.connectionNodeId);
 
@@ -23,9 +23,9 @@ export const ChoiceCard = ({ data, dragging }: NodeProps<NodeData>) => {
     type,
     isDropTarget,
     isValidDropTarget,
-    handleClickCard,
+    handleClickNode,
     isChoiceChild,
-    handleClickAddCard,
+    handleClickAddNode,
     userCanEdit,
     children,
     mergeOption,
@@ -49,13 +49,13 @@ export const ChoiceCard = ({ data, dragging }: NodeProps<NodeData>) => {
       onMouseLeave={() => setHovering(false)}
     >
       <div
-        onClick={() => handleClickCard()}
+        onClick={() => handleClickNode()}
         className={`${hovering && !merging && styles["container--hover"]} ${
           styles[
             isDropTarget && isValidDropTarget
-              ? "card--validDropTarget"
+              ? "node--validDropTarget"
               : isValidDropTarget === false
-              ? "card--invalidDropTarget"
+              ? "node--invalidDropTarget"
               : ""
           ]
         }`}
@@ -72,7 +72,7 @@ export const ChoiceCard = ({ data, dragging }: NodeProps<NodeData>) => {
             {...{ fill: "#FDD835" }}
           />
         </svg>
-        <div className={styles["card__choice__container"]}>
+        <div className={styles["node__choice__container"]}>
           {description ? (
             <p
               style={{
@@ -104,10 +104,10 @@ export const ChoiceCard = ({ data, dragging }: NodeProps<NodeData>) => {
       </div>
       {hovering && userCanEdit && !merging && (
         <>
-          <CardButtonsContainer position={Position.Bottom}>
+          <NodeButtonsContainer position={Position.Bottom}>
             <SubActivityButton
               onClick={() =>
-                handleClickAddCard(
+                handleClickAddNode(
                   lastChild || id,
                   vsmObjectTypes.subActivity,
                   lastChild ? Position.Right : Position.Bottom
@@ -116,7 +116,7 @@ export const ChoiceCard = ({ data, dragging }: NodeProps<NodeData>) => {
             />
             <ChoiceButton
               onClick={() =>
-                handleClickAddCard(
+                handleClickAddNode(
                   lastChild || id,
                   vsmObjectTypes.choice,
                   lastChild ? Position.Right : Position.Bottom
@@ -125,7 +125,7 @@ export const ChoiceCard = ({ data, dragging }: NodeProps<NodeData>) => {
             />
             <WaitingButton
               onClick={() =>
-                handleClickAddCard(
+                handleClickAddNode(
                   lastChild || id,
                   vsmObjectTypes.waiting,
                   lastChild ? Position.Right : Position.Bottom
@@ -137,13 +137,13 @@ export const ChoiceCard = ({ data, dragging }: NodeProps<NodeData>) => {
                 onConnect={(e: Connection) => handleMerge(e.source, e.target)}
               />
             )}
-          </CardButtonsContainer>
+          </NodeButtonsContainer>
           {isChoiceChild && (
             <>
-              <CardButtonsContainer position={Position.Right}>
+              <NodeButtonsContainer position={Position.Right}>
                 <SubActivityButton
                   onClick={() =>
-                    handleClickAddCard(
+                    handleClickAddNode(
                       id,
                       vsmObjectTypes.subActivity,
                       Position.Right
@@ -152,7 +152,7 @@ export const ChoiceCard = ({ data, dragging }: NodeProps<NodeData>) => {
                 />
                 <ChoiceButton
                   onClick={() =>
-                    handleClickAddCard(
+                    handleClickAddNode(
                       id,
                       vsmObjectTypes.choice,
                       Position.Right
@@ -161,18 +161,18 @@ export const ChoiceCard = ({ data, dragging }: NodeProps<NodeData>) => {
                 />
                 <WaitingButton
                   onClick={() =>
-                    handleClickAddCard(
+                    handleClickAddNode(
                       id,
                       vsmObjectTypes.waiting,
                       Position.Right
                     )
                   }
                 />
-              </CardButtonsContainer>
-              <CardButtonsContainer position={Position.Left}>
+              </NodeButtonsContainer>
+              <NodeButtonsContainer position={Position.Left}>
                 <SubActivityButton
                   onClick={() =>
-                    handleClickAddCard(
+                    handleClickAddNode(
                       id,
                       vsmObjectTypes.subActivity,
                       Position.Left
@@ -181,19 +181,19 @@ export const ChoiceCard = ({ data, dragging }: NodeProps<NodeData>) => {
                 />
                 <ChoiceButton
                   onClick={() =>
-                    handleClickAddCard(id, vsmObjectTypes.choice, Position.Left)
+                    handleClickAddNode(id, vsmObjectTypes.choice, Position.Left)
                   }
                 />
                 <WaitingButton
                   onClick={() =>
-                    handleClickAddCard(
+                    handleClickAddNode(
                       id,
                       vsmObjectTypes.waiting,
                       Position.Left
                     )
                   }
                 />
-              </CardButtonsContainer>
+              </NodeButtonsContainer>
             </>
           )}
         </>

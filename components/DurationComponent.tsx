@@ -8,17 +8,17 @@ import {
 import { useEffect, useState } from "react";
 
 export function DurationComponent(props: {
-  selectedObject: vsmObject;
+  selectedNode: vsmObject;
   onChangeDuration: (e: { duration: number; unit: string }) => void;
   disabled: boolean;
 }): JSX.Element {
-  const [duration, setDuration] = useState(props.selectedObject.duration);
-  const [unit, setUnit] = useState(props.selectedObject.unit);
+  const [duration, setDuration] = useState(props.selectedNode.duration);
+  const [unit, setUnit] = useState(props.selectedNode.unit);
 
   useEffect(() => {
-    setDuration(props.selectedObject.duration);
-    setUnit(props.selectedObject.unit);
-  }, [props.selectedObject]);
+    setDuration(props.selectedNode.duration);
+    setUnit(props.selectedNode.unit);
+  }, [props.selectedNode]);
 
   return (
     <div style={{ display: "flex" }}>

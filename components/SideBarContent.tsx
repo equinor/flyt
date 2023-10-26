@@ -24,7 +24,7 @@ export function SideBarContent(props: {
   onClose: () => void;
   onDelete: () => void;
   canEdit: boolean;
-  selectedObject;
+  selectedNode;
   isLoading: boolean;
 }): JSX.Element {
   const { accounts } = useMsal();
@@ -46,8 +46,8 @@ export function SideBarContent(props: {
     }
   );
 
-  function patchCard(
-    selectedObject: vsmObject,
+  function patchNode(
+    selectedNode: vsmObject,
     updates: {
       description?: string;
       role?: string;
@@ -58,16 +58,16 @@ export function SideBarContent(props: {
     debounce(
       () => {
         vsmObjectMutation.mutate({
-          id: selectedObject.id,
-          ...{ ...selectedObject, ...updates },
+          id: selectedNode.id,
+          ...{ ...selectedNode, ...updates },
         });
       },
       1500,
-      `update ${Object.keys(updates)[0]} - ${selectedObject.id}`
+      `update ${Object.keys(updates)[0]} - ${selectedNode.id}`
     );
   }
 
-  const selectedObject = props.selectedObject;
+  const selectedNode = props.selectedNode;
   const [showNewTaskSection, setShowNewTaskSection] = useState(false);
 
   if (props.isLoading) {
@@ -114,28 +114,26 @@ export function SideBarContent(props: {
     return (
       <NewTaskSection
         onClose={() => setShowNewTaskSection(false)}
-        selectedObject={selectedObject}
+        selectedNode={selectedNode}
       />
     );
 
   return (
-    <Fragment key={selectedObject?.id}>
+    <Fragment key={selectedNode?.id}>
       <SideBarHeader
-        object={selectedObject}
+        object={selectedNode}
         onClose={props.onClose}
         onDelete={props.onDelete}
         canEdit={props.canEdit}
       />
       <SideBarBody
-        selectedObject={selectedObject}
+        selectedNode={selectedNode}
         onChangeDescription={(description) =>
-          patchCard(selectedObject, { description })
+          patchNode(selectedNode, { description })
         }
-        onChangeRole={(e) =>
-          patchCard(selectedObject, { role: e.target.value })
-        }
+        onChangeRole={(e) => patchNode(selectedNode, { role: e.target.value })}
         onChangeDuration={(e) =>
-          patchCard(selectedObject, { duration: e.duration, unit: e.unit })
+          patchNode(selectedNode, { duration: e.duration, unit: e.unit })
         }
         setShowNewTaskSection={setShowNewTaskSection}
         canEdit={props.canEdit}

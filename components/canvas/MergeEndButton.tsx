@@ -1,4 +1,4 @@
-import styles from "./CardButtons.module.scss";
+import styles from "./NodeButtons.module.scss";
 import { Handle, Position } from "reactflow";
 
 export const MergeEndButton = (props: { hidden: boolean }) => (

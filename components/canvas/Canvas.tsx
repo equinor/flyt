@@ -300,8 +300,8 @@ const Canvas = ({ graph, project }: CanvasProps) => {
         id: node.id,
         data: {
           ...node,
-          handleClickCard: () => setSelectedNode(node),
-          handleClickAddCard: (id, type, position) =>
+          handleClickNode: () => setSelectedNode(node),
+          handleClickAddNode: (id, type, position) =>
             handleClickAddNode.mutate({ parentId: id, type, position }),
           handleMerge: (sourceId, targetId) =>
             sourceId && targetId && handleMerge.mutate({ sourceId, targetId }),
@@ -414,24 +414,22 @@ const Canvas = ({ graph, project }: CanvasProps) => {
   };
 
   useEffect(() => {
-    if (graph) {
-      const root = graph.find(
-        (node: vsmObject) => node.type === vsmObjectTypes.root
-      );
-      if (root) {
-        if (selectedNode) {
-          const updatedSelectedNode = graph.find(
-            (node) => node.id === selectedNode.id
-          );
-          updatedSelectedNode && setSelectedNode(updatedSelectedNode);
-        }
-        createNodes(root);
-        setNodesDepth(tempNodes);
-        createFillerNodes();
-        const finalNodes = setLayout(tempNodes, tempEdges);
-        setNodes(finalNodes);
-        setEdges(tempEdges);
+    const root = graph.find(
+      (node: vsmObject) => node.type === vsmObjectTypes.root
+    );
+    if (root) {
+      if (selectedNode) {
+        const updatedSelectedNode = graph.find(
+          (node) => node.id === selectedNode.id
+        );
+        updatedSelectedNode && setSelectedNode(updatedSelectedNode);
       }
+      createNodes(root);
+      setNodesDepth(tempNodes);
+      createFillerNodes();
+      const finalNodes = setLayout(tempNodes, tempEdges);
+      setNodes(finalNodes);
+      setEdges(tempEdges);
     }
   }, [graph]);
 
@@ -460,9 +458,9 @@ const Canvas = ({ graph, project }: CanvasProps) => {
     const targetNode = nodes.find(
       (n) =>
         centerX > n.position.x &&
-        centerX < n.position.x + 130 &&
+        centerX < n.position.x + nodeWidth &&
         centerY > n.position.y &&
-        centerY < n.position.y + 140 &&
+        centerY < n.position.y + nodeHeight &&
         n.id !== node.id
     );
 
@@ -554,7 +552,7 @@ const Canvas = ({ graph, project }: CanvasProps) => {
         onClose={() => setSelectedNode(undefined)}
         onDelete={() => setVisibleDeleteScrim(true)}
         canEdit={userCanEdit}
-        selectedObject={selectedNode}
+        selectedNode={selectedNode}
       />
       <ReactFlow
         nodes={nodes}

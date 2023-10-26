@@ -30,14 +30,14 @@ export function EditTaskSection(props: {
 
   const solveTaskMutation = useMutation(
     ({
-      card,
+      node,
       solvedTask,
       solved,
     }: {
-      card: vsmObject;
+      node: vsmObject;
       solvedTask: taskObject;
       solved: boolean;
-    }) => solveTask(id, card.id, solvedTask.id, solved),
+    }) => solveTask(id, node.id, solvedTask.id, solved),
     {
       onSuccess(_data, variables) {
         const { solvedTask, solved } = variables;
@@ -96,7 +96,7 @@ export function EditTaskSection(props: {
             disabled={!props.canEdit}
             onChange={() => {
               solveTaskMutation.mutate({
-                card: object,
+                node: object,
                 solvedTask: task,
                 solved: !task.solved,
               });

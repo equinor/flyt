@@ -25,22 +25,22 @@ export const QIPSection = (props: {
   onClickNewTask: () => void;
   canEdit: boolean;
 }): JSX.Element => {
-  const selectedObject = props.object;
+  const selectedNode = props.object;
   const [selectedTask, setSelectedTask] = useState(null);
 
   // Show the edit task section if the selected task relates to the selected vsm object
-  const showEditTaskSection = selectedObject.tasks.some(
+  const showEditTaskSection = selectedNode.tasks.some(
     (task) => task.id === selectedTask?.id
   );
 
   useEffect(() => {
     if (selectedTask) {
-      const updatedTask = selectedObject.tasks.find(
+      const updatedTask = selectedNode.tasks.find(
         (task) => task.id === selectedTask.id
       );
       setSelectedTask(updatedTask);
     }
-  }, [selectedObject]);
+  }, [selectedNode]);
 
   return (
     <div className={styles.QIPContainer}>
@@ -51,7 +51,7 @@ export const QIPSection = (props: {
       {showEditTaskSection && (
         <EditTaskSection
           canEdit={props.canEdit}
-          object={selectedObject}
+          object={selectedNode}
           task={selectedTask}
         />
       )}
@@ -63,7 +63,7 @@ export const QIPSection = (props: {
           paddingTop: 12,
         }}
       >
-        {selectedObject.tasks.length === 0 && (
+        {selectedNode.tasks.length === 0 && (
           <p
             className={props.canEdit && styles.clickable}
             onClick={() => props.canEdit && props.onClickNewTask()}
@@ -74,7 +74,7 @@ export const QIPSection = (props: {
           </p>
         )}
         <div style={{ display: "flex", flexWrap: "wrap" }}>
-          {selectedObject.tasks.sort(taskSorter()).map((task: taskObject) => {
+          {selectedNode.tasks.sort(taskSorter()).map((task: taskObject) => {
             return (
               <div
                 title={`${task?.description}`} //<- hover tooltip

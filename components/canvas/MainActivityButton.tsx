@@ -1,13 +1,13 @@
-import styles from "./CardButtons.module.scss";
-import { CardButton } from "../../types/CardButton";
-import MainActivityButtonIcon from "../../public/CardButtons/MainActivityButtonIcon.svg";
+import styles from "./NodeButtons.module.scss";
+import { NodeButton } from "../../types/NodeButton";
+import MainActivityButtonIcon from "../../public/NodeButtons/MainActivityButtonIcon.svg";
 
-export const MainActivityButton = (props: CardButton) => (
+export const MainActivityButton = (props: NodeButton) => (
   <div
-    className={styles["cardButton--container"]}
+    className={styles["nodeButton--container"]}
     onClick={() => props.onClick()}
     title="Main Activity"
   >
-    <img src={MainActivityButtonIcon.src} className={styles.cardButton} />
+    <img src={MainActivityButtonIcon.src} className={styles.nodeButton} />
   </div>
 );

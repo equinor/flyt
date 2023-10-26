@@ -3,10 +3,10 @@ import { Connection, Handle, Position, useStore } from "reactflow";
 import { formatNodeText } from "./utils/formatNodeText";
 import { formatDuration } from "types/unitDefinitions";
 
-import styles from "./Card.module.scss";
-import stylesCardButtons from "./CardButtons.module.scss";
+import styles from "./Node.module.scss";
+import stylesNodeButtons from "./NodeButtons.module.scss";
 import { SubActivityButton } from "./SubActivityButton";
-import { CardButtonsContainer } from "./CardButtonsContainer";
+import { NodeButtonsContainer } from "./NodeButtonsContainer";
 import { ChoiceButton } from "./ChoiceButton";
 import { WaitingButton } from "./WaitingButton";
 import { QIPRContainer } from "./QIPRContainer";
@@ -16,7 +16,7 @@ import { vsmObjectTypes } from "types/vsmObjectTypes";
 import { MergeStartButton } from "./MergeStartButton";
 import { MergeEndButton } from "./MergeEndButton";
 
-export const SubActivityCard = (props: NodeProps<NodeData>) => {
+export const SubActivityNode = (props: NodeProps<NodeData>) => {
   const [hovering, setHovering] = useState(false);
   const connectionNodeId = useStore((state) => state.connectionNodeId);
 
@@ -30,13 +30,12 @@ export const SubActivityCard = (props: NodeProps<NodeData>) => {
     id,
     isValidDropTarget,
     isDropTarget,
-    mergeable,
     merging,
     mergeOption,
-    handleClickCard,
+    handleClickNode,
     handleMerge,
     isChoiceChild,
-    handleClickAddCard,
+    handleClickAddNode,
     userCanEdit,
   } = props.data;
 
@@ -44,14 +43,14 @@ export const SubActivityCard = (props: NodeProps<NodeData>) => {
     setHovering(false);
   }, [props.dragging, connectionNodeId]);
 
-  const renderCardButtons = () => {
+  const renderNodeButtons = () => {
     if (hovering && !merging) {
       return (
         <>
-          <CardButtonsContainer position={Position.Bottom}>
+          <NodeButtonsContainer position={Position.Bottom}>
             <SubActivityButton
               onClick={() =>
-                handleClickAddCard(
+                handleClickAddNode(
                   id,
                   vsmObjectTypes.subActivity,
                   Position.Bottom
@@ -60,24 +59,24 @@ export const SubActivityCard = (props: NodeProps<NodeData>) => {
             />
             <ChoiceButton
               onClick={() =>
-                handleClickAddCard(id, vsmObjectTypes.choice, Position.Bottom)
+                handleClickAddNode(id, vsmObjectTypes.choice, Position.Bottom)
               }
             />
             <WaitingButton
               onClick={() =>
-                handleClickAddCard(id, vsmObjectTypes.waiting, Position.Bottom)
+                handleClickAddNode(id, vsmObjectTypes.waiting, Position.Bottom)
               }
             />
             <MergeStartButton
               onConnect={(e: Connection) => handleMerge(e.source, e.target)}
             />
-          </CardButtonsContainer>
+          </NodeButtonsContainer>
           {isChoiceChild && (
             <>
-              <CardButtonsContainer position={Position.Right}>
+              <NodeButtonsContainer position={Position.Right}>
                 <SubActivityButton
                   onClick={() =>
-                    handleClickAddCard(
+                    handleClickAddNode(
                       id,
                       vsmObjectTypes.subActivity,
                       Position.Right
@@ -86,7 +85,7 @@ export const SubActivityCard = (props: NodeProps<NodeData>) => {
                 />
                 <ChoiceButton
                   onClick={() =>
-                    handleClickAddCard(
+                    handleClickAddNode(
                       id,
                       vsmObjectTypes.choice,
                       Position.Right
@@ -95,18 +94,18 @@ export const SubActivityCard = (props: NodeProps<NodeData>) => {
                 />
                 <WaitingButton
                   onClick={() =>
-                    handleClickAddCard(
+                    handleClickAddNode(
                       id,
                       vsmObjectTypes.waiting,
                       Position.Right
                     )
                   }
                 />
-              </CardButtonsContainer>
-              <CardButtonsContainer position={Position.Left}>
+              </NodeButtonsContainer>
+              <NodeButtonsContainer position={Position.Left}>
                 <SubActivityButton
                   onClick={() =>
-                    handleClickAddCard(
+                    handleClickAddNode(
                       id,
                       vsmObjectTypes.subActivity,
                       Position.Left
@@ -115,19 +114,19 @@ export const SubActivityCard = (props: NodeProps<NodeData>) => {
                 />
                 <ChoiceButton
                   onClick={() =>
-                    handleClickAddCard(id, vsmObjectTypes.choice, Position.Left)
+                    handleClickAddNode(id, vsmObjectTypes.choice, Position.Left)
                   }
                 />
                 <WaitingButton
                   onClick={() =>
-                    handleClickAddCard(
+                    handleClickAddNode(
                       id,
                       vsmObjectTypes.waiting,
                       Position.Left
                     )
                   }
                 />
-              </CardButtonsContainer>
+              </NodeButtonsContainer>
             </>
           )}
         </>
@@ -147,18 +146,18 @@ export const SubActivityCard = (props: NodeProps<NodeData>) => {
         style={{ display: "flex" }}
       >
         <div
-          onClick={() => handleClickCard()}
-          className={`${styles.card} ${styles["card--subactivity"]} ${
+          onClick={() => handleClickNode()}
+          className={`${styles.node} ${styles["node--subactivity"]} ${
             styles[
               isDropTarget && isValidDropTarget
-                ? "card--validDropTarget"
+                ? "node--validDropTarget"
                 : isValidDropTarget === false
-                ? "card--invalidDropTarget"
+                ? "node--invalidDropTarget"
                 : ""
             ]
           }`}
         >
-          <div className={styles["card__description-container"]}>
+          <div className={styles["node__description-container"]}>
             {description ? (
               <p className={styles.text}>{formatNodeText(description, 70)}</p>
             ) : (
@@ -167,28 +166,28 @@ export const SubActivityCard = (props: NodeProps<NodeData>) => {
               </p>
             )}
           </div>
-          <div className={styles["card__role-container"]}>
+          <div className={styles["node__role-container"]}>
             <p className={styles.text}>
               {formatNodeText(role ?? "", 16, true)}
             </p>
           </div>
-          <div className={styles["card__time-container"]}>
+          <div className={styles["node__time-container"]}>
             <p className={styles.text}>
               {formatNodeText(formatDuration(duration, unit), 12, true)}
             </p>
           </div>
           <MergeEndButton hidden={!mergeOption} />
           <Handle
-            className={stylesCardButtons["handle--hidden"]}
+            className={stylesNodeButtons["handle--hidden"]}
             type="source"
             position={Position.Bottom}
             isConnectable={false}
             isConnectableEnd={false}
           />
         </div>
-        <QIPRContainer onClick={() => handleClickCard()} tasks={tasks} />
+        <QIPRContainer onClick={() => handleClickNode()} tasks={tasks} />
       </div>
-      {userCanEdit && renderCardButtons()}
+      {userCanEdit && renderNodeButtons()}
     </div>
   );
 };

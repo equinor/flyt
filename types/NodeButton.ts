@@ -1,10 +1,10 @@
 import { Connection } from "reactflow";
 
-export type CardButton = {
+export type NodeButton = {
   active?: boolean;
   onClick(): void;
 };
 
-export type CardButtonMerge = {
+export type NodeButtonMerge = {
   onConnect(e: Connection): void;
 };

@@ -16,13 +16,13 @@ import { useAccount, useMsal } from "@azure/msal-react";
 
 export function NewTaskSection(props: {
   onClose: () => void;
-  selectedObject;
+  selectedNode;
 }): JSX.Element {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
 
   const dispatch = useStoreDispatch();
-  const selectedObject = props.selectedObject;
+  const selectedNode = props.selectedNode;
 
   const router = useRouter();
   const { id } = router.query;
@@ -30,7 +30,7 @@ export function NewTaskSection(props: {
   const queryClient = useQueryClient();
   const taskMutations = useMutation(
     (task: taskObject) =>
-      createTask(task, selectedObject.projectId, selectedObject.id),
+      createTask(task, selectedNode.projectId, selectedNode.id),
     {
       onSuccess: () => {
         clearAndCloseAddTaskSection();
@@ -83,7 +83,7 @@ export function NewTaskSection(props: {
           "Existing Risk",
         ]}
         handleSelectedItemChange={(e) => {
-          if (!selectedObject) throw new Error("No selected object");
+          if (!selectedNode) throw new Error("No selected object");
           const t = {
             type: newTask?.type,
             description: newTask?.description ?? "", // Let's not overwrite description if we change the type midways
@@ -132,7 +132,7 @@ export function NewTaskSection(props: {
       />
       <ExistingTaskSection
         visible={showExistingTaskSection}
-        selectedObject={selectedObject}
+        selectedNode={selectedNode}
         existingTaskFilter={existingTaskFilter}
       />
       {!showExistingTaskSection && newTask && (

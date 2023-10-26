@@ -5,16 +5,16 @@ import { MainActivityButton } from "./MainActivityButton";
 import { SubActivityButton } from "./SubActivityButton";
 import { ChoiceButton } from "./ChoiceButton";
 import { WaitingButton } from "./WaitingButton";
-import { CardButtonsContainer } from "./CardButtonsContainer";
+import { NodeButtonsContainer } from "./NodeButtonsContainer";
 
-import styles from "./Card.module.scss";
-import stylesCardButtons from "./CardButtons.module.scss";
+import styles from "./Node.module.scss";
+import stylesNodeButtons from "./NodeButtons.module.scss";
 import { QIPRContainer } from "./QIPRContainer";
 import { NodeData } from "types/NodeData";
 import { NodeProps } from "reactflow";
 import { vsmObjectTypes } from "types/vsmObjectTypes";
 
-export const MainActivityCard = (props: NodeProps<NodeData>) => {
+export const MainActivityNode = (props: NodeProps<NodeData>) => {
   const [hovering, setHovering] = useState(false);
 
   const {
@@ -24,8 +24,8 @@ export const MainActivityCard = (props: NodeProps<NodeData>) => {
     id,
     isValidDropTarget,
     isDropTarget,
-    handleClickCard,
-    handleClickAddCard,
+    handleClickNode,
+    handleClickAddNode,
     userCanEdit,
     merging,
   } = props.data;
@@ -46,18 +46,18 @@ export const MainActivityCard = (props: NodeProps<NodeData>) => {
         style={{ display: "flex" }}
       >
         <div
-          onClick={() => handleClickCard()}
-          className={`${styles.card} ${styles["card--mainactivity"]} ${
+          onClick={() => handleClickNode()}
+          className={`${styles.node} ${styles["node--mainactivity"]} ${
             styles[
               isDropTarget && isValidDropTarget
-                ? "card--validDropTarget"
+                ? "node--validDropTarget"
                 : isValidDropTarget === false
-                ? "card--invalidDropTarget"
+                ? "node--invalidDropTarget"
                 : ""
             ]
           }`}
         >
-          <div className={styles["card__description-container"]}>
+          <div className={styles["node__description-container"]}>
             {description ? (
               <p className={styles.text}>{formatNodeText(description, 70)}</p>
             ) : (
@@ -68,48 +68,48 @@ export const MainActivityCard = (props: NodeProps<NodeData>) => {
           </div>
 
           <Handle
-            className={stylesCardButtons["handle--hidden"]}
+            className={stylesNodeButtons["handle--hidden"]}
             type="target"
             position={Position.Top}
             isConnectable={false}
           />
           <Handle
-            className={stylesCardButtons["handle--hidden"]}
+            className={stylesNodeButtons["handle--hidden"]}
             type="source"
             position={Position.Bottom}
             isConnectable={false}
           />
         </div>
-        <QIPRContainer onClick={() => handleClickCard()} tasks={tasks} />
+        <QIPRContainer onClick={() => handleClickNode()} tasks={tasks} />
       </div>
       {hovering && userCanEdit && !merging && (
         <>
-          <CardButtonsContainer position={Position.Left}>
+          <NodeButtonsContainer position={Position.Left}>
             <MainActivityButton
               onClick={() =>
-                handleClickAddCard(
+                handleClickAddNode(
                   id,
                   vsmObjectTypes.mainActivity,
                   Position.Left
                 )
               }
             />
-          </CardButtonsContainer>
-          <CardButtonsContainer position={Position.Right}>
+          </NodeButtonsContainer>
+          <NodeButtonsContainer position={Position.Right}>
             <MainActivityButton
               onClick={() =>
-                handleClickAddCard(
+                handleClickAddNode(
                   id,
                   vsmObjectTypes.mainActivity,
                   Position.Right
                 )
               }
             />
-          </CardButtonsContainer>
-          <CardButtonsContainer position={Position.Bottom}>
+          </NodeButtonsContainer>
+          <NodeButtonsContainer position={Position.Bottom}>
             <SubActivityButton
               onClick={() =>
-                handleClickAddCard(
+                handleClickAddNode(
                   id,
                   vsmObjectTypes.subActivity,
                   Position.Bottom
@@ -118,15 +118,15 @@ export const MainActivityCard = (props: NodeProps<NodeData>) => {
             />
             <ChoiceButton
               onClick={() =>
-                handleClickAddCard(id, vsmObjectTypes.choice, Position.Bottom)
+                handleClickAddNode(id, vsmObjectTypes.choice, Position.Bottom)
               }
             />
             <WaitingButton
               onClick={() =>
-                handleClickAddCard(id, vsmObjectTypes.waiting, Position.Bottom)
+                handleClickAddNode(id, vsmObjectTypes.waiting, Position.Bottom)
               }
             />
-          </CardButtonsContainer>
+          </NodeButtonsContainer>
         </>
       )}
     </div>

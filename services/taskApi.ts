@@ -57,7 +57,7 @@ export const solveTask = (
     return r.data;
   });
 
-//Link a task to a card
+//Link a task to a node
 export const linkTask = (
   projectId: string | string[],
   vertexId: string,
@@ -70,7 +70,7 @@ export const linkTask = (
     return r.data;
   });
 
-//Remove a link between a task and a card
+//Remove a link between a task and a node
 export const unlinkTask = (
   projectId: string | string[],
   vsmObjectId: string,

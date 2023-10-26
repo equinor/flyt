@@ -9,21 +9,21 @@ const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
 });
 
 export function SideBarBody(props: {
-  selectedObject: vsmObject;
+  selectedNode: vsmObject;
   onChangeDescription: (value?: string) => void;
   onChangeRole: (event: { target: { value: string } }) => void;
   onChangeDuration: (e: { duration: number; unit: string }) => void;
   setShowNewTaskSection: (boolean) => void;
   canEdit: boolean;
 }): JSX.Element {
-  const { selectedObject, setShowNewTaskSection } = props;
+  const { selectedNode, setShowNewTaskSection } = props;
 
-  switch (selectedObject?.type) {
+  switch (selectedNode?.type) {
     case vsmObjectTypes.root:
       return (
         <MarkdownEditor
           canEdit={props.canEdit}
-          defaultText={selectedObject.description || ""}
+          defaultText={selectedNode.description || ""}
           label={"Title"}
           onChange={props.onChangeDescription}
         />
@@ -33,13 +33,13 @@ export function SideBarBody(props: {
         <>
           <MarkdownEditor
             canEdit={props.canEdit}
-            defaultText={selectedObject.description || ""}
+            defaultText={selectedNode.description || ""}
             label={"Supplier(s)"}
             onChange={props.onChangeDescription}
           />
           <QIPSection
             canEdit={props.canEdit}
-            object={selectedObject}
+            object={selectedNode}
             onClickNewTask={() => setShowNewTaskSection(true)}
           />
         </>
@@ -49,13 +49,13 @@ export function SideBarBody(props: {
         <>
           <MarkdownEditor
             canEdit={props.canEdit}
-            defaultText={selectedObject.description || ""}
+            defaultText={selectedNode.description || ""}
             label={"Input(s)"}
             onChange={props.onChangeDescription}
           />
           <QIPSection
             canEdit={props.canEdit}
-            object={selectedObject}
+            object={selectedNode}
             onClickNewTask={() => setShowNewTaskSection(true)}
           />
         </>
@@ -65,13 +65,13 @@ export function SideBarBody(props: {
         <>
           <MarkdownEditor
             canEdit={props.canEdit}
-            defaultText={selectedObject.description || ""}
+            defaultText={selectedNode.description || ""}
             label={"Output(s)"}
             onChange={props.onChangeDescription}
           />
           <QIPSection
             canEdit={props.canEdit}
-            object={selectedObject}
+            object={selectedNode}
             onClickNewTask={() => setShowNewTaskSection(true)}
           />
         </>
@@ -81,13 +81,13 @@ export function SideBarBody(props: {
         <>
           <MarkdownEditor
             canEdit={props.canEdit}
-            defaultText={selectedObject.description || ""}
+            defaultText={selectedNode.description || ""}
             label={"Customer(s)"}
             onChange={props.onChangeDescription}
           />
           <QIPSection
             canEdit={props.canEdit}
-            object={selectedObject}
+            object={selectedNode}
             onClickNewTask={() => setShowNewTaskSection(true)}
           />
         </>
@@ -97,13 +97,13 @@ export function SideBarBody(props: {
         <>
           <MarkdownEditor
             canEdit={props.canEdit}
-            defaultText={selectedObject.description || ""}
+            defaultText={selectedNode.description || ""}
             label={"Description"}
             onChange={props.onChangeDescription}
           />
           <QIPSection
             canEdit={props.canEdit}
-            object={selectedObject}
+            object={selectedNode}
             onClickNewTask={() => setShowNewTaskSection(true)}
           />
         </>
@@ -113,7 +113,7 @@ export function SideBarBody(props: {
         <>
           <MarkdownEditor
             canEdit={props.canEdit}
-            defaultText={selectedObject.description || ""}
+            defaultText={selectedNode.description || ""}
             label={"Description"}
             onChange={props.onChangeDescription}
           />
@@ -122,7 +122,7 @@ export function SideBarBody(props: {
               disabled={!props.canEdit}
               label={"Role(s)"}
               variant={"default"}
-              defaultValue={selectedObject.role?.toString()}
+              defaultValue={selectedNode.role?.toString()}
               id={"vsmObjectRole"}
               onChange={props.onChangeRole}
             />
@@ -130,12 +130,12 @@ export function SideBarBody(props: {
             <DurationComponent
               disabled={!props.canEdit}
               onChangeDuration={props.onChangeDuration}
-              selectedObject={selectedObject}
+              selectedNode={selectedNode}
             />
           </div>
           <QIPSection
             canEdit={props.canEdit}
-            object={selectedObject}
+            object={selectedNode}
             onClickNewTask={() => setShowNewTaskSection(true)}
           />
         </>
@@ -146,11 +146,11 @@ export function SideBarBody(props: {
           <DurationComponent
             disabled={!props.canEdit}
             {...props}
-            selectedObject={selectedObject}
+            selectedNode={selectedNode}
           />
           <QIPSection
             canEdit={props.canEdit}
-            object={selectedObject}
+            object={selectedNode}
             onClickNewTask={() => setShowNewTaskSection(true)}
           />
         </>
@@ -159,7 +159,7 @@ export function SideBarBody(props: {
       return (
         <MarkdownEditor
           canEdit={props.canEdit}
-          defaultText={selectedObject.description || ""}
+          defaultText={selectedNode.description || ""}
           label={"Define choice"}
           onChange={props.onChangeDescription}
         />
