@@ -1,3 +1,5 @@
+import { tokens } from "@equinor/eds-tokens";
+
 export default {
   EQUINOR_PRIMARY: "#FF1243",
   EQUINOR_PROMINENT: "#007079",
@@ -15,4 +17,9 @@ export default {
   ERROR: "#FF002D",
 
   SUCCESS: "#3fd18e",
+};
+
+export const colors = {
+  interactive_primary__selected_highlight:
+    tokens.colors.interactive.primary__selected_highlight.hex,
 };
