@@ -1,7 +1,7 @@
 import { Button } from "@equinor/eds-core-react";
 import { SectionQueryValue } from "./hooks/useCanvasTutorial";
-import { tokens } from "@equinor/eds-tokens";
 import { useCurrentSection } from "./hooks/useCurrentSection";
+import { colors } from "theme/colors";
 
 export type CanvasTutorialSectionButtonProps = {
   section: SectionQueryValue;
@@ -23,8 +23,7 @@ export const CanvasTutorialSectionButton = ({
       style={
         isCurrentSection
           ? {
-              backgroundColor:
-                tokens.colors.interactive.primary__selected_highlight.hex,
+              backgroundColor: colors.interactive_primary__selected_highlight,
             }
           : undefined
       }

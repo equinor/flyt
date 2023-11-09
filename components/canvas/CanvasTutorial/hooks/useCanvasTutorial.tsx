@@ -12,12 +12,9 @@ const sectionQueryValues = [
 
 export type SectionQueryValue = (typeof sectionQueryValues)[number];
 
-const isSectionValid = (section: unknown): section is SectionQueryValue => {
-  if (typeof section === "string") {
-    return sectionQueryValues.includes(section as SectionQueryValue);
-  }
-  return false;
-};
+const isSectionValid = (section: unknown): section is SectionQueryValue =>
+  typeof section === "string" &&
+  sectionQueryValues.includes(section as SectionQueryValue);
 
 export const useCanvasTutorial = () => {
   const router = useRouter();
@@ -31,13 +28,7 @@ export const useCanvasTutorial = () => {
 
   const handleClose = () => router.replace(`/process/${router.query.id}`);
 
-  const handleInitialOpen = useCallback(() => {
-    router.query.canvasTutorial = "true";
-    router.query.section = "add-new-main-activity";
-    router.replace(router);
-  }, [router]);
-
-  useInitialOpen(handleInitialOpen, isOpen, isValidSection);
+  const { handleInitialOpen } = useInitialOpen(isOpen, isValidSection);
 
   useScrollIntoView(ref);
 
@@ -72,15 +63,19 @@ const useSectionRefs = () => {
   return refs;
 };
 
-const useInitialOpen = (
-  handleInitialOpen: () => void,
-  isOpen: boolean,
-  isValidSection: boolean
-) => {
+const useInitialOpen = (isOpen: boolean, isValidSection: boolean) => {
   const [isFirstTimeUser, setIsFirstTimeUser] = useLocalStorage(
     "isFirstTimeUser",
     true
   );
+
+  const router = useRouter();
+
+  const handleInitialOpen = useCallback(() => {
+    router.query.canvasTutorial = "true";
+    router.query.section = "add-new-main-activity";
+    router.replace(router);
+  }, [router]);
 
   useEffect(() => {
     if (isFirstTimeUser) {
@@ -90,6 +85,8 @@ const useInitialOpen = (
       handleInitialOpen();
     }
   }, []);
+
+  return { handleInitialOpen };
 };
 
 const useScrollIntoView = (ref: RefObject<HTMLDivElement> | undefined) => {
