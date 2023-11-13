@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.34](https://github.com/equinor/flyt/compare/v0.2.33...v0.2.34) (2023-11-13)
+
+
+### Bug Fixes
+
+* **deps:** Upgrade axios from 0.25.0 to 1.6.1 ([#634](https://github.com/equinor/flyt/issues/634)) ([ca581e3](https://github.com/equinor/flyt/commit/ca581e3acf3dd192b6cd6728116a095433ab2748)), closes [#633](https://github.com/equinor/flyt/issues/633)
+
 ## [0.2.33](https://github.com/equinor/flyt/compare/v0.2.32...v0.2.33) (2023-10-19)
 
 
