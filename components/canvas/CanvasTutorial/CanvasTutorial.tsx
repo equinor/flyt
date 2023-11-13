@@ -16,7 +16,7 @@ import { CanvasTutorialSection } from "./CanvasTutorialSection";
 import { InlineImage } from "./InlineImage";
 import { useCanvasTutorial } from "./hooks/useCanvasTutorial";
 
-const title = "Canvas Tutorial";
+const title = "Tutorial";
 
 export const CanvasTutorial = () => {
   const { handleClose, handleInitialOpen, isOpen, onSectionButtonClick, refs } =
