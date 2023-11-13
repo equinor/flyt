@@ -46,7 +46,7 @@
     "@typescript-eslint/eslint-plugin": "5.62.0",
     "@typescript-eslint/parser": "5.62.0",
     "@uiw/react-md-editor": "3.11.2",
-    "axios": "0.25.0",
+    "axios": "^1.6.1",
     "easy-peasy": "5.2.0",
     "jsonwebtoken": "9.0.1",
     "moment": "2.29.4",
