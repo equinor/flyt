@@ -38,7 +38,6 @@ const setSingleNodeDepth = (
 };
 
 export const setNodesDepth = (nodes: Node<NodeDataFull>[]) => {
-  console.log(nodes);
   const rootNode = nodes.find((node) => node.type === "Root");
   rootNode.data.children.forEach((childId) => {
     setSingleNodeDepth(childId, nodes, 0);

@@ -18,6 +18,7 @@ import { unknownErrorToString } from "utils/isError";
 import { useRouter } from "next/router";
 import { useStoreDispatch } from "../../hooks/storeHooks";
 import { NodeDataApi } from "types/NodeDataApi";
+import styles from "./Canvas.module.scss";
 import ReactFlow, {
   useNodesState,
   useEdgesState,
@@ -47,6 +48,7 @@ import { Graph } from "types/Graph";
 import { validDropTarget } from "./utils/validDropTarget";
 import { setNodesDepth } from "./utils/setNodesDepth";
 import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
+import { CanvasTutorial } from "./CanvasTutorial/CanvasTutorial";
 
 type CanvasProps = {
   graph: Graph;
@@ -567,10 +569,12 @@ const Canvas = ({ graph, project }: CanvasProps) => {
         connectionRadius={100}
       >
         <Controls
+          className={styles.controls}
           showInteractive={false}
           fitViewOptions={{ includeHiddenNodes: true }}
         />
       </ReactFlow>
+      <CanvasTutorial />
     </div>
   );
 };
