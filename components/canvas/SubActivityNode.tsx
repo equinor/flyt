@@ -2,25 +2,24 @@ import React, { useEffect, useState } from "react";
 import { Connection, Handle, Position, useStore } from "reactflow";
 import { formatNodeText } from "./utils/formatNodeText";
 import { formatDuration } from "types/unitDefinitions";
-
 import styles from "./Node.module.scss";
-import stylesNodeButtons from "./NodeButtons.module.scss";
 import { SubActivityButton } from "./SubActivityButton";
 import { NodeButtonsContainer } from "./NodeButtonsContainer";
 import { ChoiceButton } from "./ChoiceButton";
 import { WaitingButton } from "./WaitingButton";
-import { QIPRContainer } from "./QIPRContainer";
 import { NodeData } from "types/NodeData";
 import { NodeProps } from "reactflow";
-import { vsmObjectTypes } from "types/vsmObjectTypes";
-import { MergeStartButton } from "./MergeStartButton";
-import { MergeEndButton } from "./MergeEndButton";
+import { NodeTypes } from "types/NodeTypes";
+import { MergeButton } from "./MergeButton";
+import { TargetHandle } from "./TargetHandle";
+import { NodeDescription } from "./NodeDescription";
+import { NodeCard } from "./NodeCard";
+import colors from "theme/colors";
+import { Typography } from "@equinor/eds-core-react";
+import { SourceHandle } from "./SourceHandle";
 
-export const SubActivityNode = (props: NodeProps<NodeData>) => {
-  const [hovering, setHovering] = useState(false);
-  const connectionNodeId = useStore((state) => state.connectionNodeId);
-
-  const {
+export const SubActivityNode = ({
+  data: {
     description,
     role,
     duration,
@@ -37,39 +36,44 @@ export const SubActivityNode = (props: NodeProps<NodeData>) => {
     isChoiceChild,
     handleClickAddNode,
     userCanEdit,
-  } = props.data;
+    mergeable,
+    shapeHeight,
+    shapeWidth,
+  },
+  dragging,
+}: NodeProps<NodeData>) => {
+  const [hovering, setHovering] = useState(false);
+  const connectionNodeId = useStore((state) => state.connectionNodeId);
 
   useEffect(() => {
     setHovering(false);
-  }, [props.dragging, connectionNodeId]);
+  }, [dragging, connectionNodeId]);
 
   const renderNodeButtons = () => {
-    if (hovering && !merging) {
+    if (userCanEdit && hovering && !merging) {
       return (
         <>
           <NodeButtonsContainer position={Position.Bottom}>
             <SubActivityButton
               onClick={() =>
-                handleClickAddNode(
-                  id,
-                  vsmObjectTypes.subActivity,
-                  Position.Bottom
-                )
+                handleClickAddNode(id, NodeTypes.subActivity, Position.Bottom)
               }
             />
             <ChoiceButton
               onClick={() =>
-                handleClickAddNode(id, vsmObjectTypes.choice, Position.Bottom)
+                handleClickAddNode(id, NodeTypes.choice, Position.Bottom)
               }
             />
             <WaitingButton
               onClick={() =>
-                handleClickAddNode(id, vsmObjectTypes.waiting, Position.Bottom)
+                handleClickAddNode(id, NodeTypes.waiting, Position.Bottom)
               }
             />
-            <MergeStartButton
-              onConnect={(e: Connection) => handleMerge(e.source, e.target)}
-            />
+            {mergeable && (
+              <MergeButton
+                onConnect={(e: Connection) => handleMerge(e.source, e.target)}
+              />
+            )}
           </NodeButtonsContainer>
           {isChoiceChild && (
             <>
@@ -78,52 +82,36 @@ export const SubActivityNode = (props: NodeProps<NodeData>) => {
                   onClick={() =>
                     handleClickAddNode(
                       id,
-                      vsmObjectTypes.subActivity,
+                      NodeTypes.subActivity,
                       Position.Right
                     )
                   }
                 />
                 <ChoiceButton
                   onClick={() =>
-                    handleClickAddNode(
-                      id,
-                      vsmObjectTypes.choice,
-                      Position.Right
-                    )
+                    handleClickAddNode(id, NodeTypes.choice, Position.Right)
                   }
                 />
                 <WaitingButton
                   onClick={() =>
-                    handleClickAddNode(
-                      id,
-                      vsmObjectTypes.waiting,
-                      Position.Right
-                    )
+                    handleClickAddNode(id, NodeTypes.waiting, Position.Right)
                   }
                 />
               </NodeButtonsContainer>
               <NodeButtonsContainer position={Position.Left}>
                 <SubActivityButton
                   onClick={() =>
-                    handleClickAddNode(
-                      id,
-                      vsmObjectTypes.subActivity,
-                      Position.Left
-                    )
+                    handleClickAddNode(id, NodeTypes.subActivity, Position.Left)
                   }
                 />
                 <ChoiceButton
                   onClick={() =>
-                    handleClickAddNode(id, vsmObjectTypes.choice, Position.Left)
+                    handleClickAddNode(id, NodeTypes.choice, Position.Left)
                   }
                 />
                 <WaitingButton
                   onClick={() =>
-                    handleClickAddNode(
-                      id,
-                      vsmObjectTypes.waiting,
-                      Position.Left
-                    )
+                    handleClickAddNode(id, NodeTypes.waiting, Position.Left)
                   }
                 />
               </NodeButtonsContainer>
@@ -136,58 +124,35 @@ export const SubActivityNode = (props: NodeProps<NodeData>) => {
 
   return (
     <div
-      onMouseEnter={() => !props.dragging && setHovering(true)}
+      onMouseEnter={() => !dragging && setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
-      <div
-        className={`${styles.container} ${
-          hovering && !merging ? styles["container--hover"] : ""
-        }`}
-        style={{ display: "flex" }}
+      <NodeCard
+        shape="square"
+        width={shapeWidth}
+        height={shapeHeight}
+        color={colors.NODE_SUBACTIVITY}
+        tasks={tasks}
+        onClick={handleClickNode}
+        hovering={hovering && !merging}
+        highlighted={isDropTarget && isValidDropTarget}
+        darkened={isValidDropTarget === false}
       >
-        <div
-          onClick={() => handleClickNode()}
-          className={`${styles.node} ${styles["node--subactivity"]} ${
-            styles[
-              isDropTarget && isValidDropTarget
-                ? "node--validDropTarget"
-                : isValidDropTarget === false
-                ? "node--invalidDropTarget"
-                : ""
-            ]
-          }`}
-        >
-          <div className={styles["node__description-container"]}>
-            {description ? (
-              <p className={styles.text}>{formatNodeText(description, 70)}</p>
-            ) : (
-              <p className={`${styles.text} ${styles["text--placeholder"]}`}>
-                {formatNodeText(type, 70)}
-              </p>
-            )}
-          </div>
-          <div className={styles["node__role-container"]}>
-            <p className={styles.text}>
-              {formatNodeText(role ?? "", 16, true)}
-            </p>
-          </div>
-          <div className={styles["node__time-container"]}>
-            <p className={styles.text}>
-              {formatNodeText(formatDuration(duration, unit), 12, true)}
-            </p>
-          </div>
-          <MergeEndButton hidden={!mergeOption} />
-          <Handle
-            className={stylesNodeButtons["handle--hidden"]}
-            type="source"
-            position={Position.Bottom}
-            isConnectable={false}
-            isConnectableEnd={false}
-          />
+        <NodeDescription description={description} type={type} />
+        <div className={styles["node__role-container"]}>
+          <Typography variant="caption">
+            {formatNodeText(role ?? "", 16, true)}
+          </Typography>
         </div>
-        <QIPRContainer onClick={() => handleClickNode()} tasks={tasks} />
-      </div>
-      {userCanEdit && renderNodeButtons()}
+        <div className={styles["node__time-container"]}>
+          <Typography variant="caption">
+            {formatNodeText(formatDuration(duration, unit), 12, true)}
+          </Typography>
+        </div>
+      </NodeCard>
+      <TargetHandle hidden={!mergeOption} />
+      <SourceHandle />
+      {renderNodeButtons()}
     </div>
   );
 };

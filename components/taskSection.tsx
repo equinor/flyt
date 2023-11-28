@@ -1,13 +1,13 @@
 import { QipCard } from "./QipCard";
 import { getTasksForProject } from "../services/taskApi";
-import { taskObject } from "../types/taskObject";
+import { Task } from "../types/Task";
 import { unknownErrorToString } from "../utils/isError";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
-import { vsmTaskTypes } from "types/vsmTaskTypes";
+import { TaskTypes } from "types/TaskTypes";
 
 export function TaskSection(props: {
-  filterFunction: (t: taskObject) => boolean;
+  filterFunction: (t: Task) => boolean;
 }): JSX.Element {
   const router = useRouter();
   const { id } = router.query;
@@ -42,7 +42,7 @@ export function TaskSection(props: {
           ?.filter((task) => !task.solved) // filter out solved tasks
           ?.filter(props.filterFunction)
           .sort((a, b) => {
-            return vsmTaskTypes[b.type] - vsmTaskTypes[a.type];
+            return TaskTypes[b.type] - TaskTypes[a.type];
           })
           .map((task) => (
             <QipCard key={task.id} task={task} />

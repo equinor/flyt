@@ -1,5 +1,5 @@
 import { NodeDataFull } from "types/NodeData";
-import { vsmObjectTypes } from "types/vsmObjectTypes";
+import { NodeTypes } from "types/NodeTypes";
 import { Node } from "reactflow";
 
 export const validDropTarget = (
@@ -11,20 +11,20 @@ export const validDropTarget = (
   const targetType = target.type;
   const targetIsParent = source?.data?.parents?.find((id) => id === target.id);
   const targetIsChoiceChild =
-    sourceType === vsmObjectTypes.choice &&
+    sourceType === NodeTypes.choice &&
     target?.data?.parents?.find((id) => id === source.id);
 
   return (
     !targetIsParent &&
     !targetIsChoiceChild &&
-    (((sourceType === vsmObjectTypes.choice ||
-      sourceType === vsmObjectTypes.subActivity ||
-      sourceType === vsmObjectTypes.waiting) &&
-      (targetType === vsmObjectTypes.choice ||
-        targetType === vsmObjectTypes.subActivity ||
-        targetType === vsmObjectTypes.waiting ||
-        targetType === vsmObjectTypes.mainActivity)) ||
-      (sourceType === vsmObjectTypes.mainActivity &&
-        targetType === vsmObjectTypes.mainActivity))
+    (((sourceType === NodeTypes.choice ||
+      sourceType === NodeTypes.subActivity ||
+      sourceType === NodeTypes.waiting) &&
+      (targetType === NodeTypes.choice ||
+        targetType === NodeTypes.subActivity ||
+        targetType === NodeTypes.waiting ||
+        targetType === NodeTypes.mainActivity)) ||
+      (sourceType === NodeTypes.mainActivity &&
+        targetType === NodeTypes.mainActivity))
   );
 };

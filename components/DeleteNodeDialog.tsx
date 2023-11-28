@@ -2,18 +2,18 @@ import { Button, Icon, Scrim, Typography } from "@equinor/eds-core-react";
 import { close as closeIcon, delete_forever } from "@equinor/eds-icons";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQueryClient } from "react-query";
-import { getVsmTypeName } from "../utils/getVsmTypeName";
+import { getNodeTypeName } from "../utils/getNodeTypeName";
 import { notifyOthers } from "../services/notifyOthers";
 import styles from "../layouts/default.layout.module.scss";
 import { unknownErrorToString } from "../utils/isError";
 import { useRouter } from "next/router";
 import { useStoreDispatch } from "hooks/storeHooks";
-import { vsmObject } from "../types/VsmObject";
-import { vsmObjectTypes } from "../types/vsmObjectTypes";
+import { NodeDataApi } from "../types/NodeDataApi";
+import { NodeTypes } from "../types/NodeTypes";
 import { deleteVertice } from "services/graphApi";
 
-export function DeleteVsmObjectDialog(props: {
-  objectToDelete: vsmObject;
+export function DeleteNodeDialog(props: {
+  objectToDelete: NodeDataApi;
   onClose: () => void;
   visible: boolean;
 }): JSX.Element {
@@ -24,7 +24,7 @@ export function DeleteVsmObjectDialog(props: {
   const { id } = router.query;
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
-  const { choice, mainActivity } = vsmObjectTypes;
+  const { choice, mainActivity } = NodeTypes;
 
   const deleteMutation = useMutation(
     ({
@@ -59,7 +59,7 @@ export function DeleteVsmObjectDialog(props: {
 
   const { type } = props.objectToDelete;
 
-  const header = `Delete "${getVsmTypeName(type)}"`;
+  const header = `Delete "${getNodeTypeName(type).toLowerCase()}"`;
   let warningMessage = "This will delete the selected object.";
   if (type === mainActivity) {
     warningMessage =

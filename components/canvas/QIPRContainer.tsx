@@ -2,21 +2,16 @@ import styles from "./QIPRContainer.module.scss";
 import { getTaskColor } from "utils/getTaskColor";
 import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
 import { TextCircle } from "./entities/TextCircle";
-import { taskObject } from "types/taskObject";
+import { Task } from "types/Task";
 import { getTaskShorthand } from "utils/getTaskShorthand";
 import { taskSorter } from "utils/taskSorter";
 
-export const QIPRContainer = (props: {
-  onClick?(): void;
-  tasks: taskObject[];
-}) => (
+export const QIPRContainer = (props: { onClick?(): void; tasks: Task[] }) => (
   <div
     className={styles.QIPRContainer}
     onClick={props.onClick}
     style={{
-      width: getQIPRContainerWidth(
-        props.tasks?.filter((task) => !task.solved).length
-      ),
+      width: getQIPRContainerWidth(props.tasks),
     }}
   >
     {props.tasks

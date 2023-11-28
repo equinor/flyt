@@ -3,7 +3,7 @@ import { SideBarHeader } from "./SideBarHeader";
 import { NewTaskSection } from "./NewTaskSection";
 import { SideBarBody } from "./SideBarBody";
 import { useMutation, useQueryClient } from "react-query";
-import { vsmObject } from "../types/VsmObject";
+import { NodeDataApi } from "../types/NodeDataApi";
 import { patchGraph } from "services/graphApi";
 import { debounce } from "../utils/debounce";
 import styles from "./VSMCanvas.module.scss";
@@ -35,7 +35,7 @@ export function SideBarContent(props: {
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
   const vsmObjectMutation = useMutation(
-    (patchedObject: vsmObject) =>
+    (patchedObject: NodeDataApi) =>
       patchGraph(patchedObject, id, patchedObject.id),
     {
       onSuccess() {
@@ -47,7 +47,7 @@ export function SideBarContent(props: {
   );
 
   function patchNode(
-    selectedNode: vsmObject,
+    selectedNode: NodeDataApi,
     updates: {
       description?: string;
       role?: string;

@@ -2,14 +2,14 @@ import { DurationComponent } from "./DurationComponent";
 import { QIPSection } from "./QIPSection";
 import { TextField } from "@equinor/eds-core-react";
 import dynamic from "next/dynamic";
-import { vsmObject } from "../types/VsmObject";
-import { vsmObjectTypes } from "types/vsmObjectTypes";
+import { NodeDataApi } from "../types/NodeDataApi";
+import { NodeTypes } from "types/NodeTypes";
 const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
   ssr: false,
 });
 
 export function SideBarBody(props: {
-  selectedNode: vsmObject;
+  selectedNode: NodeDataApi;
   onChangeDescription: (value?: string) => void;
   onChangeRole: (event: { target: { value: string } }) => void;
   onChangeDuration: (e: { duration: number; unit: string }) => void;
@@ -19,7 +19,7 @@ export function SideBarBody(props: {
   const { selectedNode, setShowNewTaskSection } = props;
 
   switch (selectedNode?.type) {
-    case vsmObjectTypes.root:
+    case NodeTypes.root:
       return (
         <MarkdownEditor
           canEdit={props.canEdit}
@@ -28,7 +28,7 @@ export function SideBarBody(props: {
           onChange={props.onChangeDescription}
         />
       );
-    case vsmObjectTypes.supplier:
+    case NodeTypes.supplier:
       return (
         <>
           <MarkdownEditor
@@ -44,7 +44,7 @@ export function SideBarBody(props: {
           />
         </>
       );
-    case vsmObjectTypes.input:
+    case NodeTypes.input:
       return (
         <>
           <MarkdownEditor
@@ -60,7 +60,7 @@ export function SideBarBody(props: {
           />
         </>
       );
-    case vsmObjectTypes.output:
+    case NodeTypes.output:
       return (
         <>
           <MarkdownEditor
@@ -76,7 +76,7 @@ export function SideBarBody(props: {
           />
         </>
       );
-    case vsmObjectTypes.customer:
+    case NodeTypes.customer:
       return (
         <>
           <MarkdownEditor
@@ -92,7 +92,7 @@ export function SideBarBody(props: {
           />
         </>
       );
-    case vsmObjectTypes.mainActivity:
+    case NodeTypes.mainActivity:
       return (
         <>
           <MarkdownEditor
@@ -108,7 +108,7 @@ export function SideBarBody(props: {
           />
         </>
       );
-    case vsmObjectTypes.subActivity:
+    case NodeTypes.subActivity:
       return (
         <>
           <MarkdownEditor
@@ -140,7 +140,7 @@ export function SideBarBody(props: {
           />
         </>
       );
-    case vsmObjectTypes.waiting:
+    case NodeTypes.waiting:
       return (
         <>
           <DurationComponent
@@ -155,7 +155,7 @@ export function SideBarBody(props: {
           />
         </>
       );
-    case vsmObjectTypes.choice:
+    case NodeTypes.choice:
       return (
         <MarkdownEditor
           canEdit={props.canEdit}

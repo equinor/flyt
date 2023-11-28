@@ -1,3 +1,3 @@
-import { vsmObject } from "./VsmObject";
+import { NodeDataApi } from "./NodeDataApi";
 
-export type Graph = vsmObject[];
+export type Graph = NodeDataApi[];

@@ -14,9 +14,9 @@ import { getMyAccess } from "utils/getMyAccess";
 import styles from "./Card.module.scss";
 import { tag } from "@equinor/eds-icons";
 import { useRouter } from "next/router";
-import { vsmProject } from "../../types/VsmProject";
+import { Project } from "../../types/Project";
 
-export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
+export function ProjectCard(props: { vsm: Project }): JSX.Element {
   const queryClient = useQueryClient();
   const [isMutatingFavourite, setIsMutatingFavourite] = useState(false);
   const router = useRouter();

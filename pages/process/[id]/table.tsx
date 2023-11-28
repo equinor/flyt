@@ -5,7 +5,6 @@ import { Typography } from "@equinor/eds-core-react";
 import { useQuery } from "react-query";
 import { getTasksForProject } from "../../../services/taskApi";
 import { unknownErrorToString } from "../../../utils/isError";
-//import { flattenProject } from "../../../utils/flattenProject";
 import { getProject } from "../../../services/projectApi";
 import { TaskTable } from "../../../components/TaskTable";
 
@@ -49,8 +48,7 @@ export default function TablePage() {
       </div>
     );
   }
-  //TODO migrate to new data structure
-  //const flatObjects = flattenProject(project);
+
   return (
     <div className={commonStyles.container}>
       <Head>
@@ -61,7 +59,6 @@ export default function TablePage() {
       <main className={commonStyles.main}>
         <Typography variant="h1">Project {id}</Typography>
         <Typography variant="h2">Cards</Typography>
-        {/*<ObjectTable vsmObjects={flatObjects} />*/}
         <Typography variant="h2">QIPs</Typography>
         <TaskTable tasks={tasks} />
       </main>

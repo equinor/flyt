@@ -16,10 +16,10 @@ import { unknownErrorToString } from "utils/isError";
 import { useRouter } from "next/router";
 import { useStoreDispatch } from "hooks/storeHooks";
 import { userAccess } from "types/UserAccess";
-import { vsmProject } from "../types/VsmProject";
+import { Project } from "../types/Project";
 
 export function AccessBox(props: {
-  project: vsmProject;
+  project: Project;
   handleClose;
   isAdmin: boolean;
 }): JSX.Element {

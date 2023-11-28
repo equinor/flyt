@@ -7,7 +7,7 @@ import { unknownErrorToString } from "../../../../utils/isError";
 import { QipCard } from "../../../../components/QipCard";
 import { Layouts } from "../../../../layouts/LayoutWrapper";
 import { io } from "socket.io-client";
-import { vsmTaskTypes } from "types/vsmTaskTypes";
+import { TaskTypes } from "types/TaskTypes";
 
 export default function QipsPage(): JSX.Element {
   const router = useRouter();
@@ -55,7 +55,7 @@ export default function QipsPage(): JSX.Element {
         <p>Loading...</p>
       ) : (
         tasks
-          ?.sort((a, b) => vsmTaskTypes[a.type] - vsmTaskTypes[b.type])
+          ?.sort((a, b) => TaskTypes[a.type] - TaskTypes[b.type])
           .map((task) => (
             <Link key={task.id} href={`/process/${id}/qips/${task.id}`}>
               <QipCard task={task} />

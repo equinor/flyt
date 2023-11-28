@@ -1,4 +1,4 @@
-import { vsmObject } from "../types/VsmObject";
+import { NodeDataApi } from "../types/NodeDataApi";
 import { SingleSelect, TextField } from "@equinor/eds-core-react";
 import {
   getUnitDisplayName,
@@ -8,7 +8,7 @@ import {
 import { useEffect, useState } from "react";
 
 export function DurationComponent(props: {
-  selectedNode: vsmObject;
+  selectedNode: NodeDataApi;
   onChangeDuration: (e: { duration: number; unit: string }) => void;
   disabled: boolean;
 }): JSX.Element {

@@ -1,21 +1,17 @@
 import BaseAPIServices from "./BaseAPIServices";
-import { taskObject } from "../types/taskObject";
+import { Task } from "../types/Task";
 
 const baseUrl = "/api/v2.0";
 
 // Get a list of tasks created in the project identified by its projectId (vsmId)
 export const getTasksForProject = (
   projectId: string | string[]
-): Promise<taskObject[]> =>
+): Promise<Task[]> =>
   BaseAPIServices.get(`${baseUrl}/graph/${projectId}/tasks`).then(
     (value) => value.data
   );
 
-export const createTask = (
-  data: taskObject,
-  projectId: string,
-  vertexId: string
-) =>
+export const createTask = (data: Task, projectId: string, vertexId: string) =>
   BaseAPIServices.post(
     `${baseUrl}/graph/${projectId}/vertices/${vertexId}/tasks`,
     data
@@ -23,7 +19,7 @@ export const createTask = (
 
 // Saves or updates a task
 export const updateTask = (
-  data: taskObject,
+  data: Task,
   projectId: string | string[],
   taskId: string,
   vertexId: string

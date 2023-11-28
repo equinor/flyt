@@ -4,7 +4,7 @@ import WaitingButtonIcon from "../../public/NodeButtons/WaitingButtonIcon.svg";
 
 export const WaitingButton = (props: NodeButton) => (
   <div
-    className={styles["nodeButton--container"]}
+    className={styles["nodeButton__container"]}
     onClick={() => props.onClick()}
     title="Waiting"
   >

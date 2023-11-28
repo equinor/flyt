@@ -1,4 +1,4 @@
-export enum vsmTaskTypes {
+export enum TaskTypes {
   problem = "Problem",
   question = "Question",
   idea = "Idea",

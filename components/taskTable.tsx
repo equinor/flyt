@@ -1,6 +1,6 @@
-import { taskObject } from "../types/taskObject";
+import { Task } from "../types/Task";
 
-export function TaskTable({ tasks }: { tasks: taskObject[] }): JSX.Element {
+export function TaskTable({ tasks }: { tasks: Task[] }): JSX.Element {
   return (
     <table>
       <thead>

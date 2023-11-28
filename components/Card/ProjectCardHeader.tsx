@@ -1,9 +1,9 @@
 import moment from "moment";
 import styles from "./ProjectCardHeader.module.scss";
-import { vsmProject } from "types/VsmProject";
+import { Project } from "types/Project";
 
 type ProjectCardHeaderProps = {
-  vsm: vsmProject;
+  vsm: Project;
 };
 
 export const ProjectCardHeader = ({ vsm }: ProjectCardHeaderProps) => (

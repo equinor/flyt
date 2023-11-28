@@ -5,9 +5,9 @@ import { EditTaskSection } from "./EditTaskSection";
 import { TaskButton } from "./TaskButton";
 import { Typography } from "@equinor/eds-core-react";
 import styles from "./VSMCanvas.module.scss";
-import { taskObject } from "../types/taskObject";
+import { Task } from "../types/Task";
 import { taskSorter } from "../utils/taskSorter";
-import { vsmObject } from "../types/VsmObject";
+import { NodeDataApi } from "../types/NodeDataApi";
 
 const NewTaskButton = (props: { onClick: () => void; disabled: boolean }) => (
   <div>
@@ -21,7 +21,7 @@ const NewTaskButton = (props: { onClick: () => void; disabled: boolean }) => (
 
 // eslint-disable-next-line max-lines-per-function
 export const QIPSection = (props: {
-  object: vsmObject;
+  object: NodeDataApi;
   onClickNewTask: () => void;
   canEdit: boolean;
 }): JSX.Element => {
@@ -74,7 +74,7 @@ export const QIPSection = (props: {
           </p>
         )}
         <div style={{ display: "flex", flexWrap: "wrap" }}>
-          {selectedNode.tasks.sort(taskSorter()).map((task: taskObject) => {
+          {selectedNode.tasks.sort(taskSorter()).map((task: Task) => {
             return (
               <div
                 title={`${task?.description}`} //<- hover tooltip

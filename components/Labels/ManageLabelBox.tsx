@@ -12,12 +12,12 @@ import { debounce } from "utils/debounce";
 import { processLabel } from "types/processLabel";
 import styles from "./ManageLabelBox.module.scss";
 import { unknownErrorToString } from "utils/isError";
-import { vsmProject } from "types/VsmProject";
+import { Project } from "types/Project";
 
 export function ManageLabelBox(props: {
   isVisible: boolean;
   handleClose: () => void;
-  process: vsmProject;
+  process: Project;
 }): JSX.Element {
   if (!props.isVisible) return null;
 
@@ -42,7 +42,7 @@ function TopSection(props: { handleClose: () => void }): JSX.Element {
   );
 }
 
-function AddSection(props: { process: vsmProject }): JSX.Element {
+function AddSection(props: { process: Project }): JSX.Element {
   const [term, setTerm] = useState("");
   const [debouncedTerm, setDebouncedTerm] = useState("");
   const queryClient = useQueryClient();

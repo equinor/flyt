@@ -1,17 +1,17 @@
-import { taskObject } from "./taskObject";
-import { vsmObjectTypes } from "types/vsmObjectTypes";
+import { Task } from "./Task";
+import { NodeTypes } from "types/NodeTypes";
 
-export type vsmObject = {
+export type NodeDataApi = {
   id: string;
   children: string[];
-  type: vsmObjectTypes;
+  type: NodeTypes;
   projectId: string;
   index: string;
   description: string;
   role: string;
   duration: number;
   unit: string;
-  tasks: taskObject[];
+  tasks: Task[];
   depth: number;
   order: number;
 };

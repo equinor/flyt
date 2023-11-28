@@ -1,10 +1,10 @@
-import { taskObject } from "../types/taskObject";
+import { Task } from "../types/Task";
 import { Checkbox } from "@equinor/eds-core-react";
 import { useStoreDispatch } from "../hooks/storeHooks";
 import styles from "./ExistingTaskSection.module.scss";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getTasksForProject, linkTask, unlinkTask } from "../services/taskApi";
-import { vsmObject } from "../types/VsmObject";
+import { NodeDataApi } from "../types/NodeDataApi";
 import { unknownErrorToString } from "utils/isError";
 import { useRouter } from "next/router";
 import { notifyOthers } from "../services/notifyOthers";
@@ -14,7 +14,7 @@ import { getTaskShorthand } from "utils/getTaskShorthand";
 export function ExistingTaskSection(props: {
   visible: boolean;
   existingTaskFilter;
-  selectedNode: vsmObject;
+  selectedNode: NodeDataApi;
 }): JSX.Element {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
@@ -34,7 +34,7 @@ export function ExistingTaskSection(props: {
   const router = useRouter();
   const { id } = router.query;
   const taskLinkMutation = useMutation(
-    (task: taskObject) => linkTask(id, selectedNode.id, task.id),
+    (task: Task) => linkTask(id, selectedNode.id, task.id),
     {
       onSuccess: () => {
         notifyOthers("Added a Q/I/P to a card", id, account);
@@ -44,7 +44,7 @@ export function ExistingTaskSection(props: {
     }
   );
   const taskUnlinkMutation = useMutation(
-    (task: taskObject) => unlinkTask(id, selectedNode.id, task.id),
+    (task: Task) => unlinkTask(id, selectedNode.id, task.id),
     {
       onSuccess() {
         notifyOthers("Removed Q/I/P from a card", id, account);
@@ -85,7 +85,7 @@ export function ExistingTaskSection(props: {
       )}
       <div>
         <ul className={styles.taskList}>
-          {existingTasks?.map((t: taskObject) => {
+          {existingTasks?.map((t: Task) => {
             if (t.type === existingTaskFilter) {
               return (
                 <li key={t.id} title={t.description}>

@@ -4,7 +4,7 @@ import MainActivityButtonIcon from "../../public/NodeButtons/MainActivityButtonI
 
 export const MainActivityButton = (props: NodeButton) => (
   <div
-    className={styles["nodeButton--container"]}
+    className={styles["nodeButton__container"]}
     onClick={() => props.onClick()}
     title="Main Activity"
   >

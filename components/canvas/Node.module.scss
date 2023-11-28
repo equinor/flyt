@@ -1,8 +1,7 @@
 @import "styles/_variables.scss";
 
 .container {
-  border-radius: 4px;
-  overflow: hidden;
+  display: flex;
 }
 
 .container--hover {
@@ -11,64 +10,56 @@
   filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.44));
 }
 
-.node {
+.node-shape-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.node-shape--square {
   display: flex;
   flex-direction: column;
-  width: 130px;
-  height: 140px;
-  background-color: #ffff;
-  color: #565656;
+  height: 100%;
+  width: 100%;
 }
 
-.node--generic {
-  background-color: #00d889;
+.node-shape--rhombus {
+  display: flex;
+  flex-direction: column;
+  width: 70%;
+  height: 70%;
+  transform: rotate(45deg);
 }
 
-.node--mainactivity {
-  background-color: #00c1ff;
+.node-shape--rhombus .description {
+  transform: translate(-50%, -50%) rotate(-45deg);
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  left: 50%;
+  white-space: normal;
+  text-align: center;
 }
 
-.node--subactivity {
-  background-color: #fdd835;
-}
-
-.node--waiting {
-  background-color: #ff8f00;
-}
-
-.node--empty {
+.node--hidden {
   opacity: 0;
 }
 
-.node__choice__container {
-  display: flex;
-  text-align: center;
-  align-items: center;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-/* Choice node color is set in the component */
-
-.node--validDropTarget {
+.node--highlighted {
   filter: brightness(1.15);
 }
 
-.node--invalidDropTarget {
+.node--darkened {
   filter: brightness(0.85);
 }
 
 .node__description-container {
   padding: 7.5px 10px;
-  overflow-wrap: break-word;
   overflow: hidden;
+  flex: 1;
 }
 
 .node__role-container {
-  margin-top: auto;
   height: 13px;
   padding: 5px 10px;
   background-image: linear-gradient(rgb(0 0 0/5%) 0 0);
@@ -86,16 +77,11 @@
   padding: 0px 10px;
 }
 
-.text {
-  font-family: "Equinor";
-  font-weight: 500;
-  font-size: 12px;
-  line-height: 15px;
-  letter-spacing: 0.2px;
-  margin: 0;
+.description {
   white-space: pre-wrap;
+  overflow-wrap: break-word !important;
 }
 
-.text--placeholder {
+.description--placeholder {
   opacity: 0.4;
 }

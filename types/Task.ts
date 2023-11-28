@@ -1,8 +1,8 @@
-import { vsmTaskTypes } from "types/vsmTaskTypes";
+import { TaskTypes } from "types/TaskTypes";
 
-export type taskObject = {
+export type Task = {
   id?: string;
-  type?: vsmTaskTypes;
+  type?: TaskTypes;
   projectId?: string;
   description?: string;
   solved?: boolean;

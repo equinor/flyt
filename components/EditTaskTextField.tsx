@@ -1,4 +1,4 @@
-import { taskObject } from "../types/taskObject";
+import { Task } from "../types/Task";
 import { useStoreDispatch } from "../hooks/storeHooks";
 import { TextField } from "@equinor/eds-core-react";
 import { debounce } from "../utils/debounce";
@@ -8,12 +8,12 @@ import { updateTask } from "../services/taskApi";
 import { useRouter } from "next/router";
 import { notifyOthers } from "../services/notifyOthers";
 import { useAccount, useMsal } from "@azure/msal-react";
-import { vsmObject } from "types/VsmObject";
+import { NodeDataApi } from "types/NodeDataApi";
 
 export function EditTaskTextField(props: {
-  task: taskObject;
+  task: Task;
   disabled: boolean;
-  vsmObject: vsmObject;
+  vsmObject: NodeDataApi;
 }): JSX.Element {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
@@ -25,7 +25,7 @@ export function EditTaskTextField(props: {
   const { id: projectId } = router.query;
   const queryClient = useQueryClient();
   const updateTaskMutation = useMutation(
-    (newObject: taskObject) => {
+    (newObject: Task) => {
       return updateTask(newObject, projectId, id, props.vsmObject.id);
     },
     {
@@ -45,7 +45,7 @@ export function EditTaskTextField(props: {
       defaultValue={description} //Since we set a default value and not a value, it only updates on init
       id={`taskDescription-${id}`}
       onChange={(event) => {
-        const updatedTask: taskObject = {
+        const updatedTask: Task = {
           ...props.task,
           description: event.target.value.substr(0, 4000),
         };

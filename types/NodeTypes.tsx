@@ -1,4 +1,4 @@
-export enum vsmObjectTypes {
+export enum NodeTypes {
   root = "Root",
   supplier = "Supplier",
   input = "Input",
@@ -9,5 +9,5 @@ export enum vsmObjectTypes {
   output = "Output",
   customer = "Customer",
   choice = "Choice",
-  empty = "Empty",
+  hidden = "Hidden",
 }

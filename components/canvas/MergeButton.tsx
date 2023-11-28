@@ -1,10 +1,13 @@
 import styles from "./NodeButtons.module.scss";
-import { NodeButtonMerge } from "../../types/NodeButton";
 import { Handle, Position, Connection } from "reactflow";
 
-export const MergeStartButton = (props: NodeButtonMerge) => (
+export type NodeButtonMerge = {
+  onConnect(e: Connection): void;
+};
+
+export const MergeButton = (props: NodeButtonMerge) => (
   <div
-    className={`${styles["nodeButton--container"]} ${styles["nodeButton--container--merge"]}`}
+    className={`${styles["nodeButton__container"]} ${styles["nodeButton__container--merge"]}`}
     title="Merge"
   >
     <Handle

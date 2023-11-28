@@ -1,28 +1,26 @@
 import { useEffect, useState } from "react";
-import { Connection, Handle, Position, useStore } from "reactflow";
-import { formatNodeText } from "./utils/formatNodeText";
+import { Connection, Position, useStore } from "reactflow";
 import { formatDuration } from "types/unitDefinitions";
-import { Icon } from "@equinor/eds-core-react";
+import { Icon, Typography } from "@equinor/eds-core-react";
 import { time as timeIcon } from "@equinor/eds-icons";
 
 import styles from "./Node.module.scss";
-import stylesNodeButtons from "./NodeButtons.module.scss";
 import { NodeButtonsContainer } from "./NodeButtonsContainer";
 import { SubActivityButton } from "./SubActivityButton";
 import { ChoiceButton } from "./ChoiceButton";
 import { WaitingButton } from "./WaitingButton";
-import { QIPRContainer } from "./QIPRContainer";
 import { NodeData } from "types/NodeData";
 import { NodeProps } from "reactflow";
-import { vsmObjectTypes } from "types/vsmObjectTypes";
-import { MergeStartButton } from "./MergeStartButton";
-import { MergeEndButton } from "./MergeEndButton";
+import { NodeTypes } from "types/NodeTypes";
+import { MergeButton } from "./MergeButton";
+import { TargetHandle } from "./TargetHandle";
+import { NodeDescription } from "./NodeDescription";
+import { NodeCard } from "./NodeCard";
+import colors from "theme/colors";
+import { SourceHandle } from "./SourceHandle";
 
-export const WaitingNode = (props: NodeProps<NodeData>) => {
-  const [hovering, setHovering] = useState(false);
-  const connectionNodeId = useStore((state) => state.connectionNodeId);
-
-  const {
+export const WaitingNode = ({
+  data: {
     id,
     duration,
     unit,
@@ -38,38 +36,40 @@ export const WaitingNode = (props: NodeProps<NodeData>) => {
     isChoiceChild,
     handleClickAddNode,
     userCanEdit,
-  } = props.data;
+    shapeHeight,
+    shapeWidth,
+  },
+  dragging,
+}: NodeProps<NodeData>) => {
+  const [hovering, setHovering] = useState(false);
+  const connectionNodeId = useStore((state) => state.connectionNodeId);
 
   useEffect(() => {
     setHovering(false);
-  }, [props.dragging, connectionNodeId]);
+  }, [dragging, connectionNodeId]);
 
   const renderNodeButtons = () => {
-    if (hovering && !merging) {
+    if (userCanEdit && hovering && !merging) {
       return (
         <>
           <NodeButtonsContainer position={Position.Bottom}>
             <SubActivityButton
               onClick={() =>
-                handleClickAddNode(
-                  id,
-                  vsmObjectTypes.subActivity,
-                  Position.Bottom
-                )
+                handleClickAddNode(id, NodeTypes.subActivity, Position.Bottom)
               }
             />
             <ChoiceButton
               onClick={() =>
-                handleClickAddNode(id, vsmObjectTypes.choice, Position.Bottom)
+                handleClickAddNode(id, NodeTypes.choice, Position.Bottom)
               }
             />
             <WaitingButton
               onClick={() =>
-                handleClickAddNode(id, vsmObjectTypes.waiting, Position.Bottom)
+                handleClickAddNode(id, NodeTypes.waiting, Position.Bottom)
               }
             />
             {mergeable && (
-              <MergeStartButton
+              <MergeButton
                 onConnect={(e: Connection) => handleMerge(e.source, e.target)}
               />
             )}
@@ -81,52 +81,36 @@ export const WaitingNode = (props: NodeProps<NodeData>) => {
                   onClick={() =>
                     handleClickAddNode(
                       id,
-                      vsmObjectTypes.subActivity,
+                      NodeTypes.subActivity,
                       Position.Right
                     )
                   }
                 />
                 <ChoiceButton
                   onClick={() =>
-                    handleClickAddNode(
-                      id,
-                      vsmObjectTypes.choice,
-                      Position.Right
-                    )
+                    handleClickAddNode(id, NodeTypes.choice, Position.Right)
                   }
                 />
                 <WaitingButton
                   onClick={() =>
-                    handleClickAddNode(
-                      id,
-                      vsmObjectTypes.waiting,
-                      Position.Right
-                    )
+                    handleClickAddNode(id, NodeTypes.waiting, Position.Right)
                   }
                 />
               </NodeButtonsContainer>
               <NodeButtonsContainer position={Position.Left}>
                 <SubActivityButton
                   onClick={() =>
-                    handleClickAddNode(
-                      id,
-                      vsmObjectTypes.subActivity,
-                      Position.Left
-                    )
+                    handleClickAddNode(id, NodeTypes.subActivity, Position.Left)
                   }
                 />
                 <ChoiceButton
                   onClick={() =>
-                    handleClickAddNode(id, vsmObjectTypes.choice, Position.Left)
+                    handleClickAddNode(id, NodeTypes.choice, Position.Left)
                   }
                 />
                 <WaitingButton
                   onClick={() =>
-                    handleClickAddNode(
-                      id,
-                      vsmObjectTypes.waiting,
-                      Position.Left
-                    )
+                    handleClickAddNode(id, NodeTypes.waiting, Position.Left)
                   }
                 />
               </NodeButtonsContainer>
@@ -139,52 +123,31 @@ export const WaitingNode = (props: NodeProps<NodeData>) => {
 
   return (
     <div
-      onMouseEnter={() => !props.dragging && setHovering(true)}
+      onMouseEnter={() => !dragging && setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
-      <div
-        className={`${styles.container} ${
-          hovering && !merging ? styles["container--hover"] : ""
-        }`}
-        style={{ display: "flex" }}
+      <NodeCard
+        shape="square"
+        height={shapeHeight}
+        width={shapeWidth}
+        color={colors.NODE_WAITING}
+        tasks={tasks}
+        onClick={handleClickNode}
+        hovering={hovering && !merging}
+        highlighted={isDropTarget && isValidDropTarget}
+        darkened={isValidDropTarget === false}
       >
-        <div
-          onClick={() => handleClickNode()}
-          className={`${styles.node} ${styles["node--waiting"]} ${
-            styles[
-              isDropTarget && isValidDropTarget
-                ? "node--validDropTarget"
-                : isValidDropTarget === false
-                ? "node--invalidDropTarget"
-                : ""
-            ]
-          }`}
-        >
-          <div className={styles["node__description-container"]}>
-            <p className={`${styles.text} ${styles["text--placeholder"]}`}>
-              {formatNodeText(type, 70)}
-            </p>
-          </div>
-          <div>
-            <p
-              className={`${styles.text} ${styles["node__waitingtime-container"]}`}
-            >
-              <Icon data={timeIcon} size={24} style={{ marginRight: 5 }} />
-              {formatDuration(duration, unit)}
-            </p>
-          </div>
-          <MergeEndButton hidden={!mergeOption} />
-          <Handle
-            className={stylesNodeButtons["handle--hidden"]}
-            type="source"
-            position={Position.Bottom}
-            isConnectable={false}
-            isConnectableEnd={false}
-          />
+        <NodeDescription type={type} />
+        <div className={styles["node__waitingtime-container"]}>
+          <Icon data={timeIcon} size={24} style={{ marginRight: 5 }} />
+          <Typography variant="caption">
+            {formatDuration(duration, unit)}
+          </Typography>
         </div>
-        <QIPRContainer onClick={() => handleClickNode()} tasks={tasks} />
-      </div>
-      {userCanEdit && renderNodeButtons()}
+        <TargetHandle hidden={!mergeOption} />
+        <SourceHandle />
+      </NodeCard>
+      {renderNodeButtons()}
     </div>
   );
 };

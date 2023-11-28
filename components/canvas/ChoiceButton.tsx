@@ -4,8 +4,8 @@ import ChoiceButtonIcon from "../../public/NodeButtons/ChoiceButtonIcon.svg";
 
 export const ChoiceButton = (props: NodeButton) => (
   <div
-    className={styles["nodeButton--container"]}
-    onClick={() => props.onClick()}
+    className={styles["nodeButton__container"]}
+    onClick={props.onClick}
     title="Choice"
   >
     <img src={ChoiceButtonIcon.src} className={styles.nodeButton} />

@@ -1,9 +1,9 @@
 import { processLabel } from "./processLabel";
 import { userAccess } from "./UserAccess";
-import { vsmObject } from "./VsmObject";
+import { NodeDataApi } from "./NodeDataApi";
 
 // Todo: Structure is out of date. Update to match new structure.
-export type vsmProject = {
+export type Project = {
   vsmProjectID: number;
   name: string;
   toBeProcessID?: number;
@@ -12,7 +12,7 @@ export type vsmProject = {
   created: string; // date
   updated: string; // date
   updatedBy: string;
-  objects: vsmObject[];
+  objects: NodeDataApi[];
   userAccesses: userAccess[];
   duplicateOf?: number;
   isFavorite?: boolean;

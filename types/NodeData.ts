@@ -1,6 +1,6 @@
 import { Position } from "reactflow";
-import { vsmObject } from "./VsmObject";
-import { vsmObjectTypes } from "./vsmObjectTypes";
+import { NodeDataApi } from "./NodeDataApi";
+import { NodeTypes } from "./NodeTypes";
 
 export type NodeData = {
   parents: string[];
@@ -12,7 +12,7 @@ export type NodeData = {
   handleClickNode: () => void;
   handleClickAddNode: (
     nodeId: string,
-    type: vsmObjectTypes,
+    type: NodeTypes,
     position: Position
   ) => void;
   mergeable?: boolean;
@@ -20,11 +20,20 @@ export type NodeData = {
   userCanEdit?: boolean;
   depth?: number;
   isChoiceChild?: boolean;
-} & vsmObject;
+  shapeHeight: number;
+  shapeWidth: number;
+} & NodeDataApi;
 
-export type NodeDataFiller = Pick<
+export type NodeDataHidden = Pick<
   NodeData,
-  "columnId" | "parents" | "depth" | "children" | "merging"
+  | "columnId"
+  | "parents"
+  | "depth"
+  | "children"
+  | "merging"
+  | "isValidDropTarget"
+  | "isDropTarget"
+  | "mergeOption"
 >;
 
-export type NodeDataFull = NodeData | NodeDataFiller;
+export type NodeDataFull = NodeData | NodeDataHidden;

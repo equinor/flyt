@@ -1,15 +1,15 @@
-import { taskObject } from "../types/taskObject";
-import { vsmTaskTypes } from "../types/vsmTaskTypes";
+import { Task } from "../types/Task";
+import { TaskTypes } from "../types/TaskTypes";
 
-export function getTaskColor(task: taskObject): string {
+export function getTaskColor(task: Task): string {
   switch (task?.type) {
-    case vsmTaskTypes.problem:
+    case TaskTypes.problem:
       return "#eb0000";
-    case vsmTaskTypes.question:
+    case TaskTypes.question:
       return "#ad6200";
-    case vsmTaskTypes.idea:
+    case TaskTypes.idea:
       return "#00977b";
-    case vsmTaskTypes.risk:
+    case TaskTypes.risk:
       return "#ff9101";
   }
   return "#000000";

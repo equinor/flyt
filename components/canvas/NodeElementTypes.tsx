@@ -4,12 +4,12 @@ import { SubActivityNode } from "./SubActivityNode";
 import { ChoiceNode } from "./ChoiceNode";
 import { WaitingNode } from "./WaitingNode";
 import { RootNode } from "./RootNode";
-import { EmptyNode } from "./EmptyNode";
+import { HiddenNode } from "./HiddenNode";
 import { NodeTypes } from "reactflow";
 
-export const nodeTypes: NodeTypes = {
+export const nodeElementTypes: NodeTypes = {
   Root: RootNode,
-  Empty: EmptyNode,
+  Hidden: HiddenNode,
   Supplier: GenericNode,
   Input: GenericNode,
   MainActivity: MainActivityNode,

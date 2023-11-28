@@ -15,4 +15,12 @@ export default {
   ERROR: "#FF002D",
 
   SUCCESS: "#3fd18e",
+
+  CANVAS: "#f7f7f7",
+
+  NODE_GENERIC: "#00d889",
+  NODE_MAINACTIVITY: "#00c1ff",
+  NODE_SUBACTIVITY: "#fdd835",
+  NODE_CHOICE: "#FDD835",
+  NODE_WAITING: "#ff8f00",
 };

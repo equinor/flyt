@@ -1,9 +1,9 @@
 import { Action, action, createStore, Thunk, thunk } from "easy-peasy";
 import BaseAPIServices from "../services/BaseAPIServices";
-import { vsmProject } from "../types/VsmProject";
-import { vsmObject } from "../types/VsmObject";
-import { taskObject } from "../types/taskObject";
-import { canDeleteVSMObject } from "../utils/canDeleteVSMObject";
+import { Project } from "../types/Project";
+import { NodeDataApi } from "../types/NodeDataApi";
+import { Task } from "../types/Task";
+import { canDeleteNode } from "../utils/canDeleteNode";
 import { original } from "immer";
 // General pattern Thunk -> Actions -> Set state
 
@@ -11,42 +11,42 @@ export type ProjectModel = {
   ///// STORE VARIABLES ///////////////
   errorProject: Record<string, unknown>;
   fetchingProject: boolean;
-  project: vsmProject;
+  project: Project;
   snackMessage: string | null;
-  selectedNode: vsmObject | null;
+  selectedNode: NodeDataApi | null;
   //// ACTIONS ///////////////////
   //someAction: Action<model, payload>;
-  addTaskToselectedNode: Action<ProjectModel, taskObject>;
-  updateTaskDescriptionInselectedNode: Action<ProjectModel, taskObject>;
+  addTaskToselectedNode: Action<ProjectModel, Task>;
+  updateTaskDescriptionInselectedNode: Action<ProjectModel, Task>;
   removeTaskFromselectedNode: Action<ProjectModel, string>;
-  setselectedNode: Action<ProjectModel, vsmObject | null>;
-  patchLocalObject: Action<ProjectModel, vsmObject>;
+  setselectedNode: Action<ProjectModel, NodeDataApi | null>;
+  patchLocalObject: Action<ProjectModel, NodeDataApi>;
   setErrorProject: Action<ProjectModel, Record<string, unknown>>;
   setFetchingProject: Action<ProjectModel, boolean>;
-  setProject: Action<ProjectModel, vsmProject>;
+  setProject: Action<ProjectModel, Project>;
   //setProjectName: Action<ProjectModel, { name?: string }>;
   setSnackMessage: Action<ProjectModel, string>;
   //// THUNKS ///////////////////
   //someThunk: Thunk<Model,Payload,Injections,StoreModel,Result>;
-  addObject: Thunk<ProjectModel, vsmObject>;
+  addObject: Thunk<ProjectModel, NodeDataApi>;
   moveVSMObject: Thunk<
     ProjectModel,
     { projectId; id; parent; leftObjectId; choiceGroup }
   >;
-  deleteVSMObject: Thunk<ProjectModel, vsmObject>;
+  deleteVSMObject: Thunk<ProjectModel, NodeDataApi>;
   fetchProject: Thunk<ProjectModel, { id: string | string[] | number }>;
   // updateProjectName: Thunk<
   //   ProjectModel,
   //   { projectId: number; name: string; rootObjectId: number }
   // >;
   //updateVSMObject: Thunk<ProjectModel, vsmObject>;
-  addTask: Thunk<ProjectModel, taskObject>;
-  updateTask: Thunk<ProjectModel, taskObject>;
+  addTask: Thunk<ProjectModel, Task>;
+  updateTask: Thunk<ProjectModel, Task>;
   linkTask: Thunk<
     ProjectModel,
-    { projectId: number; id: number; taskId: number; task: taskObject }
+    { projectId: number; id: number; taskId: number; task: Task }
   >;
-  unlinkTask: Thunk<ProjectModel, { task: taskObject; object: vsmObject }>;
+  unlinkTask: Thunk<ProjectModel, { task: Task; object: NodeDataApi }>;
 };
 
 const projectModel: ProjectModel = {
@@ -91,7 +91,7 @@ const projectModel: ProjectModel = {
   setErrorProject: action((state, payload) => {
     state.errorProject = payload;
   }),
-  setProject: action((state, payload: vsmProject) => {
+  setProject: action((state, payload: Project) => {
     state.project = payload;
   }),
   setselectedNode: action((state, payload) => {
@@ -112,7 +112,7 @@ const projectModel: ProjectModel = {
   patchLocalObject: action((state, payload) => {
     const { project } = state;
 
-    function patchNode(oldObj: vsmObject, newObj: vsmObject) {
+    function patchNode(oldObj: NodeDataApi, newObj: NodeDataApi) {
       // oldObj = newObj //This doesn't work.
       // We need to iterate over each individual object and set them one-by-one
       Object.keys(newObj).forEach((key) => {
@@ -125,12 +125,12 @@ const projectModel: ProjectModel = {
      * @param node - What we want to put in the tree
      * @param tree
      */
-    function patchNodeInTree(node: vsmObject, tree: vsmObject) {
+    function patchNodeInTree(node: NodeDataApi, tree: NodeDataApi) {
       if (node.id === tree.id) patchNode(tree, node);
       tree.children?.forEach((id) => {
         patchNodeInTree(
           node,
-          state.project.objects.find((vsmObj: vsmObject) => vsmObj.id === id)
+          state.project.objects.find((vsmObj: NodeDataApi) => vsmObj.id === id)
         );
       });
     }
@@ -180,7 +180,7 @@ const projectModel: ProjectModel = {
   deleteVSMObject: thunk(async (actions, payload) => {
     const { id, projectId } = payload;
 
-    if (canDeleteVSMObject(payload)) {
+    if (canDeleteNode(payload)) {
       BaseAPIServices.delete(`/api/v1.0/VSMObject/${id}`)
         .then(() => {
           // Todo: delete the object locally
@@ -280,7 +280,7 @@ const projectModel: ProjectModel = {
     const apiObject = {
       ...newObject,
       id: newObject.id ?? 0, // use 0 when it is a new card
-    } as vsmObject;
+    } as NodeDataApi;
 
     actions.setSnackMessage("Adding new card...");
     BaseAPIServices.post(`/api/v1.0/VSMObject`, apiObject)

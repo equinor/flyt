@@ -1,9 +1,9 @@
 const baseUrl = "/api/v2.0";
 
 import BaseAPIServices from "./BaseAPIServices";
-import { vsmObject } from "../types/VsmObject";
+import { NodeDataApi } from "../types/NodeDataApi";
 import { Graph } from "types/Graph";
-import { vsmObjectTypes } from "types/vsmObjectTypes";
+import { NodeTypes } from "types/NodeTypes";
 
 export const getGraph = (projectId: string | string[]): Promise<Graph> => {
   return BaseAPIServices.get(`${baseUrl}/graph/${projectId}/vertices`).then(
@@ -12,7 +12,7 @@ export const getGraph = (projectId: string | string[]): Promise<Graph> => {
 };
 
 export const addVertice = (
-  data: { type: vsmObjectTypes },
+  data: { type: NodeTypes },
   projectId: string,
   parentId: string
 ): Promise<unknown> =>
@@ -22,10 +22,10 @@ export const addVertice = (
   ).then((r) => r.data);
 
 export const patchGraph = (
-  data: vsmObject,
+  data: NodeDataApi,
   projectId: string | string[],
   vertexId: string
-): Promise<vsmObject> =>
+): Promise<NodeDataApi> =>
   BaseAPIServices.put(
     `${baseUrl}/graph/${projectId}/vertices/${vertexId}`,
     data
@@ -54,7 +54,7 @@ export const moveVertice = (
   ).then((r) => r.data);
 
 export const addVerticeLeft = (
-  data: { type: vsmObjectTypes },
+  data: { type: NodeTypes },
   projectId: string,
   neighbourId: string
 ): Promise<unknown> =>
@@ -64,7 +64,7 @@ export const addVerticeLeft = (
   ).then((r) => r.data);
 
 export const addVerticeRight = (
-  data: { type: vsmObjectTypes },
+  data: { type: NodeTypes },
   projectId: string,
   neighbourId: string
 ): Promise<unknown> =>

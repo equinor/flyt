@@ -1,58 +1,26 @@
 import { Node, Edge } from "reactflow";
 import dagre, { Node as DagreNode } from "dagre";
 import { NodeDataFull } from "types/NodeData";
+import { NodeTypes } from "types/NodeTypes";
 
-const columnsEndPosX = new Map();
-const columnsStartPosX = new Map();
-const columnsOffsetX = new Map();
+const columnSpacing = 150;
+let margin = 0;
 
-type CustomDagreNode = DagreNode<{ columnId: string; type: string }>;
-
-const calcColumnOffset = (node: CustomDagreNode) => {
-  const { columnId, type, x, width } = node;
-  if (type) {
-    if (!columnsStartPosX.has(columnId) || columnsStartPosX.get(columnId) > x) {
-      columnsStartPosX.set(columnId, x);
-    }
-    if (
-      !columnsEndPosX.has(columnId) ||
-      columnsEndPosX.get(columnId) < x + width
-    ) {
-      columnsEndPosX.set(columnId, x + width);
-    }
-  }
-};
-
-const setColumnsOffsetX = () => {
-  let index = 0;
-  let totalOffsetX = 0;
-  let offsetX;
-  columnsStartPosX.forEach((value, key) => {
-    if (index === 0) {
-      columnsOffsetX.set(key, 0);
-    } else {
-      offsetX =
-        value -
-        columnsEndPosX.get(Array.from(columnsEndPosX.keys())[index - 1]);
-      totalOffsetX += offsetX < 0 ? 0 - offsetX : offsetX;
-      columnsOffsetX.set(key, totalOffsetX);
-    }
-    index++;
-  });
-};
-
-export function setLayout(
+const createColumn = (
   nodes: Node<NodeDataFull>[],
   edges: Edge[]
-): Node<NodeDataFull>[] {
-  columnsEndPosX.clear();
-  columnsStartPosX.clear();
-  columnsOffsetX.clear();
-  const dagreGraph = new dagre.graphlib.Graph<CustomDagreNode>({
+): Node<NodeDataFull>[] => {
+  const dagreGraph = new dagre.graphlib.Graph<DagreNode>({
     directed: true,
   });
   dagreGraph.setDefaultEdgeLabel(() => ({}));
-  dagreGraph.setGraph({ rankdir: "TB", nodesep: 0, edgesep: 0, ranksep: 50 });
+  dagreGraph.setGraph({
+    rankdir: "TB",
+    nodesep: 70,
+    edgesep: 0,
+    ranksep: 100,
+    marginx: margin,
+  });
 
   nodes.forEach((node) => {
     dagreGraph.setNode(node.id, {
@@ -69,25 +37,40 @@ export function setLayout(
 
   dagre.layout(dagreGraph);
 
-  nodes.forEach((node) => {
-    const nodeWithPosition = dagreGraph.node(node.id);
-    calcColumnOffset(nodeWithPosition);
-  });
+  let columnEndPosX = 0;
 
-  setColumnsOffsetX();
-
-  //TODO: default width and height
   nodes.forEach((node) => {
     const { x, y } = dagreGraph.node(node.id);
     if (node.width && node.height) {
       node.position = {
-        x: x - node.width / 2 + columnsOffsetX.get(node.data.columnId),
+        x: x - node.width / 2,
         y: y - node.height / 2,
       };
     }
-
+    if (x > columnEndPosX) {
+      columnEndPosX = x;
+    }
     return node;
   });
+  margin = columnEndPosX + columnSpacing;
 
   return nodes;
+};
+
+export function setLayout(
+  nodes: Node<NodeDataFull>[],
+  edges: Edge[]
+): Node<NodeDataFull>[] {
+  margin = 0;
+  const layout: Node<NodeDataFull>[] = [];
+  const root = nodes.find((node) => node.type === NodeTypes.root);
+  root.data.children.forEach((nodeId) => {
+    const columnNodes = nodes.filter((node) => node.data.columnId === nodeId);
+    const columnEdges = edges.filter((edge) =>
+      columnNodes.find((node) => node.id === edge.source)
+    );
+    const column = createColumn(columnNodes, columnEdges);
+    layout.push(...column);
+  });
+  return layout;
 }

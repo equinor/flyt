@@ -21,19 +21,17 @@ export const NodeButtonsContainer = (props: {
     }
   };
 
-  return hovering ? (
-    <div
-      className={`${styles.nodeButtonsContainer} ${styles[getClassName()]}`}
-      onMouseLeave={() => setHovering(false)}
-    >
-      {props.children}
-    </div>
-  ) : (
+  return (
     <div
       className={`${styles.nodeButtonsContainer} ${styles[getClassName()]}`}
       onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
     >
-      <img src={AddNodeButtonIcon.src} style={{ margin: "5px" }} />
+      {hovering ? (
+        props.children
+      ) : (
+        <img src={AddNodeButtonIcon.src} style={{ margin: "5px" }} />
+      )}
     </div>
   );
 };

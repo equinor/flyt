@@ -3,7 +3,7 @@ import { Button, Icon, Input } from "@equinor/eds-core-react";
 import { add, check } from "@equinor/eds-icons";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { taskCategory } from "../types/taskCategory";
+import { TaskCategory } from "../types/TaskCategory";
 import { postTaskCategory } from "../services/taskCategoriesApi";
 import { ErrorScrim } from "./ErrorScrim";
 
@@ -12,7 +12,7 @@ export function AddCategoryButton(props: { projectId }): JSX.Element {
   const [errorMessage, setErrorMessage] = useState(null);
   const [visibleScrim, setVisibleScrim] = useState(false);
   const [STATE_EDIT, SET_STATE_EDIT] = useState(false);
-  const [categoryDescription, setcategoryDescription] = useState("");
+  const [categoryName, setcategoryName] = useState("");
 
   const queryClient = useQueryClient();
   const getCategories = () => {
@@ -24,12 +24,9 @@ export function AddCategoryButton(props: { projectId }): JSX.Element {
   };
 
   const newTaskCategoryMutation = useMutation(
-    (category: taskCategory) => {
+    (category: TaskCategory) => {
       setIsLoading(true);
-      return postTaskCategory(props.projectId, {
-        description: category.description,
-        fkProject: props.projectId,
-      });
+      return postTaskCategory(props.projectId, category);
     },
     {
       onSettled: () => {
@@ -62,11 +59,10 @@ export function AddCategoryButton(props: { projectId }): JSX.Element {
         <form
           onSubmit={(event) => {
             event.preventDefault();
-            //Save text and exit edit-mode
-            const description = categoryDescription.trim();
-            if (description)
+            const name = categoryName.trim();
+            if (name)
               newTaskCategoryMutation.mutate({
-                description,
+                name,
                 fkProject: props.projectId,
               });
           }}
@@ -85,7 +81,7 @@ export function AddCategoryButton(props: { projectId }): JSX.Element {
               <Input
                 autoFocus
                 placeholder={"New category name"}
-                onChange={(e) => setcategoryDescription(e.target.value)}
+                onChange={(e) => setcategoryName(e.target.value)}
                 required={true}
                 type="text"
                 id="newCategoryInput"

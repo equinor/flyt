@@ -4,7 +4,7 @@ import SubActivityButtonIcon from "../../public/NodeButtons/SubActivityButtonIco
 
 export const SubActivityButton = (props: NodeButton) => (
   <div
-    className={styles["nodeButton--container"]}
+    className={styles["nodeButton__container"]}
     onClick={() => props.onClick()}
     title="Sub Activity"
   >

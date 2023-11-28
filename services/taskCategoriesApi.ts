@@ -1,5 +1,5 @@
 import BaseAPIServices from "./BaseAPIServices";
-import { taskCategory } from "../types/taskCategory";
+import { TaskCategory } from "../types/TaskCategory";
 
 const baseUrl = "/api/v2.0";
 
@@ -11,7 +11,7 @@ const baseUrl = "/api/v2.0";
  */
 export const getTaskCategories = (
   projectId: string | string[]
-): Promise<taskCategory[]> => {
+): Promise<TaskCategory[]> => {
   return BaseAPIServices.get(`${baseUrl}/graph/${projectId}/categories`).then(
     (value) => {
       if (value) return value.data;
@@ -20,14 +20,17 @@ export const getTaskCategories = (
   );
 };
 
-export const postTaskCategory = (projectId: string, category: taskCategory) => {
+export const postTaskCategory = (projectId: string, category: TaskCategory) => {
   return BaseAPIServices.post(
     `${baseUrl}/graph/${projectId}/categories`,
     category
   );
 };
 
-export const updateTaskCategory = (projectId: string | string[], category) => {
+export const updateTaskCategory = (
+  projectId: string | string[],
+  category: TaskCategory
+) => {
   return BaseAPIServices.patch(
     `${baseUrl}/graph/${projectId}/categories/${category.id}`,
     category

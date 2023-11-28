@@ -1,12 +1,12 @@
 import styles from "./VSMCanvas.module.scss";
 import { SideBarContent } from "./SideBarContent";
-import { vsmObject } from "../types/VsmObject";
+import { NodeDataApi } from "../types/NodeDataApi";
 
-export function VSMSideBar(props: {
+export function SideBar(props: {
   onClose: () => void;
   onDelete: () => void;
   canEdit: boolean;
-  selectedNode?: vsmObject;
+  selectedNode?: NodeDataApi;
 }): JSX.Element {
   const selectedNode = props.selectedNode;
   if (!selectedNode) return <></>;

@@ -1,4 +1,4 @@
-import { taskObject } from "../types/taskObject";
+import { Task } from "../types/Task";
 import { useState } from "react";
 import { getTaskColor } from "../utils/getTaskColor";
 import styles from "./QipCard.module.scss";
@@ -11,12 +11,12 @@ import {
   linkTaskCategory,
   unlinkTaskCategory,
 } from "../services/taskCategoriesApi";
-import { taskCategory } from "../types/taskCategory";
+import { TaskCategory } from "../types/TaskCategory";
 import { useRouter } from "next/router";
 import { getTaskShorthand } from "utils/getTaskShorthand";
 
 export function QipCard(props: {
-  task: taskObject;
+  task: Task;
   onClick?: () => void;
 }): JSX.Element {
   const task = props.task;
@@ -109,7 +109,7 @@ export function QipCard(props: {
       </div>
       <ReactMarkdown remarkPlugins={[gfm]}>{description}</ReactMarkdown>
       <div className={styles.qipCardCategorySection}>
-        {categories?.map((category: taskCategory) => (
+        {categories?.map((category: TaskCategory) => (
           <CategoryChip
             key={category.id}
             text={category.name}

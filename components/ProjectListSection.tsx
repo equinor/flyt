@@ -7,10 +7,10 @@ import Masonry from "react-masonry-css";
 import { NewProcessButton } from "./NewProcessButton";
 import { Typography } from "@equinor/eds-core-react";
 import styles from "./ProjectListSection.module.scss";
-import { vsmProject } from "../types/VsmProject";
+import { Project } from "../types/Project";
 
 export function ProjectListSection(props: {
-  projects: vsmProject[];
+  projects: Project[];
   isLoading: boolean;
   expectedNumberOfProjects: number;
   showNewProcessButton: boolean;

@@ -4,12 +4,12 @@ import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQueryClient } from "react-query";
 
 import { getAccessToken } from "../../auth/msalHelpers";
-import { DeleteVsmObjectDialog } from "../DeleteVsmObjectDialog";
+import { DeleteNodeDialog } from "../DeleteNodeDialog";
 import { LiveIndicator } from "../LiveIndicator";
 import { io } from "socket.io-client";
 import { ResetProcessButton } from "components/ResetProcessButton";
 import { ToBeToggle } from "./ToBeToggle";
-import { VSMSideBar } from "../VSMSideBar";
+import { SideBar } from "../SideBar";
 import { getMyAccess } from "../../utils/getMyAccess";
 import { notifyOthers } from "../../services/notifyOthers";
 import { CanvasButtons } from "components/CanvasButtons";
@@ -17,7 +17,7 @@ import { ManageLabelBox } from "components/Labels/ManageLabelBox";
 import { unknownErrorToString } from "utils/isError";
 import { useRouter } from "next/router";
 import { useStoreDispatch } from "../../hooks/storeHooks";
-import { vsmObject } from "types/VsmObject";
+import { NodeDataApi } from "types/NodeDataApi";
 import ReactFlow, {
   useNodesState,
   useEdgesState,
@@ -30,7 +30,7 @@ import ReactFlow, {
   ReactFlowState,
 } from "reactflow";
 import { setLayout } from "./hooks/useLayout";
-import { nodeTypes } from "./NodeTypes";
+import { nodeElementTypes } from "./NodeElementTypes";
 import { NodeData, NodeDataFull } from "types/NodeData";
 import {
   moveVertice,
@@ -40,21 +40,21 @@ import {
   moveVerticeRightOfTarget,
   mergeVertices,
 } from "../../services/graphApi";
-import { vsmObjectTypes } from "types/vsmObjectTypes";
-import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
+import { NodeTypes } from "types/NodeTypes";
 import { uid } from "../../utils/uuid";
-import { vsmProject } from "types/VsmProject";
+import { Project } from "types/Project";
 import { Graph } from "types/Graph";
 import { validDropTarget } from "./utils/validDropTarget";
 import { setNodesDepth } from "./utils/setNodesDepth";
+import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
 
 type CanvasProps = {
   graph: Graph;
-  project: vsmProject;
+  project: Project;
 };
 
 const Canvas = ({ graph, project }: CanvasProps) => {
-  const [selectedNode, setSelectedNode] = useState<vsmObject | undefined>(
+  const [selectedNode, setSelectedNode] = useState<NodeDataApi | undefined>(
     undefined
   );
   const dispatch = useStoreDispatch();
@@ -67,12 +67,12 @@ const Canvas = ({ graph, project }: CanvasProps) => {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
 
+  const shapeSize = { height: 140, width: 140 };
+
   let tempNodes: Node<NodeDataFull>[] = [];
   let tempEdges: Edge[] = [];
   const [nodes, setNodes, onNodesChange] = useNodesState<NodeDataFull>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const nodeWidth = 200;
-  const nodeHeight = 200;
 
   const dragRef = useRef<Node<NodeData> | null>(null);
   const [source, setSource] = useState<Node<NodeDataFull> | undefined>(
@@ -172,7 +172,7 @@ const Canvas = ({ graph, project }: CanvasProps) => {
       position,
     }: {
       parentId: string;
-      type: vsmObjectTypes;
+      type: NodeTypes;
       position: Position;
     }) => {
       dispatch.setSnackMessage("⏳ Adding new card...");
@@ -230,20 +230,15 @@ const Canvas = ({ graph, project }: CanvasProps) => {
     const sourceNode = nodes.find((node) => node.id === nodeId);
     setNodes((nodes) =>
       nodes.map((node) => {
-        if (
-          sourceNode &&
-          sourceNode.id !== node.id &&
-          node.data.columnId == sourceNode?.data?.columnId &&
-          !sourceNode.data.children.find((childId) => childId === node.id) &&
-          !sourceNode.data.parents.find((parentId) => parentId === node.id)
-        ) {
-          node.data = { ...node.data, mergeOption: true };
-        } else {
-          node.data = {
-            ...node.data,
-            mergeOption: false,
-          };
-        }
+        node.data = {
+          ...node.data,
+          mergeOption:
+            sourceNode &&
+            sourceNode.id !== node.id &&
+            node.data.columnId == sourceNode?.data?.columnId &&
+            !sourceNode.data.children.find((childId) => childId === node.id) &&
+            !sourceNode.data.parents.find((parentId) => parentId === node.id),
+        };
         node.data.merging = true;
         return node;
       })
@@ -261,14 +256,17 @@ const Canvas = ({ graph, project }: CanvasProps) => {
 
   let columnId: string | null = null;
 
-  const createNodes = (node: vsmObject, parent: vsmObject | null = null) => {
+  const createNodes = (
+    node: NodeDataApi,
+    parent: NodeDataApi | null = null
+  ) => {
     if (parent) {
       if (
-        node.type === vsmObjectTypes.mainActivity ||
-        node.type === vsmObjectTypes.output ||
-        node.type === vsmObjectTypes.supplier ||
-        node.type === vsmObjectTypes.input ||
-        node.type === vsmObjectTypes.customer
+        node.type === NodeTypes.mainActivity ||
+        node.type === NodeTypes.output ||
+        node.type === NodeTypes.supplier ||
+        node.type === NodeTypes.input ||
+        node.type === NodeTypes.customer
       ) {
         columnId = node.id;
       }
@@ -279,7 +277,6 @@ const Canvas = ({ graph, project }: CanvasProps) => {
         target: node.id,
       });
 
-      // Occurs when a node has multiple parents
       const duplicateNode = tempNodes.find(
         (tempNode) => tempNode.id === node.id
       );
@@ -306,21 +303,19 @@ const Canvas = ({ graph, project }: CanvasProps) => {
           handleMerge: (sourceId, targetId) =>
             sourceId && targetId && handleMerge.mutate({ sourceId, targetId }),
           mergeable:
-            node.children.length === 0 || node.type === vsmObjectTypes.choice,
+            node.children.length === 0 || node.type === NodeTypes.choice,
           merging: !!connectionNodeId,
           parents: [parent.id],
           userCanEdit,
-          isChoiceChild: parent.type === vsmObjectTypes.choice,
+          isChoiceChild: parent.type === NodeTypes.choice,
           columnId,
+          shapeHeight: shapeSize.height,
+          shapeWidth: shapeSize.width,
         },
         position: { x: 0, y: 0 },
         type: node.type,
-        width:
-          nodeWidth +
-          getQIPRContainerWidth(
-            node?.tasks?.filter((task) => !task.solved).length
-          ),
-        height: nodeHeight,
+        height: shapeSize.height,
+        width: shapeSize.width + getQIPRContainerWidth(node.tasks),
       });
     } else {
       tempNodes.push({
@@ -332,18 +327,18 @@ const Canvas = ({ graph, project }: CanvasProps) => {
         },
         position: { x: 0, y: 0 },
         type: node.type,
-        width: nodeWidth,
-        height: nodeHeight,
+        height: shapeSize.height,
+        width: shapeSize.width + getQIPRContainerWidth(node.tasks),
       });
     }
 
     node.children.forEach((childId) => {
-      const childNode = graph.find((node: vsmObject) => node.id === childId);
+      const childNode = graph.find((node) => node.id === childId);
       childNode && createNodes(childNode, node);
     });
   };
 
-  const createFillerNodes = () => {
+  const createHiddenNodes = () => {
     tempNodes.forEach((node) => {
       if (node?.data?.parents?.length > 1) {
         let depthDeepestNode: undefined | number = undefined;
@@ -377,13 +372,14 @@ const Canvas = ({ graph, project }: CanvasProps) => {
                   parents: [tempParentNodeId],
                   columnId: tempParentNode.data.columnId,
                   depth: i,
-                  //TODO: Add children
                   children: [],
+                  shapeHeight: shapeSize.height,
+                  shapeWidth: shapeSize.width,
                 },
                 position: { x: 0, y: 0 },
-                type: vsmObjectTypes.empty,
-                width: nodeWidth,
-                height: nodeHeight,
+                type: NodeTypes.hidden,
+                height: shapeSize.height,
+                width: shapeSize.width,
                 draggable: false,
                 selectable: false,
               });
@@ -415,7 +411,7 @@ const Canvas = ({ graph, project }: CanvasProps) => {
 
   useEffect(() => {
     const root = graph.find(
-      (node: vsmObject) => node.type === vsmObjectTypes.root
+      (node: NodeDataApi) => node.type === NodeTypes.root
     );
     if (root) {
       if (selectedNode) {
@@ -426,7 +422,7 @@ const Canvas = ({ graph, project }: CanvasProps) => {
       }
       createNodes(root);
       setNodesDepth(tempNodes);
-      createFillerNodes();
+      createHiddenNodes();
       const finalNodes = setLayout(tempNodes, tempEdges);
       setNodes(finalNodes);
       setEdges(tempEdges);
@@ -440,27 +436,26 @@ const Canvas = ({ graph, project }: CanvasProps) => {
     dragRef.current = nodeDragging;
     setNodes((nodes) =>
       nodes.map((node) => {
-        if (validDropTarget(nodeDragging, node)) {
-          node.data = { ...node.data, isValidDropTarget: true };
-        } else {
-          node.data = { ...node.data, isValidDropTarget: false };
-        }
+        node.data = {
+          ...node.data,
+          isValidDropTarget: validDropTarget(nodeDragging, node),
+        };
         return node;
       })
     );
     setSource(nodeDragging);
   };
 
-  const onNodeDrag = (evt: MouseEvent<Element>, node: Node<NodeDataFull>) => {
-    const centerX = node.position.x + (node.width || nodeWidth) / 2;
-    const centerY = node.position.y + (node.height || nodeHeight) / 2;
+  const onNodeDrag = (evt: MouseEvent, node: Node<NodeDataFull>) => {
+    const centerX = node.position.x + node.width / 2;
+    const centerY = node.position.y + node.height / 2;
 
     const targetNode = nodes.find(
       (n) =>
         centerX > n.position.x &&
-        centerX < n.position.x + nodeWidth &&
+        centerX < n.position.x + node.width &&
         centerY > n.position.y &&
-        centerY < n.position.y + nodeHeight &&
+        centerY < n.position.y + node.height &&
         n.id !== node.id
     );
 
@@ -470,29 +465,28 @@ const Canvas = ({ graph, project }: CanvasProps) => {
   useEffect(() => {
     setNodes((nodes) =>
       nodes.map((node) => {
-        if (node.id === target?.id && validDropTarget(node, target)) {
-          node.data = { ...node.data, isDropTarget: true };
-        } else {
-          node.data = { ...node.data, isDropTarget: false };
-        }
+        node.data = {
+          ...node.data,
+          isDropTarget: node.id === target?.id && validDropTarget(node, target),
+        };
         return node;
       })
     );
   }, [target]);
 
-  const onNodeDragStop = (evt: MouseEvent<Element>, node: Node<NodeData>) => {
+  const onNodeDragStop = (evt: MouseEvent, node: Node<NodeData>) => {
     if (target && validDropTarget(node, target)) {
       handleMoveNode.mutate({
         nodeId: node.id,
         targetId: target.id,
         position:
-          node.type === vsmObjectTypes.mainActivity &&
-          target.type === vsmObjectTypes.mainActivity
+          node.type === NodeTypes.mainActivity &&
+          target.type === NodeTypes.mainActivity
             ? Position.Right
             : Position.Bottom,
         includeChildren:
           target.data.children.length === 0 ||
-          node?.data?.type === vsmObjectTypes.choice,
+          node?.data?.type === NodeTypes.choice,
       });
       setTarget(undefined);
       dragRef.current = null;
@@ -531,15 +525,14 @@ const Canvas = ({ graph, project }: CanvasProps) => {
           !!socketConnected
             ? "Connection is looking good!\nYour changes should appear immediately for other users."
             : `You are not connected${
-                // eslint-disable-next-line sonarjs/no-nested-template-literals
-                socketReason ? ` because of ${socketReason}` : ""
+                socketReason ? " because of ${socketReason}" : ""
               }.`
         }
       />
       <ToBeToggle />
       <ResetProcessButton />
       {selectedNode && (
-        <DeleteVsmObjectDialog
+        <DeleteNodeDialog
           objectToDelete={selectedNode}
           visible={visibleDeleteScrim}
           onClose={() => {
@@ -548,7 +541,7 @@ const Canvas = ({ graph, project }: CanvasProps) => {
           }}
         />
       )}
-      <VSMSideBar
+      <SideBar
         onClose={() => setSelectedNode(undefined)}
         onDelete={() => setVisibleDeleteScrim(true)}
         canEdit={userCanEdit}
@@ -557,7 +550,7 @@ const Canvas = ({ graph, project }: CanvasProps) => {
       <ReactFlow
         nodes={nodes}
         edges={edges}
-        nodeTypes={nodeTypes}
+        nodeTypes={nodeElementTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onPaneClick={() => setSelectedNode(undefined)}
@@ -568,7 +561,7 @@ const Canvas = ({ graph, project }: CanvasProps) => {
         onNodeDragStart={onNodeDragStart}
         onNodeDrag={onNodeDrag}
         onNodeDragStop={onNodeDragStop}
-        attributionPosition="top-left"
+        attributionPosition="bottom-right"
         fitView
         fitViewOptions={{ includeHiddenNodes: true }}
         connectionRadius={100}

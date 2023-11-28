@@ -3,7 +3,7 @@ import { AxiosPromise, AxiosResponse } from "axios";
 import BaseAPIServices from "./BaseAPIServices";
 import { createUrlParams } from "../utils/createUrlParams";
 import { processLabel } from "types/processLabel";
-import { vsmProject } from "../types/VsmProject";
+import { Project } from "../types/Project";
 
 const baseUrl = "/api/v2.0";
 //Project aka. VSM aka. Flyt or Flow
@@ -15,7 +15,7 @@ export const getProjects = (filter?: {
   page?: number; // Page number
   items?: number; // Number of items per page
   onlyFavorites?: boolean; // Only favorites
-}): Promise<{ projects: vsmProject[]; totalItems: number }> =>
+}): Promise<{ projects: Project[]; totalItems: number }> =>
   BaseAPIServices.get(`${baseUrl}/project${createUrlParams(filter)}`).then(
     (value) => {
       return {
@@ -42,7 +42,7 @@ export const createToBeProject = (id?: string | string[]) => {
 export const getProject = (
   id: string | string[],
   asOf?: number | string | string[]
-): Promise<vsmProject> => {
+): Promise<Project> => {
   if (asOf) {
     return BaseAPIServices.get(`${baseUrl}/project/${id}?asOf=${asOf}`).then(
       (value) => value.data

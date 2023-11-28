@@ -6,17 +6,17 @@ import { useMutation, useQueryClient } from "react-query";
 import { EditTaskTextField } from "./EditTaskTextField";
 import { delete_to_trash } from "@equinor/eds-icons";
 import { notifyOthers } from "../services/notifyOthers";
-import { taskObject } from "../types/taskObject";
+import { Task } from "../types/Task";
 import { unknownErrorToString } from "../utils/isError";
 import { useRouter } from "next/router";
 import { useStoreDispatch } from "../hooks/storeHooks";
-import { vsmObject } from "../types/VsmObject";
-import { vsmTaskTypes } from "types/vsmTaskTypes";
+import { NodeDataApi } from "../types/NodeDataApi";
+import { TaskTypes } from "types/TaskTypes";
 import { getTaskShorthand } from "utils/getTaskShorthand";
 
 export function EditTaskSection(props: {
-  task: taskObject;
-  object: vsmObject;
+  task: Task;
+  object: NodeDataApi;
   canEdit: boolean;
 }): JSX.Element {
   const { task, object } = props;
@@ -34,8 +34,8 @@ export function EditTaskSection(props: {
       solvedTask,
       solved,
     }: {
-      node: vsmObject;
-      solvedTask: taskObject;
+      node: NodeDataApi;
+      solvedTask: Task;
       solved: boolean;
     }) => solveTask(id, node.id, solvedTask.id, solved),
     {
@@ -55,7 +55,7 @@ export function EditTaskSection(props: {
   );
 
   const taskDeleteMutation = useMutation(
-    (task: taskObject) => deleteTask(object.projectId, object.id, task.id),
+    (task: Task) => deleteTask(object.projectId, object.id, task.id),
     {
       onSuccess() {
         notifyOthers(
@@ -87,8 +87,7 @@ export function EditTaskSection(props: {
       >
         {/* Only show checkbox for Problems and risks */}
         {task &&
-        (task.type === vsmTaskTypes.problem ||
-          task.type === vsmTaskTypes.risk) ? (
+        (task.type === TaskTypes.problem || task.type === TaskTypes.risk) ? (
           <Checkbox
             key={task.id}
             defaultChecked={task.solved}
@@ -125,45 +124,45 @@ export function EditTaskSection(props: {
   );
 }
 
-function getToggleActionText(type: vsmTaskTypes, solved: boolean) {
+function getToggleActionText(type: TaskTypes, solved: boolean) {
   switch (type) {
-    case vsmTaskTypes.problem:
+    case TaskTypes.problem:
       return solved ? "Mark as unsolved" : "Mark as solved";
-    case vsmTaskTypes.question:
+    case TaskTypes.question:
       return solved ? "Mark as unanswered" : "Mark as answered";
-    case vsmTaskTypes.idea:
+    case TaskTypes.idea:
       return solved ? "Mark as declined" : "Mark as approved";
-    case vsmTaskTypes.risk:
+    case TaskTypes.risk:
       return solved ? "Mark as unmitigated" : "Mark as mitigated";
     default:
       return "";
   }
 }
 
-function getTaskSolvedText(type: vsmTaskTypes, solved: boolean) {
+function getTaskSolvedText(type: TaskTypes, solved: boolean) {
   switch (type) {
-    case vsmTaskTypes.problem:
+    case TaskTypes.problem:
       return solved ? "Solved" : "Unsolved";
-    case vsmTaskTypes.question:
+    case TaskTypes.question:
       return solved ? "Answered" : "Unanswered";
-    case vsmTaskTypes.idea:
+    case TaskTypes.idea:
       return solved ? "Approved" : "Declined";
-    case vsmTaskTypes.risk:
+    case TaskTypes.risk:
       return solved ? "Mitigated" : "Unmitigated";
     default:
       return "";
   }
 }
 
-function getTaskTypeText(type: vsmTaskTypes) {
+function getTaskTypeText(type: TaskTypes) {
   switch (type) {
-    case vsmTaskTypes.problem:
+    case TaskTypes.problem:
       return "Problem";
-    case vsmTaskTypes.question:
+    case TaskTypes.question:
       return "Question";
-    case vsmTaskTypes.idea:
+    case TaskTypes.idea:
       return "Idea";
-    case vsmTaskTypes.risk:
+    case TaskTypes.risk:
       return "Risk";
     default:
       return "Task";

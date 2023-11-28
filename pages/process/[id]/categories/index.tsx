@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Layouts } from "../../../../layouts/LayoutWrapper";
-import { vsmTaskTypes } from "../../../../types/vsmTaskTypes";
-import { taskObject } from "../../../../types/taskObject";
+import { TaskTypes } from "../../../../types/TaskTypes";
+import { Task } from "../../../../types/Task";
 import { TaskSection } from "../../../../components/TaskSection";
 import { CategorySection } from "../../../../components/CategorySection";
 import { CheckboxImproved } from "../../../../components/CheckboxImproved";
@@ -24,22 +24,22 @@ export default function CategoriesPage(): JSX.Element {
   const [questionChecked, setQuestionChecked] = useState(true);
   const [riskChecked, setRiskChecked] = useState(true);
 
-  const taskTypeIsChecked = (t: taskObject) => {
+  const taskTypeIsChecked = (t: Task) => {
     switch (t.type) {
-      case vsmTaskTypes.problem:
+      case TaskTypes.problem:
         return problemChecked;
-      case vsmTaskTypes.question:
+      case TaskTypes.question:
         return questionChecked;
-      case vsmTaskTypes.idea:
+      case TaskTypes.idea:
         return ideaChecked;
-      case vsmTaskTypes.risk:
+      case TaskTypes.risk:
         return riskChecked;
       default:
         return false;
     }
   };
 
-  const getFilter = (t: taskObject) => {
+  const getFilter = (t: Task) => {
     const selectedCategories = categories.filter(
       (category) => category.checked
     );
@@ -50,7 +50,7 @@ export default function CategoriesPage(): JSX.Element {
     // If task contains a category that is selected, display it!
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    return t.categories.some((taskCategory) =>
+    return t.category.some((taskCategory) =>
       selectedCategories.some(
         (selectedCategory) => selectedCategory.id === taskCategory.id
       )

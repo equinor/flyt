@@ -6,7 +6,7 @@
   width: 30px;
 }
 
-.nodeButton--container {
+.nodeButton__container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,24 +15,24 @@
   border-radius: 4px;
 }
 
-.nodeButton--container:hover {
+.nodeButton__container:hover {
   cursor: pointer;
   background-color: #deedee;
 }
 
-.nodeButton--container:hover .nodeButton {
+.nodeButton__container:hover .nodeButton {
   filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.4));
 }
 
-.nodeButton--container:active .nodeButton {
+.nodeButton__container:active .nodeButton {
   filter: brightness(80%);
 }
 
-.nodeButton--container--merge {
+.nodeButton__container--merge {
   flex: 100%;
 }
 
-.nodeButton--container--merge:hover {
+.nodeButton__container--merge:hover {
   background-color: transparent;
 }
 
@@ -47,29 +47,33 @@
 }
 
 .nodeButtonsContainer--top {
-  top: 0px;
   width: 160px;
+  margin-left: -15px;
+  top: 0;
   transform: translateY(-100%);
-  margin-left: -25px;
+  padding: 0px 5px 0px 5px;
 }
 
 .nodeButtonsContainer--bottom {
   width: 160px;
-  margin-left: -20px;
+  margin-left: -15px;
   padding: 0px 5px 0px 5px;
+  top: 100%;
 }
 
 .nodeButtonsContainer--right {
-  transform: translateX(100%) translateY(-100%);
-  right: 1px;
+  top: -15px;
+  right: 0;
+  transform: translateX(100%);
   height: 150px;
   flex-direction: column;
   padding: 5px 0px 0px 0px;
 }
 
 .nodeButtonsContainer--left {
-  transform: translateX(-100%) translateY(-100%);
-  left: 1px;
+  top: -15px;
+  left: 0;
+  transform: translateX(-100%);
   height: 150px;
   flex-direction: column;
   padding: 5px 0px 0px 0px;
