@@ -15,7 +15,6 @@ const createColumn = (
   });
   dagreGraph.setDefaultEdgeLabel(() => ({}));
   dagreGraph.setGraph({
-    rankdir: "TB",
     nodesep: 70,
     edgesep: 0,
     ranksep: 100,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Connection, Handle, Position, useStore } from "reactflow";
+import { Connection, Position, useStore } from "reactflow";
 import { formatNodeText } from "./utils/formatNodeText";
 import { formatDuration } from "types/unitDefinitions";
 import styles from "./Node.module.scss";
