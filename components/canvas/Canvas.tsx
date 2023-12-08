@@ -46,7 +46,6 @@ import { uid } from "../../utils/uuid";
 import { Project } from "types/Project";
 import { Graph } from "types/Graph";
 import { validDropTarget } from "./utils/validDropTarget";
-import { setNodesDepth } from "./utils/setNodesDepth";
 import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
 import { CanvasTutorial } from "./CanvasTutorial/CanvasTutorial";
 
@@ -411,6 +410,54 @@ const Canvas = ({ graph, project }: CanvasProps) => {
     });
   };
 
+  const mergedNodesLooping = new Map<string, [Node<NodeDataFull>, number]>();
+  let mergedNodesReady: Node<NodeDataFull>[] = [];
+
+  const setSingleNodeDepth = (nodeId: string, parentDepth: number) => {
+    const node = tempNodes.find((node) => node.id === nodeId);
+    if (!node) return;
+    const { data } = node;
+
+    if (data?.parents?.length > 1) {
+      if (mergedNodesLooping.has(nodeId)) {
+        const nodeDuplicate = mergedNodesLooping.get(nodeId)![0];
+        const loopCount = mergedNodesLooping.get(nodeId)![1];
+        if (nodeDuplicate?.data?.depth <= parentDepth) {
+          nodeDuplicate.data.depth = parentDepth + 1;
+        }
+        mergedNodesLooping.set(nodeId, [nodeDuplicate, loopCount + 1]);
+        if (nodeDuplicate?.data?.parents?.length === loopCount + 1) {
+          mergedNodesReady.push(nodeDuplicate);
+          mergedNodesLooping.delete(nodeId);
+        }
+      } else {
+        mergedNodesLooping.set(nodeId, [node, 1]);
+        data.depth = parentDepth + 1;
+      }
+    } else {
+      data.depth = parentDepth + 1;
+      data?.children?.forEach((child) => {
+        setSingleNodeDepth(child, data.depth);
+      });
+    }
+  };
+
+  const setNodesDepth = () => {
+    const rootNode = tempNodes.find((node) => node.type === "Root");
+    rootNode.data.children.forEach((childId) => {
+      setSingleNodeDepth(childId, 0);
+    });
+    while (mergedNodesReady.length > 0) {
+      const dupeMergedNodesReady = mergedNodesReady;
+      mergedNodesReady = [];
+      dupeMergedNodesReady.forEach((node) => {
+        node.data.children.forEach((child) => {
+          setSingleNodeDepth(child, node.data.depth);
+        });
+      });
+    }
+  };
+
   useEffect(() => {
     const root = graph.find(
       (node: NodeDataApi) => node.type === NodeTypes.root
@@ -423,7 +470,7 @@ const Canvas = ({ graph, project }: CanvasProps) => {
         updatedSelectedNode && setSelectedNode(updatedSelectedNode);
       }
       createNodes(root);
-      setNodesDepth(tempNodes);
+      setNodesDepth();
       createHiddenNodes();
       const finalNodes = setLayout(tempNodes, tempEdges);
       setNodes(finalNodes);
