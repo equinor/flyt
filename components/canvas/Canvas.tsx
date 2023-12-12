@@ -476,7 +476,7 @@ const Canvas = ({ graph, project }: CanvasProps) => {
       setNodes(finalNodes);
       setEdges(tempEdges);
     }
-  }, [graph]);
+  }, [graph, userCanEdit]);
 
   const onNodeDragStart = (
     evt: MouseEvent<Element>,
