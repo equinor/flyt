@@ -1,4 +1,5 @@
 import commonStyles from "../../../styles/common.module.scss";
+import styles from "./ProjectPage.module.scss";
 import Head from "next/head";
 import { Typography } from "@equinor/eds-core-react";
 import { useRouter } from "next/router";
@@ -14,7 +15,11 @@ export default function Project() {
   const router = useRouter();
   const { id } = router.query;
 
-  const { data: project, error: errorProject } = useQuery(
+  const {
+    isLoading: isLoadingProject,
+    data: project,
+    error: errorProject,
+  } = useQuery(
     ["project", id],
     () => {
       return getProject(id);
@@ -25,9 +30,11 @@ export default function Project() {
     }
   );
 
-  const { data: graph, error: errorGraph } = useQuery(["graph", id], () =>
-    getGraph(id)
-  );
+  const {
+    isLoading: isLoadingGraph,
+    data: graph,
+    error: errorGraph,
+  } = useQuery(["graph", id], () => getGraph(id));
 
   if (errorProject || errorGraph) {
     return (
@@ -50,21 +57,21 @@ export default function Project() {
     );
   }
 
-  if (project && graph) {
-    return (
-      <div className={commonStyles.container}>
-        <Head>
-          <title>{project?.name || `Flyt | Process ${id}`}</title>
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-        <main>
+  return (
+    <div className={commonStyles.container}>
+      <Head>
+        <title>{project?.name || `Flyt | Process ${id}`}</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <main className={styles.main}>
+        {isLoadingGraph || isLoadingProject ? (
+          <CircularProgress size={48} />
+        ) : (
           <CanvasWrapper project={project} graph={graph} />
-        </main>
-      </div>
-    );
-  }
-
-  return <CircularProgress size={48} style={{ margin: "50%" }} />;
+        )}
+      </main>
+    </div>
+  );
 }
 
 Project.layout = Layouts.Canvas;

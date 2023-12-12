@@ -552,13 +552,7 @@ const Canvas = ({ graph, project }: CanvasProps) => {
   };
 
   return (
-    <div
-      style={{
-        width: "100vw",
-        height: "calc(100vh - 64px)",
-        overflow: "hidden",
-      }}
-    >
+    <>
       <CanvasButtons
         userCanEdit={userCanEdit}
         handleClickLabel={() => setVisibleLabelScrim(true)}
@@ -622,7 +616,7 @@ const Canvas = ({ graph, project }: CanvasProps) => {
         />
       </ReactFlow>
       <CanvasTutorial />
-    </div>
+    </>
   );
 };
 
