@@ -11,9 +11,10 @@ export function SideBar(props: {
   const selectedNode = props.selectedNode;
   if (!selectedNode) return <></>;
   return (
-    <div>
+    <div className={styles.sideBarBackgroundCover} onClick={props.onClose}>
       <div
         onWheel={(event) => event.stopPropagation()}
+        onClick={(event) => event.stopPropagation()}
         className={styles.vsmSideMenu}
       >
         <div className={styles.letItBreath}>
@@ -26,7 +27,6 @@ export function SideBar(props: {
           />
         </div>
       </div>
-      <div className={styles.sideBarBackgroundCover} onClick={props.onClose} />
     </div>
   );
 }
