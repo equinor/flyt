@@ -28,6 +28,10 @@ export default function MarkdownEditor(props: {
   const [text, setText] = useState(defaultText);
 
   useEffect(() => {
+    setText(defaultText);
+  }, [defaultText]);
+
+  useEffect(() => {
     // Open UrlPrompt on ctrl + k
     const handleKeyDown = (e: KeyboardEvent) => {
       if (editMode && (e.metaKey || e.ctrlKey) && e.key === "k") {
