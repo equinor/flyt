@@ -13,11 +13,11 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "incremental": true,
     "paths": {
-      "mini-signals": ["node_modules/resource-loader/typings/mini-signals.d.ts"]
+      "@/*": ["./*"]
     },
-    "baseUrl": "./",
-    "incremental": true
+    "baseUrl": "./"
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]

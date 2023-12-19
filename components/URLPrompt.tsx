@@ -72,6 +72,7 @@ export function URLPrompt(props: {
         display: "block",
         boxSizing: "border-box",
         width: "100%",
+        height: "100%",
       }}
     >
       <div className={styles.scrimHeaderWrapper} style={{ marginBottom: 16 }}>

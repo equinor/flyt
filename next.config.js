@@ -2,8 +2,26 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const removeImports = require("next-remove-imports")();
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const securityHeaders = [
+  {
+    key: "Referrer-Policy",
+    value: "strict-origin-when-cross-origin",
+  },
+  {
+    key: "Strict-Transport-Security",
+    value: "max-age=63072000; includeSubDomains",
+  },
+  {
+    key: "X-Content-Type-Options",
+    value: "nosniff",
+  },
+  {
+    key: "X-Frame-Options",
+    value: "SAMEORIGIN",
+  },
+];
+
+module.exports = removeImports({
   serverRuntimeConfig: {
     // Will only be available on the server side
     AUTH_SECRET: process.env.AUTH_SECRET, // "authentication secret or public key, used for validating user requests in pages/api",
@@ -29,6 +47,14 @@ const nextConfig = {
     ];
   },
   optimizeFonts: false,
-};
-
-module.exports = removeImports(nextConfig);
+  async headers() {
+    return [
+      {
+        // Apply these headers to all routes
+        source: "/:path*",
+        headers: securityHeaders,
+      },
+    ];
+  },
+  poweredByHeader: false,
+});
