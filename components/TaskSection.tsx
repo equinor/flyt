@@ -4,7 +4,7 @@ import { Task } from "../types/Task";
 import { unknownErrorToString } from "../utils/isError";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
-import { TaskTypes } from "types/TaskTypes";
+import { taskSorter } from "@/utils/taskSorter";
 
 export function TaskSection(props: {
   filterFunction: (t: Task) => boolean;
@@ -41,9 +41,7 @@ export function TaskSection(props: {
         {tasks
           ?.filter((task) => !task.solved) // filter out solved tasks
           ?.filter(props.filterFunction)
-          .sort((a, b) => {
-            return TaskTypes[b.type] - TaskTypes[a.type];
-          })
+          .sort(taskSorter())
           .map((task) => (
             <QipCard key={task.id} task={task} />
           ))}

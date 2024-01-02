@@ -11,6 +11,7 @@ export const taskSorter =
 
     return (
       Object.keys(TaskTypes).indexOf(a.type.toLocaleLowerCase()) -
-      Object.keys(TaskTypes).indexOf(b.type.toLocaleLowerCase())
+        Object.keys(TaskTypes).indexOf(b.type.toLocaleLowerCase()) ||
+      a.number - b.number
     );
   };
