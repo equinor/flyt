@@ -4,7 +4,7 @@ import { useAccount, useMsal } from "@azure/msal-react";
 import { UserDot } from "../UserDot";
 import { getUserShortName } from "../../utils/getUserShortName";
 import packageJson from "../../package.json";
-import Link from "next/dist/client/link";
+import Link from "next/link";
 import getConfig from "next/config";
 
 const UserMenu: React.FC = () => {
@@ -71,19 +71,21 @@ const UserMenu: React.FC = () => {
       >
         <Menu.Item disabled>{account?.username}</Menu.Item>
         <Link href={"/changelog"}>
-          <Menu.Item>Version {packageJson.version}</Menu.Item>
+          <Menu.Item style={{ width: "100%" }}>
+            Version {packageJson.version}
+          </Menu.Item>
         </Link>
         {!!commitHash ? (
-          <Link
-            href={`https://github.com/equinor/flyt/commits/${commitHash}`}
-          >
-            <Menu.Item>Commit {commitHash.slice(0, 7)}</Menu.Item>
+          <Link href={`https://github.com/equinor/flyt/commits/${commitHash}`}>
+            <Menu.Item style={{ width: "100%" }}>
+              Commit {commitHash.slice(0, 7)}
+            </Menu.Item>
           </Link>
         ) : (
           <Menu.Item disabled>Commit not available</Menu.Item>
         )}
         <Link href={"/settings"}>
-          <Menu.Item>Settings</Menu.Item>
+          <Menu.Item style={{ width: "100%" }}>Settings</Menu.Item>
         </Link>
         <Menu.Item onClick={() => instance.logout()}>Logout</Menu.Item>
       </Menu>
