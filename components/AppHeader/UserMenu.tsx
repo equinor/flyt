@@ -15,13 +15,11 @@ const UserMenu: React.FC = () => {
 
   const [state, setState] = React.useState<{
     buttonEl: HTMLButtonElement;
-    focus: "first" | "last";
   }>({
-    focus: "first",
     buttonEl: null,
   });
 
-  const { focus, buttonEl } = state;
+  const { buttonEl } = state;
   const isOpen = Boolean(buttonEl);
 
   const openMenu = (
@@ -64,7 +62,6 @@ const UserMenu: React.FC = () => {
       <Menu
         id="menu-on-button"
         aria-labelledby="menuButton"
-        focus={focus}
         open={!!buttonEl}
         anchorEl={buttonEl}
         onClose={closeMenu}

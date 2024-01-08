@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import { getTaskTypes } from "../services/taskApi";
 import { unknownErrorToString } from "../utils/isError";
-import { SingleSelect } from "@equinor/eds-core-react";
+import { Autocomplete } from "@equinor/eds-core-react";
 import React from "react";
 
 export function SelectTaskType(props: { onSelect: (e) => void }): JSX.Element {
@@ -18,15 +18,15 @@ export function SelectTaskType(props: { onSelect: (e) => void }): JSX.Element {
   }
   return (
     <div style={{ paddingBottom: 16 }}>
-      <SingleSelect
+      <Autocomplete
         label={"Select type"}
-        items={taskTypes.map((t) => t.name)}
-        handleSelectedItemChange={(e) =>
+        options={taskTypes.map((t) => t.name)}
+        onInputChange={(e) =>
           props.onSelect(
-            taskTypes.find((t) => e.selectedItem === t.name).vsmTaskTypeID //Wow... there must be a better way
+            taskTypes.find((t) => e === t.name).vsmTaskTypeID //Wow... there must be a better way
           )
         }
-        initialSelectedItem={taskTypes[0]?.name}
+        initialSelectedOptions={[taskTypes[0]?.name]}
       />
     </div>
   );

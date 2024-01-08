@@ -1,5 +1,5 @@
 import { vsmObject } from "../interfaces/VsmObject";
-import { SingleSelect, TextField } from "@equinor/eds-core-react";
+import { Autocomplete, TextField } from "@equinor/eds-core-react";
 import {
   getTimeDefinitionDisplayName,
   getTimeDefinitionValue,
@@ -38,15 +38,15 @@ export function DurationComponent(props: {
         }}
       />
       <div style={{ padding: 8 }} />
-      <SingleSelect
+      <Autocomplete
         disabled={props.disabled}
-        items={getTimeDefinitionValues()}
-        handleSelectedItemChange={(i) => {
-          const apiValue = getTimeDefinitionValue(i.selectedItem);
+        options={getTimeDefinitionValues()}
+        onInputChange={(i) => {
+          const apiValue = getTimeDefinitionValue(i);
           setUnit(apiValue);
           props.onChangeTime({ time: time, unit: apiValue });
         }}
-        value={getTimeDefinitionDisplayName(unit)}
+        selectedOptions={[getTimeDefinitionDisplayName(unit)]}
         label="Unit"
       />
     </div>
