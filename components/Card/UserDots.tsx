@@ -20,6 +20,7 @@ export function UserDots(props: {
       <button
         className={styles.buttonUserDots}
         onClick={(e) => {
+          e.preventDefault();
           e.stopPropagation();
           setVisibleScrim(true);
         }}

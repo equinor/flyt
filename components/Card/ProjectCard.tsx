@@ -15,6 +15,7 @@ import styles from "./Card.module.scss";
 import { tag } from "@equinor/eds-icons";
 import { useRouter } from "next/router";
 import { vsmProject } from "../../interfaces/VsmProject";
+import Link from "next/link";
 
 export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
   const queryClient = useQueryClient();
@@ -56,54 +57,56 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
 
   return (
     <>
-      <button
-        style={{
-          padding: "0",
-          marginBottom: "16px",
-          border: "none",
-          textAlign: "inherit",
-          display: "inherit",
-          backgroundColor: "unset",
-          width: "100%",
-        }}
-        onClick={() => router.push(`/process/${props.vsm.vsmProjectID}`)}
-      >
-        <div className={styles.card}>
-          <div className={styles.section}>
-            <ProjectCardHeader vsm={props.vsm} />
-            <Heart
-              isFavourite={props.vsm.isFavorite}
-              fave={() => faveMutation.mutate()}
-              unfave={() => unfaveMutation.mutate()}
-              isLoading={isMutatingFavourite}
-            />
-          </div>
-          <div className={`${styles.section} ${styles.labelSection}`}>
-            <Labels labels={props.vsm.labels} />
-          </div>
-          <div className={`${styles.section} ${styles.bottomSection}`}>
-            <UserDots
-              userAccesses={props.vsm.userAccesses}
-              setVisibleScrim={(any: boolean) => setVisibleScrim(any)}
-            />
-            {userCanEdit && (
-              <Tooltip title="Manage process labels" placement="right">
-                <Button
-                  color="primary"
-                  variant="ghost_icon"
-                  style={{ height: "30px", width: "30px" }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setVisibleLabelScrim(true);
-                  }}
-                >
-                  <Icon data={tag} />
-                </Button>
-              </Tooltip>
-            )}
+      <Link href={`/process/${props.vsm.vsmProjectID}`}>
+        <div
+          style={{
+            padding: "0",
+            marginBottom: "16px",
+            border: "none",
+            textAlign: "inherit",
+            backgroundColor: "unset",
+            width: "100%",
+          }}
+          //onClick={() => router.push(`/process/${props.vsm.vsmProjectID}`)}
+        >
+          <div className={styles.card}>
+            <div className={styles.section}>
+              <ProjectCardHeader vsm={props.vsm} />
+              <Heart
+                isFavourite={props.vsm.isFavorite}
+                fave={() => faveMutation.mutate()}
+                unfave={() => unfaveMutation.mutate()}
+                isLoading={isMutatingFavourite}
+              />
+            </div>
+            <div className={`${styles.section} ${styles.labelSection}`}>
+              <Labels labels={props.vsm.labels} />
+            </div>
+            <div className={`${styles.section} ${styles.bottomSection}`}>
+              <UserDots
+                userAccesses={props.vsm.userAccesses}
+                setVisibleScrim={(any: boolean) => setVisibleScrim(any)}
+              />
+              {userCanEdit && (
+                <Tooltip title="Manage process labels" placement="right">
+                  <Button
+                    color="primary"
+                    variant="ghost_icon"
+                    style={{ height: "30px", width: "30px" }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setVisibleLabelScrim(true);
+                    }}
+                  >
+                    <Icon data={tag} />
+                  </Button>
+                </Tooltip>
+              )}
+            </div>
           </div>
         </div>
-      </button>
+      </Link>
 
       <Scrim
         open={visibleScrim}
