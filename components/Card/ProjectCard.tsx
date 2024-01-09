@@ -13,14 +13,12 @@ import { UserDots } from "./UserDots";
 import { getMyAccess } from "utils/getMyAccess";
 import styles from "./Card.module.scss";
 import { tag } from "@equinor/eds-icons";
-import { useRouter } from "next/router";
 import { vsmProject } from "../../interfaces/VsmProject";
 import Link from "next/link";
 
 export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
   const queryClient = useQueryClient();
   const [isMutatingFavourite, setIsMutatingFavourite] = useState(false);
-  const router = useRouter();
 
   const [visibleScrim, setVisibleScrim] = useState(false);
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
@@ -67,7 +65,6 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
             backgroundColor: "unset",
             width: "100%",
           }}
-          //onClick={() => router.push(`/process/${props.vsm.vsmProjectID}`)}
         >
           <div className={styles.card}>
             <div className={styles.section}>
