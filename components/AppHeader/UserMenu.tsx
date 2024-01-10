@@ -74,9 +74,7 @@ const UserMenu: React.FC = () => {
           <Menu.Item>Version {packageJson.version}</Menu.Item>
         </Link>
         {!!commitHash ? (
-          <Link
-            href={`https://github.com/equinor/MAD-VSM-WEB/commits/${commitHash}`}
-          >
+          <Link href={`https://github.com/equinor/flyt/commits/${commitHash}`}>
             <Menu.Item>Commit {commitHash.slice(0, 7)}</Menu.Item>
           </Link>
         ) : (

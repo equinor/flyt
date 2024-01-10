@@ -7,7 +7,7 @@ class MyDocument extends Document {
       <Html>
         <Head>
           <link
-            href="https://eds-static.equinor.com/font/equinor-font.css"
+            href="https://cdn.eds.equinor.com/font/equinor-font.css"
             rel="stylesheet"
           />
         </Head>

@@ -6,7 +6,7 @@ export default (req: NextApiRequest, res: NextApiResponseServerIO) => {
     try {
       if (req.method === "GET") {
         fetch(
-          `https://raw.githubusercontent.com/equinor/MAD-VSM-WEB/main/CHANGELOG.md`,
+          `https://raw.githubusercontent.com/equinor/flyt/main/CHANGELOG.md`,
           { method: "GET" }
         ).then(async (r) =>
           res.status(r.status).json({ text: await r.text() })
