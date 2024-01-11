@@ -1,30 +1,35 @@
-import React, { useEffect, useState } from "react";
-import styles from "../layouts/default.layout.module.scss";
+import React from "react";
+import styles from "layouts/default.layout.module.scss";
+import { TextField } from "@equinor/eds-core-react";
 
-export const EditableTitle = (props) => {
-  const { defaultValue, readOnly, onConfirm } = props;
-  const [projectTitle, setProjectTitle] = useState(defaultValue);
+export const EditableTitle = (props: {
+  defaulText?: string;
+  readOnly?: boolean;
+  onSubmit: (arg0: string) => void;
+}) => {
+  const { defaulText, readOnly, onSubmit } = props;
+  const text = defaulText || "Untitled process";
 
-  const handleConfirm = (e) => {
-    if (e.code === "Enter") {
-      e.preventDefault();
-      e.target.blur();
+  const handleSubmit = (e) => {
+    if (e.code === "Enter" || e.type === "blur") {
+      e.target.value !== text && onSubmit(e.target.value);
     }
+    e.code === "Enter" && e.target.blur();
   };
 
-  useEffect(() => {
-    setProjectTitle(defaultValue);
-  }, [defaultValue]);
-
   return (
-    <input
-      value={projectTitle}
+    <TextField
+      id={"title"}
+      key={text}
+      defaultValue={text}
       readOnly={readOnly}
       className={styles.projectName}
-      style={{ width: projectTitle.length + "ch" }}
-      onInput={(e) => setProjectTitle((e.target as HTMLInputElement).value)}
-      onKeyDown={(e) => handleConfirm(e)}
-      onBlur={() => onConfirm(projectTitle)}
+      onBlur={(e) => {
+        handleSubmit(e);
+      }}
+      onKeyDown={(e) => {
+        handleSubmit(e);
+      }}
     />
   );
 };

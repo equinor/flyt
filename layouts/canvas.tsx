@@ -47,7 +47,6 @@ const CanvasLayout = ({ children }): JSX.Element => {
   const router = useRouter();
   const { id } = router.query;
   const { data: project } = useQuery(["project", id], () => getProject(id));
-  const projectTitle = project?.name;
 
   const queryClient = useQueryClient();
   const projectMutation = useMutation(
@@ -228,11 +227,11 @@ const CanvasLayout = ({ children }): JSX.Element => {
         <div className={styles.center}>
           <div style={{ gridAutoFlow: "row" }} className={styles.centerButton}>
             <div className={styles.centerButton}>
-              {projectTitle !== undefined ? (
+              {project ? (
                 <EditableTitle
-                  defaultValue={projectTitle || "Untitled process"}
+                  defaulText={project.name || "Untitled process"}
                   readOnly={!userCanEdit}
-                  onConfirm={(text) => updateProjectName(text)}
+                  onSubmit={(text) => updateProjectName(text)}
                 />
               ) : (
                 <DotProgress size={32} color={"primary"} />
