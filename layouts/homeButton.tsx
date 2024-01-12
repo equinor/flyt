@@ -14,7 +14,7 @@ export function HomeButton(): JSX.Element {
             alt={"Logo"}
             width={0}
             height={0}
-            style={{ width: "auto", height: "auto" }}
+            className={styles.image}
           />
           <span style={{ padding: 4 }} />
           <Typography className={styles.homeButtonText} variant={"h4"}>

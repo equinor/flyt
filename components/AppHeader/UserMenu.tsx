@@ -1,4 +1,5 @@
 import React from "react";
+import styles from "./UserMenu.module.scss";
 import { Button, Menu } from "@equinor/eds-core-react";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { UserDot } from "../UserDot";
@@ -68,13 +69,13 @@ const UserMenu: React.FC = () => {
       >
         <Menu.Item disabled>{account?.username}</Menu.Item>
         <Link href={"/changelog"}>
-          <Menu.Item style={{ width: "100%" }}>
+          <Menu.Item className={styles.menuItem}>
             Version {packageJson.version}
           </Menu.Item>
         </Link>
         {!!commitHash ? (
           <Link href={`https://github.com/equinor/flyt/commits/${commitHash}`}>
-            <Menu.Item style={{ width: "100%" }}>
+            <Menu.Item className={styles.menuItem}>
               Commit {commitHash.slice(0, 7)}
             </Menu.Item>
           </Link>
@@ -82,7 +83,7 @@ const UserMenu: React.FC = () => {
           <Menu.Item disabled>Commit not available</Menu.Item>
         )}
         <Link href={"/settings"}>
-          <Menu.Item style={{ width: "100%" }}>Settings</Menu.Item>
+          <Menu.Item className={styles.menuItem}>Settings</Menu.Item>
         </Link>
         <Menu.Item onClick={() => instance.logout()}>Logout</Menu.Item>
       </Menu>
