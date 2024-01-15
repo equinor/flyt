@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./UserMenu.module.scss";
 import { Button, Menu } from "@equinor/eds-core-react";
 import { useAccount, useMsal } from "@azure/msal-react";
@@ -14,13 +14,8 @@ const UserMenu: React.FC = () => {
   const { publicRuntimeConfig } = getConfig();
   const commitHash = publicRuntimeConfig.RADIX_GIT_COMMIT_HASH;
 
-  const [state, setState] = React.useState<{
-    buttonEl: HTMLButtonElement;
-  }>({
-    buttonEl: null,
-  });
+  const [buttonEl, setButtonEl] = useState<HTMLButtonElement | null>(null);
 
-  const { buttonEl } = state;
   const isOpen = Boolean(buttonEl);
 
   const openMenu = (
@@ -29,10 +24,10 @@ const UserMenu: React.FC = () => {
       | React.KeyboardEvent<HTMLButtonElement>
   ) => {
     const target = e.target as HTMLButtonElement;
-    setState({ ...state, buttonEl: target });
+    setButtonEl(target);
   };
 
-  const closeMenu = () => setState({ ...state, buttonEl: null });
+  const closeMenu = () => setButtonEl(null);
 
   const onKeyPress = (e: React.KeyboardEvent<HTMLButtonElement>) => {
     const { key } = e;

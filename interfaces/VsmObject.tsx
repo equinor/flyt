@@ -11,8 +11,8 @@ export interface vsmObject {
   parent?: number;
   name?: string;
   fkObjectType?: vsmObjectTypes;
-  time?: number;
-  timeDefinition?: string;
+  time?: number | null;
+  timeDefinition?: string | null;
   role?: string;
   childObjects?: Array<vsmObject>;
   vsmObjectType?: {
