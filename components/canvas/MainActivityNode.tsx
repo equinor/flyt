@@ -92,7 +92,10 @@ export const MainActivityNode = ({
         highlighted={isDropTarget && isValidDropTarget}
         darkened={isValidDropTarget === false}
       >
-        <NodeDescription description={description} type={type} />
+        <NodeDescription
+          header={!description && type}
+          description={description}
+        />
       </NodeCard>
       <Handle
         className={stylesNodeButtons["handle--hidden"]}

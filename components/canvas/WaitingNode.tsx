@@ -137,7 +137,7 @@ export const WaitingNode = ({
         highlighted={isDropTarget && isValidDropTarget}
         darkened={isValidDropTarget === false}
       >
-        <NodeDescription type={type} />
+        <NodeDescription header={type} />
         <div className={styles["node__waitingtime-container"]}>
           <Icon data={timeIcon} size={24} style={{ marginRight: 5 }} />
           <Typography variant="caption">

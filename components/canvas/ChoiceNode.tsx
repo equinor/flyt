@@ -145,7 +145,10 @@ export const ChoiceNode = ({
         highlighted={isDropTarget && isValidDropTarget}
         darkened={isValidDropTarget === false}
       >
-        <NodeDescription description={description} type={type} />
+        <NodeDescription
+          header={!description && type}
+          description={description}
+        />
       </NodeCard>
       <TargetHandle hidden={!mergeOption} />
       <SourceHandle />

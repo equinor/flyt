@@ -68,7 +68,7 @@ export const GenericNode = ({
         highlighted={isDropTarget && isValidDropTarget}
         darkened={isValidDropTarget === false}
       >
-        <NodeDescription description={description} type={type} />
+        <NodeDescription header={type} description={description} />
       </NodeCard>
       <Handle
         className={stylesNodeButtons["handle--hidden"]}

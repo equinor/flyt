@@ -138,7 +138,10 @@ export const SubActivityNode = ({
         highlighted={isDropTarget && isValidDropTarget}
         darkened={isValidDropTarget === false}
       >
-        <NodeDescription description={description} type={type} />
+        <NodeDescription
+          header={!description && type}
+          description={description}
+        />
         <div className={styles["node__role-container"]}>
           <Typography variant="caption">
             {formatNodeText(role ?? "", 16, true)}
