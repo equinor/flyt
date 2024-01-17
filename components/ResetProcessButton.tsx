@@ -56,6 +56,7 @@ export const ResetProcessButton = () => {
         variant="outlined"
         style={{
           position: "absolute",
+          top: 64,
           left: 0,
           margin: 24,
           zIndex: 1,
