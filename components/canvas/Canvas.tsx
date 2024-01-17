@@ -48,6 +48,7 @@ import { Graph } from "types/Graph";
 import { validDropTarget } from "./utils/validDropTarget";
 import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
 import { CanvasTutorial } from "./CanvasTutorial/CanvasTutorial";
+import { useCenterCanvas } from "./hooks/useCenterCanvas";
 
 type CanvasProps = {
   graph: Graph;
@@ -551,6 +552,8 @@ const Canvas = ({ graph, project }: CanvasProps) => {
     );
   };
 
+  useCenterCanvas();
+
   return (
     <>
       <CanvasButtons
@@ -605,15 +608,9 @@ const Canvas = ({ graph, project }: CanvasProps) => {
         onNodeDrag={onNodeDrag}
         onNodeDragStop={onNodeDragStop}
         attributionPosition="bottom-right"
-        fitView
-        fitViewOptions={{ includeHiddenNodes: true }}
         connectionRadius={100}
       >
-        <Controls
-          className={styles.controls}
-          showInteractive={false}
-          fitViewOptions={{ includeHiddenNodes: true }}
-        />
+        <Controls className={styles.controls} showInteractive={false} />
       </ReactFlow>
       <CanvasTutorial />
     </>
