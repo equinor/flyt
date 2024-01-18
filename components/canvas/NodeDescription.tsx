@@ -1,5 +1,4 @@
 import styles from "./Node.module.scss";
-import { formatNodeText } from "./utils/formatNodeText";
 import { Typography } from "@equinor/eds-core-react";
 
 type NodeDescription = {
@@ -16,7 +15,7 @@ export const NodeDescription = ({ header, description }: NodeDescription) => (
     )}
     {description && (
       <Typography variant="caption" className={`${styles.description}`}>
-        {formatNodeText(description)}
+        {description}
       </Typography>
     )}
   </div>

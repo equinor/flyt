@@ -34,14 +34,14 @@
   border-radius: 4px;
 }
 
-.node-shape--rhombus .description {
-  transform: translate(-50%, -50%) rotate(-45deg);
-  position: absolute;
+.node-shape--rhombus > * {
+  transform: rotate(-45deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
   width: 100%;
-  top: 50%;
-  left: 50%;
-  white-space: normal;
-  text-align: center;
 }
 
 .node--hidden {
@@ -60,6 +60,11 @@
   padding: 7.5px 10px;
   overflow: hidden;
   flex: 1;
+}
+
+.node-shape--rhombus .node__description-container {
+  margin: -20%;
+  padding: 12px 22.5px 12px 22.5px;
 }
 
 .node__role-container {
@@ -83,6 +88,12 @@
 .description {
   white-space: pre-wrap;
   overflow-wrap: break-word !important;
+  width: 100%;
+  overflow: hidden;
+}
+
+.node-shape--rhombus .description {
+  text-align: center;
 }
 
 .header {

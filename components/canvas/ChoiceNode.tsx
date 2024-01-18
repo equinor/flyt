@@ -13,6 +13,7 @@ import colors from "theme/colors";
 import { NodeCard } from "./NodeCard";
 import { NodeDescription } from "./NodeDescription";
 import { SourceHandle } from "./SourceHandle";
+import { formatNodeText } from "./utils/formatNodeText";
 
 export const ChoiceNode = ({
   data: {
@@ -147,7 +148,7 @@ export const ChoiceNode = ({
       >
         <NodeDescription
           header={!description && type}
-          description={description}
+          description={formatNodeText(description, 45)}
         />
       </NodeCard>
       <TargetHandle hidden={!mergeOption} />
