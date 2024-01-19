@@ -389,7 +389,6 @@ const Canvas = ({ graph, project }: CanvasProps) => {
                 id: `${tempParentNodeId}=>${id}`,
                 source: tempParentNodeId,
                 target: id,
-                type: "straight",
               });
               tempEdges.push({
                 id: `${id}=>${id}`,
