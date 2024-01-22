@@ -53,7 +53,9 @@ export default function Project() {
         </Head>
 
         <main className={commonStyles.main}>
-          <Typography variant="h1">{error.message}</Typography>
+          {typeof error?.message === "string" && (
+            <Typography variant="h1">{error.message}</Typography>
+          )}
           <p>
             We have some troubles with this process. Please try to refresh the
             page.
