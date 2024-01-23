@@ -53,7 +53,7 @@ function SearchSection(props: {
         id="searchProjects"
         placeholder="Search users"
         autoComplete="off"
-        style={{ width: "100%" }}
+        className={styles.searchBar}
         onChange={(e) => {
           debounce(() => setSearchText(`${e.target.value}`), 500, "userSearch");
         }}

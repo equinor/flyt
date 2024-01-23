@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import styles from "./UserMenu.module.scss";
 import { Button, Menu } from "@equinor/eds-core-react";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { UserDot } from "../UserDot";
@@ -13,13 +14,8 @@ const UserMenu: React.FC = () => {
   const { publicRuntimeConfig } = getConfig();
   const commitHash = publicRuntimeConfig.RADIX_GIT_COMMIT_HASH;
 
-  const [state, setState] = React.useState<{
-    buttonEl: HTMLButtonElement;
-  }>({
-    buttonEl: null,
-  });
+  const [buttonEl, setButtonEl] = useState<HTMLButtonElement | null>(null);
 
-  const { buttonEl } = state;
   const isOpen = Boolean(buttonEl);
 
   const openMenu = (
@@ -28,10 +24,10 @@ const UserMenu: React.FC = () => {
       | React.KeyboardEvent<HTMLButtonElement>
   ) => {
     const target = e.target as HTMLButtonElement;
-    setState({ ...state, buttonEl: target });
+    setButtonEl(target);
   };
 
-  const closeMenu = () => setState({ ...state, buttonEl: null });
+  const closeMenu = () => setButtonEl(null);
 
   const onKeyPress = (e: React.KeyboardEvent<HTMLButtonElement>) => {
     const { key } = e;
@@ -68,13 +64,13 @@ const UserMenu: React.FC = () => {
       >
         <Menu.Item disabled>{account?.username}</Menu.Item>
         <Link href={"/changelog"}>
-          <Menu.Item style={{ width: "100%" }}>
+          <Menu.Item className={styles.menuItem}>
             Version {packageJson.version}
           </Menu.Item>
         </Link>
         {!!commitHash ? (
           <Link href={`https://github.com/equinor/flyt/commits/${commitHash}`}>
-            <Menu.Item style={{ width: "100%" }}>
+            <Menu.Item className={styles.menuItem}>
               Commit {commitHash.slice(0, 7)}
             </Menu.Item>
           </Link>
@@ -82,7 +78,7 @@ const UserMenu: React.FC = () => {
           <Menu.Item disabled>Commit not available</Menu.Item>
         )}
         <Link href={"/settings"}>
-          <Menu.Item style={{ width: "100%" }}>Settings</Menu.Item>
+          <Menu.Item className={styles.menuItem}>Settings</Menu.Item>
         </Link>
         <Menu.Item onClick={() => instance.logout()}>Logout</Menu.Item>
       </Menu>

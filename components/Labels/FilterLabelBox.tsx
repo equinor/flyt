@@ -52,7 +52,7 @@ function SearchSection(props: {
         aria-label="search"
         placeholder="Search labels"
         autoComplete="off"
-        style={{ width: "100%" }}
+        className={styles.searchBar}
         onChange={(e) => {
           debounce(
             () => setSearchText(`${e.target.value}`),

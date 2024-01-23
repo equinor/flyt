@@ -80,6 +80,11 @@
   text-align: left;
 }
 
+.image {
+  width: auto;
+  height: auto;
+}
+
 @media screen and (max-width: 510px) {
   .topBar {
     padding: 0 !important;
