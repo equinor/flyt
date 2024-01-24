@@ -1,9 +1,9 @@
 import { NodeDataApi } from "../types/NodeDataApi";
-import { SingleSelect, TextField } from "@equinor/eds-core-react";
+import { Autocomplete, TextField } from "@equinor/eds-core-react";
 import {
-  getUnitDisplayName,
-  getUnitValue,
-  getUnitValues,
+  getTimeDefinitionDisplayName,
+  getTimeDefinitionValue,
+  getTimeDefinitionValues,
 } from "../types/unitDefinitions";
 import { useEffect, useState } from "react";
 
@@ -38,15 +38,15 @@ export function DurationComponent(props: {
         }}
       />
       <div style={{ padding: 8 }} />
-      <SingleSelect
+      <Autocomplete
         disabled={props.disabled}
-        items={getUnitValues()}
-        handleSelectedItemChange={(i) => {
-          const apiValue = getUnitValue(i.selectedItem);
+        options={getTimeDefinitionValues()}
+        onInputChange={(i) => {
+          const apiValue = getTimeDefinitionValue(i);
           setUnit(apiValue);
           props.onChangeDuration({ duration, unit: apiValue });
         }}
-        value={getUnitDisplayName(unit)}
+        selectedOptions={[getTimeDefinitionDisplayName(unit)]}
         label="Unit"
       />
     </div>

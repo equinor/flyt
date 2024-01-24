@@ -121,7 +121,6 @@ export function SideBarBody(props: {
             <TextField
               disabled={!props.canEdit}
               label={"Role(s)"}
-              variant={"default"}
               defaultValue={selectedNode.role?.toString()}
               id={"vsmObjectRole"}
               onChange={props.onChangeRole}

@@ -25,6 +25,6 @@ export const CanvasTutorialSection = ({
       </Typography>
       <Typography variant="body_long">{children}</Typography>
     </div>
-    <Image className={styles.image} src={image} layout="responsive" />
+    <Image className={styles.image} src={image} layout="responsive" alt="gif" />
   </div>
 );

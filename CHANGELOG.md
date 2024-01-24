@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.36](https://github.com/equinor/flyt/compare/v0.2.35...v0.2.36) (2024-01-22)
+
+### Bug Fixes
+
+- Upgrade next, react, typescript and eds ([#658](https://github.com/equinor/flyt/issues/658)) ([5f7dc4e](https://github.com/equinor/flyt/commit/5f7dc4e48929a9c61c0298189bce1713cc513b4a)), closes [#567](https://github.com/equinor/flyt/issues/567)
+
+## [0.2.35](https://github.com/equinor/flyt/compare/v0.2.34...v0.2.35) (2024-01-08)
+
+### Bug Fixes
+
+- **deps:** Patch vulnerabilities ([#652](https://github.com/equinor/flyt/issues/652)) ([3cabfb4](https://github.com/equinor/flyt/commit/3cabfb4e46d31714bf452a4d11fceb1dca194d9f)), closes [#651](https://github.com/equinor/flyt/issues/651)
+
 ## [0.2.34](https://github.com/equinor/flyt/compare/v0.2.33...v0.2.34) (2023-11-13)
 
 ### Bug Fixes

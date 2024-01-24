@@ -7,6 +7,6 @@ type InlineImageProps = {
 
 export const InlineImage = ({ src }: InlineImageProps) => (
   <div className={styles.container}>
-    <Image src={src} />
+    <Image src={src} alt="card" />
   </div>
 );

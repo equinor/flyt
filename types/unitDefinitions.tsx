@@ -1,4 +1,4 @@
-const units = [
+export const timeDefinitions = [
   { value: "Minute", displayName: "Minute(s)" },
   { value: "Hour", displayName: "Hour(s)" },
   { value: "Day", displayName: "Day(s)" },
@@ -7,16 +7,15 @@ const units = [
   { value: "Year", displayName: "Year(s)" },
 ];
 
-export const getUnitValues = (): string[] =>
-  units.map((item) => item.displayName);
+export const getTimeDefinitionValues = (): Array<string> =>
+  timeDefinitions.map((item) => item.displayName);
 
-export const getUnitValue = (displayName: string): string =>
-  units.find((item) => item.displayName === displayName).value;
+export const getTimeDefinitionValue = (displayName: string) =>
+  timeDefinitions.find((item) => item?.displayName === displayName)?.value ||
+  null;
 
-export const getUnitDisplayName = (value: string): string => {
-  if (!value) return "";
-  return units.find((item) => item.value === value).displayName;
-};
+export const getTimeDefinitionDisplayName = (value: string) =>
+  timeDefinitions.find((item) => item.value === value)?.displayName || "";
 
 /**
  * Capitalize the first letter and lowercase the rest.

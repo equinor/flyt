@@ -108,7 +108,6 @@ function AddSection(props: { process: Project }): JSX.Element {
         aria-label="search"
         placeholder="Search labels"
         autoComplete="off"
-        className={styles.searchField}
         onChange={handleChange}
         autoFocus
         value={term}

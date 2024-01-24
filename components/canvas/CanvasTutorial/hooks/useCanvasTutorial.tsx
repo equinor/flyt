@@ -93,7 +93,6 @@ const useScrollIntoView = (ref: RefObject<HTMLDivElement> | undefined) => {
   const [isInitialScroll, setIsInitialScroll] = useState(true);
   useEffect(() => {
     if (isInitialScroll) {
-      // @ts-expect-error - TypeScript 4.5.5 don't know about behavior: "instant"
       ref?.current?.scrollIntoView({ behavior: "instant" });
       setIsInitialScroll(false);
     } else {

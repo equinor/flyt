@@ -1,20 +1,28 @@
 import { ReactElement } from "react";
+import dynamic from "next/dynamic";
 import { Tooltip } from "@equinor/eds-core-react";
 
 /**
- * Improved EDS Tooltip - fallback to div with title prop when window is undefined.
+ * Improved EDS Tooltip - Disabled SSR
  * + disabled prop circumventing the tooltip altogether
  * @param props
  * @constructor
  */
-export function TooltipImproved(props: {
+function TooltipComponent(props: {
   title: string;
   children: ReactElement;
   disabled?: boolean;
 }): ReactElement {
-  if (props.disabled) return <>{props.children}</>;
-  if (typeof window === "undefined") {
-    return <div title={props.title}>{props.children}</div>;
-  }
-  return <Tooltip title={props.title}>{props.children}</Tooltip>;
+  return props.disabled ? (
+    <>{props.children}</>
+  ) : (
+    <Tooltip title={props.title}>{props.children}</Tooltip>
+  );
 }
+
+export const TooltipImproved = dynamic(
+  () => Promise.resolve(TooltipComponent),
+  {
+    ssr: false,
+  }
+);

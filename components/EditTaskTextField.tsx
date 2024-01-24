@@ -41,7 +41,6 @@ export function EditTaskTextField(props: {
     <TextField
       disabled={props.disabled}
       label={"Task description"}
-      variant={"default"}
       defaultValue={description} //Since we set a default value and not a value, it only updates on init
       id={`taskDescription-${id}`}
       onChange={(event) => {

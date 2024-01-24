@@ -251,7 +251,6 @@ export const CanvasLayout = ({ children }): JSX.Element => {
               open={isOpen}
               anchorEl={buttonEl}
               onClose={closeMenu}
-              focus={focus}
             >
               <Menu.Item
                 title={`${
@@ -348,9 +347,6 @@ export const CanvasLayout = ({ children }): JSX.Element => {
             <TextField
               autoFocus
               label={"Add title"}
-              // multiline
-              // rows={3}
-              variant={"default"}
               defaultValue={project?.name}
               onChange={(e) => updateProjectName(e.target.value)}
               id={"vsmObjectDescription"}

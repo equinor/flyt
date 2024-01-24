@@ -27,6 +27,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-left: 16px !important;
 }
 
 .customContent {
@@ -40,5 +41,5 @@
   flex-direction: column;
   overflow-y: scroll;
   gap: 64px;
-  padding-right: 16px;
+  padding-right: 40px;
 }
