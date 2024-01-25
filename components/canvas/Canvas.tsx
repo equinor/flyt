@@ -1,5 +1,5 @@
 import "reactflow/dist/style.css";
-import { MouseEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 
 import { getAccessToken } from "../../auth/msalHelpers";
@@ -30,25 +30,23 @@ import ReactFlow, {
 } from "reactflow";
 import { setLayout } from "./hooks/useLayout";
 import { nodeElementTypes } from "./NodeElementTypes";
-import { NodeData, NodeDataFull } from "types/NodeData";
+import { NodeDataFull } from "types/NodeData";
 import {
-  moveVertice,
   addVertice,
   addVerticeLeft,
   addVerticeRight,
-  moveVerticeRightOfTarget,
   mergeVertices,
 } from "../../services/graphApi";
 import { NodeTypes } from "types/NodeTypes";
 import { uid } from "../../utils/uuid";
 import { Project } from "types/Project";
 import { Graph } from "types/Graph";
-import { validDropTarget } from "./utils/validDropTarget";
 import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
 import { CanvasTutorial } from "./CanvasTutorial/CanvasTutorial";
 import { useCenterCanvas } from "./hooks/useCenterCanvas";
 import { useAccess } from "./hooks/useAccess";
 import { useUserAccount } from "./hooks/useUserAccount";
+import { useNodeDrag } from "./CanvasTutorial/hooks/useNodeDrag";
 
 type CanvasProps = {
   graph: Graph;
@@ -76,14 +74,6 @@ const Canvas = ({ graph, project }: CanvasProps) => {
   const [nodes, setNodes, onNodesChange] = useNodesState<NodeDataFull>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-  const dragRef = useRef<Node<NodeData> | null>(null);
-  const [source, setSource] = useState<Node<NodeDataFull> | undefined>(
-    undefined
-  );
-  const [target, setTarget] = useState<Node<NodeDataFull> | undefined>(
-    undefined
-  );
-
   const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
 
@@ -93,6 +83,8 @@ const Canvas = ({ graph, project }: CanvasProps) => {
   const connectionNodeIdSelector = (state: ReactFlowState) =>
     state.connectionNodeId;
   const connectionNodeId = useStore(connectionNodeIdSelector);
+
+  const { onNodeDragStart, onNodeDrag, onNodeDragStop } = useNodeDrag();
 
   useEffect(() => {
     getAccessToken().then((accessToken) => {
@@ -189,37 +181,6 @@ const Canvas = ({ graph, project }: CanvasProps) => {
       onSuccess: () => {
         dispatch.setSnackMessage("✅ Card added!");
         notifyOthers("Added a new card", id, account);
-        return queryClient.invalidateQueries();
-      },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
-    }
-  );
-
-  const handleMoveNode = useMutation(
-    ({
-      nodeId,
-      targetId,
-      position,
-      includeChildren,
-    }: {
-      nodeId: string;
-      targetId: string;
-      position: Position;
-      includeChildren: boolean;
-    }) => {
-      dispatch.setSnackMessage("⏳ Moving card...");
-      return position === Position.Bottom
-        ? moveVertice(
-            { vertexToMoveId: nodeId, vertexDestinationParentId: targetId },
-            projectId,
-            includeChildren
-          )
-        : moveVerticeRightOfTarget({ vertexId: nodeId }, targetId, projectId);
-    },
-    {
-      onSuccess: () => {
-        dispatch.setSnackMessage("✅ Moved card!");
-        id && notifyOthers("Moved a card", id, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
@@ -475,79 +436,6 @@ const Canvas = ({ graph, project }: CanvasProps) => {
       setEdges(tempEdges);
     }
   }, [graph, userCanEdit]);
-
-  const onNodeDragStart = (
-    evt: MouseEvent<Element>,
-    nodeDragging: Node<NodeData>
-  ) => {
-    dragRef.current = nodeDragging;
-    setNodes((nodes) =>
-      nodes.map((node) => {
-        node.data = {
-          ...node.data,
-          isValidDropTarget: validDropTarget(nodeDragging, node),
-        };
-        return node;
-      })
-    );
-    setSource(nodeDragging);
-  };
-
-  const onNodeDrag = (evt: MouseEvent, node: Node<NodeDataFull>) => {
-    const centerX = node.position.x + node.width / 2;
-    const centerY = node.position.y + node.height / 2;
-
-    const targetNode = nodes.find(
-      (n) =>
-        centerX > n.position.x &&
-        centerX < n.position.x + node.width &&
-        centerY > n.position.y &&
-        centerY < n.position.y + node.height &&
-        n.id !== node.id
-    );
-
-    setTarget(targetNode);
-  };
-
-  useEffect(() => {
-    setNodes((nodes) =>
-      nodes.map((node) => {
-        node.data = {
-          ...node.data,
-          isDropTarget: node.id === target?.id && validDropTarget(node, target),
-        };
-        return node;
-      })
-    );
-  }, [target]);
-
-  const onNodeDragStop = (evt: MouseEvent, node: Node<NodeData>) => {
-    if (target && validDropTarget(node, target)) {
-      handleMoveNode.mutate({
-        nodeId: node.id,
-        targetId: target.id,
-        position:
-          node.type === NodeTypes.mainActivity &&
-          target.type === NodeTypes.mainActivity
-            ? Position.Right
-            : Position.Bottom,
-        includeChildren:
-          target.data.children.length === 0 ||
-          node?.data?.type === NodeTypes.choice,
-      });
-      setTarget(undefined);
-      dragRef.current = null;
-    }
-    setNodes((nodes) =>
-      nodes.map((n) => {
-        n.data = { ...n.data, isValidDropTarget: null };
-        if (n.id === node?.id && source) {
-          n = source;
-        }
-        return n;
-      })
-    );
-  };
 
   useCenterCanvas();
 

@@ -2,7 +2,7 @@ import { NodeDataFull } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
 import { Node } from "reactflow";
 
-export const validDropTarget = (
+export const validTarget = (
   source: Node<NodeDataFull> | undefined,
   target: Node<NodeDataFull> | undefined
 ): boolean => {
