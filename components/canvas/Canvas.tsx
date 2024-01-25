@@ -25,8 +25,6 @@ import ReactFlow, {
   Node,
   Position,
   Controls,
-  useStore,
-  ReactFlowState,
 } from "reactflow";
 import { setLayout } from "./hooks/useLayout";
 import { nodeElementTypes } from "./NodeElementTypes";
@@ -46,7 +44,8 @@ import { CanvasTutorial } from "./CanvasTutorial/CanvasTutorial";
 import { useCenterCanvas } from "./hooks/useCenterCanvas";
 import { useAccess } from "./hooks/useAccess";
 import { useUserAccount } from "./hooks/useUserAccount";
-import { useNodeDrag } from "./CanvasTutorial/hooks/useNodeDrag";
+import { useNodeDrag } from "./hooks/useNodeDrag";
+import { useNodeMerge } from "./hooks/useNodeMerge";
 
 type CanvasProps = {
   graph: Graph;
@@ -80,11 +79,8 @@ const Canvas = ({ graph, project }: CanvasProps) => {
   const queryClient = useQueryClient();
   const projectId = router.query.id as string;
 
-  const connectionNodeIdSelector = (state: ReactFlowState) =>
-    state.connectionNodeId;
-  const connectionNodeId = useStore(connectionNodeIdSelector);
-
   const { onNodeDragStart, onNodeDrag, onNodeDragStop } = useNodeDrag();
+  const { merging } = useNodeMerge();
 
   useEffect(() => {
     getAccessToken().then((accessToken) => {
@@ -121,14 +117,6 @@ const Canvas = ({ graph, project }: CanvasProps) => {
       return () => socket.disconnect();
     });
   }, []);
-
-  useEffect(() => {
-    if (connectionNodeId) {
-      handleMergeInit(connectionNodeId);
-    } else {
-      handleMergeCancel();
-    }
-  }, [connectionNodeId]);
 
   const handleMerge = useMutation(
     ({
@@ -187,34 +175,6 @@ const Canvas = ({ graph, project }: CanvasProps) => {
     }
   );
 
-  const handleMergeInit = (nodeId: string) => {
-    const sourceNode = nodes.find((node) => node.id === nodeId);
-    setNodes((nodes) =>
-      nodes.map((node) => {
-        node.data = {
-          ...node.data,
-          mergeOption:
-            sourceNode &&
-            sourceNode.id !== node.id &&
-            node.data.columnId == sourceNode?.data?.columnId &&
-            !sourceNode.data.children.find((childId) => childId === node.id) &&
-            !sourceNode.data.parents.find((parentId) => parentId === node.id),
-        };
-        node.data.merging = true;
-        return node;
-      })
-    );
-  };
-
-  const handleMergeCancel = () => {
-    setNodes((nodes) =>
-      nodes.map((node) => {
-        node.data = { ...node.data, mergeOption: false, merging: false };
-        return node;
-      })
-    );
-  };
-
   let columnId: string | null = null;
 
   const createNodes = (
@@ -265,7 +225,7 @@ const Canvas = ({ graph, project }: CanvasProps) => {
             sourceId && targetId && handleMerge.mutate({ sourceId, targetId }),
           mergeable:
             node.children.length === 0 || node.type === NodeTypes.choice,
-          merging: !!connectionNodeId,
+          merging: merging,
           parents: [parent.id],
           userCanEdit,
           isChoiceChild: parent.type === NodeTypes.choice,

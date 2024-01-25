@@ -5,12 +5,12 @@ import { Node } from "reactflow";
 import { Position, useReactFlow } from "reactflow";
 import router from "next/router";
 import { moveVertice, moveVerticeRightOfTarget } from "@/services/graphApi";
-import { validTarget } from "../../utils/validTarget";
+import { validTarget } from "../utils/validTarget";
 import { notifyOthers } from "@/services/notifyOthers";
 import { unknownErrorToString } from "@/utils/isError";
 import { useMutation, useQueryClient } from "react-query";
-import { useStoreDispatch } from "../../../../hooks/storeHooks";
-import { useUserAccount } from "../../hooks/useUserAccount";
+import { useStoreDispatch } from "../../../hooks/storeHooks";
+import { useUserAccount } from "./useUserAccount";
 
 export const useNodeDrag = () => {
   const [source, setSource] = useState<Node<NodeDataFull> | undefined>(
