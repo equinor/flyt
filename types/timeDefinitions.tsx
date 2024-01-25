@@ -10,13 +10,12 @@ export const timeDefinitions = [
 export const getTimeDefinitionValues = (): Array<string> =>
   timeDefinitions.map((item) => item.displayName);
 
-export const getTimeDefinitionValue = (displayName: string): string =>
-  timeDefinitions.find((item) => item.displayName === displayName).value;
+export const getTimeDefinitionValue = (displayName: string) =>
+  timeDefinitions.find((item) => item?.displayName === displayName)?.value ||
+  null;
 
-export const getTimeDefinitionDisplayName = (value: string): string => {
-  if (!value) return "";
-  return timeDefinitions.find((item) => item.value === value).displayName;
-};
+export const getTimeDefinitionDisplayName = (value: string) =>
+  timeDefinitions.find((item) => item.value === value)?.displayName || "";
 
 /**
  * Capitalize the first letter and lowercase the rest.

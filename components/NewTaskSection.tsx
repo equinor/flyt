@@ -2,7 +2,7 @@ import { useStoreDispatch } from "../hooks/storeHooks";
 import React, { useState } from "react";
 import { taskObject } from "../interfaces/taskObject";
 import styles from "./VSMCanvas.module.scss";
-import { Button, Icon, SingleSelect, TextField } from "@equinor/eds-core-react";
+import { Button, Icon, Autocomplete, TextField } from "@equinor/eds-core-react";
 import { vsmTaskTypes } from "../types/vsmTaskTypes";
 import { ExistingTaskSection } from "./ExistingTaskSection";
 import { arrow_back } from "@equinor/eds-icons";
@@ -66,9 +66,9 @@ export function NewTaskSection(props: {
       <div className={styles.sideBarSectionHeader}>
         <p>Add Questions, Ideas, Problems and Risks</p>
       </div>
-      <SingleSelect
+      <Autocomplete
         autoFocus
-        items={[
+        options={[
           "Problem",
           "Idea",
           "Question",
@@ -78,7 +78,7 @@ export function NewTaskSection(props: {
           "Existing Question",
           "Existing Risk",
         ]}
-        handleSelectedItemChange={(e) => {
+        onInputChange={(e) => {
           if (!selectedObject) throw new Error("No selected object");
           const t = {
             objects: [{ fkObject: selectedObject.vsmObjectID } as vsmObject],
@@ -86,7 +86,7 @@ export function NewTaskSection(props: {
             description: newTask?.description ?? "", // Let's not overwrite description if we change the type midways
           } as taskObject;
 
-          switch (e.selectedItem) {
+          switch (e) {
             case "Problem":
               t.fkTaskType = vsmTaskTypes.problem;
               setNewTask(t);
@@ -137,7 +137,6 @@ export function NewTaskSection(props: {
           <div style={{ paddingTop: 8 }}>
             <TextField
               label={"Description"}
-              variant={"default"}
               value={newTask.description}
               id={`newTask`}
               onChange={(event) =>

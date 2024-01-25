@@ -14,7 +14,7 @@ import { SelectionInfo } from "interfaces/SelectionInfo";
 import { transformLink } from "utils/transformLink";
 
 const getInputVariant = (url: string) => {
-  if (url.length === 0) return "default";
+  if (url.length === 0) return undefined;
   return isValidUrl(url) ? "success" : "error";
 };
 
@@ -81,7 +81,6 @@ function UrlPrompt(props: {
       <TextField
         autoFocus={!selectionInfo.linkText}
         label={"Text"}
-        variant={"default"}
         defaultValue={selectionInfo.linkText}
         onChange={(e: FormEvent<HTMLInputElement>) =>
           setSelectionInfo({
