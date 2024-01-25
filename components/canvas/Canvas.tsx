@@ -1,6 +1,5 @@
 import "reactflow/dist/style.css";
 import { MouseEvent, useEffect, useRef, useState } from "react";
-import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQueryClient } from "react-query";
 
 import { getAccessToken } from "../../auth/msalHelpers";
@@ -10,7 +9,6 @@ import { io } from "socket.io-client";
 import { ResetProcessButton } from "components/ResetProcessButton";
 import { ToBeToggle } from "./ToBeToggle";
 import { SideBar } from "../SideBar";
-import { getMyAccess } from "../../utils/getMyAccess";
 import { notifyOthers } from "../../services/notifyOthers";
 import { CanvasButtons } from "components/CanvasButtons";
 import { ManageLabelBox } from "components/Labels/ManageLabelBox";
@@ -49,6 +47,8 @@ import { validDropTarget } from "./utils/validDropTarget";
 import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
 import { CanvasTutorial } from "./CanvasTutorial/CanvasTutorial";
 import { useCenterCanvas } from "./hooks/useCenterCanvas";
+import { useAccess } from "./hooks/useAccess";
+import { useUserAccount } from "./hooks/useUserAccount";
 
 type CanvasProps = {
   graph: Graph;
@@ -61,13 +61,13 @@ const Canvas = ({ graph, project }: CanvasProps) => {
   );
   const dispatch = useStoreDispatch();
   const router = useRouter();
-  const { id, version } = router.query;
+  const { id } = router.query;
+
+  const account = useUserAccount();
+  const { userCanEdit } = useAccess(project);
 
   const [socketConnected, setSocketConnected] = useState(false);
   const [socketReason, setSocketReason] = useState("");
-
-  const { accounts } = useMsal();
-  const account = useAccount(accounts[0] || {});
 
   const shapeSize = { height: 140, width: 140 };
 
@@ -86,8 +86,6 @@ const Canvas = ({ graph, project }: CanvasProps) => {
 
   const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
-  const myAccess = getMyAccess(project, account);
-  const userCanEdit = !version && myAccess !== "Reader";
 
   const queryClient = useQueryClient();
   const projectId = router.query.id as string;

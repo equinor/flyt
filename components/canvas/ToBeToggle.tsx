@@ -1,24 +1,19 @@
 import { createToBeProject, getProject } from "../../services/projectApi";
-import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQuery } from "react-query";
 
 import { ToggleButton } from "components/ToggleButton";
 import { ToggleButtonGroup } from "components/ToggleButtonGroup";
-import { getMyAccess } from "utils/getMyAccess";
 import { useRouter } from "next/router";
 import { unknownErrorToString } from "utils/isError";
 import { useStoreDispatch } from "hooks/storeHooks";
+import { useAccess } from "./hooks/useAccess";
 
 export const ToBeToggle = (): JSX.Element => {
   const router = useRouter();
   const { id } = router.query;
 
   const { data: project } = useQuery(["project", id], () => getProject(id));
-
-  const { accounts } = useMsal();
-  const account = useAccount(accounts[0] || {});
-  const myAccess = getMyAccess(project, account);
-  const userCanEdit = myAccess !== "Reader";
+  const { userCanEdit } = useAccess(project);
   const dispatch = useStoreDispatch();
 
   const newProjectMutation = useMutation(
