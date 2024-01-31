@@ -10,6 +10,7 @@ export default function Heart(props: {
   unfave: () => void;
 }): JSX.Element {
   const handleClick = (e) => {
+    e.preventDefault();
     e.stopPropagation();
     props.isFavourite ? props.unfave() : props.fave();
   };
