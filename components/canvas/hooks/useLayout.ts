@@ -19,7 +19,6 @@ const createColumn = (
     edgesep: 0,
     ranksep: 100,
     marginx: margin,
-    keeporder: true,
   });
 
   nodes.forEach((node) => {
