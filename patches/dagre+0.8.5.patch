@@ -1,0 +1,74 @@
+diff --git a/node_modules/dagre/dist/dagre.js b/node_modules/dagre/dist/dagre.js
+index 0c2cc94..c2ac4bb 100644
+--- a/node_modules/dagre/dist/dagre.js
++++ b/node_modules/dagre/dist/dagre.js
+@@ -20,7 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ */
+-
+ module.exports = {
+   graphlib: require("./lib/graphlib"),
+ 
+diff --git a/node_modules/dagre/lib/layout.js b/node_modules/dagre/lib/layout.js
+index 26b0730..8f8cc0b 100644
+--- a/node_modules/dagre/lib/layout.js
++++ b/node_modules/dagre/lib/layout.js
+@@ -95,7 +95,7 @@ function updateInputGraph(inputGraph, layoutGraph) {
+ }
+ 
+ var graphNumAttrs = ["nodesep", "edgesep", "ranksep", "marginx", "marginy"];
+-var graphDefaults = { ranksep: 50, edgesep: 20, nodesep: 50, rankdir: "tb" };
++var graphDefaults = { ranksep: 50, edgesep: 20, nodesep: 50, rankdir: "tb", keeporder: false };
+ var graphAttrs = ["acyclicer", "ranker", "rankdir", "align"];
+ var nodeNumAttrs = ["width", "height"];
+ var nodeDefaults = { width: 0, height: 0 };
+@@ -118,6 +118,7 @@ function buildLayoutGraph(inputGraph) {
+ 
+   g.setGraph(_.merge({},
+     graphDefaults,
++    { keeporder: graph.keeporder },
+     selectNumberAttrs(graph, graphNumAttrs),
+     _.pick(graph, graphAttrs)));
+ 
+diff --git a/node_modules/dagre/lib/order/index.js b/node_modules/dagre/lib/order/index.js
+index 4ac2d9f..518ca51 100644
+--- a/node_modules/dagre/lib/order/index.js
++++ b/node_modules/dagre/lib/order/index.js
+@@ -34,22 +34,24 @@ function order(g) {
+   var layering = initOrder(g);
+   assignOrder(g, layering);
+ 
+-  var bestCC = Number.POSITIVE_INFINITY,
+-    best;
++  if(!g.graph().keeporder) {
++    var bestCC = Number.POSITIVE_INFINITY,
++      best;
+ 
+-  for (var i = 0, lastBest = 0; lastBest < 4; ++i, ++lastBest) {
+-    sweepLayerGraphs(i % 2 ? downLayerGraphs : upLayerGraphs, i % 4 >= 2);
++    for (var i = 0, lastBest = 0; lastBest < 4; ++i, ++lastBest) {
++      sweepLayerGraphs(i % 2 ? downLayerGraphs : upLayerGraphs, i % 4 >= 2);
+ 
+-    layering = util.buildLayerMatrix(g);
+-    var cc = crossCount(g, layering);
+-    if (cc < bestCC) {
+-      lastBest = 0;
+-      best = _.cloneDeep(layering);
+-      bestCC = cc;
++      layering = util.buildLayerMatrix(g);
++      var cc = crossCount(g, layering);
++      if (cc < bestCC) {
++        lastBest = 0;
++        best = _.cloneDeep(layering);
++        bestCC = cc;
++      }
+     }
+-  }
+ 
+-  assignOrder(g, best);
++    assignOrder(g, best);
++  }
+ }
+ 
+ function buildLayerGraphs(g, ranks, relationship) {
