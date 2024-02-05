@@ -147,7 +147,7 @@ export const ChoiceNode = ({
         darkened={isValidDropTarget === false}
       >
         <NodeDescription
-          header={!description && type}
+          header={!description ? type : undefined}
           description={formatNodeText(description, 45)}
         />
       </NodeCard>

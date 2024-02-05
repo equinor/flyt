@@ -23,6 +23,6 @@ export const getNodeTypeName = (type: NodeTypes): string => {
     case NodeTypes.choice:
       return "Choice";
     default:
-      return "Unknown";
+      return type;
   }
 };

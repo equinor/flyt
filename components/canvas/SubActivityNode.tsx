@@ -139,7 +139,7 @@ export const SubActivityNode = ({
         darkened={isValidDropTarget === false}
       >
         <NodeDescription
-          header={!description && type}
+          header={!description ? type : undefined}
           description={description}
         />
         <div className={styles["node__role-container"]}>

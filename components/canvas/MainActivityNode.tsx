@@ -93,7 +93,7 @@ export const MainActivityNode = ({
         darkened={isValidDropTarget === false}
       >
         <NodeDescription
-          header={!description && type}
+          header={!description ? type : undefined}
           description={description}
         />
       </NodeCard>
