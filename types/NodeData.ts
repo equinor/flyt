@@ -34,6 +34,7 @@ export type NodeDataHidden = Pick<
   | "isValidDropTarget"
   | "isDropTarget"
   | "mergeOption"
+  | "isChoiceChild"
 >;
 
 export type NodeDataFull = NodeData | NodeDataHidden;

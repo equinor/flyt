@@ -207,6 +207,9 @@ const Canvas = ({ graph, project }: CanvasProps) => {
           const newData = tempNode.data;
           if (tempNode.id === node.id) {
             newData.parents.push(parent.id);
+            if (parent.type === NodeTypes.choice) {
+              newData.isChoiceChild = true;
+            }
             return { ...tempNode, data: newData };
           }
           return tempNode;
