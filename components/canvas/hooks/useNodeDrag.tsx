@@ -11,7 +11,7 @@ import { unknownErrorToString } from "@/utils/isError";
 import { useMutation, useQueryClient } from "react-query";
 import { useStoreDispatch } from "../../../hooks/storeHooks";
 import { useUserAccount } from "./useUserAccount";
-import { targetIsSubtreeLeaf } from "../utils/targetIsSubtreeLeaf";
+import { targetIsInSubtree } from "../utils/targetIsInSubtree";
 
 export const useNodeDrag = () => {
   const [source, setSource] = useState<Node<NodeData> | undefined>(undefined);
@@ -28,7 +28,8 @@ export const useNodeDrag = () => {
       nodes.map((node) => {
         node.data = {
           ...node.data,
-          isDropTarget: node.id === target?.id && validTarget(node, target),
+          isDropTarget:
+            node.id === target?.id && validTarget(node, target, getNodes()),
         };
         return node;
       })
@@ -44,7 +45,7 @@ export const useNodeDrag = () => {
       nodes.map((node) => {
         node.data = {
           ...node.data,
-          isValidDropTarget: validTarget(nodeDragging, node),
+          isValidDropTarget: validTarget(nodeDragging, node, getNodes()),
         };
         return node;
       })
@@ -70,7 +71,7 @@ export const useNodeDrag = () => {
   };
 
   const onNodeDragStop = (evt: MouseEvent, node: Node<NodeData>) => {
-    if (validTarget(node, target)) {
+    if (validTarget(node, target, getNodes())) {
       moveNode.mutate({
         nodeId: node.id,
         targetId: target.id,
@@ -134,7 +135,7 @@ export const useNodeDrag = () => {
         const nodes = getNodes().filter(
           (node) => node.data.columnId === source.data.columnId
         );
-        return !targetIsSubtreeLeaf(source, nodes, target.id);
+        return !targetIsInSubtree(source, target.id, nodes);
       }
     }
     return false;

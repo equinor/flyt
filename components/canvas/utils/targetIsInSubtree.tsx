@@ -1,10 +1,10 @@
 import { Node } from "reactflow";
 import { NodeData } from "@/types/NodeData";
 
-export const targetIsSubtreeLeaf = (
+export const targetIsInSubtree = (
   node: Node<NodeData>,
-  nodes: Node<NodeData>[],
-  targetId: string
+  targetId: string,
+  nodes: Node<NodeData>[]
 ) => {
   for (let i = 0; i < node.data.children.length; i++) {
     const id = node.data.children[i];
@@ -12,7 +12,7 @@ export const targetIsSubtreeLeaf = (
       return true;
     } else {
       const node = nodes.find((node) => node.id === id);
-      if (node && targetIsSubtreeLeaf(node, nodes, targetId)) {
+      if (node && targetIsInSubtree(node, targetId, nodes)) {
         return true;
       }
     }

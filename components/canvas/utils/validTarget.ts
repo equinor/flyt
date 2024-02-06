@@ -1,10 +1,12 @@
-import { NodeDataFull } from "types/NodeData";
+import { NodeData } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
 import { Node } from "reactflow";
+import { targetIsInSubtree } from "./targetIsInSubtree";
 
 export const validTarget = (
-  source: Node<NodeDataFull> | undefined,
-  target: Node<NodeDataFull> | undefined
+  source: Node<NodeData> | undefined,
+  target: Node<NodeData> | undefined,
+  nodes: Node<NodeData>[]
 ): boolean => {
   if (!target || !source) return false;
   const sourceType = source.type;
@@ -13,6 +15,13 @@ export const validTarget = (
   const targetIsChoiceChild =
     sourceType === NodeTypes.choice &&
     target?.data?.parents?.find((id) => id === source.id);
+
+  if (
+    sourceType === NodeTypes.choice &&
+    (target.data.children.length || targetIsInSubtree(source, target.id, nodes))
+  ) {
+    return false;
+  }
 
   return (
     !targetIsParent &&
