@@ -11,14 +11,11 @@ import { unknownErrorToString } from "@/utils/isError";
 import { useMutation, useQueryClient } from "react-query";
 import { useStoreDispatch } from "../../../hooks/storeHooks";
 import { useUserAccount } from "./useUserAccount";
+import { targetIsSubtreeLeaf } from "../utils/targetIsSubtreeLeaf";
 
 export const useNodeDrag = () => {
-  const [source, setSource] = useState<Node<NodeDataFull> | undefined>(
-    undefined
-  );
-  const [target, setTarget] = useState<Node<NodeDataFull> | undefined>(
-    undefined
-  );
+  const [source, setSource] = useState<Node<NodeData> | undefined>(undefined);
+  const [target, setTarget] = useState<Node<NodeData> | undefined>(undefined);
   const { setNodes, getNodes } = useReactFlow();
   const dragRef = useRef<Node<NodeData> | null>(null);
   const dispatch = useStoreDispatch();
@@ -55,7 +52,8 @@ export const useNodeDrag = () => {
     setSource(nodeDragging);
   };
 
-  const onNodeDrag = (evt: MouseEvent, node: Node<NodeDataFull>) => {
+  const onNodeDrag = (evt: MouseEvent, node: Node<NodeData>) => {
+    if (!node.width || !node.height) return;
     const centerX = node.position.x + node.width / 2;
     const centerY = node.position.y + node.height / 2;
 
@@ -81,9 +79,7 @@ export const useNodeDrag = () => {
           target.type === NodeTypes.mainActivity
             ? Position.Right
             : Position.Bottom,
-        includeChildren:
-          target.data.children.length === 0 ||
-          node?.data?.type === NodeTypes.choice,
+        includeChildren: includeChildren(node, target),
       });
       setTarget(undefined);
       dragRef.current = null;
@@ -129,6 +125,20 @@ export const useNodeDrag = () => {
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
+
+  const includeChildren = (source: Node<NodeData>, target: Node<NodeData>) => {
+    if (target.data.children.length === 0) {
+      if (source?.data?.type === NodeTypes.choice) {
+        return true;
+      } else if (target.data.columnId === source.data.columnId) {
+        const nodes = getNodes().filter(
+          (node) => node.data.columnId === source.data.columnId
+        );
+        return !targetIsSubtreeLeaf(source, nodes, target.id);
+      }
+    }
+    return false;
+  };
 
   return {
     onNodeDragStart,
