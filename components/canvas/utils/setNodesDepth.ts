@@ -39,7 +39,7 @@ const setSingleNodeDepth = (
 
 export const setNodesDepth = (nodes: Node<NodeDataFull>[]) => {
   const rootNode = nodes.find((node) => node.type === "Root");
-  rootNode.data.children.forEach((childId) => {
+  rootNode?.data.children.forEach((childId) => {
     setSingleNodeDepth(childId, nodes, 0);
   });
   while (mergedNodesReady.length > 0) {

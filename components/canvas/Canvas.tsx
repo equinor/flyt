@@ -58,7 +58,6 @@ const Canvas = ({ graph, project }: CanvasProps) => {
   );
   const dispatch = useStoreDispatch();
   const router = useRouter();
-  const { id } = router.query;
 
   const account = useUserAccount();
   const { userCanEdit } = useAccess(project);
@@ -104,8 +103,8 @@ const Canvas = ({ graph, project }: CanvasProps) => {
         // }
       });
 
-      socket.on(`room-${id}`, (payload) => {
-        if (payload.user !== account.username?.split("@")[0]) {
+      socket.on(`room-${projectId}`, (payload) => {
+        if (payload.user !== account?.username?.split("@")[0]) {
           dispatch.setSnackMessage(
             `${payload.user ? payload.user : "Someone"} ${payload.msg}`
           );
@@ -138,7 +137,7 @@ const Canvas = ({ graph, project }: CanvasProps) => {
     {
       onSuccess: () => {
         dispatch.setSnackMessage("✅ Cards merged!");
-        id && notifyOthers("Merged cards", id, account);
+        projectId && notifyOthers("Merged cards", projectId, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
@@ -168,7 +167,7 @@ const Canvas = ({ graph, project }: CanvasProps) => {
     {
       onSuccess: () => {
         dispatch.setSnackMessage("✅ Card added!");
-        notifyOthers("Added a new card", id, account);
+        notifyOthers("Added a new card", projectId, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
@@ -365,8 +364,8 @@ const Canvas = ({ graph, project }: CanvasProps) => {
   };
 
   const setNodesDepth = () => {
-    const rootNode = tempNodes.find((node) => node.type === "Root");
-    rootNode.data.children.forEach((childId) => {
+    const rootNode = tempNodes.find((node) => node.type === NodeTypes.root);
+    rootNode?.data.children.forEach((childId) => {
       setSingleNodeDepth(childId, 0);
     });
     while (mergedNodesReady.length > 0) {

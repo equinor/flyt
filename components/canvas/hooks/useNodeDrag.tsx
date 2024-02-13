@@ -28,8 +28,7 @@ export const useNodeDrag = () => {
       nodes.map((node) => {
         node.data = {
           ...node.data,
-          isDropTarget:
-            node.id === target?.id && validTarget(node, target, getNodes()),
+          isDropTarget: node.id === target?.id,
         };
         return node;
       })
@@ -87,7 +86,7 @@ export const useNodeDrag = () => {
     }
     setNodes((nodes) =>
       nodes.map((n) => {
-        n.data = { ...n.data, isValidDropTarget: null };
+        n.data = { ...n.data, isValidDropTarget: undefined };
         if (n.id === node?.id && source) {
           n = source;
         }

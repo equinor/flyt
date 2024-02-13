@@ -5,7 +5,7 @@ import { NodeTypes } from "./NodeTypes";
 export type NodeData = {
   parents: string[];
   isDropTarget?: boolean;
-  isValidDropTarget?: boolean | null;
+  isValidDropTarget?: boolean;
   columnId: string | null;
   mergeOption?: boolean;
   handleMerge: (sourceId: string | null, targetId: string | null) => void;

@@ -64,7 +64,7 @@ export function setLayout(
   margin = 0;
   const layout: Node<NodeDataFull>[] = [];
   const root = nodes.find((node) => node.type === NodeTypes.root);
-  root.data.children.forEach((nodeId) => {
+  root?.data.children.forEach((nodeId) => {
     const columnNodes = nodes.filter((node) => node.data.columnId === nodeId);
     const columnEdges = edges.filter((edge) =>
       columnNodes.find((node) => node.id === edge.source)
