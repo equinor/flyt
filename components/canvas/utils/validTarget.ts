@@ -11,29 +11,34 @@ export const validTarget = (
   if (!target || !source) return false;
   const sourceType = source.type;
   const targetType = target.type;
-  const targetIsParent = source?.data?.parents?.find((id) => id === target.id);
-  const targetIsChoiceChild =
-    sourceType === NodeTypes.choice &&
-    target?.data?.parents?.find((id) => id === source.id);
+  const targetIsParent = source?.data?.parents?.includes(target.id);
+
+  if (targetIsParent) {
+    return false;
+  }
 
   if (
-    sourceType === NodeTypes.choice &&
-    (target.data.children.length || targetIsInSubtree(source, target.id, nodes))
+    !(
+      ((sourceType === NodeTypes.choice ||
+        sourceType === NodeTypes.subActivity ||
+        sourceType === NodeTypes.waiting) &&
+        (targetType === NodeTypes.choice ||
+          targetType === NodeTypes.subActivity ||
+          targetType === NodeTypes.waiting ||
+          targetType === NodeTypes.mainActivity)) ||
+      (sourceType === NodeTypes.mainActivity &&
+        targetType === NodeTypes.mainActivity)
+    )
   ) {
     return false;
   }
 
-  return (
-    !targetIsParent &&
-    !targetIsChoiceChild &&
-    (((sourceType === NodeTypes.choice ||
-      sourceType === NodeTypes.subActivity ||
-      sourceType === NodeTypes.waiting) &&
-      (targetType === NodeTypes.choice ||
-        targetType === NodeTypes.subActivity ||
-        targetType === NodeTypes.waiting ||
-        targetType === NodeTypes.mainActivity)) ||
-      (sourceType === NodeTypes.mainActivity &&
-        targetType === NodeTypes.mainActivity))
-  );
+  if (
+    sourceType === NodeTypes.choice &&
+    (target.data.children.length || targetIsInSubtree(source, target, nodes))
+  ) {
+    return false;
+  }
+
+  return true;
 };

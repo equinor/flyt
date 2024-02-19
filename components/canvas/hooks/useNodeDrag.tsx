@@ -1,4 +1,4 @@
-import { NodeData, NodeDataFull } from "@/types/NodeData";
+import { NodeData } from "@/types/NodeData";
 import { NodeTypes } from "@/types/NodeTypes";
 import { useEffect, MouseEvent, useRef, useState } from "react";
 import { Node } from "reactflow";
@@ -131,10 +131,8 @@ export const useNodeDrag = () => {
       if (source?.data?.type === NodeTypes.choice) {
         return true;
       } else if (target.data.columnId === source.data.columnId) {
-        const nodes = getNodes().filter(
-          (node) => node.data.columnId === source.data.columnId
-        );
-        return !targetIsInSubtree(source, target.id, nodes);
+        const nodes = getNodes();
+        return !targetIsInSubtree(source, target, nodes);
       }
     }
     return false;
