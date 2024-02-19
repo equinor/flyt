@@ -4,7 +4,8 @@
 
 # Links
 
-- :inbox_tray: [Bug and feature tracker](https://github.com/orgs/equinor/projects/87/views/8)
+- 🌱 [Internal repo](https://github.com/equinor/flyt-internal)
+- :inbox_tray: [Bug and feature tracker](https://github.com/orgs/equinor/projects/361/views/34)
 - :1234: [Feature backlog (and prioritisation)](https://github.com/orgs/equinor/projects/141/)
 - :art: [Figma design & prototype](https://www.figma.com/file/IkHwmIQrsT0iR34f5R5UnZ/vsm)
 - :zap: [Api-endpoints: See swagger](https://vsm-api-dev.azurewebsites.net/swagger/index.html)
