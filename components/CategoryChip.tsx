@@ -22,7 +22,7 @@ export function CategoryChip(props: {
         className={styles.removeButton}
         onClick={(e) => {
           e.stopPropagation();
-          props.onClickRemove();
+          //props.onClickRemove();
         }}
         style={{
           color: textColor,

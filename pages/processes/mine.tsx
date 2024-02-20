@@ -90,7 +90,7 @@ export default function MyProcesses(): JSX.Element {
             itemsPerPage={itemsPerPage}
             onChangePage={(pageNumber: number) => setPage(pageNumber)}
             query={query}
-            showNewProcessButton={true}
+            showNewProcessButton={false}
           />
         </div>
       </main>

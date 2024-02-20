@@ -12,46 +12,25 @@ class BaseApiService {
   }
 
   async post(path: string, data: unknown) {
-    return axios.post(APIConfigs.url + path, data, {
-      headers: {
-        ContentType: "application/json",
-        Authorization: await getAccessToken(),
-      },
-    });
+    return axios.post(APIConfigs.url + path, data, {});
   }
 
   async put(url: string, data: unknown) {
-    return axios.put(APIConfigs.url + url, data, {
-      headers: {
-        Authorization: await getAccessToken(),
-      },
-    });
+    return axios.put(APIConfigs.url + url, data, {});
   }
 
   async patch(path: string, data: unknown) {
-    return axios.patch(APIConfigs.url + path, data, {
-      headers: {
-        Authorization: await getAccessToken(),
-      },
-    });
+    return axios.patch(APIConfigs.url + path, data, {});
   }
 
   async delete(path: string, data?: unknown) {
     return axios.delete(APIConfigs.url + path, {
-      headers: {
-        Authorization: await getAccessToken(),
-      },
       data: data ?? null,
     });
   }
 
   async uploadFile(path: string, formData: unknown) {
-    return axios.post(APIConfigs.url + path, formData, {
-      headers: {
-        Authorization: await getAccessToken(),
-        "content-type": "multipart/form-data",
-      },
-    });
+    return axios.post(APIConfigs.url + path, formData, {});
   }
 }
 

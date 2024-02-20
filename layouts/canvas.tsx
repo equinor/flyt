@@ -95,9 +95,9 @@ const CanvasLayout = ({ children }): JSX.Element => {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
   const myAccess = getMyAccess(project, account);
-  const userCanEdit = myAccess !== "Reader";
+  const userCanEdit = false;
   const userCannotEdit = !userCanEdit;
-  const isAdmin = myAccess === "Admin" || myAccess === "Owner";
+  const isAdmin = false;
 
   const [visibleShareScrim, setVisibleShareScrim] = React.useState(false);
   const [visibleRenameScrim, setVisibleRenameScrim] = React.useState(false);
@@ -270,7 +270,7 @@ const CanvasLayout = ({ children }): JSX.Element => {
                   Rename
                 </Typography>
               </Menu.Item>
-              <Menu.Item onClick={handleDuplicate}>
+              <Menu.Item onClick={handleDuplicate} disabled>
                 <Typography group="navigation" variant="menu_title" as="span">
                   Duplicate
                 </Typography>

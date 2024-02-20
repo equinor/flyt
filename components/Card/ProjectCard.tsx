@@ -26,8 +26,8 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
   const myAccess = getMyAccess(props.vsm, account);
-  const isAdmin = myAccess === "Admin" || myAccess === "Owner";
-  const userCanEdit = isAdmin || myAccess == "Contributor";
+  const isAdmin = false;
+  const userCanEdit = false;
 
   const handleSettled = () => {
     queryClient.invalidateQueries().then(() => setIsMutatingFavourite(false));

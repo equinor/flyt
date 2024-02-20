@@ -19,7 +19,7 @@ export const ToBeToggle = (): JSX.Element => {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
   const myAccess = getMyAccess(project, account);
-  const userCanEdit = myAccess !== "Reader";
+  const userCanEdit = false;
 
   const newProjectMutation = useMutation(() => {
     return createProject({

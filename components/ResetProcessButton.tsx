@@ -33,7 +33,7 @@ export const ResetProcessButton = () => {
   // 1. This is a to-be process
   const isTobeProcess = !!process?.currentProcessId;
   // 2. The user have the right to edit the process
-  const userCanEdit = myAccess !== "Reader";
+  const userCanEdit = false;
 
   if (!isTobeProcess || !userCanEdit) return null;
 

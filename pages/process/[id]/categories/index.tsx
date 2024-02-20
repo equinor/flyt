@@ -110,10 +110,6 @@ export default function CategoriesPage(): JSX.Element {
           }}
         >
           <ButtonNavigateToProcess />
-          <CategorySection
-            categories={categories}
-            setCategories={setCategories}
-          />
         </div>
         <div
           style={{

@@ -91,7 +91,7 @@ export default function Canvas(): JSX.Element {
   const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
   const myAccess = getMyAccess(project, account);
-  const userCanEdit = !version && myAccess !== "Reader";
+  const userCanEdit = false;
 
   const queryClient = useQueryClient();
   const vsmObjectMutation = useMutation(
