@@ -23,6 +23,7 @@ export function Labels(props: { labels: processLabel[] }): JSX.Element {
           style={{ marginRight: "5px", marginBottom: "10px" }}
           key={label.id}
           onClick={(e) => {
+            e.preventDefault();
             e.stopPropagation();
             handleClickLabel(label.id.toString());
           }}
