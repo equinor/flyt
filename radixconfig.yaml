@@ -1,40 +1,34 @@
 apiVersion: radix.equinor.com/v1
 kind: RadixApplication
 metadata:
-  name: vsm
+  name: flyt
 spec:
   environments:
     - name: dev
       build:
-        from: DEV
-    - name: dev-graph-poc
-      build:
-        from: 446-migrate-to-reactflow
-    - name: qa-graph-poc
-      build:
         from: 446-migrate-to-reactflow
     - name: test
       build:
-        from: TEST
+        from: 446-migrate-to-reactflow
     - name: qa
       build:
-        from: QA
-    - name: prod
+        from: 446-migrate-to-reactflow
+    - name: old
       build:
-        from: PROD
-  dnsExternalAlias:
-    - alias: dev.flyt.equinor.com
-      environment: dev
-      component: web
-    - alias: test.flyt.equinor.com
-      environment: test
-      component: web
-    - alias: qa.flyt.equinor.com
-      environment: qa
-      component: web
-    - alias: flyt.equinor.com
-      environment: prod
-      component: web
+        from: old
+  # dnsExternalAlias:
+  #   - alias: dev.flyt.equinor.com
+  #     environment: dev
+  #     component: web
+  #   - alias: test.flyt.equinor.com
+  #     environment: test
+  #     component: web
+  #   - alias: qa.flyt.equinor.com
+  #     environment: qa
+  #     component: web
+  #   - alias: flyt.equinor.com
+  #     environment: prod
+  #     component: web
   components:
     - name: web
       dockerfileName: Dockerfile
@@ -45,31 +39,15 @@ spec:
       environmentConfig:
         - environment: dev
           variables:
-            API_BASEURL: https://api.statoil.com/app/vsm/dev
+            API_BASEURL: https://api-flyt-api-dev.radix.equinor.com
             AUDIENCE: c001f24f-64a7-4f0c-bfe8-bf9c8e7aa74c
             AUTHORITY: https://login.microsoftonline.com/statoilsrm.onmicrosoft.com
             CLIENT_ID: e6e2f3c4-d6bd-4d71-a00e-be0c16a703da
             ENVIRONMENT: DEV
             SCOPE: c001f24f-64a7-4f0c-bfe8-bf9c8e7aa74c/api.access
-        - environment: dev-graph-poc
-          variables:
-            API_BASEURL: https://api-flyt-api-dev.radix.equinor.com
-            AUDIENCE: c001f24f-64a7-4f0c-bfe8-bf9c8e7aa74c
-            AUTHORITY: https://login.microsoftonline.com/statoilsrm.onmicrosoft.com
-            CLIENT_ID: e6e2f3c4-d6bd-4d71-a00e-be0c16a703da
-            ENVIRONMENT: DEV-GRAPH-POC
-            SCOPE: c001f24f-64a7-4f0c-bfe8-bf9c8e7aa74c/api.access
-        - environment: qa-graph-poc
-          variables:
-            API_BASEURL: https://api-flyt-api-qa.radix.equinor.com
-            AUDIENCE: b78f9306-406d-4fa8-98e5-001dcd933ff4
-            AUTHORITY: https://login.microsoftonline.com/statoilsrm.onmicrosoft.com
-            CLIENT_ID: 7fe4fa03-733a-414d-8d32-0a9358b5eeb9
-            ENVIRONMENT: QA-GRAPH-POC
-            SCOPE: b78f9306-406d-4fa8-98e5-001dcd933ff4/user_impersonation
         - environment: test
           variables:
-            API_BASEURL: https://api.statoil.com/app/vsm/test
+            API_BASEURL: https://api-flyt-api-test.radix.equinor.com/
             AUDIENCE: cf7bf606-0fca-498d-9ec5-74d32a6ab4cf
             AUTHORITY: https://login.microsoftonline.com/statoilsrm.onmicrosoft.com
             CLIENT_ID: b3e899bf-12af-4f63-8744-d1ef4edc30b5
@@ -77,17 +55,17 @@ spec:
             SCOPE: cf7bf606-0fca-498d-9ec5-74d32a6ab4cf/api_access
         - environment: qa
           variables:
-            API_BASEURL: https://api.statoil.com/app/vsm/qa
+            API_BASEURL: https://api-flyt-api-qa.radix.equinor.com
             AUDIENCE: b78f9306-406d-4fa8-98e5-001dcd933ff4
             AUTHORITY: https://login.microsoftonline.com/statoilsrm.onmicrosoft.com
             CLIENT_ID: 7fe4fa03-733a-414d-8d32-0a9358b5eeb9
             ENVIRONMENT: QA
             SCOPE: b78f9306-406d-4fa8-98e5-001dcd933ff4/user_impersonation
-        - environment: prod          
+        - environment: old
           variables:
             API_BASEURL: https://api.statoil.com/app/vsm/prod
             AUDIENCE: 93cb35f6-8dd4-4dc1-8f44-d2e8dbd4be48
             AUTHORITY: https://login.microsoftonline.com/statoilsrm.onmicrosoft.com
             CLIENT_ID: 7b6f1bd7-ecb7-4e9b-b8a4-7a0a0804760d
-            ENVIRONMENT: PROD
+            ENVIRONMENT: OLD
             SCOPE: 93cb35f6-8dd4-4dc1-8f44-d2e8dbd4be48/user_impersonation
