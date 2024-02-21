@@ -30,18 +30,22 @@ spec:
         - environment: dev
           variables:
             API_BASEURL: https://api-flyt-api-dev.radix.equinor.com
+            AUTHORITY: https://login.microsoftonline.com/statoilsrm.onmicrosoft.com
             ENVIRONMENT: dev
         - environment: test
           variables:
             API_BASEURL: https://api-flyt-api-test.radix.equinor.com/
+            AUTHORITY: https://login.microsoftonline.com/statoilsrm.onmicrosoft.com
             ENVIRONMENT: test
         - environment: qa
           variables:
             API_BASEURL: https://api-flyt-api-qa.radix.equinor.com
+            AUTHORITY: https://login.microsoftonline.com/statoilsrm.onmicrosoft.com
             ENVIRONMENT: qa
         - environment: prod
           variables:
             API_BASEURL: https://api-flyt-api-prod.radix.equinor.com
+            AUTHORITY: https://login.microsoftonline.com/statoilsrm.onmicrosoft.com
             ENVIRONMENT: prod
         - environment: old
           variables:
