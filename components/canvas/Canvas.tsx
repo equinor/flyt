@@ -46,6 +46,7 @@ import { useAccess } from "./hooks/useAccess";
 import { useUserAccount } from "./hooks/useUserAccount";
 import { useNodeDrag } from "./hooks/useNodeDrag";
 import { useNodeMerge } from "./hooks/useNodeMerge";
+import { OldFlytButton } from "./OldFlytButton";
 
 type CanvasProps = {
   graph: Graph;
@@ -66,6 +67,8 @@ const Canvas = ({ graph, project }: CanvasProps) => {
   const [socketReason, setSocketReason] = useState("");
 
   const shapeSize = { height: 140, width: 140 };
+  const createdBeforeSecondMajorRelease =
+    project.created > "2024-01-01T00:00:00.0384589+00:00";
 
   let tempNodes: Node<NodeDataFull>[] = [];
   let tempEdges: Edge[] = [];
@@ -460,6 +463,9 @@ const Canvas = ({ graph, project }: CanvasProps) => {
         <Controls className={styles.controls} showInteractive={false} />
       </ReactFlow>
       <CanvasTutorial />
+      {createdBeforeSecondMajorRelease && (
+        <OldFlytButton projectId={projectId} />
+      )}
     </>
   );
 };

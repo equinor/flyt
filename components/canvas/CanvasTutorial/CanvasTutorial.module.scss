@@ -1,18 +1,10 @@
 @import "styles/_variables.scss";
 
 .canvasTutorialButtonContainer {
-  position: absolute;
+  position: absolute !important;
   bottom: 35px;
   left: 56px;
   z-index: 20;
-  height: 54px;
-  padding: 0 16px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: $white;
-  box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.14);
-  border-radius: 4px;
 }
 
 .dialog {

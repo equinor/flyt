@@ -24,11 +24,14 @@ export const CanvasTutorial = () => {
 
   return (
     <>
-      <div className={styles.canvasTutorialButtonContainer}>
-        <Button aria-haspopup="dialog" onClick={handleInitialOpen}>
-          {title}
-        </Button>
-      </div>
+      <Button
+        aria-haspopup="dialog"
+        onClick={handleInitialOpen}
+        className={styles.canvasTutorialButtonContainer}
+      >
+        {title}
+      </Button>
+
       <Dialog
         open={isOpen}
         onClose={handleClose}
