@@ -8,7 +8,7 @@ export const OldFlytButton = ({ projectId }) => {
       href={`https://web-flyt-old.radix.equinor.com/process/${projectId}`}
       target="_blank"
     >
-      <Button className={styles.oldFlytButtonContainer} variant="outlined">
+      <Button className={styles.oldFlytButtonContainer} variant="ghost">
         See this process in Flyt 1.0
       </Button>
     </Link>
