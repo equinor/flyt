@@ -15,6 +15,7 @@ export const ToBeToggle = (): JSX.Element => {
   const { data: project } = useQuery(["project", id], () => getProject(id));
   const { userCanEdit } = useAccess(project);
   const dispatch = useStoreDispatch();
+  const isToBe = !!project?.currentProcessId;
 
   const newProjectMutation = useMutation(
     (id: string | string[]) => createToBeProject(id),
@@ -47,9 +48,9 @@ export const ToBeToggle = (): JSX.Element => {
        */}
         <ToggleButton
           name="Current"
-          selected={!project?.currentProcessId} // currentProcessId is null if we are on the "Current"-process.
+          selected={!isToBe} // currentProcessId is null if we are on the "Current"-process.
           onClick={() => {
-            if (project.currentProcessId) {
+            if (isToBe) {
               // We are on a "To-be" process and there exists a "Current" process
               // Let's navigate to it
               router.replace(`/process/${project.currentProcessId}`);
@@ -64,11 +65,11 @@ export const ToBeToggle = (): JSX.Element => {
             !(project?.toBeProcessID || project?.currentProcessId)
           }
           onClick={() => {
-            if (project.toBeProcessID) {
+            if (!isToBe && project?.toBeProcessID) {
               // We are currently on the "Current"-process and there exists a "To-be" process
               // Let's navigate to it
-              router.replace(`/process/${project.toBeProcessID}`);
-            } else {
+              router.replace(`/process/${project?.toBeProcessID}`);
+            } else if (!isToBe && !project?.toBeProcessID) {
               // We are on a "Current" process, but there is no "To-be" process created
               // Let's create one and navigate to it
               newProjectMutation.mutate(id);
