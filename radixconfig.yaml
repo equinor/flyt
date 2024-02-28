@@ -23,9 +23,6 @@ spec:
       build:
         from: PROD
   dnsExternalAlias:
-    - alias: dev.flyt.equinor.com
-      environment: dev
-      component: web
     - alias: test.flyt.equinor.com
       environment: test
       component: web
