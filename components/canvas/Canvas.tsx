@@ -391,7 +391,7 @@ const Canvas = ({ graph, project }: CanvasProps) => {
         const updatedSelectedNode = graph.find(
           (node) => node.id === selectedNode.id
         );
-        updatedSelectedNode && setSelectedNode(updatedSelectedNode);
+        setSelectedNode(updatedSelectedNode);
       }
       createNodes(root);
       setNodesDepth();
