@@ -19,6 +19,10 @@ spec:
     - name: old
       build:
         from: old
+  dnsExternalAlias: 
+  - alias: dev.flyt.equinor.com
+    environment: dev
+    component: web
   components:
     - name: web
       dockerfileName: Dockerfile
