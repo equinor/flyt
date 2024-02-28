@@ -18,7 +18,7 @@ spec:
         from: 446-migrate-to-reactflow
     - name: old
       build:
-        from: OLD
+        from: old
   components:
     - name: web
       dockerfileName: Dockerfile
