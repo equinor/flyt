@@ -1,13 +1,13 @@
 import { Button, Icon } from "@equinor/eds-core-react";
 import { IconData } from "@equinor/eds-icons";
-import React from "react";
+import { CSSProperties } from "react";
 import { TooltipImproved } from "./TooltipImproved";
 
 export function LinkIcon(props: {
   helpText: string;
   icon: IconData;
   link: string;
-  style?: React.CSSProperties;
+  style?: CSSProperties;
 }): JSX.Element {
   return (
     <a href={props.link} className="href" target="_blank" rel="noreferrer">

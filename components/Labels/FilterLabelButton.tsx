@@ -1,11 +1,11 @@
 import { Button, Scrim } from "@equinor/eds-core-react";
-import React, { useState } from "react";
+import { useState } from "react";
 
-import FilterLabelBox from "./FilterLabelBox";
+import { FilterLabelBox } from "./FilterLabelBox";
 import { numberOfQueryParams } from "utils/numberOfQueryParams";
 import { useRouter } from "next/router";
 
-export default function FilterLabelButton(): JSX.Element {
+export function FilterLabelButton(): JSX.Element {
   const [visibleScrim, setVisibleScrim] = useState(false);
   const router = useRouter();
   const numberOfSelectedLabels = numberOfQueryParams(router.query.rl);

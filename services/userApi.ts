@@ -1,6 +1,8 @@
 import { AxiosPromise } from "axios";
 import BaseAPIServices from "./BaseAPIServices";
 
+const baseUrl = "/api/v2.0";
+
 /**
  * Give a new user access to a vsm
  * @param newUser
@@ -10,7 +12,7 @@ export const add = (newUser: {
   vsmId: number;
   role: string;
 }): AxiosPromise =>
-  BaseAPIServices.post(`/api/v1.0/userAccess`, newUser).then(
+  BaseAPIServices.post(`${baseUrl}/userAccess`, newUser).then(
     (value) => value.data
   );
 
@@ -22,7 +24,7 @@ export const update = (props: {
   user: { accessId: number };
   role: string;
 }): AxiosPromise =>
-  BaseAPIServices.patch(`/api/v1.0/userAccess`, {
+  BaseAPIServices.patch(`${baseUrl}/userAccess`, {
     accessId: props.user.accessId,
     role: props.role,
   });
@@ -36,7 +38,7 @@ export const remove = (props: {
   vsmId: number;
 }): AxiosPromise =>
   BaseAPIServices.delete(
-    `/api/v1.0/userAccess/${props.vsmId}/${props.accessId}`
+    `${baseUrl}/userAccess/${props.vsmId}/${props.accessId}`
   );
 
 /**
@@ -44,7 +46,7 @@ export const remove = (props: {
  * @param props
  */
 export const get = ({ vsmId, userName }) => {
-  return BaseAPIServices.get(`/api/v1.0/userAccess/${vsmId}/${userName}`).then(
+  return BaseAPIServices.get(`${baseUrl}/userAccess/${vsmId}/${userName}`).then(
     (res) => res.data
   );
 };
@@ -56,8 +58,8 @@ export const get = ({ vsmId, userName }) => {
  */
 export const searchUser = (
   userName: string
-): Promise<Array<{ pkUser: number; userName: string }>> =>
-  BaseAPIServices.get(`/api/v1.0/userAccess/userSearch?q=${userName}`).then(
+): Promise<{ pkUser: number; userName: string }[]> =>
+  BaseAPIServices.get(`${baseUrl}/userAccess/userSearch?q=${userName}`).then(
     (value) => value.data
   );
 
@@ -67,6 +69,6 @@ export const getUserById = (
   pkUser: number;
   userName: string;
 }> =>
-  BaseAPIServices.get(`/api/v1.0/userAccess/userById/${userId}`).then(
+  BaseAPIServices.get(`${baseUrl}/userAccess/userById/${userId}`).then(
     (res) => res.data
   );

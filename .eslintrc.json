@@ -22,6 +22,8 @@
   },
   "rules": {
     "react/prop-types": ["off"],
-    "sonarjs/cognitive-complexity": ["warn", 5]
+    "sonarjs/cognitive-complexity": ["warn", 5],
+    "react/react-in-jsx-scope": "off",
+    "react/jsx-uses-react": "off"
   }
 }

@@ -1,6 +1,5 @@
 import { ColorDot } from "./ColorDot";
 import colors from "../theme/colors";
-import React from "react";
 
 export function LiveIndicator(props: {
   live: boolean;
@@ -8,7 +7,7 @@ export function LiveIndicator(props: {
 }): JSX.Element {
   const { live } = props;
   return (
-    <div style={{ position: "absolute", right: 0, top: 124 }}>
+    <div style={{ position: "absolute", right: 0, top: 124, zIndex: 20 }}>
       <div
         style={{
           paddingRight: 12,

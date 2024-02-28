@@ -1,22 +1,21 @@
 import { Button, Icon } from "@equinor/eds-core-react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { getProject, resetProcess } from "services/projectApi";
-import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import { ErrorDialog } from "./ErrorDialog";
 import { ResetProcessDialog } from "./ResetProcessDialog";
-import { getMyAccess } from "utils/getMyAccess";
 import { notifyOthers } from "services/notifyOthers";
 import { restore } from "@equinor/eds-icons";
 import { useRouter } from "next/router";
+import { useAccess } from "./canvas/hooks/useAccess";
+import { useUserAccount } from "./canvas/hooks/useUserAccount";
 
 export const ResetProcessButton = () => {
   const { id } = useRouter().query;
   const { data: process } = useQuery(["project", id], () => getProject(id));
-  const { accounts } = useMsal();
-  const account = useAccount(accounts[0] || {});
-  const myAccess = getMyAccess(process, account);
+  const account = useUserAccount();
+  const { userCanEdit } = useAccess(process);
 
   const queryClient = useQueryClient();
   const resetProcessMutation = useMutation(() => resetProcess(id), {
@@ -33,7 +32,6 @@ export const ResetProcessButton = () => {
   // 1. This is a to-be process
   const isTobeProcess = !!process?.currentProcessId;
   // 2. The user have the right to edit the process
-  const userCanEdit = myAccess !== "Reader";
 
   if (!isTobeProcess || !userCanEdit) return null;
 
@@ -56,8 +54,10 @@ export const ResetProcessButton = () => {
         variant="outlined"
         style={{
           position: "absolute",
+          top: 64,
           left: 0,
           margin: 24,
+          zIndex: 1,
         }}
         onClick={() => {
           setShowResetScrim(true);

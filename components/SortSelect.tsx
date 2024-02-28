@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 import style from "./SortSelect.module.scss";
 import { useRouter } from "next/router";

@@ -1,9 +1,9 @@
-import React from "react";
+import { FormEvent } from "react";
 import { Chip, Typography } from "@equinor/eds-core-react";
 import { useMutation, useQueryClient } from "react-query";
 
 import { createLabel } from "services/labelsApi";
-import { processLabel } from "interfaces/processLabel";
+import { processLabel } from "types/processLabel";
 import { unknownErrorToString } from "utils/isError";
 import { useState } from "react";
 
@@ -49,7 +49,7 @@ export default function BulkAddLabels() {
     }
   );
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const newLabels: processLabelType[] = textInput

@@ -1,8 +1,7 @@
-import React from "react";
 import styles from "./SearchField.module.scss";
 import { Search } from "@equinor/eds-core-react";
 import { debounce } from "../utils/debounce";
-import removeEmpty from "utils/removeEmpty";
+import { removeEmpty } from "utils/removeEmpty";
 import { useRouter } from "next/router";
 
 export function SearchField(): JSX.Element {

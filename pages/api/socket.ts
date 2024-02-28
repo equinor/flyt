@@ -6,13 +6,10 @@ import validateJWTToken from "../../services/validate-azure-token";
 import getConfig from "next/config";
 import { Algorithm } from "jsonwebtoken";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
-const server = (req: NextApiRequest, res: NextApiResponseServerIO) => {
+export default function server(
+  req: NextApiRequest,
+  res: NextApiResponseServerIO
+) {
   if (!res.socket.server.io) {
     console.log("New Socket.io server...");
     // adapt Next's net Server to http Server
@@ -48,6 +45,4 @@ const server = (req: NextApiRequest, res: NextApiResponseServerIO) => {
     res.socket.server.io = io;
   }
   res.end();
-};
-
-export default server;
+}

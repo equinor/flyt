@@ -5,7 +5,7 @@
  * @returns - The number of query params in the query string or array
  */
 export function numberOfQueryParams(
-  selectedQueryParam?: string | Array<string>
+  selectedQueryParam?: string | string[]
 ): number {
   if (!selectedQueryParam) return 0;
   const isString = typeof selectedQueryParam === "string";

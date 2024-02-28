@@ -1,5 +1,4 @@
 import styles from "./CircleButton.module.scss";
-import React from "react";
 
 export function CircleButton(props: {
   symbol: string;

@@ -1,6 +1,6 @@
 import { Typography } from "@equinor/eds-core-react";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import commonStyles from "../styles/common.module.scss";
 
 export default function DummyPage(): JSX.Element {

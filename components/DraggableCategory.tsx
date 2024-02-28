@@ -1,7 +1,7 @@
 import { getColor } from "../utils/getColor";
 import styles from "./DraggableCategory.module.scss";
 import { ColorDot } from "./ColorDot";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Button, Icon, Input, Menu } from "@equinor/eds-core-react";
 import {
   check,
@@ -13,16 +13,16 @@ import colors from "../theme/colors";
 import { useMutation, useQueryClient } from "react-query";
 import {
   deleteTaskCategory,
-  patchTaskCategory,
+  updateTaskCategory,
 } from "../services/taskCategoriesApi";
-import { taskCategory } from "../interfaces/taskCategory";
+import { TaskCategory } from "../types/TaskCategory";
 import { ErrorScrim } from "./ErrorScrim";
 
 export function DraggableCategory(props: {
-  category: taskCategory;
+  category: TaskCategory;
   onClick: () => void;
   checked: boolean;
-  projectId: number | string | string[];
+  projectId: string | string[];
 }): JSX.Element {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButtonRef = useRef();
@@ -43,9 +43,9 @@ export function DraggableCategory(props: {
   };
 
   const patchTaskCategoryMutation = useMutation(
-    (category: taskCategory) => {
+    (category: TaskCategory) => {
       setIsLoading(true);
-      return patchTaskCategory({ name: category.name, id: category.id });
+      return updateTaskCategory(props.projectId, category);
     },
     {
       onSettled: () => {
@@ -75,9 +75,9 @@ export function DraggableCategory(props: {
   );
 
   const deleteTaskCategoryMutation = useMutation(
-    (category: taskCategory) => {
+    (category: TaskCategory) => {
       setIsLoading(true);
-      return deleteTaskCategory(category.id);
+      return deleteTaskCategory(props.projectId, category.id);
     },
     {
       onSettled: () => getCategories(),

@@ -1,0 +1,37 @@
+@import "styles/_variables.scss";
+
+.canvasTutorialButtonContainer {
+  position: absolute !important;
+  bottom: 35px;
+  left: 56px;
+  z-index: 20;
+}
+
+.dialog {
+  width: calc(100vw - 32px) !important;
+  max-width: 1270px !important;
+  height: 860px;
+}
+
+.dialogTitle {
+  width: -webkit-fill-available;
+  width: -moz-available;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 16px !important;
+}
+
+.customContent {
+  display: flex;
+  gap: 16px;
+}
+
+.sections {
+  height: 760px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  gap: 64px;
+  padding-right: 40px;
+}

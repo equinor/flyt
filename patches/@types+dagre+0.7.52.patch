@@ -1,0 +1,12 @@
+diff --git a/node_modules/@types/dagre/index.d.ts b/node_modules/@types/dagre/index.d.ts
+index 087de88..b719fdb 100644
+--- a/node_modules/@types/dagre/index.d.ts
++++ b/node_modules/@types/dagre/index.d.ts
+@@ -81,6 +81,7 @@ export interface GraphLabel {
+     marginy?: number | undefined;
+     acyclicer?: string | undefined;
+     ranker?: string | undefined;
++    keeporder?: boolean | undefined;
+ }
+ 
+ export interface NodeConfig {

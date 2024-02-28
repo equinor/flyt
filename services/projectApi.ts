@@ -2,11 +2,10 @@ import { AxiosPromise, AxiosResponse } from "axios";
 
 import BaseAPIServices from "./BaseAPIServices";
 import { createUrlParams } from "../utils/createUrlParams";
-import { processLabel } from "interfaces/processLabel";
-import { projectTemplatesV1 } from "../assets/projectTemplatesV1";
-import { vsmProject } from "../interfaces/VsmProject";
+import { processLabel } from "types/processLabel";
+import { Project } from "../types/Project";
 
-const baseUrl = "/api/v1.0";
+const baseUrl = "/api/v2.0";
 //Project aka. VSM aka. Flyt or Flow
 export const getProjects = (filter?: {
   q?: string | string[]; // Search query
@@ -16,7 +15,7 @@ export const getProjects = (filter?: {
   page?: number; // Page number
   items?: number; // Number of items per page
   onlyFavorites?: boolean; // Only favorites
-}): Promise<{ projects: vsmProject[]; totalItems: number }> =>
+}): Promise<{ projects: Project[]; totalItems: number }> =>
   BaseAPIServices.get(`${baseUrl}/project${createUrlParams(filter)}`).then(
     (value) => {
       return {
@@ -26,16 +25,12 @@ export const getProjects = (filter?: {
     }
   );
 
-export const createProject = (
-  template?: vsmProject
-): AxiosPromise<{
+export const createProject = (): AxiosPromise<{
   vsmProjectID: number;
-}> => {
-  if (template) return BaseAPIServices.post(`${baseUrl}/project`, template);
-  return BaseAPIServices.post(
-    `${baseUrl}/project`,
-    projectTemplatesV1.defaultProject
-  );
+}> => BaseAPIServices.post(`${baseUrl}/project`, {});
+
+export const createToBeProject = (id?: string | string[]) => {
+  return BaseAPIServices.post(`${baseUrl}/project/${id}/tobe`, null);
 };
 
 /**
@@ -47,7 +42,7 @@ export const createProject = (
 export const getProject = (
   id: string | string[],
   asOf?: number | string | string[]
-): Promise<vsmProject> => {
+): Promise<Project> => {
   if (asOf) {
     return BaseAPIServices.get(`${baseUrl}/project/${id}?asOf=${asOf}`).then(
       (value) => value.data
@@ -58,11 +53,18 @@ export const getProject = (
   );
 };
 
-export const updateProject = (data) =>
-  BaseAPIServices.post(`${baseUrl}/project`, data);
+export const updateProject = (
+  projectId: string | string[],
+  data: [{ op: string; path: string; value: string }]
+) => BaseAPIServices.patch(`${baseUrl}/project/${projectId}`, data);
 
-export const deleteProject = (id: string | string[]) =>
+export const deleteProject = (id: number | number[]) =>
   BaseAPIServices.delete(`${baseUrl}/project/${id}`);
+
+export const duplicateProject = (id: number): Promise<processLabel> =>
+  BaseAPIServices.post(`${baseUrl}/project/${id}/duplicate`, null).then(
+    (value) => value.data
+  );
 
 export const faveProject = (id: number) =>
   BaseAPIServices.put(`${baseUrl}/project/${id}/favorite`, null);
@@ -70,20 +72,7 @@ export const faveProject = (id: number) =>
 export const unfaveProject = (id: number) =>
   BaseAPIServices.delete(`${baseUrl}/project/${id}/favorite`);
 
-export const getLabels = (id: number): Promise<processLabel> =>
-  BaseAPIServices.get(`${baseUrl}/project/${id}/labels`).then(
-    (value) => value.data
-  );
-
 export const resetProcess = (
   id: number | string | string[]
 ): Promise<AxiosResponse> =>
-  BaseAPIServices.patch(`${baseUrl}/project/${id}/reset`, null);
-
-// Check at what datetimes the given project has been updated.
-export const getProjectUpdateTimes = (
-  id: number | string | string[]
-): Promise<Array<string>> =>
-  BaseAPIServices.get(`${baseUrl}/project/${id}/updates`).then(
-    (value) => value.data
-  );
+  BaseAPIServices.post(`${baseUrl}/project/${id}/reset`, null);

@@ -1,9 +1,8 @@
-import React from "react";
 import { Icon, Tooltip } from "@equinor/eds-core-react";
 import styles from "./SideNavBarElement.module.scss";
 import { useRouter } from "next/router";
 
-export default function SideNavBarElement(props: {
+export function SideNavBarElement(props: {
   icon;
   title: string;
   pathname: string;

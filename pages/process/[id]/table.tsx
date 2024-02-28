@@ -2,14 +2,11 @@ import { useRouter } from "next/router";
 import commonStyles from "../../../styles/common.module.scss";
 import Head from "next/head";
 import { Typography } from "@equinor/eds-core-react";
-import React from "react";
 import { useQuery } from "react-query";
 import { getTasksForProject } from "../../../services/taskApi";
 import { unknownErrorToString } from "../../../utils/isError";
-import { flattenProject } from "../../../utils/flattenProject";
 import { getProject } from "../../../services/projectApi";
-import ObjectTable from "../../../components/objectTable";
-import TaskTable from "../../../components/taskTable";
+import { TaskTable } from "../../../components/TaskTable";
 
 export default function TablePage() {
   const router = useRouter();
@@ -51,7 +48,7 @@ export default function TablePage() {
       </div>
     );
   }
-  const flatObjects = flattenProject(project);
+
   return (
     <div className={commonStyles.container}>
       <Head>
@@ -62,7 +59,6 @@ export default function TablePage() {
       <main className={commonStyles.main}>
         <Typography variant="h1">Project {id}</Typography>
         <Typography variant="h2">Cards</Typography>
-        <ObjectTable vsmObjects={flatObjects} />
         <Typography variant="h2">QIPs</Typography>
         <TaskTable tasks={tasks} />
       </main>

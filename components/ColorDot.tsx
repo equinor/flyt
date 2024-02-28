@@ -1,5 +1,3 @@
-import React from "react";
-
 export function ColorDot(props: { color: string }): JSX.Element {
   return (
     <div

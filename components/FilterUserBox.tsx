@@ -10,9 +10,7 @@ import { useQuery } from "react-query";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-export default function FilterUserBox(props: {
-  handleClose: () => void;
-}): JSX.Element {
+export function FilterUserBox(props: { handleClose: () => void }): JSX.Element {
   const [searchText, setSearchText] = useState("");
   const {
     data: users,

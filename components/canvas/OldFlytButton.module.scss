@@ -1,0 +1,10 @@
+@import "styles/_variables.scss";
+
+.oldFlytButtonContainer {
+  position: absolute !important;
+  bottom: 35px;
+  left: 152px;
+  z-index: 20;
+  height: 54px;
+  min-width: 136px;
+}

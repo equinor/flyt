@@ -1,3 +1,0 @@
-ASSET GENERATORS
-
-Aka. methods that return PIXI-objects...

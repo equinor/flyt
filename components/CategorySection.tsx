@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import { getTaskCategories } from "../services/taskCategoriesApi";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import styles from "./CategorySection.module.scss";
 import { CategoryHelpers } from "./CategoryHelpers";
 import { AddCategoryButton } from "./AddCategoryButton";

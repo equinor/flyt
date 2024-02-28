@@ -1,32 +1,42 @@
 import commonStyles from "../../../styles/common.module.scss";
+import styles from "./ProjectPage.module.scss";
 import Head from "next/head";
 import { Typography } from "@equinor/eds-core-react";
 import { useRouter } from "next/router";
-import React from "react";
-import dynamic from "next/dynamic";
 import { Layouts } from "../../../layouts/LayoutWrapper";
 import { useQuery } from "react-query";
 import { getProject } from "../../../services/projectApi";
+import { getGraph } from "services/graphApi";
 import { unknownErrorToString } from "../../../utils/isError";
-
-const DynamicComponentWithNoSSR = dynamic(
-  () => import("../../../components/canvas/Canvas"),
-  { ssr: false }
-);
+import { CanvasWrapper } from "../../../components/canvas/Canvas";
+import { CircularProgress } from "@equinor/eds-core-react";
 
 export default function Project() {
   const router = useRouter();
   const { id } = router.query;
 
-  const { data: project, error } = useQuery(
+  const {
+    isLoading: isLoadingProject,
+    data: project,
+    error: errorProject,
+  } = useQuery(
     ["project", id],
-    () => getProject(id),
+    () => {
+      return getProject(id);
+    },
     {
       enabled: !!id,
+      refetchOnWindowFocus: false,
     }
   );
 
-  if (error) {
+  const {
+    isLoading: isLoadingGraph,
+    data: graph,
+    error: errorGraph,
+  } = useQuery(["graph", id], () => getGraph(id));
+
+  if (errorProject || errorGraph) {
     return (
       <div className={commonStyles.container}>
         <Head>
@@ -35,7 +45,9 @@ export default function Project() {
         </Head>
 
         <main className={commonStyles.main}>
-          <Typography variant="h1">{unknownErrorToString(error)}</Typography>
+          <Typography variant="h1">
+            {unknownErrorToString(errorProject || errorGraph)}
+          </Typography>
           <p>
             We have some troubles with this process. Please try to refresh the
             page.
@@ -44,14 +56,19 @@ export default function Project() {
       </div>
     );
   }
+
   return (
     <div className={commonStyles.container}>
       <Head>
         <title>{project?.name || `Flyt | Process ${id}`}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        <DynamicComponentWithNoSSR />
+      <main className={styles.main}>
+        {isLoadingGraph || isLoadingProject ? (
+          <CircularProgress size={48} />
+        ) : (
+          <CanvasWrapper project={project} graph={graph} />
+        )}
       </main>
     </div>
   );

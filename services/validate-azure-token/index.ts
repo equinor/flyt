@@ -7,10 +7,10 @@ import { getMatchingKey } from "./getMatchingKey";
  * @param verifyOptions
  * @returns {*}
  */
-const validateToken = async (
+export default async function validateToken(
   token: string,
   verifyOptions: VerifyOptions | undefined
-): Promise<string | unknown> => {
+): Promise<string | unknown> {
   return new Promise(async (resolve, reject) => {
     if (!token) return reject("Missing JWT token");
 
@@ -33,6 +33,4 @@ const validateToken = async (
       });
     }
   });
-};
-
-export default validateToken;
+}

@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import { Fragment, useState } from "react";
 import { SideBarHeader } from "./SideBarHeader";
 import { NewTaskSection } from "./NewTaskSection";
 import { SideBarBody } from "./SideBarBody";
 import { useMutation, useQueryClient } from "react-query";
-import { vsmObject } from "../interfaces/VsmObject";
-import { patchVSMObject } from "../services/vsmObjectApi";
+import { NodeDataApi } from "../types/NodeDataApi";
+import { patchGraph } from "services/graphApi";
 import { debounce } from "../utils/debounce";
 import styles from "./VSMCanvas.module.scss";
 import { Button, Icon, Typography } from "@equinor/eds-core-react";
@@ -24,7 +24,7 @@ export function SideBarContent(props: {
   onClose: () => void;
   onDelete: () => void;
   canEdit: boolean;
-  selectedObject;
+  selectedNode;
   isLoading: boolean;
 }): JSX.Element {
   const { accounts } = useMsal();
@@ -35,7 +35,8 @@ export function SideBarContent(props: {
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
   const vsmObjectMutation = useMutation(
-    (patchedObject: vsmObject) => patchVSMObject(patchedObject),
+    (patchedObject: NodeDataApi) =>
+      patchGraph(patchedObject, id, patchedObject.id),
     {
       onSuccess() {
         notifyOthers("Updated a card", id, account);
@@ -45,28 +46,28 @@ export function SideBarContent(props: {
     }
   );
 
-  function patchCard(
-    selectedObject: vsmObject,
+  function patchNode(
+    selectedNode: NodeDataApi,
     updates: {
-      name?: string;
+      description?: string;
       role?: string;
-      time?: number;
-      timeDefinition?: string;
+      duration?: number;
+      unit?: string;
     }
   ) {
     debounce(
       () => {
         vsmObjectMutation.mutate({
-          vsmObjectID: selectedObject.vsmObjectID,
-          ...updates,
+          id: selectedNode.id,
+          ...{ ...selectedNode, ...updates },
         });
       },
       1500,
-      `update ${Object.keys(updates)[0]} - ${selectedObject.vsmObjectID}`
+      `update ${Object.keys(updates)[0]} - ${selectedNode.id}`
     );
   }
 
-  const selectedObject = props.selectedObject;
+  const selectedNode = props.selectedNode;
   const [showNewTaskSection, setShowNewTaskSection] = useState(false);
 
   if (props.isLoading) {
@@ -113,30 +114,30 @@ export function SideBarContent(props: {
     return (
       <NewTaskSection
         onClose={() => setShowNewTaskSection(false)}
-        selectedObject={selectedObject}
+        selectedNode={selectedNode}
       />
     );
 
   return (
-    <React.Fragment key={selectedObject?.vsmObjectID}>
+    <Fragment key={selectedNode?.id}>
       <SideBarHeader
-        object={selectedObject}
+        object={selectedNode}
         onClose={props.onClose}
         onDelete={props.onDelete}
         canEdit={props.canEdit}
       />
       <SideBarBody
-        selectedObject={selectedObject}
-        onChangeName={(name) => patchCard(selectedObject, { name })}
-        onChangeRole={(e) =>
-          patchCard(selectedObject, { role: e.target.value })
+        selectedNode={selectedNode}
+        onChangeDescription={(description) =>
+          patchNode(selectedNode, { description })
         }
-        onChangeTime={(e) =>
-          patchCard(selectedObject, { time: e.time, timeDefinition: e.unit })
+        onChangeRole={(e) => patchNode(selectedNode, { role: e.target.value })}
+        onChangeDuration={(e) =>
+          patchNode(selectedNode, { duration: e.duration, unit: e.unit })
         }
         setShowNewTaskSection={setShowNewTaskSection}
         canEdit={props.canEdit}
       />
-    </React.Fragment>
+    </Fragment>
   );
 }

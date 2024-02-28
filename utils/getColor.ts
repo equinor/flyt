@@ -1,6 +1,6 @@
 import { randomColor } from "./randomColor";
 
-const colorMapArray: Array<{ name: string; color: string }> = [];
+const colorMapArray: { name: string; color: string }[] = [];
 
 export function getColor(text: string): string {
   const existingColorMap = colorMapArray.find((n) => n.name === text);

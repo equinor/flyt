@@ -1,5 +1,6 @@
 #!/bin/sh
 
+patch-package
 if [ "$NODE_ENV" = 'production' ]; then
   echo "RUNNING IN PRODUCTION"
   echo "Skipping postInstall scripts"

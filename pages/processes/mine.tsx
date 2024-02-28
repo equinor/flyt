@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useAccount, useMsal } from "@azure/msal-react";
 
-import ActiveFilterSection from "components/Labels/ActiveFilterSection";
-import FilterLabelButton from "components/Labels/FilterLabelButton";
-import FilterUserButton from "components/FilterUserButton";
-import FrontPageBody from "components/FrontPageBody";
+import { ActiveFilterSection } from "components/Labels/ActiveFilterSection";
+import { FilterLabelButton } from "components/Labels/FilterLabelButton";
+import { FilterUserButton } from "components/FilterUserButton";
+import { FrontPageBody } from "components/FrontPageBody";
 import Head from "next/head";
 import { Layouts } from "../../layouts/LayoutWrapper";
 import { SearchField } from "components/SearchField";
-import SideNavBar from "components/SideNavBar";
+import { SideNavBar } from "components/SideNavBar";
 import { SortSelect } from "../../components/SortSelect";
 import { Typography } from "@equinor/eds-core-react";
 import { getProjects } from "../../services/projectApi";

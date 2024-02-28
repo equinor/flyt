@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 
 export const MySnackBar = (props: {
   children: ReactNode;

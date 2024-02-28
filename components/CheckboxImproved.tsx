@@ -1,5 +1,4 @@
 import { Checkbox } from "@equinor/eds-core-react";
-import React from "react";
 
 /**
  * EDS checkbox with proper spacing between checkbox and label

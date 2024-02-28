@@ -1,17 +1,18 @@
-import React from "react";
+import { CElement } from "react";
 import style from "./TaskButton.module.scss";
-import { taskObject } from "../interfaces/taskObject";
-import { vsmTaskTypes } from "../types/vsmTaskTypes";
+import { Task } from "../types/Task";
+import { TaskTypes } from "../types/TaskTypes";
+import { getTaskShorthand } from "utils/getTaskShorthand";
 
 export function TaskButton({
   task,
   selected,
   draft,
 }: {
-  task: taskObject;
+  task: Task;
   selected: boolean;
   draft: boolean;
-}): React.CElement<unknown, never> {
+}): CElement<unknown, never> {
   if (!task)
     return (
       <div
@@ -26,12 +27,12 @@ export function TaskButton({
   return (
     <div
       className={`
-        ${getStyle(task.fkTaskType)}
+        ${getStyle(task.type)}
         ${selected && style.selected} ${draft && style.draft} ${
         task.solved && style.solved
       }`}
     >
-      <p>{task.displayIndex}</p>
+      <p>{getTaskShorthand(task)}</p>
     </div>
   );
 }
@@ -41,10 +42,10 @@ export function TaskButton({
  * @param type - The task type
  * @returns string - The corresponding style
  */
-function getStyle(type: vsmTaskTypes): string {
-  if (type === vsmTaskTypes.problem) return style.problem;
-  if (type === vsmTaskTypes.question) return style.question;
-  if (type === vsmTaskTypes.idea) return style.idea;
-  if (type === vsmTaskTypes.risk) return style.risk;
+function getStyle(type: TaskTypes): string {
+  if (type === TaskTypes.problem) return style.problem;
+  if (type === TaskTypes.question) return style.question;
+  if (type === TaskTypes.idea) return style.idea;
+  if (type === TaskTypes.risk) return style.risk;
   return style.unknown;
 }

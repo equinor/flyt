@@ -1,3 +1,4 @@
+import { Configuration } from "@azure/msal-browser";
 import getConfig from "next/config";
 
 // Only holds serverRuntimeConfig and publicRuntimeConfig.
@@ -5,7 +6,7 @@ import getConfig from "next/config";
 const { publicRuntimeConfig } = getConfig();
 
 // Config object to be passed to Msal on creation
-export const msalConfig = {
+export const msalConfig: Configuration = {
   auth: {
     clientId: publicRuntimeConfig.CLIENT_ID,
     authority: publicRuntimeConfig.AUTHORITY,
@@ -13,7 +14,7 @@ export const msalConfig = {
 };
 
 // Add here scopes for id token to be used at MS Identity Platform endpoints.
-export const loginRequest = {
+export const loginRequest: { scopes: string[] } = {
   scopes: [publicRuntimeConfig.SCOPE],
 };
 

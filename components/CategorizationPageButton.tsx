@@ -1,4 +1,3 @@
-import React from "react";
 import { category } from "@equinor/eds-icons";
 import { useRouter } from "next/router";
 import { ButtonWrapper } from "./ButtonWrapper";

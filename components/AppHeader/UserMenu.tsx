@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { KeyboardEvent, useState } from "react";
 import styles from "./UserMenu.module.scss";
 import { Button, Menu } from "@equinor/eds-core-react";
 import { useAccount, useMsal } from "@azure/msal-react";
@@ -8,7 +8,7 @@ import packageJson from "../../package.json";
 import Link from "next/link";
 import getConfig from "next/config";
 
-const UserMenu: React.FC = () => {
+export const UserMenu = () => {
   const { instance, accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
   const { publicRuntimeConfig } = getConfig();
@@ -29,7 +29,7 @@ const UserMenu: React.FC = () => {
 
   const closeMenu = () => setButtonEl(null);
 
-  const onKeyPress = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+  const onKeyPress = (e: KeyboardEvent<HTMLButtonElement>) => {
     const { key } = e;
     switch (key) {
       case "ArrowDown":
@@ -85,4 +85,3 @@ const UserMenu: React.FC = () => {
     </>
   );
 };
-export default UserMenu;

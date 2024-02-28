@@ -1,31 +1,20 @@
-import * as PIXI from "pixi.js";
-import { Graphics } from "pixi.js";
+import { Typography } from "@equinor/eds-core-react";
+import styles from "./TextCircle.module.scss";
 
-export function TextCircle(
-  text = "?",
-  background: PIXI.ILoaderResource,
-  textResolution = 2
-): PIXI.Container {
-  const diameter = 26; // <- Must be the same as the circle sprite
-  const circle = new PIXI.Sprite(background.texture);
+type TextCircleProps = {
+  color: string;
+  text: string;
+};
 
-  const circleText = new PIXI.Text(text, {
-    fontFamily: "Equinor",
-    fontSize: 12,
-    fontStyle: "normal",
-    fontWeight: "500",
-    lineHeight: 15,
-    letterSpacing: 0,
-    fill: "white",
-  });
-  circleText.resolution = textResolution;
-
-  // Center text
-  circleText.anchor.set(0.5);
-  circleText.y = diameter / 2;
-  circleText.x = diameter / 2;
-
-  const circleContainer = new PIXI.Container();
-  circleContainer.addChild(circle, circleText);
-  return circleContainer;
-}
+export const TextCircle = ({ color, text }: TextCircleProps) => (
+  <div
+    className={styles.container}
+    style={{
+      backgroundColor: color,
+    }}
+  >
+    <Typography variant="body_short" color="white">
+      {text}
+    </Typography>
+  </div>
+);

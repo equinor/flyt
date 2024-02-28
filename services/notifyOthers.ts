@@ -5,7 +5,7 @@ import { getAccessToken } from "../auth/msalHelpers";
 export const notifyOthers = async (
   msg: unknown,
   roomId: string | string[],
-  account?: AccountInfo
+  account?: AccountInfo | null
 ) => {
   // build message obj
   const message = {
