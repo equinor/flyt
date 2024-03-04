@@ -1,5 +1,5 @@
 import "reactflow/dist/style.css";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 
 import { getAccessToken } from "../../auth/msalHelpers";
@@ -382,24 +382,29 @@ const Canvas = ({ graph, project }: CanvasProps) => {
     }
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const root = graph.find(
       (node: NodeDataApi) => node.type === NodeTypes.root
     );
-    if (root) {
-      if (selectedNode) {
-        const updatedSelectedNode = graph.find(
-          (node) => node.id === selectedNode.id
-        );
-        setSelectedNode(updatedSelectedNode);
-      }
-      createNodes(root);
-      setNodesDepth();
-      createHiddenNodes();
-      const finalNodes = setLayout(tempNodes, tempEdges);
-      setNodes(finalNodes);
-      setEdges(tempEdges);
+
+    if (!root) {
+      setNodes([]);
+      setEdges([]);
+      return;
     }
+
+    if (selectedNode) {
+      const updatedSelectedNode = graph.find(
+        (node) => node.id === selectedNode.id
+      );
+      setSelectedNode(updatedSelectedNode);
+    }
+    createNodes(root);
+    setNodesDepth();
+    createHiddenNodes();
+    const finalNodes = setLayout(tempNodes, tempEdges);
+    setNodes(finalNodes);
+    setEdges(tempEdges);
   }, [graph, userCanEdit]);
 
   useCenterCanvas();
