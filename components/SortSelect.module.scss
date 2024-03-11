@@ -9,16 +9,18 @@
   color: $equinor_PROMINENT;
   /* identical to box height, or 100% */
 
-  display: flex;
-  align-items: center;
   letter-spacing: 0.2px;
-
-  min-width: 125px;
+  min-width: 140px;
   border: 0;
-  background: transparent;
+  padding: 0 16px;
 
   // Replace the chevron with a green one
   -webkit-appearance: none; // Hide the original chevron
   background: url(/chevron_down.svg) no-repeat right; // Add svg chevron
-  background-position-x: 90px; // Adjust placement
+  background-position-x: 105px; // Adjust placement
+}
+
+.sortSelect:hover {
+  cursor: pointer;
+  background-color: $equinor_HOVER-ALT;
 }
