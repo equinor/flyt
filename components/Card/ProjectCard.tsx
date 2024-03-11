@@ -73,7 +73,6 @@ export function ProjectCard(props: { vsm: Project }): JSX.Element {
               <Button
                 color="primary"
                 variant="ghost_icon"
-                style={{ height: "30px", width: "30px" }}
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();

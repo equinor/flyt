@@ -30,4 +30,6 @@ export default {
 export const colors = {
   interactive_primary__selected_highlight:
     tokens.colors.interactive.primary__selected_highlight.hex,
+  infographic_primary__energy_red_100:
+    tokens.colors.infographic.primary__energy_red_100.hex,
 };
