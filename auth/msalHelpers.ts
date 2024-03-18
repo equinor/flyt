@@ -12,6 +12,7 @@ export async function getAccessToken(): Promise<string> {
     });
     return `Bearer ${tokenResponse.accessToken}`;
   } catch (e) {
+    if (e.errorCode === "monitor_window_timeout") msalInstance.logoutRedirect();
     throw Error(e);
   }
 }
