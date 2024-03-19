@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.3.0](https://github.com/equinor/flyt/compare/v0.2.36...v0.3.0) (2024-03-19)
+
+
+### Features
+
+* Process cards link behaviour ([#677](https://github.com/equinor/flyt/issues/677)) ([7bf5dbc](https://github.com/equinor/flyt/commit/7bf5dbc7c062cdb28fcc6f43695f1536389a2c00)), closes [#279](https://github.com/equinor/flyt/issues/279)
+
+
+### Bug Fixes
+
+* Display 0 duration on card ([#672](https://github.com/equinor/flyt/issues/672)) ([66e8b3c](https://github.com/equinor/flyt/commit/66e8b3c131b1b92976014a5ef07264df06eb53e6)), closes [#671](https://github.com/equinor/flyt/issues/671)
+* Upgrade dependencies ([#702](https://github.com/equinor/flyt/issues/702)) ([e6ca777](https://github.com/equinor/flyt/commit/e6ca7772335fb69b163945c0d14c75d6ffde5e02)), closes [#701](https://github.com/equinor/flyt/issues/701)
+
 ## [0.2.36](https://github.com/equinor/flyt/compare/v0.2.35...v0.2.36) (2024-01-22)
 
 ### Bug Fixes
