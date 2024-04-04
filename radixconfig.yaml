@@ -24,14 +24,17 @@ spec:
         from: PROD
   dnsExternalAlias:
     - alias: test.flyt.equinor.com
+      component: web
       environment: test
-      component: web
+      useCertificateAutomation: true
     - alias: qa.flyt.equinor.com
+      component: web
       environment: qa
-      component: web
+      useCertificateAutomation: true
     - alias: flyt.equinor.com
-      environment: prod
       component: web
+      environment: prod
+      useCertificateAutomation: true
   components:
     - name: web
       dockerfileName: Dockerfile
