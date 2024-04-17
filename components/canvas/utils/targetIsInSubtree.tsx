@@ -5,29 +5,23 @@ export const targetIsInSubtree = (
   node: Node<NodeData>,
   target: Node<NodeData>,
   nodes: Node<NodeData>[],
-  originalNodeId?: string
+  visited = new Set()
 ) => {
   if (node.data.columnId !== target.data.columnId) return false;
-  if (originalNodeId !== node.id) {
-    for (let i = 0; i < node.data.children.length; i++) {
-      const id = node.data.children[i];
-      if (id === target.id) {
-        return true;
-      } else {
-        const nextNode = nodes.find((node) => node.id === id);
-        if (
-          nextNode &&
-          targetIsInSubtree(
-            nextNode,
-            target,
-            nodes,
-            !originalNodeId ? node.id : originalNodeId
-          )
-        ) {
-          return true;
-        }
-      }
-    }
-    return false;
+  if (visited.has(node.id)) return false;
+
+  visited.add(node.id);
+
+  if (node.data.children.includes(target.id)) {
+    return true;
   }
+
+  for (const childId of node.data.children) {
+    const childNode = nodes.find((n) => n.id === childId);
+    if (childNode && targetIsInSubtree(childNode, target, nodes, visited)) {
+      return true;
+    }
+  }
+
+  return false;
 };
