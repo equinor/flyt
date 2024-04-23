@@ -68,7 +68,8 @@ const Canvas = ({ graph, project }: CanvasProps) => {
 
   const shapeSize = { height: 140, width: 140 };
   const createdBeforeSecondMajorRelease =
-    project.created < "2024-01-01T00:00:00.0384589+00:00";
+    new Date(project.created).getTime() <
+    new Date("2024-04-24T00:08:00.000000Z").getTime();
 
   let tempNodes: Node<NodeDataFull>[] = [];
   let tempEdges: Edge[] = [];
