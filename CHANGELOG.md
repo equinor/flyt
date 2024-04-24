@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.0](https://github.com/equinor/flyt/compare/v0.3.0...v1.0.0) (2024-04-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* Migrate to React Flow ([#630](https://github.com/equinor/flyt/issues/630))
+
+### Features
+
+* Migrate to React Flow ([#630](https://github.com/equinor/flyt/issues/630)) ([796c6aa](https://github.com/equinor/flyt/commit/796c6aa4318d27c44a8e5978f8a5975b9c43dd3a))
+
 ## [0.3.0](https://github.com/equinor/flyt/compare/v0.2.36...v0.3.0) (2024-03-19)
 
 ### Features
