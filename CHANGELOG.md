@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.0.0](https://github.com/equinor/flyt/compare/v0.3.0...v1.0.0) (2024-04-24)
+## [2.0.0](https://github.com/equinor/flyt/compare/v0.3.0...v2.0.0) (2024-04-24)
 
 
 ### ⚠ BREAKING CHANGES
