@@ -1,7 +1,7 @@
 import * as userApi from "../services/userApi";
 
 import { Button, Icon, Input } from "@equinor/eds-core-react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { close, link } from "@equinor/eds-icons";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -15,11 +15,11 @@ import style from "./AccessBox.module.scss";
 import { unknownErrorToString } from "utils/isError";
 import { useRouter } from "next/router";
 import { useStoreDispatch } from "hooks/storeHooks";
-import { userAccess } from "interfaces/UserAccess";
-import { vsmProject } from "../interfaces/VsmProject";
+import { userAccess } from "types/UserAccess";
+import { Project } from "../types/Project";
 
 export function AccessBox(props: {
-  project: vsmProject;
+  project: Project;
   handleClose;
   isAdmin: boolean;
 }): JSX.Element {

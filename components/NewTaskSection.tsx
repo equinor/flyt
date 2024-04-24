@@ -1,47 +1,49 @@
 import { useStoreDispatch } from "../hooks/storeHooks";
-import React, { useState } from "react";
-import { taskObject } from "../interfaces/taskObject";
+import { useState } from "react";
+import { Task } from "../types/Task";
 import styles from "./VSMCanvas.module.scss";
-import { Button, Icon, SingleSelect, TextField } from "@equinor/eds-core-react";
-import { vsmTaskTypes } from "../types/vsmTaskTypes";
+import { Button, Icon, Autocomplete, TextField } from "@equinor/eds-core-react";
+import { TaskTypes } from "../types/TaskTypes";
 import { ExistingTaskSection } from "./ExistingTaskSection";
 import { arrow_back } from "@equinor/eds-icons";
 import { useMutation, useQueryClient } from "react-query";
 import { createTask } from "../services/taskApi";
 import { unknownErrorToString } from "utils/isError";
-import { vsmObject } from "../interfaces/VsmObject";
 import { useRouter } from "next/router";
 import { notifyOthers } from "../services/notifyOthers";
 import { useAccount, useMsal } from "@azure/msal-react";
 
 export function NewTaskSection(props: {
   onClose: () => void;
-  selectedObject;
+  selectedNode;
 }): JSX.Element {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
 
   const dispatch = useStoreDispatch();
-  const selectedObject = props.selectedObject;
+  const selectedNode = props.selectedNode;
 
   const router = useRouter();
   const { id } = router.query;
 
   const queryClient = useQueryClient();
-  const taskMutations = useMutation((task: taskObject) => createTask(task), {
-    onSuccess: () => {
-      clearAndCloseAddTaskSection();
-      notifyOthers(`Created a new Q/I/P`, id, account);
-      return queryClient.invalidateQueries();
-    },
-    onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
-  });
+  const taskMutations = useMutation(
+    (task: Task) => createTask(task, selectedNode.projectId, selectedNode.id),
+    {
+      onSuccess: () => {
+        clearAndCloseAddTaskSection();
+        notifyOthers(`Created a new Q/I/P/R`, id, account);
+        return queryClient.invalidateQueries();
+      },
+      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+    }
+  );
   const [newTask, setNewTask] = useState(null);
 
   const [existingTaskFilter, setExistingTaskFilter] = useState(null);
   const [showExistingTaskSection, setShowExistingTaskSection] = useState(false);
 
-  function newTaskIsReady(task: taskObject) {
+  function newTaskIsReady(task: Task) {
     return task?.description?.trim().length > 0;
   }
 
@@ -66,9 +68,9 @@ export function NewTaskSection(props: {
       <div className={styles.sideBarSectionHeader}>
         <p>Add Questions, Ideas, Problems and Risks</p>
       </div>
-      <SingleSelect
+      <Autocomplete
         autoFocus
-        items={[
+        options={[
           "Problem",
           "Idea",
           "Question",
@@ -78,50 +80,49 @@ export function NewTaskSection(props: {
           "Existing Question",
           "Existing Risk",
         ]}
-        handleSelectedItemChange={(e) => {
-          if (!selectedObject) throw new Error("No selected object");
+        onInputChange={(e) => {
+          if (!selectedNode) throw new Error("No selected object");
           const t = {
-            objects: [{ fkObject: selectedObject.vsmObjectID } as vsmObject],
-            fkProject: selectedObject.vsmProjectID,
+            type: newTask?.type,
             description: newTask?.description ?? "", // Let's not overwrite description if we change the type midways
-          } as taskObject;
+          } as Task;
 
-          switch (e.selectedItem) {
+          switch (e) {
             case "Problem":
-              t.fkTaskType = vsmTaskTypes.problem;
+              t.type = TaskTypes.problem;
               setNewTask(t);
               setShowExistingTaskSection(false);
               break;
             case "Idea":
-              t.fkTaskType = vsmTaskTypes.idea;
+              t.type = TaskTypes.idea;
               setNewTask(t);
               setShowExistingTaskSection(false);
               break;
             case "Question":
-              t.fkTaskType = vsmTaskTypes.question;
+              t.type = TaskTypes.question;
               setNewTask(t);
               setShowExistingTaskSection(false);
               break;
             case "Risk":
-              t.fkTaskType = vsmTaskTypes.risk;
+              t.type = TaskTypes.risk;
               setNewTask(t);
               setShowExistingTaskSection(false);
               break;
             case "Existing Problem":
               setShowExistingTaskSection(true);
-              setExistingTaskFilter(vsmTaskTypes.problem);
+              setExistingTaskFilter(TaskTypes.problem);
               break;
             case "Existing Idea":
               setShowExistingTaskSection(true);
-              setExistingTaskFilter(vsmTaskTypes.idea);
+              setExistingTaskFilter(TaskTypes.idea);
               break;
             case "Existing Question":
               setShowExistingTaskSection(true);
-              setExistingTaskFilter(vsmTaskTypes.question);
+              setExistingTaskFilter(TaskTypes.question);
               break;
             case "Existing Risk":
               setShowExistingTaskSection(true);
-              setExistingTaskFilter(vsmTaskTypes.risk);
+              setExistingTaskFilter(TaskTypes.risk);
               break;
           }
         }}
@@ -129,7 +130,7 @@ export function NewTaskSection(props: {
       />
       <ExistingTaskSection
         visible={showExistingTaskSection}
-        selectedObject={selectedObject}
+        selectedNode={selectedNode}
         existingTaskFilter={existingTaskFilter}
       />
       {!showExistingTaskSection && newTask && (
@@ -137,7 +138,6 @@ export function NewTaskSection(props: {
           <div style={{ paddingTop: 8 }}>
             <TextField
               label={"Description"}
-              variant={"default"}
               value={newTask.description}
               id={`newTask`}
               onChange={(event) =>

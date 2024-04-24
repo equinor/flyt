@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { Layouts } from "../layouts/LayoutWrapper";
 import { getAccessToken } from "../auth/msalHelpers";
@@ -8,7 +8,7 @@ function getUserString(e) {
   return <></>;
 }
 
-function LiveEventPage() {
+export default function LiveEventPage() {
   const [events, setEvents] = useState([]);
   const [socket, setSocket] = useState(null);
 
@@ -64,8 +64,6 @@ function LiveEventPage() {
     </div>
   );
 }
-
-export default LiveEventPage;
 
 LiveEventPage.layout = Layouts.Default;
 LiveEventPage.auth = true;

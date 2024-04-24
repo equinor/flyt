@@ -1,5 +1,4 @@
 import { Button, Switch } from "@equinor/eds-core-react";
-import React from "react";
 import useLocalStorage from "../hooks/useLocalStorage";
 
 export default function SettingsPage(): JSX.Element {

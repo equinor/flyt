@@ -1,7 +1,6 @@
 import useLocalStorage from "../hooks/useLocalStorage";
 import { InfoBox } from "./InfoBox";
 import Image from "next/image";
-import React from "react";
 
 export function CategoryHelpers(): JSX.Element {
   const [showDragHelper, setShowDragHelper] = useLocalStorage(

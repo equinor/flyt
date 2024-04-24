@@ -1,5 +1,5 @@
 import { Button, Chip, Icon, Search } from "@equinor/eds-core-react";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { close } from "@equinor/eds-icons";
 import { debounce } from "utils/debounce";
@@ -10,7 +10,7 @@ import { unknownErrorToString } from "utils/isError";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
 
-export default function FilterLabelBox(props: {
+export function FilterLabelBox(props: {
   handleClose: () => void;
 }): JSX.Element {
   const [searchText, setSearchText] = useState("");
@@ -52,6 +52,7 @@ function SearchSection(props: {
         aria-label="search"
         placeholder="Search labels"
         autoComplete="off"
+        className={styles.searchBar}
         onChange={(e) => {
           debounce(
             () => setSearchText(`${e.target.value}`),
@@ -111,19 +112,14 @@ function LabelSection(props: { labels; isLoading; error }): JSX.Element {
 
       <div className={styles.labelContainer}>
         {labels.map((label) => (
-          <button
+          <Chip
             key={label.id}
+            variant={isActive(label.id.toString()) ? "active" : null}
+            style={{ marginRight: "5px", marginBottom: "10px" }}
             onClick={() => handleClick(label.id.toString())}
-            style={{ padding: "0", backgroundColor: "#ffffff", border: "none" }}
-            className={styles.button}
           >
-            <Chip
-              variant={isActive(label.id.toString()) ? "active" : null}
-              style={{ marginRight: "5px", marginBottom: "10px" }}
-            >
-              {label.text}
-            </Chip>
-          </button>
+            {label.text}
+          </Chip>
         ))}
       </div>
     </div>

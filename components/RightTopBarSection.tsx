@@ -1,7 +1,6 @@
 import { TopBar } from "@equinor/eds-core-react";
 import styles from "../layouts/default.layout.module.scss";
-import UserMenu from "./AppHeader/UserMenu";
-import React from "react";
+import { UserMenu } from "./AppHeader/UserMenu";
 import { bar_chart, comment_important, info_circle } from "@equinor/eds-icons";
 import { LinkIcon } from "./LinkIcon";
 

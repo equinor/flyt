@@ -3,7 +3,7 @@
  * @param params
  */
 export function createUrlParams(params: {
-  [x: string]: string | number | boolean | Array<string | number | boolean>;
+  [x: string]: string | number | boolean | (string | number | boolean)[];
 }): string {
   // If no params, return empty string
   if (!params) return "";

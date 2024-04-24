@@ -1,13 +1,12 @@
-import React from "react";
 import Document, { Head, Html, Main, NextScript } from "next/document";
 
-class MyDocument extends Document {
+export default class MyDocument extends Document {
   render() {
     return (
       <Html>
         <Head>
           <link
-            href="https://eds-static.equinor.com/font/equinor-font.css"
+            href="https://cdn.eds.equinor.com/font/equinor-font.css"
             rel="stylesheet"
           />
         </Head>
@@ -19,5 +18,3 @@ class MyDocument extends Document {
     );
   }
 }
-
-export default MyDocument;

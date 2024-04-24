@@ -1,4 +1,3 @@
-import React from "react";
 import { ToggleButton } from "./ToggleButton";
 export const ToggleButtonGroup = (props: {
   children: {

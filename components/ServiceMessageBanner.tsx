@@ -1,5 +1,4 @@
 import { Banner, Button, Icon } from "@equinor/eds-core-react";
-import React from "react";
 import { high_priority } from "@equinor/eds-icons";
 import { useQuery } from "react-query";
 import style from "./ServiceMessageBanner.module.scss";
@@ -15,7 +14,7 @@ export const ServiceMessageBanner = () => {
   );
 
   if (isLoading || error) return null;
-  if (data && !data.status) return null; // https://github.com/equinor/MAD-VSM-WEB/issues/259#issue-1034675684
+  if (data && !data.status) return null; // https://github.com/equinor/flyt/issues/259#issue-1034675684
 
   return (
     <>

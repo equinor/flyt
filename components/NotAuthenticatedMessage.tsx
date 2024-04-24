@@ -1,9 +1,9 @@
 import { Typography } from "@equinor/eds-core-react";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import styles from "../styles/common.module.scss";
 import { useRouter } from "next/router";
 
-const NotAuthenticatedMessage = (): JSX.Element => {
+export const NotAuthenticatedMessage = (): JSX.Element => {
   const { asPath: redirectUrl } = useRouter();
   const router = useRouter();
 
@@ -21,4 +21,3 @@ const NotAuthenticatedMessage = (): JSX.Element => {
     </main>
   );
 };
-export default NotAuthenticatedMessage;

@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { CircleButton } from "./CircleButton";
 import { EditTaskSection } from "./EditTaskSection";
 import { TaskButton } from "./TaskButton";
 import { Typography } from "@equinor/eds-core-react";
 import styles from "./VSMCanvas.module.scss";
-import { taskObject } from "../interfaces/taskObject";
+import { Task } from "../types/Task";
 import { taskSorter } from "../utils/taskSorter";
-import { vsmObject } from "../interfaces/VsmObject";
+import { NodeDataApi } from "../types/NodeDataApi";
 
 const NewTaskButton = (props: { onClick: () => void; disabled: boolean }) => (
   <div>
@@ -21,17 +21,26 @@ const NewTaskButton = (props: { onClick: () => void; disabled: boolean }) => (
 
 // eslint-disable-next-line max-lines-per-function
 export const QIPSection = (props: {
-  object: vsmObject;
+  object: NodeDataApi;
   onClickNewTask: () => void;
   canEdit: boolean;
 }): JSX.Element => {
-  const selectedObject = props.object;
+  const selectedNode = props.object;
   const [selectedTask, setSelectedTask] = useState(null);
 
   // Show the edit task section if the selected task relates to the selected vsm object
-  const showEditTaskSection = selectedObject.tasks.some(
-    (task) => task.vsmTaskID === selectedTask?.vsmTaskID
+  const showEditTaskSection = selectedNode.tasks.some(
+    (task) => task.id === selectedTask?.id
   );
+
+  useEffect(() => {
+    if (selectedTask) {
+      const updatedTask = selectedNode.tasks.find(
+        (task) => task.id === selectedTask.id
+      );
+      setSelectedTask(updatedTask);
+    }
+  }, [selectedNode]);
 
   return (
     <div className={styles.QIPContainer}>
@@ -42,7 +51,7 @@ export const QIPSection = (props: {
       {showEditTaskSection && (
         <EditTaskSection
           canEdit={props.canEdit}
-          object={selectedObject}
+          object={selectedNode}
           task={selectedTask}
         />
       )}
@@ -54,7 +63,7 @@ export const QIPSection = (props: {
           paddingTop: 12,
         }}
       >
-        {selectedObject.tasks.length === 0 && (
+        {selectedNode.tasks.length === 0 && (
           <p
             className={props.canEdit && styles.clickable}
             onClick={() => props.canEdit && props.onClickNewTask()}
@@ -65,17 +74,17 @@ export const QIPSection = (props: {
           </p>
         )}
         <div style={{ display: "flex", flexWrap: "wrap" }}>
-          {selectedObject.tasks.sort(taskSorter()).map((task: taskObject) => {
+          {selectedNode.tasks.sort(taskSorter()).map((task: Task) => {
             return (
               <div
                 title={`${task?.description}`} //<- hover tooltip
-                key={`${task?.vsmTaskID}`}
+                key={`${task?.id}`}
                 onClick={() => setSelectedTask(task)}
               >
                 <TaskButton
-                  key={`${task?.vsmTaskID}`}
+                  key={`${task?.id}`}
                   task={task}
-                  selected={selectedTask?.vsmTaskID === task?.vsmTaskID}
+                  selected={selectedTask?.id === task?.id}
                   draft={false}
                 />
               </div>

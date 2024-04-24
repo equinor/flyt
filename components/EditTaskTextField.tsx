@@ -1,6 +1,5 @@
-import { taskObject } from "../interfaces/taskObject";
+import { Task } from "../types/Task";
 import { useStoreDispatch } from "../hooks/storeHooks";
-import React from "react";
 import { TextField } from "@equinor/eds-core-react";
 import { debounce } from "../utils/debounce";
 import { useMutation, useQueryClient } from "react-query";
@@ -9,27 +8,29 @@ import { updateTask } from "../services/taskApi";
 import { useRouter } from "next/router";
 import { notifyOthers } from "../services/notifyOthers";
 import { useAccount, useMsal } from "@azure/msal-react";
+import { NodeDataApi } from "types/NodeDataApi";
 
 export function EditTaskTextField(props: {
-  task: taskObject;
+  task: Task;
   disabled: boolean;
+  vsmObject: NodeDataApi;
 }): JSX.Element {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
 
-  const { description, vsmTaskID } = props.task;
+  const { description, id } = props.task;
   const dispatch = useStoreDispatch();
 
   const router = useRouter();
-  const { id } = router.query;
+  const { id: projectId } = router.query;
   const queryClient = useQueryClient();
   const updateTaskMutation = useMutation(
-    (newObject: taskObject) => {
-      return updateTask(newObject);
+    (newObject: Task) => {
+      return updateTask(newObject, projectId, id, props.vsmObject.id);
     },
     {
       onSuccess: () => {
-        notifyOthers("Updated a Q/I/P", id, account);
+        notifyOthers("Updated a Q/I/P", projectId, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
@@ -40,11 +41,10 @@ export function EditTaskTextField(props: {
     <TextField
       disabled={props.disabled}
       label={"Task description"}
-      variant={"default"}
       defaultValue={description} //Since we set a default value and not a value, it only updates on init
-      id={`taskDescription-${vsmTaskID}`}
+      id={`taskDescription-${id}`}
       onChange={(event) => {
-        const updatedTask: taskObject = {
+        const updatedTask: Task = {
           ...props.task,
           description: event.target.value.substr(0, 4000),
         };
