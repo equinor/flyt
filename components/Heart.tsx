@@ -12,7 +12,7 @@ export default function Heart(props: {
   const handleClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    props.isFavourite ? props.unfave() : props.fave();
+    //props.isFavourite ? props.unfave() : props.fave();
   };
 
   if (props.isLoading) {
