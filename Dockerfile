@@ -3,6 +3,7 @@ FROM node:18.19.1-alpine3.18 AS deps
 WORKDIR /opt/app
 COPY package.json yarn.lock ./
 COPY scripts scripts
+COPY patches ./patches
 ENV NODE_ENV=production
 RUN yarn install --frozen-lockfile
 

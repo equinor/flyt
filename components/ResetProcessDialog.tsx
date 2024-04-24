@@ -1,6 +1,4 @@
 import { Button, Scrim } from "@equinor/eds-core-react";
-
-import React from "react";
 import style from "./ResetProcessDialog.module.scss";
 
 export const ResetProcessDialog = ({

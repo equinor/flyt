@@ -1,11 +1,11 @@
 import { Button, Scrim } from "@equinor/eds-core-react";
-import React, { useState } from "react";
+import { useState } from "react";
 
-import FilterUserBox from "./FilterUserBox";
+import { FilterUserBox } from "./FilterUserBox";
 import { numberOfQueryParams } from "utils/numberOfQueryParams";
 import { useRouter } from "next/router";
 
-export default function FilterUserButton(): JSX.Element {
+export function FilterUserButton(): JSX.Element {
   const [visibleScrim, setVisibleScrim] = useState(false);
   const router = useRouter();
   const numberOfSelectedUsers = numberOfQueryParams(router.query.user);

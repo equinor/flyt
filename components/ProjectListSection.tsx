@@ -5,13 +5,12 @@ import {
 
 import Masonry from "react-masonry-css";
 import { NewProcessButton } from "./NewProcessButton";
-import React from "react";
 import { Typography } from "@equinor/eds-core-react";
 import styles from "./ProjectListSection.module.scss";
-import { vsmProject } from "../interfaces/VsmProject";
+import { Project } from "../types/Project";
 
 export function ProjectListSection(props: {
-  projects: Array<vsmProject>;
+  projects: Project[];
   isLoading: boolean;
   expectedNumberOfProjects: number;
   showNewProcessButton: boolean;

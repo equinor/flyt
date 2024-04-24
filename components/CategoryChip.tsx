@@ -1,9 +1,8 @@
 import { getColor } from "../utils/getColor";
-import { lightOrDark } from "../utils/LightOrDark";
+import { lightOrDark } from "../utils/lightOrDark";
 import styles from "./CategoryChip.module.scss";
 import { Icon } from "@equinor/eds-core-react";
 import { close } from "@equinor/eds-icons";
-import React from "react";
 
 export function CategoryChip(props: {
   text: string;

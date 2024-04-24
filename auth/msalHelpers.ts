@@ -1,8 +1,7 @@
 import { PublicClientApplication } from "@azure/msal-browser";
 import { loginRequest, msalConfig } from "../Config";
 
-const msalInstance = new PublicClientApplication(msalConfig);
-export default msalInstance;
+export const msalInstance = new PublicClientApplication(msalConfig);
 
 export async function getAccessToken(): Promise<string> {
   try {
@@ -13,6 +12,7 @@ export async function getAccessToken(): Promise<string> {
     });
     return `Bearer ${tokenResponse.accessToken}`;
   } catch (e) {
+    if (e.errorCode === "monitor_window_timeout") msalInstance.logoutRedirect();
     throw Error(e);
   }
 }

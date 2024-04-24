@@ -1,5 +1,4 @@
 import { Banner, Button, Icon } from "@equinor/eds-core-react";
-import React from "react";
 import { high_priority } from "@equinor/eds-icons";
 import { useQuery } from "react-query";
 import style from "./ServiceMessageBanner.module.scss";

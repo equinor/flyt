@@ -1,9 +1,8 @@
-import React from "react";
 import { dashboard, person, favorite_outlined } from "@equinor/eds-icons";
 import styles from "./SideNavBar.module.scss";
-import SideNavBarElement from "./SideNavBarElement";
+import { SideNavBarElement } from "./SideNavBarElement";
 
-export default function SideNavBar(): JSX.Element {
+export function SideNavBar(): JSX.Element {
   return (
     <div className={styles.elements}>
       <SideNavBarElement

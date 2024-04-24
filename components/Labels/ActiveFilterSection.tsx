@@ -1,6 +1,5 @@
 import { Button, Chip } from "@equinor/eds-core-react";
 
-import React from "react";
 import { getLabel } from "services/labelsApi";
 import { getUpdatedLabel } from "utils/getUpdatedLabel";
 import { getUserById } from "services/userApi";
@@ -10,7 +9,7 @@ import { unknownErrorToString } from "utils/isError";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
 
-export default function ActiveFilterSection(): JSX.Element {
+export function ActiveFilterSection(): JSX.Element {
   const router = useRouter();
   const { rl, user } = router.query;
 
@@ -44,7 +43,7 @@ export default function ActiveFilterSection(): JSX.Element {
   );
 }
 
-export function SingleLabel(props: { id: string }): JSX.Element {
+function SingleLabel(props: { id: string }): JSX.Element {
   const { id } = props;
   const router = useRouter();
   const {
@@ -88,7 +87,7 @@ export function SingleLabel(props: { id: string }): JSX.Element {
     </Chip>
   );
 }
-export function SingleUser(props: { id: string }): JSX.Element {
+function SingleUser(props: { id: string }): JSX.Element {
   const { id } = props;
   const router = useRouter();
   const {

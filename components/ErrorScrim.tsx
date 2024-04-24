@@ -1,11 +1,10 @@
-import React from "react";
 import { Button, Dialog, Typography } from "@equinor/eds-core-react";
 
 export function ErrorScrim(props: {
   visible: boolean;
   handleClose: () => void;
   title?: string;
-  messages?: Array<string>;
+  messages?: string[];
 }): JSX.Element {
   return (
     <Dialog open={props.visible} onClose={props.handleClose}>

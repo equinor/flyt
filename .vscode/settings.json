@@ -1,16 +1,3 @@
 {
-  "cSpell.words": [
-    "combobox",
-    "Dismissable",
-    "Favourite",
-    "flyt",
-    "Msal",
-    "peasy",
-    "PIXI",
-    "rehype",
-    "socketio",
-    "sonarjs",
-    "thream",
-    "unfave"
-  ]
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

@@ -1,8 +1,7 @@
-import React from "react";
 import { useIsAuthenticated } from "@azure/msal-react";
-import NotAuthenticatedMessage from "../components/NotAuthenticatedMessage";
-import DefaultLayout from "./default";
-import CanvasLayout from "./canvas";
+import { NotAuthenticatedMessage } from "../components/NotAuthenticatedMessage";
+import { DefaultLayout } from "./default";
+import { CanvasLayout } from "./canvas";
 
 // ADD MORE LAYOUTS HERE
 const layouts = {
@@ -19,7 +18,7 @@ export const Layouts = {
   Empty: "empty",
 };
 
-const LayoutWrapper = (props) => {
+export const LayoutWrapper = (props) => {
   const Layout = layouts[props.children?.type.layout];
   const authRequired = props.children?.type.auth;
   const isAuthenticated = useIsAuthenticated();
@@ -34,5 +33,3 @@ const LayoutWrapper = (props) => {
   if (Layout) return <Layout {...props}>{props.children}</Layout>;
   return <DefaultLayout {...props}>{props.children}</DefaultLayout>;
 };
-
-export default LayoutWrapper;

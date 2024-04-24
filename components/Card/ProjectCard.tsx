@@ -1,33 +1,28 @@
 import { Button, Icon, Scrim, Tooltip } from "@equinor/eds-core-react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { faveProject, unfaveProject } from "services/projectApi";
-import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQueryClient } from "react-query";
 
 import { AccessBox } from "components/AccessBox";
-import Heart from "components/Heart";
-import Labels from "components/Labels/Labels";
-import ManageLabelBox from "components/Labels/ManageLabelBox";
-import ProjectCardHeader from "./ProjectCardHeader";
+import { Heart } from "components/Heart";
+import { Labels } from "components/Labels/Labels";
+import { ManageLabelBox } from "components/Labels/ManageLabelBox";
+import { ProjectCardHeader } from "./ProjectCardHeader";
 import { UserDots } from "./UserDots";
-import { getMyAccess } from "utils/getMyAccess";
 import styles from "./Card.module.scss";
 import { tag } from "@equinor/eds-icons";
-import { vsmProject } from "../../interfaces/VsmProject";
 import Link from "next/link";
+import { Project } from "../../types/Project";
+import { useAccess } from "../canvas/hooks/useAccess";
 
-export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
+export function ProjectCard(props: { vsm: Project }): JSX.Element {
   const queryClient = useQueryClient();
   const [isMutatingFavourite, setIsMutatingFavourite] = useState(false);
 
   const [visibleScrim, setVisibleScrim] = useState(false);
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
 
-  const { accounts } = useMsal();
-  const account = useAccount(accounts[0] || {});
-  const myAccess = getMyAccess(props.vsm, account);
-  const isAdmin = myAccess === "Admin" || myAccess === "Owner";
-  const userCanEdit = isAdmin || myAccess == "Contributor";
+  const { isAdmin, userCanEdit } = useAccess(props.vsm);
 
   const handleSettled = () => {
     queryClient.invalidateQueries().then(() => setIsMutatingFavourite(false));
@@ -78,7 +73,6 @@ export function ProjectCard(props: { vsm: vsmProject }): JSX.Element {
               <Button
                 color="primary"
                 variant="ghost_icon"
-                style={{ height: "30px", width: "30px" }}
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();

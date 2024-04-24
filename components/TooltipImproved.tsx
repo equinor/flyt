@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import { ReactElement } from "react";
 import dynamic from "next/dynamic";
 import { Tooltip } from "@equinor/eds-core-react";
 

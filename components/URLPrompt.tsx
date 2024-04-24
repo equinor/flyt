@@ -1,5 +1,5 @@
 import { TextField } from "@equinor/eds-core-react";
-import React, { Dispatch, FormEvent, SetStateAction, useState } from "react";
+import { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import {
   Button,
   Icon,
@@ -10,7 +10,7 @@ import {
 import { error_filled } from "@equinor/eds-icons";
 import { isValidUrl } from "utils/isValidUrl";
 import styles from "../layouts/default.layout.module.scss";
-import { SelectionInfo } from "interfaces/SelectionInfo";
+import { SelectionInfo } from "types/SelectionInfo";
 import { transformLink } from "utils/transformLink";
 
 const getInputVariant = (url: string) => {
@@ -18,7 +18,7 @@ const getInputVariant = (url: string) => {
   return isValidUrl(url) ? "success" : "error";
 };
 
-function UrlPrompt(props: {
+export function URLPrompt(props: {
   selectionInfo: SelectionInfo;
   setIsOpenUrlPrompt: Dispatch<SetStateAction<boolean>>;
   setSelectionInfo: Dispatch<SetStateAction<SelectionInfo>>;
@@ -144,5 +144,3 @@ function UrlPrompt(props: {
     </div>
   );
 }
-
-export default UrlPrompt;
