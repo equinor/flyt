@@ -4,11 +4,11 @@
 
 # Links
 
-- :inbox_tray: [Bug and feature tracker](https://github.com/orgs/equinor/projects/87/views/8)
+- :inbox_tray: [Bug and feature tracker](https://github.com/orgs/equinor/projects/361/views/34)
 - :1234: [Feature backlog (and prioritisation)](https://github.com/orgs/equinor/projects/141/)
 - :art: [Figma design & prototype](https://www.figma.com/file/IkHwmIQrsT0iR34f5R5UnZ/vsm)
-- :zap: [Api-endpoints: See swagger](https://vsm-api-dev.azurewebsites.net/swagger/index.html)
-- :dizzy: [Our development process: Mapped in Flyt itself](https://flyt.equinor.com/projects/172)
+- :zap: [API endpoints](https://api-flyt-api-dev.radix.equinor.com/swagger/index.html)
+- :dizzy: [Development process](https://flyt.equinor.com/process/172)
 - 🏃 [Running in Radix](https://console.radix.equinor.com/applications/flyt/)
 - :memo: [Architecture contract](https://github.com/equinor/architecturecontract/blob/master/contracts/flyt.md)
 
@@ -16,64 +16,50 @@
 
 Mission statement: Empower everyone on all levels to improve the way we work - process by process
 
-# Tech stack / Features
+# Tech stack
 
-|                  | Comment                                                                                                                                |
-| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| Library          | This is a [React](https://reactjs.org/) project                                                                                        |
-| Package manager  | We use the [Yarn](https://yarnpkg.com/) -package-manager. To get started, run `yarn && yarn start`                                     |
-| Navigation       | [NextJS](https://nextjs.org/)                                                                                                          |
-| State management | [EasyPeasy](https://easy-peasy.now.sh/) persisted global store                                                                         |
-| Canvas tools     | We heavily rely on canvas and use [PixiJS](https://www.pixijs.com/) to ease development.                                               |
-| Testing          | TODO: [Testing-Library](https://testing-library.com/)                                                                                  |
-| Code-Style       | We use [ESLint](https://eslint.org/) together with [Prettier](https://prettier.io/) for linting and enforcing a consistent code-style. |
-| Authentication   | [@azure/msal-react](https://github.com/AzureAD/microsoft-authentication-library-for-js#readme)                                         |
-| Styling          | [Sass](https://sass-lang.com/)                                                                                                         |
-| Templates        |                                                                                                                                        |
+|                  | Comment                                                                                        |
+|------------------|------------------------------------------------------------------------------------------------|
+| Language         | [TypeScript](https://www.typescriptlang.org/)                                                  |
+| Library          | [React](https://react.dev/)                                                                    |
+| Framework        | [Next.js](https://nextjs.org/)                                                                 |
+| Process renderer | [React Flow](https://reactflow.dev/)                                                           |
+| State management | [EasyPeasy](https://easy-peasy.vercel.app/)                                                    |
+| Linting          | [ESLint](https://eslint.org/)                                                                  |
+| Code-Style       | [Prettier](https://prettier.io/)                                                               |
+| Authentication   | [@azure/msal-react](https://github.com/AzureAD/microsoft-authentication-library-for-js#readme) |
+| Styling          | [Sass](https://sass-lang.com/)                                                                 |
+| Package manager  | [Yarn](https://yarnpkg.com/)                                                                   |
 
 # Developing
 
-To get up and running:
-`yarn && yarn use-dev`
+To get up and running, run:
+
+```bash
+yarn && yarn use-dev
+```
 
 ## Running different environments locally
 
 | Env. |     command     |
-| ---- | :-------------: |
-| Dev  | `yarn use-dev`  |
-| Test | `yarn use-test` |
+|------|:---------------:|
+| DEV  | `yarn use-dev`  |
+| TEST | `yarn use-test` |
 | QA   |  `yarn use-qa`  |
 | PROD | `yarn use-prod` |
 
-### What it does
-
-For example: running `yarn use-dev` replaces the root `.env` file with `environment-variables/DEV.env`, then it
-runs `yarn dev`.
-
 ## Branching and deploying stuff
-
-We use a simple branching structure. Instead of having a `master` and `develop` branch we just use one `main`-branch.
 
 The `main`-branch contains the latest changes.
 
-We use a "sliding tag" for each environment... Tag something DEV, TEST, QA or PROD, and it should trigger a new build
-and release. This gets rid of the "empty Pull requests" for releases, which is something we would have if we do a PR
-into `Master` from `Develop`. Also, this gives us more flexibility to release from another branch if we need to do that
-for some reason.
+To release you you run one of the following scripts:
 
-I've added a simple script to automate this:
-For example; Run `yarn release-dev` to tag DEV and push tags to GitHub.
-
-> **NOTE:** This script need to be updated to accomadate for multiple people updating the tags. Until then, try to update the tag and push it manually. [Read more about git tags](https://git-scm.com/book/en/v2/Git-Basics-Tagging).
-
-| Environment | Release script          | Deploy status                                                                                                                  | URL                                     | Who should test what?       | Comments                                                                         |
-| ----------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------- | --------------------------- | -------------------------------------------------------------------------------- |
-| DEV         | Run `yarn release-dev`  | ![DEV environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/flyt/environments/dev/buildstatus)   | <https://web-flyt-dev.radix.equinor.com/>  | Developer                   | Developer is free to use this environment however they want to                   |
-| TEST        | Run `yarn release-test` | ![TEST environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/flyt/environments/test/buildstatus) | <https://web-flyt-test.radix.equinor.com/> | Internal testing            | Developer tags what needs to be tested for QA-tester in the team                 |
-| QA          | Run `yarn release-qa`   | ![QA environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/flyt/environments/qa/buildstatus)     | <https://web-flyt-qa.radix.equinor.com/>   | "Product Owner" or Customer | When said feature is ready, it gets released into QA so our PO can give feedback |
-| PROD        | Run `yarn release-prod` | ![PROD environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/flyt/environments/prod/buildstatus) | <https://web-flyt-prod.radix.equinor.com/> | End-users                   | We wait with deploying to prod until everyone is happy                           |
-
-> **Note:** When running `yarn release-<environment>` we are starting a new build in Radix. If we already have a working build and want to release it to another environment, we may "promote" it to a different environment via the [Radix-console](https://console.radix.equinor.com/applications/flyt).
+| Environment | Release script      | Deploy status                                                                                                                   | URL                                        | Who should test what?       | Comments                                                                         |
+|-------------|---------------------|---------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------|-----------------------------|----------------------------------------------------------------------------------|
+| DEV         | `yarn release-dev`  | ![DEV environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/flyt/environments/dev/buildstatus)   | <https://web-flyt-dev.radix.equinor.com/>  | Developer                   | Developer is free to use this environment however they want to                   |
+| TEST        | `yarn release-test` | ![TEST environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/flyt/environments/test/buildstatus) | <https://web-flyt-test.radix.equinor.com/> | Internal testing            | Developer tags what needs to be tested for QA-tester in the team                 |
+| QA          | `yarn release-qa`   | ![QA environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/flyt/environments/qa/buildstatus)     | <https://web-flyt-qa.radix.equinor.com/>   | "Product Owner" or Customer | When said feature is ready, it gets released into QA so our PO can give feedback |
+| PROD        | `yarn release-prod` | ![PROD environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/flyt/environments/prod/buildstatus) | <https://web-flyt-prod.radix.equinor.com/> | End-users                   | We wait with deploying to prod until everyone is happy                           |
 
 ## Docker
 
@@ -94,7 +80,7 @@ docker run -p 3000:3000 --env-file ./environment-variables/PROD.env equinor-flyt
 
 ## Runtime environment variables
 
-When using NEXT.JS, the environment variables need to be set when building the image and not at runtime.
+When using Next.js, the environment variables need to be set when building the image and not at runtime.
 
 > Generally you'll want to use build-time environment variables to provide your configuration. The reason for this is that runtime configuration adds rendering / initialization overhead and is incompatible with Automatic Static Optimization.
 >
@@ -112,40 +98,6 @@ MyApp.getInitialProps = async (appContext: AppContext) => {
 
 Which disables "automatic static optimization" for all our
 pages. [Read more ...](https://github.com/vercel/next.js/blob/master/errors/opt-out-auto-static-optimization.md)
-
-# Pixi js Canvas
-
-## Making space for stuff
-
-Put every Main activity and all it's children inside a container. That container width can be used to figure out
-the distance to the next Main Activity etc...
-
-# Defining a process
-
-A vsm/flyt/process consists of a set of entities.
-
-An entity can be of the following types:
-
-- MainActivity
-- SubActivity
-- Choice
-- Waiting
-
-Structure of an entity
-
-```json5
-{
-  id: "",
-  type: "MainActivity",
-  text: "",
-  roles: [],
-  duration: 0,
-  problems: [],
-  ideas: [],
-  solutions: [],
-  parentId: "",
-}
-```
 
 # Semantic Commit Messages
 
