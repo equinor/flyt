@@ -7,7 +7,7 @@
 - :inbox_tray: [Bug and feature tracker](https://github.com/orgs/equinor/projects/361/views/34)
 - :1234: [Feature backlog (and prioritisation)](https://github.com/orgs/equinor/projects/141/)
 - :art: [Figma design & prototype](https://www.figma.com/file/IkHwmIQrsT0iR34f5R5UnZ/vsm)
-- :zap: [API endpoints](https://api-flyt-api-dev.radix.equinor.com/swagger/index.html)
+- :zap: [API endpoints](https://api-flyt-api-dev.radix.equinor.com/swagger/index.html?urls.primaryName=Flyt%20Api%20V2)
 - :dizzy: [Development process](https://flyt.equinor.com/process/172)
 - 🏃 [Running in Radix](https://console.radix.equinor.com/applications/flyt/)
 - :memo: [Architecture contract](https://github.com/equinor/architecturecontract/blob/master/contracts/flyt.md)
@@ -19,7 +19,7 @@ Mission statement: Empower everyone on all levels to improve the way we work - p
 # Tech stack
 
 |                  | Comment                                                                                        |
-|------------------|------------------------------------------------------------------------------------------------|
+| ---------------- | ---------------------------------------------------------------------------------------------- |
 | Language         | [TypeScript](https://www.typescriptlang.org/)                                                  |
 | Library          | [React](https://react.dev/)                                                                    |
 | Framework        | [Next.js](https://nextjs.org/)                                                                 |
@@ -42,7 +42,7 @@ yarn && yarn use-dev
 ## Running different environments locally
 
 | Env. |     command     |
-|------|:---------------:|
+| ---- | :-------------: |
 | DEV  | `yarn use-dev`  |
 | TEST | `yarn use-test` |
 | QA   |  `yarn use-qa`  |
@@ -55,7 +55,7 @@ The `main`-branch contains the latest changes.
 To release you you run one of the following scripts:
 
 | Environment | Release script      | Deploy status                                                                                                                   | URL                                                    | Who should test what?       | Comments                                                                         |
-|-------------|---------------------|---------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------|-----------------------------|----------------------------------------------------------------------------------|
+| ----------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------ | --------------------------- | -------------------------------------------------------------------------------- |
 | DEV         | `yarn release-dev`  | ![DEV environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/flyt/environments/dev/buildstatus)   | [dev.flyt.equinor.com](https://dev.flyt.equinor.com)   | Developer                   | Developer is free to use this environment however they want to                   |
 | TEST        | `yarn release-test` | ![TEST environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/flyt/environments/test/buildstatus) | [test.flyt.equinor.com](https://test.flyt.equinor.com) | Internal testing            | Developer tags what needs to be tested for QA-tester in the team                 |
 | QA          | `yarn release-qa`   | ![QA environment build status in Radix](https://api.radix.equinor.com/api/v1/applications/flyt/environments/qa/buildstatus)     | [qa.flyt.equinor.com](https://qa.flyt.equinor.com)     | "Product Owner" or Customer | When said feature is ready, it gets released into QA so our PO can give feedback |
