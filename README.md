@@ -6,7 +6,7 @@
 
 - :inbox_tray: [Bug and feature tracker](https://github.com/orgs/equinor/projects/361/views/34)
 - :1234: [Feature backlog (and prioritisation)](https://github.com/orgs/equinor/projects/141/)
-- :art: [Figma design & prototype](https://www.figma.com/file/IkHwmIQrsT0iR34f5R5UnZ/vsm)
+- :art: [Figma design & prototype](https://www.figma.com/file/SacZjN10goX2lahJrmjWC0/Flyt--%3E-Ideation?type=design&node-id=0%3A1&mode=design&t=qZPDP2RQYWZdO8Fh-1)
 - :zap: [API endpoints](https://api-flyt-api-dev.radix.equinor.com/swagger/index.html?urls.primaryName=Flyt%20Api%20V2)
 - :dizzy: [Development process](https://flyt.equinor.com/process/172)
 - 🏃 [Running in Radix](https://console.radix.equinor.com/applications/flyt/)
