@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/equinor/flyt/compare/v2.0.0...v2.0.1) (2024-04-25)
+
+
+### Bug Fixes
+
+* Missing logo ([#715](https://github.com/equinor/flyt/issues/715)) ([06070fa](https://github.com/equinor/flyt/commit/06070fafa6548f3f2226a63c0547e07f529641a3))
+
 ## [2.0.0](https://github.com/equinor/flyt/compare/v0.3.0...v2.0.0) (2024-04-24)
 
 
