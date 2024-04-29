@@ -12,12 +12,12 @@ type NodeDescription = {
 export const NodeDescription = ({ header, description }: NodeDescription) => (
   <div className={styles["node__description-container"]}>
     {header && (
-      <Typography variant="caption" className={styles.header}>
+      <Typography variant="caption" className={styles["node__header"]}>
         {getNodeTypeName(header)}
       </Typography>
     )}
     {description && (
-      <Typography variant="caption" className={`${styles.description}`}>
+      <Typography variant="caption" className={styles["node__description"]}>
         {formatNodeText(description, 1000)}
       </Typography>
     )}
