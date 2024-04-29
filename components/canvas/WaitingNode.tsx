@@ -21,6 +21,7 @@ import { SourceHandle } from "./SourceHandle";
 
 export const WaitingNode = ({
   data: {
+    description,
     id,
     duration,
     unit,
@@ -137,7 +138,10 @@ export const WaitingNode = ({
         highlighted={isDropTarget && isValidDropTarget}
         darkened={isValidDropTarget === false}
       >
-        <NodeDescription header={type} />
+        <NodeDescription
+          header={!description ? type : undefined}
+          description={description}
+        />
         <div className={styles["node__waitingtime-container"]}>
           <Icon data={timeIcon} size={24} style={{ marginRight: 5 }} />
           <Typography variant="caption">
