@@ -148,7 +148,7 @@ export const ChoiceNode = ({
       >
         <NodeDescription
           header={!description ? type : undefined}
-          description={formatNodeText(description, 45)}
+          description={formatNodeText(description)}
         />
       </NodeCard>
       <TargetHandle hidden={!mergeOption} />

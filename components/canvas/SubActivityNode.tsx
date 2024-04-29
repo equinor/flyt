@@ -144,7 +144,7 @@ export const SubActivityNode = ({
         />
         <div className={styles["node__role-container"]}>
           <Typography variant="caption" className={styles["node__info-text"]}>
-            {formatNodeText(role ?? "")}
+            {formatNodeText(role)}
           </Typography>
         </div>
         <div className={styles["node__time-container"]}>

@@ -18,7 +18,7 @@ export const NodeDescription = ({ header, description }: NodeDescription) => (
     )}
     {description && (
       <Typography variant="caption" className={styles["node__description"]}>
-        {formatNodeText(description, 1000)}
+        {formatNodeText(description)}
       </Typography>
     )}
   </div>
