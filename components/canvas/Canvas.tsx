@@ -1,52 +1,39 @@
-import "reactflow/dist/style.css";
-import { useEffect, useLayoutEffect, useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
-
-import { getAccessToken } from "../../auth/msalHelpers";
-import { DeleteNodeDialog } from "../DeleteNodeDialog";
-import { LiveIndicator } from "../LiveIndicator";
-import { io } from "socket.io-client";
-import { ResetProcessButton } from "components/ResetProcessButton";
-import { ToBeToggle } from "./ToBeToggle";
-import { SideBar } from "../SideBar";
-import { notifyOthers } from "../../services/notifyOthers";
 import { CanvasButtons } from "components/CanvasButtons";
 import { ManageLabelBox } from "components/Labels/ManageLabelBox";
-import { unknownErrorToString } from "utils/isError";
+import { ResetProcessButton } from "components/ResetProcessButton";
 import { useRouter } from "next/router";
-import { useStoreDispatch } from "../../hooks/storeHooks";
-import { NodeDataApi } from "types/NodeDataApi";
-import styles from "./Canvas.module.scss";
+import { useLayoutEffect, useState } from "react";
 import ReactFlow, {
-  useNodesState,
-  useEdgesState,
-  ReactFlowProvider,
+  Controls,
   Edge,
   Node,
-  Position,
-  Controls,
+  ReactFlowProvider,
+  useEdgesState,
+  useNodesState,
 } from "reactflow";
-import { setLayout } from "./hooks/useLayout";
-import { nodeElementTypes } from "./NodeElementTypes";
+import "reactflow/dist/style.css";
 import { NodeDataFull } from "types/NodeData";
-import {
-  addVertice,
-  addVerticeLeft,
-  addVerticeRight,
-  mergeVertices,
-} from "../../services/graphApi";
+import { NodeDataApi } from "types/NodeDataApi";
 import { NodeTypes } from "types/NodeTypes";
-import { uid } from "../../utils/uuid";
 import { Project } from "types/Project";
-import { Graph } from "types/Graph";
-import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
+import { Graph } from "../../types/Graph";
+import { uid } from "../../utils/uuid";
+import { DeleteNodeDialog } from "../DeleteNodeDialog";
+import { LiveIndicator } from "../LiveIndicator";
+import { SideBar } from "../SideBar";
+import styles from "./Canvas.module.scss";
 import { CanvasTutorial } from "./CanvasTutorial/CanvasTutorial";
-import { useCenterCanvas } from "./hooks/useCenterCanvas";
+import { nodeElementTypes } from "./NodeElementTypes";
+import { OldFlytButton } from "./OldFlytButton";
+import { ToBeToggle } from "./ToBeToggle";
 import { useAccess } from "./hooks/useAccess";
-import { useUserAccount } from "./hooks/useUserAccount";
+import { useCenterCanvas } from "./hooks/useCenterCanvas";
+import { setLayout } from "./hooks/useLayout";
+import { useNodeAdd } from "./hooks/useNodeAdd";
 import { useNodeDrag } from "./hooks/useNodeDrag";
 import { useNodeMerge } from "./hooks/useNodeMerge";
-import { OldFlytButton } from "./OldFlytButton";
+import useWebSocket from "./hooks/useWebSocket";
+import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
 
 type CanvasProps = {
   graph: Graph;
@@ -57,14 +44,8 @@ const Canvas = ({ graph, project }: CanvasProps) => {
   const [selectedNode, setSelectedNode] = useState<NodeDataApi | undefined>(
     undefined
   );
-  const dispatch = useStoreDispatch();
   const router = useRouter();
-
-  const account = useUserAccount();
   const { userCanEdit } = useAccess(project);
-
-  const [socketConnected, setSocketConnected] = useState(false);
-  const [socketReason, setSocketReason] = useState("");
 
   const shapeSize = { height: 140, width: 140 };
   const createdBeforeSecondMajorRelease =
@@ -72,111 +53,20 @@ const Canvas = ({ graph, project }: CanvasProps) => {
     new Date("2024-04-24T00:08:00.000000Z").getTime();
 
   let tempNodes: Node<NodeDataFull>[] = [];
-  let tempEdges: Edge[] = [];
+  let tempEdges: Edge[] = apiEdges;
   const [nodes, setNodes, onNodesChange] = useNodesState<NodeDataFull>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
 
-  const queryClient = useQueryClient();
   const projectId = router.query.id as string;
 
   const { onNodeDragStart, onNodeDrag, onNodeDragStop } = useNodeDrag();
-  const { merging } = useNodeMerge();
+  const { mutate: mergeNode, merging } = useNodeMerge(projectId);
+  const { mutate: addNode } = useNodeAdd(projectId);
 
-  useEffect(() => {
-    getAccessToken().then((accessToken) => {
-      const socket = io({ path: "/api/socket", auth: { token: accessToken } });
-
-      socket.on("connect", () => {
-        setSocketConnected(true);
-      });
-
-      socket.on("disconnect", (reason) => {
-        dispatch.setSnackMessage(`Socket disconnected because ${reason}`);
-        setSocketConnected(false);
-        setSocketReason(`${reason}`);
-      });
-
-      socket.on("connect_error", (error) => {
-        // if (error.data.type === "UnauthorizedError") {
-        console.log("Error", error);
-        setSocketConnected(false);
-        setSocketReason(error.message);
-        // }
-      });
-
-      socket.on(`room-${projectId}`, (payload) => {
-        if (payload.user !== account?.username?.split("@")[0]) {
-          dispatch.setSnackMessage(
-            `${payload.user ? payload.user : "Someone"} ${payload.msg}`
-          );
-        }
-        queryClient.invalidateQueries();
-      });
-      // Handling token expiration
-
-      return () => socket.disconnect();
-    });
-  }, []);
-
-  const handleMerge = useMutation(
-    ({
-      sourceId,
-      targetId,
-    }: {
-      sourceId: string | null;
-      targetId: string | null;
-    }) => {
-      if (!sourceId || !targetId) {
-        throw new Error("Could not connect nodes");
-      }
-      dispatch.setSnackMessage("⏳ Merging cards...");
-      return mergeVertices(
-        { fromVertexId: sourceId, toVertexId: targetId },
-        projectId
-      );
-    },
-    {
-      onSuccess: () => {
-        dispatch.setSnackMessage("✅ Cards merged!");
-        projectId && notifyOthers("Merged cards", projectId, account);
-        return queryClient.invalidateQueries();
-      },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
-    }
-  );
-
-  const handleClickAddNode = useMutation(
-    ({
-      parentId,
-      type,
-      position,
-    }: {
-      parentId: string;
-      type: NodeTypes;
-      position: Position;
-    }) => {
-      dispatch.setSnackMessage("⏳ Adding new card...");
-      switch (position) {
-        case Position.Left:
-          return addVerticeLeft({ type }, projectId, parentId);
-        case Position.Right:
-          return addVerticeRight({ type }, projectId, parentId);
-        default:
-          return addVertice({ type }, projectId, parentId);
-      }
-    },
-    {
-      onSuccess: () => {
-        dispatch.setSnackMessage("✅ Card added!");
-        notifyOthers("Added a new card", projectId, account);
-        return queryClient.invalidateQueries();
-      },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
-    }
-  );
+  const { socketConnected, socketReason } = useWebSocket(projectId);
 
   let columnId: string | null = null;
 
@@ -226,9 +116,9 @@ const Canvas = ({ graph, project }: CanvasProps) => {
           ...node,
           handleClickNode: () => setSelectedNode(node),
           handleClickAddNode: (id, type, position) =>
-            handleClickAddNode.mutate({ parentId: id, type, position }),
+            addNode({ parentId: id, type, position }),
           handleMerge: (sourceId, targetId) =>
-            sourceId && targetId && handleMerge.mutate({ sourceId, targetId }),
+            sourceId && targetId && mergeNode.mutate({ sourceId, targetId }),
           mergeable:
             node.children.length === 0 || node.type === NodeTypes.choice,
           merging: merging,
