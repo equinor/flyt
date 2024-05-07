@@ -40,7 +40,10 @@ type CanvasProps = {
   project: Project;
 };
 
-const Canvas = ({ graph, project }: CanvasProps) => {
+const Canvas = ({
+  graph: { vertices: apiNodes, edges: apiEdges },
+  project,
+}: CanvasProps) => {
   const [selectedNode, setSelectedNode] = useState<NodeDataApi | undefined>(
     undefined
   );
@@ -84,12 +87,6 @@ const Canvas = ({ graph, project }: CanvasProps) => {
       ) {
         columnId = node.id;
       }
-
-      tempEdges.push({
-        id: `${parent.id}=>${node.id}`,
-        source: parent.id,
-        target: node.id,
-      });
 
       const duplicateNode = tempNodes.find(
         (tempNode) => tempNode.id === node.id
@@ -150,7 +147,7 @@ const Canvas = ({ graph, project }: CanvasProps) => {
     }
 
     node.children.forEach((childId) => {
-      const childNode = graph.find((node) => node.id === childId);
+      const childNode = apiNodes.find((node) => node.id === childId);
       childNode && createNodes(childNode, node);
     });
   };
@@ -274,7 +271,7 @@ const Canvas = ({ graph, project }: CanvasProps) => {
   };
 
   useLayoutEffect(() => {
-    const root = graph.find(
+    const root = apiNodes.find(
       (node: NodeDataApi) => node.type === NodeTypes.root
     );
 
@@ -285,7 +282,7 @@ const Canvas = ({ graph, project }: CanvasProps) => {
     }
 
     if (selectedNode) {
-      const updatedSelectedNode = graph.find(
+      const updatedSelectedNode = apiNodes.find(
         (node) => node.id === selectedNode.id
       );
       setSelectedNode(updatedSelectedNode);
@@ -296,7 +293,7 @@ const Canvas = ({ graph, project }: CanvasProps) => {
     const finalNodes = setLayout(tempNodes, tempEdges);
     setNodes(finalNodes);
     setEdges(tempEdges);
-  }, [graph, userCanEdit]);
+  }, [apiNodes, apiEdges, userCanEdit]);
 
   useCenterCanvas();
 
