@@ -3,12 +3,14 @@ import { Socket, io } from "socket.io-client";
 import { getAccessToken } from "../../../auth/msalHelpers";
 import { useStoreDispatch } from "../../../hooks/storeHooks";
 import { useUserAccount } from "./useUserAccount";
+import { useQueryClient } from "react-query";
 
 const useWebSocket = (projectId: string) => {
   const [socketConnected, setSocketConnected] = useState(false);
   const [socketReason, setSocketReason] = useState("");
   const dispatch = useStoreDispatch();
   const account = useUserAccount();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     let socket: Socket;
@@ -39,6 +41,7 @@ const useWebSocket = (projectId: string) => {
             `${payload.user ? payload.user : "Someone"} ${payload.msg}`
           );
         }
+        queryClient.invalidateQueries();
       });
     };
 
