@@ -3,20 +3,19 @@ import { getTasksForProject } from "../services/taskApi";
 import { Task } from "../types/Task";
 import { unknownErrorToString } from "../utils/isError";
 import { useQuery } from "react-query";
-import { useRouter } from "next/router";
 import { taskSorter } from "@/utils/taskSorter";
+import { useProjectId } from "@/hooks/useProjectId";
 
 export function TaskSection(props: {
   filterFunction: (t: Task) => boolean;
 }): JSX.Element {
-  const router = useRouter();
-  const { id } = router.query;
+  const { projectId } = useProjectId();
 
   const {
     data: tasks,
     isLoading: isLoadingTasks,
     error: errorTasks,
-  } = useQuery(["tasks", id], () => getTasksForProject(id));
+  } = useQuery(["tasks", projectId], () => getTasksForProject(projectId));
 
   return (
     <>

@@ -1,7 +1,6 @@
 import { CanvasButtons } from "components/CanvasButtons";
 import { ManageLabelBox } from "components/Labels/ManageLabelBox";
 import { ResetProcessButton } from "components/ResetProcessButton";
-import { useRouter } from "next/router";
 import { useLayoutEffect, useState } from "react";
 import ReactFlow, {
   Controls,
@@ -32,8 +31,9 @@ import { setLayout } from "./hooks/useLayout";
 import { useNodeAdd } from "./hooks/useNodeAdd";
 import { useNodeDrag } from "./hooks/useNodeDrag";
 import { useNodeMerge } from "./hooks/useNodeMerge";
-import useWebSocket from "./hooks/useWebSocket";
+import { useWebSocket } from "./hooks/useWebSocket";
 import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
+import { useProjectId } from "../../hooks/useProjectId";
 
 type CanvasProps = {
   graph: Graph;
@@ -47,7 +47,7 @@ const Canvas = ({
   const [selectedNode, setSelectedNode] = useState<NodeDataApi | undefined>(
     undefined
   );
-  const router = useRouter();
+  const { projectId } = useProjectId();
   const { userCanEdit } = useAccess(project);
 
   const shapeSize = { height: 140, width: 140 };
@@ -63,13 +63,11 @@ const Canvas = ({
   const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
 
-  const projectId = router.query.id as string;
-
   const { onNodeDragStart, onNodeDrag, onNodeDragStop } = useNodeDrag();
-  const { mutate: mergeNode, merging } = useNodeMerge(projectId);
-  const { mutate: addNode } = useNodeAdd(projectId);
+  const { mutate: mergeNode, merging } = useNodeMerge();
+  const { mutate: addNode } = useNodeAdd();
 
-  const { socketConnected, socketReason } = useWebSocket(projectId);
+  const { socketConnected, socketReason } = useWebSocket();
 
   let columnId: string | null = null;
 

@@ -7,7 +7,7 @@ import {
   TopBar,
   Typography,
 } from "@equinor/eds-core-react";
-import { KeyboardEvent, MouseEvent, useEffect, useState } from "react";
+import { KeyboardEvent, useEffect, useState } from "react";
 import { chevron_down, close, share } from "@equinor/eds-icons";
 import {
   faveProject,
@@ -38,23 +38,26 @@ import packageJson from "../package.json";
 import styles from "./default.layout.module.scss";
 import { unknownErrorToString } from "../utils/isError";
 import { useRouter } from "next/router";
+import { useProjectId } from "../hooks/useProjectId";
 
 export const CanvasLayout = ({ children }): JSX.Element => {
   const isAuthenticated = useIsAuthenticated();
+  const { projectId } = useProjectId();
 
   const router = useRouter();
-  const { id } = router.query;
-  const { data: project } = useQuery(["project", id], () => getProject(id));
+  const { data: project } = useQuery(["project", projectId], () =>
+    getProject(projectId)
+  );
   const projectTitle = project?.name;
 
   const queryClient = useQueryClient();
   const projectMutation = useMutation(
     (updatedProject: [{ op: string; path: string; value: string }]) => {
-      return updateProject(id, updatedProject);
+      return updateProject(projectId, updatedProject);
     },
     {
       onSuccess: () => {
-        notifyOthers("Gave the process a new name", id, account);
+        notifyOthers("Gave the process a new name", projectId, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),

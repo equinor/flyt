@@ -9,9 +9,9 @@ import { arrow_back } from "@equinor/eds-icons";
 import { useMutation, useQueryClient } from "react-query";
 import { createTask } from "../services/taskApi";
 import { unknownErrorToString } from "utils/isError";
-import { useRouter } from "next/router";
 import { notifyOthers } from "../services/notifyOthers";
 import { useAccount, useMsal } from "@azure/msal-react";
+import { useProjectId } from "@/hooks/useProjectId";
 
 export function NewTaskSection(props: {
   onClose: () => void;
@@ -23,8 +23,7 @@ export function NewTaskSection(props: {
   const dispatch = useStoreDispatch();
   const selectedNode = props.selectedNode;
 
-  const router = useRouter();
-  const { id } = router.query;
+  const { projectId } = useProjectId();
 
   const queryClient = useQueryClient();
   const taskMutations = useMutation(
@@ -32,7 +31,7 @@ export function NewTaskSection(props: {
     {
       onSuccess: () => {
         clearAndCloseAddTaskSection();
-        notifyOthers(`Created a new Q/I/P/R`, id, account);
+        notifyOthers(`Created a new Q/I/P/R`, projectId, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),

@@ -7,12 +7,15 @@ import { useRouter } from "next/router";
 import { unknownErrorToString } from "utils/isError";
 import { useStoreDispatch } from "hooks/storeHooks";
 import { useAccess } from "./hooks/useAccess";
+import { useProjectId } from "@/hooks/useProjectId";
 
 export const ToBeToggle = (): JSX.Element => {
   const router = useRouter();
-  const { id } = router.query;
+  const { projectId } = useProjectId();
 
-  const { data: project } = useQuery(["project", id], () => getProject(id));
+  const { data: project } = useQuery(["project", projectId], () =>
+    getProject(projectId)
+  );
   const { userCanEdit } = useAccess(project);
   const dispatch = useStoreDispatch();
   const isToBe = !!project?.currentProcessId;
@@ -72,7 +75,7 @@ export const ToBeToggle = (): JSX.Element => {
             } else if (!isToBe && !project?.toBeProcessID) {
               // We are on a "Current" process, but there is no "To-be" process created
               // Let's create one and navigate to it
-              newProjectMutation.mutate(id);
+              newProjectMutation.mutate(projectId);
             }
           }}
           disabledTooltip="There is no To-be process and you don't have access to create one."

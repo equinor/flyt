@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useQuery, useQueryClient } from "react-query";
-import { useRouter } from "next/router";
 import Link from "next/link";
 import { getTasksForProject } from "../../../../services/taskApi";
 import { unknownErrorToString } from "../../../../utils/isError";
@@ -8,16 +7,16 @@ import { QipCard } from "../../../../components/QipCard";
 import { Layouts } from "../../../../layouts/LayoutWrapper";
 import { io } from "socket.io-client";
 import { TaskTypes } from "types/TaskTypes";
+import { useProjectId } from "../../../../hooks/useProjectId";
 
 export default function QipsPage(): JSX.Element {
-  const router = useRouter();
-  const { id } = router.query;
+  const { projectId } = useProjectId();
 
   const {
     data: tasks,
     isLoading,
     error,
-  } = useQuery(["tasks", id], () => getTasksForProject(id));
+  } = useQuery(["tasks", projectId], () => getTasksForProject(projectId));
 
   const queryClient = useQueryClient();
 
@@ -31,7 +30,7 @@ export default function QipsPage(): JSX.Element {
       console.log("SOCKET CONNECTED!", socket.id);
     });
 
-    socket.on(`room-${id}`, (message) => {
+    socket.on(`room-${projectId}`, (message) => {
       queryClient.invalidateQueries(message?.queryKey);
     });
 
@@ -57,7 +56,7 @@ export default function QipsPage(): JSX.Element {
         tasks
           ?.sort((a, b) => TaskTypes[a.type] - TaskTypes[b.type])
           .map((task) => (
-            <Link key={task.id} href={`/process/${id}/qips/${task.id}`}>
+            <Link key={task.id} href={`/process/${projectId}/qips/${task.id}`}>
               <QipCard task={task} />
             </Link>
           ))

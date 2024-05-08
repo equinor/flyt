@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
+import { useQueryClient } from "react-query";
 import { Socket, io } from "socket.io-client";
 import { getAccessToken } from "../../../auth/msalHelpers";
 import { useStoreDispatch } from "../../../hooks/storeHooks";
+import { useProjectId } from "../../../hooks/useProjectId";
 import { useUserAccount } from "./useUserAccount";
-import { useQueryClient } from "react-query";
 
-const useWebSocket = (projectId: string) => {
+export const useWebSocket = () => {
+  const { projectId } = useProjectId();
   const [socketConnected, setSocketConnected] = useState(false);
   const [socketReason, setSocketReason] = useState("");
   const dispatch = useStoreDispatch();
@@ -55,5 +57,3 @@ const useWebSocket = (projectId: string) => {
 
   return { socketConnected, socketReason };
 };
-
-export default useWebSocket;

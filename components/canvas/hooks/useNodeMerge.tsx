@@ -6,14 +6,17 @@ import { mergeVertices } from "../../../services/graphApi";
 import { notifyOthers } from "../../../services/notifyOthers";
 import { unknownErrorToString } from "../../../utils/isError";
 import { useUserAccount } from "./useUserAccount";
+import { useProjectId } from "../../../hooks/useProjectId";
+import { NodeData } from "@/types/NodeData";
 
-export type MergeNodeParams = {
+export type NodeMergeParams = {
   sourceId: string;
   targetId: string;
 };
 
-export const useNodeMerge = (projectId: string) => {
-  const { getNodes, setNodes } = useReactFlow();
+export const useNodeMerge = () => {
+  const { getNodes, setNodes } = useReactFlow<NodeData>();
+  const { projectId } = useProjectId();
   const connectionNodeIdSelector = (state: ReactFlowState) =>
     state.connectionNodeId;
   const connectionNodeId = useStore(connectionNodeIdSelector);
@@ -30,8 +33,7 @@ export const useNodeMerge = (projectId: string) => {
   }, [connectionNodeId]);
 
   const mutate = useMutation(
-    (params: MergeNodeParams) => {
-      const { sourceId, targetId } = params;
+    ({ sourceId, targetId }: NodeMergeParams) => {
       if (!sourceId || !targetId) {
         throw new Error("Could not connect nodes");
       }
@@ -60,12 +62,8 @@ export const useNodeMerge = (projectId: string) => {
             sourceNode &&
             sourceNode.id !== node.id &&
             node.data.columnId == sourceNode?.data?.columnId &&
-            !sourceNode.data.children.find(
-              (childId: string) => childId === node.id
-            ) &&
-            !sourceNode.data.parents.find(
-              (parentId: string) => parentId === node.id
-            ),
+            !sourceNode.data.children.find((childId) => childId === node.id) &&
+            !sourceNode.data.parents.find((parentId) => parentId === node.id),
         };
         node.data.merging = true;
         return node;

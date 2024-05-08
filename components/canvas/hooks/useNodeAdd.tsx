@@ -9,22 +9,23 @@ import {
 } from "../../../services/graphApi";
 import { notifyOthers } from "../../../services/notifyOthers";
 import { unknownErrorToString } from "../../../utils/isError";
+import { useProjectId } from "../../../hooks/useProjectId";
 import { useUserAccount } from "./useUserAccount";
 
-export type AddNodeParams = {
+export type NodeAddParams = {
   parentId: string;
   type: NodeTypes;
   position: Position;
 };
 
-export const useNodeAdd = (projectId: string) => {
+export const useNodeAdd = () => {
+  const { projectId } = useProjectId();
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
   const account = useUserAccount();
 
   return useMutation(
-    (params: AddNodeParams) => {
-      const { parentId, type, position } = params;
+    ({ parentId, type, position }: NodeAddParams) => {
       dispatch.setSnackMessage("⏳ Adding new card...");
       switch (position) {
         case Position.Left:
