@@ -24,7 +24,6 @@ const useWebSocket = (projectId: string) => {
       });
 
       socket.on("disconnect", (reason) => {
-        dispatch.setSnackMessage(`Socket disconnected because ${reason}`);
         setSocketConnected(false);
         setSocketReason(reason);
       });
