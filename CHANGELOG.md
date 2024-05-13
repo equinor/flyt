@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.1.0](https://github.com/equinor/flyt/compare/v2.0.1...v2.1.0) (2024-05-13)
+
+
+### Features
+
+* Waiting card description ([#722](https://github.com/equinor/flyt/issues/722)) ([bc326b0](https://github.com/equinor/flyt/commit/bc326b0a067ac30c87e5259d74c6b0641ccf8116))
+
+
+### Bug Fixes
+
+* Card text truncation ([#720](https://github.com/equinor/flyt/issues/720)) ([82fc982](https://github.com/equinor/flyt/commit/82fc9822c2df5181527074b56015cdba4a0f6954))
+
 ## [2.0.1](https://github.com/equinor/flyt/compare/v2.0.0...v2.0.1) (2024-04-25)
 
 
