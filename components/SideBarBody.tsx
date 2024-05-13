@@ -142,11 +142,19 @@ export function SideBarBody(props: {
     case NodeTypes.waiting:
       return (
         <>
-          <DurationComponent
-            disabled={!props.canEdit}
-            {...props}
-            selectedNode={selectedNode}
+          <MarkdownEditor
+            canEdit={props.canEdit}
+            defaultText={selectedNode.description || ""}
+            label={"Description"}
+            onChange={props.onChangeDescription}
           />
+          <div style={{ paddingTop: 12 }}>
+            <DurationComponent
+              disabled={!props.canEdit}
+              {...props}
+              selectedNode={selectedNode}
+            />
+          </div>
           <QIPSection
             canEdit={props.canEdit}
             object={selectedNode}
