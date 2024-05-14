@@ -58,7 +58,7 @@ spec:
             SCOPE: c001f24f-64a7-4f0c-bfe8-bf9c8e7aa74c/api.access
         - environment: test
           variables:
-            API_BASEURL: https://api-flyt-api-test.radix.equinor.com/
+            API_BASEURL: https://api-flyt-api-test.radix.equinor.com
             AUDIENCE: cf7bf606-0fca-498d-9ec5-74d32a6ab4cf
             AUTHORITY: https://login.microsoftonline.com/statoilsrm.onmicrosoft.com
             CLIENT_ID: b3e899bf-12af-4f63-8744-d1ef4edc30b5
