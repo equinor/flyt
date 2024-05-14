@@ -1,22 +1,30 @@
 # Changelog
 
-## [2.0.1](https://github.com/equinor/flyt/compare/v2.0.0...v2.0.1) (2024-04-25)
-
-
-### Bug Fixes
-
-* Missing logo ([#715](https://github.com/equinor/flyt/issues/715)) ([06070fa](https://github.com/equinor/flyt/commit/06070fafa6548f3f2226a63c0547e07f529641a3))
-
-## [2.0.0](https://github.com/equinor/flyt/compare/v0.3.0...v2.0.0) (2024-04-24)
-
-
-### ⚠ BREAKING CHANGES
-
-* Migrate to React Flow ([#630](https://github.com/equinor/flyt/issues/630))
+## [2.1.0](https://github.com/equinor/flyt/compare/v2.0.1...v2.1.0) (2024-05-13)
 
 ### Features
 
-* Migrate to React Flow ([#630](https://github.com/equinor/flyt/issues/630)) ([796c6aa](https://github.com/equinor/flyt/commit/796c6aa4318d27c44a8e5978f8a5975b9c43dd3a))
+- Waiting card description ([#722](https://github.com/equinor/flyt/issues/722)) ([bc326b0](https://github.com/equinor/flyt/commit/bc326b0a067ac30c87e5259d74c6b0641ccf8116))
+
+### Bug Fixes
+
+- Card text truncation ([#720](https://github.com/equinor/flyt/issues/720)) ([82fc982](https://github.com/equinor/flyt/commit/82fc9822c2df5181527074b56015cdba4a0f6954))
+
+## [2.0.1](https://github.com/equinor/flyt/compare/v2.0.0...v2.0.1) (2024-04-25)
+
+### Bug Fixes
+
+- Missing logo ([#715](https://github.com/equinor/flyt/issues/715)) ([06070fa](https://github.com/equinor/flyt/commit/06070fafa6548f3f2226a63c0547e07f529641a3))
+
+## [2.0.0](https://github.com/equinor/flyt/compare/v0.3.0...v2.0.0) (2024-04-24)
+
+### ⚠ BREAKING CHANGES
+
+- Migrate to React Flow ([#630](https://github.com/equinor/flyt/issues/630))
+
+### Features
+
+- Migrate to React Flow ([#630](https://github.com/equinor/flyt/issues/630)) ([796c6aa](https://github.com/equinor/flyt/commit/796c6aa4318d27c44a8e5978f8a5975b9c43dd3a))
 
 ## [0.3.0](https://github.com/equinor/flyt/compare/v0.2.36...v0.3.0) (2024-03-19)
 

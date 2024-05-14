@@ -35,7 +35,10 @@ const capitalizeFirstLetter = (s: string): string =>
  * @param duration
  * @param unit
  */
-export const formatDuration = (duration?: number, unit?: string): string => {
+export const formatDuration = (
+  duration?: number | null,
+  unit?: string | null
+): string => {
   if (typeof duration !== "number" || !unit) return "";
   const cUnit = capitalizeFirstLetter(unit);
   return duration === 1 ? `1 ${cUnit}` : `${duration} ${cUnit}s`;

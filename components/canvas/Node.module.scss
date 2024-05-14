@@ -67,15 +67,24 @@
   padding: 12px 22.5px 12px 22.5px;
 }
 
-.node__role-container {
+.node__info-container {
   height: 13px;
   padding: 5px 10px;
+}
+
+.node__info-text {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.node__role-container {
+  @extend .node__info-container;
   background-image: linear-gradient(rgb(0 0 0/5%) 0 0);
 }
 
 .node__time-container {
-  height: 13px;
-  padding: 5px 10px;
+  @extend .node__info-container;
   background-image: linear-gradient(rgb(0 0 0/10%) 0 0);
 }
 
@@ -85,17 +94,20 @@
   padding: 10px;
 }
 
-.description {
+.node__description {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
   white-space: pre-wrap;
   overflow-wrap: break-word !important;
   width: 100%;
   overflow: hidden;
 }
 
-.node-shape--rhombus .description {
+.node-shape--rhombus .node__description {
   text-align: center;
 }
 
-.header {
+.node__header {
   opacity: 0.4;
 }
