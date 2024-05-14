@@ -91,3 +91,8 @@ export const mergeVertices = (
     `${baseUrl}/graph/${projectId}/vertices/connect`,
     data
   ).then((r) => r.data);
+
+export const deleteEdge = (edgeId: string): Promise<string> =>
+  BaseAPIServices.delete(`${baseUrl}/graph/edges/${edgeId}`).then(
+    (r) => r.data
+  );

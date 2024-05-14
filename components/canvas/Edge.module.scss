@@ -1,0 +1,8 @@
+@import "styles/_variables.scss";
+
+.edge-button-container {
+  position: absolute;
+  pointer-events: all;
+  border-radius: 50%;
+  background-color: $canvas;
+}

@@ -34,6 +34,7 @@ import { useNodeMerge } from "./hooks/useNodeMerge";
 import { useWebSocket } from "./hooks/useWebSocket";
 import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
 import { useProjectId } from "../../hooks/useProjectId";
+import { edgeElementTypes } from "./EdgeElementTypes";
 
 type CanvasProps = {
   graph: Graph;
@@ -268,6 +269,27 @@ const Canvas = ({
     }
   };
 
+  const setEdgeTypes = () => {
+    const fromCounts = tempEdges.reduce(
+      (acc: Record<string, number>, obj: Edge) => {
+        acc[obj.target] = (acc[obj.target] || 0) + 1;
+        return acc;
+      },
+      {}
+    );
+    const duplicates = tempEdges.filter(
+      (obj: Edge) => fromCounts[obj.target] > 1
+    );
+    const duplicateIds = duplicates.map((obj: Edge) => obj.id);
+
+    tempEdges = tempEdges.map((edge) => {
+      if (duplicateIds.includes(edge.id)) {
+        return { ...edge, type: "Deletable" };
+      }
+      return edge;
+    });
+  };
+
   useLayoutEffect(() => {
     const root = apiNodes.find(
       (node: NodeDataApi) => node.type === NodeTypes.root
@@ -288,6 +310,7 @@ const Canvas = ({
     createNodes(root);
     setNodesDepth();
     createHiddenNodes();
+    setEdgeTypes();
     const finalNodes = setLayout(tempNodes, tempEdges);
     setNodes(finalNodes);
     setEdges(tempEdges);
@@ -338,6 +361,7 @@ const Canvas = ({
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeElementTypes}
+        edgeTypes={edgeElementTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onPaneClick={() => setSelectedNode(undefined)}
