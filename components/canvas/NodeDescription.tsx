@@ -31,7 +31,10 @@ export const NodeDescription = ({ header, description }: NodeDescription) => {
           {formatNodeText(description)}
         </Typography>
       )}
-      <NodeTooltip text={description} isVisible={hoveringText} />
+      <NodeTooltip
+        text={formatNodeText(description)}
+        isVisible={hoveringText}
+      />
     </div>
   );
 };
