@@ -143,13 +143,13 @@ export const SubActivityNode = ({
           description={description}
         />
         <div className={styles["node__role-container"]}>
-          <Typography variant="caption">
-            {formatNodeText(role ?? "", 16, true)}
+          <Typography variant="caption" className={styles["node__info-text"]}>
+            {formatNodeText(role)}
           </Typography>
         </div>
         <div className={styles["node__time-container"]}>
-          <Typography variant="caption">
-            {formatNodeText(formatDuration(duration, unit), 12, true)}
+          <Typography variant="caption" className={styles["node__info-text"]}>
+            {formatDuration(duration, unit)}
           </Typography>
         </div>
       </NodeCard>

@@ -3,15 +3,14 @@ import { NodeTypes } from "types/NodeTypes";
 
 export type NodeDataApi = {
   id: string;
-  children: string[];
   type: NodeTypes;
   projectId: string;
-  index: string;
+  index: string | null;
+  order: number | null;
   description: string;
-  role: string;
-  duration: number;
-  unit: string;
+  role: string | null;
+  duration: number | null;
+  unit: string | null;
+  children: string[];
   tasks: Task[];
-  depth: number;
-  order: number;
 };
