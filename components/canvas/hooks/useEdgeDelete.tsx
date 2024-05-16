@@ -18,13 +18,13 @@ export const useEdgeDelete = () => {
 
   return useMutation(
     ({ edgeId }: EdgeDeleteParams) => {
-      dispatch.setSnackMessage("⏳ Deleting edge...");
+      dispatch.setSnackMessage("⏳ Deleting line...");
       return deleteEdge(edgeId, projectId);
     },
     {
       onSuccess: () => {
-        dispatch.setSnackMessage("🗑️ Edge deleted!");
-        notifyOthers("Deleted an edge", projectId, account);
+        dispatch.setSnackMessage("🗑️ Line deleted!");
+        notifyOthers("Deleted a line", projectId, account);
         queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
