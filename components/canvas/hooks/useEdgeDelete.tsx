@@ -19,7 +19,7 @@ export const useEdgeDelete = () => {
   return useMutation(
     ({ edgeId }: EdgeDeleteParams) => {
       dispatch.setSnackMessage("⏳ Deleting edge...");
-      return deleteEdge(edgeId);
+      return deleteEdge(edgeId, projectId);
     },
     {
       onSuccess: () => {

@@ -92,7 +92,10 @@ export const mergeVertices = (
     data
   ).then((r) => r.data);
 
-export const deleteEdge = (edgeId: string): Promise<string> =>
-  BaseAPIServices.delete(`${baseUrl}/graph/edges/${edgeId}`).then(
+export const deleteEdge = (
+  edgeId: string,
+  projectId: string
+): Promise<string> =>
+  BaseAPIServices.delete(`${baseUrl}/graph/${projectId}/edges/${edgeId}`).then(
     (r) => r.data
   );
