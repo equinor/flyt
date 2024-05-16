@@ -1,22 +1,24 @@
-import { useStoreDispatch } from "../hooks/storeHooks";
-import { useState } from "react";
-import { Task } from "../types/Task";
+import { useStoreDispatch } from "@/hooks/storeHooks";
+import React, { useState } from "react";
+import { Task } from "@/types/Task";
 import styles from "./VSMCanvas.module.scss";
-import { Button, Icon, Autocomplete, TextField } from "@equinor/eds-core-react";
-import { TaskTypes } from "../types/TaskTypes";
+import { Button, Icon, Autocomplete } from "@equinor/eds-core-react";
+import { TaskTypes } from "@/types/TaskTypes";
 import { ExistingTaskSection } from "./ExistingTaskSection";
 import { arrow_back } from "@equinor/eds-icons";
 import { useMutation, useQueryClient } from "react-query";
-import { createTask } from "../services/taskApi";
+import { createTask } from "@/services/taskApi";
 import { unknownErrorToString } from "utils/isError";
-import { notifyOthers } from "../services/notifyOthers";
+import { notifyOthers } from "@/services/notifyOthers";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useProjectId } from "@/hooks/useProjectId";
+import MarkdownEditor from "@/components/MarkdownEditor";
+import { NodeDataApi } from "@/types/NodeDataApi";
 
 export function NewTaskSection(props: {
   onClose: () => void;
-  selectedNode;
-}): JSX.Element {
+  selectedNode: NodeDataApi;
+}): React.ReactElement {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
 
@@ -37,13 +39,14 @@ export function NewTaskSection(props: {
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
-  const [newTask, setNewTask] = useState(null);
+  const [newTask, setNewTask] = useState<Task | null>(null);
 
-  const [existingTaskFilter, setExistingTaskFilter] = useState(null);
+  const [existingTaskFilter, setExistingTaskFilter] =
+    useState<TaskTypes | null>(null);
   const [showExistingTaskSection, setShowExistingTaskSection] = useState(false);
 
   function newTaskIsReady(task: Task) {
-    return task?.description?.trim().length > 0;
+    return (task.description?.trim().length ?? 0) > 0;
   }
 
   function clearAndCloseAddTaskSection() {
@@ -135,15 +138,12 @@ export function NewTaskSection(props: {
       {!showExistingTaskSection && newTask && (
         <>
           <div style={{ paddingTop: 8 }}>
-            <TextField
+            <MarkdownEditor
               label={"Description"}
-              value={newTask.description}
-              id={`newTask`}
+              defaultText={newTask.description || ""}
               onChange={(event) =>
-                setNewTask({ ...newTask, description: event.target.value })
+                setNewTask({ ...newTask, description: event })
               }
-              multiline
-              rows={5}
             />
           </div>
           <div
