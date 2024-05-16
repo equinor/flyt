@@ -1,5 +1,5 @@
 import { useStoreDispatch } from "@/hooks/storeHooks";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Task } from "@/types/Task";
 import styles from "./VSMCanvas.module.scss";
 import { Button, Icon, Autocomplete } from "@equinor/eds-core-react";
@@ -18,7 +18,7 @@ import { NodeDataApi } from "@/types/NodeDataApi";
 export function NewTaskSection(props: {
   onClose: () => void;
   selectedNode: NodeDataApi;
-}): React.ReactElement {
+}) {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
 
@@ -141,6 +141,7 @@ export function NewTaskSection(props: {
             <MarkdownEditor
               label={"Description"}
               defaultText={newTask.description || ""}
+              canEdit={true}
               onChange={(event) =>
                 setNewTask({ ...newTask, description: event })
               }
