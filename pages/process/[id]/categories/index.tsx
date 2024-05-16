@@ -7,14 +7,15 @@ import { CategorySection } from "../../../../components/CategorySection";
 import { CheckboxImproved } from "../../../../components/CheckboxImproved";
 import { ButtonNavigateToProcess } from "../../../../components/ButtonNavigateToProcess";
 import Head from "next/head";
-import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import { getProject } from "../../../../services/projectApi";
+import { useProjectId } from "../../../../hooks/useProjectId";
 
 export default function CategoriesPage(): JSX.Element {
-  const router = useRouter();
-  const { id } = router.query;
-  const { data: project } = useQuery(["project", id], () => getProject(id));
+  const { projectId } = useProjectId();
+  const { data: project } = useQuery(["project", projectId], () =>
+    getProject(projectId)
+  );
   const projectTitle = project?.name;
 
   const [categories, setCategories] = useState([]);

@@ -3,16 +3,17 @@ import { duplicateProject, getProject } from "../../../services/projectApi";
 import { useMutation, useQuery } from "react-query";
 import { Layouts } from "../../../layouts/LayoutWrapper";
 import { useRouter } from "next/router";
+import { useProjectId } from "../../../hooks/useProjectId";
 
 export default function DuplicatePage() {
   const router = useRouter();
-  const { id } = router.query;
+  const { projectId } = useProjectId();
 
   const {
     data: project,
     isLoading,
     error,
-  } = useQuery(["project", id], () => getProject(id));
+  } = useQuery(["project", projectId], () => getProject(projectId));
 
   const [statusMessage, setStatusMessage] = useState("");
   const newProjectMutation = useMutation((projectId: number) =>

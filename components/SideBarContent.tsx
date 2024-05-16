@@ -12,8 +12,8 @@ import { unknownErrorToString } from "utils/isError";
 import { useStoreDispatch } from "hooks/storeHooks";
 import { close as closeIcon } from "@equinor/eds-icons";
 import { notifyOthers } from "../services/notifyOthers";
-import { useRouter } from "next/router";
 import { useAccount, useMsal } from "@azure/msal-react";
+import { useProjectId } from "../hooks/useProjectId";
 
 /**
  * Process specific content stuff
@@ -30,16 +30,15 @@ export function SideBarContent(props: {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
 
-  const router = useRouter();
-  const { id } = router.query;
+  const { projectId } = useProjectId();
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
   const vsmObjectMutation = useMutation(
     (patchedObject: NodeDataApi) =>
-      patchGraph(patchedObject, id, patchedObject.id),
+      patchGraph(patchedObject, projectId, patchedObject.id),
     {
       onSuccess() {
-        notifyOthers("Updated a card", id, account);
+        notifyOthers("Updated a card", projectId, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),

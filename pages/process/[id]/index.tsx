@@ -2,7 +2,6 @@ import commonStyles from "../../../styles/common.module.scss";
 import styles from "./ProjectPage.module.scss";
 import Head from "next/head";
 import { Typography } from "@equinor/eds-core-react";
-import { useRouter } from "next/router";
 import { Layouts } from "../../../layouts/LayoutWrapper";
 import { useQuery } from "react-query";
 import { getProject } from "../../../services/projectApi";
@@ -10,22 +9,22 @@ import { getGraph } from "services/graphApi";
 import { unknownErrorToString } from "../../../utils/isError";
 import { CanvasWrapper } from "../../../components/canvas/Canvas";
 import { CircularProgress } from "@equinor/eds-core-react";
+import { useProjectId } from "../../../hooks/useProjectId";
 
 export default function Project() {
-  const router = useRouter();
-  const { id } = router.query;
+  const { projectId } = useProjectId();
 
   const {
     isLoading: isLoadingProject,
     data: project,
     error: errorProject,
   } = useQuery(
-    ["project", id],
+    ["project", projectId],
     () => {
-      return getProject(id);
+      return getProject(projectId);
     },
     {
-      enabled: !!id,
+      enabled: !!projectId,
       refetchOnWindowFocus: false,
     }
   );
@@ -34,13 +33,13 @@ export default function Project() {
     isLoading: isLoadingGraph,
     data: graph,
     error: errorGraph,
-  } = useQuery(["graph", id], () => getGraph(id));
+  } = useQuery(["graph", projectId], () => getGraph(projectId));
 
   if (errorProject || errorGraph) {
     return (
       <div className={commonStyles.container}>
         <Head>
-          <title>Flyt | Project {id}</title>
+          <title>Flyt | Project {projectId}</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
@@ -60,7 +59,7 @@ export default function Project() {
   return (
     <div className={commonStyles.container}>
       <Head>
-        <title>{project?.name || `Flyt | Process ${id}`}</title>
+        <title>{project?.name || `Flyt | Process ${projectId}`}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>

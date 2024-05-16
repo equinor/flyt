@@ -1,27 +1,26 @@
+import { moveVertice, moveVerticeRightOfTarget } from "@/services/graphApi";
+import { notifyOthers } from "@/services/notifyOthers";
 import { NodeData } from "@/types/NodeData";
 import { NodeTypes } from "@/types/NodeTypes";
-import { useEffect, MouseEvent, useRef, useState } from "react";
-import { Node } from "reactflow";
-import { Position, useReactFlow } from "reactflow";
-import router from "next/router";
-import { moveVertice, moveVerticeRightOfTarget } from "@/services/graphApi";
-import { validTarget } from "../utils/validTarget";
-import { notifyOthers } from "@/services/notifyOthers";
 import { unknownErrorToString } from "@/utils/isError";
+import { MouseEvent, useEffect, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
+import { Node, Position, useReactFlow } from "reactflow";
 import { useStoreDispatch } from "../../../hooks/storeHooks";
-import { useUserAccount } from "./useUserAccount";
 import { targetIsInSubtree } from "../utils/targetIsInSubtree";
+import { validTarget } from "../utils/validTarget";
+import { useUserAccount } from "./useUserAccount";
+import { useProjectId } from "../../../hooks/useProjectId";
 
 export const useNodeDrag = () => {
   const [source, setSource] = useState<Node<NodeData> | undefined>(undefined);
   const [target, setTarget] = useState<Node<NodeData> | undefined>(undefined);
-  const { setNodes, getNodes } = useReactFlow();
+  const { setNodes, getNodes } = useReactFlow<NodeData>();
   const dragRef = useRef<Node<NodeData> | null>(null);
   const dispatch = useStoreDispatch();
   const account = useUserAccount();
   const queryClient = useQueryClient();
-  const id = router.query.id as string;
+  const { projectId } = useProjectId();
 
   useEffect(() => {
     setNodes((nodes) =>
@@ -111,15 +110,15 @@ export const useNodeDrag = () => {
       return position === Position.Bottom
         ? moveVertice(
             { vertexToMoveId: nodeId, vertexDestinationParentId: targetId },
-            id,
+            projectId,
             includeChildren
           )
-        : moveVerticeRightOfTarget({ vertexId: nodeId }, targetId, id);
+        : moveVerticeRightOfTarget({ vertexId: nodeId }, targetId, projectId);
     },
     {
       onSuccess: () => {
         dispatch.setSnackMessage("✅ Moved card!");
-        id && notifyOthers("Moved a card", id, account);
+        projectId && notifyOthers("Moved a card", projectId, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),

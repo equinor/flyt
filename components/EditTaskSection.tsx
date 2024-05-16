@@ -8,11 +8,11 @@ import { delete_to_trash } from "@equinor/eds-icons";
 import { notifyOthers } from "../services/notifyOthers";
 import { Task } from "../types/Task";
 import { unknownErrorToString } from "../utils/isError";
-import { useRouter } from "next/router";
 import { useStoreDispatch } from "../hooks/storeHooks";
 import { NodeDataApi } from "../types/NodeDataApi";
 import { TaskTypes } from "types/TaskTypes";
 import { getTaskShorthand } from "utils/getTaskShorthand";
+import { useProjectId } from "../hooks/useProjectId";
 
 export function EditTaskSection(props: {
   task: Task;
@@ -22,8 +22,7 @@ export function EditTaskSection(props: {
   const { task, object } = props;
   const dispatch = useStoreDispatch();
 
-  const router = useRouter();
-  const { id } = router.query;
+  const { projectId } = useProjectId();
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
   const queryClient = useQueryClient();
@@ -37,7 +36,7 @@ export function EditTaskSection(props: {
       node: NodeDataApi;
       solvedTask: Task;
       solved: boolean;
-    }) => solveTask(id, node.id, solvedTask.id, solved),
+    }) => solveTask(projectId, node.id, solvedTask.id, solved),
     {
       onSuccess(_data, variables) {
         const { solvedTask, solved } = variables;
@@ -45,7 +44,7 @@ export function EditTaskSection(props: {
           ` ${getTaskSolvedText(solvedTask.type, solved)} a ${getTaskTypeText(
             solvedTask.type
           )}`,
-          id,
+          projectId,
           account
         );
         return queryClient.invalidateQueries();
@@ -60,7 +59,7 @@ export function EditTaskSection(props: {
       onSuccess() {
         notifyOthers(
           `Removed ${getTaskTypeText(task.type)} from a card`,
-          id,
+          projectId,
           account
         );
         return queryClient.invalidateQueries();

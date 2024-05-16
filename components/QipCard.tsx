@@ -12,8 +12,8 @@ import {
   unlinkTaskCategory,
 } from "../services/taskCategoriesApi";
 import { TaskCategory } from "../types/TaskCategory";
-import { useRouter } from "next/router";
 import { getTaskShorthand } from "utils/getTaskShorthand";
+import { useProjectId } from "../hooks/useProjectId";
 
 export function QipCard(props: {
   task: Task;
@@ -26,20 +26,19 @@ export function QipCard(props: {
   const taskColor = getTaskColor(task);
   const [isLoading, setIsLoading] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
-  const router = useRouter();
-  const { id } = router.query;
+  const { projectId } = useProjectId();
 
   const queryClient = useQueryClient();
   const linkTaskMutation = useMutation(
     (p: { categoryId; taskId }) => {
       setIsLoading(true);
-      return linkTaskCategory(id, p.categoryId, p.taskId);
+      return linkTaskCategory(projectId, p.categoryId, p.taskId);
     },
     {
       onSuccess: (message) => console.log(message),
       onError: (error) => console.log(`${error}`),
       onSettled: () => {
-        queryClient.invalidateQueries(["tasks", id]).then(() => {
+        queryClient.invalidateQueries(["tasks", projectId]).then(() => {
           setIsLoading(false);
           setIsDragOver(false);
         });
@@ -50,12 +49,12 @@ export function QipCard(props: {
   const unlinkTaskMutation = useMutation(
     (p: { categoryId: number; taskId: string }) => {
       setIsLoading(true);
-      return unlinkTaskCategory(id, p.categoryId, p.taskId);
+      return unlinkTaskCategory(projectId, p.categoryId, p.taskId);
     },
     {
       onSettled: () => {
         queryClient
-          .invalidateQueries(["tasks", id])
+          .invalidateQueries(["tasks", projectId])
           .then(() => setIsLoading(false));
       },
     }
