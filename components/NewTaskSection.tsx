@@ -33,7 +33,7 @@ export function NewTaskSection(props: {
     {
       onSuccess: () => {
         clearAndCloseAddTaskSection();
-        notifyOthers(`Created a new Q/I/P/R`, projectId, account);
+        void notifyOthers(`Created a new Q/I/P/R`, projectId, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
