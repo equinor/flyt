@@ -6,10 +6,10 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getTasksForProject, linkTask, unlinkTask } from "../services/taskApi";
 import { NodeDataApi } from "../types/NodeDataApi";
 import { unknownErrorToString } from "utils/isError";
-import { useRouter } from "next/router";
 import { notifyOthers } from "../services/notifyOthers";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { getTaskShorthand } from "utils/getTaskShorthand";
+import { useProjectId } from "../hooks/useProjectId";
 
 export function ExistingTaskSection(props: {
   visible: boolean;
@@ -31,23 +31,22 @@ export function ExistingTaskSection(props: {
     () => getTasksForProject(selectedNode.projectId).then((r) => r),
     { enabled: !!existingTaskFilter }
   );
-  const router = useRouter();
-  const { id } = router.query;
+  const { projectId } = useProjectId();
   const taskLinkMutation = useMutation(
-    (task: Task) => linkTask(id, selectedNode.id, task.id),
+    (task: Task) => linkTask(projectId, selectedNode.id, task.id),
     {
       onSuccess: () => {
-        notifyOthers("Added a Q/I/P to a card", id, account);
+        notifyOthers("Added a Q/I/P to a card", projectId, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
   const taskUnlinkMutation = useMutation(
-    (task: Task) => unlinkTask(id, selectedNode.id, task.id),
+    (task: Task) => unlinkTask(projectId, selectedNode.id, task.id),
     {
       onSuccess() {
-        notifyOthers("Removed Q/I/P from a card", id, account);
+        notifyOthers("Removed Q/I/P from a card", projectId, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),

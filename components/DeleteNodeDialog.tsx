@@ -6,11 +6,11 @@ import { getNodeTypeName } from "../utils/getNodeTypeName";
 import { notifyOthers } from "../services/notifyOthers";
 import styles from "../layouts/default.layout.module.scss";
 import { unknownErrorToString } from "../utils/isError";
-import { useRouter } from "next/router";
 import { useStoreDispatch } from "hooks/storeHooks";
 import { NodeDataApi } from "../types/NodeDataApi";
 import { NodeTypes } from "../types/NodeTypes";
 import { deleteVertice } from "services/graphApi";
+import { useProjectId } from "../hooks/useProjectId";
 
 export function DeleteNodeDialog(props: {
   objectToDelete: NodeDataApi;
@@ -20,8 +20,7 @@ export function DeleteNodeDialog(props: {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
 
-  const router = useRouter();
-  const { id } = router.query;
+  const { projectId } = useProjectId();
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
   const { choice, mainActivity } = NodeTypes;
@@ -40,7 +39,7 @@ export function DeleteNodeDialog(props: {
     {
       onSuccess() {
         handleClose();
-        notifyOthers("Deleted a card", id, account);
+        notifyOthers("Deleted a card", projectId, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
