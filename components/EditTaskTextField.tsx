@@ -7,8 +7,11 @@ import { updateTask } from "@/services/taskApi";
 import { notifyOthers } from "@/services/notifyOthers";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { NodeDataApi } from "types/NodeDataApi";
-import MarkdownEditor from "@/components/MarkdownEditor";
 import { useProjectId } from "@/hooks/useProjectId";
+import dynamic from "next/dynamic";
+const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
+  ssr: false,
+});
 
 export function EditTaskTextField(props: {
   task: Task;

@@ -12,8 +12,11 @@ import { unknownErrorToString } from "utils/isError";
 import { notifyOthers } from "@/services/notifyOthers";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useProjectId } from "@/hooks/useProjectId";
-import MarkdownEditor from "@/components/MarkdownEditor";
+import dynamic from "next/dynamic";
 import { NodeDataApi } from "@/types/NodeDataApi";
+const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
+  ssr: false,
+});
 
 export function NewTaskSection(props: {
   onClose: () => void;
