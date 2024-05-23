@@ -1,0 +1,7 @@
+.minimap {
+  margin-left: 48px;
+  border-radius: 4px 4px 0 0;
+  border-top: 4px solid #fff;
+  border-right: 4px solid #fff;
+  border-left: 4px solid #fff;
+}

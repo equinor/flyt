@@ -354,7 +354,6 @@ const Canvas = ({
         attributionPosition="bottom-right"
         connectionRadius={100}
       >
-        <Controls className={styles.controls} showInteractive={false} />
         <MiniMapCustom />
       </ReactFlow>
       {createdBeforeSecondMajorRelease && (
@@ -368,6 +367,7 @@ export function CanvasWrapper(props: CanvasProps) {
   return (
     <ReactFlowProvider>
       <Canvas {...props} />
+      <Controls className={styles.controls} showInteractive={false} />
     </ReactFlowProvider>
   );
 }
