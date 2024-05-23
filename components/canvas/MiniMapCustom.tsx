@@ -1,7 +1,7 @@
 import { MiniMap, Node } from "reactflow";
 import { NodeTypes } from "@/types/NodeTypes";
 import colors from "../../theme/colors";
-import styles from "./MiniMapCustom.module.css";
+import styles from "./MiniMapCustom.module.scss";
 
 export function MiniMapCustom() {
   const nodeColor = (node: Node) => {
@@ -21,7 +21,7 @@ export function MiniMapCustom() {
 
   return (
     <MiniMap
-      className={styles["minimap"]}
+      className={styles.minimap}
       nodeColor={nodeColor}
       position={"bottom-left"}
       ariaLabel={"Flyt mini map"}

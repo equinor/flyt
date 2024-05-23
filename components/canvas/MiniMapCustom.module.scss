@@ -1,3 +1,5 @@
+@import "styles/_variables.scss";
+
 .minimap {
   bottom: 50px !important;
   left: -16px !important;
@@ -7,4 +9,11 @@
   border-top: 4px solid #fff;
   border-right: 4px solid #fff;
   border-left: 4px solid #fff;
+
+  svg {
+    path {
+      stroke: $equinor_PROMINENT;
+      stroke-width: 40px;
+    }
+  }
 }
