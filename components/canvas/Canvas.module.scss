@@ -1,25 +1,26 @@
 @import "styles/_variables.scss";
 
 .controls {
-  bottom: 35px !important;
-  left: 16px !important;
+  left: 65px !important;
   margin: 0;
   display: flex;
   flex-direction: column;
   gap: 1px;
   box-shadow: none;
+  transform: rotate(90deg);
 
   button {
-    height: 24px;
-    width: 24px;
+    height: 32px;
+    width: 32px;
     padding: 0;
     border: none;
     background-color: $white;
     filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.14));
+    transform: rotate(90deg);
 
     svg {
-      max-height: 14px;
-      max-width: 14px;
+      max-height: 20px;
+      max-width: 20px;
 
       path {
         fill: $equinor_PROMINENT;

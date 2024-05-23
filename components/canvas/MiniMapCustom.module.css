@@ -1,4 +1,7 @@
 .minimap {
+  bottom: 50px !important;
+  left: -16px !important;
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.14);
   margin-left: 48px;
   border-radius: 4px 4px 0 0;
   border-top: 4px solid #fff;
