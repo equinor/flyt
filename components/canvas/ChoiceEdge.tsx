@@ -8,6 +8,7 @@ import {
 import colors from "../../theme/colors";
 import { Input } from "@equinor/eds-core-react";
 import { useState } from "react";
+import * as styles from "./ChoiceEdge.module.scss";
 import { EdgeLabel } from "@/components/canvas/ChoiceEdgeLabel";
 
 export function ChoiceEdge({
@@ -33,11 +34,7 @@ export function ChoiceEdge({
 
   return (
     <>
-      <BaseEdge
-        path={edgePath}
-        markerEnd={markerEnd}
-        style={{ ...style, color: colors.EQUINOR_PROMINENT }}
-      />
+      <BaseEdge path={edgePath} markerEnd={markerEnd} />
       <EdgeLabelRenderer>
         <div
           style={{
