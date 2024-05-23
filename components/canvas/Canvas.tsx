@@ -3,7 +3,6 @@ import { ManageLabelBox } from "components/Labels/ManageLabelBox";
 import { ResetProcessButton } from "components/ResetProcessButton";
 import { useLayoutEffect, useState } from "react";
 import ReactFlow, {
-  BaseEdge,
   Controls,
   Edge,
   Node,
@@ -35,8 +34,6 @@ import { useWebSocket } from "./hooks/useWebSocket";
 import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
 import { useProjectId } from "@/hooks/useProjectId";
 import { MiniMapCustom } from "@/components/canvas/MiniMapCustom";
-import { EdgeDataApi } from "@/types/EdgeDataApi";
-import { ChoiceEdge } from "@/components/canvas/ChoiceEdge";
 
 type CanvasProps = {
   graph: Graph;
@@ -59,22 +56,9 @@ const Canvas = ({
     new Date("2024-04-24T00:08:00.000000Z").getTime();
 
   let tempNodes: Node<NodeDataFull>[] = [];
-  let tempEdges: Edge[] = [];
-  apiEdges.map((edge: EdgeDataApi) => {
-    const nodeSource = apiNodes.filter((node) => node.id === edge.source);
-    if (nodeSource[0] && nodeSource[0].type === NodeTypes.choice) {
-      tempEdges.push({ ...edge, label: "test", type: "choice" });
-    } else {
-      tempEdges.push({ ...edge });
-    }
-  });
-
+  let tempEdges: Edge[] = apiEdges;
   const [nodes, setNodes, onNodesChange] = useNodesState<NodeDataFull>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-
-  const edgeTypes = {
-    choice: ChoiceEdge,
-  };
 
   const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
@@ -215,14 +199,12 @@ const Canvas = ({
                 id: `${tempParentNodeId}=>${id}`,
                 source: tempParentNodeId,
                 target: id,
-                labelShowBg: true,
               });
               tempEdges.push({
                 id: `${id}=>${id}`,
                 source: id,
                 target: id,
                 type: "straight",
-                labelShowBg: true,
               });
               tempParentNodeId = id;
             }
@@ -231,7 +213,6 @@ const Canvas = ({
               id: `${tempParentNodeId}=>${node.id}`,
               source: tempParentNodeId,
               target: node.id,
-              labelShowBg: true,
             });
           }
         });
@@ -360,7 +341,6 @@ const Canvas = ({
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeElementTypes}
-        edgeTypes={edgeTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onPaneClick={() => setSelectedNode(undefined)}
