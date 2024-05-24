@@ -4,12 +4,20 @@ import {
   EdgeProps,
   getBezierPath,
   useReactFlow,
+  useOnSelectionChange,
 } from "reactflow";
 import colors from "../../theme/colors";
-import { Input } from "@equinor/eds-core-react";
-import { useState } from "react";
+import {
+  Button,
+  Icon,
+  Input,
+  Popover,
+  Typography,
+} from "@equinor/eds-core-react";
+import { useRef, useState } from "react";
 import * as styles from "./ChoiceEdge.module.scss";
 import { EdgeLabel } from "@/components/canvas/ChoiceEdgeLabel";
+import { edit } from "@equinor/eds-icons";
 
 export function ChoiceEdge({
   id,
@@ -22,6 +30,7 @@ export function ChoiceEdge({
   style = {},
   markerEnd,
   label,
+  selected,
 }: EdgeProps) {
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
@@ -41,13 +50,15 @@ export function ChoiceEdge({
             position: "absolute",
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
             fontSize: 12,
-            // everything inside EdgeLabelRenderer has no pointer events by default
-            // if you have an interactive element, set pointer-events: all
             pointerEvents: "all",
           }}
           className="nodrag nopan"
         >
-          <EdgeLabel id={id} labelText={label?.toString()} />
+          <EdgeLabel
+            id={id}
+            labelText={label?.toString()}
+            selected={selected}
+          />
         </div>
       </EdgeLabelRenderer>
     </>
