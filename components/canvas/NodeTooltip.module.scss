@@ -1,8 +1,14 @@
+@import "styles/_variables.scss";
+
 .container {
   background: white;
-  padding: 20px;
   max-width: 300px;
   box-shadow: 0px 11px 15px 0px #00000033;
   white-space: pre-wrap;
-  overflow-wrap: break-word !important;
+  overflow-wrap: break-word;
+  border-radius: 2.5%;
+}
+
+.container > * + * {
+  border-top: 1px solid $equinor_MEDIUM_GRAY;
 }

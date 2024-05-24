@@ -3,8 +3,6 @@ import { Typography } from "@equinor/eds-core-react";
 import { formatNodeText } from "./utils/formatNodeText";
 import { getNodeTypeName } from "@/utils/getNodeTypeName";
 import { NodeTypes } from "@/types/NodeTypes";
-import { useState } from "react";
-import { NodeTooltip } from "./NodeTooltip";
 
 type NodeDescription = {
   header?: NodeTypes;
@@ -12,8 +10,6 @@ type NodeDescription = {
 };
 
 export const NodeDescription = ({ header, description }: NodeDescription) => {
-  const [hoveringText, setHoveringText] = useState(false);
-
   return (
     <div className={styles["node__description-container"]}>
       {header && (
@@ -22,19 +18,10 @@ export const NodeDescription = ({ header, description }: NodeDescription) => {
         </Typography>
       )}
       {description && (
-        <Typography
-          variant="caption"
-          className={styles["node__description"]}
-          onMouseEnter={() => setHoveringText(true)}
-          onMouseLeave={() => setHoveringText(false)}
-        >
+        <Typography variant="caption" className={styles["node__description"]}>
           {formatNodeText(description)}
         </Typography>
       )}
-      <NodeTooltip
-        text={formatNodeText(description)}
-        isVisible={hoveringText}
-      />
     </div>
   );
 };

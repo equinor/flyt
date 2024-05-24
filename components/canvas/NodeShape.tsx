@@ -1,3 +1,4 @@
+import { MouseEventHandler } from "react";
 import styles from "./Node.module.scss";
 
 type NodeShape = {
@@ -6,6 +7,8 @@ type NodeShape = {
   width: number;
   height: number;
   children: JSX.Element | JSX.Element[];
+  onMouseEnter?: MouseEventHandler<HTMLDivElement>;
+  onMouseLeave?: MouseEventHandler<HTMLDivElement>;
 };
 
 export const NodeShape = ({
@@ -14,11 +17,15 @@ export const NodeShape = ({
   width,
   height,
   children,
+  onMouseEnter,
+  onMouseLeave,
 }: NodeShape) => {
   const square = (
     <div
       style={{ height: height, width: width }}
       className={`${styles["node-shape-container"]} ${styles["node-shape-container--square"]}`}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
       <div
         className={`${styles["node-shape--square"]}`}
@@ -33,6 +40,8 @@ export const NodeShape = ({
     <div
       style={{ height: height, width: width }}
       className={styles["node-shape-container"]}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
       <div
         className={`${styles["node-shape--rhombus"]} `}

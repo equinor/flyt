@@ -17,6 +17,10 @@ import { NodeCard } from "./NodeCard";
 import colors from "theme/colors";
 import { Typography } from "@equinor/eds-core-react";
 import { SourceHandle } from "./SourceHandle";
+import { NodeTooltip } from "./NodeTooltip";
+import { QIPRContainer } from "./QIPRContainer";
+import { NodeTooltipSection } from "./NodeTooltipSection";
+import { NodeShape } from "./NodeShape";
 
 export const SubActivityNode = ({
   data: {
@@ -43,10 +47,12 @@ export const SubActivityNode = ({
   dragging,
 }: NodeProps<NodeData>) => {
   const [hovering, setHovering] = useState(false);
+  const [hoveringShape, setHoveringShape] = useState(false);
   const connectionNodeId = useStore((state) => state.connectionNodeId);
 
   useEffect(() => {
     setHovering(false);
+    setHoveringShape(false);
   }, [dragging, connectionNodeId]);
 
   const renderNodeButtons = () => {
@@ -128,33 +134,54 @@ export const SubActivityNode = ({
       onMouseLeave={() => setHovering(false)}
     >
       <NodeCard
-        shape="square"
-        width={shapeWidth}
-        height={shapeHeight}
-        color={colors.NODE_SUBACTIVITY}
-        tasks={tasks}
         onClick={handleClickNode}
         hovering={hovering && !merging}
         highlighted={isDropTarget && isValidDropTarget}
         darkened={isValidDropTarget === false}
       >
-        <NodeDescription
-          header={!description ? type : undefined}
-          description={description}
-        />
-        <div className={styles["node__role-container"]}>
-          <Typography variant="caption" className={styles["node__info-text"]}>
-            {formatNodeText(role)}
-          </Typography>
-        </div>
-        <div className={styles["node__time-container"]}>
-          <Typography variant="caption" className={styles["node__info-text"]}>
-            {formatDuration(duration, unit)}
-          </Typography>
-        </div>
+        <NodeShape
+          shape={"square"}
+          color={colors.NODE_SUBACTIVITY}
+          width={shapeWidth}
+          height={shapeHeight}
+          onMouseEnter={() => !dragging && setHoveringShape(true)}
+          onMouseLeave={() => setHoveringShape(false)}
+        >
+          <NodeDescription
+            header={!description ? type : undefined}
+            description={description}
+          />
+          <div className={styles["node__role-container"]}>
+            <Typography variant="caption" className={styles["node__info-text"]}>
+              {formatNodeText(role)}
+            </Typography>
+          </div>
+          <div className={styles["node__time-container"]}>
+            <Typography variant="caption" className={styles["node__info-text"]}>
+              {formatDuration(duration, unit)}
+            </Typography>
+          </div>
+        </NodeShape>
+        <QIPRContainer tasks={tasks} />
       </NodeCard>
       <TargetHandle hidden={!mergeOption} />
       <SourceHandle />
+      <NodeTooltip
+        isVisible={!!(hoveringShape && (description || role || duration))}
+      >
+        {description && (
+          <NodeTooltipSection header={"Description"} text={description} />
+        )}
+        {role && (
+          <NodeTooltipSection header={"Role(s)"} text={formatNodeText(role)} />
+        )}
+        {duration && (
+          <NodeTooltipSection
+            header={"Duration"}
+            text={formatDuration(duration, unit)}
+          />
+        )}
+      </NodeTooltip>
       {renderNodeButtons()}
     </div>
   );

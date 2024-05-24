@@ -1,21 +1,21 @@
-import { Typography } from "@equinor/eds-core-react";
+import { ReactNode } from "react";
 import { NodeToolbar, Position } from "reactflow";
 import styles from "./NodeTooltip.module.scss";
 
 type NodeTooltip = {
-  text: string;
+  children: ReactNode;
   isVisible?: boolean;
   position?: Position;
 };
 
-export const NodeTooltip = ({ text, isVisible, position }: NodeTooltip) => {
+export const NodeTooltip = ({ children, isVisible, position }: NodeTooltip) => {
   return (
     <NodeToolbar
       position={position}
       isVisible={isVisible}
       className={styles.container}
     >
-      <Typography variant="body_long">{text}</Typography>
+      {children}
     </NodeToolbar>
   );
 };
