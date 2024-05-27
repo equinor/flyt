@@ -63,7 +63,7 @@ const Canvas = ({
   apiEdges.map((edge: EdgeDataApi) => {
     const nodeSource = apiNodes.filter((node) => node.id === edge.source);
     if (nodeSource[0] && nodeSource[0].type === NodeTypes.choice) {
-      tempEdges.push({ ...edge, label: "test", type: "choice" });
+      tempEdges.push({ ...edge, type: "choice" });
     } else {
       tempEdges.push({ ...edge });
     }
