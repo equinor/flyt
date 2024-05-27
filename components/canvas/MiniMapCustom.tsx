@@ -1,4 +1,4 @@
-import { MiniMap, Node } from "reactflow";
+import { MiniMap, MiniMapNodeProps, Node, useReactFlow } from "reactflow";
 import { NodeTypes } from "@/types/NodeTypes";
 import colors from "../../theme/colors";
 import styles from "./MiniMapCustom.module.scss";
@@ -21,10 +21,30 @@ export function MiniMapCustom() {
     }
   };
 
+  const nodeShape = ({ id, x, y, width, height, color }: MiniMapNodeProps) => {
+    const { getNode } = useReactFlow();
+
+    return (
+      <rect
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        fill={color}
+        transform={
+          getNode(id)?.type === NodeTypes.choice
+            ? `rotate(45 ${x + width / 2} ${y + height / 2})`
+            : ""
+        }
+      />
+    );
+  };
+
   return (
     <MiniMap
       className={styles.minimap}
       nodeColor={nodeColor}
+      nodeComponent={nodeShape}
       position={"bottom-left"}
       ariaLabel={"Flyt mini map"}
       pannable
