@@ -9,17 +9,19 @@ type NodeDescription = {
   description?: string;
 };
 
-export const NodeDescription = ({ header, description }: NodeDescription) => (
-  <div className={styles["node__description-container"]}>
-    {header && (
-      <Typography variant="caption" className={styles["node__header"]}>
-        {getNodeTypeName(header)}
-      </Typography>
-    )}
-    {description && (
-      <Typography variant="caption" className={styles["node__description"]}>
-        {formatNodeText(description)}
-      </Typography>
-    )}
-  </div>
-);
+export const NodeDescription = ({ header, description }: NodeDescription) => {
+  return (
+    <div className={styles["node__description-container"]}>
+      {header && (
+        <Typography variant="caption" className={styles["node__header"]}>
+          {getNodeTypeName(header)}
+        </Typography>
+      )}
+      {description && (
+        <Typography variant="caption" className={styles["node__description"]}>
+          {formatNodeText(description)}
+        </Typography>
+      )}
+    </div>
+  );
+};

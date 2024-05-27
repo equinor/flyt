@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Connection, NodeProps, Position, useStore } from "reactflow";
-
 import { NodeButtonsContainer } from "./NodeButtonsContainer";
 import { SubActivityButton } from "./SubActivityButton";
 import { ChoiceButton } from "./ChoiceButton";
@@ -13,7 +12,9 @@ import colors from "theme/colors";
 import { NodeCard } from "./NodeCard";
 import { NodeDescription } from "./NodeDescription";
 import { SourceHandle } from "./SourceHandle";
-import { formatNodeText } from "./utils/formatNodeText";
+import { NodeShape } from "./NodeShape";
+import { NodeTooltip } from "./NodeTooltip";
+import { NodeTooltipSection } from "./NodeTooltipSection";
 
 export const ChoiceNode = ({
   data: {
@@ -37,11 +38,13 @@ export const ChoiceNode = ({
   dragging,
 }: NodeProps<NodeData>) => {
   const [hovering, setHovering] = useState(false);
+  const [hoveringShape, setHoveringShape] = useState(false);
   const connectionNodeId = useStore((state) => state.connectionNodeId);
   const lastChild = children[children?.length - 1];
 
   useEffect(() => {
     setHovering(false);
+    setHoveringShape(false);
   }, [dragging, connectionNodeId]);
 
   const renderNodeButtons = () => {
@@ -137,22 +140,32 @@ export const ChoiceNode = ({
       onMouseLeave={() => setHovering(false)}
     >
       <NodeCard
-        shape="rhombus"
-        height={shapeHeight}
-        width={shapeWidth}
-        color={colors.NODE_CHOICE}
         onClick={handleClickNode}
         hovering={hovering && !merging}
         highlighted={isDropTarget && isValidDropTarget}
         darkened={isValidDropTarget === false}
       >
-        <NodeDescription
-          header={!description ? type : undefined}
-          description={description}
-        />
+        <NodeShape
+          shape={"rhombus"}
+          color={colors.NODE_CHOICE}
+          width={shapeWidth}
+          height={shapeHeight}
+          onMouseEnter={() => !dragging && setHoveringShape(true)}
+          onMouseLeave={() => setHoveringShape(false)}
+        >
+          <NodeDescription
+            header={!description ? type : undefined}
+            description={description}
+          />
+        </NodeShape>
       </NodeCard>
       <TargetHandle hidden={!mergeOption} />
       <SourceHandle />
+      <NodeTooltip isVisible={!!(hoveringShape && description)}>
+        {description && (
+          <NodeTooltipSection header={"Description"} text={description} />
+        )}
+      </NodeTooltip>
       {renderNodeButtons()}
     </div>
   );

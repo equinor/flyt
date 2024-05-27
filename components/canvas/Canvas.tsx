@@ -215,14 +215,12 @@ const Canvas = ({
                 id: `${tempParentNodeId}=>${id}`,
                 source: tempParentNodeId,
                 target: id,
-                labelShowBg: true,
               });
               tempEdges.push({
                 id: `${id}=>${id}`,
                 source: id,
                 target: id,
                 type: "straight",
-                labelShowBg: true,
               });
               tempParentNodeId = id;
             }
@@ -231,7 +229,6 @@ const Canvas = ({
               id: `${tempParentNodeId}=>${node.id}`,
               source: tempParentNodeId,
               target: node.id,
-              labelShowBg: true,
             });
           }
         });
@@ -374,7 +371,6 @@ const Canvas = ({
         attributionPosition="bottom-right"
         connectionRadius={100}
       >
-        <Controls className={styles.controls} showInteractive={false} />
         <MiniMapCustom />
       </ReactFlow>
       {createdBeforeSecondMajorRelease && (
@@ -388,6 +384,7 @@ export function CanvasWrapper(props: CanvasProps) {
   return (
     <ReactFlowProvider>
       <Canvas {...props} />
+      <Controls className={styles.controls} showInteractive={false} />
     </ReactFlowProvider>
   );
 }

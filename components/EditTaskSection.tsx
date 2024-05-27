@@ -1,24 +1,24 @@
 import { Button, Checkbox, Icon } from "@equinor/eds-core-react";
-import { solveTask, deleteTask } from "../services/taskApi";
+import { solveTask, deleteTask } from "@/services/taskApi";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQueryClient } from "react-query";
 
 import { EditTaskTextField } from "./EditTaskTextField";
 import { delete_to_trash } from "@equinor/eds-icons";
-import { notifyOthers } from "../services/notifyOthers";
-import { Task } from "../types/Task";
-import { unknownErrorToString } from "../utils/isError";
-import { useStoreDispatch } from "../hooks/storeHooks";
-import { NodeDataApi } from "../types/NodeDataApi";
+import { notifyOthers } from "@/services/notifyOthers";
+import { Task } from "@/types/Task";
+import { unknownErrorToString } from "@/utils/isError";
+import { useStoreDispatch } from "@/hooks/storeHooks";
+import { NodeDataApi } from "@/types/NodeDataApi";
 import { TaskTypes } from "types/TaskTypes";
 import { getTaskShorthand } from "utils/getTaskShorthand";
-import { useProjectId } from "../hooks/useProjectId";
+import { useProjectId } from "@/hooks/useProjectId";
 
 export function EditTaskSection(props: {
   task: Task;
   object: NodeDataApi;
   canEdit: boolean;
-}): JSX.Element {
+}) {
   const { task, object } = props;
   const dispatch = useStoreDispatch();
 
@@ -36,11 +36,11 @@ export function EditTaskSection(props: {
       node: NodeDataApi;
       solvedTask: Task;
       solved: boolean;
-    }) => solveTask(projectId, node.id, solvedTask.id, solved),
+    }) => solveTask(projectId, node.id, solvedTask.id ?? "", solved),
     {
       onSuccess(_data, variables) {
         const { solvedTask, solved } = variables;
-        notifyOthers(
+        void notifyOthers(
           ` ${getTaskSolvedText(solvedTask.type, solved)} a ${getTaskTypeText(
             solvedTask.type
           )}`,
@@ -54,10 +54,10 @@ export function EditTaskSection(props: {
   );
 
   const taskDeleteMutation = useMutation(
-    (task: Task) => deleteTask(object.projectId, object.id, task.id),
+    (task: Task) => deleteTask(object.projectId, object.id, task.id ?? ""),
     {
       onSuccess() {
-        notifyOthers(
+        void notifyOthers(
           `Removed ${getTaskTypeText(task.type)} from a card`,
           projectId,
           account
@@ -71,12 +71,14 @@ export function EditTaskSection(props: {
   return (
     <div style={{ display: "flex" }}>
       {/*  Important to have a key so that it triggers a re-render when needed */}
-      <EditTaskTextField
-        disabled={!props.canEdit}
-        key={task.id}
-        task={task}
-        vsmObject={object}
-      />
+      <div style={{ flex: 1 }}>
+        <EditTaskTextField
+          canEdit={props.canEdit}
+          key={task.id}
+          task={task}
+          vsmObject={object}
+        />
+      </div>
       <div
         style={{
           display: "flex",
@@ -90,7 +92,7 @@ export function EditTaskSection(props: {
           <Checkbox
             key={task.id}
             defaultChecked={task.solved}
-            title={`${getToggleActionText(task.type, task.solved)}`}
+            title={`${getToggleActionText(task.type, task.solved ?? false)}`}
             disabled={!props.canEdit}
             onChange={() => {
               solveTaskMutation.mutate({
@@ -138,7 +140,7 @@ function getToggleActionText(type: TaskTypes, solved: boolean) {
   }
 }
 
-function getTaskSolvedText(type: TaskTypes, solved: boolean) {
+function getTaskSolvedText(type: TaskTypes | undefined, solved: boolean) {
   switch (type) {
     case TaskTypes.problem:
       return solved ? "Solved" : "Unsolved";
@@ -153,7 +155,7 @@ function getTaskSolvedText(type: TaskTypes, solved: boolean) {
   }
 }
 
-function getTaskTypeText(type: TaskTypes) {
+function getTaskTypeText(type: TaskTypes | undefined) {
   switch (type) {
     case TaskTypes.problem:
       return "Problem";

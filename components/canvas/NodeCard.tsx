@@ -1,14 +1,6 @@
-import { Task } from "types/Task";
 import styles from "./Node.module.scss";
-import { QIPRContainer } from "./QIPRContainer";
-import { NodeShape } from "./NodeShape";
 
 type NodeCard = {
-  shape: "square" | "rhombus";
-  color: string;
-  height: number;
-  width: number;
-  tasks?: Task[];
   onClick: () => void;
   hovering?: boolean;
   highlighted?: boolean;
@@ -17,11 +9,6 @@ type NodeCard = {
 };
 
 export const NodeCard = ({
-  shape,
-  height,
-  width,
-  color,
-  tasks,
   onClick,
   hovering,
   highlighted,
@@ -38,9 +25,6 @@ export const NodeCard = ({
     }`}
     onClick={onClick}
   >
-    <NodeShape shape={shape} color={color} width={width} height={height}>
-      {children}
-    </NodeShape>
-    <QIPRContainer tasks={tasks} />
+    {children}
   </div>
 );

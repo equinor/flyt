@@ -18,6 +18,10 @@ import { NodeDescription } from "./NodeDescription";
 import { NodeCard } from "./NodeCard";
 import colors from "theme/colors";
 import { SourceHandle } from "./SourceHandle";
+import { NodeShape } from "./NodeShape";
+import { NodeTooltip } from "./NodeTooltip";
+import { NodeTooltipSection } from "./NodeTooltipSection";
+import { QIPRContainer } from "./QIPRContainer";
 
 export const WaitingNode = ({
   data: {
@@ -43,10 +47,12 @@ export const WaitingNode = ({
   dragging,
 }: NodeProps<NodeData>) => {
   const [hovering, setHovering] = useState(false);
+  const [hoveringShape, setHoveringShape] = useState(false);
   const connectionNodeId = useStore((state) => state.connectionNodeId);
 
   useEffect(() => {
     setHovering(false);
+    setHoveringShape(false);
   }, [dragging, connectionNodeId]);
 
   const renderNodeButtons = () => {
@@ -128,29 +134,45 @@ export const WaitingNode = ({
       onMouseLeave={() => setHovering(false)}
     >
       <NodeCard
-        shape="square"
-        height={shapeHeight}
-        width={shapeWidth}
-        color={colors.NODE_WAITING}
-        tasks={tasks}
         onClick={handleClickNode}
         hovering={hovering && !merging}
         highlighted={isDropTarget && isValidDropTarget}
         darkened={isValidDropTarget === false}
       >
-        <NodeDescription
-          header={!description ? type : undefined}
-          description={description}
-        />
-        <div className={styles["node__waitingtime-container"]}>
-          <Icon data={timeIcon} size={24} style={{ marginRight: 5 }} />
-          <Typography variant="caption">
-            {formatDuration(duration, unit)}
-          </Typography>
-        </div>
-        <TargetHandle hidden={!mergeOption} />
-        <SourceHandle />
+        <NodeShape
+          shape={"square"}
+          color={colors.NODE_WAITING}
+          width={shapeWidth}
+          height={shapeHeight}
+          onMouseEnter={() => !dragging && setHoveringShape(true)}
+          onMouseLeave={() => setHoveringShape(false)}
+        >
+          <NodeDescription
+            header={!description ? type : undefined}
+            description={description}
+          />
+          <div className={styles["node__waitingtime-container"]}>
+            <Icon data={timeIcon} size={24} style={{ marginRight: 5 }} />
+            <Typography variant="caption">
+              {formatDuration(duration, unit)}
+            </Typography>
+          </div>
+        </NodeShape>
+        <QIPRContainer tasks={tasks} />
       </NodeCard>
+      <TargetHandle hidden={!mergeOption} />
+      <SourceHandle />
+      <NodeTooltip isVisible={!!(hoveringShape && (description || duration))}>
+        {description && (
+          <NodeTooltipSection header={"Description"} text={description} />
+        )}
+        {duration && (
+          <NodeTooltipSection
+            header={"Duration"}
+            text={formatDuration(duration, unit)}
+          />
+        )}
+      </NodeTooltip>
       {renderNodeButtons()}
     </div>
   );
