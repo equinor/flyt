@@ -2,7 +2,6 @@
 
 ![image](https://github.com/equinor/flyt/assets/115637685/b2cbc217-1b39-4668-b891-afed82edcd01)
 
-
 # Links
 
 - 🌱 [Internal repo](https://github.com/equinor/flyt-internal)

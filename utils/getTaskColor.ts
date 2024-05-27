@@ -1,7 +1,7 @@
 import { Task } from "../types/Task";
 import { TaskTypes } from "../types/TaskTypes";
 
-export function getTaskColor(task: Task): string {
+export function getTaskColor(task?: Task): string {
   switch (task?.type) {
     case TaskTypes.problem:
       return "#eb0000";
