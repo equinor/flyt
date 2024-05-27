@@ -43,7 +43,7 @@ export function ChoiceEdge({
           <EdgeLabel
             id={id}
             labelText={label?.toString()}
-            selected={selected}
+            selected={selected ?? false}
           />
         </div>
       </EdgeLabelRenderer>
