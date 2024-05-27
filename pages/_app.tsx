@@ -3,11 +3,11 @@ import "../styles/globals.scss";
 import App, { AppContext } from "next/app";
 import { QueryClient, QueryClientProvider } from "react-query";
 
-import { LayoutWrapper } from "../layouts/LayoutWrapper";
+import { LayoutWrapper } from "@/layouts/LayoutWrapper";
 import { MsalProvider } from "@azure/msal-react";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { StoreProvider } from "easy-peasy";
-import { msalInstance } from "../auth/msalHelpers";
+import { msalInstance } from "@/auth/msalHelpers";
 import store from "../store/store";
 
 const queryClient = new QueryClient();
@@ -22,7 +22,7 @@ export default function MyApp({ Component, pageProps }) {
           </LayoutWrapper>
         </MsalProvider>
         <div onWheel={(e) => e.stopPropagation()}>
-          <ReactQueryDevtools initialIsOpen={false} />
+          <ReactQueryDevtools initialIsOpen={false} position={"bottom-right"} />
         </div>
       </QueryClientProvider>
     </StoreProvider>
