@@ -3,21 +3,8 @@ import {
   EdgeLabelRenderer,
   EdgeProps,
   getBezierPath,
-  useReactFlow,
-  useOnSelectionChange,
 } from "reactflow";
-import colors from "../../theme/colors";
-import {
-  Button,
-  Icon,
-  Input,
-  Popover,
-  Typography,
-} from "@equinor/eds-core-react";
-import { useRef, useState } from "react";
-import * as styles from "./ChoiceEdge.module.scss";
 import { EdgeLabel } from "@/components/canvas/ChoiceEdgeLabel";
-import { edit } from "@equinor/eds-icons";
 
 export function ChoiceEdge({
   id,
@@ -27,7 +14,6 @@ export function ChoiceEdge({
   targetY,
   sourcePosition,
   targetPosition,
-  style = {},
   markerEnd,
   label,
   selected,

@@ -1,5 +1,28 @@
+@import "styles/_variables.scss";
+
 .choice-edge {
   path {
     color: #fff;
   }
+}
+
+.editButton {
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.14);
+  background: $white;
+}
+
+.editButton:hover {
+  background: $equinor_HOVER-ALT;
+}
+
+.textarea {
+  background: $canvas;
+  outline: none;
+  border: none;
+  border-radius: 4px;
+  height: auto;
+  max-width: 15ch;
+  text-align: center;
+  resize: none;
+  cursor: pointer;
 }
