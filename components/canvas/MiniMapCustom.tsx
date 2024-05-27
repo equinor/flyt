@@ -14,6 +14,8 @@ export function MiniMapCustom() {
         return colors.NODE_CHOICE;
       case NodeTypes.waiting:
         return colors.NODE_WAITING;
+      case NodeTypes.hidden:
+        return colors.WHITE;
       default:
         return colors.NODE_GENERIC;
     }
