@@ -1,5 +1,5 @@
 import { useReactFlow } from "reactflow";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button, Icon } from "@equinor/eds-core-react";
 import { edit } from "@equinor/eds-icons";
 import styles from "./ChoiceEdge.module.scss";
@@ -16,18 +16,15 @@ export function EdgeLabel({ id, labelText, selected }: EdgeLabelProps) {
   const [showInput, setShowInput] = useState(!!value);
   const valueSize = Math.max(value?.length ?? 0, 1);
 
-  if (!value && !selected) return <></>;
   const updateLabel = () => {
-    console.log("updating edge with value:", value);
     setEdges((edges) =>
       edges.map((edge) => (edge.id === id ? { ...edge, label: value } : edge))
     );
   };
 
-  if (!selected)
-    setTimeout(() => {
-      inputRef.current?.blur();
-    }, 50);
+  useEffect(() => {
+    if (!selected) inputRef.current?.blur();
+  }, [selected]);
 
   const ButtonComponent = (
     <>
@@ -61,15 +58,13 @@ export function EdgeLabel({ id, labelText, selected }: EdgeLabelProps) {
         onKeyDown={(event) => {
           if (event.key === "Enter") {
             event.preventDefault();
-            updateLabel();
-            setTimeout(() => {
-              inputRef.current?.blur();
-            }, 500);
           }
         }}
         onBlur={updateLabel}
       />
     </>
   );
+
+  if (!value && !selected) return <></>;
   return !value && selected && !showInput ? ButtonComponent : TextAreaComponent;
 }
