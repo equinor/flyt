@@ -8,11 +8,11 @@
 
 .editButton {
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.14);
-  background: $white;
+  background: $white !important;
 }
 
 .editButton:hover {
-  background: $equinor_HOVER-ALT;
+  background: $equinor_HOVER-ALT !important;
 }
 
 .textarea {

@@ -18,6 +18,7 @@ export function EdgeLabel({ id, labelText, selected }: EdgeLabelProps) {
 
   if (!value && !selected) return <></>;
   const updateLabel = () => {
+    console.log("updating edge with value:", value);
     setEdges((edges) =>
       edges.map((edge) => (edge.id === id ? { ...edge, label: value } : edge))
     );
@@ -48,12 +49,11 @@ export function EdgeLabel({ id, labelText, selected }: EdgeLabelProps) {
   const TextAreaComponent = (
     <>
       <textarea
-        rows={Math.ceil(valueSize / 15)}
+        rows={Math.ceil(valueSize / 25)}
         id={id}
         ref={inputRef}
         className={styles.textarea}
         style={{
-          display: value || showInput ? "inline-block" : "none",
           width: valueSize + "ch",
         }}
         value={value}
@@ -62,7 +62,9 @@ export function EdgeLabel({ id, labelText, selected }: EdgeLabelProps) {
           if (event.key === "Enter") {
             event.preventDefault();
             updateLabel();
-            inputRef.current?.blur();
+            setTimeout(() => {
+              inputRef.current?.blur();
+            }, 500);
           }
         }}
         onBlur={updateLabel}
