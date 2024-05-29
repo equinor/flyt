@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Connection, Position, useStore } from "reactflow";
-import { formatNodeText } from "./utils/formatNodeText";
+import { FormatNodeText } from "./utils/FormatNodeText";
 import { formatDuration } from "types/unitDefinitions";
 import styles from "./Node.module.scss";
 import { SubActivityButton } from "./SubActivityButton";
@@ -152,9 +152,12 @@ export const SubActivityNode = ({
             description={description}
           />
           <div className={styles["node__role-container"]}>
-            <Typography variant="caption" className={styles["node__info-text"]}>
-              {formatNodeText(role)}
-            </Typography>
+            <FormatNodeText
+              variant="caption"
+              className={styles["node__info-text"]}
+            >
+              {role}
+            </FormatNodeText>
           </div>
           <div className={styles["node__time-container"]}>
             <Typography variant="caption" className={styles["node__info-text"]}>
@@ -172,9 +175,7 @@ export const SubActivityNode = ({
         {description && (
           <NodeTooltipSection header={"Description"} text={description} />
         )}
-        {role && (
-          <NodeTooltipSection header={"Role(s)"} text={formatNodeText(role)} />
-        )}
+        {role && <NodeTooltipSection header={"Role(s)"} text={role} />}
         {duration && (
           <NodeTooltipSection
             header={"Duration"}

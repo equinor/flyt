@@ -1,6 +1,5 @@
-import { Typography } from "@equinor/eds-core-react";
 import styles from "./NodeTooltipSection.module.scss";
-import { formatNodeText } from "./utils/formatNodeText";
+import { FormatNodeText } from "./utils/FormatNodeText";
 
 type NodeTooltipSection = {
   header?: string;
@@ -9,9 +8,9 @@ type NodeTooltipSection = {
 
 export const NodeTooltipSection = ({ header, text }: NodeTooltipSection) => (
   <div className={styles.container}>
-    <Typography variant="meta" color="Gray">
-      {formatNodeText(header)}
-    </Typography>
-    <Typography variant="body_long">{formatNodeText(text)}</Typography>
+    <FormatNodeText variant="meta" color="Gray">
+      {header}
+    </FormatNodeText>
+    <FormatNodeText variant="body_long">{text}</FormatNodeText>
   </div>
 );
