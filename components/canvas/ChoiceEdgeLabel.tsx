@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from "react";
 import { Button, Icon } from "@equinor/eds-core-react";
 import { edit } from "@equinor/eds-icons";
 import styles from "./ChoiceEdge.module.scss";
+import { patchEdge } from "@/services/graphApi";
+import { useProjectId } from "@/hooks/useProjectId";
 
 type EdgeLabelProps = {
   id: string;
@@ -11,19 +13,30 @@ type EdgeLabelProps = {
 };
 export function EdgeLabel({ id, labelText, selected }: EdgeLabelProps) {
   const { setEdges } = useReactFlow();
+  const projectId = useProjectId();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [value, setValue] = useState(labelText);
   const [showInput, setShowInput] = useState(!!value);
   const valueSize = Math.max(value?.length ?? 0, 1);
 
   const updateLabel = () => {
-    setEdges((edges) =>
-      edges.map((edge) => (edge.id === id ? { ...edge, label: value } : edge))
-    );
+    if (labelText !== value) {
+      setEdges((edges) =>
+        edges.map((edge) => (edge.id === id ? { ...edge, label: value } : edge))
+      );
+      patchEdge({ EdgeValue: value }, projectId.projectId, id);
+    }
   };
 
   useEffect(() => {
     if (!selected) inputRef.current?.blur();
+    else {
+      inputRef.current?.focus();
+      inputRef.current?.setSelectionRange(
+        inputRef.current?.value.length,
+        inputRef.current?.value.length
+      );
+    }
   }, [selected]);
 
   const ButtonComponent = (

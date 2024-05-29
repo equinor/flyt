@@ -3,7 +3,6 @@ import { ManageLabelBox } from "components/Labels/ManageLabelBox";
 import { ResetProcessButton } from "components/ResetProcessButton";
 import { useLayoutEffect, useState } from "react";
 import ReactFlow, {
-  BaseEdge,
   Controls,
   Edge,
   Node,
@@ -63,9 +62,14 @@ const Canvas = ({
   apiEdges.map((edge: EdgeDataApi) => {
     const nodeSource = apiNodes.filter((node) => node.id === edge.source);
     if (nodeSource[0] && nodeSource[0].type === NodeTypes.choice) {
-      tempEdges.push({ ...edge, type: "choice" });
+      tempEdges.push({
+        ...edge,
+        data: { projectId: edge.projectId },
+        type: "choice",
+        label: edge.edgeValue,
+      });
     } else {
-      tempEdges.push({ ...edge });
+      tempEdges.push({ ...edge, data: { projectId: edge.projectId } });
     }
   });
 
