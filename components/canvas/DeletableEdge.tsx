@@ -1,13 +1,8 @@
 import { Button, Icon } from "@equinor/eds-core-react";
 import { close_circle_outlined } from "@equinor/eds-icons";
-import {
-  BaseEdge,
-  EdgeLabelRenderer,
-  EdgeProps,
-  getBezierPath,
-} from "reactflow";
+import { BaseEdge, EdgeLabelRenderer, EdgeProps } from "reactflow";
 import styles from "./Edge.module.scss";
-import { useEdgeDelete } from "./hooks/useEdgeDelete";
+import { getSvgStraightLineData } from "./drawSvgPath";
 
 export const DeletableEdge = ({
   id,
@@ -15,19 +10,17 @@ export const DeletableEdge = ({
   sourceY,
   targetX,
   targetY,
-  sourcePosition,
-  targetPosition,
   selected,
+  data,
 }: EdgeProps) => {
-  const [edgePath, labelX, labelY] = getBezierPath({
-    sourceX,
-    sourceY,
-    sourcePosition,
-    targetX,
-    targetY,
-    targetPosition,
-  });
-  const { mutate: deleteEdge } = useEdgeDelete();
+  const points = [
+    { x: sourceX, y: sourceY },
+    { x: targetX, y: targetY },
+  ];
+
+  data?.points && points.splice(1, 0, ...data.points);
+
+  const [edgePath, labelX, labelY] = getSvgStraightLineData(points);
 
   return (
     <>
@@ -40,10 +33,7 @@ export const DeletableEdge = ({
               transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
             }}
           >
-            <Button
-              variant="ghost_icon"
-              onClick={() => deleteEdge({ edgeId: id })}
-            >
+            <Button variant="ghost_icon" onClick={() => data?.onDelete(id)}>
               <Icon data={close_circle_outlined} size={24} />
             </Button>
           </div>

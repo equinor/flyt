@@ -7,16 +7,17 @@ import ReactFlow, {
   Edge,
   Node,
   ReactFlowProvider,
+  XYPosition,
   useEdgesState,
   useNodesState,
 } from "reactflow";
 import "reactflow/dist/style.css";
-import { NodeDataFull } from "types/NodeData";
+import { NodeDataFull, NodeDataHidden } from "types/NodeData";
 import { NodeDataApi } from "types/NodeDataApi";
 import { NodeTypes } from "types/NodeTypes";
+import { EdgeTypes } from "types/EdgeTypes";
 import { Project } from "types/Project";
 import { Graph } from "../../types/Graph";
-import { uid } from "../../utils/uuid";
 import { DeleteNodeDialog } from "../DeleteNodeDialog";
 import { LiveIndicator } from "../LiveIndicator";
 import { SideBar } from "../SideBar";
@@ -35,6 +36,8 @@ import { useWebSocket } from "./hooks/useWebSocket";
 import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
 import { useProjectId } from "../../hooks/useProjectId";
 import { edgeElementTypes } from "./EdgeElementTypes";
+import { useEdgeDelete } from "./hooks/useEdgeDelete";
+import { ScrimDelete } from "../ScrimDelete";
 
 type CanvasProps = {
   graph: Graph;
@@ -58,15 +61,20 @@ const Canvas = ({
 
   let tempNodes: Node<NodeDataFull>[] = [];
   let tempEdges: Edge[] = apiEdges;
+  const customEdges: Edge[] = [];
   const [nodes, setNodes, onNodesChange] = useNodesState<NodeDataFull>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-  const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
+  const [visibleDeleteNodeScrim, setVisibleDeleteNodeScrim] = useState(false);
+  const [edgeToBeDeletedId, setEdgeToBeDeletedId] = useState<
+    string | undefined
+  >(undefined);
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
 
   const { onNodeDragStart, onNodeDrag, onNodeDragStop } = useNodeDrag();
   const { mutate: mergeNode, merging } = useNodeMerge();
   const { mutate: addNode } = useNodeAdd();
+  const { deleteEdgeMutation } = useEdgeDelete();
 
   const { socketConnected, socketReason } = useWebSocket();
 
@@ -103,6 +111,12 @@ const Canvas = ({
           }
           return tempNode;
         });
+        tempEdges = tempEdges.map((tempEdge) => {
+          if (tempEdge.target === duplicateNode.id) {
+            tempEdge.type = EdgeTypes.deletable;
+          }
+          return tempEdge;
+        });
         return;
       }
 
@@ -137,6 +151,8 @@ const Canvas = ({
           ...node,
           parents: [],
           columnId: node.id,
+          shapeHeight: shapeSize.height,
+          shapeWidth: shapeSize.width,
         },
         position: { x: 0, y: 0 },
         type: node.type,
@@ -172,14 +188,28 @@ const Canvas = ({
             depthDeepestNode &&
             tempParentNode.data.depth < depthDeepestNode
           ) {
-            tempEdges = tempEdges.filter(
-              (edge) =>
-                edge.source !== tempParentNode.id || edge.target !== node.id
-            );
+            let customEdge: Edge | undefined;
+            // Remove edge and add it as a custom edge to redraw it later
+            tempEdges = tempEdges.filter((edge) => {
+              if (
+                edge.source !== tempParentNode.id ||
+                edge.target !== node.id
+              ) {
+                return true;
+              } else {
+                customEdge = edge;
+                customEdge.data = {
+                  hiddenNodeTree: [],
+                };
+                return false;
+              }
+            });
+
             let tempParentNodeId = tempParentNode.id;
             for (let i = tempParentNode.data.depth; i < depthDeepestNode; i++) {
-              const id = uid();
-              tempNodes.push({
+              const id = `h_n_${i}_${tempParentNodeId}`;
+              customEdge?.data?.hiddenNodeTree.push(id);
+              const node: Node<NodeDataHidden> = {
                 id,
                 data: {
                   parents: [tempParentNodeId],
@@ -195,29 +225,57 @@ const Canvas = ({
                 width: shapeSize.width,
                 draggable: false,
                 selectable: false,
-              });
+              };
+              tempNodes.push(node);
+              tempNodes.push();
               tempEdges.push({
-                id: `${tempParentNodeId}=>${id}`,
+                id: `h_e_${tempParentNodeId}`,
                 source: tempParentNodeId,
                 target: id,
-              });
-              tempEdges.push({
-                id: `${id}=>${id}`,
-                source: id,
-                target: id,
-                type: "straight",
+                type: EdgeTypes.straight,
+                hidden: true,
               });
               tempParentNodeId = id;
             }
 
             tempEdges.push({
-              id: `${tempParentNodeId}=>${node.id}`,
+              id: `h_e_${tempParentNodeId}`,
               source: tempParentNodeId,
               target: node.id,
+              type: EdgeTypes.straight,
+              hidden: true,
             });
+            customEdge && customEdges.push(customEdge);
           }
         });
       }
+    });
+  };
+
+  const createCustomEdges = (nodes: Node<NodeDataFull>[]) => {
+    customEdges.forEach((e) => {
+      const points: XYPosition[] = [];
+      e.data.hiddenNodeTree.forEach((nId) => {
+        const hiddenNode = nodes.find((n) => n.id === nId);
+        if (hiddenNode) {
+          points.push({
+            x: hiddenNode.position.x + shapeSize.width / 2,
+            y: hiddenNode.position.y,
+          });
+          points.push({
+            x: hiddenNode.position.x + shapeSize.width / 2,
+            y: hiddenNode.position.y + shapeSize.height,
+          });
+        }
+      });
+      const edge = {
+        ...e,
+        data: {
+          points: points,
+          onDelete: () => setEdgeToBeDeletedId(e.id),
+        },
+      };
+      tempEdges.push(edge);
     });
   };
 
@@ -270,23 +328,9 @@ const Canvas = ({
   };
 
   const setEdgeTypes = () => {
-    const fromCounts = tempEdges.reduce(
-      (acc: Record<string, number>, obj: Edge) => {
-        acc[obj.target] = (acc[obj.target] || 0) + 1;
-        return acc;
-      },
-      {}
-    );
-    const duplicates = tempEdges.filter(
-      (obj: Edge) => fromCounts[obj.target] > 1
-    );
-    const duplicateIds = duplicates.map((obj: Edge) => obj.id);
-
-    tempEdges = tempEdges.map((edge) => {
-      if (duplicateIds.includes(edge.id)) {
-        return { ...edge, type: "Deletable" };
-      }
-      return edge;
+    tempEdges = tempEdges.map((e) => {
+      e.type = EdgeTypes.straight;
+      return e;
     });
   };
 
@@ -307,11 +351,12 @@ const Canvas = ({
       );
       setSelectedNode(updatedSelectedNode);
     }
+    setEdgeTypes();
     createNodes(root);
     setNodesDepth();
     createHiddenNodes();
-    setEdgeTypes();
     const finalNodes = setLayout(tempNodes, tempEdges);
+    createCustomEdges(finalNodes);
     setNodes(finalNodes);
     setEdges(tempEdges);
   }, [apiNodes, apiEdges, userCanEdit]);
@@ -344,16 +389,38 @@ const Canvas = ({
       {selectedNode && (
         <DeleteNodeDialog
           objectToDelete={selectedNode}
-          visible={visibleDeleteScrim}
+          visible={visibleDeleteNodeScrim}
           onClose={() => {
-            setVisibleDeleteScrim(false);
+            setVisibleDeleteNodeScrim(false);
             setSelectedNode(undefined);
           }}
         />
       )}
+      {edgeToBeDeletedId && (
+        <ScrimDelete
+          id={edgeToBeDeletedId}
+          open={!!edgeToBeDeletedId}
+          onConfirm={(id) => {
+            deleteEdgeMutation.mutate(
+              { edgeId: id },
+              {
+                onSuccess() {
+                  setEdgeToBeDeletedId(undefined);
+                },
+              }
+            );
+          }}
+          onClose={() => setEdgeToBeDeletedId(undefined)}
+          header={"Delete line"}
+          warningMessage={"Are you sure you want to delete this line?"}
+          confirmMessage={"Delete"}
+          isLoading={deleteEdgeMutation.isLoading}
+          error={deleteEdgeMutation.error}
+        />
+      )}
       <SideBar
         onClose={() => setSelectedNode(undefined)}
-        onDelete={() => setVisibleDeleteScrim(true)}
+        onDelete={() => setVisibleDeleteNodeScrim(true)}
         canEdit={userCanEdit}
         selectedNode={selectedNode}
       />

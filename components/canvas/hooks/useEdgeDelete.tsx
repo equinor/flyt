@@ -16,7 +16,7 @@ export const useEdgeDelete = () => {
   const queryClient = useQueryClient();
   const account = useUserAccount();
 
-  return useMutation(
+  const deleteEdgeMutation = useMutation(
     ({ edgeId }: EdgeDeleteParams) => {
       dispatch.setSnackMessage("⏳ Deleting line...");
       return deleteEdge(edgeId, projectId);
@@ -30,4 +30,6 @@ export const useEdgeDelete = () => {
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
+
+  return { deleteEdgeMutation };
 };

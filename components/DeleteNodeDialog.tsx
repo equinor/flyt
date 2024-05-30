@@ -1,16 +1,14 @@
-import { Button, Icon, Scrim, Typography } from "@equinor/eds-core-react";
-import { close as closeIcon, delete_forever } from "@equinor/eds-icons";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQueryClient } from "react-query";
 import { getNodeTypeName } from "../utils/getNodeTypeName";
 import { notifyOthers } from "../services/notifyOthers";
-import styles from "../layouts/default.layout.module.scss";
 import { unknownErrorToString } from "../utils/isError";
 import { useStoreDispatch } from "hooks/storeHooks";
 import { NodeDataApi } from "../types/NodeDataApi";
 import { NodeTypes } from "../types/NodeTypes";
 import { deleteVertice } from "services/graphApi";
 import { useProjectId } from "../hooks/useProjectId";
+import { ScrimDelete } from "./ScrimDelete";
 
 export function DeleteNodeDialog(props: {
   objectToDelete: NodeDataApi;
@@ -58,8 +56,8 @@ export function DeleteNodeDialog(props: {
 
   const { type } = props.objectToDelete;
 
-  const header = `Delete "${getNodeTypeName(type).toLowerCase()}"`;
-  let warningMessage = "This will delete the selected object.";
+  const header = `Delete ${getNodeTypeName(type).toLowerCase()}`;
+  let warningMessage = "This will delete the selected card.";
   if (type === mainActivity) {
     warningMessage =
       "This will delete everything under it.\nAre you sure you want to proceed?";
@@ -69,39 +67,16 @@ export function DeleteNodeDialog(props: {
   }
   const confirmMessage = "Delete";
   return (
-    <Scrim open onClose={handleClose} isDismissable>
-      <div className={styles.scrimWrapper}>
-        {deleteMutation.isLoading ? (
-          <Typography>Deleting...</Typography>
-        ) : (
-          <>
-            <div className={styles.scrimHeaderWrapper}>
-              <div className={styles.scrimTitle}>{header}</div>
-              <Button autoFocus variant={"ghost_icon"} onClick={handleClose}>
-                <Icon data={closeIcon} title="Close" />
-              </Button>
-            </div>
-            <div className={styles.scrimContent}>
-              {deleteMutation.error && (
-                <Typography color={"warning"} variant={"h4"}>
-                  {unknownErrorToString(deleteMutation.error)}
-                </Typography>
-              )}
-              <Typography variant={"h4"}>{warningMessage}</Typography>
-            </div>
-            <div className={styles.deleteButton}>
-              <Button
-                variant={"contained"}
-                color={"danger"}
-                onClick={handleDelete}
-              >
-                <Icon data={delete_forever} title="Delete process" size={16} />
-                {confirmMessage}
-              </Button>
-            </div>
-          </>
-        )}
-      </div>
-    </Scrim>
+    <ScrimDelete
+      id={props.objectToDelete.id}
+      open
+      header={header}
+      onClose={handleClose}
+      onConfirm={handleDelete}
+      error={deleteMutation.error}
+      warningMessage={warningMessage}
+      confirmMessage={confirmMessage}
+      isLoading={deleteMutation.isLoading}
+    />
   );
 }
