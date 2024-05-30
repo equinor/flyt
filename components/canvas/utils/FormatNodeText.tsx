@@ -18,7 +18,11 @@ export function FormatNodeText({
     }
 
     result.push(
-      <Typography className={styles[typographyProps.className ?? ""]} link>
+      <Typography
+        className={styles[typographyProps.className ?? ""]}
+        style={{ cursor: "grab" }}
+        link
+      >
         {linkText}
       </Typography>
     );
