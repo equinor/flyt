@@ -18,14 +18,12 @@ export const NodeDescription = ({ header, description }: NodeDescription) => {
         </Typography>
       )}
       {description && (
-        <Typography variant="caption" className={styles["node__description"]}>
-          <FormatNodeText
-            variant="caption"
-            className={styles["node__description"]}
-          >
-            {description}
-          </FormatNodeText>
-        </Typography>
+        <FormatNodeText
+          variant="caption"
+          className={styles["node__description"]}
+        >
+          {description}
+        </FormatNodeText>
       )}
     </div>
   );
