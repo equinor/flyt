@@ -5,7 +5,7 @@ import styles from "./Canvas.module.scss";
 
 export function ZoomLevel() {
   useStore((store) => store.transform[2]);
-  const otherZoomLevel = useReactFlow().getZoom();
+  const zoomLevel = useReactFlow().getZoom();
 
   return (
     <div className={styles.zoomLevel}>
@@ -13,7 +13,7 @@ export function ZoomLevel() {
         group={"heading"}
         variant={"h4"}
         color={colors.EQUINOR_PROMINENT}
-      >{`${Math.round(otherZoomLevel * 100)}%`}</Typography>
+      >{`${Math.round(zoomLevel * 100)}%`}</Typography>
     </div>
   );
 }
