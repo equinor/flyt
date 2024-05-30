@@ -9,7 +9,7 @@ export function FormatNodeText({
   const text = children.toString();
   // Pattern matching for Markdown hyperlink urls
   const pattern = /\[([^\]]+)]\(([^)]+)\)/g;
-  let result = [];
+  const result = [];
   let lastIndex = 0;
 
   text.replace(pattern, (match, linkText, _, offset) => {
@@ -18,7 +18,7 @@ export function FormatNodeText({
     }
 
     result.push(
-      <Typography className={styles[typographyProps.className]} link>
+      <Typography className={styles[typographyProps.className ?? ""]} link>
         {linkText}
       </Typography>
     );
