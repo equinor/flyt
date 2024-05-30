@@ -3,6 +3,7 @@ import { ManageLabelBox } from "components/Labels/ManageLabelBox";
 import { ResetProcessButton } from "components/ResetProcessButton";
 import { useLayoutEffect, useState } from "react";
 import ReactFlow, {
+  ControlButton,
   Controls,
   Edge,
   Node,
@@ -34,6 +35,7 @@ import { useWebSocket } from "./hooks/useWebSocket";
 import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
 import { useProjectId } from "@/hooks/useProjectId";
 import { MiniMapCustom } from "@/components/canvas/MiniMapCustom";
+import { ZoomLevel } from "@/components/canvas/ZoomLevel";
 
 type CanvasProps = {
   graph: Graph;
@@ -355,6 +357,12 @@ const Canvas = ({
         connectionRadius={100}
       >
         <MiniMapCustom />
+        <Controls className={styles.controls} showInteractive={false}>
+          <ControlButton className={styles.zoomContainer}>
+            <ZoomLevel />
+          </ControlButton>
+        </Controls>
+        <ZoomLevel />
       </ReactFlow>
       {createdBeforeSecondMajorRelease && (
         <OldFlytButton projectId={projectId} />
@@ -367,7 +375,6 @@ export function CanvasWrapper(props: CanvasProps) {
   return (
     <ReactFlowProvider>
       <Canvas {...props} />
-      <Controls className={styles.controls} showInteractive={false} />
     </ReactFlowProvider>
   );
 }
