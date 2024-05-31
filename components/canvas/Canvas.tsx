@@ -66,12 +66,11 @@ const Canvas = ({
     if (nodeSource[0] && nodeSource[0].type === NodeTypes.choice) {
       tempEdges.push({
         ...edge,
-        data: { projectId: edge.projectId },
         type: "choice",
         label: edge.edgeValue,
       });
     } else {
-      tempEdges.push({ ...edge, data: { projectId: edge.projectId } });
+      tempEdges.push({ ...edge });
     }
   });
 

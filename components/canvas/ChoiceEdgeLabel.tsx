@@ -13,7 +13,7 @@ type EdgeLabelProps = {
 };
 export function EdgeLabel({ id, labelText, selected }: EdgeLabelProps) {
   const { setEdges } = useReactFlow();
-  const projectId = useProjectId();
+  const { projectId } = useProjectId();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const [value, setValue] = useState(labelText);
   const [showInput, setShowInput] = useState(!!value);
@@ -24,7 +24,7 @@ export function EdgeLabel({ id, labelText, selected }: EdgeLabelProps) {
       setEdges((edges) =>
         edges.map((edge) => (edge.id === id ? { ...edge, label: value } : edge))
       );
-      patchEdge({ EdgeValue: value }, projectId.projectId, id);
+      patchEdge({ EdgeValue: value }, projectId, id);
     }
   };
 

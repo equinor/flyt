@@ -4,5 +4,4 @@ export type EdgeDataApi = {
   source: string; // Source node ID
   target: string; // Target node ID
   edgeValue?: string;
-  type?: string;
 };
