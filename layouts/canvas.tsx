@@ -50,7 +50,6 @@ export const CanvasLayout = ({ children }): JSX.Element => {
   const { data: project } = useQuery(["project", projectId], () =>
     getProject(projectId)
   );
-  const projectTitle = project?.name;
 
   const queryClient = useQueryClient();
   const projectMutation = useMutation(
@@ -190,19 +189,15 @@ export const CanvasLayout = ({ children }): JSX.Element => {
   }
 
   function updateProjectName(name: string) {
-    debounce(
-      () => {
-        projectMutation.mutate([
-          {
-            op: "replace",
-            path: "/Name",
-            value: name,
-          },
-        ]);
-      },
-      1000,
-      "updateProjectName"
-    );
+    if (name !== project?.name) {
+      projectMutation.mutate([
+        {
+          op: "replace",
+          path: "/Name",
+          value: name,
+        },
+      ]);
+    }
   }
 
   function handleDuplicate() {
@@ -231,7 +226,7 @@ export const CanvasLayout = ({ children }): JSX.Element => {
             <div className={styles.centerButton}>
               {project ? (
                 <EditableTitle
-                  defaulText={project.name || "Untitled process"}
+                  defaultText={project.name || "Untitled process"}
                   readOnly={!userCanEdit}
                   onSubmit={(text) => updateProjectName(text)}
                 />

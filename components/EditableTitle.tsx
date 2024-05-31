@@ -1,35 +1,43 @@
-import React from "react";
-import styles from "layouts/default.layout.module.scss";
 import { TextField } from "@equinor/eds-core-react";
+import { ChangeEvent, KeyboardEvent, useEffect, useState } from "react";
+import styles from "./EditableTitle.module.scss";
 
 export const EditableTitle = (props: {
-  defaulText?: string;
+  defaultText: string;
   readOnly?: boolean;
   onSubmit: (arg0: string) => void;
 }) => {
-  const { defaulText, readOnly, onSubmit } = props;
-  const text = defaulText || "Untitled process";
+  const { defaultText, readOnly, onSubmit } = props;
+  const [text, setText] = useState(defaultText);
 
-  const handleSubmit = (e) => {
-    if (e.code === "Enter" || e.type === "blur") {
-      e.target.value !== text && onSubmit(e.target.value);
+  useEffect(() => {
+    setText(defaultText);
+  }, [defaultText]);
+
+  const handleOnEnter = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.code === "Enter") {
+      e.currentTarget.blur();
     }
-    e.code === "Enter" && e.target.blur();
   };
 
   return (
     <TextField
       id={"title"}
-      key={text}
-      defaultValue={text}
+      defaultValue={defaultText}
+      value={text}
       readOnly={readOnly}
       className={styles.projectName}
-      onBlur={(e) => {
-        handleSubmit(e);
+      onBlur={() => {
+        onSubmit(text);
       }}
-      onKeyDown={(e) => {
-        handleSubmit(e);
+      onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+        handleOnEnter(e);
       }}
+      onChange={(e: ChangeEvent<HTMLInputElement>) => {
+        setText(e.target.value);
+      }}
+      multiline={false}
+      style={{ width: text.length + "ch" }}
     />
   );
 };
