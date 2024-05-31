@@ -362,7 +362,6 @@ const Canvas = ({
             <ZoomLevel />
           </ControlButton>
         </Controls>
-        <ZoomLevel />
       </ReactFlow>
       {createdBeforeSecondMajorRelease && (
         <OldFlytButton projectId={projectId} />
