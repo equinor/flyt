@@ -26,7 +26,7 @@ export const EditableTitle = (props: {
       defaultValue={defaultText}
       value={text}
       readOnly={readOnly}
-      className={styles.projectName}
+      className={styles.title}
       onBlur={() => {
         onSubmit(text);
       }}
