@@ -23,7 +23,6 @@ export const EditableTitle = (props: {
   return (
     <TextField
       id={"title"}
-      defaultValue={defaultText}
       value={text}
       readOnly={readOnly}
       className={styles.title}
