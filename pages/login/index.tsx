@@ -1,12 +1,12 @@
 import { useIsAuthenticated, useMsalAuthentication } from "@azure/msal-react";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { loginRequest, msalConfig } from "../../Config";
 import { InteractionType } from "@azure/msal-browser";
 import commonStyles from "../../styles/common.module.scss";
 import Link from "next/link";
 import { Button, Typography } from "@equinor/eds-core-react";
-import msalInstance from "../../auth/msalHelpers";
+import { msalInstance } from "../../auth/msalHelpers";
 
 export default function LoginPage() {
   const isAuthenticated = useIsAuthenticated();

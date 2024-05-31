@@ -1,215 +1,310 @@
-import React, { useEffect, useRef, useState } from "react";
-import { getProject } from "../../services/projectApi";
-import { moveVSMObject, postVSMObject } from "../../services/vsmObjectApi";
-import { useAccount, useMsal } from "@azure/msal-react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-
-import { DeleteVsmObjectDialog } from "../DeleteVsmObjectDialog";
-import { LiveIndicator } from "../LiveIndicator";
-import { ResetProcessButton } from "components/ResetProcessButton";
-import { ToBeToggle } from "./ToBeToggle";
-import { VSMSideBar } from "../VSMSideBar";
-import { addCardsToCanvas } from "./utils/AddCardsToCanvas";
-import { assets } from "./utils/AssetFactory";
-import { draggable } from "./utils/draggable";
-import { getAccessToken } from "../../auth/msalHelpers";
-import { getApp } from "./utils/PixiApp";
-import { getMyAccess } from "../../utils/getMyAccess";
-import { getViewPort } from "./utils/PixiViewport";
-import { initCanvas } from "./utils/InitCanvas";
-import { io } from "socket.io-client";
-import { loadAssets } from "./utils/LoadAssets";
-import { notifyOthers } from "../../services/notifyOthers";
-import { resetCanvasZoomAndPosition } from "./utils/ResetCanvasZoomAndPosition";
 import { CanvasButtons } from "components/CanvasButtons";
-import ManageLabelBox from "components/Labels/ManageLabelBox";
-import style from "../VSMCanvas.module.scss";
-import { toolBox } from "./entities/toolbox/toolbox";
-import { unknownErrorToString } from "utils/isError";
-import { useRouter } from "next/router";
-import { useStoreDispatch } from "../../hooks/storeHooks";
-import { vsmObject } from "interfaces/VsmObject";
-import { Button, Icon } from "@equinor/eds-core-react";
-import { close } from "@equinor/eds-icons";
-import { ProcessTimeline } from "../ProcessTimeline";
+import { ManageLabelBox } from "components/Labels/ManageLabelBox";
+import { ResetProcessButton } from "components/ResetProcessButton";
+import { useLayoutEffect, useState } from "react";
+import ReactFlow, {
+  ControlButton,
+  Controls,
+  Edge,
+  Node,
+  ReactFlowProvider,
+  useEdgesState,
+  useNodesState,
+} from "reactflow";
+import "reactflow/dist/style.css";
+import { NodeDataFull } from "types/NodeData";
+import { NodeDataApi } from "types/NodeDataApi";
+import { NodeTypes } from "types/NodeTypes";
+import { Project } from "types/Project";
+import { Graph } from "@/types/Graph";
+import { uid } from "@/utils/uuid";
+import { DeleteNodeDialog } from "../DeleteNodeDialog";
+import { LiveIndicator } from "../LiveIndicator";
+import { SideBar } from "../SideBar";
+import styles from "./Canvas.module.scss";
+import { nodeElementTypes } from "./NodeElementTypes";
+import { OldFlytButton } from "./OldFlytButton";
+import { ToBeToggle } from "./ToBeToggle";
+import { useAccess } from "./hooks/useAccess";
+import { useCenterCanvas } from "./hooks/useCenterCanvas";
+import { setLayout } from "./hooks/useLayout";
+import { useNodeAdd } from "./hooks/useNodeAdd";
+import { useNodeDrag } from "./hooks/useNodeDrag";
+import { useNodeMerge } from "./hooks/useNodeMerge";
+import { useWebSocket } from "./hooks/useWebSocket";
+import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
+import { useProjectId } from "@/hooks/useProjectId";
+import { MiniMapCustom } from "@/components/canvas/MiniMapCustom";
+import { ZoomLevel } from "@/components/canvas/ZoomLevel";
 
-export default function Canvas(): JSX.Element {
-  const ref = useRef();
-  const [selectedObject, setSelectedObject] = useState(null);
-  const dispatch = useStoreDispatch();
-  const router = useRouter();
-  const { id, version } = router.query;
+type CanvasProps = {
+  graph: Graph;
+  project: Project;
+};
 
-  const [socketConnected, setSocketConnected] = useState(false);
-  const [socketReason, setSocketReason] = useState("");
-
-  const { accounts } = useMsal();
-  const account = useAccount(accounts[0] || {});
-
-  useEffect(() => resetCanvasZoomAndPosition(), []);
-
-  useEffect(() => {
-    getAccessToken().then((accessToken) => {
-      const socket = io({ path: "/api/socket", auth: { token: accessToken } });
-
-      socket.on("connect", () => {
-        setSocketConnected(true);
-      });
-
-      socket.on("disconnect", (reason) => {
-        dispatch.setSnackMessage(`Socket disconnected because ${reason}`);
-        setSocketConnected(false);
-        setSocketReason(`${reason}`);
-      });
-
-      socket.on("connect_error", (error) => {
-        // if (error.data.type === "UnauthorizedError") {
-        console.log("Error", error);
-        setSocketConnected(false);
-        setSocketReason(error.message);
-        // }
-      });
-
-      socket.on(`room-${id}`, (payload) => {
-        if (payload.user !== account.username?.split("@")[0]) {
-          dispatch.setSnackMessage(
-            `${payload.user ? payload.user : "Someone"} ${payload.msg}`
-          );
-        }
-        queryClient.invalidateQueries();
-      });
-      // Handling token expiration
-
-      return () => socket.disconnect();
-    });
-  }, []);
-
-  const { data: project } = useQuery(["project", id, version], () =>
-    getProject(id, version)
+const Canvas = ({
+  graph: { vertices: apiNodes, edges: apiEdges },
+  project,
+}: CanvasProps) => {
+  const [selectedNode, setSelectedNode] = useState<NodeDataApi | undefined>(
+    undefined
   );
-  const [assetsAreLoaded, setAssetsAreLoaded] = useState(false);
+  const { projectId } = useProjectId();
+  const { userCanEdit } = useAccess(project);
+
+  const shapeSize = { height: 140, width: 140 };
+  const createdBeforeSecondMajorRelease =
+    new Date(project.created).getTime() <
+    new Date("2024-04-24T00:08:00.000000Z").getTime();
+
+  let tempNodes: Node<NodeDataFull>[] = [];
+  let tempEdges: Edge[] = apiEdges;
+  const [nodes, setNodes, onNodesChange] = useNodesState<NodeDataFull>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+
   const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
-  const myAccess = getMyAccess(project, account);
-  const userCanEdit = !version && myAccess !== "Reader";
 
-  const queryClient = useQueryClient();
-  const vsmObjectMutation = useMutation(
-    (newObject: vsmObject) => {
-      dispatch.setSnackMessage("⏳ Moving card...");
-      return moveVSMObject(newObject);
-    },
-    {
-      onSuccess: () => {
-        dispatch.setSnackMessage("✅ Moved card!");
-        notifyOthers("Moved a card", id, account);
-        return queryClient.invalidateQueries();
-      },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
-    }
-  );
-  const vsmObjectAddMutation = useMutation(
-    (newObject: vsmObject) => {
-      dispatch.setSnackMessage("⏳ Adding new card...");
-      return postVSMObject(newObject);
-    },
-    {
-      onSuccess: () => {
-        dispatch.setSnackMessage("✅ Card added!");
-        notifyOthers("Added a new card", id, account);
-        return queryClient.invalidateQueries();
-      },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
-    }
-  );
-  const projectId = router.query.id as string;
-  const [showVersionHistoryBottomSheet, setShowVersionHistoryBottomSheet] =
-    React.useState(!!router.query.version);
+  const { onNodeDragStart, onNodeDrag, onNodeDragStop } = useNodeDrag();
+  const { mutate: mergeNode, merging } = useNodeMerge();
+  const { mutate: addNode } = useNodeAdd();
 
-  function goToCurrentVersion() {
-    // navigate back to current version
-    router.replace(`/process/${projectId}`);
-  }
+  const { socketConnected, socketReason } = useWebSocket();
 
-  function closeVersionHistoryBottomSheet() {
-    setShowVersionHistoryBottomSheet(false);
-    goToCurrentVersion();
-  }
+  let columnId: string | null = null;
 
-  // "Constructor"
-  useEffect(() => {
-    initCanvas(ref);
-    const cleanupAssets = loadAssets(assets, () => setAssetsAreLoaded(true));
-    return () => {
-      cleanupAssets();
-      getApp().stage.removeChildren();
-      getApp()?.stop();
-    };
-  }, []);
+  const createNodes = (
+    node: NodeDataApi,
+    parent: NodeDataApi | null = null
+  ) => {
+    if (parent) {
+      if (
+        node.type === NodeTypes.mainActivity ||
+        node.type === NodeTypes.output ||
+        node.type === NodeTypes.supplier ||
+        node.type === NodeTypes.input ||
+        node.type === NodeTypes.customer
+      ) {
+        columnId = node.id;
+      }
 
-  // "Renderer"
-  useEffect(() => {
-    if (project && assetsAreLoaded) {
-      const viewport = getViewPort();
-      addCardsToCanvas(
-        viewport,
-        project,
-        userCanEdit,
-        dispatch,
-        setSelectedObject,
-        vsmObjectMutation
+      const duplicateNode = tempNodes.find(
+        (tempNode) => tempNode.id === node.id
       );
 
-      //Todo: Only show toolbox if userCanEdit. ref: https://equinor-sds-si.atlassian.net/browse/VSM-143
-      const cleanupToolbox = userCanEdit
-        ? toolBox(draggable, project, vsmObjectAddMutation, dispatch)
-        : () => {
-            //nothing to clean up
-          };
+      if (duplicateNode) {
+        tempNodes = tempNodes.map((tempNode) => {
+          const newData = tempNode.data;
+          if (tempNode.id === node.id) {
+            newData.parents.push(parent.id);
+            if (parent.type === NodeTypes.choice) {
+              newData.isChoiceChild = true;
+            }
+            return { ...tempNode, data: newData };
+          }
+          return tempNode;
+        });
+        return;
+      }
 
-      return () => {
-        // Clearing canvas
-        viewport.removeChildren();
-        cleanupToolbox();
-      };
+      tempNodes.push({
+        id: node.id,
+        data: {
+          ...node,
+          handleClickNode: () => setSelectedNode(node),
+          handleClickAddNode: (id, type, position) =>
+            addNode({ parentId: id, type, position }),
+          handleMerge: (sourceId, targetId) =>
+            sourceId && targetId && mergeNode.mutate({ sourceId, targetId }),
+          mergeable:
+            node.children.length === 0 || node.type === NodeTypes.choice,
+          merging: merging,
+          parents: [parent.id],
+          userCanEdit,
+          isChoiceChild: parent.type === NodeTypes.choice,
+          columnId,
+          shapeHeight: shapeSize.height,
+          shapeWidth: shapeSize.width,
+        },
+        position: { x: 0, y: 0 },
+        type: node.type,
+        height: shapeSize.height,
+        width: shapeSize.width + getQIPRContainerWidth(node.tasks),
+      });
+    } else {
+      tempNodes.push({
+        id: node.id,
+        data: {
+          ...node,
+          parents: [],
+          columnId: node.id,
+        },
+        position: { x: 0, y: 0 },
+        type: node.type,
+        height: shapeSize.height,
+        width: shapeSize.width + getQIPRContainerWidth(node.tasks),
+      });
     }
-  }, [project, assetsAreLoaded]);
+
+    node.children.forEach((childId) => {
+      const childNode = apiNodes.find((node) => node.id === childId);
+      childNode && createNodes(childNode, node);
+    });
+  };
+
+  const createHiddenNodes = () => {
+    tempNodes.forEach((node) => {
+      if (node?.data?.parents?.length > 1) {
+        let depthDeepestNode: undefined | number = undefined;
+        node?.data?.parents?.forEach((parentNodeId) => {
+          const parentNode = tempNodes.find((node) => node.id === parentNodeId);
+          if (
+            parentNode?.data?.depth &&
+            (!depthDeepestNode || parentNode?.data?.depth > depthDeepestNode)
+          )
+            depthDeepestNode = parentNode.data.depth;
+        });
+        node?.data?.parents?.forEach((parentNodeId) => {
+          const tempParentNode = tempNodes.find(
+            (node) => node.id === parentNodeId
+          );
+          if (
+            depthDeepestNode &&
+            tempParentNode?.data.depth &&
+            tempParentNode.data.depth < depthDeepestNode
+          ) {
+            tempEdges = tempEdges.filter(
+              (edge) =>
+                edge.source !== tempParentNode.id || edge.target !== node.id
+            );
+            let tempParentNodeId = tempParentNode.id;
+            for (let i = tempParentNode.data.depth; i < depthDeepestNode; i++) {
+              const id = uid();
+              tempNodes.push({
+                id,
+                data: {
+                  parents: [tempParentNodeId],
+                  columnId: tempParentNode.data.columnId,
+                  depth: i,
+                  children: [],
+                  shapeHeight: shapeSize.height,
+                  shapeWidth: shapeSize.width,
+                },
+                position: { x: 0, y: 0 },
+                type: NodeTypes.hidden,
+                height: shapeSize.height,
+                width: shapeSize.width,
+                draggable: false,
+                selectable: false,
+              });
+              tempEdges.push({
+                id: `${tempParentNodeId}=>${id}`,
+                source: tempParentNodeId,
+                target: id,
+              });
+              tempEdges.push({
+                id: `${id}=>${id}`,
+                source: id,
+                target: id,
+                type: "straight",
+              });
+              tempParentNodeId = id;
+            }
+
+            tempEdges.push({
+              id: `${tempParentNodeId}=>${node.id}`,
+              source: tempParentNodeId,
+              target: node.id,
+            });
+          }
+        });
+      }
+    });
+  };
+
+  const mergedNodesLooping = new Map<string, [Node<NodeDataFull>, number]>();
+  let mergedNodesReady: Node<NodeDataFull>[] = [];
+
+  const setSingleNodeDepth = (nodeId: string, parentDepth: number) => {
+    const node = tempNodes.find((node) => node.id === nodeId);
+    if (!node) return;
+    const { data } = node;
+
+    if (data?.parents?.length > 1) {
+      if (mergedNodesLooping.has(nodeId)) {
+        const nodeDuplicate = mergedNodesLooping.get(nodeId)![0];
+        const loopCount = mergedNodesLooping.get(nodeId)![1];
+        if (
+          nodeDuplicate.data.depth &&
+          nodeDuplicate.data.depth <= parentDepth
+        ) {
+          nodeDuplicate.data.depth = parentDepth + 1;
+        }
+        mergedNodesLooping.set(nodeId, [nodeDuplicate, loopCount + 1]);
+        if (nodeDuplicate?.data?.parents?.length === loopCount + 1) {
+          mergedNodesReady.push(nodeDuplicate);
+          mergedNodesLooping.delete(nodeId);
+        }
+      } else {
+        mergedNodesLooping.set(nodeId, [node, 1]);
+        data.depth = parentDepth + 1;
+      }
+    } else {
+      data.depth = parentDepth + 1;
+      data?.children?.forEach((child) => {
+        if (data.depth) setSingleNodeDepth(child, data.depth);
+      });
+    }
+  };
+
+  const setNodesDepth = () => {
+    const rootNode = tempNodes.find((node) => node.type === NodeTypes.root);
+    rootNode?.data.children.forEach((childId) => {
+      setSingleNodeDepth(childId, 0);
+    });
+    while (mergedNodesReady.length > 0) {
+      const dupeMergedNodesReady = mergedNodesReady;
+      mergedNodesReady = [];
+      dupeMergedNodesReady.forEach((node) => {
+        node.data.children.forEach((child) => {
+          if (node.data.depth) setSingleNodeDepth(child, node.data.depth);
+        });
+      });
+    }
+  };
+
+  useLayoutEffect(() => {
+    const root = apiNodes.find(
+      (node: NodeDataApi) => node.type === NodeTypes.root
+    );
+
+    if (!root) {
+      setNodes([]);
+      setEdges([]);
+      return;
+    }
+
+    if (selectedNode) {
+      const updatedSelectedNode = apiNodes.find(
+        (node) => node.id === selectedNode.id
+      );
+      setSelectedNode(updatedSelectedNode);
+    }
+    createNodes(root);
+    setNodesDepth();
+    createHiddenNodes();
+    const finalNodes = setLayout(tempNodes, tempEdges);
+    setNodes(finalNodes);
+    setEdges(tempEdges);
+  }, [apiNodes, apiEdges, userCanEdit]);
+
+  useCenterCanvas();
 
   return (
-    <div
-      style={{
-        backgroundColor: "black",
-      }}
-    >
-      {showVersionHistoryBottomSheet && (
-        <div
-          onWheel={(e) => e.stopPropagation()}
-          style={{
-            position: "absolute",
-            bottom: "0",
-            zIndex: 1,
-            width: "100%",
-          }}
-        >
-          <Button
-            style={{
-              position: "absolute",
-              right: "0",
-              top: "0",
-            }}
-            variant={"ghost_icon"}
-            onClick={closeVersionHistoryBottomSheet}
-          >
-            <Icon data={close} />
-          </Button>
-          <ProcessTimeline processId={projectId} />
-        </div>
-      )}
-
+    <>
       <CanvasButtons
         userCanEdit={userCanEdit}
         handleClickLabel={() => setVisibleLabelScrim(true)}
-        handleClickVersionHistory={() => setShowVersionHistoryBottomSheet(true)}
       />
       <ManageLabelBox
         handleClose={() => setVisibleLabelScrim(false)}
@@ -219,35 +314,67 @@ export default function Canvas(): JSX.Element {
       <LiveIndicator
         live={socketConnected}
         title={
-          !!socketConnected
+          socketConnected
             ? "Connection is looking good!\nYour changes should appear immediately for other users."
-            : `You are not connected ${
-                socketReason ? `because of ${socketReason}` : ""
+            : `You are not connected${
+                socketReason ? " because of ${socketReason}" : ""
               }.`
         }
       />
       <ToBeToggle />
       <ResetProcessButton />
-      <DeleteVsmObjectDialog
-        objectToDelete={selectedObject}
-        visible={visibleDeleteScrim}
-        onClose={() => {
-          setVisibleDeleteScrim(false);
-          setSelectedObject(null);
-        }}
-      />
-
-      <VSMSideBar
-        onClose={() => setSelectedObject(null)}
+      {selectedNode && (
+        <DeleteNodeDialog
+          objectToDelete={selectedNode}
+          visible={visibleDeleteScrim}
+          onClose={() => {
+            setVisibleDeleteScrim(false);
+            setSelectedNode(undefined);
+          }}
+        />
+      )}
+      <SideBar
+        onClose={() => setSelectedNode(undefined)}
         onDelete={() => setVisibleDeleteScrim(true)}
         canEdit={userCanEdit}
-        selectedObject={selectedObject}
+        selectedNode={selectedNode}
       />
-      <div
-        onContextMenu={(e) => e.preventDefault()} // prevent right click menu
-        className={style.canvasWrapper}
-        ref={ref}
-      />
-    </div>
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        nodeTypes={nodeElementTypes}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onPaneClick={() => setSelectedNode(undefined)}
+        minZoom={0.2}
+        nodesDraggable={userCanEdit}
+        nodesConnectable={true}
+        zoomOnDoubleClick={false}
+        onNodeDragStart={onNodeDragStart}
+        onNodeDrag={onNodeDrag}
+        onNodeDragStop={onNodeDragStop}
+        attributionPosition="bottom-right"
+        connectionRadius={100}
+      >
+        <MiniMapCustom />
+        <Controls className={styles.controls} showInteractive={false}>
+          <ControlButton className={styles.zoomContainer}>
+            <ZoomLevel />
+          </ControlButton>
+        </Controls>
+        <ZoomLevel />
+      </ReactFlow>
+      {createdBeforeSecondMajorRelease && (
+        <OldFlytButton projectId={projectId} />
+      )}
+    </>
+  );
+};
+
+export function CanvasWrapper(props: CanvasProps) {
+  return (
+    <ReactFlowProvider>
+      <Canvas {...props} />
+    </ReactFlowProvider>
   );
 }

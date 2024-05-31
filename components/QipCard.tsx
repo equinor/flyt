@@ -1,5 +1,5 @@
-import { taskObject } from "../interfaces/taskObject";
-import React, { useState } from "react";
+import { Task } from "../types/Task";
+import { useState } from "react";
 import { getTaskColor } from "../utils/getTaskColor";
 import styles from "./QipCard.module.scss";
 import { ColorDot } from "./ColorDot";
@@ -11,32 +11,34 @@ import {
   linkTaskCategory,
   unlinkTaskCategory,
 } from "../services/taskCategoriesApi";
-import { taskCategory } from "../interfaces/taskCategory";
-import { useRouter } from "next/router";
+import { TaskCategory } from "../types/TaskCategory";
+import { getTaskShorthand } from "utils/getTaskShorthand";
+import { useProjectId } from "../hooks/useProjectId";
 
 export function QipCard(props: {
-  task: taskObject;
+  task: Task;
   onClick?: () => void;
 }): JSX.Element {
   const task = props.task;
-  const { displayIndex, description, categories, vsmTaskID, solved } = task;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const { description, category: categories, id: taskId, solved } = task;
   const taskColor = getTaskColor(task);
   const [isLoading, setIsLoading] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
-  const router = useRouter();
-  const { id } = router.query;
+  const { projectId } = useProjectId();
 
   const queryClient = useQueryClient();
   const linkTaskMutation = useMutation(
     (p: { categoryId; taskId }) => {
       setIsLoading(true);
-      return linkTaskCategory(p.categoryId, p.taskId);
+      return linkTaskCategory(projectId, p.categoryId, p.taskId);
     },
     {
       onSuccess: (message) => console.log(message),
       onError: (error) => console.log(`${error}`),
       onSettled: () => {
-        queryClient.invalidateQueries(["tasks", id]).then(() => {
+        queryClient.invalidateQueries(["tasks", projectId]).then(() => {
           setIsLoading(false);
           setIsDragOver(false);
         });
@@ -45,14 +47,14 @@ export function QipCard(props: {
   );
 
   const unlinkTaskMutation = useMutation(
-    (p: { categoryId: number; taskId: number }) => {
+    (p: { categoryId: number; taskId: string }) => {
       setIsLoading(true);
-      return unlinkTaskCategory(p.categoryId, p.taskId);
+      return unlinkTaskCategory(projectId, p.categoryId, p.taskId);
     },
     {
       onSettled: () => {
         queryClient
-          .invalidateQueries(["tasks", id])
+          .invalidateQueries(["tasks", projectId])
           .then(() => setIsLoading(false));
       },
     }
@@ -80,7 +82,7 @@ export function QipCard(props: {
         } else {
           linkTaskMutation.mutate({
             categoryId: data.id,
-            taskId: vsmTaskID,
+            taskId: taskId,
           });
         }
       }}
@@ -102,18 +104,18 @@ export function QipCard(props: {
       {solved && <span className={styles.stamp}>Solved</span>}
       <div className={styles.qipCardTop}>
         <ColorDot color={taskColor} />
-        <p>{displayIndex || "?"}</p>
+        <p>{getTaskShorthand(task) || "?"}</p>
       </div>
       <ReactMarkdown remarkPlugins={[gfm]}>{description}</ReactMarkdown>
       <div className={styles.qipCardCategorySection}>
-        {categories?.map((category: taskCategory) => (
+        {categories?.map((category: TaskCategory) => (
           <CategoryChip
             key={category.id}
             text={category.name}
             onClickRemove={() => {
               unlinkTaskMutation.mutate({
                 categoryId: category.id,
-                taskId: vsmTaskID,
+                taskId: taskId,
               });
             }}
           />

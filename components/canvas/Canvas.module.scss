@@ -1,0 +1,48 @@
+@import "styles/_variables.scss";
+
+.controls {
+  left: 120px !important;
+  bottom: -56px !important;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  box-shadow: 1px -1px 2px rgba(0, 0, 0, 0.14);
+  transform: rotate(90deg);
+  background-color: $white;
+
+  button {
+    height: 32px;
+    width: 32px;
+    padding: 0;
+    background-color: $white;
+    transform: rotate(90deg);
+    order: 2;
+
+    svg {
+      max-height: 20px;
+      max-width: 20px;
+
+      path {
+        fill: $equinor_PROMINENT;
+      }
+    }
+  }
+  button:hover {
+    background-color: $equinor_HOVER-ALT;
+  }
+}
+
+.zoomContainer {
+  order: 1 !important;
+  margin: 58px 0 18px 0;
+  cursor: default;
+}
+
+.zoomContainer:hover {
+  background-color: $white !important;
+}
+
+.zoomLevel {
+  transform: rotate(180deg);
+}

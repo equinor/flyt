@@ -1,20 +1,21 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Layouts } from "../../../../layouts/LayoutWrapper";
-import { vsmTaskTypes } from "../../../../types/vsmTaskTypes";
-import { taskObject } from "../../../../interfaces/taskObject";
-import { TaskSection } from "../../../../components/taskSection";
+import { TaskTypes } from "../../../../types/TaskTypes";
+import { Task } from "../../../../types/Task";
+import { TaskSection } from "../../../../components/TaskSection";
 import { CategorySection } from "../../../../components/CategorySection";
 import { CheckboxImproved } from "../../../../components/CheckboxImproved";
 import { ButtonNavigateToProcess } from "../../../../components/ButtonNavigateToProcess";
 import Head from "next/head";
-import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import { getProject } from "../../../../services/projectApi";
+import { useProjectId } from "../../../../hooks/useProjectId";
 
 export default function CategoriesPage(): JSX.Element {
-  const router = useRouter();
-  const { id } = router.query;
-  const { data: project } = useQuery(["project", id], () => getProject(id));
+  const { projectId } = useProjectId();
+  const { data: project } = useQuery(["project", projectId], () =>
+    getProject(projectId)
+  );
   const projectTitle = project?.name;
 
   const [categories, setCategories] = useState([]);
@@ -24,22 +25,22 @@ export default function CategoriesPage(): JSX.Element {
   const [questionChecked, setQuestionChecked] = useState(true);
   const [riskChecked, setRiskChecked] = useState(true);
 
-  const taskTypeIsChecked = (t: taskObject) => {
-    switch (t.taskType.vsmTaskTypeID) {
-      case vsmTaskTypes.problem:
+  const taskTypeIsChecked = (t: Task) => {
+    switch (t.type) {
+      case TaskTypes.problem:
         return problemChecked;
-      case vsmTaskTypes.question:
+      case TaskTypes.question:
         return questionChecked;
-      case vsmTaskTypes.idea:
+      case TaskTypes.idea:
         return ideaChecked;
-      case vsmTaskTypes.risk:
+      case TaskTypes.risk:
         return riskChecked;
       default:
         return false;
     }
   };
 
-  const getFilter = (t: taskObject) => {
+  const getFilter = (t: Task) => {
     const selectedCategories = categories.filter(
       (category) => category.checked
     );
@@ -48,7 +49,9 @@ export default function CategoriesPage(): JSX.Element {
     // Display it if checkbox is checked but no categories are selected.
     if (!selectedCategories.length) return true;
     // If task contains a category that is selected, display it!
-    return t.categories.some((taskCategory) =>
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    return t.category.some((taskCategory) =>
       selectedCategories.some(
         (selectedCategory) => selectedCategory.id === taskCategory.id
       )

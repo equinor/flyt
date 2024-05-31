@@ -1,5 +1,5 @@
-import React from "react";
 import { TooltipImproved } from "./TooltipImproved";
+
 export const ToggleButton = (props: {
   name: string;
   selected: boolean;

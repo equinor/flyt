@@ -37,6 +37,10 @@
   margin-bottom: 15px;
 }
 
+.searchBar {
+  width: 100%;
+}
+
 .labelSection {
   display: flex;
   flex-direction: column;
@@ -51,10 +55,6 @@
 .labelContainer {
   display: flex;
   flex-wrap: wrap;
-}
-
-.button:hover {
-  cursor: pointer;
 }
 
 .chip:focus {

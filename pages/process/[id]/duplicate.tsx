@@ -1,49 +1,31 @@
-import React, { useEffect, useState } from "react";
-import { createProject, getProject } from "../../../services/projectApi";
+import { useEffect, useState } from "react";
+import { duplicateProject, getProject } from "../../../services/projectApi";
 import { useMutation, useQuery } from "react-query";
-
 import { Layouts } from "../../../layouts/LayoutWrapper";
-import { debounce } from "../../../utils/debounce";
-import { getProjectAsCleanJsonWithoutQIPs } from "../../../utils/DownloadJSON";
 import { useRouter } from "next/router";
-import { vsmProject } from "../../../interfaces/VsmProject";
+import { useProjectId } from "../../../hooks/useProjectId";
 
 export default function DuplicatePage() {
   const router = useRouter();
-  const { id } = router.query;
+  const { projectId } = useProjectId();
 
   const {
     data: project,
     isLoading,
     error,
-  } = useQuery(["project", id], () => getProject(id));
+  } = useQuery(["project", projectId], () => getProject(projectId));
 
   const [statusMessage, setStatusMessage] = useState("");
-  const newProjectMutation = useMutation((project: vsmProject) =>
-    createProject(project).then((value) =>
-      router.replace(`/process/${value.data.vsmProjectID}`)
-    )
+  const newProjectMutation = useMutation((projectId: number) =>
+    duplicateProject(projectId).then((value) => {
+      return router.replace(`/process/${value}`);
+    })
   );
 
   useEffect(() => {
     if (project) {
-      setStatusMessage("Preparing process");
-      const json = getProjectAsCleanJsonWithoutQIPs(
-        project,
-        `${!!project.name ? project.name : "Untitled process"} (Duplicate of ${
-          project.vsmProjectID
-        })`,
-        project.vsmProjectID
-      );
-      if (json) {
-        setStatusMessage("Creating new process");
-        debounce(
-          //Hack to stop sending multiple requests when the project-object changes
-          () => newProjectMutation.mutate(json),
-          1000,
-          "CreateNewProject"
-        );
-      }
+      setStatusMessage("Creating new process");
+      newProjectMutation.mutate(project.vsmProjectID);
     }
   }, [project]);
 

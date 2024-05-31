@@ -1,168 +1,174 @@
 import { DurationComponent } from "./DurationComponent";
 import { QIPSection } from "./QIPSection";
-import React from "react";
 import { TextField } from "@equinor/eds-core-react";
 import dynamic from "next/dynamic";
-import { vsmObject } from "../interfaces/VsmObject";
-import { vsmObjectTypes } from "../types/vsmObjectTypes";
+import { NodeDataApi } from "../types/NodeDataApi";
+import { NodeTypes } from "types/NodeTypes";
 const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
   ssr: false,
 });
 
 export function SideBarBody(props: {
-  selectedObject: vsmObject;
-  onChangeName: (value?: string) => void;
+  selectedNode: NodeDataApi;
+  onChangeDescription: (value?: string) => void;
   onChangeRole: (event: { target: { value: string } }) => void;
-  onChangeTime: (e: { time: number; unit: string }) => void;
+  onChangeDuration: (e: { duration: number; unit: string }) => void;
   setShowNewTaskSection: (boolean) => void;
   canEdit: boolean;
 }): JSX.Element {
-  const { selectedObject, setShowNewTaskSection } = props;
+  const { selectedNode, setShowNewTaskSection } = props;
 
-  switch (selectedObject?.vsmObjectType?.pkObjectType) {
-    case vsmObjectTypes.process:
+  switch (selectedNode?.type) {
+    case NodeTypes.root:
       return (
         <MarkdownEditor
           canEdit={props.canEdit}
-          defaultText={selectedObject.name || ""}
+          defaultText={selectedNode.description || ""}
           label={"Title"}
-          onChange={props.onChangeName}
+          onChange={props.onChangeDescription}
         />
       );
-    case vsmObjectTypes.supplier:
+    case NodeTypes.supplier:
       return (
         <>
           <MarkdownEditor
             canEdit={props.canEdit}
-            defaultText={selectedObject.name || ""}
+            defaultText={selectedNode.description || ""}
             label={"Supplier(s)"}
-            onChange={props.onChangeName}
+            onChange={props.onChangeDescription}
           />
           <QIPSection
             canEdit={props.canEdit}
-            object={selectedObject}
+            object={selectedNode}
             onClickNewTask={() => setShowNewTaskSection(true)}
           />
         </>
       );
-    case vsmObjectTypes.input:
+    case NodeTypes.input:
       return (
         <>
           <MarkdownEditor
             canEdit={props.canEdit}
-            defaultText={selectedObject.name || ""}
+            defaultText={selectedNode.description || ""}
             label={"Input(s)"}
-            onChange={props.onChangeName}
+            onChange={props.onChangeDescription}
           />
           <QIPSection
             canEdit={props.canEdit}
-            object={selectedObject}
+            object={selectedNode}
             onClickNewTask={() => setShowNewTaskSection(true)}
           />
         </>
       );
-    case vsmObjectTypes.output:
+    case NodeTypes.output:
       return (
         <>
           <MarkdownEditor
             canEdit={props.canEdit}
-            defaultText={selectedObject.name || ""}
+            defaultText={selectedNode.description || ""}
             label={"Output(s)"}
-            onChange={props.onChangeName}
+            onChange={props.onChangeDescription}
           />
           <QIPSection
             canEdit={props.canEdit}
-            object={selectedObject}
+            object={selectedNode}
             onClickNewTask={() => setShowNewTaskSection(true)}
           />
         </>
       );
-    case vsmObjectTypes.customer:
+    case NodeTypes.customer:
       return (
         <>
           <MarkdownEditor
             canEdit={props.canEdit}
-            defaultText={selectedObject.name || ""}
+            defaultText={selectedNode.description || ""}
             label={"Customer(s)"}
-            onChange={props.onChangeName}
+            onChange={props.onChangeDescription}
           />
           <QIPSection
             canEdit={props.canEdit}
-            object={selectedObject}
+            object={selectedNode}
             onClickNewTask={() => setShowNewTaskSection(true)}
           />
         </>
       );
-    case vsmObjectTypes.mainActivity:
+    case NodeTypes.mainActivity:
       return (
         <>
           <MarkdownEditor
             canEdit={props.canEdit}
-            defaultText={selectedObject.name || ""}
+            defaultText={selectedNode.description || ""}
             label={"Description"}
-            onChange={props.onChangeName}
+            onChange={props.onChangeDescription}
           />
           <QIPSection
             canEdit={props.canEdit}
-            object={selectedObject}
+            object={selectedNode}
             onClickNewTask={() => setShowNewTaskSection(true)}
           />
         </>
       );
-    case vsmObjectTypes.subActivity:
+    case NodeTypes.subActivity:
       return (
         <>
           <MarkdownEditor
             canEdit={props.canEdit}
-            defaultText={selectedObject.name || ""}
+            defaultText={selectedNode.description || ""}
             label={"Description"}
-            onChange={props.onChangeName}
+            onChange={props.onChangeDescription}
           />
           <div style={{ paddingTop: 12 }}>
             <TextField
               disabled={!props.canEdit}
               label={"Role(s)"}
-              variant={"default"}
-              defaultValue={selectedObject.role?.toString()}
+              defaultValue={selectedNode.role?.toString()}
               id={"vsmObjectRole"}
               onChange={props.onChangeRole}
             />
             <div style={{ padding: 8 }} />
             <DurationComponent
               disabled={!props.canEdit}
-              onChangeTime={props.onChangeTime}
-              selectedObject={selectedObject}
+              onChangeDuration={props.onChangeDuration}
+              selectedNode={selectedNode}
             />
           </div>
           <QIPSection
             canEdit={props.canEdit}
-            object={selectedObject}
+            object={selectedNode}
             onClickNewTask={() => setShowNewTaskSection(true)}
           />
         </>
       );
-    case vsmObjectTypes.waiting:
+    case NodeTypes.waiting:
       return (
         <>
-          <DurationComponent
-            disabled={!props.canEdit}
-            {...props}
-            selectedObject={selectedObject}
+          <MarkdownEditor
+            canEdit={props.canEdit}
+            defaultText={selectedNode.description || ""}
+            label={"Description"}
+            onChange={props.onChangeDescription}
           />
+          <div style={{ paddingTop: 12 }}>
+            <DurationComponent
+              disabled={!props.canEdit}
+              {...props}
+              selectedNode={selectedNode}
+            />
+          </div>
           <QIPSection
             canEdit={props.canEdit}
-            object={selectedObject}
+            object={selectedNode}
             onClickNewTask={() => setShowNewTaskSection(true)}
           />
         </>
       );
-    case vsmObjectTypes.choice:
+    case NodeTypes.choice:
       return (
         <MarkdownEditor
           canEdit={props.canEdit}
-          defaultText={selectedObject.name || ""}
+          defaultText={selectedNode.description || ""}
           label={"Define choice"}
-          onChange={props.onChangeName}
+          onChange={props.onChangeDescription}
         />
       );
     default:

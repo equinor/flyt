@@ -1,5 +1,48 @@
 # Changelog
 
+## [2.1.0](https://github.com/equinor/flyt/compare/v2.0.1...v2.1.0) (2024-05-13)
+
+### Features
+
+- Waiting card description ([#722](https://github.com/equinor/flyt/issues/722)) ([bc326b0](https://github.com/equinor/flyt/commit/bc326b0a067ac30c87e5259d74c6b0641ccf8116))
+
+### Bug Fixes
+
+- Card text truncation ([#720](https://github.com/equinor/flyt/issues/720)) ([82fc982](https://github.com/equinor/flyt/commit/82fc9822c2df5181527074b56015cdba4a0f6954))
+
+## [2.0.1](https://github.com/equinor/flyt/compare/v2.0.0...v2.0.1) (2024-04-25)
+
+### Bug Fixes
+
+- Missing logo ([#715](https://github.com/equinor/flyt/issues/715)) ([06070fa](https://github.com/equinor/flyt/commit/06070fafa6548f3f2226a63c0547e07f529641a3))
+
+## [2.0.0](https://github.com/equinor/flyt/compare/v0.3.0...v2.0.0) (2024-04-24)
+
+### ⚠ BREAKING CHANGES
+
+- Migrate to React Flow ([#630](https://github.com/equinor/flyt/issues/630))
+
+### Features
+
+- Migrate to React Flow ([#630](https://github.com/equinor/flyt/issues/630)) ([796c6aa](https://github.com/equinor/flyt/commit/796c6aa4318d27c44a8e5978f8a5975b9c43dd3a))
+
+## [0.3.0](https://github.com/equinor/flyt/compare/v0.2.36...v0.3.0) (2024-03-19)
+
+### Features
+
+- Process cards link behaviour ([#677](https://github.com/equinor/flyt/issues/677)) ([7bf5dbc](https://github.com/equinor/flyt/commit/7bf5dbc7c062cdb28fcc6f43695f1536389a2c00)), closes [#279](https://github.com/equinor/flyt/issues/279)
+
+### Bug Fixes
+
+- Display 0 duration on card ([#672](https://github.com/equinor/flyt/issues/672)) ([66e8b3c](https://github.com/equinor/flyt/commit/66e8b3c131b1b92976014a5ef07264df06eb53e6)), closes [#671](https://github.com/equinor/flyt/issues/671)
+- Upgrade dependencies ([#702](https://github.com/equinor/flyt/issues/702)) ([e6ca777](https://github.com/equinor/flyt/commit/e6ca7772335fb69b163945c0d14c75d6ffde5e02)), closes [#701](https://github.com/equinor/flyt/issues/701)
+
+## [0.2.36](https://github.com/equinor/flyt/compare/v0.2.35...v0.2.36) (2024-01-22)
+
+### Bug Fixes
+
+- Upgrade next, react, typescript and eds ([#658](https://github.com/equinor/flyt/issues/658)) ([5f7dc4e](https://github.com/equinor/flyt/commit/5f7dc4e48929a9c61c0298189bce1713cc513b4a)), closes [#567](https://github.com/equinor/flyt/issues/567)
+
 ## [0.2.35](https://github.com/equinor/flyt/compare/v0.2.34...v0.2.35) (2024-01-08)
 
 ### Bug Fixes

@@ -1,26 +1,27 @@
-import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import { getTaskCategories } from "../services/taskCategoriesApi";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import styles from "./CategorySection.module.scss";
 import { CategoryHelpers } from "./CategoryHelpers";
 import { AddCategoryButton } from "./AddCategoryButton";
 import { unknownErrorToString } from "../utils/isError";
 import { DraggableCategory } from "./DraggableCategory";
+import { useProjectId } from "../hooks/useProjectId";
 
 export function CategorySection(props: {
   setCategories: (value: ((prevState: any[]) => any[]) | any[]) => void;
   categories: any[];
 }) {
   const { categories, setCategories } = props;
-  const router = useRouter();
-  const { id } = router.query;
+  const { projectId } = useProjectId();
 
   const {
     data: taskCategories,
     isLoading: isLoadingCategories,
     error: errorCategories,
-  } = useQuery(["taskCategories", id], () => getTaskCategories(id));
+  } = useQuery(["taskCategories", projectId], () =>
+    getTaskCategories(projectId)
+  );
 
   useEffect(() => {
     if (!isLoadingCategories && !errorCategories && taskCategories) {
@@ -45,7 +46,7 @@ export function CategorySection(props: {
     <div>
       <p className={styles.header}>Categories</p>
       <CategoryHelpers />
-      <AddCategoryButton projectId={id} />
+      <AddCategoryButton projectId={projectId} />
       <div>
         {isLoadingCategories && <p>Loading</p>}
         {!isLoadingCategories && errorCategories && (
@@ -62,7 +63,7 @@ export function CategorySection(props: {
         )}
         {categories.map((category) => (
           <DraggableCategory
-            projectId={id}
+            projectId={projectId}
             key={category.id}
             onClick={() => toggleSelection(category)}
             checked={category.checked}

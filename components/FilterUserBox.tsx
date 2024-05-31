@@ -10,9 +10,7 @@ import { useQuery } from "react-query";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-export default function FilterUserBox(props: {
-  handleClose: () => void;
-}): JSX.Element {
+export function FilterUserBox(props: { handleClose: () => void }): JSX.Element {
   const [searchText, setSearchText] = useState("");
   const {
     data: users,
@@ -53,6 +51,7 @@ function SearchSection(props: {
         id="searchProjects"
         placeholder="Search users"
         autoComplete="off"
+        className={styles.searchBar}
         onChange={(e) => {
           debounce(() => setSearchText(`${e.target.value}`), 500, "userSearch");
         }}
@@ -99,19 +98,14 @@ function LabelSection(props: { labels; isLoading; error }): JSX.Element {
 
       <div className={styles.labelContainer}>
         {labels.map((label) => (
-          <button
+          <Chip
             key={label.pkUser}
+            variant={isActive(label.pkUser.toString()) ? "active" : null}
+            style={{ marginRight: "5px", marginBottom: "10px" }}
             onClick={() => toggleQueryParam("user", label.pkUser, router)}
-            style={{ padding: "0", backgroundColor: "#ffffff", border: "none" }}
-            className={styles.button}
           >
-            <Chip
-              variant={isActive(label.pkUser.toString()) ? "active" : null}
-              style={{ marginRight: "5px", marginBottom: "10px" }}
-            >
-              {label.userName}
-            </Chip>
-          </button>
+            {label.userName}
+          </Chip>
         ))}
       </div>
     </div>

@@ -2,8 +2,7 @@ import styles from "./default.layout.module.scss";
 import Link from "next/link";
 import { Button, Typography } from "@equinor/eds-core-react";
 import Image from "next/image";
-import React from "react";
-import { TooltipImproved } from "../components/TooltipImproved";
+import greenLogo from "../public/greenLogo.png";
 
 export function HomeButton(): JSX.Element {
   return (
@@ -11,10 +10,11 @@ export function HomeButton(): JSX.Element {
       <Link href={"/"}>
         <Button variant={"ghost"}>
           <Image
-            src={"/greenLogo.png"}
+            src={greenLogo}
             alt={"Logo"}
-            width={12.53}
-            height={25}
+            width={0}
+            height={0}
+            className={styles.image}
           />
           <span style={{ padding: 4 }} />
           <Typography className={styles.homeButtonText} variant={"h4"}>

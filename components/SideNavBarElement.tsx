@@ -1,9 +1,7 @@
-import React from "react";
-import { Icon, Tooltip } from "@equinor/eds-core-react";
-import styles from "./SideNavBarElement.module.scss";
+import { Button, Icon, Tooltip } from "@equinor/eds-core-react";
 import { useRouter } from "next/router";
 
-export default function SideNavBarElement(props: {
+export function SideNavBarElement(props: {
   icon;
   title: string;
   pathname: string;
@@ -14,9 +12,12 @@ export default function SideNavBarElement(props: {
 
   return (
     <Tooltip title={props.title} placement="right">
-      <button
-        style={{ backgroundColor: isOnCurrentPage && "#E6FAEC" }}
-        className={styles.iconContainer}
+      <Button
+        style={{
+          backgroundColor: isOnCurrentPage && "#E6FAEC",
+          height: "56px",
+        }}
+        variant="ghost"
         onClick={() =>
           router.push({
             pathname: props.pathname,
@@ -24,12 +25,8 @@ export default function SideNavBarElement(props: {
           })
         }
       >
-        <Icon
-          data={props.icon}
-          className={styles.icon}
-          style={{ backgroundColor: "inherit" }}
-        ></Icon>
-      </button>
+        <Icon data={props.icon}></Icon>
+      </Button>
     </Tooltip>
   );
 }

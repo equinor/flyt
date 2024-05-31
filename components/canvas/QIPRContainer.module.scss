@@ -1,0 +1,15 @@
+.QIPRContainer {
+  height: 140px;
+  background-color: rgb(235, 235, 235);
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.tooltip-content {
+  display: flex;
+}
+
+.tooltip-qipr-icon {
+  margin: 10px 0 10px 10px;
+}

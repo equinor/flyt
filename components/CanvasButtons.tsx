@@ -1,27 +1,20 @@
-import React from "react";
 import { CategorizationPageButton } from "./CategorizationPageButton";
 import styles from "./CanvasButtons.module.scss";
-import { ManageLabelButton } from "./Labels/ManageLabelButton";
-import { VersionHistoryButton } from "./VersionHistoryButton";
+import { ManageLabelsButton } from "./Labels/ManageLabelsButton";
+import { CanvasTutorial } from "@/components/canvas/CanvasTutorial/CanvasTutorial";
 
-/**
- * NB. Currently, only adjusted for use in the canvas. path: "baseURL/process/{id}"
- * @constructor
- */
-export const CanvasButtons = (props: {
-  userCanEdit: boolean;
+type CanvasButtonsProps = {
   handleClickLabel: () => void;
-  handleClickVersionHistory: () => void;
-}): JSX.Element => {
-  return (
-    <div className={styles.wrapper}>
-      {props.userCanEdit && (
-        <ManageLabelButton handleClickLabel={props.handleClickLabel} />
-      )}
-      <CategorizationPageButton />
-      <VersionHistoryButton
-        handleVersionHistoryClick={props.handleClickVersionHistory}
-      />
-    </div>
-  );
+  userCanEdit: boolean;
 };
+
+export const CanvasButtons = ({
+  handleClickLabel,
+  userCanEdit,
+}: CanvasButtonsProps) => (
+  <div className={styles.container}>
+    {userCanEdit && <ManageLabelsButton handleClickLabel={handleClickLabel} />}
+    <CategorizationPageButton />
+    <CanvasTutorial />
+  </div>
+);

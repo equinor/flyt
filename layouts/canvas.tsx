@@ -8,27 +8,27 @@ import {
   Typography,
   DotProgress,
 } from "@equinor/eds-core-react";
-import React, { useEffect, useState } from "react";
+import { KeyboardEvent, useEffect, useState } from "react";
 import { chevron_down, close, share } from "@equinor/eds-icons";
 import {
   faveProject,
   getProject,
   unfaveProject,
   updateProject,
+  deleteProject,
 } from "../services/projectApi";
 import { useAccount, useIsAuthenticated, useMsal } from "@azure/msal-react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useStoreDispatch, useStoreState } from "../hooks/storeHooks";
 
 import { AccessBox } from "../components/AccessBox";
-import BaseAPIServices from "../services/BaseAPIServices";
 import Head from "next/head";
-import Heart from "components/Heart";
+import { Heart } from "components/Heart";
 import { HomeButton } from "./homeButton";
 import { MySnackBar } from "../components/MySnackBar";
 import { RightTopBarSection } from "../components/RightTopBarSection";
 import { TooltipImproved } from "../components/TooltipImproved";
-import UserMenu from "../components/AppHeader/UserMenu";
+import { UserMenu } from "../components/AppHeader/UserMenu";
 import { debounce } from "../utils/debounce";
 import { disableKeyboardZoomShortcuts } from "../utils/disableKeyboardZoomShortcuts";
 import { disableMouseWheelZoom } from "../utils/disableMouseWheelZoom";
@@ -39,23 +39,27 @@ import packageJson from "../package.json";
 import styles from "./default.layout.module.scss";
 import { unknownErrorToString } from "../utils/isError";
 import { useRouter } from "next/router";
+import { useProjectId } from "../hooks/useProjectId";
 import { EditableTitle } from "components/EditableTitle";
 
-const CanvasLayout = ({ children }): JSX.Element => {
+export const CanvasLayout = ({ children }): JSX.Element => {
   const isAuthenticated = useIsAuthenticated();
+  const { projectId } = useProjectId();
 
   const router = useRouter();
-  const { id } = router.query;
-  const { data: project } = useQuery(["project", id], () => getProject(id));
+  const { data: project } = useQuery(["project", projectId], () =>
+    getProject(projectId)
+  );
+  const projectTitle = project?.name;
 
   const queryClient = useQueryClient();
   const projectMutation = useMutation(
-    (updatedProject: { vsmProjectID: number; name: string }) => {
-      return updateProject(updatedProject);
+    (updatedProject: [{ op: string; path: string; value: string }]) => {
+      return updateProject(projectId, updatedProject);
     },
     {
       onSuccess: () => {
-        notifyOthers("Gave the process a new name", id, account);
+        notifyOthers("Gave the process a new name", projectId, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
@@ -100,11 +104,11 @@ const CanvasLayout = ({ children }): JSX.Element => {
   const userCannotEdit = !userCanEdit;
   const isAdmin = myAccess === "Admin" || myAccess === "Owner";
 
-  const [visibleShareScrim, setVisibleShareScrim] = React.useState(false);
-  const [visibleRenameScrim, setVisibleRenameScrim] = React.useState(false);
-  const [visibleDeleteScrim, setVisibleDeleteScrim] = React.useState(false);
+  const [visibleShareScrim, setVisibleShareScrim] = useState(false);
+  const [visibleRenameScrim, setVisibleRenameScrim] = useState(false);
+  const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
 
-  const [state, setState] = React.useState<{
+  const [state, setState] = useState<{
     buttonEl: HTMLButtonElement;
     focus: "first" | "last";
   }>({
@@ -115,12 +119,7 @@ const CanvasLayout = ({ children }): JSX.Element => {
   const { buttonEl, focus } = state;
   const isOpen = Boolean(buttonEl);
 
-  const openMenu = (
-    e:
-      | React.MouseEvent<HTMLButtonElement, MouseEvent>
-      | React.KeyboardEvent<HTMLButtonElement>,
-    focus: "first" | "last"
-  ) => {
+  const openMenu = (e, focus: "first" | "last") => {
     const target = e.target as HTMLButtonElement;
     setState({ ...state, buttonEl: target, focus });
   };
@@ -129,7 +128,7 @@ const CanvasLayout = ({ children }): JSX.Element => {
     setState({ ...state, buttonEl: null, focus });
   };
 
-  const onKeyPress = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+  const onKeyPress = (e: KeyboardEvent<HTMLButtonElement>) => {
     const { key } = e;
     e.preventDefault();
     switch (key) {
@@ -180,7 +179,7 @@ const CanvasLayout = ({ children }): JSX.Element => {
   function deleteVSM() {
     setIsDeleting(true);
     setDeleteError(null);
-    BaseAPIServices.delete(`/api/v1.0/project/${project.vsmProjectID}`)
+    deleteProject(project?.vsmProjectID)
       .then(() => router.push("/"))
       .catch((reason) => {
         setDeleteError(reason);
@@ -193,10 +192,13 @@ const CanvasLayout = ({ children }): JSX.Element => {
   function updateProjectName(name: string) {
     debounce(
       () => {
-        projectMutation.mutate({
-          vsmProjectID: project.vsmProjectID,
-          name,
-        });
+        projectMutation.mutate([
+          {
+            op: "replace",
+            path: "/Name",
+            value: name,
+          },
+        ]);
       },
       1000,
       "updateProjectName"
@@ -260,7 +262,6 @@ const CanvasLayout = ({ children }): JSX.Element => {
               open={isOpen}
               anchorEl={buttonEl}
               onClose={closeMenu}
-              focus={focus}
             >
               <Menu.Item
                 title={`${
@@ -309,7 +310,6 @@ const CanvasLayout = ({ children }): JSX.Element => {
         </div>
 
         <div style={{ display: "flex", alignItems: "center" }}>
-          {/*<UserDots users={userAccesses?.map((u) => u.user) || []} />*/}
           <TooltipImproved title={"Share"}>
             <Button
               variant={"ghost_icon"}
@@ -358,9 +358,6 @@ const CanvasLayout = ({ children }): JSX.Element => {
             <TextField
               autoFocus
               label={"Add title"}
-              // multiline
-              // rows={3}
-              variant={"default"}
               defaultValue={project?.name}
               onChange={(e) => updateProjectName(e.target.value)}
               id={"vsmObjectDescription"}
@@ -433,5 +430,3 @@ const CanvasLayout = ({ children }): JSX.Element => {
     </div>
   );
 };
-
-export default CanvasLayout;

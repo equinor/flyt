@@ -1,26 +1,25 @@
-import { taskObject } from "../interfaces/taskObject";
+import { Task } from "../types/Task";
 import { Checkbox } from "@equinor/eds-core-react";
-import React from "react";
 import { useStoreDispatch } from "../hooks/storeHooks";
-import BaseAPIServices from "../services/BaseAPIServices";
 import styles from "./ExistingTaskSection.module.scss";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { linkTask, unlinkTask } from "../services/taskApi";
-import { vsmObject } from "../interfaces/VsmObject";
+import { getTasksForProject, linkTask, unlinkTask } from "../services/taskApi";
+import { NodeDataApi } from "../types/NodeDataApi";
 import { unknownErrorToString } from "utils/isError";
-import { useRouter } from "next/router";
 import { notifyOthers } from "../services/notifyOthers";
 import { useAccount, useMsal } from "@azure/msal-react";
+import { getTaskShorthand } from "utils/getTaskShorthand";
+import { useProjectId } from "../hooks/useProjectId";
 
 export function ExistingTaskSection(props: {
   visible: boolean;
   existingTaskFilter;
-  selectedObject: vsmObject;
+  selectedNode: NodeDataApi;
 }): JSX.Element {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
-  const { existingTaskFilter, selectedObject } = props;
-  const { tasks } = selectedObject;
+  const { existingTaskFilter, selectedNode } = props;
+  const { tasks } = selectedNode;
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
   const {
@@ -28,31 +27,26 @@ export function ExistingTaskSection(props: {
     error: fetchingTasksError,
     isLoading: fetchingTasks,
   } = useQuery(
-    `tasks - ${selectedObject.vsmProjectID}/${existingTaskFilter}`,
-    () =>
-      BaseAPIServices.get(
-        `/api/v1.0/task/list/${selectedObject.vsmProjectID}/${existingTaskFilter}`
-      ).then((r) => r.data),
+    `tasks - ${selectedNode.projectId}/${existingTaskFilter}`,
+    () => getTasksForProject(selectedNode.projectId).then((r) => r),
     { enabled: !!existingTaskFilter }
   );
-  const router = useRouter();
-  const { id } = router.query;
+  const { projectId } = useProjectId();
   const taskLinkMutation = useMutation(
-    (task: taskObject) => linkTask(selectedObject.vsmObjectID, task.vsmTaskID),
+    (task: Task) => linkTask(projectId, selectedNode.id, task.id),
     {
       onSuccess: () => {
-        notifyOthers("Added a Q/I/P to a card", id, account);
+        notifyOthers("Added a Q/I/P to a card", projectId, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
   const taskUnlinkMutation = useMutation(
-    (task: taskObject) =>
-      unlinkTask(selectedObject.vsmObjectID, task.vsmTaskID),
+    (task: Task) => unlinkTask(projectId, selectedNode.id, task.id),
     {
       onSuccess() {
-        notifyOthers("Removed Q/I/P from a card", id, account);
+        notifyOthers("Removed Q/I/P from a card", projectId, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
@@ -90,21 +84,23 @@ export function ExistingTaskSection(props: {
       )}
       <div>
         <ul className={styles.taskList}>
-          {existingTasks?.map((t: taskObject) => (
-            <li key={t.vsmTaskID} title={t.description}>
-              <Checkbox
-                defaultChecked={tasks.some(
-                  (task) => task?.vsmTaskID === t?.vsmTaskID
-                )}
-                label={`${t.displayIndex} - ${t.description}`}
-                onChange={(event) =>
-                  event.target.checked
-                    ? taskLinkMutation.mutate(t)
-                    : taskUnlinkMutation.mutate(t)
-                }
-              />
-            </li>
-          ))}
+          {existingTasks?.map((t: Task) => {
+            if (t.type === existingTaskFilter) {
+              return (
+                <li key={t.id} title={t.description}>
+                  <Checkbox
+                    defaultChecked={tasks.some((task) => task?.id === t?.id)}
+                    label={`${getTaskShorthand(t)} - ${t.description}`}
+                    onChange={(event) =>
+                      event.target.checked
+                        ? taskLinkMutation.mutate(t)
+                        : taskUnlinkMutation.mutate(t)
+                    }
+                  />
+                </li>
+              );
+            }
+          })}
         </ul>
       </div>
     </div>

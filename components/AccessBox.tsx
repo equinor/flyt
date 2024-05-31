@@ -1,7 +1,7 @@
 import * as userApi from "../services/userApi";
 
 import { Button, Icon, Input } from "@equinor/eds-core-react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { close, link } from "@equinor/eds-icons";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -13,13 +13,13 @@ import { getOwner } from "utils/getOwner";
 import { notifyOthers } from "../services/notifyOthers";
 import style from "./AccessBox.module.scss";
 import { unknownErrorToString } from "utils/isError";
-import { useRouter } from "next/router";
 import { useStoreDispatch } from "hooks/storeHooks";
-import { userAccess } from "interfaces/UserAccess";
-import { vsmProject } from "../interfaces/VsmProject";
+import { userAccess } from "types/UserAccess";
+import { Project } from "../types/Project";
+import { useProjectId } from "../hooks/useProjectId";
 
 export function AccessBox(props: {
-  project: vsmProject;
+  project: Project;
   handleClose;
   isAdmin: boolean;
 }): JSX.Element {
@@ -141,15 +141,14 @@ function MiddleSection(props: {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
 
-  const router = useRouter();
-  const { id } = router.query;
+  const { projectId } = useProjectId();
   const addUserMutation = useMutation(
     (newUser: { user: string; vsmId: number; role: string }) =>
       userApi.add(newUser),
     {
       onSuccess: () => {
         setEmailInput("");
-        notifyOthers("Gave access to a new user", id, account);
+        notifyOthers("Gave access to a new user", projectId, account);
         queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
@@ -159,7 +158,7 @@ function MiddleSection(props: {
     (props: { accessId; vsmId }) => userApi.remove(props),
     {
       onSuccess: () => {
-        notifyOthers("Removed access for user", id, account);
+        notifyOthers("Removed access for user", projectId, account);
         return queryClient.invalidateQueries();
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
@@ -170,7 +169,7 @@ function MiddleSection(props: {
       userApi.update(props),
     {
       onSuccess() {
-        notifyOthers("Updated access for some user", id, account);
+        notifyOthers("Updated access for some user", projectId, account);
         return queryClient.invalidateQueries("userAccesses");
       },
       onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),

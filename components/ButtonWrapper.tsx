@@ -1,4 +1,3 @@
-import React from "react";
 import { IconData } from "@equinor/eds-icons";
 import style from "./ButtonWrapper.module.scss";
 import { Icon, Tooltip } from "@equinor/eds-core-react";
