@@ -50,8 +50,8 @@ export function SideBarContent(props: {
     updates: {
       description?: string;
       role?: string;
-      duration?: number;
-      unit?: string;
+      duration?: number | null;
+      unit?: string | null;
     }
   ) {
     debounce(
