@@ -36,8 +36,8 @@ import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
 import { useProjectId } from "@/hooks/useProjectId";
 import { MiniMapCustom } from "@/components/canvas/MiniMapCustom";
 import { EdgeDataApi } from "@/types/EdgeDataApi";
-import { ChoiceEdge } from "@/components/canvas/ChoiceEdge";
 import { ZoomLevel } from "@/components/canvas/ZoomLevel";
+import { edgeElementTypes } from "@/components/canvas/EdgeElementTypes";
 
 type CanvasProps = {
   graph: Graph;
@@ -76,10 +76,6 @@ const Canvas = ({
 
   const [nodes, setNodes, onNodesChange] = useNodesState<NodeDataFull>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-
-  const edgeTypes = {
-    choice: ChoiceEdge,
-  };
 
   const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
@@ -362,7 +358,7 @@ const Canvas = ({
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeElementTypes}
-        edgeTypes={edgeTypes}
+        edgeTypes={edgeElementTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onPaneClick={() => setSelectedNode(undefined)}
