@@ -31,7 +31,8 @@ export function DurationComponent({
     setUnit(selectedNode.unit);
   }, [selectedNode]);
 
-  const parseValue = (value: string) => (!value ? null : parseFloat(value));
+  const parseValue = (value: string) =>
+    value === "" ? null : parseFloat(value);
 
   const handleDurationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseValue(event.target.value);
@@ -56,7 +57,7 @@ export function DurationComponent({
         type={"number"}
         id={"vsmObjectTime"}
         min={0}
-        value={`${duration || ""}`}
+        value={`${duration === null ? "" : duration}`}
         onChange={handleDurationChange}
       />
       <div style={{ padding: 8 }} />

@@ -176,7 +176,7 @@ export const SubActivityNode = ({
           <NodeTooltipSection header={"Description"} text={description} />
         )}
         {role && <NodeTooltipSection header={"Role(s)"} text={role} />}
-        {duration && (
+        {duration !== null && unit !== null && (
           <NodeTooltipSection
             header={"Duration"}
             text={formatDuration(duration, unit)}
