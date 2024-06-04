@@ -12,7 +12,7 @@ spec:
         from: TEST
     - name: qa
       build:
-        from: QA
+        from: main
     - name: prod
       build:
         from: PROD
