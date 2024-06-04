@@ -14,10 +14,11 @@ type EdgeLabelProps = {
 export function EdgeLabel({ id, labelText, selected }: EdgeLabelProps) {
   const { setEdges } = useReactFlow();
   const { projectId } = useProjectId();
-  const inputRef = useRef<HTMLTextAreaElement>(null);
   const [value, setValue] = useState(labelText);
   const [showInput, setShowInput] = useState(!!value);
-  const valueSize = Math.max(value?.length ?? 0, 1);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const textMeasureRef = useRef<HTMLSpanElement>(null);
+  const numberOfRows = Math.ceil(Math.max(value?.length ?? 0, 1) / 12);
 
   const updateLabel = () => {
     if (labelText !== value) {
@@ -29,15 +30,26 @@ export function EdgeLabel({ id, labelText, selected }: EdgeLabelProps) {
   };
 
   useEffect(() => {
-    if (!selected) inputRef.current?.blur();
-    else {
-      inputRef.current?.focus();
-      inputRef.current?.setSelectionRange(
-        inputRef.current?.value.length,
-        inputRef.current?.value.length
-      );
+    const input = inputRef.current;
+    if (!input) {
+      if (!value || value.length === 0) setShowInput(false);
+      return;
     }
-  }, [selected]);
+
+    if (selected) {
+      input.focus();
+      input.setSelectionRange(input.value.length, input.value.length);
+    } else {
+      input.blur();
+    }
+  }, [selected, value]);
+
+  useEffect(() => {
+    if (inputRef.current && textMeasureRef.current) {
+      const scrollWidth = textMeasureRef.current?.scrollWidth;
+      inputRef.current.style.width = `${scrollWidth * 2}px`;
+    }
+  }, [value]);
 
   const ButtonComponent = (
     <>
@@ -59,13 +71,10 @@ export function EdgeLabel({ id, labelText, selected }: EdgeLabelProps) {
   const TextAreaComponent = (
     <>
       <textarea
-        rows={Math.ceil(valueSize / 15)}
+        rows={numberOfRows}
         id={id}
         ref={inputRef}
         className={styles.textarea}
-        style={{
-          width: valueSize + "ch",
-        }}
         value={value}
         onChange={(event) => setValue(event.target.value)}
         onKeyDown={(event) => {
@@ -75,6 +84,9 @@ export function EdgeLabel({ id, labelText, selected }: EdgeLabelProps) {
         }}
         onBlur={updateLabel}
       />
+      <span ref={textMeasureRef} className={styles.textMeasureSpan}>
+        {value}
+      </span>
     </>
   );
 
