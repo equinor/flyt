@@ -17,7 +17,6 @@ export function EdgeLabel({ id, labelText, selected }: EdgeLabelProps) {
   const [value, setValue] = useState(labelText);
   const [showInput, setShowInput] = useState(!!value);
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const textMeasureRef = useRef<HTMLSpanElement>(null);
   const numberOfRows = Math.ceil(Math.max(value?.length ?? 0, 1) / 12);
 
   const updateLabel = () => {
@@ -43,13 +42,6 @@ export function EdgeLabel({ id, labelText, selected }: EdgeLabelProps) {
       input.blur();
     }
   }, [selected, value]);
-
-  useEffect(() => {
-    if (inputRef.current && textMeasureRef.current) {
-      const scrollWidth = textMeasureRef.current?.scrollWidth;
-      inputRef.current.style.width = `${scrollWidth * 2}px`;
-    }
-  }, [value]);
 
   const ButtonComponent = (
     <>
@@ -84,9 +76,6 @@ export function EdgeLabel({ id, labelText, selected }: EdgeLabelProps) {
         }}
         onBlur={updateLabel}
       />
-      <span ref={textMeasureRef} className={styles.textMeasureSpan}>
-        {value}
-      </span>
     </>
   );
 
