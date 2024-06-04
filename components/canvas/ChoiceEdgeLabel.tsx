@@ -59,7 +59,7 @@ export function EdgeLabel({ id, labelText, selected }: EdgeLabelProps) {
   const TextAreaComponent = (
     <>
       <textarea
-        rows={Math.ceil(valueSize / 25)}
+        rows={Math.ceil(valueSize / 15)}
         id={id}
         ref={inputRef}
         className={styles.textarea}
