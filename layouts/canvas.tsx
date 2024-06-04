@@ -29,7 +29,6 @@ import { MySnackBar } from "../components/MySnackBar";
 import { RightTopBarSection } from "../components/RightTopBarSection";
 import { TooltipImproved } from "../components/TooltipImproved";
 import { UserMenu } from "../components/AppHeader/UserMenu";
-import { debounce } from "../utils/debounce";
 import { disableKeyboardZoomShortcuts } from "../utils/disableKeyboardZoomShortcuts";
 import { disableMouseWheelZoom } from "../utils/disableMouseWheelZoom";
 import { getMyAccess } from "../utils/getMyAccess";
@@ -189,15 +188,14 @@ export const CanvasLayout = ({ children }): JSX.Element => {
   }
 
   function updateProjectName(name: string) {
-    if (name !== project?.name) {
-      projectMutation.mutate([
-        {
-          op: "replace",
-          path: "/Name",
-          value: name,
-        },
-      ]);
-    }
+    if (name === project?.name) return;
+    projectMutation.mutate([
+      {
+        op: "replace",
+        path: "/Name",
+        value: name,
+      },
+    ]);
   }
 
   function handleDuplicate() {
