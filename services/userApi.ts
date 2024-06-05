@@ -1,5 +1,6 @@
 import { AxiosPromise } from "axios";
 import BaseAPIServices from "./BaseAPIServices";
+import { UserAccessSearch } from "@/types/UserAccess";
 
 const baseUrl = "/api/v2.0";
 
@@ -56,7 +57,12 @@ export const get = ({ vsmId, userName }) => {
  * @param userName - The short-name of the user to search for.
  * @returns - Array of users.
  */
-export const searchUser = (
+export const searchUser = (userName: string): Promise<UserAccessSearch[]> =>
+  BaseAPIServices.get(`${baseUrl}/users/query?startsWith=${userName}`).then(
+    (value) => value.data
+  );
+
+export const getUserByShortname = (
   userName: string
 ): Promise<{ pkUser: number; userName: string }[]> =>
   BaseAPIServices.get(`${baseUrl}/userAccess/userSearch?q=${userName}`).then(

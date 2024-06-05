@@ -3,16 +3,12 @@
 .box {
   background: #ffffff;
   border-radius: 4px;
-  padding-left: 15px;
-  padding-right: 15px;
-  padding-bottom: 15px;
-  margin: 12px;
 
   display: flex;
   flex-direction: column;
 
   min-width: 320px;
-  max-width: 700px;
+  width: 60vw;
   max-height: 90vh;
 
   animation-name: fade-in;
@@ -25,38 +21,28 @@
   align-items: center; //Vertical align the items
 
   border-bottom: #dcdcdc solid 1px;
+  padding: 6px 6px 6px 16px;
 }
 
 .middleSection {
-  margin-top: 12px;
-  margin-bottom: 12px;
-  overflow-y: scroll;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
 }
 
 .bottomSection {
   border-top: #dcdcdc solid 1px;
-  padding-top: 12px;
-}
-
-.heading {
-  /* Heading/H6 */
-  font-family: Equinor, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
-  letter-spacing: 0.2px;
-  color: $equinor_PROMINENT;
-}
-
-.emailSection {
-  padding-top: 12px;
-  display: flex;
-  justify-content: space-between;
+  padding: 16px;
 }
 
 .userListSection {
-  padding-top: 12px;
   animation-name: fade-in;
   animation-duration: 0.5s;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding-right: 1vw; /* add padding-right to make room for scrollbar */ /* subtract 1vw for the width of the scrollbar */
 }
 
 .userItem {
@@ -66,12 +52,17 @@
 
   animation-name: fade-in;
   animation-duration: 0.5s;
+  padding: 10px;
+}
+
+.userListSection :hover {
+  background-color: $equinor_HOVER-ALT;
 }
 
 .userDotAndName {
   display: flex;
   align-items: center;
-  padding-right: 8px;
+  gap: 8px;
 }
 
 .userDotAndName > p {
@@ -80,38 +71,6 @@
 
 .userRole {
   max-width: 140px !important;
-}
-
-.userText {
-  padding-left: 8px;
-
-  /* Navigation/Menu Title */
-
-  font-family: Equinor, sans-serif;
-  font-size: 16px;
-  line-height: 16px;
-  /* identical to box height, or 100% */
-
-  display: flex;
-  align-items: center;
-  letter-spacing: 0.2px;
-
-  color: #000000;
-}
-
-.accessText {
-  /* Navigation/Menu Title */
-
-  font-family: Equinor, sans-serif;
-  font-size: 16px;
-  line-height: 16px;
-  /* identical to box height, or 100% */
-
-  display: flex;
-  align-items: center;
-  letter-spacing: 0.2px;
-
-  color: #000000;
 }
 
 .roleSelect {
@@ -155,8 +114,19 @@
 }
 
 .infoCannotEdit {
-  margin-top: 12px;
   border-radius: 4px;
   border: $equinor_DISABLED solid 1px;
-  padding: 8px;
+  padding: 18px;
+  display: flex;
+  justify-content: center;
+}
+
+.searchBar {
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.seperator {
+  border-bottom: #dcdcdc solid 1px;
+  margin: 10px 0;
 }

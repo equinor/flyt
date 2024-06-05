@@ -1,8 +1,15 @@
 import * as userApi from "../services/userApi";
 
-import { Button, Icon, Input } from "@equinor/eds-core-react";
+import {
+  Button,
+  Chip,
+  Icon,
+  LinearProgress,
+  Search,
+  Typography,
+} from "@equinor/eds-core-react";
 import { useState } from "react";
-import { close, link } from "@equinor/eds-icons";
+import { close, link, add } from "@equinor/eds-icons";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
@@ -16,6 +23,9 @@ import { unknownErrorToString } from "utils/isError";
 import { useStoreDispatch } from "hooks/storeHooks";
 import { userAccess } from "types/UserAccess";
 import { Project } from "../types/Project";
+import colors from "@/theme/colors";
+import { debounce } from "@/utils/debounce";
+import { searchUser } from "../services/userApi";
 import { useProjectId } from "../hooks/useProjectId";
 
 export function AccessBox(props: {
@@ -27,7 +37,7 @@ export function AccessBox(props: {
     ["userAccesses", props.project.vsmProjectID],
     () =>
       BaseAPIServices.get(
-        `/api/v1.0/userAccess/${props.project.vsmProjectID}`
+        `/api/v2.0/userAccess/${props.project.vsmProjectID}`
       ).then((value) => {
         return value.data;
       }),
@@ -35,7 +45,7 @@ export function AccessBox(props: {
   );
 
   if (!props.project) return <p>Missing project</p>;
-  const { created, vsmProjectID } = props.project;
+  const { vsmProjectID } = props.project;
 
   return (
     <div className={style.box}>
@@ -73,10 +83,10 @@ function RoleSelect(props: {
   );
 }
 
-function TopSection(props: { title: string; handleClose }) {
+export function TopSection(props: { title: string; handleClose }) {
   return (
     <div className={style.topSection}>
-      <p className={style.heading}> {props.title}</p>
+      <Typography> {props.title}</Typography>
       <Button variant={"ghost_icon"} onClick={props.handleClose}>
         <Icon data={close} />
       </Button>
@@ -84,45 +94,62 @@ function TopSection(props: { title: string; handleClose }) {
   );
 }
 
-function UserItem(props: {
-  user: { accessId: number; user: string; role: string };
-  onRoleChange;
-  onRemove;
+type userItem = {
+  shortName: string;
+  fullName: string;
+  role?: string;
+  onRoleChange?;
+  onRemove?;
+  onAdd?: () => void;
   disabled: boolean;
-}) {
+};
+
+function UserItem({
+  shortName,
+  fullName,
+  role,
+  onRoleChange,
+  onRemove,
+  onAdd,
+  disabled,
+}: userItem) {
   function handleChange(role: string) {
     if (role === "Remove") {
-      props.onRemove();
+      onRemove();
     } else {
-      props.onRoleChange(role);
+      onRoleChange(role);
     }
   }
 
   return (
     <div className={style.userItem}>
       <div className={style.userDotAndName}>
-        <UserDot name={props.user.user} />
-        <p className={style.userText}>{props.user.user}</p>
+        <UserDot name={shortName} />
+        <Chip>{shortName}</Chip>
+        <Typography color={colors.EQUINOR_PROMINENT}>{fullName}</Typography>
       </div>
 
-      <RoleSelect
-        onChange={(role) => handleChange(role)}
-        defaultValue={props.user.role}
-        disabled={props.disabled}
-      />
-    </div>
-  );
-}
-
-function OwnerItem(props: { owner: string }) {
-  return (
-    <div className={style.userItem}>
-      <div className={style.userDotAndName}>
-        <UserDot name={props.owner} />
-        {/*Todo: If you are the owner, add "(You)" to the paragraph under  */}
-        <p className={style.userText}>{props.owner}</p>
-      </div>
-      <p className={style.accessText}>Owner</p>
+      {role ? (
+        role === "Owner" ? (
+          "Owner"
+        ) : (
+          <RoleSelect
+            onChange={(role) => handleChange(role)}
+            defaultValue={role}
+            disabled={disabled}
+          />
+        )
+      ) : (
+        <Button
+          type={"submit"}
+          variant={"contained_icon"}
+          onClick={onAdd}
+          disabled={disabled}
+          style={{ width: 24, height: 24, flexShrink: 0, marginLeft: 12 }}
+        >
+          <Icon data={add} size={16} />
+        </Button>
+      )}
     </div>
   );
 }
@@ -135,7 +162,6 @@ function MiddleSection(props: {
   isAdmin: boolean;
 }) {
   const dispatch = useStoreDispatch();
-  const [userInput, setEmailInput] = useState("");
   const queryClient = useQueryClient();
 
   const { accounts } = useMsal();
@@ -147,7 +173,6 @@ function MiddleSection(props: {
       userApi.add(newUser),
     {
       onSuccess: () => {
-        setEmailInput("");
         notifyOthers("Gave access to a new user", projectId, account);
         queryClient.invalidateQueries();
       },
@@ -180,77 +205,118 @@ function MiddleSection(props: {
    * Add new user
    * @param e
    */
-  function handleSubmit(e) {
-    e.preventDefault();
-    userInput
-      .split(",") // Split by comma
-      .filter((user) => !!user.trim()) // remove empty strings
-      .map((user) => user.trim()) // remove whitespace
-      .forEach((user) => {
-        // add each user
-        addUserMutation.mutate({
-          user: user,
-          vsmId: props.vsmId,
-          role: accessRoles.Contributor,
-        });
-      });
-  }
+  const handleSubmit = (user) => {
+    console.log(user);
+    // userInput
+    //   .split(",") // Split by comma
+    //   .filter((user) => !!user.trim()) // remove empty strings
+    //   .map((user) => user.trim()) // remove whitespace
+    //   .forEach((user) => {
+    //     // add each user
+    addUserMutation.mutate({
+      user: user.userName,
+      vsmId: props.vsmId,
+      role: accessRoles.Contributor,
+    });
+    //   });
+  };
 
   if (props.loading) {
     return <p>Loading...</p>;
   }
   return (
-    <>
-      <form className={style.emailSection} onSubmit={handleSubmit}>
-        <Input
+    <UserListAndSearch
+      onRoleChange={(user, role) => changeUserMutation.mutate({ user, role })}
+      onRemove={(user) =>
+        removeUserMutation.mutate({
+          accessId: user.accessId,
+          vsmId: props.vsmId,
+        })
+      }
+      users={props.users}
+      isAdmin={props.isAdmin}
+      onAdd={(user) => handleSubmit(user)}
+    />
+  );
+}
+
+export const UserListAndSearch = (props: {
+  isAdmin;
+  users: userAccess[];
+  onRoleChange;
+  onRemove;
+  onAdd;
+}) => {
+  const [searchText, setSearchText] = useState("");
+  const {
+    data: usersSearched,
+    isLoading: loadingUsers,
+    error,
+  } = useQuery(["users", searchText], () => searchUser(searchText), {
+    enabled: searchText.trim() !== "",
+  });
+
+  return (
+    <div className={style.middleSection}>
+      {props.isAdmin ? (
+        <Search
+          className={style.searchBar}
           disabled={!props.isAdmin}
           autoFocus
           type={"text"}
-          // pattern={"[Bb]anana|[Cc]herry"} //Todo: pattern match?
-          placeholder={"shortname"}
-          value={userInput}
-          onChange={(event) => setEmailInput(event.target.value)}
+          onChange={(e) => {
+            debounce(
+              () => setSearchText(`${e.target.value}`),
+              500,
+              "userSearch"
+            );
+          }}
         />
-        <span style={{ padding: 4 }} />
-        <Button type={"submit"} variant={"contained"} disabled={!props.isAdmin}>
-          {props.loading ? "Adding..." : "Add"}
-        </Button>
-      </form>
-      {!props.isAdmin && (
+      ) : (
         <div className={style.infoCannotEdit}>
-          <p>You need to be owner or admin to manage sharing</p>
+          <Typography variant="body_short">
+            You need to be owner or admin to manage sharing
+          </Typography>
         </div>
       )}
-      <div className={style.middleSection}>
-        <div className={style.userListSection}>
-          {/* 
-            Filter away the owner. 
-            This could be changed to support giving away ownership of a process.
-          */}
-          <OwnerItem owner={props.owner} />
-          {props.users
-            ?.filter((user) => user.user !== props.owner)
+      <div className={style.userListSection}>
+        {props.users?.map((user) => (
+          <UserItem
+            key={user.accessId}
+            shortName={user.user}
+            fullName={user.user}
+            role={user.role}
+            onRoleChange={(role) => props.onRoleChange(user, role)}
+            onRemove={() => props.onRemove(user)}
+            disabled={!props.isAdmin}
+          />
+        ))}
+        {usersSearched?.length > 0 && <div className={style.seperator} />}
+        {loadingUsers ? (
+          <LinearProgress />
+        ) : (
+          usersSearched
+            ?.filter(
+              (userSearched) =>
+                !props.users.find(
+                  (userWithRole) =>
+                    userWithRole.user.toLowerCase() === userSearched.shortName
+                )
+            )
             .map((user) => (
               <UserItem
-                key={user.accessId}
-                user={user}
-                onRoleChange={(role) =>
-                  changeUserMutation.mutate({ user, role })
-                }
-                onRemove={() =>
-                  removeUserMutation.mutate({
-                    accessId: user.accessId,
-                    vsmId: props.vsmId,
-                  })
-                }
+                key={user.shortName}
+                shortName={user.shortName.toUpperCase()}
+                fullName={user.displayName}
                 disabled={!props.isAdmin}
+                onAdd={() => props.onAdd(user)}
               />
-            ))}
-        </div>
+            ))
+        )}
       </div>
-    </>
+    </div>
   );
-}
+};
 
 function BottomSection(props: { vsmProjectID: number }) {
   const [copySuccess, setCopySuccess] = useState("");

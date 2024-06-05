@@ -5,3 +5,9 @@ export type userAccess = {
   role: userAccessRole;
   user: string;
 };
+
+export type UserAccessSearch = {
+  displayName: string;
+  email: string;
+  shortName: string;
+};

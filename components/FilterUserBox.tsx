@@ -2,7 +2,7 @@ import { Button, Chip, Icon, Search } from "@equinor/eds-core-react";
 
 import { close } from "@equinor/eds-icons";
 import { debounce } from "utils/debounce";
-import { searchUser } from "services/userApi";
+import { getUserByShortname } from "services/userApi";
 import styles from "./FilterUserBox.module.scss";
 import { toggleQueryParam } from "utils/toggleQueryParam";
 import { unknownErrorToString } from "utils/isError";
@@ -16,7 +16,7 @@ export function FilterUserBox(props: { handleClose: () => void }): JSX.Element {
     data: users,
     isLoading,
     error,
-  } = useQuery(["users", searchText], () => searchUser(searchText));
+  } = useQuery(["users", searchText], () => getUserByShortname(searchText));
 
   return (
     <div className={styles.box}>
