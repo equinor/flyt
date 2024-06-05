@@ -1,5 +1,5 @@
 import { Button, Chip, Icon, Scrim, Search } from "@equinor/eds-core-react";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import {
   addLabelToProcess,
   getLabels,
@@ -18,7 +18,7 @@ export function ManageLabelBox(props: {
   isVisible: boolean;
   handleClose: () => void;
   process: Project;
-}): JSX.Element {
+}) {
   if (!props.isVisible) return null;
 
   return (
@@ -31,7 +31,7 @@ export function ManageLabelBox(props: {
   );
 }
 
-function TopSection(props: { handleClose: () => void }): JSX.Element {
+function TopSection(props: { handleClose: () => void }) {
   return (
     <div className={styles.topSection}>
       <p className={styles.heading}>Add labels</p>
@@ -42,7 +42,7 @@ function TopSection(props: { handleClose: () => void }): JSX.Element {
   );
 }
 
-function AddSection(props: { process: Project }): JSX.Element {
+function AddSection(props: { process: Project }) {
   const [term, setTerm] = useState("");
   const [debouncedTerm, setDebouncedTerm] = useState("");
   const queryClient = useQueryClient();
@@ -51,7 +51,7 @@ function AddSection(props: { process: Project }): JSX.Element {
     getLabels(debouncedTerm)
   );
 
-  const handleChange = (event) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setTerm(event.target.value);
   };
 

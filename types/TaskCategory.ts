@@ -1,5 +1,6 @@
 export type TaskCategory = {
   name: string;
-  id?: number;
+  id: number;
   fkProject?: number | string | string[];
+  checked: boolean;
 };

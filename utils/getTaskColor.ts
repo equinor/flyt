@@ -1,15 +1,15 @@
-import { Task } from "../types/Task";
-import { TaskTypes } from "../types/TaskTypes";
+import { Task } from "@/types/Task";
+import { TaskTypes } from "@/types/TaskTypes";
 
 export function getTaskColor(task?: Task): string {
   switch (task?.type) {
-    case TaskTypes.problem:
+    case TaskTypes.Problem:
       return "#eb0000";
-    case TaskTypes.question:
+    case TaskTypes.Question:
       return "#ad6200";
-    case TaskTypes.idea:
+    case TaskTypes.Idea:
       return "#00977b";
-    case TaskTypes.risk:
+    case TaskTypes.Risk:
       return "#ff9101";
   }
   return "#000000";

@@ -12,10 +12,10 @@ import { UserDots } from "./UserDots";
 import styles from "./Card.module.scss";
 import { tag } from "@equinor/eds-icons";
 import Link from "next/link";
-import { Project } from "../../types/Project";
+import { Project } from "@/types/Project";
 import { useAccess } from "../canvas/hooks/useAccess";
 
-export function ProjectCard(props: { vsm: Project }): JSX.Element {
+export function ProjectCard(props: { vsm: Project }) {
   const queryClient = useQueryClient();
   const [isMutatingFavourite, setIsMutatingFavourite] = useState(false);
 
@@ -54,7 +54,7 @@ export function ProjectCard(props: { vsm: Project }): JSX.Element {
         <div className={styles.section}>
           <ProjectCardHeader vsm={props.vsm} />
           <Heart
-            isFavourite={props.vsm.isFavorite}
+            isFavourite={props.vsm.isFavorite ?? false}
             fave={() => faveMutation.mutate()}
             unfave={() => unfaveMutation.mutate()}
             isLoading={isMutatingFavourite}

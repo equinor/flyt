@@ -1,7 +1,7 @@
 import { CElement } from "react";
 import style from "./TaskButton.module.scss";
-import { Task } from "../types/Task";
-import { TaskTypes } from "../types/TaskTypes";
+import { Task } from "@/types/Task";
+import { TaskTypes } from "@/types/TaskTypes";
 import { getTaskShorthand } from "utils/getTaskShorthand";
 
 export function TaskButton({
@@ -43,9 +43,9 @@ export function TaskButton({
  * @returns string - The corresponding style
  */
 function getStyle(type: TaskTypes): string {
-  if (type === TaskTypes.problem) return style.problem;
-  if (type === TaskTypes.question) return style.question;
-  if (type === TaskTypes.idea) return style.idea;
-  if (type === TaskTypes.risk) return style.risk;
+  if (type === TaskTypes.Problem) return style.problem;
+  if (type === TaskTypes.Question) return style.question;
+  if (type === TaskTypes.Idea) return style.idea;
+  if (type === TaskTypes.Risk) return style.risk;
   return style.unknown;
 }

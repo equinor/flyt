@@ -23,7 +23,7 @@ export function createUrlParams(params: {
       .split(",") // Make an array
       .filter((v) => v) // Remove empty strings
       // remove duplicates
-      .reduce((acc, curr) => {
+      .reduce((acc: string[], curr) => {
         if (acc.indexOf(curr) < 0) {
           acc.push(curr);
         }

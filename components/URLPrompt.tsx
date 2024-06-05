@@ -1,5 +1,11 @@
 import { TextField } from "@equinor/eds-core-react";
-import { Dispatch, FormEvent, SetStateAction, useState } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useState,
+} from "react";
 import {
   Button,
   Icon,
@@ -100,7 +106,9 @@ export function URLPrompt(props: {
           type="text"
           value={url}
           variant={getInputVariant(url)}
-          onChange={(e) => setUrl(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setUrl(e.target.value)
+          }
           autoComplete="off"
         />
         {getInputVariant(url) === "error" && (

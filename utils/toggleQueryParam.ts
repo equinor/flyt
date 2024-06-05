@@ -20,10 +20,11 @@ export function toggleQueryParam(
 
   // If key is empty, add it together with the value
   if (!query[key]) newQuery[key] = [value];
+  const val = query[key];
 
   // If it does exist, either remove it or add a new one
-  if (query[key]) {
-    const currentQueryParam = query[key].toString().split(","); // an array is easier to work with..
+  if (val) {
+    const currentQueryParam = val.toString().split(","); // an array is easier to work with..
 
     // If the query param is already in the URL, remove it.
     // Else, add it.

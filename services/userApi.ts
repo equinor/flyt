@@ -42,16 +42,6 @@ export const remove = (props: {
   );
 
 /**
- * Gets the access for the specified user in the specified Vsm
- * @param props
- */
-export const get = ({ vsmId, userName }) => {
-  return BaseAPIServices.get(`${baseUrl}/userAccess/${vsmId}/${userName}`).then(
-    (res) => res.data
-  );
-};
-
-/**
  * Retrieve registered users or search for a short-name.
  * @param userName - The short-name of the user to search for.
  * @returns - Array of users.

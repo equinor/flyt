@@ -1,4 +1,4 @@
-import { createToBeProject, getProject } from "../../services/projectApi";
+import { createToBeProject, getProject } from "@/services/projectApi";
 import { useMutation, useQuery } from "react-query";
 
 import { ToggleButton } from "components/ToggleButton";
@@ -9,14 +9,14 @@ import { useStoreDispatch } from "hooks/storeHooks";
 import { useAccess } from "./hooks/useAccess";
 import { useProjectId } from "@/hooks/useProjectId";
 
-export const ToBeToggle = (): JSX.Element => {
+export const ToBeToggle = () => {
   const router = useRouter();
   const { projectId } = useProjectId();
 
   const { data: project } = useQuery(["project", projectId], () =>
     getProject(projectId)
   );
-  const { userCanEdit } = useAccess(project);
+  const { userCanEdit } = project ? useAccess(project) : { userCanEdit: false };
   const dispatch = useStoreDispatch();
   const isToBe = !!project?.currentProcessId;
 
@@ -56,7 +56,7 @@ export const ToBeToggle = (): JSX.Element => {
             if (isToBe) {
               // We are on a "To-be" process and there exists a "Current" process
               // Let's navigate to it
-              router.replace(`/process/${project.currentProcessId}`);
+              void router.replace(`/process/${project.currentProcessId}`);
             }
           }}
         />
@@ -71,7 +71,7 @@ export const ToBeToggle = (): JSX.Element => {
             if (!isToBe && project?.toBeProcessID) {
               // We are currently on the "Current"-process and there exists a "To-be" process
               // Let's navigate to it
-              router.replace(`/process/${project?.toBeProcessID}`);
+              void router.replace(`/process/${project?.toBeProcessID}`);
             } else if (!isToBe && !project?.toBeProcessID) {
               // We are on a "Current" process, but there is no "To-be" process created
               // Let's create one and navigate to it

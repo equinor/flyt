@@ -8,7 +8,7 @@ export const ToggleButton = (props: {
   disabledTooltip?: string;
   first?: boolean;
   last?: boolean;
-}): JSX.Element => {
+}) => {
   //Default border
   const border = "2px solid #007079";
   // Do not show top and bottom border on disabled buttons
@@ -51,7 +51,7 @@ export const ToggleButton = (props: {
       {/* // Only show tooltip if the button is disabled */}
       <TooltipImproved
         disabled={!props.disabled || !props.disabledTooltip}
-        title={props.disabledTooltip}
+        title={props.disabledTooltip ?? ""}
       >
         <button
           disabled={props.disabled}

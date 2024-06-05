@@ -10,9 +10,7 @@ import { unknownErrorToString } from "utils/isError";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
 
-export function FilterLabelBox(props: {
-  handleClose: () => void;
-}): JSX.Element {
+export function FilterLabelBox(props: { handleClose: () => void }) {
   const [searchText, setSearchText] = useState("");
   const {
     data: labels,
@@ -29,7 +27,7 @@ export function FilterLabelBox(props: {
   );
 }
 
-function TopSection(props: { handleClose: () => void }): JSX.Element {
+function TopSection(props: { handleClose: () => void }) {
   return (
     <div className={styles.topSection}>
       <p className={styles.heading}>Filter by label</p>
@@ -40,9 +38,7 @@ function TopSection(props: { handleClose: () => void }): JSX.Element {
   );
 }
 
-function SearchSection(props: {
-  setSearchText: (searchText: string) => void;
-}): JSX.Element {
+function SearchSection(props: { setSearchText: (searchText: string) => void }) {
   const { setSearchText } = props;
   const router = useRouter();
 
@@ -77,14 +73,18 @@ function SearchSection(props: {
   );
 }
 
-function LabelSection(props: { labels; isLoading; error }): JSX.Element {
+function LabelSection(props: {
+  labels: any;
+  isLoading: boolean;
+  error: unknown;
+}) {
   const { labels, isLoading, error } = props;
   const router = useRouter();
 
   // rl stands for "required label"
   const handleClick = (selectedLabelId: string) => {
     const labelIdArray = getUpdatedLabel(selectedLabelId, router.query.rl);
-    router.replace({
+    void router.replace({
       query: { ...router.query, rl: labelIdArray },
     });
   };
@@ -111,10 +111,10 @@ function LabelSection(props: { labels; isLoading; error }): JSX.Element {
       </p>
 
       <div className={styles.labelContainer}>
-        {labels.map((label) => (
+        {labels.map((label: any) => (
           <Chip
             key={label.id}
-            variant={isActive(label.id.toString()) ? "active" : null}
+            variant={isActive(label.id.toString()) ? "active" : undefined}
             style={{ marginRight: "5px", marginBottom: "10px" }}
             onClick={() => handleClick(label.id.toString())}
           >

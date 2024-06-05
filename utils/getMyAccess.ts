@@ -1,6 +1,6 @@
 import { getUserShortName } from "./getUserShortName";
-import { Project } from "../types/Project";
-import { userAccessRole } from "../types/UserAccess";
+import { Project } from "@/types/Project";
+import { userAccessRole } from "@/types/UserAccess";
 import { AccountInfo } from "@azure/msal-browser";
 
 /**
@@ -9,7 +9,7 @@ import { AccountInfo } from "@azure/msal-browser";
  * @param account
  */
 export function getMyAccess(
-  project: Project,
+  project: Project | null,
   account: AccountInfo | null
 ): userAccessRole {
   //If not given a role, we default to "Reader"

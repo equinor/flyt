@@ -1,15 +1,16 @@
 import { useQuery } from "react-query";
-import { getTaskCategories } from "../services/taskCategoriesApi";
-import { useEffect } from "react";
+import { getTaskCategories } from "@/services/taskCategoriesApi";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import styles from "./CategorySection.module.scss";
 import { CategoryHelpers } from "./CategoryHelpers";
 import { AddCategoryButton } from "./AddCategoryButton";
-import { unknownErrorToString } from "../utils/isError";
+import { unknownErrorToString } from "@/utils/isError";
 import { DraggableCategory } from "./DraggableCategory";
-import { useProjectId } from "../hooks/useProjectId";
+import { useProjectId } from "@/hooks/useProjectId";
+import { TaskCategory } from "@/types/TaskCategory";
 
 export function CategorySection(props: {
-  setCategories: (value: ((prevState: any[]) => any[]) | any[]) => void;
+  setCategories: Dispatch<SetStateAction<TaskCategory[]>>;
   categories: any[];
 }) {
   const { categories, setCategories } = props;
@@ -29,7 +30,7 @@ export function CategorySection(props: {
     }
   }, [taskCategories]);
 
-  const toggleSelection = (category) => {
+  const toggleSelection = (category: any) => {
     const newCategories = categories.map((c) => {
       if (c === category) {
         return {
@@ -42,6 +43,25 @@ export function CategorySection(props: {
     setCategories(newCategories);
   };
 
+  const renderCategories = () => {
+    return isLoadingCategories ? (
+      <p>Loading</p>
+    ) : errorCategories ? (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <h1>Error</h1>
+        <p>{unknownErrorToString(errorCategories)}</p>
+      </div>
+    ) : (
+      <></>
+    );
+  };
+
   return (
     <div>
       <p className={styles.header}>Categories</p>
@@ -49,18 +69,7 @@ export function CategorySection(props: {
       <AddCategoryButton projectId={projectId} />
       <div>
         {isLoadingCategories && <p>Loading</p>}
-        {!isLoadingCategories && errorCategories && (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <h1>Error</h1>
-            <p>{unknownErrorToString(errorCategories)}</p>
-          </div>
-        )}
+        {renderCategories()}
         {categories.map((category) => (
           <DraggableCategory
             projectId={projectId}

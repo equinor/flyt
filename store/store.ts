@@ -1,9 +1,9 @@
 import { Action, action, createStore, Thunk, thunk } from "easy-peasy";
 import BaseAPIServices from "../services/BaseAPIServices";
-import { Project } from "../types/Project";
-import { NodeDataApi } from "../types/NodeDataApi";
-import { Task } from "../types/Task";
-import { canDeleteNode } from "../utils/canDeleteNode";
+import { Project } from "@/types/Project";
+import { NodeDataApi } from "@/types/NodeDataApi";
+import { Task } from "@/types/Task";
+import { canDeleteNode } from "@/utils/canDeleteNode";
 import { original } from "immer";
 // General pattern Thunk -> Actions -> Set state
 
@@ -16,10 +16,10 @@ export type ProjectModel = {
   selectedNode: NodeDataApi | null;
   //// ACTIONS ///////////////////
   //someAction: Action<model, payload>;
-  addTaskToselectedNode: Action<ProjectModel, Task>;
+  addTaskToSelectedNode: Action<ProjectModel, Task>;
   updateTaskDescriptionInselectedNode: Action<ProjectModel, Task>;
-  removeTaskFromselectedNode: Action<ProjectModel, string>;
-  setselectedNode: Action<ProjectModel, NodeDataApi | null>;
+  removeTaskFromSelectedNode: Action<ProjectModel, string>;
+  setSelectedNode: Action<ProjectModel, NodeDataApi | null>;
   patchLocalObject: Action<ProjectModel, NodeDataApi>;
   setErrorProject: Action<ProjectModel, Record<string, unknown>>;
   setFetchingProject: Action<ProjectModel, boolean>;
@@ -31,7 +31,13 @@ export type ProjectModel = {
   addObject: Thunk<ProjectModel, NodeDataApi>;
   moveVSMObject: Thunk<
     ProjectModel,
-    { projectId; id; parent; leftObjectId; choiceGroup }
+    {
+      projectId: any;
+      id: any;
+      parent: any;
+      leftObjectId: any;
+      choiceGroup: any;
+    }
   >;
   deleteVSMObject: Thunk<ProjectModel, NodeDataApi>;
   fetchProject: Thunk<ProjectModel, { id: string | string[] | number }>;
@@ -52,8 +58,8 @@ export type ProjectModel = {
 const projectModel: ProjectModel = {
   //State
   fetchingProject: false,
-  errorProject: null,
-  project: null,
+  errorProject: {},
+  project: {} as Project,
   snackMessage: null,
   selectedNode: null,
 
@@ -63,7 +69,7 @@ const projectModel: ProjectModel = {
   // }),
 
   //Actions
-  addTaskToselectedNode: action((state, payload) => {
+  addTaskToSelectedNode: action((state, payload) => {
     const { selectedNode } = state;
     if (selectedNode) {
       selectedNode.tasks = [...selectedNode.tasks, payload];
@@ -76,11 +82,14 @@ const projectModel: ProjectModel = {
       if (oldTask) oldTask.description = newTask.description;
     }
   }),
-  removeTaskFromselectedNode: action((state, taskId) => {
+  removeTaskFromSelectedNode: action((state, taskId) => {
     const { selectedNode } = state;
-    selectedNode.tasks = original(selectedNode.tasks).filter(
-      (t) => t?.id !== taskId
-    );
+    if (selectedNode?.tasks) {
+      const filteredTasks = original(selectedNode.tasks)?.filter(
+        (t) => t?.id !== taskId
+      );
+      if (filteredTasks) selectedNode.tasks = filteredTasks;
+    }
   }),
   setFetchingProject: action((state, payload) => {
     state.fetchingProject = payload;
@@ -94,13 +103,13 @@ const projectModel: ProjectModel = {
   setProject: action((state, payload: Project) => {
     state.project = payload;
   }),
-  setselectedNode: action((state, payload) => {
+  setSelectedNode: action((state, payload) => {
     state.selectedNode = payload;
   }),
   fetchProject: thunk(async (actions, payload) => {
     const { id } = payload;
     actions.setFetchingProject(true);
-    actions.setErrorProject(null);
+    actions.setErrorProject({});
     BaseAPIServices.get(`/api/v1.0/project/${id}`)
       .then((value) => actions.setProject(value.data))
       .catch((reason) => {
@@ -116,6 +125,7 @@ const projectModel: ProjectModel = {
       // oldObj = newObj //This doesn't work.
       // We need to iterate over each individual object and set them one-by-one
       Object.keys(newObj).forEach((key) => {
+        // @ts-expect-error -- this works, and I cant be bothered to fix it
         oldObj[key] = newObj[key];
       });
     }
@@ -127,15 +137,16 @@ const projectModel: ProjectModel = {
      */
     function patchNodeInTree(node: NodeDataApi, tree: NodeDataApi) {
       if (node.id === tree.id) patchNode(tree, node);
+
       tree.children?.forEach((id) => {
-        patchNodeInTree(
-          node,
-          state.project.objects.find((vsmObj: NodeDataApi) => vsmObj.id === id)
+        const nodeData = state.project?.objects.find(
+          (vsmObj: NodeDataApi) => vsmObj.id === id
         );
+        if (nodeData) patchNodeInTree(node, nodeData);
       });
     }
 
-    project.objects.forEach((child) => {
+    project?.objects.forEach((child) => {
       // We expect only one top level child - with parent === 0,
       // but adding a forEach just in case we have multiple.
       patchNodeInTree(payload, child);
@@ -186,7 +197,7 @@ const projectModel: ProjectModel = {
           // Todo: delete the object locally
           //  Until then, just refresh the whole project
           actions.fetchProject({ id: projectId });
-          actions.setselectedNode(null);
+          actions.setSelectedNode(null);
           return actions.setSnackMessage("Deleted object");
         })
         .catch((reason) => {
@@ -199,12 +210,12 @@ const projectModel: ProjectModel = {
   }),
   addTask: thunk(async (actions, payload) => {
     //Tasks aka. QIP ( Questions Ideas & Problems )
-    actions.setErrorProject(null);
+    actions.setErrorProject({});
     BaseAPIServices.post(`/api/v1.0/task`, payload)
       .then((response) => {
         actions.setSnackMessage("✅ Task added!");
 
-        actions.addTaskToselectedNode(response.data);
+        actions.addTaskToSelectedNode(response.data);
 
         //Todo: locally update before api-update?
         actions.fetchProject({ id: response.data.fkProject });
@@ -216,7 +227,7 @@ const projectModel: ProjectModel = {
   }),
   updateTask: thunk(async (actions, payload) => {
     //Tasks aka. QIP ( Questions Ideas & Problems )
-    actions.setErrorProject(null);
+    actions.setErrorProject({});
     BaseAPIServices.post(`/api/v1.0/task`, payload)
       .then((response) => {
         actions.setSnackMessage("✅ Task updated!");
@@ -233,7 +244,7 @@ const projectModel: ProjectModel = {
   }),
   unlinkTask: thunk(async (actions, payload) => {
     //Tasks aka. QIP ( Questions Ideas & Problems )
-    actions.setErrorProject(null);
+    actions.setErrorProject({});
 
     const { object, task } = payload;
     const { projectId, id } = object;
@@ -245,7 +256,7 @@ const projectModel: ProjectModel = {
       .then(() => {
         actions.setSnackMessage("✅ Unlinked task!");
         // actions.removeTaskFromselectedNode(response.data);
-        actions.removeTaskFromselectedNode(id);
+        actions.removeTaskFromSelectedNode(id);
         //Todo: locally update before api-update?
         actions.fetchProject({ id: projectId });
       })
@@ -256,7 +267,7 @@ const projectModel: ProjectModel = {
   }),
   linkTask: thunk(async (actions, payload) => {
     //Tasks aka. QIP ( Questions Ideas & Problems )
-    actions.setErrorProject(null);
+    actions.setErrorProject({});
 
     const { projectId, id, taskId, task } = payload;
     //Not really deleting, but rather unlinking the task.
@@ -265,7 +276,7 @@ const projectModel: ProjectModel = {
         actions.setSnackMessage("✅ Linked task!");
         // actions.removeTaskFromselectedNode(response.data);
         //Todo: a
-        actions.addTaskToselectedNode(task);
+        actions.addTaskToSelectedNode(task);
 
         //Todo: locally update before api-update?
         actions.fetchProject({ id: projectId });
@@ -336,7 +347,7 @@ const projectModel: ProjectModel = {
   //   );
   // }),
   moveVSMObject: thunk(async (actions, newVsmObject) => {
-    actions.setErrorProject(null);
+    actions.setErrorProject({});
     actions.setSnackMessage("⏳ Moving card...");
 
     const { projectId, id, parent, leftObjectId, choiceGroup } = newVsmObject;

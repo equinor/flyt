@@ -7,7 +7,7 @@ import { getLabels } from "services/labelsApi";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
 
-export default function Labels(): JSX.Element {
+export default function Labels() {
   const router = useRouter();
 
   const { data, isLoading, error } = useQuery("labels", () => getLabels(""));
@@ -40,7 +40,7 @@ export default function Labels(): JSX.Element {
           </tr>
         </thead>
         <tbody>
-          {data.map((label) => (
+          {data?.map((label) => (
             <tr key={label.id}>
               <td>{label.id}</td>
               <td>{label.text}</td>

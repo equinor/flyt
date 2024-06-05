@@ -47,7 +47,7 @@ export function EditTaskTextField(props: {
       onChange={(event) => {
         const updatedTask: Task = {
           ...props.task,
-          description: event?.substring(0, 4000),
+          description: event?.substring(0, 4000) ?? "",
         };
         debounce(
           () => {

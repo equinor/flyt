@@ -2,14 +2,16 @@ import { Pagination, Typography } from "@equinor/eds-core-react";
 import { useEffect, useState } from "react";
 import styles from "../pages/processes/FrontPage.module.scss";
 import { ProjectListSection } from "./ProjectListSection";
-import { unknownErrorToString } from "../utils/isError";
+import { unknownErrorToString } from "@/utils/isError";
+import { UseQueryResult } from "react-query";
+import { Project } from "@/types/Project";
 
 export function FrontPageBody(props: {
   showNewProcessButton: boolean;
   itemsPerPage: number;
-  query;
+  query: UseQueryResult<{ projects: Project[]; totalItems: number }, unknown>;
   onChangePage: (newPage: number) => void;
-}): JSX.Element {
+}) {
   const [page, setPage] = useState(1);
 
   const { showNewProcessButton, itemsPerPage, query } = props;
@@ -29,19 +31,21 @@ export function FrontPageBody(props: {
       </div>
     );
 
-  const handlePageChange = (event, newPage) => {
+  const handlePageChange = (_: any, newPage: number) => {
     props.onChangePage(newPage);
     setPage(newPage);
   };
 
   return (
     <>
-      <ProjectListSection
-        projects={data?.projects}
-        isLoading={isLoading}
-        expectedNumberOfProjects={itemsPerPage}
-        showNewProcessButton={showNewProcessButton}
-      />
+      {data?.projects && (
+        <ProjectListSection
+          projects={data?.projects}
+          isLoading={isLoading}
+          expectedNumberOfProjects={itemsPerPage}
+          showNewProcessButton={showNewProcessButton}
+        />
+      )}
       <div className={styles.footer}>
         {itemsPerPage < totalItems && (
           <Pagination

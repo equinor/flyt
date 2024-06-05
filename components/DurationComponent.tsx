@@ -1,17 +1,17 @@
-import { NodeDataApi } from "../types/NodeDataApi";
+import { NodeDataApi } from "@/types/NodeDataApi";
 import { Autocomplete, TextField } from "@equinor/eds-core-react";
 import {
   getTimeDefinitionDisplayName,
   getTimeDefinitionValue,
   getTimeDefinitionValues,
-} from "../types/unitDefinitions";
-import { useEffect, useState } from "react";
+} from "@/types/unitDefinitions";
+import { ChangeEvent, useEffect, useState } from "react";
 
 export function DurationComponent(props: {
   selectedNode: NodeDataApi;
   onChangeDuration: (e: { duration: number; unit: string }) => void;
   disabled: boolean;
-}): JSX.Element {
+}) {
   const [duration, setDuration] = useState(props.selectedNode.duration);
   const [unit, setUnit] = useState(props.selectedNode.unit);
 
@@ -29,11 +29,11 @@ export function DurationComponent(props: {
         id={"vsmObjectTime"}
         min={0}
         value={`${duration}`}
-        onChange={(event) => {
+        onChange={(event: ChangeEvent<HTMLInputElement>) => {
           setDuration(parseFloat(event.target.value));
           props.onChangeDuration({
             duration: parseFloat(event.target.value),
-            unit: unit,
+            unit: unit ?? "",
           });
         }}
       />
@@ -44,9 +44,12 @@ export function DurationComponent(props: {
         onInputChange={(i) => {
           const apiValue = getTimeDefinitionValue(i);
           setUnit(apiValue);
-          props.onChangeDuration({ duration, unit: apiValue });
+          props.onChangeDuration({
+            duration: duration ?? 0,
+            unit: apiValue ?? "",
+          });
         }}
-        selectedOptions={[getTimeDefinitionDisplayName(unit)]}
+        selectedOptions={[getTimeDefinitionDisplayName(unit ?? "")]}
         label="Unit"
       />
     </div>

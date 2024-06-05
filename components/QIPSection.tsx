@@ -5,9 +5,9 @@ import { EditTaskSection } from "./EditTaskSection";
 import { TaskButton } from "./TaskButton";
 import { Typography } from "@equinor/eds-core-react";
 import styles from "./VSMCanvas.module.scss";
-import { Task } from "../types/Task";
-import { taskSorter } from "../utils/taskSorter";
-import { NodeDataApi } from "../types/NodeDataApi";
+import { Task } from "@/types/Task";
+import { taskSorter } from "@/utils/taskSorter";
+import { NodeDataApi } from "@/types/NodeDataApi";
 
 const NewTaskButton = (props: { onClick: () => void; disabled: boolean }) => (
   <div>
@@ -24,9 +24,9 @@ export const QIPSection = (props: {
   object: NodeDataApi;
   onClickNewTask: () => void;
   canEdit: boolean;
-}): JSX.Element => {
+}) => {
   const selectedNode = props.object;
-  const [selectedTask, setSelectedTask] = useState(null);
+  const [selectedTask, setSelectedTask] = useState<Task | undefined>(undefined);
 
   // Show the edit task section if the selected task relates to the selected vsm object
   const showEditTaskSection = selectedNode.tasks.some(
@@ -48,7 +48,7 @@ export const QIPSection = (props: {
         Questions, Ideas, Problems and Risks
       </Typography>
 
-      {showEditTaskSection && (
+      {showEditTaskSection && selectedTask && (
         <EditTaskSection
           canEdit={props.canEdit}
           object={selectedNode}
@@ -65,7 +65,7 @@ export const QIPSection = (props: {
       >
         {selectedNode.tasks.length === 0 && (
           <p
-            className={props.canEdit && styles.clickable}
+            className={props.canEdit ? styles.clickable : ""}
             onClick={() => props.canEdit && props.onClickNewTask()}
           >
             {props.canEdit

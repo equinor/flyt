@@ -1,13 +1,13 @@
 import { AxiosPromise, AxiosResponse } from "axios";
 
 import BaseAPIServices from "./BaseAPIServices";
-import { createUrlParams } from "../utils/createUrlParams";
+import { createUrlParams } from "@/utils/createUrlParams";
 import { processLabel } from "types/processLabel";
-import { Project } from "../types/Project";
+import { Project } from "@/types/Project";
 
 const baseUrl = "/api/v2.0";
 //Project aka. VSM aka. Flyt or Flow
-export const getProjects = (filter?: {
+export const getProjects = (filter: {
   q?: string | string[]; // Search query
   ru?: (number | string)[]; // Required user(s)
   rl?: (number | string)[]; // Required label(s)
@@ -36,21 +36,21 @@ export const createToBeProject = (id?: string | string[]) => {
 /**
  * Get project by id
  * @param id project id
- * @param asOf? Get the project in a previous version by setting this to a historical time.
+ * @param asOf
  * @returns VSM Process
  */
-export const getProject = (
+export const getProject = async (
   id: string | string[],
   asOf?: number | string | string[]
 ): Promise<Project> => {
   if (asOf) {
-    return BaseAPIServices.get(`${baseUrl}/project/${id}?asOf=${asOf}`).then(
-      (value) => value.data
+    const value = await BaseAPIServices.get(
+      `${baseUrl}/project/${id}?asOf=${asOf}`
     );
+    return value.data;
   }
-  return BaseAPIServices.get(`${baseUrl}/project/${id}`).then(
-    (value) => value.data
-  );
+  const value_1 = await BaseAPIServices.get(`${baseUrl}/project/${id}`);
+  return value_1.data;
 };
 
 export const updateProject = (
@@ -66,10 +66,10 @@ export const duplicateProject = (id: number): Promise<processLabel> =>
     (value) => value.data
   );
 
-export const faveProject = (id: number) =>
+export const faveProject = (id: number | undefined) =>
   BaseAPIServices.put(`${baseUrl}/project/${id}/favorite`, null);
 
-export const unfaveProject = (id: number) =>
+export const unfaveProject = (id: number | undefined) =>
   BaseAPIServices.delete(`${baseUrl}/project/${id}/favorite`);
 
 export const resetProcess = (

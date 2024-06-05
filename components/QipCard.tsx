@@ -1,6 +1,6 @@
-import { Task } from "../types/Task";
+import { Task } from "@/types/Task";
 import { useState } from "react";
-import { getTaskColor } from "../utils/getTaskColor";
+import { getTaskColor } from "@/utils/getTaskColor";
 import styles from "./QipCard.module.scss";
 import { ColorDot } from "./ColorDot";
 import { CategoryChip } from "./CategoryChip";
@@ -10,18 +10,13 @@ import { useMutation, useQueryClient } from "react-query";
 import {
   linkTaskCategory,
   unlinkTaskCategory,
-} from "../services/taskCategoriesApi";
-import { TaskCategory } from "../types/TaskCategory";
+} from "@/services/taskCategoriesApi";
+import { TaskCategory } from "@/types/TaskCategory";
 import { getTaskShorthand } from "utils/getTaskShorthand";
-import { useProjectId } from "../hooks/useProjectId";
+import { useProjectId } from "@/hooks/useProjectId";
 
-export function QipCard(props: {
-  task: Task;
-  onClick?: () => void;
-}): JSX.Element {
+export function QipCard(props: { task: Task; onClick?: () => void }) {
   const task = props.task;
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
   const { description, category: categories, id: taskId, solved } = task;
   const taskColor = getTaskColor(task);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +25,7 @@ export function QipCard(props: {
 
   const queryClient = useQueryClient();
   const linkTaskMutation = useMutation(
-    (p: { categoryId; taskId }) => {
+    (p: { categoryId: string; taskId: string }) => {
       setIsLoading(true);
       return linkTaskCategory(projectId, p.categoryId, p.taskId);
     },
@@ -60,20 +55,20 @@ export function QipCard(props: {
     }
   );
 
-  function getAlreadyThere(data: { text: string; color: string; id: number }) {
-    return categories?.some((c) => c.id === data.id);
+  function getAlreadyThere(data: { text: string; color: string; id: string }) {
+    return categories?.some((c: any) => c.id === data.id);
   }
 
   return (
     <div
       style={{
-        transform: (isDragOver || isLoading) && "scale(0.98)",
-        opacity: (isDragOver || isLoading) && 0.4,
-        borderStyle: isDragOver && "dashed",
+        transform: isDragOver || isLoading ? "scale(0.98)" : "auto",
+        opacity: isDragOver || isLoading ? 0.4 : "auto",
+        borderStyle: isDragOver ? "dashed" : "auto",
       }}
       onClick={props.onClick}
       onDrop={(event) => {
-        const data: { text: string; color: string; id: number } = JSON.parse(
+        const data: { text: string; color: string; id: string } = JSON.parse(
           event.dataTransfer.getData("text/plain")
         );
         const alreadyThere = getAlreadyThere(data);
@@ -91,7 +86,7 @@ export function QipCard(props: {
         event.stopPropagation();
         const dragData = event.dataTransfer.getData("text/plain");
         if (!dragData) return;
-        const data: { text: string; color: string; id: number } =
+        const data: { text: string; color: string; id: string } =
           JSON.parse(dragData);
         const alreadyThere = getAlreadyThere(data);
         if (!alreadyThere) {

@@ -1,4 +1,4 @@
-export default function Error(props: { statusCode: number }): JSX.Element {
+export default function Error(props: { statusCode: number }) {
   const { statusCode } = props;
   return (
     <p>
@@ -9,7 +9,13 @@ export default function Error(props: { statusCode: number }): JSX.Element {
   );
 }
 
-Error.getInitialProps = ({ res, err }) => {
+Error.getInitialProps = ({
+  res,
+  err,
+}: {
+  res: { statusCode: number };
+  err: { statusCode: number };
+}) => {
   let statusCode: number;
   if (res) {
     statusCode = res.statusCode;

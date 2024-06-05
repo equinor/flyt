@@ -94,40 +94,40 @@ export function NewTaskSection(props: {
 
           switch (e) {
             case "Problem":
-              t.type = TaskTypes.problem;
+              t.type = TaskTypes.Problem;
               setNewTask(t);
               setShowExistingTaskSection(false);
               break;
             case "Idea":
-              t.type = TaskTypes.idea;
+              t.type = TaskTypes.Idea;
               setNewTask(t);
               setShowExistingTaskSection(false);
               break;
             case "Question":
-              t.type = TaskTypes.question;
+              t.type = TaskTypes.Question;
               setNewTask(t);
               setShowExistingTaskSection(false);
               break;
             case "Risk":
-              t.type = TaskTypes.risk;
+              t.type = TaskTypes.Risk;
               setNewTask(t);
               setShowExistingTaskSection(false);
               break;
             case "Existing Problem":
               setShowExistingTaskSection(true);
-              setExistingTaskFilter(TaskTypes.problem);
+              setExistingTaskFilter(TaskTypes.Problem);
               break;
             case "Existing Idea":
               setShowExistingTaskSection(true);
-              setExistingTaskFilter(TaskTypes.idea);
+              setExistingTaskFilter(TaskTypes.Idea);
               break;
             case "Existing Question":
               setShowExistingTaskSection(true);
-              setExistingTaskFilter(TaskTypes.question);
+              setExistingTaskFilter(TaskTypes.Question);
               break;
             case "Existing Risk":
               setShowExistingTaskSection(true);
-              setExistingTaskFilter(TaskTypes.risk);
+              setExistingTaskFilter(TaskTypes.Risk);
               break;
           }
         }}
@@ -146,7 +146,7 @@ export function NewTaskSection(props: {
               defaultText={newTask.description || ""}
               canEdit={true}
               onChange={(event) =>
-                setNewTask({ ...newTask, description: event })
+                setNewTask({ ...newTask, description: event ?? "" })
               }
             />
           </div>
