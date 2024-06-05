@@ -1,7 +1,7 @@
 const baseUrl = "/api/v2.0";
 
 import BaseAPIServices from "./BaseAPIServices";
-import { NodeDataApi } from "../types/NodeDataApi";
+import { NodeDataApi } from "@/types/NodeDataApi";
 import { Graph } from "types/Graph";
 import { NodeTypes } from "types/NodeTypes";
 
@@ -91,3 +91,14 @@ export const mergeVertices = (
     `${baseUrl}/graph/${projectId}/vertices/connect`,
     data
   ).then((r) => r.data);
+
+export const patchEdge = (
+  data: { EdgeValue?: string },
+  projectId: string,
+  edgeId: string
+) => {
+  BaseAPIServices.post(
+    `${baseUrl}/graph/${projectId}/edges/${edgeId}`,
+    data
+  ).then((r) => r.data);
+};
