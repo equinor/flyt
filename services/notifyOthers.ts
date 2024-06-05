@@ -8,12 +8,10 @@ export const notifyOthers = async (
   account?: AccountInfo | null
 ) => {
   // build message obj
-  let user = "";
-  if (account) user = getUserShortName(account);
   const message = {
     msg,
     roomId,
-    user,
+    user: account ? getUserShortName(account) : "",
   };
 
   if (account) message["user"] = getUserShortName(account);
