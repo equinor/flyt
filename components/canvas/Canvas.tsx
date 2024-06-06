@@ -3,6 +3,7 @@ import { ManageLabelBox } from "components/Labels/ManageLabelBox";
 import { ResetProcessButton } from "components/ResetProcessButton";
 import { useLayoutEffect, useState } from "react";
 import ReactFlow, {
+  ControlButton,
   Controls,
   Edge,
   Node,
@@ -17,12 +18,11 @@ import { NodeDataApi } from "types/NodeDataApi";
 import { NodeTypes } from "types/NodeTypes";
 import { EdgeTypes } from "types/EdgeTypes";
 import { Project } from "types/Project";
-import { Graph } from "../../types/Graph";
+import { Graph } from "@/types/Graph";
 import { DeleteNodeDialog } from "../DeleteNodeDialog";
 import { LiveIndicator } from "../LiveIndicator";
 import { SideBar } from "../SideBar";
 import styles from "./Canvas.module.scss";
-import { CanvasTutorial } from "./CanvasTutorial/CanvasTutorial";
 import { nodeElementTypes } from "./NodeElementTypes";
 import { OldFlytButton } from "./OldFlytButton";
 import { ToBeToggle } from "./ToBeToggle";
@@ -34,10 +34,13 @@ import { useNodeDrag } from "./hooks/useNodeDrag";
 import { useNodeMerge } from "./hooks/useNodeMerge";
 import { useWebSocket } from "./hooks/useWebSocket";
 import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
-import { useProjectId } from "../../hooks/useProjectId";
+import { useProjectId } from "@/hooks/useProjectId";
 import { edgeElementTypes } from "./EdgeElementTypes";
 import { useEdgeDelete } from "./hooks/useEdgeDelete";
 import { ScrimDelete } from "../ScrimDelete";
+import { MiniMapCustom } from "@/components/canvas/MiniMapCustom";
+import { EdgeDataApi } from "@/types/EdgeDataApi";
+import { ZoomLevel } from "@/components/canvas/ZoomLevel";
 
 type CanvasProps = {
   graph: Graph;
@@ -60,7 +63,20 @@ const Canvas = ({
     new Date("2024-04-24T00:08:00.000000Z").getTime();
 
   let tempNodes: Node<NodeDataFull>[] = [];
-  let tempEdges: Edge[] = apiEdges;
+  let tempEdges: Edge[] = [];
+  apiEdges.map((edge: EdgeDataApi) => {
+    const nodeSource = apiNodes.filter((node) => node.id === edge.source);
+    if (nodeSource[0] && nodeSource[0].type === NodeTypes.choice) {
+      tempEdges.push({
+        ...edge,
+        type: "choice",
+        label: edge.edgeValue,
+      });
+    } else {
+      tempEdges.push({ ...edge });
+    }
+  });
+
   const customEdges: Edge[] = [];
   const [nodes, setNodes, onNodesChange] = useNodesState<NodeDataFull>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -184,8 +200,8 @@ const Canvas = ({
             (node) => node.id === parentNodeId
           );
           if (
-            tempParentNode &&
             depthDeepestNode &&
+            tempParentNode?.data.depth &&
             tempParentNode.data.depth < depthDeepestNode
           ) {
             let customEdge: Edge | undefined;
@@ -291,7 +307,10 @@ const Canvas = ({
       if (mergedNodesLooping.has(nodeId)) {
         const nodeDuplicate = mergedNodesLooping.get(nodeId)![0];
         const loopCount = mergedNodesLooping.get(nodeId)![1];
-        if (nodeDuplicate?.data?.depth <= parentDepth) {
+        if (
+          nodeDuplicate.data.depth &&
+          nodeDuplicate.data.depth <= parentDepth
+        ) {
           nodeDuplicate.data.depth = parentDepth + 1;
         }
         mergedNodesLooping.set(nodeId, [nodeDuplicate, loopCount + 1]);
@@ -306,7 +325,7 @@ const Canvas = ({
     } else {
       data.depth = parentDepth + 1;
       data?.children?.forEach((child) => {
-        setSingleNodeDepth(child, data.depth);
+        if (data.depth) setSingleNodeDepth(child, data.depth);
       });
     }
   };
@@ -321,7 +340,7 @@ const Canvas = ({
       mergedNodesReady = [];
       dupeMergedNodesReady.forEach((node) => {
         node.data.children.forEach((child) => {
-          setSingleNodeDepth(child, node.data.depth);
+          if (node.data.depth) setSingleNodeDepth(child, node.data.depth);
         });
       });
     }
@@ -377,7 +396,7 @@ const Canvas = ({
       <LiveIndicator
         live={socketConnected}
         title={
-          !!socketConnected
+          socketConnected
             ? "Connection is looking good!\nYour changes should appear immediately for other users."
             : `You are not connected${
                 socketReason ? " because of ${socketReason}" : ""
@@ -442,9 +461,13 @@ const Canvas = ({
         attributionPosition="bottom-right"
         connectionRadius={100}
       >
-        <Controls className={styles.controls} showInteractive={false} />
+        <MiniMapCustom />
+        <Controls className={styles.controls} showInteractive={false}>
+          <ControlButton className={styles.zoomContainer}>
+            <ZoomLevel />
+          </ControlButton>
+        </Controls>
       </ReactFlow>
-      <CanvasTutorial />
       {createdBeforeSecondMajorRelease && (
         <OldFlytButton projectId={projectId} />
       )}

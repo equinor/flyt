@@ -13,6 +13,10 @@ import { NodeDescription } from "./NodeDescription";
 import { NodeCard } from "./NodeCard";
 import colors from "theme/colors";
 import { SourceHandle } from "./SourceHandle";
+import { NodeShape } from "./NodeShape";
+import { QIPRContainer } from "./QIPRContainer";
+import { NodeTooltipSection } from "./NodeTooltipSection";
+import { NodeTooltip } from "./NodeTooltip";
 
 export const MainActivityNode = ({
   data: {
@@ -32,9 +36,11 @@ export const MainActivityNode = ({
   dragging,
 }: NodeProps<NodeData>) => {
   const [hovering, setHovering] = useState(false);
+  const [hoveringShape, setHoveringShape] = useState(false);
 
   useEffect(() => {
     setHovering(false);
+    setHoveringShape(false);
   }, [dragging]);
 
   const renderNodeButtons = () => {
@@ -82,20 +88,25 @@ export const MainActivityNode = ({
       onMouseLeave={() => setHovering(false)}
     >
       <NodeCard
-        shape="square"
-        height={shapeHeight}
-        width={shapeWidth}
-        color={colors.NODE_MAINACTIVITY}
-        tasks={tasks}
         onClick={handleClickNode}
         hovering={hovering && !merging}
         highlighted={isDropTarget && isValidDropTarget}
         darkened={isValidDropTarget === false}
       >
-        <NodeDescription
-          header={!description ? type : undefined}
-          description={description}
-        />
+        <NodeShape
+          shape={"square"}
+          color={colors.NODE_MAINACTIVITY}
+          width={shapeWidth}
+          height={shapeHeight}
+          onMouseEnter={() => !dragging && setHoveringShape(true)}
+          onMouseLeave={() => setHoveringShape(false)}
+        >
+          <NodeDescription
+            header={!description ? type : undefined}
+            description={description}
+          />
+        </NodeShape>
+        <QIPRContainer tasks={tasks} />
       </NodeCard>
       <Handle
         className={stylesNodeButtons["handle--hidden"]}
@@ -104,6 +115,11 @@ export const MainActivityNode = ({
         isConnectable={false}
       />
       <SourceHandle />
+      <NodeTooltip isVisible={!!(hoveringShape && description)}>
+        {description && (
+          <NodeTooltipSection header={"Description"} text={description} />
+        )}
+      </NodeTooltip>
       {renderNodeButtons()}
     </div>
   );

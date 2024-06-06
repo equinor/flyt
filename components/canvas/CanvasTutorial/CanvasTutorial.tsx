@@ -1,5 +1,5 @@
 import { Button, Dialog, Icon } from "@equinor/eds-core-react";
-import { close } from "@equinor/eds-icons";
+import { help_outline, close } from "@equinor/eds-icons";
 import addNewMainActivity from "../../../public/CanvasTutorial/add-new-main-activity.gif";
 import addNewSubActivity from "../../../public/CanvasTutorial/add-new-sub-activity.gif";
 import addNewChoice from "../../../public/CanvasTutorial/add-new-choice.gif";
@@ -15,6 +15,7 @@ import { CanvasTutorialButtonGroup } from "./CanvasTutorialButtonGroup";
 import { CanvasTutorialSection } from "./CanvasTutorialSection";
 import { InlineImage } from "./InlineImage";
 import { useCanvasTutorial } from "./hooks/useCanvasTutorial";
+import { ButtonWrapper } from "@/components/ButtonWrapper";
 
 const title = "Tutorial";
 
@@ -24,13 +25,12 @@ export const CanvasTutorial = () => {
 
   return (
     <>
-      <Button
-        aria-haspopup="dialog"
+      <ButtonWrapper
+        icon={help_outline}
+        title={"Tutorial"}
         onClick={handleInitialOpen}
-        className={styles.canvasTutorialButtonContainer}
-      >
-        {title}
-      </Button>
+        aria-haspopup="dialog"
+      />
 
       <Dialog
         open={isOpen}

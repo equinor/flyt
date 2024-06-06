@@ -7,46 +7,67 @@ import {
 } from "../types/unitDefinitions";
 import { useEffect, useState } from "react";
 
-export function DurationComponent(props: {
+type DurationComponent = {
   selectedNode: NodeDataApi;
-  onChangeDuration: (e: { duration: number; unit: string }) => void;
+  onChangeDuration: (e: {
+    duration: number | null;
+    unit: string | null;
+  }) => void;
   disabled: boolean;
-}): JSX.Element {
-  const [duration, setDuration] = useState(props.selectedNode.duration);
-  const [unit, setUnit] = useState(props.selectedNode.unit);
+};
+
+export function DurationComponent({
+  selectedNode,
+  onChangeDuration,
+  disabled,
+}: DurationComponent): JSX.Element {
+  const [duration, setDuration] = useState<number | null>(
+    selectedNode.duration
+  );
+  const [unit, setUnit] = useState<string | null>(selectedNode.unit);
 
   useEffect(() => {
-    setDuration(props.selectedNode.duration);
-    setUnit(props.selectedNode.unit);
-  }, [props.selectedNode]);
+    setDuration(selectedNode.duration);
+    setUnit(selectedNode.unit);
+  }, [selectedNode]);
+
+  const parseValue = (value: string) =>
+    value === "" ? null : parseFloat(value);
+
+  const handleDurationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseValue(event.target.value);
+    setDuration(value);
+    onChangeDuration({
+      duration: value,
+      unit: unit,
+    });
+  };
+
+  const handleUnitChange = (event: string) => {
+    const value = getTimeDefinitionValue(event);
+    setUnit(value);
+    onChangeDuration({ duration, unit: value });
+  };
 
   return (
     <div style={{ display: "flex" }}>
       <TextField
-        disabled={props.disabled}
+        disabled={disabled}
         label={"Duration"}
         type={"number"}
         id={"vsmObjectTime"}
         min={0}
-        value={`${duration}`}
-        onChange={(event) => {
-          setDuration(parseFloat(event.target.value));
-          props.onChangeDuration({
-            duration: parseFloat(event.target.value),
-            unit: unit,
-          });
-        }}
+        value={`${duration === null ? "" : duration}`}
+        onChange={handleDurationChange}
       />
       <div style={{ padding: 8 }} />
       <Autocomplete
-        disabled={props.disabled}
+        disabled={disabled}
         options={getTimeDefinitionValues()}
-        onInputChange={(i) => {
-          const apiValue = getTimeDefinitionValue(i);
-          setUnit(apiValue);
-          props.onChangeDuration({ duration, unit: apiValue });
-        }}
-        selectedOptions={[getTimeDefinitionDisplayName(unit)]}
+        onInputChange={handleUnitChange}
+        selectedOptions={[
+          unit ? getTimeDefinitionDisplayName(unit) : undefined,
+        ]}
         label="Unit"
       />
     </div>

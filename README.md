@@ -1,16 +1,17 @@
 ## Flyt - (aka VSM/Value Stream Mapping)
 
-![Flyt canvas (13) - Process feedback on 'Flyt'  - Wednesday, September 15, 2021](https://user-images.githubusercontent.com/3164065/133470524-d6934d90-82ce-4870-aea3-450fd1f4c48f.png)
+![image](https://github.com/equinor/flyt/assets/115637685/b2cbc217-1b39-4668-b891-afed82edcd01)
 
 # Links
 
+- 🌱 [Internal repo](https://github.com/equinor/flyt-internal)
 - :inbox_tray: [Bug and feature tracker](https://github.com/orgs/equinor/projects/361/views/34)
 - :1234: [Feature backlog (and prioritisation)](https://github.com/orgs/equinor/projects/141/)
 - :art: [Figma design & prototype](https://www.figma.com/file/SacZjN10goX2lahJrmjWC0/Flyt--%3E-Ideation?type=design&node-id=0%3A1&mode=design&t=qZPDP2RQYWZdO8Fh-1)
 - :zap: [API endpoints](https://api-flyt-api-dev.radix.equinor.com/swagger/index.html?urls.primaryName=Flyt%20Api%20V2)
 - :dizzy: [Development process](https://flyt.equinor.com/process/172)
 - 🏃 [Running in Radix](https://console.radix.equinor.com/applications/flyt/)
-- :memo: [Architecture contract](https://github.com/equinor/architecturecontract/blob/master/contracts/flyt.md)
+- :memo: [Architecture contract (old)](https://github.com/equinor/architecturecontract/blob/master/contracts/flyt.md) / [Architecture contract (new)](https://org8b9f0d0d.crm19.dynamics.com/main.aspx?appid=9284c773-f710-ee11-9cbd-002248dcc582&pagetype=entityrecord&etn=ak_architecturecontract&id=bffbf0ed-7027-4cb4-8d55-8931a5147fa3&lid=1714052686856)
 
 # Background
 

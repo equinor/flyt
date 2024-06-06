@@ -12,8 +12,11 @@ export function SideBarBody(props: {
   selectedNode: NodeDataApi;
   onChangeDescription: (value?: string) => void;
   onChangeRole: (event: { target: { value: string } }) => void;
-  onChangeDuration: (e: { duration: number; unit: string }) => void;
-  setShowNewTaskSection: (boolean) => void;
+  onChangeDuration: (e: {
+    duration: number | null;
+    unit: string | null;
+  }) => void;
+  setShowNewTaskSection: (arg0: boolean) => void;
   canEdit: boolean;
 }): JSX.Element {
   const { selectedNode, setShowNewTaskSection } = props;

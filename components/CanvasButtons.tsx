@@ -1,6 +1,7 @@
 import { CategorizationPageButton } from "./CategorizationPageButton";
 import styles from "./CanvasButtons.module.scss";
 import { ManageLabelsButton } from "./Labels/ManageLabelsButton";
+import { CanvasTutorial } from "@/components/canvas/CanvasTutorial/CanvasTutorial";
 
 type CanvasButtonsProps = {
   handleClickLabel: () => void;
@@ -14,5 +15,6 @@ export const CanvasButtons = ({
   <div className={styles.container}>
     {userCanEdit && <ManageLabelsButton handleClickLabel={handleClickLabel} />}
     <CategorizationPageButton />
+    <CanvasTutorial />
   </div>
 );
