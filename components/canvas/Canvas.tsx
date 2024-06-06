@@ -35,7 +35,9 @@ import { useWebSocket } from "./hooks/useWebSocket";
 import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
 import { useProjectId } from "@/hooks/useProjectId";
 import { MiniMapCustom } from "@/components/canvas/MiniMapCustom";
+import { EdgeDataApi } from "@/types/EdgeDataApi";
 import { ZoomLevel } from "@/components/canvas/ZoomLevel";
+import { edgeElementTypes } from "@/components/canvas/EdgeElementTypes";
 
 type CanvasProps = {
   graph: Graph;
@@ -58,7 +60,20 @@ const Canvas = ({
     new Date("2024-04-24T00:08:00.000000Z").getTime();
 
   let tempNodes: Node<NodeDataFull>[] = [];
-  let tempEdges: Edge[] = apiEdges;
+  let tempEdges: Edge[] = [];
+  apiEdges.map((edge: EdgeDataApi) => {
+    const nodeSource = apiNodes.filter((node) => node.id === edge.source);
+    if (nodeSource[0] && nodeSource[0].type === NodeTypes.choice) {
+      tempEdges.push({
+        ...edge,
+        type: "choice",
+        label: edge.edgeValue,
+      });
+    } else {
+      tempEdges.push({ ...edge });
+    }
+  });
+
   const [nodes, setNodes, onNodesChange] = useNodesState<NodeDataFull>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
@@ -343,6 +358,7 @@ const Canvas = ({
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeElementTypes}
+        edgeTypes={edgeElementTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onPaneClick={() => setSelectedNode(undefined)}
@@ -362,7 +378,6 @@ const Canvas = ({
             <ZoomLevel />
           </ControlButton>
         </Controls>
-        <ZoomLevel />
       </ReactFlow>
       {createdBeforeSecondMajorRelease && (
         <OldFlytButton projectId={projectId} />

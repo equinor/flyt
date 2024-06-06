@@ -1,7 +1,7 @@
 {
   "name": "flyt",
   "radix-name": "flyt",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "private": true,
   "scripts": {
     "dev": "NODE_OPTIONS='--inspect' next dev",
@@ -12,7 +12,6 @@
     "fetch-tags": "git fetch origin --tags --force",
     "release-dev": "yarn fetch-tags &&  git tag -f DEV   && yarn push-tags",
     "release-test": "yarn fetch-tags && git tag -f TEST  && yarn push-tags",
-    "release-qa": "yarn fetch-tags &&   git tag -f QA    && yarn push-tags",
     "release-prod": "yarn fetch-tags && git tag -f PROD  && yarn push-tags",
     "push-tags": "git push origin --tags -f && echo Check status: https://console.radix.equinor.com/applications/flyt/jobs",
     "use-dev": "cp environment-variables/DEV.env .env && yarn dev",
