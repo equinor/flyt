@@ -41,5 +41,5 @@ export const formatDuration = (
 ): string => {
   if (typeof duration !== "number" || !unit) return "";
   const cUnit = capitalizeFirstLetter(unit);
-  return duration === 1 ? `1 ${cUnit}` : `${duration} ${cUnit}s`;
+  return `${duration} ${cUnit}s`;
 };
