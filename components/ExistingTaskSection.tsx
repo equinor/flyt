@@ -10,7 +10,6 @@ import { notifyOthers } from "@/services/notifyOthers";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { getTaskShorthand } from "utils/getTaskShorthand";
 import { useProjectId } from "@/hooks/useProjectId";
-import { ReactNode } from "react";
 import { TaskTypes } from "@/types/TaskTypes";
 
 export function ExistingTaskSection(props: {
@@ -41,7 +40,8 @@ export function ExistingTaskSection(props: {
         void notifyOthers("Added a Q/I/P to a card", projectId, account);
         return queryClient.invalidateQueries();
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
   const taskUnlinkMutation = useMutation(
@@ -51,7 +51,8 @@ export function ExistingTaskSection(props: {
         void notifyOthers("Removed Q/I/P from a card", projectId, account);
         return queryClient.invalidateQueries();
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
 
@@ -59,7 +60,7 @@ export function ExistingTaskSection(props: {
 
   return (
     <div>
-      {(fetchingTasksError as ReactNode) && (
+      {(fetchingTasksError as Error | null) && (
         <p>ERROR: {JSON.stringify(fetchingTasksError)}</p>
       )}
       {fetchingTasks && (

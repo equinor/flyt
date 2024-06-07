@@ -68,7 +68,6 @@ export function CategorySection(props: {
       <CategoryHelpers />
       <AddCategoryButton projectId={projectId} />
       <div>
-        {isLoadingCategories && <p>Loading</p>}
         {renderCategories()}
         {categories.map((category) => (
           <DraggableCategory

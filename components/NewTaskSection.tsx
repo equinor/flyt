@@ -39,7 +39,8 @@ export function NewTaskSection(props: {
         void notifyOthers(`Created a new Q/I/P/R`, projectId, account);
         return queryClient.invalidateQueries();
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
   const [newTask, setNewTask] = useState<Task | null>(null);

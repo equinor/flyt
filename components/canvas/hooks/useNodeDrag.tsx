@@ -118,7 +118,8 @@ export const useNodeDrag = () => {
         projectId && notifyOthers("Moved a card", projectId, account);
         return queryClient.invalidateQueries();
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
 

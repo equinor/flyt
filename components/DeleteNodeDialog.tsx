@@ -11,7 +11,6 @@ import { NodeDataApi } from "@/types/NodeDataApi";
 import { NodeTypes } from "@/types/NodeTypes";
 import { deleteVertice } from "services/graphApi";
 import { useProjectId } from "@/hooks/useProjectId";
-import { ReactNode } from "react";
 
 export function DeleteNodeDialog(props: {
   objectToDelete: NodeDataApi;
@@ -43,7 +42,8 @@ export function DeleteNodeDialog(props: {
         void notifyOthers("Deleted a card", projectId, account);
         return queryClient.invalidateQueries();
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
 
@@ -83,7 +83,7 @@ export function DeleteNodeDialog(props: {
               </Button>
             </div>
             <div className={styles.scrimContent}>
-              {(deleteMutation.error as ReactNode) && (
+              {deleteMutation.error && (
                 <Typography color={"warning"} variant={"h4"}>
                   {unknownErrorToString(deleteMutation.error)}
                 </Typography>

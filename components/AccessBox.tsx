@@ -151,7 +151,8 @@ function MiddleSection(props: {
         void notifyOthers("Gave access to a new user", projectId, account);
         void queryClient.invalidateQueries();
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
   const removeUserMutation = useMutation(
@@ -161,7 +162,8 @@ function MiddleSection(props: {
         void notifyOthers("Removed access for user", projectId, account);
         return queryClient.invalidateQueries();
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
   const changeUserMutation = useMutation(
@@ -172,7 +174,8 @@ function MiddleSection(props: {
         void notifyOthers("Updated access for some user", projectId, account);
         return queryClient.invalidateQueries("userAccesses");
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
 

@@ -31,7 +31,7 @@ export function QipCard(props: { task: Task; onClick?: () => void }) {
     },
     {
       onSuccess: (message) => console.log(message),
-      onError: (error) => console.log(`${error}`),
+      onError: (error: Error | null) => console.log(`${error}`),
       onSettled: () => {
         queryClient.invalidateQueries(["tasks", projectId]).then(() => {
           setIsLoading(false);

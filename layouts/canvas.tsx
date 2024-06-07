@@ -67,7 +67,8 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
         void notifyOthers("Gave the process a new name", projectId, account);
         return queryClient.invalidateQueries();
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
 

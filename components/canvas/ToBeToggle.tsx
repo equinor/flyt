@@ -26,7 +26,8 @@ export const ToBeToggle = () => {
       onSuccess: (res) => {
         return router.push(`/process/${res.data}`);
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
 
