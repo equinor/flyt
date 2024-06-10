@@ -1,4 +1,4 @@
-import { processLabel } from "./processLabel";
+import { ProcessLabel } from "./ProcessLabel";
 import { userAccess } from "./UserAccess";
 import { NodeDataApi } from "./NodeDataApi";
 
@@ -8,7 +8,7 @@ export type Project = {
   name: string;
   toBeProcessID?: number;
   currentProcessId?: number;
-  labels: processLabel[];
+  labels: ProcessLabel[];
   created: string; // date
   updated: string; // date
   updatedBy: string;

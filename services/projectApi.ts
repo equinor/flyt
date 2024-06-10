@@ -2,7 +2,7 @@ import { AxiosPromise, AxiosResponse } from "axios";
 
 import BaseAPIServices from "./BaseAPIServices";
 import { createUrlParams } from "@/utils/createUrlParams";
-import { processLabel } from "types/processLabel";
+import { ProcessLabel } from "@/types/ProcessLabel";
 import { Project } from "@/types/Project";
 
 const baseUrl = "/api/v2.0";
@@ -19,7 +19,7 @@ export const getProjects = (filter: {
   BaseAPIServices.get(`${baseUrl}/project${createUrlParams(filter)}`).then(
     (value) => {
       return {
-        projects: value.data,
+        projects: value.data as Project[],
         totalItems: parseInt(value.headers.totalitems, 10),
       };
     }
@@ -47,10 +47,10 @@ export const getProject = async (
     const value = await BaseAPIServices.get(
       `${baseUrl}/project/${id}?asOf=${asOf}`
     );
-    return value.data;
+    return value.data as Project;
   }
   const value_1 = await BaseAPIServices.get(`${baseUrl}/project/${id}`);
-  return value_1.data;
+  return value_1.data as Project;
 };
 
 export const updateProject = (
@@ -61,7 +61,7 @@ export const updateProject = (
 export const deleteProject = (id: number | number[]) =>
   BaseAPIServices.delete(`${baseUrl}/project/${id}`);
 
-export const duplicateProject = (id: number): Promise<processLabel> =>
+export const duplicateProject = (id: number): Promise<ProcessLabel> =>
   BaseAPIServices.post(`${baseUrl}/project/${id}/duplicate`, null).then(
     (value) => value.data
   );

@@ -46,19 +46,12 @@ export const remove = (props: {
  * @param userName - The short-name of the user to search for.
  * @returns - Array of users.
  */
-export const searchUser = (
-  userName: string
-): Promise<{ pkUser: number; userName: string }[]> =>
+export const searchUser = (userName: string): Promise<User[]> =>
   BaseAPIServices.get(`${baseUrl}/userAccess/userSearch?q=${userName}`).then(
-    (value) => value.data
+    (value) => value.data as User[]
   );
 
-export const getUserById = (
-  userId: number | string
-): Promise<{
-  pkUser: number;
-  userName: string;
-}> =>
+export const getUserById = (userId: number | string): Promise<User> =>
   BaseAPIServices.get(`${baseUrl}/userAccess/userById/${userId}`).then(
-    (res) => res.data
+    (res) => res.data as User
   );

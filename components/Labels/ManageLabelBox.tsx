@@ -9,7 +9,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import { close } from "@equinor/eds-icons";
 import { debounce } from "utils/debounce";
-import { processLabel } from "types/processLabel";
+import { ProcessLabel } from "@/types/ProcessLabel";
 import styles from "./ManageLabelBox.module.scss";
 import { unknownErrorToString } from "utils/isError";
 import { Project } from "types/Project";
@@ -68,7 +68,7 @@ function AddSection(props: { process: Project }) {
   const addLabelMutation = useMutation(
     (payload: {
       processID: number;
-      label: processLabel | { text: string };
+      label: ProcessLabel | { text: string };
     }) => {
       return addLabelToProcess(payload.processID, payload.label);
     },
