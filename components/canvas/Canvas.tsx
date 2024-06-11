@@ -17,7 +17,6 @@ import { NodeDataApi } from "types/NodeDataApi";
 import { NodeTypes } from "types/NodeTypes";
 import { Project } from "types/Project";
 import { Graph } from "@/types/Graph";
-import { uid } from "@/utils/uuid";
 import { DeleteNodeDialog } from "../DeleteNodeDialog";
 import { LiveIndicator } from "../LiveIndicator";
 import { SideBar } from "../SideBar";
@@ -38,6 +37,7 @@ import { MiniMapCustom } from "@/components/canvas/MiniMapCustom";
 import { EdgeDataApi } from "@/types/EdgeDataApi";
 import { ZoomLevel } from "@/components/canvas/ZoomLevel";
 import { edgeElementTypes } from "@/components/canvas/EdgeElementTypes";
+import { createHiddenNodes } from "@/components/canvas/utils/createHiddenNodes";
 
 type CanvasProps = {
   graph: Graph;
@@ -167,76 +167,6 @@ const Canvas = ({
     });
   };
 
-  const createHiddenNodes = () => {
-    tempNodes.forEach((node) => {
-      if (node?.data?.parents?.length > 1) {
-        let depthDeepestNode: undefined | number = undefined;
-        node?.data?.parents?.forEach((parentNodeId) => {
-          const parentNode = tempNodes.find((node) => node.id === parentNodeId);
-          if (
-            parentNode?.data?.depth &&
-            (!depthDeepestNode || parentNode?.data?.depth > depthDeepestNode)
-          )
-            depthDeepestNode = parentNode.data.depth;
-        });
-        node?.data?.parents?.forEach((parentNodeId) => {
-          const tempParentNode = tempNodes.find(
-            (node) => node.id === parentNodeId
-          );
-          if (
-            depthDeepestNode &&
-            tempParentNode?.data.depth &&
-            tempParentNode.data.depth < depthDeepestNode
-          ) {
-            tempEdges = tempEdges.filter(
-              (edge) =>
-                edge.source !== tempParentNode.id || edge.target !== node.id
-            );
-            let tempParentNodeId = tempParentNode.id;
-            for (let i = tempParentNode.data.depth; i < depthDeepestNode; i++) {
-              const id = uid();
-              tempNodes.push({
-                id,
-                data: {
-                  parents: [tempParentNodeId],
-                  columnId: tempParentNode.data.columnId,
-                  depth: i,
-                  children: [],
-                  shapeHeight: shapeSize.height,
-                  shapeWidth: shapeSize.width,
-                },
-                position: { x: 0, y: 0 },
-                type: NodeTypes.hidden,
-                height: shapeSize.height,
-                width: shapeSize.width,
-                draggable: false,
-                selectable: false,
-              });
-              tempEdges.push({
-                id: `${tempParentNodeId}=>${id}`,
-                source: tempParentNodeId,
-                target: id,
-              });
-              tempEdges.push({
-                id: `${id}=>${id}`,
-                source: id,
-                target: id,
-                type: "straight",
-              });
-              tempParentNodeId = id;
-            }
-
-            tempEdges.push({
-              id: `${tempParentNodeId}=>${node.id}`,
-              source: tempParentNodeId,
-              target: node.id,
-            });
-          }
-        });
-      }
-    });
-  };
-
   const mergedNodesLooping = new Map<string, [Node<NodeDataFull>, number]>();
   let mergedNodesReady: Node<NodeDataFull>[] = [];
 
@@ -307,10 +237,11 @@ const Canvas = ({
     }
     createNodes(root);
     setNodesDepth();
-    createHiddenNodes();
-    const finalNodes = setLayout(tempNodes, tempEdges);
+    const { tempNodes: tempWithHiddenNodes, tempEdges: tempWithHiddenEdges } =
+      createHiddenNodes(tempNodes, tempEdges, shapeSize);
+    const finalNodes = setLayout(tempWithHiddenNodes, tempWithHiddenEdges);
     setNodes(finalNodes);
-    setEdges(tempEdges);
+    setEdges(tempWithHiddenEdges);
   }, [apiNodes, apiEdges, userCanEdit]);
 
   useCenterCanvas();
