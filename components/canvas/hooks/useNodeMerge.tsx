@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { ReactFlowState, useReactFlow, useStore } from "reactflow";
-import { useStoreDispatch } from "../../../hooks/storeHooks";
-import { mergeVertices } from "../../../services/graphApi";
-import { notifyOthers } from "../../../services/notifyOthers";
-import { unknownErrorToString } from "../../../utils/isError";
+import { useStoreDispatch } from "@/hooks/storeHooks";
+import { mergeVertices } from "@/services/graphApi";
+import { notifyOthers } from "@/services/notifyOthers";
+import { unknownErrorToString } from "@/utils/isError";
 import { useUserAccount } from "./useUserAccount";
-import { useProjectId } from "../../../hooks/useProjectId";
+import { useProjectId } from "@/hooks/useProjectId";
 import { NodeData } from "@/types/NodeData";
 
 export type NodeMergeParams = {
@@ -48,7 +48,8 @@ export const useNodeMerge = () => {
         notifyOthers("Merged cards", projectId, account);
         queryClient.invalidateQueries();
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
 

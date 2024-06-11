@@ -1,31 +1,25 @@
 import styles from "./AddCategoryButton.module.scss";
 import { Button, Icon, Input } from "@equinor/eds-core-react";
 import { add, check } from "@equinor/eds-icons";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { TaskCategory } from "../types/TaskCategory";
-import { postTaskCategory } from "../services/taskCategoriesApi";
+import { TaskCategory } from "@/types/TaskCategory";
+import { postTaskCategory } from "@/services/taskCategoriesApi";
 import { ErrorScrim } from "./ErrorScrim";
 
-export function AddCategoryButton(props: { projectId }): JSX.Element {
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(null);
+export function AddCategoryButton(props: { projectId: string }) {
+  const [errorMessage, setErrorMessage] = useState<string[] | null>(null);
   const [visibleScrim, setVisibleScrim] = useState(false);
   const [STATE_EDIT, SET_STATE_EDIT] = useState(false);
   const [categoryName, setcategoryName] = useState("");
 
   const queryClient = useQueryClient();
   const getCategories = () => {
-    queryClient
-      .invalidateQueries(["taskCategories", props.projectId])
-      .then(() => {
-        setIsLoading(false);
-      });
+    void queryClient.invalidateQueries(["taskCategories", props.projectId]);
   };
 
   const newTaskCategoryMutation = useMutation(
     (category: TaskCategory) => {
-      setIsLoading(true);
       return postTaskCategory(props.projectId, category);
     },
     {
@@ -62,8 +56,10 @@ export function AddCategoryButton(props: { projectId }): JSX.Element {
             const name = categoryName.trim();
             if (name)
               newTaskCategoryMutation.mutate({
+                id: 0,
                 name,
                 fkProject: props.projectId,
+                checked: false,
               });
           }}
         >
@@ -81,7 +77,9 @@ export function AddCategoryButton(props: { projectId }): JSX.Element {
               <Input
                 autoFocus
                 placeholder={"New category name"}
-                onChange={(e) => setcategoryName(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setcategoryName(e.target.value)
+                }
                 required={true}
                 type="text"
                 id="newCategoryInput"

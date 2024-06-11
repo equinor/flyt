@@ -2,21 +2,21 @@ import { Button, Icon, Scrim, Typography } from "@equinor/eds-core-react";
 import { close as closeIcon, delete_forever } from "@equinor/eds-icons";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQueryClient } from "react-query";
-import { getNodeTypeName } from "../utils/getNodeTypeName";
-import { notifyOthers } from "../services/notifyOthers";
+import { getNodeTypeName } from "@/utils/getNodeTypeName";
+import { notifyOthers } from "@/services/notifyOthers";
 import styles from "../layouts/default.layout.module.scss";
-import { unknownErrorToString } from "../utils/isError";
+import { unknownErrorToString } from "@/utils/isError";
 import { useStoreDispatch } from "hooks/storeHooks";
-import { NodeDataApi } from "../types/NodeDataApi";
-import { NodeTypes } from "../types/NodeTypes";
+import { NodeDataApi } from "@/types/NodeDataApi";
+import { NodeTypes } from "@/types/NodeTypes";
 import { deleteVertice } from "services/graphApi";
-import { useProjectId } from "../hooks/useProjectId";
+import { useProjectId } from "@/hooks/useProjectId";
 
 export function DeleteNodeDialog(props: {
   objectToDelete: NodeDataApi;
   onClose: () => void;
   visible: boolean;
-}): JSX.Element {
+}) {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
 
@@ -39,10 +39,11 @@ export function DeleteNodeDialog(props: {
     {
       onSuccess() {
         handleClose();
-        notifyOthers("Deleted a card", projectId, account);
+        void notifyOthers("Deleted a card", projectId, account);
         return queryClient.invalidateQueries();
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
 

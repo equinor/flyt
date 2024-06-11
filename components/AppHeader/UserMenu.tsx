@@ -1,9 +1,9 @@
-import { KeyboardEvent, useState } from "react";
+import React, { KeyboardEvent, useState } from "react";
 import styles from "./UserMenu.module.scss";
 import { Button, Menu } from "@equinor/eds-core-react";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { UserDot } from "../UserDot";
-import { getUserShortName } from "../../utils/getUserShortName";
+import { getUserShortName } from "@/utils/getUserShortName";
 import packageJson from "../../package.json";
 import Link from "next/link";
 import getConfig from "next/config";
@@ -53,7 +53,7 @@ export const UserMenu = () => {
         onClick={(e) => (isOpen ? closeMenu() : openMenu(e))}
         onKeyDown={onKeyPress}
       >
-        <UserDot name={getUserShortName(account)} />
+        <UserDot name={getUserShortName(account ?? { username: "" })} />
       </Button>
       <Menu
         id="menu-on-button"

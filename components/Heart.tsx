@@ -8,8 +8,8 @@ export function Heart(props: {
   isLoading: boolean;
   fave: () => void;
   unfave: () => void;
-}): JSX.Element {
-  const handleClick = (e) => {
+}) {
+  const handleClick = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
     props.isFavourite ? props.unfave() : props.fave();

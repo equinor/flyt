@@ -35,7 +35,8 @@ export function EditTaskTextField(props: {
         void notifyOthers("Updated a Q/I/P", projectId, account);
         return queryClient.invalidateQueries();
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
 
@@ -47,7 +48,7 @@ export function EditTaskTextField(props: {
       onChange={(event) => {
         const updatedTask: Task = {
           ...props.task,
-          description: event?.substring(0, 4000),
+          description: event?.substring(0, 4000) ?? "",
         };
         debounce(
           () => {

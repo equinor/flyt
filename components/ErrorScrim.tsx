@@ -3,9 +3,9 @@ import { Button, Dialog, Typography } from "@equinor/eds-core-react";
 export function ErrorScrim(props: {
   visible: boolean;
   handleClose: () => void;
-  title?: string;
-  messages?: string[];
-}): JSX.Element {
+  title?: string | null;
+  messages?: string[] | null[];
+}) {
   return (
     <Dialog open={props.visible} onClose={props.handleClose}>
       <Dialog.Title>{props.title || "Error"}</Dialog.Title>

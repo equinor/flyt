@@ -1,6 +1,6 @@
 import { AccountInfo } from "@azure/msal-browser";
-import { getUserShortName } from "../utils/getUserShortName";
-import { getAccessToken } from "../auth/msalHelpers";
+import { getUserShortName } from "@/utils/getUserShortName";
+import { getAccessToken } from "@/auth/msalHelpers";
 
 export const notifyOthers = async (
   msg: unknown,
@@ -11,6 +11,7 @@ export const notifyOthers = async (
   const message = {
     msg,
     roomId,
+    user: account ? getUserShortName(account) : "",
   };
 
   if (account) message["user"] = getUserShortName(account);

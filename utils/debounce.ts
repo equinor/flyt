@@ -7,7 +7,7 @@
 export const debounce = (fn: () => void, ms = 500, caller = "any"): void => {
   delayed();
 
-  function delayed(this: any, ...args: any[]) {
+  function delayed(this: any, ...args: any) {
     const already_in_queue = callers[caller];
     clearTimeout(already_in_queue);
     callers[caller] = setTimeout(() => {
@@ -17,4 +17,4 @@ export const debounce = (fn: () => void, ms = 500, caller = "any"): void => {
   }
 };
 
-const callers = {}; // Store all ongoing-timers for all "callers".
+const callers: Record<string, string | number | NodeJS.Timeout> = {}; // Store all ongoing-timers for all "callers".

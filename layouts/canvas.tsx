@@ -7,7 +7,14 @@ import {
   TopBar,
   Typography,
 } from "@equinor/eds-core-react";
-import { KeyboardEvent, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  KeyboardEvent,
+  MouseEvent,
+  ReactNode,
+  useEffect,
+  useState,
+} from "react";
 import { chevron_down, close, share } from "@equinor/eds-icons";
 import {
   faveProject,
@@ -15,32 +22,32 @@ import {
   unfaveProject,
   updateProject,
   deleteProject,
-} from "../services/projectApi";
+} from "@/services/projectApi";
 import { useAccount, useIsAuthenticated, useMsal } from "@azure/msal-react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useStoreDispatch, useStoreState } from "../hooks/storeHooks";
+import { useStoreDispatch, useStoreState } from "@/hooks/storeHooks";
 
-import { AccessBox } from "../components/AccessBox";
+import { AccessBox } from "@/components/AccessBox";
 import Head from "next/head";
 import { Heart } from "components/Heart";
 import { HomeButton } from "./homeButton";
-import { MySnackBar } from "../components/MySnackBar";
-import { RightTopBarSection } from "../components/RightTopBarSection";
-import { TooltipImproved } from "../components/TooltipImproved";
-import { UserMenu } from "../components/AppHeader/UserMenu";
-import { debounce } from "../utils/debounce";
-import { disableKeyboardZoomShortcuts } from "../utils/disableKeyboardZoomShortcuts";
-import { disableMouseWheelZoom } from "../utils/disableMouseWheelZoom";
-import { getMyAccess } from "../utils/getMyAccess";
+import { MySnackBar } from "@/components/MySnackBar";
+import { RightTopBarSection } from "@/components/RightTopBarSection";
+import { TooltipImproved } from "@/components/TooltipImproved";
+import { UserMenu } from "@/components/AppHeader/UserMenu";
+import { debounce } from "@/utils/debounce";
+import { disableKeyboardZoomShortcuts } from "@/utils/disableKeyboardZoomShortcuts";
+import { disableMouseWheelZoom } from "@/utils/disableMouseWheelZoom";
+import { getMyAccess } from "@/utils/getMyAccess";
 import { getOwner } from "utils/getOwner";
-import { notifyOthers } from "../services/notifyOthers";
+import { notifyOthers } from "@/services/notifyOthers";
 import packageJson from "../package.json";
 import styles from "./default.layout.module.scss";
-import { unknownErrorToString } from "../utils/isError";
+import { unknownErrorToString } from "@/utils/isError";
 import { useRouter } from "next/router";
-import { useProjectId } from "../hooks/useProjectId";
+import { useProjectId } from "@/hooks/useProjectId";
 
-export const CanvasLayout = ({ children }): JSX.Element => {
+export const CanvasLayout = ({ children }: { children: ReactNode }) => {
   const isAuthenticated = useIsAuthenticated();
   const { projectId } = useProjectId();
 
@@ -57,10 +64,11 @@ export const CanvasLayout = ({ children }): JSX.Element => {
     },
     {
       onSuccess: () => {
-        notifyOthers("Gave the process a new name", projectId, account);
+        void notifyOthers("Gave the process a new name", projectId, account);
         return queryClient.invalidateQueries();
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
 
@@ -97,7 +105,7 @@ export const CanvasLayout = ({ children }): JSX.Element => {
 
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
-  const myAccess = getMyAccess(project, account);
+  const myAccess = getMyAccess(project ?? null, account);
   const userCanEdit = myAccess !== "Reader";
   const userCannotEdit = !userCanEdit;
   const isAdmin = myAccess === "Admin" || myAccess === "Owner";
@@ -107,7 +115,7 @@ export const CanvasLayout = ({ children }): JSX.Element => {
   const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
 
   const [state, setState] = useState<{
-    buttonEl: HTMLButtonElement;
+    buttonEl: HTMLButtonElement | null;
     focus: "first" | "last";
   }>({
     focus: "first",
@@ -117,13 +125,16 @@ export const CanvasLayout = ({ children }): JSX.Element => {
   const { buttonEl, focus } = state;
   const isOpen = Boolean(buttonEl);
 
-  const openMenu = (e, focus: "first" | "last") => {
+  const openMenu = (
+    e: KeyboardEvent<HTMLButtonElement> | MouseEvent<HTMLButtonElement>,
+    focus: "first" | "last"
+  ) => {
     const target = e.target as HTMLButtonElement;
     setState({ ...state, buttonEl: target, focus });
   };
 
   const closeMenu = () => {
-    setState({ ...state, buttonEl: null, focus });
+    setState({ ...state, buttonEl, focus });
   };
 
   const onKeyPress = (e: KeyboardEvent<HTMLButtonElement>) => {
@@ -177,14 +188,15 @@ export const CanvasLayout = ({ children }): JSX.Element => {
   function deleteVSM() {
     setIsDeleting(true);
     setDeleteError(null);
-    deleteProject(project?.vsmProjectID)
-      .then(() => router.push("/"))
-      .catch((reason) => {
-        setDeleteError(reason);
-      })
-      .finally(() => {
-        setIsDeleting(false);
-      });
+    if (project?.vsmProjectID)
+      deleteProject(project?.vsmProjectID)
+        .then(() => router.push("/"))
+        .catch((reason) => {
+          setDeleteError(reason);
+        })
+        .finally(() => {
+          setIsDeleting(false);
+        });
   }
 
   function updateProjectName(name: string) {
@@ -204,10 +216,11 @@ export const CanvasLayout = ({ children }): JSX.Element => {
   }
 
   function handleDuplicate() {
-    if (project?.currentProcessId) {
-      router.push(`/process/${project.currentProcessId}/duplicate`);
+    if (!project) return;
+    if (project && project.currentProcessId) {
+      void router.push(`/process/${project.currentProcessId}/duplicate`);
     } else {
-      router.push(`/process/${project.vsmProjectID}/duplicate`);
+      void router.push(`/process/${project.vsmProjectID}/duplicate`);
     }
   }
 
@@ -232,7 +245,7 @@ export const CanvasLayout = ({ children }): JSX.Element => {
               </Typography>
               <Button
                 variant={"ghost"}
-                onClick={(e) => (isOpen ? closeMenu() : openMenu(e, null))}
+                onClick={(e) => (isOpen ? closeMenu() : openMenu(e, "last"))}
                 onKeyDown={onKeyPress}
                 id="menuButton"
                 aria-controls="menu-on-button"
@@ -242,7 +255,7 @@ export const CanvasLayout = ({ children }): JSX.Element => {
                 <Icon data={chevron_down} title="chevron-down" size={16} />
               </Button>
               <Heart
-                isFavourite={project?.isFavorite}
+                isFavourite={!!project?.isFavorite}
                 fave={() => faveMutation.mutate()}
                 unfave={() => unfaveMutation.mutate()}
                 isLoading={isMutatingFavourite}
@@ -292,11 +305,13 @@ export const CanvasLayout = ({ children }): JSX.Element => {
                   Delete process
                 </Typography>
               </Menu.Item>
-              <Menu.Item disabled>
-                <Typography group="navigation" variant="menu_title" as="span">
-                  Owner: {getOwner(project)}
-                </Typography>
-              </Menu.Item>
+              {project && (
+                <Menu.Item disabled>
+                  <Typography group="navigation" variant="menu_title" as="span">
+                    Owner: {getOwner(project)}
+                  </Typography>
+                </Menu.Item>
+              )}
             </Menu>
           </div>
         </div>
@@ -317,18 +332,20 @@ export const CanvasLayout = ({ children }): JSX.Element => {
 
       {children}
 
-      <Scrim
-        open={visibleShareScrim}
-        onClose={() => setVisibleShareScrim(false)}
-        onWheel={(e) => e.stopPropagation()}
-        isDismissable
-      >
-        <AccessBox
-          project={project}
-          handleClose={() => setVisibleShareScrim(false)}
-          isAdmin={isAdmin}
-        />
-      </Scrim>
+      {project && (
+        <Scrim
+          open={visibleShareScrim}
+          onClose={() => setVisibleShareScrim(false)}
+          onWheel={(e) => e.stopPropagation()}
+          isDismissable
+        >
+          <AccessBox
+            project={project}
+            handleClose={() => setVisibleShareScrim(false)}
+            isAdmin={isAdmin}
+          />
+        </Scrim>
+      )}
 
       <Scrim
         open={visibleRenameScrim}
@@ -351,7 +368,9 @@ export const CanvasLayout = ({ children }): JSX.Element => {
               autoFocus
               label={"Add title"}
               defaultValue={project?.name}
-              onChange={(e) => updateProjectName(e.target.value)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                updateProjectName(e.target.value)
+              }
               id={"vsmObjectDescription"}
             />
           </div>
@@ -414,7 +433,7 @@ export const CanvasLayout = ({ children }): JSX.Element => {
       {snackMessage && (
         <MySnackBar
           autoHideDuration={3000}
-          onClose={() => dispatch.setSnackMessage(null)}
+          onClose={() => dispatch.setSnackMessage("")}
         >
           {`${snackMessage}`}
         </MySnackBar>

@@ -2,7 +2,7 @@ import Link from "next/link";
 import styles from "./OldFlytButton.module.scss";
 import { Button } from "@equinor/eds-core-react";
 
-export const OldFlytButton = ({ projectId }) => {
+export const OldFlytButton = ({ projectId }: { projectId: string }) => {
   return (
     <Link
       href={`https://web-flyt-old.radix.equinor.com/process/${projectId}`}
