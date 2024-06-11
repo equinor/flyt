@@ -62,9 +62,9 @@ export function QipCard(props: { task: Task; onClick?: () => void }) {
   return (
     <div
       style={{
-        transform: isDragOver || isLoading ? "scale(0.98)" : "auto",
-        opacity: isDragOver || isLoading ? 0.4 : "auto",
-        borderStyle: isDragOver ? "dashed" : "auto",
+        transform: isDragOver || isLoading ? "scale(0.98)" : "",
+        opacity: isDragOver || isLoading ? 0.4 : "",
+        borderStyle: isDragOver ? "dashed" : "",
       }}
       onClick={props.onClick}
       onDrop={(event) => {

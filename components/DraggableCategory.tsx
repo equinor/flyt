@@ -121,7 +121,7 @@ export function DraggableCategory(props: {
   if (isLoading) {
     return (
       <div
-        style={{ border: props.checked ? `${color} 2px solid` : "auto" }}
+        style={{ border: props.checked ? `${color} 2px solid` : "" }}
         className={styles.category}
       >
         <p>Loading...</p>
@@ -133,7 +133,7 @@ export function DraggableCategory(props: {
     return (
       <>
         <div
-          style={{ border: props.checked ? `${color} 2px solid` : "auto" }}
+          style={{ border: props.checked ? `${color} 2px solid` : "" }}
           className={styles.category}
         >
           <Input
@@ -167,7 +167,7 @@ export function DraggableCategory(props: {
         messages={errorMessage?.slice(1)}
       />
       <div
-        style={{ border: props.checked ? `${color} 2px solid` : "auto" }}
+        style={{ border: props.checked ? `${color} 2px solid` : "" }}
         draggable={true}
         onDragStart={(ev) => {
           ev.dataTransfer.setData(
