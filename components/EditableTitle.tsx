@@ -36,7 +36,7 @@ export const EditableTitle = (props: {
         setText(e.target.value);
       }}
       multiline={false}
-      style={{ width: text.length + "ch" }}
+      style={{ width: text.length + 2 + "ch" }}
     />
   );
 };
