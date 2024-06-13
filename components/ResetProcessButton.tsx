@@ -13,14 +13,17 @@ import { useUserAccount } from "./canvas/hooks/useUserAccount";
 
 export const ResetProcessButton = () => {
   const { id } = useRouter().query;
-  const { data: process } = useQuery(["project", id], () => getProject(id));
+  const nonNullId = id ?? "";
+  const { data: process } = useQuery(["project", id], () =>
+    getProject(nonNullId)
+  );
   const account = useUserAccount();
-  const { userCanEdit } = useAccess(process);
+  const { userCanEdit } = process ? useAccess(process) : { userCanEdit: false };
 
   const queryClient = useQueryClient();
-  const resetProcessMutation = useMutation(() => resetProcess(id), {
+  const resetProcessMutation = useMutation(() => resetProcess(nonNullId), {
     onSuccess: () => {
-      notifyOthers("Reset the process", id, account);
+      void notifyOthers("Reset the process", nonNullId, account);
     },
     onError: () => setShowErrorDialog(true),
     onSettled: () => queryClient.invalidateQueries(),

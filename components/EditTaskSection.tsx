@@ -49,7 +49,8 @@ export function EditTaskSection(props: {
         );
         return queryClient.invalidateQueries();
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
 
@@ -64,7 +65,8 @@ export function EditTaskSection(props: {
         );
         return queryClient.invalidateQueries();
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
 
@@ -88,7 +90,7 @@ export function EditTaskSection(props: {
       >
         {/* Only show checkbox for Problems and risks */}
         {task &&
-        (task.type === TaskTypes.problem || task.type === TaskTypes.risk) ? (
+        (task.type === TaskTypes.Problem || task.type === TaskTypes.Risk) ? (
           <Checkbox
             key={task.id}
             defaultChecked={task.solved}
@@ -127,13 +129,13 @@ export function EditTaskSection(props: {
 
 function getToggleActionText(type: TaskTypes, solved: boolean) {
   switch (type) {
-    case TaskTypes.problem:
+    case TaskTypes.Problem:
       return solved ? "Mark as unsolved" : "Mark as solved";
-    case TaskTypes.question:
+    case TaskTypes.Question:
       return solved ? "Mark as unanswered" : "Mark as answered";
-    case TaskTypes.idea:
+    case TaskTypes.Idea:
       return solved ? "Mark as declined" : "Mark as approved";
-    case TaskTypes.risk:
+    case TaskTypes.Risk:
       return solved ? "Mark as unmitigated" : "Mark as mitigated";
     default:
       return "";
@@ -142,13 +144,13 @@ function getToggleActionText(type: TaskTypes, solved: boolean) {
 
 function getTaskSolvedText(type: TaskTypes | undefined, solved: boolean) {
   switch (type) {
-    case TaskTypes.problem:
+    case TaskTypes.Problem:
       return solved ? "Solved" : "Unsolved";
-    case TaskTypes.question:
+    case TaskTypes.Question:
       return solved ? "Answered" : "Unanswered";
-    case TaskTypes.idea:
+    case TaskTypes.Idea:
       return solved ? "Approved" : "Declined";
-    case TaskTypes.risk:
+    case TaskTypes.Risk:
       return solved ? "Mitigated" : "Unmitigated";
     default:
       return "";
@@ -157,13 +159,13 @@ function getTaskSolvedText(type: TaskTypes | undefined, solved: boolean) {
 
 function getTaskTypeText(type: TaskTypes | undefined) {
   switch (type) {
-    case TaskTypes.problem:
+    case TaskTypes.Problem:
       return "Problem";
-    case TaskTypes.question:
+    case TaskTypes.Question:
       return "Question";
-    case TaskTypes.idea:
+    case TaskTypes.Idea:
       return "Idea";
-    case TaskTypes.risk:
+    case TaskTypes.Risk:
       return "Risk";
     default:
       return "Task";

@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import Link from "next/link";
-import { getTasksForProject } from "../../../../services/taskApi";
-import { unknownErrorToString } from "../../../../utils/isError";
-import { QipCard } from "../../../../components/QipCard";
-import { Layouts } from "../../../../layouts/LayoutWrapper";
+import { getTasksForProject } from "@/services/taskApi";
+import { unknownErrorToString } from "@/utils/isError";
+import { QipCard } from "@/components/QipCard";
+import { Layouts } from "@/layouts/LayoutWrapper";
 import { io } from "socket.io-client";
 import { TaskTypes } from "types/TaskTypes";
-import { useProjectId } from "../../../../hooks/useProjectId";
+import { useProjectId } from "@/hooks/useProjectId";
 
 export default function QipsPage(): JSX.Element {
   const { projectId } = useProjectId();
@@ -22,7 +22,7 @@ export default function QipsPage(): JSX.Element {
 
   useEffect((): any => {
     // connect to socket server
-    const socket = io(process.env.BASE_URL, {
+    const socket = io(process.env.BASE_URL ?? "", {
       path: "/api/socketio",
     });
     // log socket connection
@@ -31,7 +31,7 @@ export default function QipsPage(): JSX.Element {
     });
 
     socket.on(`room-${projectId}`, (message) => {
-      queryClient.invalidateQueries(message?.queryKey);
+      void queryClient.invalidateQueries(message?.queryKey);
     });
 
     // socket disconnect onUnmount if exists
@@ -54,7 +54,7 @@ export default function QipsPage(): JSX.Element {
         <p>Loading...</p>
       ) : (
         tasks
-          ?.sort((a, b) => TaskTypes[a.type] - TaskTypes[b.type])
+          ?.sort((a, b) => TaskTypes[a.type].length - TaskTypes[b.type].length)
           .map((task) => (
             <Link key={task.id} href={`/process/${projectId}/qips/${task.id}`}>
               <QipCard task={task} />

@@ -1,11 +1,11 @@
-import { NodeDataApi } from "../types/NodeDataApi";
+import { NodeDataApi } from "@/types/NodeDataApi";
 import { Autocomplete, TextField } from "@equinor/eds-core-react";
 import {
   getTimeDefinitionDisplayName,
   getTimeDefinitionValue,
   getTimeDefinitionValues,
-} from "../types/unitDefinitions";
-import { useEffect, useState } from "react";
+} from "@/types/unitDefinitions";
+import { ChangeEvent, useEffect, useState } from "react";
 
 type DurationComponent = {
   selectedNode: NodeDataApi;
@@ -20,7 +20,7 @@ export function DurationComponent({
   selectedNode,
   onChangeDuration,
   disabled,
-}: DurationComponent): JSX.Element {
+}: DurationComponent) {
   const [duration, setDuration] = useState<number | null>(
     selectedNode.duration
   );

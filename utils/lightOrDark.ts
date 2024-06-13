@@ -1,8 +1,12 @@
 export const lightOrDark = (color: string): string => {
   // Convert hex to RGB: http://gist.github.com/983661
-  const newColor = +`0x${color
-    .slice(1)
-    .replace(color.length < 5 && /./g, "$&$&")}`;
+
+  let colorVal = color;
+  if (color.length < 5) {
+    colorVal = color.slice(1).replace(/./g, "$&$&");
+  }
+
+  const newColor = +`0x${colorVal}`;
 
   const r = newColor >> 16;
   const g = (newColor >> 8) & 255;

@@ -1,26 +1,26 @@
 import * as userApi from "../services/userApi";
 
 import { Button, Icon, Input } from "@equinor/eds-core-react";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { close, link } from "@equinor/eds-icons";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import BaseAPIServices from "../services/BaseAPIServices";
 import { UserDot } from "./UserDot";
-import { accessRoles } from "../types/AccessRoles";
+import { accessRoles } from "@/types/AccessRoles";
 import { getOwner } from "utils/getOwner";
-import { notifyOthers } from "../services/notifyOthers";
+import { notifyOthers } from "@/services/notifyOthers";
 import style from "./AccessBox.module.scss";
 import { unknownErrorToString } from "utils/isError";
 import { useStoreDispatch } from "hooks/storeHooks";
 import { userAccess } from "types/UserAccess";
-import { Project } from "../types/Project";
-import { useProjectId } from "../hooks/useProjectId";
+import { Project } from "@/types/Project";
+import { useProjectId } from "@/hooks/useProjectId";
 
 export function AccessBox(props: {
   project: Project;
-  handleClose;
+  handleClose: () => void;
   isAdmin: boolean;
 }): JSX.Element {
   const { data: userAccesses, isLoading } = useQuery(
@@ -35,13 +35,13 @@ export function AccessBox(props: {
   );
 
   if (!props.project) return <p>Missing project</p>;
-  const { created, vsmProjectID } = props.project;
+  const { vsmProjectID } = props.project;
 
   return (
     <div className={style.box}>
       <TopSection title={"User access"} handleClose={props.handleClose} />
       <MiddleSection
-        owner={getOwner(props.project)}
+        owner={getOwner(props.project) ?? ""}
         users={userAccesses}
         vsmId={vsmProjectID}
         loading={isLoading}
@@ -73,7 +73,7 @@ function RoleSelect(props: {
   );
 }
 
-function TopSection(props: { title: string; handleClose }) {
+function TopSection(props: { title: string; handleClose: () => void }) {
   return (
     <div className={style.topSection}>
       <p className={style.heading}> {props.title}</p>
@@ -86,8 +86,8 @@ function TopSection(props: { title: string; handleClose }) {
 
 function UserItem(props: {
   user: { accessId: number; user: string; role: string };
-  onRoleChange;
-  onRemove;
+  onRoleChange: (role: string) => void;
+  onRemove: () => void;
   disabled: boolean;
 }) {
   function handleChange(role: string) {
@@ -148,20 +148,22 @@ function MiddleSection(props: {
     {
       onSuccess: () => {
         setEmailInput("");
-        notifyOthers("Gave access to a new user", projectId, account);
-        queryClient.invalidateQueries();
+        void notifyOthers("Gave access to a new user", projectId, account);
+        void queryClient.invalidateQueries();
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
   const removeUserMutation = useMutation(
-    (props: { accessId; vsmId }) => userApi.remove(props),
+    (props: { accessId: string; vsmId: number }) => userApi.remove(props),
     {
       onSuccess: () => {
-        notifyOthers("Removed access for user", projectId, account);
+        void notifyOthers("Removed access for user", projectId, account);
         return queryClient.invalidateQueries();
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
   const changeUserMutation = useMutation(
@@ -169,19 +171,15 @@ function MiddleSection(props: {
       userApi.update(props),
     {
       onSuccess() {
-        notifyOthers("Updated access for some user", projectId, account);
+        void notifyOthers("Updated access for some user", projectId, account);
         return queryClient.invalidateQueries("userAccesses");
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
 
-  /**
-   * Add new user
-   * @param e
-   */
-  function handleSubmit(e) {
-    e.preventDefault();
+  function handleSubmit() {
     userInput
       .split(",") // Split by comma
       .filter((user) => !!user.trim()) // remove empty strings
@@ -206,10 +204,11 @@ function MiddleSection(props: {
           disabled={!props.isAdmin}
           autoFocus
           type={"text"}
-          // pattern={"[Bb]anana|[Cc]herry"} //Todo: pattern match?
           placeholder={"shortname"}
           value={userInput}
-          onChange={(event) => setEmailInput(event.target.value)}
+          onChange={(event: ChangeEvent<HTMLInputElement>) =>
+            setEmailInput(event.target.value)
+          }
         />
         <span style={{ padding: 4 }} />
         <Button type={"submit"} variant={"contained"} disabled={!props.isAdmin}>
@@ -234,12 +233,12 @@ function MiddleSection(props: {
               <UserItem
                 key={user.accessId}
                 user={user}
-                onRoleChange={(role) =>
+                onRoleChange={(role: any) =>
                   changeUserMutation.mutate({ user, role })
                 }
                 onRemove={() =>
                   removeUserMutation.mutate({
-                    accessId: user.accessId,
+                    accessId: user.accessId.toString(),
                     vsmId: props.vsmId,
                   })
                 }

@@ -3,11 +3,12 @@ import { TopBar } from "@equinor/eds-core-react";
 import styles from "./default.layout.module.scss";
 import { useIsAuthenticated } from "@azure/msal-react";
 import { HomeButton } from "./homeButton";
-import { RightTopBarSection } from "../components/RightTopBarSection";
+import { RightTopBarSection } from "@/components/RightTopBarSection";
 import packageJson from "../package.json";
-import { ServiceMessageBanner } from "../components/ServiceMessageBanner";
+import { ServiceMessageBanner } from "@/components/ServiceMessageBanner";
+import { ReactNode } from "react";
 
-export const DefaultLayout = ({ children }) => {
+export const DefaultLayout = ({ children }: { children: ReactNode }) => {
   const isAuthenticated = useIsAuthenticated();
 
   if (!isAuthenticated) {

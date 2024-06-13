@@ -29,7 +29,7 @@ export default function MarkdownEditor(props: {
     linkText: "",
   });
   // The "text"-state is used for displaying the changing text instantly
-  const [text, setText] = useState(defaultText);
+  const [text, setText] = useState<string | undefined>(defaultText);
 
   useEffect(() => {
     setText(defaultText);
@@ -40,8 +40,8 @@ export default function MarkdownEditor(props: {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (editMode && (e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault(); // prevent ctrl + k from opening the browser's address bar
-        const textArea = window.getSelection().anchorNode
-          .lastChild as HTMLTextAreaElement;
+        const textArea = window.getSelection()?.anchorNode
+          ?.lastChild as HTMLTextAreaElement;
 
         openUrlPrompt({
           start: textArea.selectionStart,
@@ -67,9 +67,11 @@ export default function MarkdownEditor(props: {
   };
 
   // Sets local state to display text instantly and updates the API
-  const setAndPatchText = (text: string) => {
+  const setAndPatchText = (text?: string) => {
     // Patching the text via the API is debounced in the onChange
-    onChange(text);
+    if (onChange) {
+      onChange(text);
+    }
     setText(text);
   };
 
@@ -99,7 +101,7 @@ export default function MarkdownEditor(props: {
         setIsOpenUrlPrompt={setIsOpenUrlPrompt}
         setSelectionInfo={setSelectionInfo}
         setAndPatchText={setAndPatchText}
-        text={text}
+        text={text ?? ""}
       />
     );
   }
@@ -134,7 +136,7 @@ export default function MarkdownEditor(props: {
               style: {
                 backgroundColor: canEdit ? "rgba(247,247,247,1" : "white",
                 color: "rgba(61,61,61,1)",
-                cursor: canEdit && "cell",
+                cursor: canEdit ? "cell" : "not-allowed",
                 fontSize: "1rem",
                 fontWeight: 400,
                 lineHeight: 1.5,

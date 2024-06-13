@@ -1,5 +1,5 @@
 import BaseAPIServices from "./BaseAPIServices";
-import { Task } from "../types/Task";
+import { Task } from "@/types/Task";
 
 const baseUrl = "/api/v2.0";
 
@@ -8,7 +8,7 @@ export const getTasksForProject = (
   projectId: string | string[]
 ): Promise<Task[]> =>
   BaseAPIServices.get(`${baseUrl}/graph/${projectId}/tasks`).then(
-    (value) => value.data
+    (value) => value.data as Task[]
   );
 
 export const createTask = (data: Task, projectId: string, vertexId: string) =>

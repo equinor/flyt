@@ -2,10 +2,10 @@ import commonStyles from "../../../styles/common.module.scss";
 import Head from "next/head";
 import { Typography } from "@equinor/eds-core-react";
 import { useQuery } from "react-query";
-import { getTasksForProject } from "../../../services/taskApi";
-import { unknownErrorToString } from "../../../utils/isError";
-import { TaskTable } from "../../../components/TaskTable";
-import { useProjectId } from "../../../hooks/useProjectId";
+import { getTasksForProject } from "@/services/taskApi";
+import { unknownErrorToString } from "@/utils/isError";
+import { TaskTable } from "@/components/TaskTable";
+import { useProjectId } from "@/hooks/useProjectId";
 
 export default function TablePage() {
   const { projectId } = useProjectId();
@@ -29,7 +29,7 @@ export default function TablePage() {
       </div>
     );
   }
-  if (error) {
+  if (error || !tasks) {
     return (
       <div className={commonStyles.container}>
         <Head>

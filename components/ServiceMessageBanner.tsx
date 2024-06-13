@@ -2,7 +2,7 @@ import { Banner, Button, Icon } from "@equinor/eds-core-react";
 import { high_priority } from "@equinor/eds-icons";
 import { useQuery } from "react-query";
 import style from "./ServiceMessageBanner.module.scss";
-import { getServiceMessage } from "../services/CommonAPIService";
+import { getServiceMessage } from "@/services/CommonAPIService";
 import gfm from "remark-gfm";
 import ReactMarkdown from "react-markdown";
 import getConfig from "next/config";
@@ -23,6 +23,7 @@ export const ServiceMessageBanner = () => {
           <Icon data={high_priority} />
         </Banner.Icon>
         <div style={{ display: "flex", alignItems: "center" }}>
+          {/* @ts-expect-error */}
           <ReactMarkdown remarkPlugins={[gfm]}>{data?.message}</ReactMarkdown>
         </div>
         {data?.urlString && (

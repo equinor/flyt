@@ -7,7 +7,7 @@ import { NodeTypes } from "types/NodeTypes";
 
 export const getGraph = (projectId: string | string[]): Promise<Graph> => {
   return BaseAPIServices.get(`${baseUrl}/graph/${projectId}`).then(
-    (value) => value.data
+    (value) => value.data as Graph
   );
 };
 
