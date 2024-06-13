@@ -1,8 +1,6 @@
 import { EdgeTypes } from "reactflow";
-import { ChoiceEdge } from "@/components/canvas/ChoiceEdge";
-import { DeletableEdge } from "./DeletableEdge";
+import { CustomEdge } from "./CustomEdge";
 
 export const edgeElementTypes: EdgeTypes = {
-  choice: ChoiceEdge,
-  deletable: DeletableEdge,
+  custom: CustomEdge,
 };

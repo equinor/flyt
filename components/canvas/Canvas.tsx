@@ -39,7 +39,6 @@ import { edgeElementTypes } from "./EdgeElementTypes";
 import { useEdgeDelete } from "./hooks/useEdgeDelete";
 import { ScrimDelete } from "../ScrimDelete";
 import { MiniMapCustom } from "@/components/canvas/MiniMapCustom";
-import { EdgeDataApi } from "@/types/EdgeDataApi";
 import { ZoomLevel } from "@/components/canvas/ZoomLevel";
 
 type CanvasProps = {
@@ -63,21 +62,10 @@ const Canvas = ({
     new Date("2024-04-24T00:08:00.000000Z").getTime();
 
   let tempNodes: Node<NodeDataFull>[] = [];
-  let tempEdges: Edge[] = [];
-  apiEdges.map((edge: EdgeDataApi) => {
-    const nodeSource = apiNodes.filter((node) => node.id === edge.source);
-    if (nodeSource[0] && nodeSource[0].type === NodeTypes.choice) {
-      tempEdges.push({
-        ...edge,
-        type: "choice",
-        label: edge.edgeValue,
-      });
-    } else {
-      tempEdges.push({ ...edge });
-    }
-  });
+  let tempEdges: Edge[] = apiEdges.map((e) => ({ ...e, label: e.edgeValue }));
 
-  const customEdges: Edge[] = [];
+  const longEdges: Edge[] = [];
+  const [isEditingEdgeText, setIsEditingEdgeText] = useState(false);
   const [nodes, setNodes, onNodesChange] = useNodesState<NodeDataFull>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
@@ -86,6 +74,7 @@ const Canvas = ({
     string | undefined
   >(undefined);
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
+  const isEditingEdge = isEditingEdgeText || edgeToBeDeletedId;
 
   const { onNodeDragStart, onNodeDrag, onNodeDragStop } = useNodeDrag();
   const { mutate: mergeNode, merging } = useNodeMerge();
@@ -127,12 +116,6 @@ const Canvas = ({
           }
           return tempNode;
         });
-        tempEdges = tempEdges.map((tempEdge) => {
-          if (tempEdge.target === duplicateNode.id) {
-            tempEdge.type = EdgeTypes.deletable;
-          }
-          return tempEdge;
-        });
         return;
       }
 
@@ -159,6 +142,7 @@ const Canvas = ({
         type: node.type,
         height: shapeSize.height,
         width: shapeSize.width + getQIPRContainerWidth(node.tasks),
+        deletable: false,
       });
     } else {
       tempNodes.push({
@@ -174,6 +158,7 @@ const Canvas = ({
         type: node.type,
         height: shapeSize.height,
         width: shapeSize.width + getQIPRContainerWidth(node.tasks),
+        deletable: false,
       });
     }
 
@@ -204,8 +189,8 @@ const Canvas = ({
             tempParentNode?.data.depth &&
             tempParentNode.data.depth < depthDeepestNode
           ) {
-            let customEdge: Edge | undefined;
-            // Remove edge and add it as a custom edge to redraw it later
+            let longEdge: Edge | undefined;
+            // Remove edge in order to redraw it after running layout algorithm
             tempEdges = tempEdges.filter((edge) => {
               if (
                 edge.source !== tempParentNode.id ||
@@ -213,8 +198,8 @@ const Canvas = ({
               ) {
                 return true;
               } else {
-                customEdge = edge;
-                customEdge.data = {
+                longEdge = edge;
+                longEdge.data = {
                   hiddenNodeTree: [],
                 };
                 return false;
@@ -224,7 +209,7 @@ const Canvas = ({
             let tempParentNodeId = tempParentNode.id;
             for (let i = tempParentNode.data.depth; i < depthDeepestNode; i++) {
               const id = `h_n_${i}_${tempParentNodeId}`;
-              customEdge?.data?.hiddenNodeTree.push(id);
+              longEdge?.data?.hiddenNodeTree.push(id);
               const node: Node<NodeDataHidden> = {
                 id,
                 data: {
@@ -243,12 +228,10 @@ const Canvas = ({
                 selectable: false,
               };
               tempNodes.push(node);
-              tempNodes.push();
               tempEdges.push({
-                id: `h_e_${tempParentNodeId}`,
+                id: `h_e_${i}_${tempParentNodeId}`,
                 source: tempParentNodeId,
                 target: id,
-                type: EdgeTypes.straight,
                 hidden: true,
               });
               tempParentNodeId = id;
@@ -258,20 +241,54 @@ const Canvas = ({
               id: `h_e_${tempParentNodeId}`,
               source: tempParentNodeId,
               target: node.id,
-              type: EdgeTypes.straight,
               hidden: true,
             });
-            customEdge && customEdges.push(customEdge);
+            longEdge && longEdges.push(longEdge);
           }
         });
       }
     });
   };
 
-  const createCustomEdges = (nodes: Node<NodeDataFull>[]) => {
-    customEdges.forEach((e) => {
+  const handleSetSelectedEdge = (selectedEdge: Edge | undefined) => {
+    if (userCanEdit && !isEditingEdge) {
+      const updatedEdges = edges.map((e) => {
+        e.selected = e.id === selectedEdge?.id;
+        return e;
+      });
+      setEdges(updatedEdges);
+    }
+  };
+
+  const isWritable = (edge: Edge) => {
+    const sourceNode = tempNodes.find((n) => n.id === edge.source);
+    return sourceNode?.type === NodeTypes.choice;
+  };
+
+  const isDeletable = (edge: Edge) =>
+    tempEdges.find((e) => e.target === edge.target && e.id !== edge.id);
+
+  const createEdges = (nodes: Node<NodeDataFull>[]) => {
+    createLongEdges(nodes);
+    return tempEdges.map((e) => ({
+      ...e,
+      type: EdgeTypes.custom,
+      deletable: false,
+      interactionWidth: 50,
+      data: {
+        ...e?.data,
+        setIsEditingText: (arg1: boolean) => setIsEditingEdgeText(arg1),
+        userCanEdit: userCanEdit,
+        writable: isWritable(e),
+        onDelete: isDeletable(e) && (() => setEdgeToBeDeletedId(e.id)),
+      },
+    }));
+  };
+
+  const createLongEdges = (nodes: Node<NodeDataFull>[]) => {
+    longEdges.forEach((e) => {
       const points: XYPosition[] = [];
-      e.data.hiddenNodeTree.forEach((nId) => {
+      e.data?.hiddenNodeTree.forEach((nId: string) => {
         const hiddenNode = nodes.find((n) => n.id === nId);
         if (hiddenNode) {
           points.push({
@@ -284,14 +301,8 @@ const Canvas = ({
           });
         }
       });
-      const edge = {
-        ...e,
-        data: {
-          points: points,
-          onDelete: () => setEdgeToBeDeletedId(e.id),
-        },
-      };
-      tempEdges.push(edge);
+      e.data.points = points;
+      tempEdges.push(e);
     });
   };
 
@@ -346,13 +357,6 @@ const Canvas = ({
     }
   };
 
-  const setEdgeTypes = () => {
-    tempEdges = tempEdges.map((e) => {
-      e.type = EdgeTypes.straight;
-      return e;
-    });
-  };
-
   useLayoutEffect(() => {
     const root = apiNodes.find(
       (node: NodeDataApi) => node.type === NodeTypes.root
@@ -370,14 +374,13 @@ const Canvas = ({
       );
       setSelectedNode(updatedSelectedNode);
     }
-    setEdgeTypes();
     createNodes(root);
     setNodesDepth();
     createHiddenNodes();
     const finalNodes = setLayout(tempNodes, tempEdges);
-    createCustomEdges(finalNodes);
+    const finalEdges = createEdges(finalNodes);
     setNodes(finalNodes);
-    setEdges(tempEdges);
+    setEdges(finalEdges);
   }, [apiNodes, apiEdges, userCanEdit]);
 
   useCenterCanvas();
@@ -458,6 +461,10 @@ const Canvas = ({
         onNodeDragStart={onNodeDragStart}
         onNodeDrag={onNodeDrag}
         onNodeDragStop={onNodeDragStop}
+        elevateEdgesOnSelect={true}
+        edgesFocusable={userCanEdit}
+        onEdgeMouseEnter={(event, edge) => handleSetSelectedEdge(edge)}
+        onEdgeMouseLeave={() => handleSetSelectedEdge(undefined)}
         attributionPosition="bottom-right"
         connectionRadius={100}
       >
