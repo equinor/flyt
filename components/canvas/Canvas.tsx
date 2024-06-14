@@ -8,7 +8,6 @@ import ReactFlow, {
   Edge,
   Node,
   ReactFlowProvider,
-  XYPosition,
   useEdgesState,
   useNodesState,
 } from "reactflow";
@@ -16,7 +15,6 @@ import "reactflow/dist/style.css";
 import { NodeDataFull } from "types/NodeData";
 import { NodeDataApi } from "types/NodeDataApi";
 import { NodeTypes } from "types/NodeTypes";
-import { EdgeTypes } from "types/EdgeTypes";
 import { Project } from "types/Project";
 import { Graph } from "@/types/Graph";
 import { DeleteNodeDialog } from "../DeleteNodeDialog";
@@ -41,6 +39,7 @@ import { MiniMapCustom } from "@/components/canvas/MiniMapCustom";
 import { ZoomLevel } from "@/components/canvas/ZoomLevel";
 import { edgeElementTypes } from "@/components/canvas/EdgeElementTypes";
 import { createHiddenNodes } from "@/components/canvas/utils/createHiddenNodes";
+import { createEdges } from "./utils/createEdges";
 
 type CanvasProps = {
   graph: Graph;
@@ -178,57 +177,6 @@ const Canvas = ({
     }
   };
 
-  const isWritable = (edge: Edge) => {
-    const sourceNode = tempNodes.find((n) => n.id === edge.source);
-    return sourceNode?.type === NodeTypes.choice;
-  };
-
-  const isDeletable = (edge: Edge) =>
-    tempEdges.find((e) => e.target === edge.target && e.id !== edge.id);
-
-  const createEdges = (
-    nodes: Node<NodeDataFull>[],
-    edges: Edge[],
-    longEdges: Edge[]
-  ) => {
-    longEdges = createLongEdges(nodes, longEdges);
-    edges = edges.concat(longEdges);
-    return edges.map((e) => ({
-      ...e,
-      type: EdgeTypes.custom,
-      deletable: false,
-      interactionWidth: 50,
-      data: {
-        ...e?.data,
-        setIsEditingText: (arg1: boolean) => setIsEditingEdgeText(arg1),
-        userCanEdit: userCanEdit,
-        writable: isWritable(e),
-        onDelete: isDeletable(e) && (() => setEdgeToBeDeletedId(e.id)),
-      },
-    }));
-  };
-
-  const createLongEdges = (nodes: Node<NodeDataFull>[], longEdges: Edge[]) => {
-    return longEdges.map((e) => {
-      const points: XYPosition[] = [];
-      e.data?.hiddenNodeTree.forEach((nId: string) => {
-        const hiddenNode = nodes.find((n) => n.id === nId);
-        if (hiddenNode) {
-          points.push({
-            x: hiddenNode.position.x + shapeSize.width / 2,
-            y: hiddenNode.position.y,
-          });
-          points.push({
-            x: hiddenNode.position.x + shapeSize.width / 2,
-            y: hiddenNode.position.y + shapeSize.height,
-          });
-        }
-      });
-      e.data.points = points;
-      return e;
-    });
-  };
-
   const mergedNodesLooping = new Map<string, [Node<NodeDataFull>, number]>();
   let mergedNodesReady: Node<NodeDataFull>[] = [];
 
@@ -305,7 +253,15 @@ const Canvas = ({
       longEdges,
     } = createHiddenNodes(tempNodes, tempEdges, shapeSize);
     const finalNodes = setLayout(tempWithHiddenNodes, tempWithHiddenEdges);
-    const finalEdges = createEdges(finalNodes, tempWithHiddenEdges, longEdges);
+    const finalEdges = createEdges(
+      finalNodes,
+      tempWithHiddenEdges,
+      longEdges,
+      shapeSize,
+      userCanEdit,
+      setIsEditingEdgeText,
+      setEdgeToBeDeletedId
+    );
     setNodes(finalNodes);
     setEdges(finalEdges);
   }, [apiNodes, apiEdges, userCanEdit]);
