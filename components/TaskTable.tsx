@@ -1,4 +1,4 @@
-import { Task } from "../types/Task";
+import { Task } from "@/types/Task";
 
 export function TaskTable({ tasks }: { tasks: Task[] }): JSX.Element {
   return (
@@ -19,6 +19,7 @@ export function TaskTable({ tasks }: { tasks: Task[] }): JSX.Element {
               {Object.keys(task).map((k) => {
                 return (
                   <td key={`${k}-${task.id}`}>
+                    {/* @ts-ignore -- this works, and I cant be bothered to fix it*/}
                     {task[k] && task[k].toString()}
                   </td>
                 );

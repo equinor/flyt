@@ -6,10 +6,10 @@ import { Checkbox } from "@equinor/eds-core-react";
  * @constructor
  */
 export function CheckboxImproved(props: {
-  setIsChecked: (isChecked: (p) => boolean) => void;
+  setIsChecked: (isChecked: (p: boolean) => boolean) => void;
   isChecked: boolean;
   label: string;
-}): JSX.Element {
+}) {
   return (
     <div
       style={{ paddingRight: 20, display: "flex", cursor: "pointer" }}

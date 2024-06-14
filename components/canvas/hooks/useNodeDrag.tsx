@@ -6,11 +6,11 @@ import { unknownErrorToString } from "@/utils/isError";
 import { MouseEvent, useEffect, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { Node, Position, useReactFlow } from "reactflow";
-import { useStoreDispatch } from "../../../hooks/storeHooks";
+import { useStoreDispatch } from "@/hooks/storeHooks";
 import { targetIsInSubtree } from "../utils/targetIsInSubtree";
 import { validTarget } from "../utils/validTarget";
 import { useUserAccount } from "./useUserAccount";
-import { useProjectId } from "../../../hooks/useProjectId";
+import { useProjectId } from "@/hooks/useProjectId";
 
 export const useNodeDrag = () => {
   const [source, setSource] = useState<Node<NodeData> | undefined>(undefined);
@@ -34,10 +34,7 @@ export const useNodeDrag = () => {
     );
   }, [target]);
 
-  const onNodeDragStart = (
-    evt: MouseEvent<Element>,
-    nodeDragging: Node<NodeData>
-  ) => {
+  const onNodeDragStart = (_evt: MouseEvent, nodeDragging: Node<NodeData>) => {
     dragRef.current = nodeDragging;
     setNodes((nodes) =>
       nodes.map((node) => {
@@ -51,7 +48,7 @@ export const useNodeDrag = () => {
     setSource(nodeDragging);
   };
 
-  const onNodeDrag = (evt: MouseEvent, node: Node<NodeData>) => {
+  const onNodeDrag = (_evt: MouseEvent, node: Node<NodeData>) => {
     if (!node.width || !node.height) return;
     const centerX = node.position.x + node.width / 2;
     const centerY = node.position.y + node.height / 2;
@@ -59,26 +56,26 @@ export const useNodeDrag = () => {
     const targetNode = getNodes().find(
       (n) =>
         centerX > n.position.x &&
-        centerX < n.position.x + node.width &&
+        centerX < n.position.x + (node.width ?? 0) &&
         centerY > n.position.y &&
-        centerY < n.position.y + node.height &&
+        centerY < n.position.y + (node.height ?? 0) &&
         n.id !== node.id
     );
 
     setTarget(targetNode);
   };
 
-  const onNodeDragStop = (evt: MouseEvent, node: Node<NodeData>) => {
+  const onNodeDragStop = (_evt: MouseEvent, node: Node<NodeData>) => {
     if (validTarget(node, target, getNodes())) {
       moveNode.mutate({
         nodeId: node.id,
-        targetId: target.id,
+        targetId: target?.id ?? "",
         position:
           node.type === NodeTypes.mainActivity &&
-          target.type === NodeTypes.mainActivity
+          target?.type === NodeTypes.mainActivity
             ? Position.Right
             : Position.Bottom,
-        includeChildren: includeChildren(node, target),
+        includeChildren: target ? includeChildren(node, target) : false,
       });
       setTarget(undefined);
       dragRef.current = null;
@@ -121,7 +118,8 @@ export const useNodeDrag = () => {
         projectId && notifyOthers("Moved a card", projectId, account);
         return queryClient.invalidateQueries();
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
 

@@ -13,7 +13,7 @@ import ReactFlow, {
   useNodesState,
 } from "reactflow";
 import "reactflow/dist/style.css";
-import { NodeDataFull, NodeDataHidden } from "types/NodeData";
+import { NodeDataFull } from "types/NodeData";
 import { NodeDataApi } from "types/NodeDataApi";
 import { NodeTypes } from "types/NodeTypes";
 import { EdgeTypes } from "types/EdgeTypes";
@@ -35,11 +35,12 @@ import { useNodeMerge } from "./hooks/useNodeMerge";
 import { useWebSocket } from "./hooks/useWebSocket";
 import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
 import { useProjectId } from "@/hooks/useProjectId";
-import { edgeElementTypes } from "./EdgeElementTypes";
 import { useEdgeDelete } from "./hooks/useEdgeDelete";
 import { ScrimDelete } from "../ScrimDelete";
 import { MiniMapCustom } from "@/components/canvas/MiniMapCustom";
 import { ZoomLevel } from "@/components/canvas/ZoomLevel";
+import { edgeElementTypes } from "@/components/canvas/EdgeElementTypes";
+import { createHiddenNodes } from "@/components/canvas/utils/createHiddenNodes";
 
 type CanvasProps = {
   graph: Graph;
@@ -62,9 +63,8 @@ const Canvas = ({
     new Date("2024-04-24T00:08:00.000000Z").getTime();
 
   let tempNodes: Node<NodeDataFull>[] = [];
-  let tempEdges: Edge[] = apiEdges.map((e) => ({ ...e, label: e.edgeValue }));
+  const tempEdges: Edge[] = apiEdges.map((e) => ({ ...e, label: e.edgeValue }));
 
-  const longEdges: Edge[] = [];
   const [isEditingEdgeText, setIsEditingEdgeText] = useState(false);
   const [nodes, setNodes, onNodesChange] = useNodesState<NodeDataFull>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -168,88 +168,6 @@ const Canvas = ({
     });
   };
 
-  const createHiddenNodes = () => {
-    tempNodes.forEach((node) => {
-      if (node?.data?.parents?.length > 1) {
-        let depthDeepestNode: undefined | number = undefined;
-        node?.data?.parents?.forEach((parentNodeId) => {
-          const parentNode = tempNodes.find((node) => node.id === parentNodeId);
-          if (
-            parentNode?.data?.depth &&
-            (!depthDeepestNode || parentNode?.data?.depth > depthDeepestNode)
-          )
-            depthDeepestNode = parentNode.data.depth;
-        });
-        node?.data?.parents?.forEach((parentNodeId) => {
-          const tempParentNode = tempNodes.find(
-            (node) => node.id === parentNodeId
-          );
-          if (
-            depthDeepestNode &&
-            tempParentNode?.data.depth &&
-            tempParentNode.data.depth < depthDeepestNode
-          ) {
-            let longEdge: Edge | undefined;
-            // Remove edge in order to redraw it after running layout algorithm
-            tempEdges = tempEdges.filter((edge) => {
-              if (
-                edge.source !== tempParentNode.id ||
-                edge.target !== node.id
-              ) {
-                return true;
-              } else {
-                longEdge = edge;
-                longEdge.data = {
-                  hiddenNodeTree: [],
-                };
-                return false;
-              }
-            });
-
-            let tempParentNodeId = tempParentNode.id;
-            for (let i = tempParentNode.data.depth; i < depthDeepestNode; i++) {
-              const id = `h_n_${i}_${tempParentNodeId}`;
-              longEdge?.data?.hiddenNodeTree.push(id);
-              const node: Node<NodeDataHidden> = {
-                id,
-                data: {
-                  parents: [tempParentNodeId],
-                  columnId: tempParentNode.data.columnId,
-                  depth: i,
-                  children: [],
-                  shapeHeight: shapeSize.height,
-                  shapeWidth: shapeSize.width,
-                },
-                position: { x: 0, y: 0 },
-                type: NodeTypes.hidden,
-                height: shapeSize.height,
-                width: shapeSize.width,
-                draggable: false,
-                selectable: false,
-              };
-              tempNodes.push(node);
-              tempEdges.push({
-                id: `h_e_${i}_${tempParentNodeId}`,
-                source: tempParentNodeId,
-                target: id,
-                hidden: true,
-              });
-              tempParentNodeId = id;
-            }
-
-            tempEdges.push({
-              id: `h_e_${tempParentNodeId}`,
-              source: tempParentNodeId,
-              target: node.id,
-              hidden: true,
-            });
-            longEdge && longEdges.push(longEdge);
-          }
-        });
-      }
-    });
-  };
-
   const handleSetSelectedEdge = (selectedEdge: Edge | undefined) => {
     if (userCanEdit && !isEditingEdge) {
       const updatedEdges = edges.map((e) => {
@@ -268,9 +186,14 @@ const Canvas = ({
   const isDeletable = (edge: Edge) =>
     tempEdges.find((e) => e.target === edge.target && e.id !== edge.id);
 
-  const createEdges = (nodes: Node<NodeDataFull>[]) => {
-    createLongEdges(nodes);
-    return tempEdges.map((e) => ({
+  const createEdges = (
+    nodes: Node<NodeDataFull>[],
+    edges: Edge[],
+    longEdges: Edge[]
+  ) => {
+    longEdges = createLongEdges(nodes, longEdges);
+    edges = edges.concat(longEdges);
+    return edges.map((e) => ({
       ...e,
       type: EdgeTypes.custom,
       deletable: false,
@@ -285,8 +208,8 @@ const Canvas = ({
     }));
   };
 
-  const createLongEdges = (nodes: Node<NodeDataFull>[]) => {
-    longEdges.forEach((e) => {
+  const createLongEdges = (nodes: Node<NodeDataFull>[], longEdges: Edge[]) => {
+    return longEdges.map((e) => {
       const points: XYPosition[] = [];
       e.data?.hiddenNodeTree.forEach((nId: string) => {
         const hiddenNode = nodes.find((n) => n.id === nId);
@@ -302,7 +225,7 @@ const Canvas = ({
         }
       });
       e.data.points = points;
-      tempEdges.push(e);
+      return e;
     });
   };
 
@@ -376,9 +299,13 @@ const Canvas = ({
     }
     createNodes(root);
     setNodesDepth();
-    createHiddenNodes();
-    const finalNodes = setLayout(tempNodes, tempEdges);
-    const finalEdges = createEdges(finalNodes);
+    const {
+      tempNodes: tempWithHiddenNodes,
+      tempEdges: tempWithHiddenEdges,
+      longEdges,
+    } = createHiddenNodes(tempNodes, tempEdges, shapeSize);
+    const finalNodes = setLayout(tempWithHiddenNodes, tempWithHiddenEdges);
+    const finalEdges = createEdges(finalNodes, tempWithHiddenEdges, longEdges);
     setNodes(finalNodes);
     setEdges(finalEdges);
   }, [apiNodes, apiEdges, userCanEdit]);

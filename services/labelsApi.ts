@@ -1,22 +1,22 @@
 import BaseAPIServices from "./BaseAPIServices";
-import { processLabel } from "types/processLabel";
+import { ProcessLabel } from "@/types/ProcessLabel";
 
 const baseUrl = "/api/v2.0";
 
 // getLabels will return labels with sorting field "linkCount", from most used label to least used label
 export const getLabels = (
   searchText: string | string[]
-): Promise<processLabel[]> =>
+): Promise<ProcessLabel[]> =>
   BaseAPIServices.get(
     `${baseUrl}/labels?sortingField=linkCount&sortingDirection=descending&searchText=${searchText}`
-  ).then((value) => value.data);
+  ).then((value) => value.data as ProcessLabel[]);
 
-export const getLabel = (id: string): Promise<processLabel> =>
+export const getLabel = (id: string): Promise<ProcessLabel> =>
   BaseAPIServices.get(`${baseUrl}/labels/${id}`).then((value) => value.data);
 
 export const addLabelToProcess = (
   processID: number,
-  label: processLabel | { text: string }
+  label: ProcessLabel | { text: string }
 ) => {
   return BaseAPIServices.put(`${baseUrl}/project/${processID}/label`, label);
 };
@@ -27,6 +27,6 @@ export const removeLabelFromProcess = (processID: number, labelID: number) => {
   );
 };
 
-export const createLabel = (label: processLabel) => {
+export const createLabel = (label: ProcessLabel) => {
   return BaseAPIServices.post(`${baseUrl}/labels`, label);
 };

@@ -1,21 +1,22 @@
-import { Task } from "../types/Task";
+import { Task } from "@/types/Task";
 import { Checkbox } from "@equinor/eds-core-react";
-import { useStoreDispatch } from "../hooks/storeHooks";
+import { useStoreDispatch } from "@/hooks/storeHooks";
 import styles from "./ExistingTaskSection.module.scss";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { getTasksForProject, linkTask, unlinkTask } from "../services/taskApi";
-import { NodeDataApi } from "../types/NodeDataApi";
+import { getTasksForProject, linkTask, unlinkTask } from "@/services/taskApi";
+import { NodeDataApi } from "@/types/NodeDataApi";
 import { unknownErrorToString } from "utils/isError";
-import { notifyOthers } from "../services/notifyOthers";
+import { notifyOthers } from "@/services/notifyOthers";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { getTaskShorthand } from "utils/getTaskShorthand";
-import { useProjectId } from "../hooks/useProjectId";
+import { useProjectId } from "@/hooks/useProjectId";
+import { TaskTypes } from "@/types/TaskTypes";
 
 export function ExistingTaskSection(props: {
   visible: boolean;
-  existingTaskFilter;
+  existingTaskFilter: TaskTypes | null;
   selectedNode: NodeDataApi;
-}): JSX.Element {
+}) {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
   const { existingTaskFilter, selectedNode } = props;
@@ -36,20 +37,22 @@ export function ExistingTaskSection(props: {
     (task: Task) => linkTask(projectId, selectedNode.id, task.id),
     {
       onSuccess: () => {
-        notifyOthers("Added a Q/I/P to a card", projectId, account);
+        void notifyOthers("Added a Q/I/P to a card", projectId, account);
         return queryClient.invalidateQueries();
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
   const taskUnlinkMutation = useMutation(
     (task: Task) => unlinkTask(projectId, selectedNode.id, task.id),
     {
       onSuccess() {
-        notifyOthers("Removed Q/I/P from a card", projectId, account);
+        void notifyOthers("Removed Q/I/P from a card", projectId, account);
         return queryClient.invalidateQueries();
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
 
@@ -57,7 +60,9 @@ export function ExistingTaskSection(props: {
 
   return (
     <div>
-      {fetchingTasksError && <p>ERROR: {JSON.stringify(fetchingTasksError)}</p>}
+      {(fetchingTasksError as Error | null) && (
+        <p>ERROR: {JSON.stringify(fetchingTasksError)}</p>
+      )}
       {fetchingTasks && (
         <div
           style={{
@@ -70,7 +75,7 @@ export function ExistingTaskSection(props: {
           <p>Loading...</p>
         </div>
       )}
-      {!fetchingTasks && existingTasks.length < 1 && (
+      {!fetchingTasks && (existingTasks?.length ?? 0) < 1 && (
         <div
           style={{
             display: "flex",

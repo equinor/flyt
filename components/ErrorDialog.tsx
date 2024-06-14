@@ -9,7 +9,7 @@ export function ErrorDialog({
   visible: boolean;
   error: unknown;
   onClose: () => void;
-}): JSX.Element {
+}) {
   if (!error || !visible) return null;
 
   return (

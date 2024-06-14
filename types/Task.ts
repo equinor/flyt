@@ -7,4 +7,5 @@ export type Task = {
   description: string;
   solved: boolean;
   number: number;
+  category: any;
 };

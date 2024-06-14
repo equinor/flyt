@@ -1,10 +1,10 @@
 import { Chip } from "@equinor/eds-core-react";
-import { processLabel } from "types/processLabel";
+import { ProcessLabel } from "@/types/ProcessLabel";
 import styles from "./Labels.module.scss";
 import { useRouter } from "next/router";
 import { getUpdatedLabel } from "utils/getUpdatedLabel";
 
-export function Labels(props: { labels: processLabel[] }): JSX.Element {
+export function Labels(props: { labels: ProcessLabel[] }): JSX.Element {
   const { labels } = props;
   const router = useRouter();
 

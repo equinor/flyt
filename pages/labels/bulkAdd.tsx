@@ -1,9 +1,9 @@
 import { FormEvent } from "react";
-import { Chip, Typography } from "@equinor/eds-core-react";
-import { useMutation, useQueryClient } from "react-query";
+import { Chip } from "@equinor/eds-core-react";
+import { useMutation } from "react-query";
 
 import { createLabel } from "services/labelsApi";
-import { processLabel } from "types/processLabel";
+import { ProcessLabel } from "@/types/ProcessLabel";
 import { unknownErrorToString } from "utils/isError";
 import { useState } from "react";
 
@@ -18,7 +18,7 @@ export default function BulkAddLabels() {
   const [labels, setLabels] = useState<processLabelType[]>([]);
 
   const addLabelMutation = useMutation(
-    (label: processLabelType) => createLabel(label as processLabel),
+    (label: processLabelType) => createLabel(label as ProcessLabel),
     {
       onError: (err, errorLabel) => {
         //update the status of our label

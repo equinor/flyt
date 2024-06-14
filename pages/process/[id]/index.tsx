@@ -2,14 +2,14 @@ import commonStyles from "../../../styles/common.module.scss";
 import styles from "./ProjectPage.module.scss";
 import Head from "next/head";
 import { Typography } from "@equinor/eds-core-react";
-import { Layouts } from "../../../layouts/LayoutWrapper";
+import { Layouts } from "@/layouts/LayoutWrapper";
 import { useQuery } from "react-query";
-import { getProject } from "../../../services/projectApi";
+import { getProject } from "@/services/projectApi";
 import { getGraph } from "services/graphApi";
-import { unknownErrorToString } from "../../../utils/isError";
-import { CanvasWrapper } from "../../../components/canvas/Canvas";
+import { unknownErrorToString } from "@/utils/isError";
+import { CanvasWrapper } from "@/components/canvas/Canvas";
 import { CircularProgress } from "@equinor/eds-core-react";
-import { useProjectId } from "../../../hooks/useProjectId";
+import { useProjectId } from "@/hooks/useProjectId";
 
 export default function Project() {
   const { projectId } = useProjectId();
@@ -55,22 +55,23 @@ export default function Project() {
       </div>
     );
   }
-
-  return (
-    <div className={commonStyles.container}>
-      <Head>
-        <title>{project?.name || `Flyt | Process ${projectId}`}</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <main className={styles.main}>
-        {isLoadingGraph || isLoadingProject ? (
-          <CircularProgress size={48} />
-        ) : (
-          <CanvasWrapper project={project} graph={graph} />
-        )}
-      </main>
-    </div>
-  );
+  if (project && graph) {
+    return (
+      <div className={commonStyles.container}>
+        <Head>
+          <title>{project.name || `Flyt | Process ${projectId}`}</title>
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <main className={styles.main}>
+          {isLoadingGraph || isLoadingProject ? (
+            <CircularProgress size={48} />
+          ) : (
+            <CanvasWrapper project={project} graph={graph} />
+          )}
+        </main>
+      </div>
+    );
+  }
 }
 
 Project.layout = Layouts.Canvas;
