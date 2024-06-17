@@ -4,6 +4,13 @@ export type svgLine = (
   points: XYPosition[]
 ) => [path: string, labelX: number, labelY: number];
 
+/**
+Finds the midpoint of a line in order to place the lines label in the correct position.
+We traverse each segment (adjecent points) to make sure the midpoint is placed on a line.
+If the traversed distance is half of the total distance we return the coordinates.
+@param points - A list of the lines start, end and breakpoint XY coordinates
+@returns [midPointX, midPointY] - the XY coordinates of the midpoint of the edge
+*/
 const findMidpoint = (points: XYPosition[]) => {
   let totalDistance = 0;
   for (let i = 1; i < points.length; i++) {
