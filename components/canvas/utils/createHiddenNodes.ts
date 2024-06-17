@@ -22,15 +22,15 @@ export const createHiddenNodes = (
     node.data.parents.forEach((parentNodeId) => {
       const tempParentNode = tempNodes.find((node) => node.id === parentNodeId);
       if (
-        !tempParentNode.data.depth ||
+        !tempParentNode?.data.depth ||
         tempParentNode.data.depth >= depthDeepestNode
       ) {
         return;
       }
 
       // Find and filter the edge we are replacing with hidden node
-      let originalEdge = null;
-      tempEdges = tempEdges.reduce((newEdges, edge) => {
+      let originalEdge: null | Edge = null;
+      tempEdges = tempEdges.reduce((newEdges: Edge[], edge) => {
         if (edge.source === tempParentNode.id && edge.target === node.id) {
           if (!originalEdge) {
             originalEdge = edge;
@@ -48,7 +48,8 @@ export const createHiddenNodes = (
         hiddenNodes.push(createHiddenNode(id, tempParentNode, i, shapeSize));
 
         tempParentNode.type === NodeTypes.choice &&
-        i === tempParentNode.data.depth
+        i === tempParentNode.data.depth &&
+        originalEdge
           ? tempEdges.push(createChoiceEdge(originalEdge, tempParentNodeId, id))
           : tempEdges.push(createNormalEdge(tempParentNodeId, id));
 
