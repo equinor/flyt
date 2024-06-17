@@ -5,7 +5,7 @@ import { NodeDataApi } from "./NodeDataApi";
 // Todo: Structure is out of date. Update to match new structure.
 export type Project = {
   vsmProjectID: number;
-  name: string;
+  name: string | null;
   toBeProcessID?: number;
   currentProcessId?: number;
   labels: ProcessLabel[];

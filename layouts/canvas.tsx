@@ -6,6 +6,7 @@ import {
   TextField,
   TopBar,
   Typography,
+  DotProgress,
 } from "@equinor/eds-core-react";
 import {
   ChangeEvent,
@@ -35,7 +36,6 @@ import { MySnackBar } from "@/components/MySnackBar";
 import { RightTopBarSection } from "@/components/RightTopBarSection";
 import { TooltipImproved } from "@/components/TooltipImproved";
 import { UserMenu } from "@/components/AppHeader/UserMenu";
-import { debounce } from "@/utils/debounce";
 import { disableKeyboardZoomShortcuts } from "@/utils/disableKeyboardZoomShortcuts";
 import { disableMouseWheelZoom } from "@/utils/disableMouseWheelZoom";
 import { getMyAccess } from "@/utils/getMyAccess";
@@ -46,6 +46,7 @@ import styles from "./default.layout.module.scss";
 import { unknownErrorToString } from "@/utils/isError";
 import { useRouter } from "next/router";
 import { useProjectId } from "@/hooks/useProjectId";
+import { EditableTitle } from "components/EditableTitle";
 
 export const CanvasLayout = ({ children }: { children: ReactNode }) => {
   const isAuthenticated = useIsAuthenticated();
@@ -55,7 +56,6 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
   const { data: project } = useQuery(["project", projectId], () =>
     getProject(projectId)
   );
-  const projectTitle = project?.name;
 
   const queryClient = useQueryClient();
   const projectMutation = useMutation(
@@ -200,19 +200,14 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
   }
 
   function updateProjectName(name: string) {
-    debounce(
-      () => {
-        projectMutation.mutate([
-          {
-            op: "replace",
-            path: "/Name",
-            value: name,
-          },
-        ]);
+    if (name === project?.name) return;
+    projectMutation.mutate([
+      {
+        op: "replace",
+        path: "/Name",
+        value: name,
       },
-      1000,
-      "updateProjectName"
-    );
+    ]);
   }
 
   function handleDuplicate() {
@@ -240,9 +235,15 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
         <div className={styles.center}>
           <div style={{ gridAutoFlow: "row" }} className={styles.centerButton}>
             <div className={styles.centerButton}>
-              <Typography variant={"h4"} className={styles.projectName}>
-                {projectTitle || "Untitled process"}
-              </Typography>
+              {project ? (
+                <EditableTitle
+                  defaultText={project.name || "Untitled process"}
+                  readOnly={!userCanEdit}
+                  onSubmit={(text) => updateProjectName(text)}
+                />
+              ) : (
+                <DotProgress size={32} color={"primary"} />
+              )}
               <Button
                 variant={"ghost"}
                 onClick={(e) => (isOpen ? closeMenu() : openMenu(e, "last"))}
@@ -367,7 +368,7 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
             <TextField
               autoFocus
               label={"Add title"}
-              defaultValue={project?.name}
+              defaultValue={project?.name ?? undefined}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 updateProjectName(e.target.value)
               }
