@@ -8,6 +8,8 @@ const sectionQueryValues = [
   "add-new-wait",
   "add-new-choice",
   "merge-activities",
+  "rename-edge",
+  "delete-edge",
 ] as const;
 
 export type SectionQueryValue = (typeof sectionQueryValues)[number];
@@ -51,6 +53,8 @@ const useSectionRefs = () => {
   const addNewWaitRef = useRef<HTMLDivElement>(null);
   const addNewChoiceRef = useRef<HTMLDivElement>(null);
   const mergeActivitiesRef = useRef<HTMLDivElement>(null);
+  const renameEdgeRef = useRef<HTMLDivElement>(null);
+  const deleteEdgeRef = useRef<HTMLDivElement>(null);
 
   const refs: { [key in SectionQueryValue]: RefObject<HTMLDivElement> } = {
     "add-new-main-activity": addNewMainActivityRef,
@@ -58,6 +62,8 @@ const useSectionRefs = () => {
     "add-new-wait": addNewWaitRef,
     "add-new-choice": addNewChoiceRef,
     "merge-activities": mergeActivitiesRef,
+    "rename-edge": renameEdgeRef,
+    "delete-edge": deleteEdgeRef,
   };
 
   return refs;

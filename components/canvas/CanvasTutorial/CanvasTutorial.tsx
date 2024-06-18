@@ -5,6 +5,8 @@ import addNewSubActivity from "../../../public/CanvasTutorial/add-new-sub-activi
 import addNewChoice from "../../../public/CanvasTutorial/add-new-choice.gif";
 import addNewWait from "../../../public/CanvasTutorial/add-new-wait.gif";
 import mergeActivities from "../../../public/CanvasTutorial/merge-activities.gif";
+import renameEdge from "../../../public/CanvasTutorial/rename-edge.gif";
+import deleteEdge from "../../../public/CanvasTutorial/delete-edge.gif";
 import mainActivity from "../../../public/CanvasTutorial/main-activity.svg";
 import subActivity from "../../../public/CanvasTutorial/sub-activity.svg";
 import choice from "../../../public/CanvasTutorial/choice.svg";
@@ -94,11 +96,30 @@ export const CanvasTutorial = () => {
               containerRef={refs["merge-activities"]}
               title="Merge activities"
               image={mergeActivities}
-              style={{ marginBottom: "32px" }}
             >
               Hover over the merge circle of a card at the end of a choice path.{" "}
               <InlineImage src={merge} /> Drag and drop it onto the card you
               wish to merge into.
+            </CanvasTutorialSection>
+            <CanvasTutorialSection
+              containerRef={refs["rename-edge"]}
+              title="Write on lines"
+              image={renameEdge}
+            >
+              Hover over a editable line. Look for the pencil icon to appear.
+              Click the edit button to start writing. Once you have finished,
+              click outside the text area to save your changes. Editable lines
+              can be found directly beneath a choice card.
+            </CanvasTutorialSection>
+            <CanvasTutorialSection
+              containerRef={refs["delete-edge"]}
+              title="Remove lines"
+              image={deleteEdge}
+              style={{ marginBottom: "32px" }}
+            >
+              Hover over a removable line. Click the remove button to remove the
+              line. Removeable lines are only found above a subactivity that has
+              multiple parent connections.
             </CanvasTutorialSection>
           </div>
         </Dialog.CustomContent>
