@@ -1,5 +1,3 @@
-import { NodeData } from "./NodeData";
-
 export const timeDefinitions = [
   { value: "Minute", displayName: "Minute(s)", duration: 0 },
   { value: "Hour", displayName: "Hour(s)", duration: 0 },
@@ -49,7 +47,7 @@ export const formatDuration = (
   return `${duration} ${cUnit}s`;
 };
 
-export const formatSumDuration = (
+export const formatDurationSum = (
   duration?: typeof timeDefinitions
 ): string => {
   if (!duration) return "";

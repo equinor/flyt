@@ -2,7 +2,7 @@ import { NodeTypes } from "@/types/NodeTypes";
 import { Node } from "reactflow";
 import { timeDefinitions } from "@/types/unitDefinitions";
 
-const getMainActivitySumDuration = (subtreeNodes: Node[]) => {
+const getMainActivityDurationSum = (subtreeNodes: Node[]) => {
   const time = timeDefinitions.map((timeUnit) => ({ ...timeUnit }));
 
   subtreeNodes.forEach((node) => {
@@ -34,13 +34,13 @@ const roundDurations = (sumDurations: typeof timeDefinitions) => {
   }
 };
 
-export const setMainActivitiesSumDuration = (nodes: Node[]) => {
+export const setMainActivitiesDurationSum = (nodes: Node[]) => {
   return nodes.map((node) => {
     if (node.type === NodeTypes.mainActivity) {
       const subtreeNodes = nodes.filter(
         (n) => n.data.columnId === node.data.columnId
       );
-      const sumDuration = getMainActivitySumDuration(subtreeNodes);
+      const sumDuration = getMainActivityDurationSum(subtreeNodes);
       node.data.sumDuration = roundDurations(sumDuration);
     }
     return node;
