@@ -17,6 +17,8 @@ import { NodeShape } from "./NodeShape";
 import { QIPRContainer } from "./QIPRContainer";
 import { NodeTooltipSection } from "./NodeTooltipSection";
 import { NodeTooltip } from "./NodeTooltip";
+import { NodeDuration } from "./NodeDuration";
+import { formatSumDuration } from "@/types/unitDefinitions";
 
 export const MainActivityNode = ({
   data: {
@@ -32,6 +34,7 @@ export const MainActivityNode = ({
     merging,
     shapeHeight,
     shapeWidth,
+    sumDuration,
   },
   dragging,
 }: NodeProps<NodeData>) => {
@@ -105,6 +108,7 @@ export const MainActivityNode = ({
             header={!description ? type : undefined}
             description={description}
           />
+          <NodeDuration duration={formatSumDuration(sumDuration)} />
         </NodeShape>
         <QIPRContainer tasks={tasks} />
       </NodeCard>

@@ -1,6 +1,7 @@
 import { Position } from "reactflow";
 import { NodeDataApi } from "./NodeDataApi";
 import { NodeTypes } from "./NodeTypes";
+import { timeDefinitions } from "./unitDefinitions";
 
 export type NodeData = {
   parents: string[];
@@ -22,6 +23,7 @@ export type NodeData = {
   isChoiceChild?: boolean;
   shapeHeight: number;
   shapeWidth: number;
+  sumDuration?: typeof timeDefinitions;
 } & NodeDataApi;
 
 export type NodeDataHidden = Pick<

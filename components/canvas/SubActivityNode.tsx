@@ -15,7 +15,7 @@ import { TargetHandle } from "./TargetHandle";
 import { NodeDescription } from "./NodeDescription";
 import { NodeCard } from "./NodeCard";
 import colors from "theme/colors";
-import { Typography } from "@equinor/eds-core-react";
+import { NodeDuration } from "./NodeDuration";
 import { SourceHandle } from "./SourceHandle";
 import { NodeTooltip } from "./NodeTooltip";
 import { QIPRContainer } from "./QIPRContainer";
@@ -159,11 +159,7 @@ export const SubActivityNode = ({
               {role}
             </FormatNodeText>
           </div>
-          <div className={styles["node__time-container"]}>
-            <Typography variant="caption" className={styles["node__info-text"]}>
-              {formatDuration(duration, unit)}
-            </Typography>
-          </div>
+          <NodeDuration duration={formatDuration(duration, unit)} />
         </NodeShape>
         <QIPRContainer tasks={tasks} />
       </NodeCard>

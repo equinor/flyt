@@ -38,6 +38,7 @@ import { EdgeDataApi } from "@/types/EdgeDataApi";
 import { ZoomLevel } from "@/components/canvas/ZoomLevel";
 import { edgeElementTypes } from "@/components/canvas/EdgeElementTypes";
 import { createHiddenNodes } from "@/components/canvas/utils/createHiddenNodes";
+import { setMainActivitiesSumDuration } from "./utils/setMainActivitySumDuration";
 
 type CanvasProps = {
   graph: Graph;
@@ -236,6 +237,7 @@ const Canvas = ({
       setSelectedNode(updatedSelectedNode);
     }
     createNodes(root);
+    tempNodes = setMainActivitiesSumDuration(tempNodes);
     setNodesDepth();
     const { tempNodes: tempWithHiddenNodes, tempEdges: tempWithHiddenEdges } =
       createHiddenNodes(tempNodes, tempEdges, shapeSize);
