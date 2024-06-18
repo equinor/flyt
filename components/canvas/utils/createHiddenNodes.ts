@@ -29,7 +29,7 @@ export const createHiddenNodes = (
       }
 
       // Find and filter the edge we are replacing with hidden node
-      let originalEdge: null | Edge = null;
+      let originalEdge: Edge | null = null;
       tempEdges = tempEdges.reduce((newEdges: Edge[], edge) => {
         if (edge.source === tempParentNode.id && edge.target === node.id) {
           if (!originalEdge) {
