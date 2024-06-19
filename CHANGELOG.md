@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.3.0](https://github.com/equinor/flyt/compare/v2.2.0...v2.3.0) (2024-06-18)
+
+### Features
+
+- Click to rename project title ([#489](https://github.com/equinor/flyt/issues/489)) ([d74062f](https://github.com/equinor/flyt/commit/d74062fe1256dbdba4863e9041f0397df908ade1))
+- Edge labels ([#743](https://github.com/equinor/flyt/issues/743)) ([cae915c](https://github.com/equinor/flyt/commit/cae915ce4a9a7e69c1b894854d3997eb58c9c3ed))
+
+### Bug Fixes
+
+- close scrim, fix ts errors ([#764](https://github.com/equinor/flyt/issues/764)) ([00ed2b6](https://github.com/equinor/flyt/commit/00ed2b62f2ca723335df7bf29a7c4180b228b55c))
+- edges no longer disappearing when creating hidden nodes ([#761](https://github.com/equinor/flyt/issues/761)) ([0f8ec0e](https://github.com/equinor/flyt/commit/0f8ec0ebad2f558b89c36f31a65750916d0562c4))
+- Remove duration bug ([#753](https://github.com/equinor/flyt/issues/753)) ([4edc93d](https://github.com/equinor/flyt/commit/4edc93db75872adbca7d98089487c35ac308f615))
+
 ## [2.2.0](https://github.com/equinor/flyt/compare/v2.1.0...v2.2.0) (2024-06-03)
 
 ### Features
