@@ -45,7 +45,13 @@ export const GenericNode = ({
         : type === NodeTypes.output
         ? Position.Left
         : undefined;
-    if (userCanEdit && hovering && !merging && nodeButtonsPosition) {
+    if (
+      userCanEdit &&
+      hovering &&
+      !merging &&
+      nodeButtonsPosition &&
+      handleClickAddNode
+    ) {
       return (
         <NodeButtonsContainer position={nodeButtonsPosition}>
           <MainActivityButton

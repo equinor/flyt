@@ -1,0 +1,12 @@
+@import "styles/_variables.scss";
+
+.textarea {
+  background: $canvas;
+  outline: none;
+  border: none;
+  border-radius: 4px;
+  height: auto;
+  width: 90px;
+  text-align: center;
+  resize: none;
+}

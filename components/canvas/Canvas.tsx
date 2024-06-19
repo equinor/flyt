@@ -33,11 +33,13 @@ import { useNodeMerge } from "./hooks/useNodeMerge";
 import { useWebSocket } from "./hooks/useWebSocket";
 import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
 import { useProjectId } from "@/hooks/useProjectId";
+import { useEdgeDelete } from "./hooks/useEdgeDelete";
+import { ScrimDelete } from "../ScrimDelete";
 import { MiniMapCustom } from "@/components/canvas/MiniMapCustom";
-import { EdgeDataApi } from "@/types/EdgeDataApi";
 import { ZoomLevel } from "@/components/canvas/ZoomLevel";
 import { edgeElementTypes } from "@/components/canvas/EdgeElementTypes";
 import { createHiddenNodes } from "@/components/canvas/utils/createHiddenNodes";
+import { createEdges } from "./utils/createEdges";
 
 type CanvasProps = {
   graph: Graph;
@@ -60,29 +62,23 @@ const Canvas = ({
     new Date("2024-04-24T00:08:00.000000Z").getTime();
 
   let tempNodes: Node<NodeDataFull>[] = [];
-  let tempEdges: Edge[] = [];
-  apiEdges.map((edge: EdgeDataApi) => {
-    const nodeSource = apiNodes.filter((node) => node.id === edge.source);
-    if (nodeSource[0] && nodeSource[0].type === NodeTypes.choice) {
-      tempEdges.push({
-        ...edge,
-        type: "choice",
-        label: edge.edgeValue,
-      });
-    } else {
-      tempEdges.push({ ...edge });
-    }
-  });
+  const tempEdges: Edge[] = apiEdges.map((e) => ({ ...e, label: e.edgeValue }));
 
+  const [isEditingEdgeText, setIsEditingEdgeText] = useState(false);
   const [nodes, setNodes, onNodesChange] = useNodesState<NodeDataFull>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-  const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
+  const [visibleDeleteNodeScrim, setVisibleDeleteNodeScrim] = useState(false);
+  const [edgeToBeDeletedId, setEdgeToBeDeletedId] = useState<
+    string | undefined
+  >(undefined);
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
+  const isEditingEdge = isEditingEdgeText || edgeToBeDeletedId;
 
   const { onNodeDragStart, onNodeDrag, onNodeDragStop } = useNodeDrag();
   const { mutate: mergeNode, merging } = useNodeMerge();
   const { mutate: addNode } = useNodeAdd();
+  const { deleteEdgeMutation } = useEdgeDelete();
 
   const { socketConnected, socketReason } = useWebSocket();
 
@@ -145,6 +141,7 @@ const Canvas = ({
         type: node.type,
         height: shapeSize.height,
         width: shapeSize.width + getQIPRContainerWidth(node.tasks),
+        deletable: false,
       });
     } else {
       tempNodes.push({
@@ -153,11 +150,14 @@ const Canvas = ({
           ...node,
           parents: [],
           columnId: node.id,
+          shapeHeight: shapeSize.height,
+          shapeWidth: shapeSize.width,
         },
         position: { x: 0, y: 0 },
         type: node.type,
         height: shapeSize.height,
         width: shapeSize.width + getQIPRContainerWidth(node.tasks),
+        deletable: false,
       });
     }
 
@@ -165,6 +165,16 @@ const Canvas = ({
       const childNode = apiNodes.find((node) => node.id === childId);
       childNode && createNodes(childNode, node);
     });
+  };
+
+  const handleSetSelectedEdge = (selectedEdge: Edge | undefined) => {
+    if (userCanEdit && !isEditingEdge) {
+      const updatedEdges = edges.map((e) => {
+        e.selected = e.id === selectedEdge?.id;
+        return e;
+      });
+      setEdges(updatedEdges);
+    }
   };
 
   const mergedNodesLooping = new Map<string, [Node<NodeDataFull>, number]>();
@@ -237,11 +247,23 @@ const Canvas = ({
     }
     createNodes(root);
     setNodesDepth();
-    const { tempNodes: tempWithHiddenNodes, tempEdges: tempWithHiddenEdges } =
-      createHiddenNodes(tempNodes, tempEdges, shapeSize);
+    const {
+      tempNodes: tempWithHiddenNodes,
+      tempEdges: tempWithHiddenEdges,
+      longEdges,
+    } = createHiddenNodes(tempNodes, tempEdges, shapeSize);
     const finalNodes = setLayout(tempWithHiddenNodes, tempWithHiddenEdges);
+    const finalEdges = createEdges(
+      finalNodes,
+      tempWithHiddenEdges,
+      longEdges,
+      shapeSize,
+      userCanEdit,
+      setIsEditingEdgeText,
+      setEdgeToBeDeletedId
+    );
     setNodes(finalNodes);
-    setEdges(tempWithHiddenEdges);
+    setEdges(finalEdges);
   }, [apiNodes, apiEdges, userCanEdit]);
 
   useCenterCanvas();
@@ -272,16 +294,38 @@ const Canvas = ({
       {selectedNode && (
         <DeleteNodeDialog
           objectToDelete={selectedNode}
-          visible={visibleDeleteScrim}
+          visible={visibleDeleteNodeScrim}
           onClose={() => {
-            setVisibleDeleteScrim(false);
+            setVisibleDeleteNodeScrim(false);
             setSelectedNode(undefined);
           }}
         />
       )}
+      {edgeToBeDeletedId && (
+        <ScrimDelete
+          id={edgeToBeDeletedId}
+          open={!!edgeToBeDeletedId}
+          onConfirm={(id) => {
+            deleteEdgeMutation.mutate(
+              { edgeId: id },
+              {
+                onSuccess() {
+                  setEdgeToBeDeletedId(undefined);
+                },
+              }
+            );
+          }}
+          onClose={() => setEdgeToBeDeletedId(undefined)}
+          header={"Delete line"}
+          warningMessage={"Are you sure you want to delete this line?"}
+          confirmMessage={"Delete"}
+          isLoading={deleteEdgeMutation.isLoading}
+          error={deleteEdgeMutation.error}
+        />
+      )}
       <SideBar
         onClose={() => setSelectedNode(undefined)}
-        onDelete={() => setVisibleDeleteScrim(true)}
+        onDelete={() => setVisibleDeleteNodeScrim(true)}
         canEdit={userCanEdit}
         selectedNode={selectedNode}
       />
@@ -300,6 +344,10 @@ const Canvas = ({
         onNodeDragStart={onNodeDragStart}
         onNodeDrag={onNodeDrag}
         onNodeDragStop={onNodeDragStop}
+        elevateEdgesOnSelect={true}
+        edgesFocusable={userCanEdit}
+        onEdgeMouseEnter={(event, edge) => handleSetSelectedEdge(edge)}
+        onEdgeMouseLeave={() => handleSetSelectedEdge(undefined)}
         attributionPosition="bottom-right"
         connectionRadius={100}
       >

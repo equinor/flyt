@@ -1,7 +1,7 @@
 import styles from "./Node.module.scss";
 
 type NodeCard = {
-  onClick: () => void;
+  onClick?: () => void;
   hovering?: boolean;
   highlighted?: boolean;
   darkened?: boolean;
