@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.4.0](https://github.com/equinor/flyt/compare/v2.3.0...v2.4.0) (2024-06-19)
+
+
+### Features
+
+* Deletable Edges ([#763](https://github.com/equinor/flyt/issues/763)) ([a516a13](https://github.com/equinor/flyt/commit/a516a1369050b1ed8764a6e7db88b19728684806))
+
+
+### Bug Fixes
+
+* Upgrade dependencies ([#766](https://github.com/equinor/flyt/issues/766)) ([a37a28e](https://github.com/equinor/flyt/commit/a37a28e35db60cc0c74c2bbbd31c024d13fe262d))
+
 ## [2.3.0](https://github.com/equinor/flyt/compare/v2.2.0...v2.3.0) (2024-06-18)
 
 ### Features
