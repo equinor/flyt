@@ -7,13 +7,13 @@ import { notifyOthers } from "@/services/notifyOthers";
 import styles from "../layouts/default.layout.module.scss";
 import { unknownErrorToString } from "@/utils/isError";
 import { useStoreDispatch } from "hooks/storeHooks";
-import { NodeDataApi } from "@/types/NodeDataApi";
+import { NodeData } from "@/types/NodeData";
 import { NodeTypes } from "@/types/NodeTypes";
 import { deleteVertice } from "services/graphApi";
 import { useProjectId } from "@/hooks/useProjectId";
 
 export function DeleteNodeDialog(props: {
-  objectToDelete: NodeDataApi;
+  objectToDelete: NodeData;
   onClose: () => void;
   visible: boolean;
 }) {

@@ -1,4 +1,4 @@
-import { NodeDataApi } from "@/types/NodeDataApi";
+import { NodeData } from "../types/NodeData";
 import { Autocomplete, TextField } from "@equinor/eds-core-react";
 import {
   getTimeDefinitionDisplayName,
@@ -8,7 +8,7 @@ import {
 import { ChangeEvent, useEffect, useState } from "react";
 
 type DurationComponent = {
-  selectedNode: NodeDataApi;
+  selectedNode: NodeData;
   onChangeDuration: (e: {
     duration: number | null;
     unit: string | null;

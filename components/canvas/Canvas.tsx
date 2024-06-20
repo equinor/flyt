@@ -12,7 +12,7 @@ import ReactFlow, {
   useNodesState,
 } from "reactflow";
 import "reactflow/dist/style.css";
-import { NodeDataFull } from "types/NodeData";
+import { NodeData, NodeDataFull } from "types/NodeData";
 import { NodeDataApi } from "types/NodeDataApi";
 import { NodeTypes } from "types/NodeTypes";
 import { Project } from "types/Project";
@@ -32,13 +32,13 @@ import { useNodeDrag } from "./hooks/useNodeDrag";
 import { useNodeMerge } from "./hooks/useNodeMerge";
 import { useWebSocket } from "./hooks/useWebSocket";
 import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
+import { setMainActivitiesDurationSum } from "./utils/setMainActivitiesDurationSum";
 import { useProjectId } from "@/hooks/useProjectId";
 import { MiniMapCustom } from "@/components/canvas/MiniMapCustom";
 import { EdgeDataApi } from "@/types/EdgeDataApi";
 import { ZoomLevel } from "@/components/canvas/ZoomLevel";
 import { edgeElementTypes } from "@/components/canvas/EdgeElementTypes";
 import { createHiddenNodes } from "@/components/canvas/utils/createHiddenNodes";
-import { setMainActivitiesDurationSum } from "./utils/setMainActivityDurationSum";
 
 type CanvasProps = {
   graph: Graph;
@@ -49,7 +49,7 @@ const Canvas = ({
   graph: { vertices: apiNodes, edges: apiEdges },
   project,
 }: CanvasProps) => {
-  const [selectedNode, setSelectedNode] = useState<NodeDataApi | undefined>(
+  const [selectedNode, setSelectedNode] = useState<Node<NodeData> | undefined>(
     undefined
   );
   const { projectId } = useProjectId();
@@ -61,7 +61,7 @@ const Canvas = ({
     new Date("2024-04-24T00:08:00.000000Z").getTime();
 
   let tempNodes: Node<NodeDataFull>[] = [];
-  let tempEdges: Edge[] = [];
+  const tempEdges: Edge[] = [];
   apiEdges.map((edge: EdgeDataApi) => {
     const nodeSource = apiNodes.filter((node) => node.id === edge.source);
     if (nodeSource[0] && nodeSource[0].type === NodeTypes.choice) {
@@ -88,6 +88,11 @@ const Canvas = ({
   const { socketConnected, socketReason } = useWebSocket();
 
   let columnId: string | null = null;
+
+  const handelSetSelectedNode = (id?: string) => {
+    const node = tempNodes.find((n) => n.id === id);
+    node && setSelectedNode(node as Node<NodeData>);
+  };
 
   const createNodes = (
     node: NodeDataApi,
@@ -127,7 +132,7 @@ const Canvas = ({
         id: node.id,
         data: {
           ...node,
-          handleClickNode: () => setSelectedNode(node),
+          handleClickNode: () => handelSetSelectedNode(node.id),
           handleClickAddNode: (id, type, position) =>
             addNode({ parentId: id, type, position }),
           handleMerge: (sourceId, targetId) =>
@@ -230,12 +235,6 @@ const Canvas = ({
       return;
     }
 
-    if (selectedNode) {
-      const updatedSelectedNode = apiNodes.find(
-        (node) => node.id === selectedNode.id
-      );
-      setSelectedNode(updatedSelectedNode);
-    }
     createNodes(root);
     tempNodes = setMainActivitiesDurationSum(tempNodes);
     setNodesDepth();
@@ -244,6 +243,8 @@ const Canvas = ({
     const finalNodes = setLayout(tempWithHiddenNodes, tempWithHiddenEdges);
     setNodes(finalNodes);
     setEdges(tempWithHiddenEdges);
+
+    selectedNode && handelSetSelectedNode(selectedNode.id);
   }, [apiNodes, apiEdges, userCanEdit]);
 
   useCenterCanvas();
@@ -273,7 +274,7 @@ const Canvas = ({
       <ResetProcessButton />
       {selectedNode && (
         <DeleteNodeDialog
-          objectToDelete={selectedNode}
+          objectToDelete={selectedNode.data}
           visible={visibleDeleteScrim}
           onClose={() => {
             setVisibleDeleteScrim(false);
@@ -285,7 +286,7 @@ const Canvas = ({
         onClose={() => setSelectedNode(undefined)}
         onDelete={() => setVisibleDeleteScrim(true)}
         canEdit={userCanEdit}
-        selectedNode={selectedNode}
+        selectedNode={selectedNode?.data}
       />
       <ReactFlow
         nodes={nodes}

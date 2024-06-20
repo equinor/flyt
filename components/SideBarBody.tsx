@@ -2,14 +2,16 @@ import { DurationComponent } from "./DurationComponent";
 import { QIPSection } from "./QIPSection";
 import { TextField } from "@equinor/eds-core-react";
 import dynamic from "next/dynamic";
-import { NodeDataApi } from "@/types/NodeDataApi";
+import { NodeData } from "../types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
+import { formatDurationSum } from "@/types/unitDefinitions";
+
 const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
   ssr: false,
 });
 
 export function SideBarBody(props: {
-  selectedNode: NodeDataApi;
+  selectedNode: NodeData;
   onChangeDescription: (value?: string) => void;
   onChangeRole: (event: { target: { value: string } }) => void;
   onChangeDuration: (e: {
@@ -103,6 +105,15 @@ export function SideBarBody(props: {
             defaultText={selectedNode.description || ""}
             label={"Description"}
             onChange={props.onChangeDescription}
+          />
+          <div style={{ paddingTop: 12 }} />
+          <TextField
+            disabled
+            label={"Duration"}
+            type={"string"}
+            id={"vsmObjectTime"}
+            value={formatDurationSum(selectedNode?.sumDuration)}
+            helperText={"Duration is automatically calculated"}
           />
           <QIPSection
             canEdit={props.canEdit}

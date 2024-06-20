@@ -1,7 +1,7 @@
 import { Action, action, createStore, Thunk, thunk } from "easy-peasy";
 import BaseAPIServices from "../services/BaseAPIServices";
 import { Project } from "@/types/Project";
-import { NodeDataApi } from "@/types/NodeDataApi";
+import { NodeData } from "@/types/NodeData";
 import { Task } from "@/types/Task";
 import { canDeleteNode } from "@/utils/canDeleteNode";
 import { original } from "immer";
@@ -13,14 +13,13 @@ export type ProjectModel = {
   fetchingProject: boolean;
   project: Project;
   snackMessage: string | null;
-  selectedNode: NodeDataApi | null;
+  selectedNode: NodeData | null;
   //// ACTIONS ///////////////////
   //someAction: Action<model, payload>;
   addTaskToSelectedNode: Action<ProjectModel, Task>;
   updateTaskDescriptionInselectedNode: Action<ProjectModel, Task>;
   removeTaskFromSelectedNode: Action<ProjectModel, string>;
-  setSelectedNode: Action<ProjectModel, NodeDataApi | null>;
-  patchLocalObject: Action<ProjectModel, NodeDataApi>;
+  setSelectedNode: Action<ProjectModel, NodeData | null>;
   setErrorProject: Action<ProjectModel, Record<string, unknown>>;
   setFetchingProject: Action<ProjectModel, boolean>;
   setProject: Action<ProjectModel, Project>;
@@ -28,7 +27,6 @@ export type ProjectModel = {
   setSnackMessage: Action<ProjectModel, string>;
   //// THUNKS ///////////////////
   //someThunk: Thunk<Model,Payload,Injections,StoreModel,Result>;
-  addObject: Thunk<ProjectModel, NodeDataApi>;
   moveVSMObject: Thunk<
     ProjectModel,
     {
@@ -39,7 +37,7 @@ export type ProjectModel = {
       choiceGroup: any;
     }
   >;
-  deleteVSMObject: Thunk<ProjectModel, NodeDataApi>;
+  deleteVSMObject: Thunk<ProjectModel, NodeData>;
   fetchProject: Thunk<ProjectModel, { id: string | string[] | number }>;
   // updateProjectName: Thunk<
   //   ProjectModel,
@@ -52,7 +50,7 @@ export type ProjectModel = {
     ProjectModel,
     { projectId: number; id: number; taskId: number; task: Task }
   >;
-  unlinkTask: Thunk<ProjectModel, { task: Task; object: NodeDataApi }>;
+  unlinkTask: Thunk<ProjectModel, { task: Task; object: NodeData }>;
 };
 
 const projectModel: ProjectModel = {
@@ -117,40 +115,6 @@ const projectModel: ProjectModel = {
         return actions.setErrorProject(reason);
       })
       .finally(() => actions.setFetchingProject(false));
-  }),
-  patchLocalObject: action((state, payload) => {
-    const { project } = state;
-
-    function patchNode(oldObj: NodeDataApi, newObj: NodeDataApi) {
-      // oldObj = newObj //This doesn't work.
-      // We need to iterate over each individual object and set them one-by-one
-      Object.keys(newObj).forEach((key) => {
-        // @ts-expect-error -- this works, and I cant be bothered to fix it
-        oldObj[key] = newObj[key];
-      });
-    }
-
-    /**
-     * Updates all nodes that match the id
-     * @param node - What we want to put in the tree
-     * @param tree
-     */
-    function patchNodeInTree(node: NodeDataApi, tree: NodeDataApi) {
-      if (node.id === tree.id) patchNode(tree, node);
-
-      tree.children?.forEach((id) => {
-        const nodeData = state.project?.objects.find(
-          (vsmObj: NodeDataApi) => vsmObj.id === id
-        );
-        if (nodeData) patchNodeInTree(node, nodeData);
-      });
-    }
-
-    project?.objects.forEach((child) => {
-      // We expect only one top level child - with parent === 0,
-      // but adding a forEach just in case we have multiple.
-      patchNodeInTree(payload, child);
-    });
   }),
   // updateProjectName: thunk((actions, payload) => {
   //   const { projectId, name, rootObjectId } = payload;
@@ -280,25 +244,6 @@ const projectModel: ProjectModel = {
 
         //Todo: locally update before api-update?
         actions.fetchProject({ id: projectId });
-      })
-      .catch((reason) => {
-        actions.setSnackMessage(reason);
-        return actions.setErrorProject(reason);
-      });
-  }),
-  addObject: thunk(async (actions, newObject) => {
-    //We need to update the newObject in the API, but the Parent (with the newObject) in our local state
-    const apiObject = {
-      ...newObject,
-      id: newObject.id ?? 0, // use 0 when it is a new card
-    } as NodeDataApi;
-
-    actions.setSnackMessage("Adding new card...");
-    BaseAPIServices.post(`/api/v1.0/VSMObject`, apiObject)
-      .then((response) => {
-        actions.setSnackMessage("Card added!");
-        //Todo: local update with response object instead of fetching the whole project again
-        actions.fetchProject({ id: response.data.projectId });
       })
       .catch((reason) => {
         actions.setSnackMessage(reason);
