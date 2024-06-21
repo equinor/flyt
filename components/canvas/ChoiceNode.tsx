@@ -48,7 +48,7 @@ export const ChoiceNode = ({
   }, [dragging, connectionNodeId]);
 
   const renderNodeButtons = () => {
-    if (userCanEdit && hovering && !merging) {
+    if (userCanEdit && hovering && !merging && handleClickAddNode) {
       return (
         <>
           <NodeButtonsContainer position={Position.Bottom}>
@@ -79,7 +79,7 @@ export const ChoiceNode = ({
                 )
               }
             />
-            {mergeable && (
+            {mergeable && handleMerge && (
               <MergeButton
                 onConnect={(e: Connection) => handleMerge(e.source, e.target)}
               />

@@ -134,7 +134,7 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
   };
 
   const closeMenu = () => {
-    setState({ ...state, buttonEl, focus });
+    setState({ ...state, buttonEl: null, focus });
   };
 
   const onKeyPress = (e: KeyboardEvent<HTMLButtonElement>) => {

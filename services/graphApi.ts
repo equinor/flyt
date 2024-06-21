@@ -103,3 +103,11 @@ export const patchEdge = (
     data
   ).then((r) => r.data);
 };
+
+export const deleteEdge = (
+  edgeId: string,
+  projectId: string
+): Promise<string> =>
+  BaseAPIServices.delete(`${baseUrl}/graph/${projectId}/edges/${edgeId}`).then(
+    (r) => r.data
+  );

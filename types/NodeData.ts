@@ -9,9 +9,9 @@ export type NodeData = {
   isValidDropTarget?: boolean;
   columnId: string | null;
   mergeOption?: boolean;
-  handleMerge: (sourceId: string | null, targetId: string | null) => void;
-  handleClickNode: () => void;
-  handleClickAddNode: (
+  handleMerge?: (sourceId: string | null, targetId: string | null) => void;
+  handleClickNode?: () => void;
+  handleClickAddNode?: (
     nodeId: string,
     type: NodeTypes,
     position: Position
@@ -37,6 +37,8 @@ export type NodeDataHidden = Pick<
   | "isDropTarget"
   | "mergeOption"
   | "isChoiceChild"
+  | "shapeHeight"
+  | "shapeWidth"
 >;
 
 export type NodeDataFull = NodeData | NodeDataHidden;

@@ -9,6 +9,8 @@ export const createHiddenNodes = (
   shapeSize: { width: number; height: number }
 ) => {
   const hiddenNodes: Node<NodeDataFull>[] = [];
+  const longEdges: Edge[] = [];
+
   tempNodes.forEach((node) => {
     if (!node.data.parents || node.data.parents.length <= 1) {
       return;
@@ -29,11 +31,14 @@ export const createHiddenNodes = (
       }
 
       // Find and filter the edge we are replacing with hidden node
-      let originalEdge: null | Edge = null;
+      let originalEdge: Edge | null = null;
       tempEdges = tempEdges.reduce((newEdges: Edge[], edge) => {
         if (edge.source === tempParentNode.id && edge.target === node.id) {
           if (!originalEdge) {
             originalEdge = edge;
+            originalEdge.data = {
+              hiddenNodeTree: [],
+            };
           }
           return newEdges;
         }
@@ -45,22 +50,19 @@ export const createHiddenNodes = (
       let tempParentNodeId = tempParentNode.id;
       for (let i = tempParentNode.data.depth; i < depthDeepestNode; i++) {
         const id = uid();
+        const typedOriginalEdge = originalEdge as Edge | null;
+        typedOriginalEdge?.data?.hiddenNodeTree.push(id);
         hiddenNodes.push(createHiddenNode(id, tempParentNode, i, shapeSize));
 
-        tempParentNode.type === NodeTypes.choice &&
-        i === tempParentNode.data.depth &&
-        originalEdge
-          ? tempEdges.push(createChoiceEdge(originalEdge, tempParentNodeId, id))
-          : tempEdges.push(createNormalEdge(tempParentNodeId, id));
-
-        tempEdges.push(createStraightEdge(id));
+        tempEdges.push(createHiddenEdge(tempParentNodeId, id));
         tempParentNodeId = id;
       }
-      tempEdges.push(createNormalEdge(tempParentNodeId, node.id));
+      tempEdges.push(createHiddenEdge(tempParentNodeId, node.id));
+      originalEdge && longEdges.push(originalEdge);
     });
   });
   tempNodes = tempNodes.concat(hiddenNodes);
-  return { tempNodes, tempEdges };
+  return { tempNodes, tempEdges, longEdges };
 };
 
 // Util function to get the depth of the deepest node parent of the current node iterated over
@@ -81,7 +83,6 @@ const findDepthDeepestNode = (
 };
 
 // Below are Helper functions for creating the different nodes and edges
-
 const createHiddenNode = (
   id: string,
   parentNode: Node<NodeDataFull>,
@@ -105,23 +106,9 @@ const createHiddenNode = (
   selectable: false,
 });
 
-const createNormalEdge = (parentId: string, id: string) => ({
+const createHiddenEdge = (parentId: string, id: string) => ({
   id: `${parentId}=>${id}`,
   source: parentId,
   target: id,
-});
-
-const createStraightEdge = (id: string) => ({
-  id: `${id}=>${id}`,
-  source: id,
-  target: id,
-  type: "straight",
-});
-
-const createChoiceEdge = (edge: Edge, sourceId: string, targetId: string) => ({
-  id: edge.id,
-  source: sourceId,
-  target: targetId,
-  type: "choice",
-  label: edge.label,
+  hidden: true,
 });
