@@ -85,7 +85,7 @@ const Canvas = ({
 
   let columnId: string | null = null;
 
-  const handelSetSelectedNode = (id?: string) => {
+  const handleSetSelectedNode = (id?: string) => {
     const node = tempNodes.find((n) => n.id === id);
     node && setSelectedNode(node as Node<NodeData>);
   };
@@ -128,7 +128,7 @@ const Canvas = ({
         id: node.id,
         data: {
           ...node,
-          handleClickNode: () => handelSetSelectedNode(node.id),
+          handleClickNode: () => handleSetSelectedNode(node.id),
           handleClickAddNode: (id, type, position) =>
             addNode({ parentId: id, type, position }),
           handleMerge: (sourceId, targetId) =>
@@ -266,7 +266,7 @@ const Canvas = ({
     setNodes(finalNodes);
     setEdges(finalEdges);
 
-    selectedNode && handelSetSelectedNode(selectedNode.id);
+    selectedNode && handleSetSelectedNode(selectedNode.id);
   }, [apiNodes, apiEdges, userCanEdit]);
 
   useCenterCanvas();
