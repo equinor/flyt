@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Connection, Position, useStore } from "reactflow";
-import { formatDuration } from "types/unitDefinitions";
+import { formatDuration } from "@/utils/unitDefinitions";
 import { Icon, Typography } from "@equinor/eds-core-react";
 import { time as timeIcon } from "@equinor/eds-icons";
 

@@ -4,7 +4,7 @@ import { TextField } from "@equinor/eds-core-react";
 import dynamic from "next/dynamic";
 import { NodeData } from "../types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
-import { formatDurationSum } from "@/types/unitDefinitions";
+import { formatDurationSum } from "@/utils/unitDefinitions";
 
 const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
   ssr: false,

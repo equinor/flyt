@@ -1,6 +1,6 @@
 import { NodeTypes } from "@/types/NodeTypes";
 import { Node } from "reactflow";
-import { timeDefinitions } from "@/types/unitDefinitions";
+import { timeDefinitions } from "@/utils/unitDefinitions";
 
 const getMainActivityDurationSum = (subtreeNodes: Node[]) => {
   const time = timeDefinitions.map((timeUnit) => ({ ...timeUnit }));

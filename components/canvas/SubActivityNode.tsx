@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Connection, Position, useStore } from "reactflow";
 import { FormatNodeText } from "./utils/FormatNodeText";
-import { formatDuration } from "types/unitDefinitions";
+import { formatDuration } from "@/utils/unitDefinitions";
 import styles from "./Node.module.scss";
 import { SubActivityButton } from "./SubActivityButton";
 import { NodeButtonsContainer } from "./NodeButtonsContainer";

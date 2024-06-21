@@ -18,7 +18,7 @@ import { QIPRContainer } from "./QIPRContainer";
 import { NodeTooltipSection } from "./NodeTooltipSection";
 import { NodeTooltip } from "./NodeTooltip";
 import { NodeDuration } from "./NodeDuration";
-import { formatDurationSum } from "@/types/unitDefinitions";
+import { formatDurationSum } from "@/utils/unitDefinitions";
 
 export const MainActivityNode = ({
   data: {

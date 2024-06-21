@@ -4,7 +4,7 @@ import {
   getTimeDefinitionDisplayName,
   getTimeDefinitionValue,
   getTimeDefinitionValues,
-} from "@/types/unitDefinitions";
+} from "@/utils/unitDefinitions";
 import { ChangeEvent, useEffect, useState } from "react";
 
 type DurationComponent = {

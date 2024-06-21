@@ -1,7 +1,7 @@
 import { Position } from "reactflow";
 import { NodeDataApi } from "./NodeDataApi";
 import { NodeTypes } from "./NodeTypes";
-import { timeDefinitions } from "./unitDefinitions";
+import { timeDefinitions } from "../utils/unitDefinitions";
 
 export type NodeData = {
   parents: string[];
