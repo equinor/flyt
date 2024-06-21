@@ -25,7 +25,7 @@ const capitalizeFirstLetter = (s: string): string =>
   `${s}`.charAt(0).toUpperCase() + `${s}`.slice(1).toLowerCase();
 
 const getShortDisplayName = (displayName: string) =>
-  displayName.slice(0, displayName === "Month(s)" ? 2 : 1).toLocaleLowerCase();
+  displayName.slice(0, displayName === "Month(s)" ? 2 : 1).toLowerCase();
 
 /**
  * Format a duration and unit into a human readable format.
@@ -48,16 +48,19 @@ export const formatDuration = (
 };
 
 export const formatDurationSum = (
-  duration?: typeof timeDefinitions
+  timeDurations?: typeof timeDefinitions
 ): string => {
-  if (!duration) return "";
+  if (!timeDurations) return "";
+
   let sumDuration = "";
-  const reversedDuration = [...duration].reverse();
-  reversedDuration?.forEach((d) => {
+  const reversedTimeDurations = timeDurations.slice().reverse();
+
+  reversedTimeDurations?.forEach((d) => {
     if (d.duration !== 0) {
       const cUnit = getShortDisplayName(d.displayName);
       sumDuration += `${d.duration}${cUnit} `;
     }
   });
-  return sumDuration;
+
+  return sumDuration.trim();
 };

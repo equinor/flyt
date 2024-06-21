@@ -10,9 +10,7 @@ const getMainActivityDurationSum = (subtreeNodes: Node[]) => {
       const unitIndex = time.findIndex(
         (timeUnit) => timeUnit.value === node.data.unit
       );
-      if (unitIndex !== -1) {
-        time[unitIndex].duration += node.data.duration;
-      }
+      time[unitIndex].duration += node.data.duration;
     }
   });
 
@@ -24,10 +22,15 @@ const roundDurations = (sumDurations: typeof timeDefinitions) => {
   if (minutes) {
     const hoursToAdd = Math.floor(minutes / 60);
     return sumDurations.map((dur) => {
-      if (dur.value === "Minute") {
-        dur.duration -= hoursToAdd * 60;
-      } else if (dur.value === "Hour") {
-        dur.duration += hoursToAdd;
+      switch (dur.value) {
+        case "Minute":
+          dur.duration -= hoursToAdd * 60;
+          break;
+        case "Hour":
+          dur.duration += hoursToAdd;
+          break;
+        default:
+          break;
       }
       return dur;
     });
@@ -41,7 +44,8 @@ export const setMainActivitiesDurationSum = (nodes: Node[]) => {
         (n) => n.data.columnId === node.data.columnId
       );
       const sumDuration = getMainActivityDurationSum(subtreeNodes);
-      node.data.sumDuration = roundDurations(sumDuration);
+      const roundedDuration = roundDurations(sumDuration);
+      node.data.sumDuration = roundedDuration;
     }
     return node;
   });
