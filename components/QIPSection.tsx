@@ -7,7 +7,7 @@ import { Typography } from "@equinor/eds-core-react";
 import styles from "./VSMCanvas.module.scss";
 import { Task } from "@/types/Task";
 import { taskSorter } from "@/utils/taskSorter";
-import { NodeDataApi } from "@/types/NodeDataApi";
+import { NodeData } from "../types/NodeData";
 
 const NewTaskButton = (props: { onClick: () => void; disabled: boolean }) => (
   <div>
@@ -21,7 +21,7 @@ const NewTaskButton = (props: { onClick: () => void; disabled: boolean }) => (
 
 // eslint-disable-next-line max-lines-per-function
 export const QIPSection = (props: {
-  object: NodeDataApi;
+  object: NodeData;
   onClickNewTask: () => void;
   canEdit: boolean;
 }) => {

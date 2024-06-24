@@ -1,7 +1,7 @@
 import { NodeTypes } from "../types/NodeTypes";
-import { NodeDataApi } from "../types/NodeDataApi";
+import { NodeData } from "../types/NodeData";
 
-export const canDeleteNode = (vsmObject: NodeDataApi): boolean => {
+export const canDeleteNode = (vsmObject: NodeData): boolean => {
   if (!vsmObject || !vsmObject.type) return false;
   const { type } = vsmObject;
   return (

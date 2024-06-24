@@ -4,14 +4,14 @@ import { getNodeTypeName } from "@/utils/getNodeTypeName";
 import { notifyOthers } from "@/services/notifyOthers";
 import { unknownErrorToString } from "@/utils/isError";
 import { useStoreDispatch } from "hooks/storeHooks";
-import { NodeDataApi } from "@/types/NodeDataApi";
+import { NodeData } from "@/types/NodeData";
 import { NodeTypes } from "@/types/NodeTypes";
 import { deleteVertice } from "services/graphApi";
 import { useProjectId } from "@/hooks/useProjectId";
 import { ScrimDelete } from "./ScrimDelete";
 
 export function DeleteNodeDialog(props: {
-  objectToDelete: NodeDataApi;
+  objectToDelete: NodeData;
   onClose: () => void;
   visible: boolean;
 }) {
