@@ -108,6 +108,10 @@
   text-align: center;
 }
 
-.node__header {
+.node__placeholder-text {
   opacity: 0.4;
+}
+
+.node__helper-text {
+  @extend .node__placeholder-text, .node__description;
 }

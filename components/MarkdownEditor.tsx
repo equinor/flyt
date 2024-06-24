@@ -1,7 +1,13 @@
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 
-import { Button, Icon, Label, Tooltip } from "@equinor/eds-core-react";
+import {
+  Button,
+  Icon,
+  Label,
+  Tooltip,
+  Typography,
+} from "@equinor/eds-core-react";
 import MDEditor, { ICommand, TextState } from "@uiw/react-md-editor";
 import { useEffect, useState } from "react";
 
@@ -19,8 +25,9 @@ export default function MarkdownEditor(props: {
   defaultText: string;
   label: string;
   onChange?: (value?: string) => void;
+  helperText?: string;
 }) {
-  const { canEdit, defaultText, label, onChange } = props;
+  const { canEdit, defaultText, label, onChange, helperText } = props;
   const [editMode, setEditMode] = useState(false);
   const [isOpenUrlPrompt, setIsOpenUrlPrompt] = useState(false);
   const [selectionInfo, setSelectionInfo] = useState<SelectionInfo>({
@@ -175,6 +182,11 @@ export default function MarkdownEditor(props: {
           </Button>
         )}
       </div>
+      {helperText && (
+        <Typography style={{ marginTop: 12 }} variant="caption">
+          {helperText}
+        </Typography>
+      )}
     </div>
   );
 }

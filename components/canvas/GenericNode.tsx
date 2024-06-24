@@ -12,6 +12,7 @@ import { QIPRContainer } from "./QIPRContainer";
 import { NodeShape } from "./NodeShape";
 import { NodeTooltip } from "./NodeTooltip";
 import { NodeTooltipSection } from "./NodeTooltipSection";
+import { getNodeHelperText } from "./utils/getNodeHelperText";
 
 export const GenericNode = ({
   data: {
@@ -37,6 +38,8 @@ export const GenericNode = ({
     setHovering(false);
     setHoveringShape(false);
   }, [dragging]);
+
+  const nodeHelperText = getNodeHelperText(type);
 
   const renderNodeButtons = () => {
     const nodeButtonsPosition =
@@ -87,7 +90,11 @@ export const GenericNode = ({
           onMouseEnter={() => !dragging && setHoveringShape(true)}
           onMouseLeave={() => setHoveringShape(false)}
         >
-          <NodeDescription header={type} description={description} />
+          <NodeDescription
+            header={type}
+            description={description}
+            helperText={nodeHelperText}
+          />
         </NodeShape>
         <QIPRContainer tasks={tasks} />
       </NodeCard>

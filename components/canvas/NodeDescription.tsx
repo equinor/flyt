@@ -7,24 +7,41 @@ import { NodeTypes } from "@/types/NodeTypes";
 type NodeDescription = {
   header?: NodeTypes;
   description?: string;
+  helperText?: string;
 };
 
-export const NodeDescription = ({ header, description }: NodeDescription) => {
-  return (
-    <div className={styles["node__description-container"]}>
-      {header && (
-        <Typography variant="caption" className={styles["node__header"]}>
-          {getNodeTypeName(header)}
-        </Typography>
-      )}
-      {description && (
+export const NodeDescription = ({
+  header,
+  description,
+  helperText,
+}: NodeDescription) => (
+  <div className={styles["node__description-container"]}>
+    {header && (
+      <Typography
+        variant="caption"
+        className={
+          helperText && !description
+            ? undefined
+            : styles["node__placeholder-text"]
+        }
+      >
+        {getNodeTypeName(header)}
+      </Typography>
+    )}
+    {description ? (
+      <FormatNodeText variant="caption" className={styles["node__description"]}>
+        {description}
+      </FormatNodeText>
+    ) : (
+      helperText && (
         <FormatNodeText
-          variant="caption"
-          className={styles["node__description"]}
+          lines={7}
+          variant="meta"
+          className={styles["node__helper-text"]}
         >
-          {description}
+          {helperText}
         </FormatNodeText>
-      )}
-    </div>
-  );
-};
+      )
+    )}
+  </div>
+);
