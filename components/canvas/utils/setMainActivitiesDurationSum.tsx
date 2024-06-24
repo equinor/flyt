@@ -21,7 +21,7 @@ const roundDurations = (sumDurations: typeof timeDefinitions) => {
   const minutes = sumDurations.find((d) => d.value === "Minute")?.duration;
   if (minutes) {
     const hoursToAdd = Math.floor(minutes / 60);
-    return sumDurations.map((dur) => {
+    sumDurations = sumDurations.map((dur) => {
       switch (dur.value) {
         case "Minute":
           dur.duration -= hoursToAdd * 60;
@@ -35,6 +35,7 @@ const roundDurations = (sumDurations: typeof timeDefinitions) => {
       return dur;
     });
   }
+  return sumDurations;
 };
 
 export const setMainActivitiesDurationSum = (nodes: Node[]) => {
