@@ -4,10 +4,11 @@ export type userAccess = {
   accessId: number;
   role: userAccessRole;
   user: string;
+  fullName: string | null;
 };
 
 export type UserAccessSearch = {
-  displayName: string;
-  email: string;
   shortName: string;
+  email: string;
+  displayName: string;
 };

@@ -4,7 +4,7 @@ import { Layouts } from "../layouts/LayoutWrapper";
 import { getAccessToken } from "../auth/msalHelpers";
 
 function getUserString(e) {
-  if (e.user) return <> by User {e.user}</>;
+  if (e.fullName || e.user) return <> by User {e.fullName || e.user}</>;
   return <></>;
 }
 
@@ -56,7 +56,7 @@ export default function LiveEventPage() {
 
       {events.map((e) => {
         return (
-          <p key={`${e.date}${e.user}`} title={JSON.stringify(e)}>
+          <p key={`${e.date}${e.fullName || e.user}`} title={JSON.stringify(e)}>
             {e.date} | {e.msg} {getUserString(e)} in project {e.roomId}
           </p>
         );

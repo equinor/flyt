@@ -21,7 +21,7 @@ import { notifyOthers } from "../services/notifyOthers";
 import style from "./AccessBox.module.scss";
 import { unknownErrorToString } from "utils/isError";
 import { useStoreDispatch } from "hooks/storeHooks";
-import { userAccess } from "types/UserAccess";
+import { UserAccessSearch, userAccess, userAccessRole } from "types/UserAccess";
 import { Project } from "../types/Project";
 import colors from "@/theme/colors";
 import { debounce } from "@/utils/debounce";
@@ -205,20 +205,12 @@ function MiddleSection(props: {
    * Add new user
    * @param e
    */
-  const handleSubmit = (user) => {
-    console.log(user);
-    // userInput
-    //   .split(",") // Split by comma
-    //   .filter((user) => !!user.trim()) // remove empty strings
-    //   .map((user) => user.trim()) // remove whitespace
-    //   .forEach((user) => {
-    //     // add each user
+  const handleSubmit = (user: UserAccessSearch) => {
     addUserMutation.mutate({
-      user: user.userName,
+      user: user.shortName,
       vsmId: props.vsmId,
       role: accessRoles.Contributor,
     });
-    //   });
   };
 
   if (props.loading) {
@@ -240,28 +232,36 @@ function MiddleSection(props: {
   );
 }
 
-export const UserListAndSearch = (props: {
-  isAdmin;
+type UserListAndSearch = {
+  isAdmin: boolean;
   users: userAccess[];
-  onRoleChange;
-  onRemove;
-  onAdd;
-}) => {
+  onRoleChange: (arg1: userAccess, arg2: userAccessRole) => void;
+  onRemove: (arg: userAccess) => void;
+  onAdd: (arg1: UserAccessSearch) => void;
+};
+
+export const UserListAndSearch = ({
+  isAdmin,
+  users,
+  onRoleChange,
+  onRemove,
+  onAdd,
+}: UserListAndSearch) => {
   const [searchText, setSearchText] = useState("");
-  const {
-    data: usersSearched,
-    isLoading: loadingUsers,
-    error,
-  } = useQuery(["users", searchText], () => searchUser(searchText), {
-    enabled: searchText.trim() !== "",
-  });
+  const { data: usersSearched, isLoading: loadingUsers } = useQuery(
+    ["users", searchText],
+    () => searchUser(searchText),
+    {
+      enabled: searchText.trim() !== "",
+    }
+  );
 
   return (
     <div className={style.middleSection}>
-      {props.isAdmin ? (
+      {isAdmin ? (
         <Search
           className={style.searchBar}
-          disabled={!props.isAdmin}
+          disabled={!isAdmin}
           autoFocus
           type={"text"}
           onChange={(e) => {
@@ -280,15 +280,15 @@ export const UserListAndSearch = (props: {
         </div>
       )}
       <div className={style.userListSection}>
-        {props.users?.map((user) => (
+        {users?.map((user) => (
           <UserItem
             key={user.accessId}
             shortName={user.user}
-            fullName={user.user}
+            fullName={user.fullName}
             role={user.role}
-            onRoleChange={(role) => props.onRoleChange(user, role)}
-            onRemove={() => props.onRemove(user)}
-            disabled={!props.isAdmin}
+            onRoleChange={(role: userAccessRole) => onRoleChange(user, role)}
+            onRemove={() => onRemove(user)}
+            disabled={!isAdmin}
           />
         ))}
         {usersSearched?.length > 0 && <div className={style.seperator} />}
@@ -298,7 +298,7 @@ export const UserListAndSearch = (props: {
           usersSearched
             ?.filter(
               (userSearched) =>
-                !props.users.find(
+                !users.find(
                   (userWithRole) =>
                     userWithRole.user.toLowerCase() === userSearched.shortName
                 )
@@ -308,8 +308,8 @@ export const UserListAndSearch = (props: {
                 key={user.shortName}
                 shortName={user.shortName.toUpperCase()}
                 fullName={user.displayName}
-                disabled={!props.isAdmin}
-                onAdd={() => props.onAdd(user)}
+                disabled={!isAdmin}
+                onAdd={() => onAdd(user)}
               />
             ))
         )}
