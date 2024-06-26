@@ -3,9 +3,10 @@ import { Autocomplete, TextField } from "@equinor/eds-core-react";
 import {
   getTimeDefinitionDisplayName,
   getTimeDefinitionValue,
-  getTimeDefinitionValues,
+  getTimeDefinitioDisplayNames,
 } from "@/types/unitDefinitions";
 import { ChangeEvent, useEffect, useState } from "react";
+import { sortSearch } from "@/utils/sortSearch";
 
 type DurationComponent = {
   selectedNode: NodeDataApi;
@@ -25,6 +26,9 @@ export function DurationComponent({
     selectedNode.duration
   );
   const [unit, setUnit] = useState<string | null>(selectedNode.unit);
+  const [unitSearchInput, setUnitSearchInput] = useState("");
+
+  const timeDefinitioDisplayNames = getTimeDefinitioDisplayNames();
 
   useEffect(() => {
     setDuration(selectedNode.duration);
@@ -34,7 +38,7 @@ export function DurationComponent({
   const parseValue = (value: string) =>
     value === "" ? null : parseFloat(value);
 
-  const handleDurationChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDurationChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = parseValue(event.target.value);
     setDuration(value);
     onChangeDuration({
@@ -43,8 +47,9 @@ export function DurationComponent({
     });
   };
 
-  const handleUnitChange = (event: string) => {
-    const value = getTimeDefinitionValue(event);
+  const handleUnitChange = (unit: string) => {
+    setUnitSearchInput(unit);
+    const value = getTimeDefinitionValue(unit);
     setUnit(value);
     onChangeDuration({ duration, unit: value });
   };
@@ -63,12 +68,14 @@ export function DurationComponent({
       <div style={{ padding: 8 }} />
       <Autocomplete
         disabled={disabled}
-        options={getTimeDefinitionValues()}
+        options={sortSearch(timeDefinitioDisplayNames, unitSearchInput)}
         onInputChange={handleUnitChange}
         selectedOptions={[
           unit ? getTimeDefinitionDisplayName(unit) : undefined,
         ]}
+        optionsFilter={() => true}
         label="Unit"
+        autoWidth
       />
     </div>
   );

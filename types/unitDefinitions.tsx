@@ -7,7 +7,7 @@ export const timeDefinitions = [
   { value: "Year", displayName: "Year(s)" },
 ];
 
-export const getTimeDefinitionValues = (): Array<string> =>
+export const getTimeDefinitioDisplayNames = (): Array<string> =>
   timeDefinitions.map((item) => item.displayName);
 
 export const getTimeDefinitionValue = (displayName: string) =>
