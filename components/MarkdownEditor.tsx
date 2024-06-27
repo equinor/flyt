@@ -37,7 +37,7 @@ export default function MarkdownEditor(props: {
   });
   // The "text"-state is used for displaying the changing text instantly
   const [text, setText] = useState<string | undefined>(defaultText);
-  const invalidInput = requireText && text?.length === 0;
+  const missingText = requireText && text?.length === 0;
 
   useEffect(() => {
     setText(defaultText);
@@ -162,7 +162,7 @@ export default function MarkdownEditor(props: {
             style={{
               border: editMode
                 ? `2px solid ${
-                    invalidInput ? colors.DANGER : colors.EQUINOR_PROMINENT
+                    missingText ? colors.DANGER : colors.EQUINOR_PROMINENT
                   }`
                 : `1px solid ${colors.EQUINOR_DISABLED}`,
               borderRadius: 0,
@@ -170,7 +170,7 @@ export default function MarkdownEditor(props: {
             }}
             autoFocus
           />
-          {invalidInput && (
+          {missingText && (
             <Typography color="danger" variant="caption">
               Description is required
             </Typography>
@@ -183,14 +183,12 @@ export default function MarkdownEditor(props: {
               minWidth: 48,
             }}
             variant="ghost_icon"
-            disabled={invalidInput}
+            disabled={missingText}
           >
             <Icon
               data={check}
               color={
-                invalidInput
-                  ? colors.EQUINOR_DISABLED
-                  : colors.EQUINOR_PROMINENT
+                missingText ? colors.EQUINOR_DISABLED : colors.EQUINOR_PROMINENT
               }
             />
           </Button>
