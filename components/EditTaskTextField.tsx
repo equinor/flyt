@@ -45,6 +45,7 @@ export function EditTaskTextField(props: {
       canEdit={props.canEdit}
       label={"Task description"}
       defaultText={description || ""} //Since we set a default value and not a value, it only updates on init
+      requireText
       onChange={(event) => {
         const updatedTask: Task = {
           ...props.task,
@@ -52,7 +53,7 @@ export function EditTaskTextField(props: {
         };
         debounce(
           () => {
-            updateTaskMutation.mutate(updatedTask);
+            !!event && updateTaskMutation.mutate(updatedTask);
           },
           1000,
           "SideBarContent-UpdateTask"
