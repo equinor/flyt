@@ -53,7 +53,7 @@ export function EditTaskTextField(props: {
         };
         debounce(
           () => {
-            updateTaskMutation.mutate(updatedTask);
+            !!event && updateTaskMutation.mutate(updatedTask);
           },
           1000,
           "SideBarContent-UpdateTask"

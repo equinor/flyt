@@ -77,9 +77,7 @@ export default function MarkdownEditor(props: {
   // Sets local state to display text instantly and updates the API
   const setAndPatchText = (text?: string) => {
     // Patching the text via the API is debounced in the onChange
-    if (onChange && !(requireText && text?.length === 0)) {
-      onChange(text);
-    }
+    onChange && onChange(text);
     setText(text);
   };
 
