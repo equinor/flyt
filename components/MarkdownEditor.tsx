@@ -1,7 +1,13 @@
 import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
 
-import { Button, Icon, Label, Tooltip } from "@equinor/eds-core-react";
+import {
+  Button,
+  Icon,
+  Label,
+  Tooltip,
+  Typography,
+} from "@equinor/eds-core-react";
 import MDEditor, { ICommand, TextState } from "@uiw/react-md-editor";
 import { useEffect, useState } from "react";
 
@@ -19,8 +25,9 @@ export default function MarkdownEditor(props: {
   defaultText: string;
   label: string;
   onChange?: (value?: string) => void;
+  requireText?: boolean;
 }) {
-  const { canEdit, defaultText, label, onChange } = props;
+  const { canEdit, defaultText, label, onChange, requireText } = props;
   const [editMode, setEditMode] = useState(false);
   const [isOpenUrlPrompt, setIsOpenUrlPrompt] = useState(false);
   const [selectionInfo, setSelectionInfo] = useState<SelectionInfo>({
@@ -30,6 +37,7 @@ export default function MarkdownEditor(props: {
   });
   // The "text"-state is used for displaying the changing text instantly
   const [text, setText] = useState<string | undefined>(defaultText);
+  const invalidInput = requireText && text?.length === 0;
 
   useEffect(() => {
     setText(defaultText);
@@ -69,7 +77,7 @@ export default function MarkdownEditor(props: {
   // Sets local state to display text instantly and updates the API
   const setAndPatchText = (text?: string) => {
     // Patching the text via the API is debounced in the onChange
-    if (onChange) {
+    if (onChange && !(requireText && text?.length === 0)) {
       onChange(text);
     }
     setText(text);
@@ -155,13 +163,20 @@ export default function MarkdownEditor(props: {
             }}
             style={{
               border: editMode
-                ? `2px solid ${colors.EQUINOR_PROMINENT}`
+                ? `2px solid ${
+                    invalidInput ? colors.DANGER : colors.EQUINOR_PROMINENT
+                  }`
                 : `1px solid ${colors.EQUINOR_DISABLED}`,
               borderRadius: 0,
               boxShadow: canEdit && !editMode ? "0 1px 0 0 gray" : "none",
             }}
             autoFocus
           />
+          {invalidInput && (
+            <Typography color="danger" variant="caption">
+              Description is required
+            </Typography>
+          )}
         </div>
         {editMode && (
           <Button
@@ -170,8 +185,16 @@ export default function MarkdownEditor(props: {
               minWidth: 48,
             }}
             variant="ghost_icon"
+            disabled={invalidInput}
           >
-            <Icon data={check} color={colors.EQUINOR_PROMINENT} />
+            <Icon
+              data={check}
+              color={
+                invalidInput
+                  ? colors.EQUINOR_DISABLED
+                  : colors.EQUINOR_PROMINENT
+              }
+            />
           </Button>
         )}
       </div>
