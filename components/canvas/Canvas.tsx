@@ -350,6 +350,7 @@ const Canvas = ({
         onEdgeMouseLeave={() => handleSetSelectedEdge(undefined)}
         attributionPosition="bottom-right"
         connectionRadius={100}
+        nodeDragThreshold={15}
       >
         <MiniMapCustom />
         <Controls className={styles.controls} showInteractive={false}>
