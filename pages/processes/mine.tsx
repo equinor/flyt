@@ -34,7 +34,7 @@ export default function MyProcesses(): JSX.Element {
     getUserByShortname(shortName)
   );
 
-  const myUserId = users?.find((user) => user.userName === shortName)?.pkUser;
+  const myUserId = users?.find((user) => user.shortName === shortName)?.pkUser;
   const requiredUsers = stringToArray(router.query.user);
   const query = useQuery(
     [

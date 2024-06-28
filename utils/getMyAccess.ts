@@ -1,6 +1,6 @@
 import { getUserShortName } from "./getUserShortName";
 import { Project } from "../types/Project";
-import { userAccessRole } from "../types/UserAccess";
+import { userAccessRole } from "../types/UserAccessRole";
 import { AccountInfo } from "@azure/msal-browser";
 
 /**

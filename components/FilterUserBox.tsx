@@ -104,7 +104,7 @@ function LabelSection(props: { labels; isLoading; error }): JSX.Element {
             style={{ marginRight: "5px", marginBottom: "10px" }}
             onClick={() => toggleQueryParam("user", label.pkUser, router)}
           >
-            {label.fullName || label.userName}
+            {label.fullName}
           </Chip>
         ))}
       </div>

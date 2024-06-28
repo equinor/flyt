@@ -21,7 +21,9 @@ import { notifyOthers } from "../services/notifyOthers";
 import style from "./AccessBox.module.scss";
 import { unknownErrorToString } from "utils/isError";
 import { useStoreDispatch } from "hooks/storeHooks";
-import { UserAccessSearch, userAccess, userAccessRole } from "types/UserAccess";
+import { userAccess } from "types/UserAccess";
+import { UserAccessSearch } from "types/UserAccessSearch";
+import { userAccessRole } from "types/UserAccessRole";
 import { Project } from "../types/Project";
 import colors from "@/theme/colors";
 import { debounce } from "@/utils/debounce";
@@ -296,7 +298,7 @@ export const UserListAndSearch = ({
             disabled={!isAdmin}
           />
         ))}
-        {usersSearched?.length > 0 && <div className={style.seperator} />}
+        {usersSearched?.length > 0 && <div className={style.separator} />}
         {loadingUsers ? (
           <LinearProgress />
         ) : (

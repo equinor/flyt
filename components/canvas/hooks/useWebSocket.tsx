@@ -39,11 +39,7 @@ export const useWebSocket = () => {
       socket.on(`room-${projectId}`, (payload) => {
         if (payload.user !== account?.username?.split("@")[0]) {
           dispatch.setSnackMessage(
-            `${
-              payload.fullName || payload.user
-                ? payload.fullName || payload.user
-                : "Someone"
-            } ${payload.msg}`
+            `${payload.fullName ? payload.fullName : "Someone"} ${payload.msg}`
           );
         }
         queryClient.invalidateQueries();

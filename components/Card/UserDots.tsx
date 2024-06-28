@@ -14,9 +14,7 @@ export function UserDots(props: {
 
   return (
     <Tooltip
-      title={userAccesses
-        .map((userAccess) => userAccess.fullName || userAccess.user)
-        .join(", ")}
+      title={userAccesses.map((userAccess) => userAccess.fullName).join(", ")}
     >
       <button
         className={styles.buttonUserDots}

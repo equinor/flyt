@@ -1,6 +1,6 @@
 import { AxiosPromise } from "axios";
 import BaseAPIServices from "./BaseAPIServices";
-import { UserAccessSearch } from "@/types/UserAccess";
+import { UserAccessSearch } from "@/types/UserAccessSearch";
 
 const baseUrl = "/api/v2.0";
 
@@ -9,10 +9,10 @@ const baseUrl = "/api/v2.0";
  * @param newUser
  */
 export const add = (newUser: {
-  user: UserAccessSearch["shortName"];
+  user: string;
   vsmId: number;
   role: string;
-  fullName: UserAccessSearch["displayName"];
+  fullName: string;
 }): AxiosPromise =>
   BaseAPIServices.post(`${baseUrl}/userAccess`, newUser).then(
     (value) => value.data
@@ -54,20 +54,20 @@ export const get = ({ vsmId, userName }) => {
 };
 
 /**
- * Retrieve registered users or search for a short-name.
- * @param userName - The short-name of the user to search for.
+ * Retrieve registered users or search for a short or full name.
+ * @param userName - The short or full name of the user to search for.
  * @returns - Array of users.
  */
 export const searchUser = (userName: string): Promise<UserAccessSearch[]> =>
   BaseAPIServices.get(`${baseUrl}/users/query?startsWith=${userName}`).then(
-    (value) => value.data
+    (res) => res.data
   );
 
 export const getUserByShortname = (
-  userName: string
-): Promise<{ pkUser: number; userName: string }[]> =>
-  BaseAPIServices.get(`${baseUrl}/userAccess/userSearch?q=${userName}`).then(
-    (value) => value.data
+  shortName: string
+): Promise<{ pkUser: number; shortName: string }[]> =>
+  BaseAPIServices.get(`${baseUrl}/userAccess/userSearch?q=${shortName}`).then(
+    (res) => res.data
   );
 
 export const getUserById = (
