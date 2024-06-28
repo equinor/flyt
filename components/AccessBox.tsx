@@ -169,8 +169,12 @@ function MiddleSection(props: {
 
   const { projectId } = useProjectId();
   const addUserMutation = useMutation(
-    (newUser: { user: string; vsmId: number; role: string }) =>
-      userApi.add(newUser),
+    (newUser: {
+      user: UserAccessSearch["shortName"];
+      vsmId: number;
+      role: string;
+      fullName: UserAccessSearch["displayName"];
+    }) => userApi.add(newUser),
     {
       onSuccess: () => {
         notifyOthers("Gave access to a new user", projectId, account);
@@ -210,6 +214,7 @@ function MiddleSection(props: {
       user: user.shortName,
       vsmId: props.vsmId,
       role: accessRoles.Contributor,
+      fullName: user.displayName,
     });
   };
 

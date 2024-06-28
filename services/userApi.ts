@@ -9,9 +9,10 @@ const baseUrl = "/api/v2.0";
  * @param newUser
  */
 export const add = (newUser: {
-  user: string;
+  user: UserAccessSearch["shortName"];
   vsmId: number;
   role: string;
+  fullName: UserAccessSearch["displayName"];
 }): AxiosPromise =>
   BaseAPIServices.post(`${baseUrl}/userAccess`, newUser).then(
     (value) => value.data
