@@ -10,9 +10,6 @@ export const getServiceMessage = async (
   fromDate: string;
   toDate: string;
 }> => {
-  const url =
-    environment === "PROD"
-      ? `https://api.statoil.com/app/mad/api/v1/ServiceMessage/${serviceName}`
-      : `https://api.statoil.com/app/mad/${environment}/api/v1/ServiceMessage/${serviceName}`;
+  const url = `https://api-mad-api-${environment}.radix.equinor.com/api/v1/ServiceMessage/${serviceName}`;
   return fetch(url).then((r) => r.ok && r.json());
 };
