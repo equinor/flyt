@@ -17,6 +17,8 @@ import { NodeShape } from "./NodeShape";
 import { QIPRContainer } from "./QIPRContainer";
 import { NodeTooltipSection } from "./NodeTooltipSection";
 import { NodeTooltip } from "./NodeTooltip";
+import { NodeDuration } from "./NodeDuration";
+import { formatDurationSum } from "@/utils/unitDefinitions";
 
 export const MainActivityNode = ({
   data: {
@@ -32,11 +34,14 @@ export const MainActivityNode = ({
     merging,
     shapeHeight,
     shapeWidth,
+    sumDuration,
   },
   dragging,
 }: NodeProps<NodeData>) => {
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
+
+  const formattedDurationSum = formatDurationSum(sumDuration);
 
   useEffect(() => {
     setHovering(false);
@@ -105,6 +110,7 @@ export const MainActivityNode = ({
             header={!description ? type : undefined}
             description={description}
           />
+          <NodeDuration duration={formattedDurationSum} />
         </NodeShape>
         <QIPRContainer tasks={tasks} />
       </NodeCard>
@@ -115,9 +121,16 @@ export const MainActivityNode = ({
         isConnectable={false}
       />
       <SourceHandle />
-      <NodeTooltip isVisible={!!(hoveringShape && description)}>
+      <NodeTooltip
+        isVisible={
+          !!(hoveringShape && (description || formattedDurationSum.length > 0))
+        }
+      >
         {description && (
           <NodeTooltipSection header={"Description"} text={description} />
+        )}
+        {formattedDurationSum && (
+          <NodeTooltipSection header={"Duration"} text={formattedDurationSum} />
         )}
       </NodeTooltip>
       {renderNodeButtons()}
