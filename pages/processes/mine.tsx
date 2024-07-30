@@ -6,10 +6,10 @@ import { FilterLabelButton } from "components/Labels/FilterLabelButton";
 import { FilterUserButton } from "components/FilterUserButton";
 import { FrontPageBody } from "components/FrontPageBody";
 import Head from "next/head";
-import { Layouts } from "../../layouts/LayoutWrapper";
+import { Layouts } from "@/layouts/LayoutWrapper";
 import { SearchField } from "components/SearchField";
 import { SideNavBar } from "components/SideNavBar";
-import { SortSelect } from "../../components/SortSelect";
+import { SortSelect } from "@/components/SortSelect";
 import { Typography } from "@equinor/eds-core-react";
 import { getProjects } from "../../services/projectApi";
 import { getUserShortName } from "../../utils/getUserShortName";
@@ -19,7 +19,7 @@ import styles from "./FrontPage.module.scss";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
 
-export default function MyProcesses(): JSX.Element {
+export default function MyProcesses() {
   const [page, setPage] = useState(1);
   const itemsPerPage = 15;
 
@@ -28,13 +28,13 @@ export default function MyProcesses(): JSX.Element {
   //Get my user
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
-  const shortName = getUserShortName(account);
+  const shortName = account ? getUserShortName(account) : "";
 
   const { data: users } = useQuery(["userName"], () =>
     getUserByShortname(shortName)
   );
 
-  const myUserId = users?.find((user) => user.shortName === shortName)?.pkUser;
+  const myUserId = users?.find((user) => user.userName === shortName)?.pkUser;
   const requiredUsers = stringToArray(router.query.user);
   const query = useQuery(
     [
@@ -52,15 +52,12 @@ export default function MyProcesses(): JSX.Element {
         page,
         items: itemsPerPage,
         q: stringToArray(router.query.q),
-        ru: requiredUsers ? [...requiredUsers, myUserId] : [myUserId],
+        ru: myUserId ? [...requiredUsers, myUserId] : requiredUsers,
         rl: stringToArray(router.query.rl),
         orderBy: `${router.query.orderBy}`,
       }),
     { enabled: !!myUserId }
   );
-
-  // rl stands for "required label"
-  const labelsID = router.query.rl ? `${router.query.rl}`.split(",") : null;
 
   return (
     <div>

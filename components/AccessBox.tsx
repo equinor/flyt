@@ -8,31 +8,31 @@ import {
   Search,
   Typography,
 } from "@equinor/eds-core-react";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { close, link, add } from "@equinor/eds-icons";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import BaseAPIServices from "../services/BaseAPIServices";
 import { UserDot } from "./UserDot";
-import { accessRoles } from "../types/AccessRoles";
+import { accessRoles } from "@/types/AccessRoles";
 import { getOwner } from "utils/getOwner";
-import { notifyOthers } from "../services/notifyOthers";
+import { notifyOthers } from "@/services/notifyOthers";
 import style from "./AccessBox.module.scss";
 import { unknownErrorToString } from "utils/isError";
 import { useStoreDispatch } from "hooks/storeHooks";
 import { userAccess } from "types/UserAccess";
 import { UserAccessSearch } from "types/UserAccessSearch";
 import { userAccessRole } from "types/UserAccessRole";
-import { Project } from "../types/Project";
+import { Project } from "@/types/Project";
 import colors from "@/theme/colors";
 import { debounce } from "@/utils/debounce";
 import { searchUser } from "../services/userApi";
-import { useProjectId } from "../hooks/useProjectId";
+import { useProjectId } from "@/hooks/useProjectId";
 
 export function AccessBox(props: {
   project: Project;
-  handleClose;
+  handleClose: () => void;
   isAdmin: boolean;
 }): JSX.Element {
   const { data: userAccesses, isLoading } = useQuery(
@@ -53,7 +53,7 @@ export function AccessBox(props: {
     <div className={style.box}>
       <TopSection title={"User access"} handleClose={props.handleClose} />
       <MiddleSection
-        owner={getOwner(props.project)}
+        owner={getOwner(props.project) ?? ""}
         users={userAccesses}
         vsmId={vsmProjectID}
         loading={isLoading}
@@ -85,7 +85,7 @@ function RoleSelect(props: {
   );
 }
 
-export function TopSection(props: { title: string; handleClose }) {
+export function TopSection(props: { title: string; handleClose: () => void }) {
   return (
     <div className={style.topSection}>
       <Typography> {props.title}</Typography>
@@ -98,10 +98,10 @@ export function TopSection(props: { title: string; handleClose }) {
 
 type userItem = {
   shortName: string;
-  fullName: string;
+  fullName: string | null;
   role?: string;
-  onRoleChange?;
-  onRemove?;
+  onRoleChange?: (role: string) => void;
+  onRemove?: () => void;
   onAdd?: () => void;
   disabled: boolean;
 };
@@ -116,10 +116,10 @@ function UserItem({
   disabled,
 }: userItem) {
   function handleChange(role: string) {
-    if (role === "Remove") {
+    if (role === "Remove" && onRemove) {
       onRemove();
     } else {
-      onRoleChange(role);
+      onRoleChange && onRoleChange(role);
     }
   }
 
@@ -128,7 +128,9 @@ function UserItem({
       <div className={style.userDotAndName}>
         <UserDot name={shortName} />
         <Chip>{shortName}</Chip>
-        <Typography color={colors.EQUINOR_PROMINENT}>{fullName}</Typography>
+        <Typography color={colors.EQUINOR_PROMINENT}>
+          {fullName || ""}
+        </Typography>
       </div>
 
       {role ? (
@@ -179,20 +181,22 @@ function MiddleSection(props: {
     }) => userApi.add(newUser),
     {
       onSuccess: () => {
-        notifyOthers("Gave access to a new user", projectId, account);
-        queryClient.invalidateQueries();
+        void notifyOthers("Gave access to a new user", projectId, account);
+        void queryClient.invalidateQueries();
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
   const removeUserMutation = useMutation(
-    (props: { accessId; vsmId }) => userApi.remove(props),
+    (props: { accessId: number; vsmId: number }) => userApi.remove(props),
     {
       onSuccess: () => {
-        notifyOthers("Removed access for user", projectId, account);
+        void notifyOthers("Removed access for user", projectId, account);
         return queryClient.invalidateQueries();
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
   const changeUserMutation = useMutation(
@@ -200,17 +204,14 @@ function MiddleSection(props: {
       userApi.update(props),
     {
       onSuccess() {
-        notifyOthers("Updated access for some user", projectId, account);
+        void notifyOthers("Updated access for some user", projectId, account);
         return queryClient.invalidateQueries("userAccesses");
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
 
-  /**
-   * Add new user
-   * @param e
-   */
   const handleSubmit = (user: UserAccessSearch) => {
     addUserMutation.mutate({
       user: user.shortName,
@@ -242,7 +243,7 @@ function MiddleSection(props: {
 type UserListAndSearch = {
   isAdmin: boolean;
   users: userAccess[];
-  onRoleChange: (arg1: userAccess, arg2: userAccessRole) => void;
+  onRoleChange: (arg1: userAccess, arg2: string) => void;
   onRemove: (arg: userAccess) => void;
   onAdd: (arg1: UserAccessSearch) => void;
 };
@@ -271,7 +272,7 @@ export const UserListAndSearch = ({
           disabled={!isAdmin}
           autoFocus
           type={"text"}
-          onChange={(e) => {
+          onChange={(e: ChangeEvent<HTMLInputElement>) => {
             debounce(
               () => setSearchText(`${e.target.value}`),
               500,
@@ -293,12 +294,14 @@ export const UserListAndSearch = ({
             shortName={user.user}
             fullName={user.fullName}
             role={user.role}
-            onRoleChange={(role: userAccessRole) => onRoleChange(user, role)}
+            onRoleChange={(role) => onRoleChange(user, role)}
             onRemove={() => onRemove(user)}
             disabled={!isAdmin}
           />
         ))}
-        {usersSearched?.length > 0 && <div className={style.separator} />}
+        {usersSearched && usersSearched?.length > 0 && (
+          <div className={style.separator} />
+        )}
         {loadingUsers ? (
           <LinearProgress />
         ) : (

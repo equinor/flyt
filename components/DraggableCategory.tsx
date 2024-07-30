@@ -1,7 +1,7 @@
-import { getColor } from "../utils/getColor";
+import { getColor } from "@/utils/getColor";
 import styles from "./DraggableCategory.module.scss";
 import { ColorDot } from "./ColorDot";
-import { useRef, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useRef, useState } from "react";
 import { Button, Icon, Input, Menu } from "@equinor/eds-core-react";
 import {
   check,
@@ -14,8 +14,8 @@ import { useMutation, useQueryClient } from "react-query";
 import {
   deleteTaskCategory,
   updateTaskCategory,
-} from "../services/taskCategoriesApi";
-import { TaskCategory } from "../types/TaskCategory";
+} from "@/services/taskCategoriesApi";
+import { TaskCategory } from "@/types/TaskCategory";
 import { ErrorScrim } from "./ErrorScrim";
 
 export function DraggableCategory(props: {
@@ -23,14 +23,14 @@ export function DraggableCategory(props: {
   onClick: () => void;
   checked: boolean;
   projectId: string | string[];
-}): JSX.Element {
+}) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuButtonRef = useRef();
   const [categoryName, setCategoryName] = useState(`${props.category.name}`);
   const [editText, setEditText] = useState(() => !props.category.id);
   const [isLoading, setIsLoading] = useState(false);
   const [visibleScrim, setVisibleScrim] = useState(false);
-  const [errorMessage, setErrorMessage] = useState([null]);
+  const [errorMessage, setErrorMessage] = useState<string[] | null[]>([null]);
   const queryClient = useQueryClient();
 
   const getCategories = () => {
@@ -83,7 +83,7 @@ export function DraggableCategory(props: {
       onSettled: () => getCategories(),
       onError: (error: { response: { status: number } }, taskCategory) => {
         const statusCode = error?.response?.status;
-        let errorMessage = [];
+        let errorMessage: any[];
         if (statusCode === 409) {
           //Error 409-Conflict is given when you try to delete something that is still linked to a project
           errorMessage = [
@@ -108,6 +108,7 @@ export function DraggableCategory(props: {
       patchTaskCategoryMutation.mutate({
         name: name,
         id: props.category.id,
+        checked: props.checked,
       });
     }
     setEditText(false);
@@ -120,7 +121,7 @@ export function DraggableCategory(props: {
   if (isLoading) {
     return (
       <div
-        style={{ border: props.checked && `${color} 2px solid` }}
+        style={{ border: props.checked ? `${color} 2px solid` : "" }}
         className={styles.category}
       >
         <p>Loading...</p>
@@ -132,16 +133,20 @@ export function DraggableCategory(props: {
     return (
       <>
         <div
-          style={{ border: props.checked && `${color} 2px solid` }}
+          style={{ border: props.checked ? `${color} 2px solid` : "" }}
           className={styles.category}
         >
           <Input
             autoFocus
             defaultValue={categoryName}
             placeholder={props.category.name}
-            onClick={(event) => event.stopPropagation()}
-            onChange={(e) => setCategoryName(e.target.value)}
-            onKeyDown={(e) => {
+            onClick={(event: ChangeEvent<HTMLInputElement>) =>
+              event.stopPropagation()
+            }
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setCategoryName(e.target.value)
+            }
+            onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
               if (e.code === "Enter") saveText();
             }}
           />
@@ -162,7 +167,7 @@ export function DraggableCategory(props: {
         messages={errorMessage?.slice(1)}
       />
       <div
-        style={{ border: props.checked && `${color} 2px solid` }}
+        style={{ border: props.checked ? `${color} 2px solid` : "" }}
         draggable={true}
         onDragStart={(ev) => {
           ev.dataTransfer.setData(

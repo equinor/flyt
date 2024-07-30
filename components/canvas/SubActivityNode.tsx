@@ -56,7 +56,7 @@ export const SubActivityNode = ({
   }, [dragging, connectionNodeId]);
 
   const renderNodeButtons = () => {
-    if (userCanEdit && hovering && !merging) {
+    if (userCanEdit && hovering && !merging && handleClickAddNode) {
       return (
         <>
           <NodeButtonsContainer position={Position.Bottom}>
@@ -75,7 +75,7 @@ export const SubActivityNode = ({
                 handleClickAddNode(id, NodeTypes.waiting, Position.Bottom)
               }
             />
-            {mergeable && (
+            {mergeable && handleMerge && (
               <MergeButton
                 onConnect={(e: Connection) => handleMerge(e.source, e.target)}
               />
@@ -176,7 +176,7 @@ export const SubActivityNode = ({
           <NodeTooltipSection header={"Description"} text={description} />
         )}
         {role && <NodeTooltipSection header={"Role(s)"} text={role} />}
-        {duration && (
+        {duration !== null && unit !== null && (
           <NodeTooltipSection
             header={"Duration"}
             text={formatDuration(duration, unit)}

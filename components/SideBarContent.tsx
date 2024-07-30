@@ -3,17 +3,17 @@ import { SideBarHeader } from "./SideBarHeader";
 import { NewTaskSection } from "./NewTaskSection";
 import { SideBarBody } from "./SideBarBody";
 import { useMutation, useQueryClient } from "react-query";
-import { NodeDataApi } from "../types/NodeDataApi";
+import { NodeDataApi } from "@/types/NodeDataApi";
 import { patchGraph } from "services/graphApi";
-import { debounce } from "../utils/debounce";
+import { debounce } from "@/utils/debounce";
 import styles from "./VSMCanvas.module.scss";
 import { Button, Icon, Typography } from "@equinor/eds-core-react";
 import { unknownErrorToString } from "utils/isError";
 import { useStoreDispatch } from "hooks/storeHooks";
 import { close as closeIcon } from "@equinor/eds-icons";
-import { notifyOthers } from "../services/notifyOthers";
+import { notifyOthers } from "@/services/notifyOthers";
 import { useAccount, useMsal } from "@azure/msal-react";
-import { useProjectId } from "../hooks/useProjectId";
+import { useProjectId } from "@/hooks/useProjectId";
 
 /**
  * Process specific content stuff
@@ -24,9 +24,9 @@ export function SideBarContent(props: {
   onClose: () => void;
   onDelete: () => void;
   canEdit: boolean;
-  selectedNode;
+  selectedNode: NodeDataApi;
   isLoading: boolean;
-}): JSX.Element {
+}) {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
 
@@ -38,10 +38,11 @@ export function SideBarContent(props: {
       patchGraph(patchedObject, projectId, patchedObject.id),
     {
       onSuccess() {
-        notifyOthers("Updated a card", projectId, account);
+        void notifyOthers("Updated a card", projectId, account);
         return queryClient.invalidateQueries();
       },
-      onError: (e) => dispatch.setSnackMessage(unknownErrorToString(e)),
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
 
@@ -50,15 +51,15 @@ export function SideBarContent(props: {
     updates: {
       description?: string;
       role?: string;
-      duration?: number;
-      unit?: string;
+      duration?: number | null;
+      unit?: string | null;
     }
   ) {
     debounce(
       () => {
         vsmObjectMutation.mutate({
-          id: selectedNode.id,
           ...{ ...selectedNode, ...updates },
+          id: selectedNode.id,
         });
       },
       1500,

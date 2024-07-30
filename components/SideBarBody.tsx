@@ -2,7 +2,7 @@ import { DurationComponent } from "./DurationComponent";
 import { QIPSection } from "./QIPSection";
 import { TextField } from "@equinor/eds-core-react";
 import dynamic from "next/dynamic";
-import { NodeDataApi } from "../types/NodeDataApi";
+import { NodeDataApi } from "@/types/NodeDataApi";
 import { NodeTypes } from "types/NodeTypes";
 const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
   ssr: false,
@@ -12,10 +12,13 @@ export function SideBarBody(props: {
   selectedNode: NodeDataApi;
   onChangeDescription: (value?: string) => void;
   onChangeRole: (event: { target: { value: string } }) => void;
-  onChangeDuration: (e: { duration: number; unit: string }) => void;
-  setShowNewTaskSection: (boolean) => void;
+  onChangeDuration: (e: {
+    duration: number | null;
+    unit: string | null;
+  }) => void;
+  setShowNewTaskSection: (arg0: boolean) => void;
   canEdit: boolean;
-}): JSX.Element {
+}) {
   const { selectedNode, setShowNewTaskSection } = props;
 
   switch (selectedNode?.type) {

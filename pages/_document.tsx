@@ -9,6 +9,10 @@ export default class MyDocument extends Document {
             href="https://cdn.eds.equinor.com/font/equinor-font.css"
             rel="stylesheet"
           />
+          <link
+            href="https://cdn.eds.equinor.com/font/equinor-mono.css"
+            rel="stylesheet"
+          />
         </Head>
         <body>
           <Main />

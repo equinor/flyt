@@ -44,7 +44,7 @@ export const MainActivityNode = ({
   }, [dragging]);
 
   const renderNodeButtons = () => {
-    if (hovering && userCanEdit && !merging)
+    if (hovering && userCanEdit && !merging && handleClickAddNode)
       return (
         <>
           <NodeButtonsContainer position={Position.Left}>

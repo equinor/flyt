@@ -9,7 +9,7 @@ export const ResetProcessDialog = ({
   onClose: () => void;
   onReset: () => void;
   visible: boolean;
-}): JSX.Element => {
+}) => {
   if (!visible) return null;
   return (
     <Scrim open isDismissable onClose={onClose}>

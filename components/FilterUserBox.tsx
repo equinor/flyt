@@ -10,7 +10,7 @@ import { useQuery } from "react-query";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-export function FilterUserBox(props: { handleClose: () => void }): JSX.Element {
+export function FilterUserBox(props: { handleClose: () => void }) {
   const [searchText, setSearchText] = useState("");
   const {
     data: users,
@@ -22,12 +22,14 @@ export function FilterUserBox(props: { handleClose: () => void }): JSX.Element {
     <div className={styles.box}>
       <TopSection handleClose={props.handleClose} />
       <SearchSection setSearchText={setSearchText} />
-      <LabelSection labels={users} isLoading={isLoading} error={error} />
+      {users && (
+        <LabelSection labels={users} isLoading={isLoading} error={error} />
+      )}
     </div>
   );
 }
 
-function TopSection(props: { handleClose: () => void }): JSX.Element {
+function TopSection(props: { handleClose: () => void }) {
   return (
     <div className={styles.topSection}>
       <p className={styles.heading}>Filter by user</p>
@@ -38,9 +40,7 @@ function TopSection(props: { handleClose: () => void }): JSX.Element {
   );
 }
 
-function SearchSection(props: {
-  setSearchText: (searchText: string) => void;
-}): JSX.Element {
+function SearchSection(props: { setSearchText: (searchText: string) => void }) {
   const { setSearchText } = props;
   const router = useRouter();
 
@@ -72,7 +72,11 @@ function SearchSection(props: {
   );
 }
 
-function LabelSection(props: { labels; isLoading; error }): JSX.Element {
+function LabelSection(props: {
+  labels: { pkUser: number; userName: string }[];
+  isLoading: boolean;
+  error: unknown;
+}) {
   const { labels, isLoading, error } = props;
   const router = useRouter();
 
@@ -100,11 +104,13 @@ function LabelSection(props: { labels; isLoading; error }): JSX.Element {
         {labels.map((label) => (
           <Chip
             key={label.pkUser}
-            variant={isActive(label.pkUser.toString()) ? "active" : null}
+            variant={isActive(label.pkUser.toString()) ? "active" : undefined}
             style={{ marginRight: "5px", marginBottom: "10px" }}
-            onClick={() => toggleQueryParam("user", label.pkUser, router)}
+            onClick={() =>
+              toggleQueryParam("user", label.pkUser.toString(), router)
+            }
           >
-            {label.fullName}
+            {label.userName}
           </Chip>
         ))}
       </div>

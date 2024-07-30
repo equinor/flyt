@@ -9,7 +9,7 @@ import { AccountInfo } from "@azure/msal-browser";
  * @param account
  */
 export function getMyAccess(
-  project: Project,
+  project: Project | null,
   account: AccountInfo | null
 ): userAccessRole {
   //If not given a role, we default to "Reader"

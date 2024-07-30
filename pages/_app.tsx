@@ -9,9 +9,14 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import { StoreProvider } from "easy-peasy";
 import { msalInstance } from "@/auth/msalHelpers";
 import store from "../store/store";
+import { PropsWithChildren, ReactNode } from "react";
 
 const queryClient = new QueryClient();
-export default function MyApp({ Component, pageProps }) {
+type MyAppProps = {
+  Component: (props: PropsWithChildren) => ReactNode;
+  pageProps: PropsWithChildren;
+};
+export default function MyApp({ Component, pageProps }: MyAppProps) {
   return (
     // Todo: get rid of the StoreProvider. (Simplify our workflow by using React-Query for server state data-handling and interactions)
     <StoreProvider store={store}>

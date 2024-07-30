@@ -1,15 +1,16 @@
 import { useState } from "react";
-import { Layouts } from "../../../../layouts/LayoutWrapper";
-import { TaskTypes } from "../../../../types/TaskTypes";
-import { Task } from "../../../../types/Task";
-import { TaskSection } from "../../../../components/TaskSection";
-import { CategorySection } from "../../../../components/CategorySection";
-import { CheckboxImproved } from "../../../../components/CheckboxImproved";
-import { ButtonNavigateToProcess } from "../../../../components/ButtonNavigateToProcess";
+import { Layouts } from "@/layouts/LayoutWrapper";
+import { TaskTypes } from "@/types/TaskTypes";
+import { Task } from "@/types/Task";
+import { TaskSection } from "@/components/TaskSection";
+import { CategorySection } from "@/components/CategorySection";
+import { CheckboxImproved } from "@/components/CheckboxImproved";
+import { ButtonNavigateToProcess } from "@/components/ButtonNavigateToProcess";
 import Head from "next/head";
 import { useQuery } from "react-query";
-import { getProject } from "../../../../services/projectApi";
-import { useProjectId } from "../../../../hooks/useProjectId";
+import { getProject } from "@/services/projectApi";
+import { useProjectId } from "@/hooks/useProjectId";
+import { TaskCategory } from "@/types/TaskCategory";
 
 export default function CategoriesPage(): JSX.Element {
   const { projectId } = useProjectId();
@@ -18,7 +19,7 @@ export default function CategoriesPage(): JSX.Element {
   );
   const projectTitle = project?.name;
 
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<TaskCategory[]>([]);
 
   const [problemChecked, setProblemChecked] = useState(true);
   const [ideaChecked, setIdeaChecked] = useState(true);
@@ -27,13 +28,13 @@ export default function CategoriesPage(): JSX.Element {
 
   const taskTypeIsChecked = (t: Task) => {
     switch (t.type) {
-      case TaskTypes.problem:
+      case TaskTypes.Problem:
         return problemChecked;
-      case TaskTypes.question:
+      case TaskTypes.Question:
         return questionChecked;
-      case TaskTypes.idea:
+      case TaskTypes.Idea:
         return ideaChecked;
-      case TaskTypes.risk:
+      case TaskTypes.Risk:
         return riskChecked;
       default:
         return false;

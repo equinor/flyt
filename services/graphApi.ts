@@ -1,13 +1,13 @@
 const baseUrl = "/api/v2.0";
 
 import BaseAPIServices from "./BaseAPIServices";
-import { NodeDataApi } from "../types/NodeDataApi";
+import { NodeDataApi } from "@/types/NodeDataApi";
 import { Graph } from "types/Graph";
 import { NodeTypes } from "types/NodeTypes";
 
 export const getGraph = (projectId: string | string[]): Promise<Graph> => {
   return BaseAPIServices.get(`${baseUrl}/graph/${projectId}`).then(
-    (value) => value.data
+    (value) => value.data as Graph
   );
 };
 
@@ -91,3 +91,22 @@ export const mergeVertices = (
     `${baseUrl}/graph/${projectId}/vertices/connect`,
     data
   ).then((r) => r.data);
+
+export const patchEdge = (
+  data: { EdgeValue?: string },
+  projectId: string,
+  edgeId: string
+) => {
+  BaseAPIServices.post(
+    `${baseUrl}/graph/${projectId}/edges/${edgeId}`,
+    data
+  ).then((r) => r.data);
+};
+
+export const deleteEdge = (
+  edgeId: string,
+  projectId: string
+): Promise<string> =>
+  BaseAPIServices.delete(`${baseUrl}/graph/${projectId}/edges/${edgeId}`).then(
+    (r) => r.data
+  );

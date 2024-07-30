@@ -1,23 +1,36 @@
 # Changelog
 
-## [2.2.0](https://github.com/equinor/flyt/compare/v2.1.0...v2.2.0) (2024-06-03)
-
+## [2.3.0](https://github.com/equinor/flyt/compare/v2.2.0...v2.3.0) (2024-06-19)
 
 ### Features
 
-* Card tooltip ([#737](https://github.com/equinor/flyt/issues/737)) ([89bea20](https://github.com/equinor/flyt/commit/89bea20ea2c41466089ae557629c403f09a29e0d))
-* display rhombus shape for choice nodes in minimap ([#742](https://github.com/equinor/flyt/issues/742)) ([9625cb9](https://github.com/equinor/flyt/commit/9625cb90390c605bec6f9e6865c69748fba2aef4))
-* display zoom level next to controls ([#747](https://github.com/equinor/flyt/issues/747)) ([03a93e2](https://github.com/equinor/flyt/commit/03a93e234b788103893d3e4725af407af3ccf30a))
-* highlight links in cards and pqir and tooltips ([#746](https://github.com/equinor/flyt/issues/746)) ([eacd032](https://github.com/equinor/flyt/commit/eacd0322718818c0737c6c067b183937be67ba3b))
-* links in pqirs ([#734](https://github.com/equinor/flyt/issues/734)) ([f0e6128](https://github.com/equinor/flyt/commit/f0e61287e46cc33e2ba6e2bc277aa5154d8ab5f2))
-* Minimap ([#735](https://github.com/equinor/flyt/issues/735)) ([7d87f12](https://github.com/equinor/flyt/commit/7d87f125d23b82d9f9b84dfdbc00eb8741457afc))
-
+- Deletable Edges ([#763](https://github.com/equinor/flyt/issues/763)) ([a516a13](https://github.com/equinor/flyt/commit/a516a1369050b1ed8764a6e7db88b19728684806))
+- Click to rename project title ([#489](https://github.com/equinor/flyt/issues/489)) ([d74062f](https://github.com/equinor/flyt/commit/d74062fe1256dbdba4863e9041f0397df908ade1))
+- Edge labels ([#743](https://github.com/equinor/flyt/issues/743)) ([cae915c](https://github.com/equinor/flyt/commit/cae915ce4a9a7e69c1b894854d3997eb58c9c3ed))
 
 ### Bug Fixes
 
-* removed duplicate zoom level ([#750](https://github.com/equinor/flyt/issues/750)) ([5bbbb5e](https://github.com/equinor/flyt/commit/5bbbb5e4826239ed2eeddaed265f9b82f23c534f))
-* Test environment ([#731](https://github.com/equinor/flyt/issues/731)) ([ba31814](https://github.com/equinor/flyt/commit/ba31814111a67a6e864bc5d3afd7291c2484db90))
-* Upgrade dependencies ([#745](https://github.com/equinor/flyt/issues/745)) ([f67563a](https://github.com/equinor/flyt/commit/f67563a0ba137e780c1f7232ba249033ffa67f5d)), closes [#744](https://github.com/equinor/flyt/issues/744)
+- close scrim, fix ts errors ([#764](https://github.com/equinor/flyt/issues/764)) ([00ed2b6](https://github.com/equinor/flyt/commit/00ed2b62f2ca723335df7bf29a7c4180b228b55c))
+- edges no longer disappearing when creating hidden nodes ([#761](https://github.com/equinor/flyt/issues/761)) ([0f8ec0e](https://github.com/equinor/flyt/commit/0f8ec0ebad2f558b89c36f31a65750916d0562c4))
+- Remove duration bug ([#753](https://github.com/equinor/flyt/issues/753)) ([4edc93d](https://github.com/equinor/flyt/commit/4edc93db75872adbca7d98089487c35ac308f615))
+- Upgrade dependencies ([#766](https://github.com/equinor/flyt/issues/766)) ([a37a28e](https://github.com/equinor/flyt/commit/a37a28e35db60cc0c74c2bbbd31c024d13fe262d))
+
+## [2.2.0](https://github.com/equinor/flyt/compare/v2.1.0...v2.2.0) (2024-06-03)
+
+### Features
+
+- Card tooltip ([#737](https://github.com/equinor/flyt/issues/737)) ([89bea20](https://github.com/equinor/flyt/commit/89bea20ea2c41466089ae557629c403f09a29e0d))
+- display rhombus shape for choice nodes in minimap ([#742](https://github.com/equinor/flyt/issues/742)) ([9625cb9](https://github.com/equinor/flyt/commit/9625cb90390c605bec6f9e6865c69748fba2aef4))
+- display zoom level next to controls ([#747](https://github.com/equinor/flyt/issues/747)) ([03a93e2](https://github.com/equinor/flyt/commit/03a93e234b788103893d3e4725af407af3ccf30a))
+- highlight links in cards and pqir and tooltips ([#746](https://github.com/equinor/flyt/issues/746)) ([eacd032](https://github.com/equinor/flyt/commit/eacd0322718818c0737c6c067b183937be67ba3b))
+- links in pqirs ([#734](https://github.com/equinor/flyt/issues/734)) ([f0e6128](https://github.com/equinor/flyt/commit/f0e61287e46cc33e2ba6e2bc277aa5154d8ab5f2))
+- Minimap ([#735](https://github.com/equinor/flyt/issues/735)) ([7d87f12](https://github.com/equinor/flyt/commit/7d87f125d23b82d9f9b84dfdbc00eb8741457afc))
+
+### Bug Fixes
+
+- removed duplicate zoom level ([#750](https://github.com/equinor/flyt/issues/750)) ([5bbbb5e](https://github.com/equinor/flyt/commit/5bbbb5e4826239ed2eeddaed265f9b82f23c534f))
+- Test environment ([#731](https://github.com/equinor/flyt/issues/731)) ([ba31814](https://github.com/equinor/flyt/commit/ba31814111a67a6e864bc5d3afd7291c2484db90))
+- Upgrade dependencies ([#745](https://github.com/equinor/flyt/issues/745)) ([f67563a](https://github.com/equinor/flyt/commit/f67563a0ba137e780c1f7232ba249033ffa67f5d)), closes [#744](https://github.com/equinor/flyt/issues/744)
 
 ## [2.1.0](https://github.com/equinor/flyt/compare/v2.0.1...v2.1.0) (2024-05-13)
 

@@ -1,5 +1,5 @@
 import BaseAPIServices from "./BaseAPIServices";
-import { TaskCategory } from "../types/TaskCategory";
+import { TaskCategory } from "@/types/TaskCategory";
 
 const baseUrl = "/api/v2.0";
 
@@ -14,7 +14,7 @@ export const getTaskCategories = (
 ): Promise<TaskCategory[]> => {
   return BaseAPIServices.get(`${baseUrl}/graph/${projectId}/categories`).then(
     (value) => {
-      if (value) return value.data;
+      if (value) return value.data as TaskCategory[];
       else throw Error("No data");
     }
   );

@@ -17,7 +17,10 @@ const setSingleNodeDepth = (
     if (mergedNodesLooping.has(nodeId)) {
       const nodeDuplicate = mergedNodesLooping.get(nodeId)![0];
       const loopCount = mergedNodesLooping.get(nodeId)![1];
-      if (nodeDuplicate?.data?.depth <= parentDepth) {
+      if (
+        nodeDuplicate?.data?.depth &&
+        nodeDuplicate.data.depth <= parentDepth
+      ) {
         nodeDuplicate.data.depth = parentDepth + 1;
       }
       mergedNodesLooping.set(nodeId, [nodeDuplicate, loopCount + 1]);
@@ -32,7 +35,7 @@ const setSingleNodeDepth = (
   } else {
     data.depth = parentDepth + 1;
     data?.children?.forEach((child) => {
-      setSingleNodeDepth(child, nodes, data.depth);
+      if (data.depth) setSingleNodeDepth(child, nodes, data.depth);
     });
   }
 };
@@ -47,7 +50,7 @@ export const setNodesDepth = (nodes: Node<NodeDataFull>[]) => {
     mergedNodesReady = [];
     dupeMergedNodesReady.forEach((node) => {
       node.data.children.forEach((child) => {
-        setSingleNodeDepth(child, nodes, node.data.depth);
+        if (node.data.depth) setSingleNodeDepth(child, nodes, node.data.depth);
       });
     });
   }

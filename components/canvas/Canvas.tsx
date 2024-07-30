@@ -17,7 +17,6 @@ import { NodeDataApi } from "types/NodeDataApi";
 import { NodeTypes } from "types/NodeTypes";
 import { Project } from "types/Project";
 import { Graph } from "@/types/Graph";
-import { uid } from "@/utils/uuid";
 import { DeleteNodeDialog } from "../DeleteNodeDialog";
 import { LiveIndicator } from "../LiveIndicator";
 import { SideBar } from "../SideBar";
@@ -34,8 +33,13 @@ import { useNodeMerge } from "./hooks/useNodeMerge";
 import { useWebSocket } from "./hooks/useWebSocket";
 import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
 import { useProjectId } from "@/hooks/useProjectId";
+import { useEdgeDelete } from "./hooks/useEdgeDelete";
+import { ScrimDelete } from "../ScrimDelete";
 import { MiniMapCustom } from "@/components/canvas/MiniMapCustom";
 import { ZoomLevel } from "@/components/canvas/ZoomLevel";
+import { edgeElementTypes } from "@/components/canvas/EdgeElementTypes";
+import { createHiddenNodes } from "@/components/canvas/utils/createHiddenNodes";
+import { createEdges } from "./utils/createEdges";
 
 type CanvasProps = {
   graph: Graph;
@@ -58,16 +62,23 @@ const Canvas = ({
     new Date("2024-04-24T00:08:00.000000Z").getTime();
 
   let tempNodes: Node<NodeDataFull>[] = [];
-  let tempEdges: Edge[] = apiEdges;
+  const tempEdges: Edge[] = apiEdges.map((e) => ({ ...e, label: e.edgeValue }));
+
+  const [isEditingEdgeText, setIsEditingEdgeText] = useState(false);
   const [nodes, setNodes, onNodesChange] = useNodesState<NodeDataFull>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-  const [visibleDeleteScrim, setVisibleDeleteScrim] = useState(false);
+  const [visibleDeleteNodeScrim, setVisibleDeleteNodeScrim] = useState(false);
+  const [edgeToBeDeletedId, setEdgeToBeDeletedId] = useState<
+    string | undefined
+  >(undefined);
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
+  const isEditingEdge = isEditingEdgeText || edgeToBeDeletedId;
 
   const { onNodeDragStart, onNodeDrag, onNodeDragStop } = useNodeDrag();
   const { mutate: mergeNode, merging } = useNodeMerge();
   const { mutate: addNode } = useNodeAdd();
+  const { deleteEdgeMutation } = useEdgeDelete();
 
   const { socketConnected, socketReason } = useWebSocket();
 
@@ -130,6 +141,7 @@ const Canvas = ({
         type: node.type,
         height: shapeSize.height,
         width: shapeSize.width + getQIPRContainerWidth(node.tasks),
+        deletable: false,
       });
     } else {
       tempNodes.push({
@@ -138,11 +150,14 @@ const Canvas = ({
           ...node,
           parents: [],
           columnId: node.id,
+          shapeHeight: shapeSize.height,
+          shapeWidth: shapeSize.width,
         },
         position: { x: 0, y: 0 },
         type: node.type,
         height: shapeSize.height,
         width: shapeSize.width + getQIPRContainerWidth(node.tasks),
+        deletable: false,
       });
     }
 
@@ -152,74 +167,14 @@ const Canvas = ({
     });
   };
 
-  const createHiddenNodes = () => {
-    tempNodes.forEach((node) => {
-      if (node?.data?.parents?.length > 1) {
-        let depthDeepestNode: undefined | number = undefined;
-        node?.data?.parents?.forEach((parentNodeId) => {
-          const parentNode = tempNodes.find((node) => node.id === parentNodeId);
-          if (
-            parentNode?.data?.depth &&
-            (!depthDeepestNode || parentNode?.data?.depth > depthDeepestNode)
-          )
-            depthDeepestNode = parentNode.data.depth;
-        });
-        node?.data?.parents?.forEach((parentNodeId) => {
-          const tempParentNode = tempNodes.find(
-            (node) => node.id === parentNodeId
-          );
-          if (
-            depthDeepestNode &&
-            tempParentNode?.data.depth &&
-            tempParentNode.data.depth < depthDeepestNode
-          ) {
-            tempEdges = tempEdges.filter(
-              (edge) =>
-                edge.source !== tempParentNode.id || edge.target !== node.id
-            );
-            let tempParentNodeId = tempParentNode.id;
-            for (let i = tempParentNode.data.depth; i < depthDeepestNode; i++) {
-              const id = uid();
-              tempNodes.push({
-                id,
-                data: {
-                  parents: [tempParentNodeId],
-                  columnId: tempParentNode.data.columnId,
-                  depth: i,
-                  children: [],
-                  shapeHeight: shapeSize.height,
-                  shapeWidth: shapeSize.width,
-                },
-                position: { x: 0, y: 0 },
-                type: NodeTypes.hidden,
-                height: shapeSize.height,
-                width: shapeSize.width,
-                draggable: false,
-                selectable: false,
-              });
-              tempEdges.push({
-                id: `${tempParentNodeId}=>${id}`,
-                source: tempParentNodeId,
-                target: id,
-              });
-              tempEdges.push({
-                id: `${id}=>${id}`,
-                source: id,
-                target: id,
-                type: "straight",
-              });
-              tempParentNodeId = id;
-            }
-
-            tempEdges.push({
-              id: `${tempParentNodeId}=>${node.id}`,
-              source: tempParentNodeId,
-              target: node.id,
-            });
-          }
-        });
-      }
-    });
+  const handleSetSelectedEdge = (selectedEdge: Edge | undefined) => {
+    if (userCanEdit && !isEditingEdge) {
+      const updatedEdges = edges.map((e) => {
+        e.selected = e.id === selectedEdge?.id;
+        return e;
+      });
+      setEdges(updatedEdges);
+    }
   };
 
   const mergedNodesLooping = new Map<string, [Node<NodeDataFull>, number]>();
@@ -292,10 +247,23 @@ const Canvas = ({
     }
     createNodes(root);
     setNodesDepth();
-    createHiddenNodes();
-    const finalNodes = setLayout(tempNodes, tempEdges);
+    const {
+      tempNodes: tempWithHiddenNodes,
+      tempEdges: tempWithHiddenEdges,
+      longEdges,
+    } = createHiddenNodes(tempNodes, tempEdges, shapeSize);
+    const finalNodes = setLayout(tempWithHiddenNodes, tempWithHiddenEdges);
+    const finalEdges = createEdges(
+      finalNodes,
+      tempWithHiddenEdges,
+      longEdges,
+      shapeSize,
+      userCanEdit,
+      setIsEditingEdgeText,
+      setEdgeToBeDeletedId
+    );
     setNodes(finalNodes);
-    setEdges(tempEdges);
+    setEdges(finalEdges);
   }, [apiNodes, apiEdges, userCanEdit]);
 
   useCenterCanvas();
@@ -326,16 +294,38 @@ const Canvas = ({
       {selectedNode && (
         <DeleteNodeDialog
           objectToDelete={selectedNode}
-          visible={visibleDeleteScrim}
+          visible={visibleDeleteNodeScrim}
           onClose={() => {
-            setVisibleDeleteScrim(false);
+            setVisibleDeleteNodeScrim(false);
             setSelectedNode(undefined);
           }}
         />
       )}
+      {edgeToBeDeletedId && (
+        <ScrimDelete
+          id={edgeToBeDeletedId}
+          open={!!edgeToBeDeletedId}
+          onConfirm={(id) => {
+            deleteEdgeMutation.mutate(
+              { edgeId: id },
+              {
+                onSuccess() {
+                  setEdgeToBeDeletedId(undefined);
+                },
+              }
+            );
+          }}
+          onClose={() => setEdgeToBeDeletedId(undefined)}
+          header={"Delete line"}
+          warningMessage={"Are you sure you want to delete this line?"}
+          confirmMessage={"Delete"}
+          isLoading={deleteEdgeMutation.isLoading}
+          error={deleteEdgeMutation.error}
+        />
+      )}
       <SideBar
         onClose={() => setSelectedNode(undefined)}
-        onDelete={() => setVisibleDeleteScrim(true)}
+        onDelete={() => setVisibleDeleteNodeScrim(true)}
         canEdit={userCanEdit}
         selectedNode={selectedNode}
       />
@@ -343,6 +333,7 @@ const Canvas = ({
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeElementTypes}
+        edgeTypes={edgeElementTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onPaneClick={() => setSelectedNode(undefined)}
@@ -353,6 +344,10 @@ const Canvas = ({
         onNodeDragStart={onNodeDragStart}
         onNodeDrag={onNodeDrag}
         onNodeDragStop={onNodeDragStop}
+        elevateEdgesOnSelect={true}
+        edgesFocusable={userCanEdit}
+        onEdgeMouseEnter={(event, edge) => handleSetSelectedEdge(edge)}
+        onEdgeMouseLeave={() => handleSetSelectedEdge(undefined)}
         attributionPosition="bottom-right"
         connectionRadius={100}
       >
