@@ -23,7 +23,6 @@ import { unknownErrorToString } from "utils/isError";
 import { useStoreDispatch } from "hooks/storeHooks";
 import { userAccess } from "types/UserAccess";
 import { UserAccessSearch } from "types/UserAccessSearch";
-import { userAccessRole } from "types/UserAccessRole";
 import { Project } from "@/types/Project";
 import colors from "@/theme/colors";
 import { debounce } from "@/utils/debounce";

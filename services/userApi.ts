@@ -1,6 +1,6 @@
 import { AxiosPromise } from "axios";
 import BaseAPIServices from "./BaseAPIServices";
-import { UserAccessSearch } from "../types/UserAccessSearch";
+import { UserAccessSearch } from "@/types/UserAccessSearch";
 
 const baseUrl = "/api/v2.0";
 
@@ -44,7 +44,7 @@ export const remove = (props: {
   );
 
 /**
- * Retrieve registered users or search for a short or full name.
+ * Retrieve Equinor registered users by searching for a short or full name.
  * @param userName - The short or full name of the user to search for.
  * @returns - Array of users.
  */
@@ -53,13 +53,23 @@ export const searchUser = (userName: string): Promise<UserAccessSearch[]> =>
     (res) => res.data
   );
 
+/**
+ * Retrieve Flyt registered users by searching for a shortname.
+ * @param shortName - The shortname of the user to search for.
+ * @returns - Array of users.
+ */
 export const getUserByShortname = (
   shortName: string
 ): Promise<{ pkUser: number; userName: string }[]> =>
   BaseAPIServices.get(`${baseUrl}/userAccess/userSearch?q=${shortName}`).then(
-    (res) => res.data
+    (res) => res.data as User[]
   );
 
+/**
+ * Retrieve Flyt registered user by searching for an ID.
+ * @param userId - The ID of the user to search for.
+ * @returns - User.
+ */
 export const getUserById = (
   userId: number | string
 ): Promise<{
@@ -67,5 +77,5 @@ export const getUserById = (
   userName: string;
 }> =>
   BaseAPIServices.get(`${baseUrl}/userAccess/userById/${userId}`).then(
-    (res) => res.data
+    (res) => res.data as User
   );
