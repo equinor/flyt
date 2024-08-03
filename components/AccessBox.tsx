@@ -148,7 +148,7 @@ function UserItem({
           variant={"contained_icon"}
           onClick={onAdd}
           disabled={disabled}
-          style={{ width: 24, height: 24, flexShrink: 0, marginLeft: 12 }}
+          className={style.addButton}
         >
           <Icon data={add} size={16} />
         </Button>
