@@ -2,19 +2,17 @@ import * as userApi from "../services/userApi";
 
 import {
   Button,
-  Chip,
   Icon,
   LinearProgress,
   Search,
   Typography,
 } from "@equinor/eds-core-react";
 import { ChangeEvent, useState } from "react";
-import { close, link, add } from "@equinor/eds-icons";
+import { close, link } from "@equinor/eds-icons";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import BaseAPIServices from "../services/BaseAPIServices";
-import { UserDot } from "./UserDot";
 import { accessRoles } from "@/types/AccessRoles";
 import { getOwner } from "utils/getOwner";
 import { notifyOthers } from "@/services/notifyOthers";
@@ -24,11 +22,10 @@ import { useStoreDispatch } from "hooks/storeHooks";
 import { userAccess } from "types/UserAccess";
 import { UserAccessSearch } from "types/UserAccessSearch";
 import { Project } from "@/types/Project";
-import colors from "@/theme/colors";
 import { debounce } from "@/utils/debounce";
 import { searchUser } from "../services/userApi";
 import { useProjectId } from "@/hooks/useProjectId";
-import { RoleSelect } from "./RoleSelect";
+import { UserItem } from "./UserItem";
 
 export function AccessBox(props: {
   project: Project;
@@ -71,68 +68,6 @@ export function TopSection(props: { title: string; handleClose: () => void }) {
       <Button variant={"ghost_icon"} onClick={props.handleClose}>
         <Icon data={close} />
       </Button>
-    </div>
-  );
-}
-
-type userItem = {
-  shortName: string;
-  fullName: string | null;
-  role?: string;
-  onRoleChange?: (role: string) => void;
-  onRemove?: () => void;
-  onAdd?: () => void;
-  disabled: boolean;
-};
-
-function UserItem({
-  shortName,
-  fullName,
-  role,
-  onRoleChange,
-  onRemove,
-  onAdd,
-  disabled,
-}: userItem) {
-  function handleChange(role: string) {
-    if (role === "Remove" && onRemove) {
-      onRemove();
-    } else {
-      onRoleChange && onRoleChange(role);
-    }
-  }
-
-  return (
-    <div className={style.userItem}>
-      <div className={style.userDotAndName}>
-        <UserDot name={shortName} />
-        <Chip>{shortName}</Chip>
-        <Typography color={colors.EQUINOR_PROMINENT}>
-          {fullName || ""}
-        </Typography>
-      </div>
-
-      {role ? (
-        role === "Owner" ? (
-          "Owner"
-        ) : (
-          <RoleSelect
-            onChange={(role) => handleChange(role)}
-            defaultValue={role}
-            disabled={disabled}
-          />
-        )
-      ) : (
-        <Button
-          type={"submit"}
-          variant={"contained_icon"}
-          onClick={onAdd}
-          disabled={disabled}
-          className={style.addButton}
-        >
-          <Icon data={add} size={16} />
-        </Button>
-      )}
     </div>
   );
 }

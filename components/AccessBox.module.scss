@@ -45,24 +45,8 @@
   padding-right: 1vw; /* add padding-right to make room for scrollbar */ /* subtract 1vw for the width of the scrollbar */
 }
 
-.userItem {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  animation-name: fade-in;
-  animation-duration: 0.5s;
-  padding: 10px;
-}
-
 .userListSection :hover {
   background-color: $equinor_HOVER-ALT;
-}
-
-.userDotAndName {
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 .userDotAndName > p {
@@ -107,11 +91,4 @@
 .separator {
   border-bottom: #dcdcdc solid 1px;
   margin: 10px 0;
-}
-
-.addButton {
-  width: 24;
-  height: 24;
-  flex-shrink: 0;
-  margin-left: 12;
 }
