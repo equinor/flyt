@@ -28,6 +28,7 @@ import colors from "@/theme/colors";
 import { debounce } from "@/utils/debounce";
 import { searchUser } from "../services/userApi";
 import { useProjectId } from "@/hooks/useProjectId";
+import { RoleSelect } from "./RoleSelect";
 
 export function AccessBox(props: {
   project: Project;
@@ -60,27 +61,6 @@ export function AccessBox(props: {
       />
       <BottomSection vsmProjectID={props.project.vsmProjectID} />
     </div>
-  );
-}
-
-function RoleSelect(props: {
-  onChange: (arg0: string) => void;
-  defaultValue: string;
-  disabled: boolean;
-}) {
-  return (
-    <select
-      defaultValue={props.defaultValue}
-      className={style.roleSelect}
-      id="AccessRoles"
-      name="AccessRole"
-      onChange={(event) => props.onChange(event.target.value)}
-      disabled={props.disabled}
-    >
-      <option value="Admin">Admin</option>
-      <option value="Contributor">Contributor</option>
-      <option value="Remove">Remove</option>
-    </select>
   );
 }
 
