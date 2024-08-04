@@ -1,13 +1,7 @@
 import * as userApi from "../services/userApi";
 
-import {
-  Button,
-  Icon,
-  LinearProgress,
-  Search,
-  Typography,
-} from "@equinor/eds-core-react";
-import { ChangeEvent, useState } from "react";
+import { Button, Icon, Typography } from "@equinor/eds-core-react";
+import { useState } from "react";
 import { close, link } from "@equinor/eds-icons";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -22,10 +16,8 @@ import { useStoreDispatch } from "hooks/storeHooks";
 import { userAccess } from "types/UserAccess";
 import { UserAccessSearch } from "types/UserAccessSearch";
 import { Project } from "@/types/Project";
-import { debounce } from "@/utils/debounce";
-import { searchUser } from "../services/userApi";
 import { useProjectId } from "@/hooks/useProjectId";
-import { UserItem } from "./UserItem";
+import { UserSearch } from "./UserSearch";
 
 export function AccessBox(props: {
   project: Project;
@@ -139,7 +131,7 @@ function MiddleSection(props: {
     return <p>Loading...</p>;
   }
   return (
-    <UserListAndSearch
+    <UserSearch
       onRoleChange={(user, role) => changeUserMutation.mutate({ user, role })}
       onRemove={(user) =>
         removeUserMutation.mutate({
@@ -153,94 +145,6 @@ function MiddleSection(props: {
     />
   );
 }
-
-type UserListAndSearch = {
-  isAdmin: boolean;
-  users: userAccess[];
-  onRoleChange: (arg1: userAccess, arg2: string) => void;
-  onRemove: (arg: userAccess) => void;
-  onAdd: (arg1: UserAccessSearch) => void;
-};
-
-export const UserListAndSearch = ({
-  isAdmin,
-  users,
-  onRoleChange,
-  onRemove,
-  onAdd,
-}: UserListAndSearch) => {
-  const [searchText, setSearchText] = useState("");
-  const { data: usersSearched, isLoading: loadingUsers } = useQuery(
-    ["users", searchText],
-    () => searchUser(searchText),
-    {
-      enabled: searchText.trim() !== "",
-    }
-  );
-
-  return (
-    <div className={style.middleSection}>
-      {isAdmin ? (
-        <Search
-          className={style.searchBar}
-          disabled={!isAdmin}
-          autoFocus
-          type={"text"}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => {
-            debounce(
-              () => setSearchText(`${e.target.value}`),
-              500,
-              "userSearch"
-            );
-          }}
-        />
-      ) : (
-        <div className={style.infoCannotEdit}>
-          <Typography variant="body_short">
-            You need to be owner or admin to manage sharing
-          </Typography>
-        </div>
-      )}
-      <div className={style.userListSection}>
-        {users?.map((user) => (
-          <UserItem
-            key={user.accessId}
-            shortName={user.user}
-            fullName={user.fullName}
-            role={user.role}
-            onRoleChange={(role) => onRoleChange(user, role)}
-            onRemove={() => onRemove(user)}
-            disabled={!isAdmin}
-          />
-        ))}
-        {usersSearched && usersSearched?.length > 0 && (
-          <div className={style.separator} />
-        )}
-        {loadingUsers ? (
-          <LinearProgress />
-        ) : (
-          usersSearched
-            ?.filter(
-              (userSearched) =>
-                !users.find(
-                  (userWithRole) =>
-                    userWithRole.user.toLowerCase() === userSearched.shortName
-                )
-            )
-            .map((user) => (
-              <UserItem
-                key={user.shortName}
-                shortName={user.shortName.toUpperCase()}
-                fullName={user.displayName}
-                disabled={!isAdmin}
-                onAdd={() => onAdd(user)}
-              />
-            ))
-        )}
-      </div>
-    </div>
-  );
-};
 
 function BottomSection(props: { vsmProjectID: number }) {
   const [copySuccess, setCopySuccess] = useState("");

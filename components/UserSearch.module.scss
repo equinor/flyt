@@ -1,0 +1,58 @@
+@import "styles/_variables.scss";
+
+.container {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.userList {
+  animation-name: fade-in;
+  animation-duration: 0.5s;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding-right: 1vw; /* add padding-right to make room for scrollbar */ /* subtract 1vw for the width of the scrollbar */
+}
+
+.userList :hover {
+  background-color: $equinor_HOVER-ALT;
+}
+
+.userDotAndName > p {
+  word-break: break-all;
+}
+
+.userRole {
+  max-width: 140px !important;
+}
+
+.roleSelect:disabled {
+  filter: saturate(0);
+  //opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.roleSelect:hover:enabled {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.infoCannotEdit {
+  border-radius: 4px;
+  border: $equinor_DISABLED solid 1px;
+  padding: 18px;
+  display: flex;
+  justify-content: center;
+}
+
+.searchBar {
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.separator {
+  border-bottom: #dcdcdc solid 1px;
+  margin: 10px 0;
+}
