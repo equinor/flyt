@@ -25,9 +25,11 @@ export default function MarkdownEditor(props: {
   defaultText: string;
   label: string;
   onChange?: (value?: string) => void;
+  helperText?: string;
   requireText?: boolean;
 }) {
-  const { canEdit, defaultText, label, onChange, requireText } = props;
+  const { canEdit, defaultText, label, onChange, helperText, requireText } =
+    props;
   const [editMode, setEditMode] = useState(false);
   const [isOpenUrlPrompt, setIsOpenUrlPrompt] = useState(false);
   const [selectionInfo, setSelectionInfo] = useState<SelectionInfo>({
@@ -194,6 +196,11 @@ export default function MarkdownEditor(props: {
           </Button>
         )}
       </div>
+      {helperText && (
+        <Typography style={{ marginTop: 12 }} variant="caption">
+          {helperText}
+        </Typography>
+      )}
     </div>
   );
 }
