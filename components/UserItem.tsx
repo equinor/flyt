@@ -32,27 +32,9 @@ export const UserItem = ({
     }
   }
 
-  return (
-    <div className={styles.userItem}>
-      <div className={styles.userDotAndName}>
-        <UserDot name={shortName} />
-        <Chip>{shortName}</Chip>
-        <Typography color={colors.EQUINOR_PROMINENT}>
-          {fullName || ""}
-        </Typography>
-      </div>
-
-      {role ? (
-        role === "Owner" ? (
-          "Owner"
-        ) : (
-          <RoleSelect
-            onChange={(role) => handleChange(role)}
-            defaultValue={role}
-            disabled={disabled}
-          />
-        )
-      ) : (
+  const renderRole = () => {
+    if (!role) {
+      return (
         <Button
           type={"submit"}
           variant={"contained_icon"}
@@ -62,7 +44,30 @@ export const UserItem = ({
         >
           <Icon data={add} size={16} />
         </Button>
-      )}
+      );
+    } else if (role === "Owner") {
+      return "Owner";
+    } else {
+      return (
+        <RoleSelect
+          onChange={(selectedRole) => handleChange(selectedRole)}
+          defaultValue={role}
+          disabled={disabled}
+        />
+      );
+    }
+  };
+
+  return (
+    <div className={styles.userItem}>
+      <div className={styles.userDotAndName}>
+        <UserDot name={shortName} />
+        <Chip>{shortName}</Chip>
+        <Typography color={colors.EQUINOR_PROMINENT}>
+          {fullName || ""}
+        </Typography>
+      </div>
+      {renderRole()}
     </div>
   );
 };

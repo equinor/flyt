@@ -32,65 +32,69 @@ export const UserSearch = ({
     }
   );
 
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    debounce(() => setSearchText(e.target.value), 500, "userSearch");
+  };
+
+  const SearchBar = () => (
+    <Search
+      className={styles.searchBar}
+      disabled={!isAdmin}
+      autoFocus
+      type={"text"}
+      onChange={handleSearchChange}
+    />
+  );
+
+  const InfoNoEditAccess = () => (
+    <div className={styles.infoCannotEdit}>
+      <Typography variant="body_short">
+        You need to be owner or admin to manage sharing
+      </Typography>
+    </div>
+  );
+
+  const UserItems = () =>
+    users?.map((user) => (
+      <UserItem
+        key={user.accessId}
+        shortName={user.user}
+        fullName={user.fullName}
+        role={user.role}
+        onRoleChange={(role) => onRoleChange(user, role)}
+        onRemove={() => onRemove(user)}
+        disabled={!isAdmin}
+      />
+    ));
+
+  const SearchedUserItems = () =>
+    usersSearched
+      ?.filter(
+        (userSearched) =>
+          !users.some(
+            (userWithRole) =>
+              userWithRole.user.toLowerCase() === userSearched.shortName
+          )
+      )
+      .map((user) => (
+        <UserItem
+          key={user.shortName}
+          shortName={user.shortName.toUpperCase()}
+          fullName={user.displayName}
+          disabled={!isAdmin}
+          onAdd={() => onAdd(user)}
+        />
+      ));
+
   return (
     <div className={styles.container}>
-      {isAdmin ? (
-        <Search
-          className={styles.searchBar}
-          disabled={!isAdmin}
-          autoFocus
-          type={"text"}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => {
-            debounce(
-              () => setSearchText(`${e.target.value}`),
-              500,
-              "userSearch"
-            );
-          }}
-        />
-      ) : (
-        <div className={styles.infoCannotEdit}>
-          <Typography variant="body_short">
-            You need to be owner or admin to manage sharing
-          </Typography>
-        </div>
-      )}
+      {isAdmin ? <SearchBar /> : <InfoNoEditAccess />}
       <div className={styles.userList}>
-        {users?.map((user) => (
-          <UserItem
-            key={user.accessId}
-            shortName={user.user}
-            fullName={user.fullName}
-            role={user.role}
-            onRoleChange={(role) => onRoleChange(user, role)}
-            onRemove={() => onRemove(user)}
-            disabled={!isAdmin}
-          />
-        ))}
-        {usersSearched && usersSearched?.length > 0 && (
+        {<UserItems />}
+        {usersSearched && usersSearched.length > 0 && (
           <div className={styles.separator} />
         )}
-        {loadingUsers ? (
-          <LinearProgress />
-        ) : (
-          usersSearched
-            ?.filter(
-              (userSearched) =>
-                !users.find(
-                  (userWithRole) =>
-                    userWithRole.user.toLowerCase() === userSearched.shortName
-                )
-            )
-            .map((user) => (
-              <UserItem
-                key={user.shortName}
-                shortName={user.shortName.toUpperCase()}
-                fullName={user.displayName}
-                disabled={!isAdmin}
-                onAdd={() => onAdd(user)}
-              />
-            ))
-        )}
+        {loadingUsers ? <LinearProgress /> : <SearchedUserItems />}
       </div>
     </div>
   );
