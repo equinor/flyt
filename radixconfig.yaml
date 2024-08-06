@@ -3,6 +3,8 @@ kind: RadixApplication
 metadata:
   name: flyt
 spec:
+  build:
+    useBuildKit: true
   environments:
     - name: dev
       build:
