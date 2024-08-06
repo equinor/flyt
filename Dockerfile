@@ -1,5 +1,5 @@
 # Install dependencies only when needed
-FROM node:20.15.1-alpine3.19 AS deps
+FROM docker.io/node:20.15.1-alpine3.19 AS deps
 WORKDIR /opt/app
 COPY package.json yarn.lock ./
 COPY scripts scripts
@@ -7,7 +7,7 @@ COPY patches ./patches
 ENV NODE_ENV=production
 RUN yarn install --frozen-lockfile
 
-FROM node:20.15.1-alpine3.19 AS builder
+FROM docker.io/node:20.15.1-alpine3.19 AS builder
 ENV NODE_ENV=production
 WORKDIR /opt/app
 COPY . .
@@ -17,7 +17,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN yarn build
 
 # Production image, copy all the files and run next
-FROM node:20.15.1-alpine3.19 AS runner
+FROM docker.io/node:20.15.1-alpine3.19 AS runner
 RUN addgroup -S -g 1001 radix-non-root-group
 RUN adduser -S -u 1001 -G radix-non-root-group radix-non-root-user
 USER 1001
