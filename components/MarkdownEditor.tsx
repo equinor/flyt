@@ -26,8 +26,10 @@ export default function MarkdownEditor(props: {
   label: string;
   onChange?: (value?: string) => void;
   helperText?: string;
+  requireText?: boolean;
 }) {
-  const { canEdit, defaultText, label, onChange, helperText } = props;
+  const { canEdit, defaultText, label, onChange, helperText, requireText } =
+    props;
   const [editMode, setEditMode] = useState(false);
   const [isOpenUrlPrompt, setIsOpenUrlPrompt] = useState(false);
   const [selectionInfo, setSelectionInfo] = useState<SelectionInfo>({
@@ -37,6 +39,7 @@ export default function MarkdownEditor(props: {
   });
   // The "text"-state is used for displaying the changing text instantly
   const [text, setText] = useState<string | undefined>(defaultText);
+  const missingText = requireText && text?.length === 0;
 
   useEffect(() => {
     setText(defaultText);
@@ -76,9 +79,7 @@ export default function MarkdownEditor(props: {
   // Sets local state to display text instantly and updates the API
   const setAndPatchText = (text?: string) => {
     // Patching the text via the API is debounced in the onChange
-    if (onChange) {
-      onChange(text);
-    }
+    onChange && onChange(text);
     setText(text);
   };
 
@@ -162,13 +163,20 @@ export default function MarkdownEditor(props: {
             }}
             style={{
               border: editMode
-                ? `2px solid ${colors.EQUINOR_PROMINENT}`
+                ? `2px solid ${
+                    missingText ? colors.DANGER : colors.EQUINOR_PROMINENT
+                  }`
                 : `1px solid ${colors.EQUINOR_DISABLED}`,
               borderRadius: 0,
               boxShadow: canEdit && !editMode ? "0 1px 0 0 gray" : "none",
             }}
             autoFocus
           />
+          {missingText && (
+            <Typography color="danger" variant="caption">
+              Description is required
+            </Typography>
+          )}
         </div>
         {editMode && (
           <Button
@@ -177,8 +185,14 @@ export default function MarkdownEditor(props: {
               minWidth: 48,
             }}
             variant="ghost_icon"
+            disabled={missingText}
           >
-            <Icon data={check} color={colors.EQUINOR_PROMINENT} />
+            <Icon
+              data={check}
+              color={
+                missingText ? colors.EQUINOR_DISABLED : colors.EQUINOR_PROMINENT
+              }
+            />
           </Button>
         )}
       </div>
