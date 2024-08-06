@@ -36,16 +36,6 @@ export const UserSearch = ({
     debounce(() => setSearchText(e.target.value), 500, "userSearch");
   };
 
-  const SearchBar = () => (
-    <Search
-      className={styles.searchBar}
-      disabled={!isAdmin}
-      autoFocus
-      type={"text"}
-      onChange={handleSearchChange}
-    />
-  );
-
   const InfoNoEditAccess = () => (
     <div className={styles.infoCannotEdit}>
       <Typography variant="body_short">
@@ -88,7 +78,17 @@ export const UserSearch = ({
 
   return (
     <div className={styles.container}>
-      {isAdmin ? <SearchBar /> : <InfoNoEditAccess />}
+      {isAdmin ? (
+        <Search
+          className={styles.searchBar}
+          disabled={!isAdmin}
+          autoFocus
+          type={"text"}
+          onChange={handleSearchChange}
+        />
+      ) : (
+        <InfoNoEditAccess />
+      )}
       <div className={styles.userList}>
         {<UserItems />}
         {usersSearched && usersSearched.length > 0 && (
