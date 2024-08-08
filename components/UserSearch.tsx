@@ -25,7 +25,7 @@ export const UserSearch = ({
 }: UserSearch) => {
   const [searchText, setSearchText] = useState("");
   const { data: usersSearched, isLoading: loadingUsers } = useQuery(
-    ["users", searchText],
+    ["usersSearched", searchText],
     () => searchUser(searchText),
     {
       enabled: searchText.trim() !== "",
@@ -33,7 +33,7 @@ export const UserSearch = ({
   );
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    debounce(() => setSearchText(e.target.value), 500, "userSearch");
+    debounce(() => setSearchText(e.target.value), 1000, "userSearch");
   };
 
   const InfoNoEditAccess = () => (

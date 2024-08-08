@@ -58,12 +58,20 @@ export const searchUser = (userName: string): Promise<UserAccessSearch[]> =>
  * @param shortName - The shortname of the user to search for.
  * @returns - Array of users.
  */
-export const getUserByShortname = (
-  shortName: string
-): Promise<{ pkUser: number; userName: string }[]> =>
+export const getUserByShortname = (shortName: string): Promise<User[]> =>
   BaseAPIServices.get(`${baseUrl}/userAccess/userSearch?q=${shortName}`).then(
     (res) => res.data as User[]
   );
+
+/**
+ * Retrieve Flyt registered users by searching for a full name.
+ * @param fullName - The full name of the users to search for.
+ * @returns - Array of users.
+ */
+export const getUsersByFullName = (fullName: string): Promise<User[]> =>
+  BaseAPIServices.get(
+    `${baseUrl}/userAccess/userSearchFullName?q=${fullName}`
+  ).then((res) => res.data as User[]);
 
 /**
  * Retrieve Flyt registered user by searching for an ID.

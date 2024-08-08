@@ -2,7 +2,7 @@ import { Button, Chip, Icon, Search } from "@equinor/eds-core-react";
 
 import { close } from "@equinor/eds-icons";
 import { debounce } from "utils/debounce";
-import { getUserByShortname } from "services/userApi";
+import { getUsersByFullName } from "services/userApi";
 import styles from "./FilterUserBox.module.scss";
 import { toggleQueryParam } from "utils/toggleQueryParam";
 import { unknownErrorToString } from "utils/isError";
@@ -16,14 +16,18 @@ export function FilterUserBox(props: { handleClose: () => void }) {
     data: users,
     isLoading,
     error,
-  } = useQuery(["users", searchText], () => getUserByShortname(searchText));
+  } = useQuery(["users", searchText], () => getUsersByFullName(searchText));
 
   return (
     <div className={styles.box}>
       <TopSection handleClose={props.handleClose} />
       <SearchSection setSearchText={setSearchText} />
       {users && (
-        <LabelSection labels={users} isLoading={isLoading} error={error} />
+        <LabelSection
+          labels={users.filter((user) => user.fullName)}
+          isLoading={isLoading}
+          error={error}
+        />
       )}
     </div>
   );
@@ -73,7 +77,7 @@ function SearchSection(props: { setSearchText: (searchText: string) => void }) {
 }
 
 function LabelSection(props: {
-  labels: { pkUser: number; userName: string }[];
+  labels: User[];
   isLoading: boolean;
   error: unknown;
 }) {
@@ -110,7 +114,7 @@ function LabelSection(props: {
               toggleQueryParam("user", label.pkUser.toString(), router)
             }
           >
-            {label.userName}
+            {label.fullName}
           </Chip>
         ))}
       </div>
