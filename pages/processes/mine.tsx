@@ -13,7 +13,7 @@ import { SortSelect } from "@/components/SortSelect";
 import { Typography } from "@equinor/eds-core-react";
 import { getProjects } from "@/services/projectApi";
 import { getUserShortName } from "@/utils/getUserShortName";
-import { searchUser } from "services/userApi";
+import { getUserByShortname } from "services/userApi";
 import { stringToArray } from "utils/stringToArray";
 import styles from "./FrontPage.module.scss";
 import { useQuery } from "react-query";
@@ -30,7 +30,9 @@ export default function MyProcesses() {
   const account = useAccount(accounts[0] || {});
   const shortName = account ? getUserShortName(account) : "";
 
-  const { data: users } = useQuery(["userName"], () => searchUser(shortName));
+  const { data: users } = useQuery(["userName"], () =>
+    getUserByShortname(shortName)
+  );
 
   const myUserId = users?.find((user) => user.userName === shortName)?.pkUser;
   const requiredUsers = stringToArray(router.query.user);
