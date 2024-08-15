@@ -1,52 +1,77 @@
 import { NodeTypes } from "@/types/NodeTypes";
 import { Node } from "reactflow";
-import { timeDefinitions } from "@/utils/unitDefinitions";
+import { timeDefinitions, getDurationInSeconds } from "@/utils/unitDefinitions";
+import { NodeData } from "@/types/NodeData";
 
-const getMainActivityDurationSum = (subtreeNodes: Node[]) => {
-  const time = timeDefinitions.map((timeUnit) => ({ ...timeUnit }));
+let possibleTotalDurations: (typeof timeDefinitions)[] = [];
 
-  subtreeNodes.forEach((node) => {
-    if (node.data.duration && node.data.unit) {
-      const unitIndex = time.findIndex(
-        (timeUnit) => timeUnit.value === node.data.unit
-      );
-      time[unitIndex].duration += node.data.duration;
-    }
-  });
-
-  return time;
-};
-
-const roundDurations = (sumDurations: typeof timeDefinitions) => {
-  const minutes = sumDurations.find((d) => d.value === "Minute")?.duration;
-  if (minutes) {
-    const hoursToAdd = Math.floor(minutes / 60);
-    sumDurations = sumDurations.map((dur) => {
-      switch (dur.value) {
-        case "Minute":
-          dur.duration -= hoursToAdd * 60;
-          break;
-        case "Hour":
-          dur.duration += hoursToAdd;
-          break;
-        default:
-          break;
+const addToCurrentDuration = (
+  currentDuration: typeof timeDefinitions,
+  node: Node<NodeData>
+) => {
+  if (node.data.unit && node.data.duration) {
+    return currentDuration.map((td) => {
+      if (td.value === node.data.unit && node.data.duration) {
+        return { ...td, duration: td.duration + node.data.duration };
+      } else {
+        return td;
       }
-      return dur;
     });
+  } else {
+    return currentDuration;
   }
-  return sumDurations;
 };
 
-export const setMainActivitiesDurationSum = (nodes: Node[]) => {
+const setPossibleTotalDurations = (
+  node: Node<NodeData>,
+  subtreeNodes: Node<NodeData>[],
+  currentDuration: typeof timeDefinitions = timeDefinitions
+) => {
+  currentDuration = addToCurrentDuration(currentDuration, node);
+
+  if (node.data.children.length === 0) {
+    possibleTotalDurations.push(currentDuration);
+  }
+
+  node.data.children.forEach((childId) => {
+    const childNode = subtreeNodes.find((node) => node.id === childId);
+    childNode &&
+      setPossibleTotalDurations(childNode, subtreeNodes, currentDuration);
+  });
+};
+
+const getMinMaxTotalDurations = () => {
+  const possibleTotalDurationsInSeconds = possibleTotalDurations.map(
+    (tdDuration) =>
+      tdDuration.reduce((acc, item) => {
+        return acc + getDurationInSeconds(item.value, item.duration);
+      }, 0)
+  );
+
+  const minDurationInSeconds = Math.min(...possibleTotalDurationsInSeconds);
+  const minDurationIndex =
+    possibleTotalDurationsInSeconds.indexOf(minDurationInSeconds);
+
+  const maxDurationInSeconds = Math.max(...possibleTotalDurationsInSeconds);
+  const maxDurationIndex =
+    possibleTotalDurationsInSeconds.indexOf(maxDurationInSeconds);
+
+  return {
+    minTotalDuration: possibleTotalDurations[minDurationIndex],
+    maxTotalDuration: possibleTotalDurations[maxDurationIndex],
+  };
+};
+
+export const setMainActivitiesDurationSum = (nodes: Node<NodeData>[]) => {
+  possibleTotalDurations = [];
   return nodes.map((node) => {
     if (node.type === NodeTypes.mainActivity) {
       const subtreeNodes = nodes.filter(
         (n) => n.data.columnId === node.data.columnId
       );
-      const sumDuration = getMainActivityDurationSum(subtreeNodes);
-      const roundedDuration = roundDurations(sumDuration);
-      node.data.sumDuration = roundedDuration;
+      setPossibleTotalDurations(node, subtreeNodes);
+      const minMaxTotalDurations = getMinMaxTotalDurations();
+      node.data.totalDurations = minMaxTotalDurations;
     }
     return node;
   });

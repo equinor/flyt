@@ -23,7 +23,10 @@ export type NodeData = {
   isChoiceChild?: boolean;
   shapeHeight: number;
   shapeWidth: number;
-  sumDuration?: typeof timeDefinitions;
+  totalDurations?: {
+    minTotalDuration: typeof timeDefinitions;
+    maxTotalDuration: typeof timeDefinitions;
+  };
 } & NodeDataApi;
 
 export type NodeDataHidden = Pick<

@@ -4,7 +4,7 @@ import { TextField } from "@equinor/eds-core-react";
 import dynamic from "next/dynamic";
 import { NodeData } from "../types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
-import { formatDurationSum } from "@/utils/unitDefinitions";
+import { formatMinMaxTotalDuration } from "@/utils/unitDefinitions";
 
 const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
   ssr: false,
@@ -112,7 +112,7 @@ export function SideBarBody(props: {
             label={"Duration"}
             type={"string"}
             id={"vsmObjectTime"}
-            value={formatDurationSum(selectedNode?.sumDuration)}
+            value={formatMinMaxTotalDuration(selectedNode?.totalDurations)}
             helperText={"Duration is automatically calculated"}
           />
           <QIPSection

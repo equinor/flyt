@@ -1,3 +1,5 @@
+import { NodeData } from "@/types/NodeData";
+
 export const timeDefinitions = [
   { value: "Minute", displayName: "Minute(s)", duration: 0 },
   { value: "Hour", displayName: "Hour(s)", duration: 0 },
@@ -6,6 +8,25 @@ export const timeDefinitions = [
   { value: "Month", displayName: "Month(s)", duration: 0 },
   { value: "Year", displayName: "Year(s)", duration: 0 },
 ];
+
+export const getDurationInSeconds = (value: string, duration: number) => {
+  switch (value) {
+    case "Minute":
+      return duration * 60;
+    case "Hour":
+      return duration * 3600;
+    case "Day":
+      return duration * 86400;
+    case "Week":
+      return duration * 604800;
+    case "Month":
+      return duration * 2592000;
+    case "Year":
+      return duration * 31556952;
+    default:
+      return duration;
+  }
+};
 
 export const getTimeDefinitionValues = (): Array<string> =>
   timeDefinitions.map((item) => item.displayName);
@@ -47,7 +68,7 @@ export const formatDuration = (
   return `${duration} ${cUnit}s`;
 };
 
-export const formatDurationSum = (
+export const formatTotalDuration = (
   timeDurations?: typeof timeDefinitions
 ): string => {
   if (!timeDurations) return "";
@@ -64,3 +85,10 @@ export const formatDurationSum = (
 
   return sumDuration.trim();
 };
+
+export const formatMinMaxTotalDuration = (
+  totalDurations: NodeData["totalDurations"]
+) =>
+  `${formatTotalDuration(
+    totalDurations?.minTotalDuration
+  )} - ${formatTotalDuration(totalDurations?.maxTotalDuration)}`;

@@ -18,7 +18,7 @@ import { QIPRContainer } from "./QIPRContainer";
 import { NodeTooltipSection } from "./NodeTooltipSection";
 import { NodeTooltip } from "./NodeTooltip";
 import { NodeDuration } from "./NodeDuration";
-import { formatDurationSum } from "@/utils/unitDefinitions";
+import { formatMinMaxTotalDuration } from "@/utils/unitDefinitions";
 
 export const MainActivityNode = ({
   data: {
@@ -34,14 +34,14 @@ export const MainActivityNode = ({
     merging,
     shapeHeight,
     shapeWidth,
-    sumDuration,
+    totalDurations,
   },
   dragging,
 }: NodeProps<NodeData>) => {
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
 
-  const formattedDurationSum = formatDurationSum(sumDuration);
+  const formattedDurationSum = formatMinMaxTotalDuration(totalDurations);
 
   useEffect(() => {
     setHovering(false);

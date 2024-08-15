@@ -62,7 +62,7 @@ const Canvas = ({
     new Date(project.created).getTime() <
     new Date("2024-04-24T00:08:00.000000Z").getTime();
 
-  let tempNodes: Node<NodeDataFull>[] = [];
+  let tempNodes: Node<NodeData>[] = [];
   const tempEdges: Edge[] = apiEdges.map((e) => ({ ...e, label: e.edgeValue }));
 
   const [isEditingEdgeText, setIsEditingEdgeText] = useState(false);
