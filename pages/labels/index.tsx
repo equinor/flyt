@@ -28,7 +28,7 @@ export default function Labels() {
       <p>Note: You need to be an super-user to administer labels.</p>
       <p>
         You can add new labels at the{" "}
-        <Link href="/labels/bulkAdd">"bulk add"-page</Link>
+        <Link href="/labels/bulkAdd">{'"bulk add"-page'}</Link>
       </p>
       <p>Todo: rename and merge labels</p>
       <table>
