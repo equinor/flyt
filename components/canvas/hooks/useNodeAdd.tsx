@@ -11,6 +11,7 @@ import { notifyOthers } from "@/services/notifyOthers";
 import { unknownErrorToString } from "@/utils/isError";
 import { useProjectId } from "@/hooks/useProjectId";
 import { useUserAccount } from "./useUserAccount";
+import { useState } from "react";
 
 export type NodeAddParams = {
   parentId: string;
@@ -24,8 +25,14 @@ export const useNodeAdd = () => {
   const queryClient = useQueryClient();
   const account = useUserAccount();
 
-  return useMutation(
+  const [nodeAddingChild, setNodeAddingChild] = useState<{
+    id: string;
+    position: Position;
+  } | null>(null);
+
+  const mutation = useMutation(
     ({ parentId, type, position }: NodeAddParams) => {
+      setNodeAddingChild({ id: parentId, position: position });
       dispatch.setSnackMessage("⏳ Adding new card...");
       switch (position) {
         case Position.Left:
@@ -44,6 +51,18 @@ export const useNodeAdd = () => {
       },
       onError: (e: Error | null) =>
         dispatch.setSnackMessage(unknownErrorToString(e)),
+      onSettled: () => setNodeAddingChild(null),
     }
   );
+
+  const addNode = (parentId: string, type: NodeTypes, position: Position) =>
+    mutation.mutate({ parentId, type, position });
+
+  const isNodeButtonDisabled = (nodeId: string, position: Position) =>
+    nodeAddingChild?.id === nodeId && nodeAddingChild?.position === position;
+
+  return {
+    addNode,
+    isNodeButtonDisabled,
+  };
 };
