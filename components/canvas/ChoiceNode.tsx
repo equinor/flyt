@@ -15,6 +15,7 @@ import { SourceHandle } from "./SourceHandle";
 import { NodeShape } from "./NodeShape";
 import { NodeTooltip } from "./NodeTooltip";
 import { NodeTooltipSection } from "./NodeTooltipSection";
+import { useNodeAdd } from "./hooks/useNodeAdd";
 
 export const ChoiceNode = ({
   data: {
@@ -25,7 +26,6 @@ export const ChoiceNode = ({
     isValidDropTarget,
     handleClickNode,
     isChoiceChild,
-    handleClickAddNode,
     userCanEdit,
     children,
     mergeOption,
@@ -39,6 +39,7 @@ export const ChoiceNode = ({
 }: NodeProps<NodeData>) => {
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
+  const { addNode, isNodeButtonDisabled } = useNodeAdd();
   const connectionNodeId = useStore((state) => state.connectionNodeId);
   const lastChild = children[children?.length - 1];
 
@@ -48,36 +49,39 @@ export const ChoiceNode = ({
   }, [dragging, connectionNodeId]);
 
   const renderNodeButtons = () => {
-    if (userCanEdit && hovering && !merging && handleClickAddNode) {
+    if (userCanEdit && hovering && !merging) {
       return (
         <>
           <NodeButtonsContainer position={Position.Bottom}>
             <SubActivityButton
               onClick={() =>
-                handleClickAddNode(
+                addNode(
                   lastChild || id,
                   NodeTypes.subActivity,
                   lastChild ? Position.Right : Position.Bottom
                 )
               }
+              disabled={isNodeButtonDisabled(id, Position.Bottom)}
             />
             <ChoiceButton
               onClick={() =>
-                handleClickAddNode(
+                addNode(
                   lastChild || id,
                   NodeTypes.choice,
                   lastChild ? Position.Right : Position.Bottom
                 )
               }
+              disabled={isNodeButtonDisabled(id, Position.Bottom)}
             />
             <WaitingButton
               onClick={() =>
-                handleClickAddNode(
+                addNode(
                   lastChild || id,
                   NodeTypes.waiting,
                   lastChild ? Position.Right : Position.Bottom
                 )
               }
+              disabled={isNodeButtonDisabled(id, Position.Bottom)}
             />
             {mergeable && handleMerge && (
               <MergeButton
@@ -90,39 +94,33 @@ export const ChoiceNode = ({
               <NodeButtonsContainer position={Position.Right}>
                 <SubActivityButton
                   onClick={() =>
-                    handleClickAddNode(
-                      id,
-                      NodeTypes.subActivity,
-                      Position.Right
-                    )
+                    addNode(id, NodeTypes.subActivity, Position.Right)
                   }
+                  disabled={isNodeButtonDisabled(id, Position.Right)}
                 />
                 <ChoiceButton
-                  onClick={() =>
-                    handleClickAddNode(id, NodeTypes.choice, Position.Right)
-                  }
+                  onClick={() => addNode(id, NodeTypes.choice, Position.Right)}
+                  disabled={isNodeButtonDisabled(id, Position.Right)}
                 />
                 <WaitingButton
-                  onClick={() =>
-                    handleClickAddNode(id, NodeTypes.waiting, Position.Right)
-                  }
+                  onClick={() => addNode(id, NodeTypes.waiting, Position.Right)}
+                  disabled={isNodeButtonDisabled(id, Position.Right)}
                 />
               </NodeButtonsContainer>
               <NodeButtonsContainer position={Position.Left}>
                 <SubActivityButton
                   onClick={() =>
-                    handleClickAddNode(id, NodeTypes.subActivity, Position.Left)
+                    addNode(id, NodeTypes.subActivity, Position.Left)
                   }
+                  disabled={isNodeButtonDisabled(id, Position.Left)}
                 />
                 <ChoiceButton
-                  onClick={() =>
-                    handleClickAddNode(id, NodeTypes.choice, Position.Left)
-                  }
+                  onClick={() => addNode(id, NodeTypes.choice, Position.Left)}
+                  disabled={isNodeButtonDisabled(id, Position.Left)}
                 />
                 <WaitingButton
-                  onClick={() =>
-                    handleClickAddNode(id, NodeTypes.waiting, Position.Left)
-                  }
+                  onClick={() => addNode(id, NodeTypes.waiting, Position.Left)}
+                  disabled={isNodeButtonDisabled(id, Position.Left)}
                 />
               </NodeButtonsContainer>
             </>

@@ -17,6 +17,7 @@ import { NodeShape } from "./NodeShape";
 import { QIPRContainer } from "./QIPRContainer";
 import { NodeTooltipSection } from "./NodeTooltipSection";
 import { NodeTooltip } from "./NodeTooltip";
+import { useNodeAdd } from "./hooks/useNodeAdd";
 
 export const MainActivityNode = ({
   data: {
@@ -27,7 +28,6 @@ export const MainActivityNode = ({
     isValidDropTarget,
     isDropTarget,
     handleClickNode,
-    handleClickAddNode,
     userCanEdit,
     merging,
     shapeHeight,
@@ -37,6 +37,7 @@ export const MainActivityNode = ({
 }: NodeProps<NodeData>) => {
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
+  const { addNode, isNodeButtonDisabled } = useNodeAdd();
 
   useEffect(() => {
     setHovering(false);
@@ -44,38 +45,37 @@ export const MainActivityNode = ({
   }, [dragging]);
 
   const renderNodeButtons = () => {
-    if (hovering && userCanEdit && !merging && handleClickAddNode)
+    if (hovering && userCanEdit && !merging)
       return (
         <>
           <NodeButtonsContainer position={Position.Left}>
             <MainActivityButton
-              onClick={() =>
-                handleClickAddNode(id, NodeTypes.mainActivity, Position.Left)
-              }
+              onClick={() => addNode(id, NodeTypes.mainActivity, Position.Left)}
+              disabled={isNodeButtonDisabled(id, Position.Left)}
             />
           </NodeButtonsContainer>
           <NodeButtonsContainer position={Position.Right}>
             <MainActivityButton
               onClick={() =>
-                handleClickAddNode(id, NodeTypes.mainActivity, Position.Right)
+                addNode(id, NodeTypes.mainActivity, Position.Right)
               }
+              disabled={isNodeButtonDisabled(id, Position.Right)}
             />
           </NodeButtonsContainer>
           <NodeButtonsContainer position={Position.Bottom}>
             <SubActivityButton
               onClick={() =>
-                handleClickAddNode(id, NodeTypes.subActivity, Position.Bottom)
+                addNode(id, NodeTypes.subActivity, Position.Bottom)
               }
+              disabled={isNodeButtonDisabled(id, Position.Bottom)}
             />
             <ChoiceButton
-              onClick={() =>
-                handleClickAddNode(id, NodeTypes.choice, Position.Bottom)
-              }
+              onClick={() => addNode(id, NodeTypes.choice, Position.Bottom)}
+              disabled={isNodeButtonDisabled(id, Position.Bottom)}
             />
             <WaitingButton
-              onClick={() =>
-                handleClickAddNode(id, NodeTypes.waiting, Position.Bottom)
-              }
+              onClick={() => addNode(id, NodeTypes.waiting, Position.Bottom)}
+              disabled={isNodeButtonDisabled(id, Position.Bottom)}
             />
           </NodeButtonsContainer>
         </>

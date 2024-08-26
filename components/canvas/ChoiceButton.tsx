@@ -2,12 +2,21 @@ import styles from "./NodeButtons.module.scss";
 import { NodeButton } from "../../types/NodeButton";
 import ChoiceButtonIcon from "../../public/NodeButtons/ChoiceButtonIcon.svg";
 
-export const ChoiceButton = (props: NodeButton) => (
+export const ChoiceButton = ({ onClick, disabled }: NodeButton) => (
   <div
-    className={styles["nodeButton__container"]}
-    onClick={props.onClick}
+    className={
+      styles[
+        `${
+          disabled ? "nodeButton__container--disabled" : "nodeButton__container"
+        }`
+      ]
+    }
+    onClick={() => !disabled && onClick()}
     title="Choice"
   >
-    <img src={ChoiceButtonIcon.src} className={styles.nodeButton} />
+    <img
+      src={ChoiceButtonIcon.src}
+      className={styles[`${disabled ? "nodeButton--disabled" : "nodeButton"}`]}
+    />
   </div>
 );

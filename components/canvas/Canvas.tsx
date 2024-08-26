@@ -71,7 +71,6 @@ const Canvas = ({
 
   const { onNodeDragStart, onNodeDrag, onNodeDragStop } = useNodeDrag();
   const { mutate: mergeNode, merging } = useNodeMerge();
-  const { mutate: addNode } = useNodeAdd();
   const { deleteEdgeMutation } = useEdgeDelete();
 
   const { socketConnected, socketReason } = useWebSocket();
@@ -117,8 +116,6 @@ const Canvas = ({
         data: {
           ...node,
           handleClickNode: () => setSelectedNode(node),
-          handleClickAddNode: (id, type, position) =>
-            addNode({ parentId: id, type, position }),
           handleMerge: (sourceId, targetId) =>
             sourceId && targetId && mergeNode.mutate({ sourceId, targetId }),
           mergeable:
