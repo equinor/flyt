@@ -7,10 +7,7 @@ import { Project } from "@/types/Project";
 
 export function InfiniteFrontPageBody(props: {
   showNewProcessButton: boolean;
-  query: UseInfiniteQueryResult<
-    { projects: Project[]; totalItems: number },
-    unknown
-  >;
+  query: UseInfiniteQueryResult<{ projects: Project[]; totalItems: number }>;
 }) {
   const { showNewProcessButton, query } = props;
   const { data, isLoading, error, isFetchingNextPage } = query;
@@ -26,7 +23,7 @@ export function InfiniteFrontPageBody(props: {
 
   const projects = data?.pages
     ?.map((page) => page.projects)
-    .reduce((arr, key) => arr.concat(key));
+    .reduce((prev, next) => prev.concat(next));
 
   return (
     <>
