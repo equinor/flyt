@@ -50,12 +50,12 @@ export default function AllProcesses() {
   useEffect(() => {
     const onScroll = () => {
       if (
+        query.hasNextPage &&
+        !query.isFetchingNextPage &&
         window.innerHeight + document.documentElement.scrollTop >=
-        document.documentElement.offsetHeight
+          document.documentElement.offsetHeight
       ) {
-        if (query.hasNextPage && !query.isFetchingNextPage) {
-          void query.fetchNextPage();
-        }
+        void query.fetchNextPage();
       }
     };
 
