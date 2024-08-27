@@ -54,7 +54,7 @@ export default function AllProcesses() {
         document.documentElement.offsetHeight
       ) {
         if (query.hasNextPage && !query.isFetchingNextPage) {
-          query.fetchNextPage();
+          void query.fetchNextPage();
         }
       }
     };
