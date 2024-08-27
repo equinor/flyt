@@ -5,8 +5,9 @@ on:
       - opened
       - edited
       - reopened
+      - synchronize
 jobs:
-  lint-pr:
+  lint-title:
     name: Lint pull request title
     runs-on: ubuntu-latest
     steps:
@@ -14,3 +15,33 @@ jobs:
         uses: jef/conventional-commits-pr-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+  lint-code:
+    name: 👁️ Validate code
+    runs-on: ubuntu-latest
+    steps:
+      - name: 👀 Checkout Repo
+        uses: actions/checkout@v3
+        with:
+            ref: ${{ github.head_ref }}
+
+      - name: 🌈 Setup Node.js 18
+        uses: actions/setup-node@v3
+        with:
+            node-version: 18
+            cache: yarn
+            cache-dependency-path: yarn.lock
+
+      - name: 📦 Install Dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: 🏭 Build project
+        run: yarn build
+      
+      - name: 🚦 Check typescript errors
+        run: npx tsc --noEmit
+
+      - name: 🚦 Lint and fix
+        run: yarn lint
+
+      - name: 🧪 Run tests
+        run: yarn test

@@ -22,7 +22,6 @@ import { LiveIndicator } from "../LiveIndicator";
 import { SideBar } from "../SideBar";
 import styles from "./Canvas.module.scss";
 import { nodeElementTypes } from "./NodeElementTypes";
-import { OldFlytButton } from "./OldFlytButton";
 import { ToBeToggle } from "./ToBeToggle";
 import { useAccess } from "./hooks/useAccess";
 import { useCenterCanvas } from "./hooks/useCenterCanvas";
@@ -32,7 +31,6 @@ import { useNodeDrag } from "./hooks/useNodeDrag";
 import { useNodeMerge } from "./hooks/useNodeMerge";
 import { useWebSocket } from "./hooks/useWebSocket";
 import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
-import { useProjectId } from "@/hooks/useProjectId";
 import { useEdgeDelete } from "./hooks/useEdgeDelete";
 import { ScrimDelete } from "../ScrimDelete";
 import { MiniMapCustom } from "@/components/canvas/MiniMapCustom";
@@ -53,13 +51,9 @@ const Canvas = ({
   const [selectedNode, setSelectedNode] = useState<NodeDataApi | undefined>(
     undefined
   );
-  const { projectId } = useProjectId();
   const { userCanEdit } = useAccess(project);
 
   const shapeSize = { height: 140, width: 140 };
-  const createdBeforeSecondMajorRelease =
-    new Date(project.created).getTime() <
-    new Date("2024-04-24T00:08:00.000000Z").getTime();
 
   let tempNodes: Node<NodeDataFull>[] = [];
   const tempEdges: Edge[] = apiEdges.map((e) => ({ ...e, label: e.edgeValue }));
@@ -77,7 +71,6 @@ const Canvas = ({
 
   const { onNodeDragStart, onNodeDrag, onNodeDragStop } = useNodeDrag();
   const { mutate: mergeNode, merging } = useNodeMerge();
-  const { mutate: addNode } = useNodeAdd();
   const { deleteEdgeMutation } = useEdgeDelete();
 
   const { socketConnected, socketReason } = useWebSocket();
@@ -123,8 +116,6 @@ const Canvas = ({
         data: {
           ...node,
           handleClickNode: () => setSelectedNode(node),
-          handleClickAddNode: (id, type, position) =>
-            addNode({ parentId: id, type, position }),
           handleMerge: (sourceId, targetId) =>
             sourceId && targetId && mergeNode.mutate({ sourceId, targetId }),
           mergeable:
@@ -359,9 +350,6 @@ const Canvas = ({
           </ControlButton>
         </Controls>
       </ReactFlow>
-      {createdBeforeSecondMajorRelease && (
-        <OldFlytButton projectId={projectId} />
-      )}
     </>
   );
 };

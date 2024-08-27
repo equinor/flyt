@@ -13,6 +13,7 @@ import { NodeShape } from "./NodeShape";
 import { NodeTooltip } from "./NodeTooltip";
 import { NodeTooltipSection } from "./NodeTooltipSection";
 import { getNodeHelperText } from "./utils/getNodeHelperText";
+import { useNodeAdd } from "./hooks/useNodeAdd";
 
 export const GenericNode = ({
   data: {
@@ -23,7 +24,6 @@ export const GenericNode = ({
     isValidDropTarget,
     isDropTarget,
     handleClickNode,
-    handleClickAddNode,
     userCanEdit,
     merging,
     shapeHeight,
@@ -33,6 +33,7 @@ export const GenericNode = ({
 }: NodeProps<NodeData>) => {
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
+  const { addNode, isNodeButtonDisabled } = useNodeAdd();
 
   useEffect(() => {
     setHovering(false);
@@ -48,23 +49,14 @@ export const GenericNode = ({
         : type === NodeTypes.output
         ? Position.Left
         : undefined;
-    if (
-      userCanEdit &&
-      hovering &&
-      !merging &&
-      nodeButtonsPosition &&
-      handleClickAddNode
-    ) {
+    if (userCanEdit && hovering && !merging && nodeButtonsPosition) {
       return (
         <NodeButtonsContainer position={nodeButtonsPosition}>
           <MainActivityButton
             onClick={() =>
-              handleClickAddNode(
-                id,
-                NodeTypes.mainActivity,
-                nodeButtonsPosition
-              )
+              addNode(id, NodeTypes.mainActivity, nodeButtonsPosition)
             }
+            disabled={isNodeButtonDisabled(id, nodeButtonsPosition)}
           />
         </NodeButtonsContainer>
       );

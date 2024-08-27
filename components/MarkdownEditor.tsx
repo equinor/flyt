@@ -121,6 +121,7 @@ export default function MarkdownEditor(props: {
       <div style={{ display: "flex", gap: 12 }}>
         <div onClick={() => canEdit && setEditMode(true)} style={{ flex: 1 }}>
           {/* Override MDEditor default styles */}
+          {/* eslint-disable-next-line react/no-unknown-property */}
           <style global jsx>{`
             #mdEditor > div.w-md-editor-content > div > div {
               font-size: 1rem;

@@ -23,7 +23,7 @@ export const ServiceMessageBanner = () => {
           <Icon data={high_priority} />
         </Banner.Icon>
         <div style={{ display: "flex", alignItems: "center" }}>
-          {/* @ts-expect-error */}
+          {/* @ts-expect-error -- This probably works even if typescript does not agree */}
           <ReactMarkdown remarkPlugins={[gfm]}>{data?.message}</ReactMarkdown>
         </div>
         {data?.urlString && (
