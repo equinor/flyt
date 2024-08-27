@@ -64,13 +64,15 @@ export const getUserByShortname = (shortName: string): Promise<User[]> =>
   );
 
 /**
- * Retrieve Flyt registered users by searching for a full name.
- * @param fullName - The full name of the users to search for.
+ * Retrieve Flyt registered users by searching for a full or short name.
+ * @param fullOrShortName - The full or short name of the users to search for.
  * @returns - Array of users.
  */
-export const getUsersByFullName = (fullName: string): Promise<User[]> =>
+export const getUsersByFullOrShortName = (
+  fullOrShortName: string
+): Promise<User[]> =>
   BaseAPIServices.get(
-    `${baseUrl}/userAccess/userSearchFullName?q=${fullName}`
+    `${baseUrl}/userAccess/UserSearchByUsernameAndFullName?q=${fullOrShortName}`
   ).then((res) => res.data as User[]);
 
 /**
