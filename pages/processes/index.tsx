@@ -1,46 +1,67 @@
-import { useState } from "react";
+import { useEffect } from "react";
 
 import { ActiveFilterSection } from "components/Labels/ActiveFilterSection";
 import { FilterLabelButton } from "components/Labels/FilterLabelButton";
 import { FilterUserButton } from "components/FilterUserButton";
-import { FrontPageBody } from "components/FrontPageBody";
+import { InfiniteFrontPageBody } from "components/InfiniteFrontPageBody";
 import Head from "next/head";
-import { Layouts } from "../../layouts/LayoutWrapper";
+import { Layouts } from "@/layouts/LayoutWrapper";
 import { SearchField } from "components/SearchField";
 import { SideNavBar } from "components/SideNavBar";
-import { SortSelect } from "../../components/SortSelect";
+import { SortSelect } from "@/components/SortSelect";
 import { Typography } from "@equinor/eds-core-react";
-import { getProjects } from "../../services/projectApi";
+import { getProjects } from "@/services/projectApi";
 import { stringToArray } from "utils/stringToArray";
 import styles from "./FrontPage.module.scss";
-import { useQuery } from "react-query";
+import { useInfiniteQuery } from "react-query";
 import { useRouter } from "next/router";
 
-export default function AllProcesses(): JSX.Element {
-  const [page, setPage] = useState(1);
-  const itemsPerPage = 15;
+export default function AllProcesses() {
+  const itemsPerPage = 35;
 
   const router = useRouter();
-  const query = useQuery(
+  const query = useInfiniteQuery(
     [
       "projects",
-      page,
       itemsPerPage,
       router.query.q,
       router.query.user,
       router.query.rl,
       router.query.orderBy,
     ],
-    () =>
+    ({ pageParam = 1 }) =>
       getProjects({
-        page,
+        page: pageParam,
         items: itemsPerPage,
         q: stringToArray(router.query.q),
         ru: stringToArray(router.query.user),
         rl: stringToArray(router.query.rl),
         orderBy: `${router.query.orderBy}`,
-      })
+      }),
+    {
+      getNextPageParam: (lastPage, allPages) => {
+        const hasMorePages = lastPage.projects.length === itemsPerPage;
+        if (!hasMorePages) return undefined;
+        return allPages.length + 1;
+      },
+    }
   );
+
+  useEffect(() => {
+    const onScroll = () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.offsetHeight
+      ) {
+        if (query.hasNextPage && !query.isFetchingNextPage) {
+          query.fetchNextPage();
+        }
+      }
+    };
+
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [query.hasNextPage, query.isFetchingNextPage]);
 
   return (
     <div>
@@ -68,12 +89,7 @@ export default function AllProcesses(): JSX.Element {
               <ActiveFilterSection />
             </div>
           </div>
-          <FrontPageBody
-            showNewProcessButton={true}
-            itemsPerPage={itemsPerPage}
-            query={query}
-            onChangePage={(newPage) => setPage(newPage)}
-          />
+          <InfiniteFrontPageBody showNewProcessButton={true} query={query} />
         </div>
       </main>
     </div>
