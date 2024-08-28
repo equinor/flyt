@@ -17,7 +17,7 @@ import { useInfiniteQuery } from "react-query";
 import { useRouter } from "next/router";
 
 export default function AllProcesses() {
-  const itemsPerPage = 15;
+  const itemsPerPage = 35;
 
   const router = useRouter();
   const query = useInfiniteQuery(
