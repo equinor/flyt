@@ -18,6 +18,7 @@ export default {
   ERROR: "#FF002D",
 
   SUCCESS: "#3fd18e",
+  DANGER: "#EB0000",
 
   CANVAS: "#f7f7f7",
 

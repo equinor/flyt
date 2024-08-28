@@ -1,13 +1,14 @@
 {
   "name": "flyt",
   "radix-name": "flyt",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "private": true,
   "scripts": {
     "dev": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
-    "test": "jest --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "release": "standard-version",
     "fetch-tags": "git fetch origin --tags --force",
     "release-dev": "yarn fetch-tags &&  git tag -f DEV   && yarn push-tags",

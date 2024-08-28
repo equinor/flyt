@@ -28,7 +28,7 @@ export const getDurationInSeconds = (value: string, duration: number) => {
   }
 };
 
-export const getTimeDefinitionValues = (): Array<string> =>
+export const getTimeDefinitionDisplayNames = (): Array<string> =>
   timeDefinitions.map((item) => item.displayName);
 
 export const getTimeDefinitionValue = (displayName: string) =>

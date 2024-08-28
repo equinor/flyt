@@ -4,6 +4,7 @@ import { TextField } from "@equinor/eds-core-react";
 import dynamic from "next/dynamic";
 import { NodeData } from "../types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
+import { getNodeHelperText } from "./canvas/utils/getNodeHelperText";
 import { formatMinMaxTotalDuration } from "@/utils/unitDefinitions";
 
 const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
@@ -51,6 +52,7 @@ export function SideBarBody(props: {
             defaultText={selectedNode.description || ""}
             label={"Supplier(s)"}
             onChange={props.onChangeDescription}
+            helperText={getNodeHelperText(selectedNode.type)}
           />
           <QIPSection
             canEdit={props.canEdit}
@@ -67,6 +69,7 @@ export function SideBarBody(props: {
             defaultText={selectedNode.description || ""}
             label={"Input(s)"}
             onChange={props.onChangeDescription}
+            helperText={getNodeHelperText(selectedNode.type)}
           />
           <QIPSection
             canEdit={props.canEdit}
@@ -83,6 +86,7 @@ export function SideBarBody(props: {
             defaultText={selectedNode.description || ""}
             label={"Output(s)"}
             onChange={props.onChangeDescription}
+            helperText={getNodeHelperText(selectedNode.type)}
           />
           <QIPSection
             canEdit={props.canEdit}
@@ -99,6 +103,7 @@ export function SideBarBody(props: {
             defaultText={selectedNode.description || ""}
             label={"Customer(s)"}
             onChange={props.onChangeDescription}
+            helperText={getNodeHelperText(selectedNode.type)}
           />
           <QIPSection
             canEdit={props.canEdit}

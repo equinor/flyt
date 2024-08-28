@@ -6,6 +6,11 @@
   width: 30px;
 }
 
+.nodeButton--disabled {
+  height: 30px;
+  width: 30px;
+}
+
 .nodeButton__container {
   display: flex;
   justify-content: center;
@@ -26,6 +31,16 @@
 
 .nodeButton__container:active .nodeButton {
   filter: brightness(80%);
+}
+
+.nodeButton__container--disabled {
+  @extend .nodeButton__container;
+  opacity: 50%;
+}
+
+.nodeButton__container--disabled:hover {
+  background-color: transparent;
+  cursor: not-allowed;
 }
 
 .nodeButton__container--merge {

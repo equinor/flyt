@@ -14,24 +14,39 @@ import { useAccount, useMsal } from "@azure/msal-react";
 import { useProjectId } from "@/hooks/useProjectId";
 import dynamic from "next/dynamic";
 import { NodeData } from "@/types/NodeData";
+import { sortSearch } from "@/utils/sortSearch";
 
 const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
   ssr: false,
 });
 
-export function NewTaskSection(props: {
+export const NewTaskSection = (props: {
   onClose: () => void;
   selectedNode: NodeData;
-}) {
+}) => {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
-
   const dispatch = useStoreDispatch();
-  const selectedNode = props.selectedNode;
-
   const { projectId } = useProjectId();
-
   const queryClient = useQueryClient();
+  const [newTask, setNewTask] = useState<Task | null>(null);
+  const [existingTaskFilter, setExistingTaskFilter] =
+    useState<TaskTypes | null>(null);
+  const [showExistingTaskSection, setShowExistingTaskSection] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+
+  const selectedNode = props.selectedNode;
+  const options = [
+    "Problem",
+    "Idea",
+    "Question",
+    "Risk",
+    "Existing Problem",
+    "Existing Idea",
+    "Existing Question",
+    "Existing Risk",
+  ];
+
   const taskMutations = useMutation(
     (task: Task) => createTask(task, selectedNode.projectId, selectedNode.id),
     {
@@ -44,21 +59,64 @@ export function NewTaskSection(props: {
         dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
-  const [newTask, setNewTask] = useState<Task | null>(null);
 
-  const [existingTaskFilter, setExistingTaskFilter] =
-    useState<TaskTypes | null>(null);
-  const [showExistingTaskSection, setShowExistingTaskSection] = useState(false);
-
-  function newTaskIsReady(task: Task) {
+  const newTaskIsReady = (task: Task) => {
     return (task.description?.trim().length ?? 0) > 0;
-  }
+  };
 
-  function clearAndCloseAddTaskSection() {
+  const clearAndCloseAddTaskSection = () => {
     setNewTask(null);
     setShowExistingTaskSection(false);
     props.onClose();
-  }
+  };
+
+  const handleSearchInputChange = (searchInput: string) => {
+    setSearchInput(searchInput);
+    if (!selectedNode) throw new Error("No selected object");
+    const t = {
+      type: newTask?.type,
+      description: newTask?.description ?? "", // Let's not overwrite description if we change the type midways
+    } as Task;
+
+    switch (searchInput) {
+      case "Problem":
+        t.type = TaskTypes.Problem;
+        setNewTask(t);
+        setShowExistingTaskSection(false);
+        break;
+      case "Idea":
+        t.type = TaskTypes.Idea;
+        setNewTask(t);
+        setShowExistingTaskSection(false);
+        break;
+      case "Question":
+        t.type = TaskTypes.Question;
+        setNewTask(t);
+        setShowExistingTaskSection(false);
+        break;
+      case "Risk":
+        t.type = TaskTypes.Risk;
+        setNewTask(t);
+        setShowExistingTaskSection(false);
+        break;
+      case "Existing Problem":
+        setShowExistingTaskSection(true);
+        setExistingTaskFilter(TaskTypes.Problem);
+        break;
+      case "Existing Idea":
+        setShowExistingTaskSection(true);
+        setExistingTaskFilter(TaskTypes.Idea);
+        break;
+      case "Existing Question":
+        setShowExistingTaskSection(true);
+        setExistingTaskFilter(TaskTypes.Question);
+        break;
+      case "Existing Risk":
+        setShowExistingTaskSection(true);
+        setExistingTaskFilter(TaskTypes.Risk);
+        break;
+    }
+  };
 
   return (
     <div className={styles.newTaskSection}>
@@ -77,63 +135,12 @@ export function NewTaskSection(props: {
       </div>
       <Autocomplete
         autoFocus
-        options={[
-          "Problem",
-          "Idea",
-          "Question",
-          "Risk",
-          "Existing Problem",
-          "Existing Idea",
-          "Existing Question",
-          "Existing Risk",
-        ]}
-        onInputChange={(e) => {
-          if (!selectedNode) throw new Error("No selected object");
-          const t = {
-            type: newTask?.type,
-            description: newTask?.description ?? "", // Let's not overwrite description if we change the type midways
-          } as Task;
-
-          switch (e) {
-            case "Problem":
-              t.type = TaskTypes.Problem;
-              setNewTask(t);
-              setShowExistingTaskSection(false);
-              break;
-            case "Idea":
-              t.type = TaskTypes.Idea;
-              setNewTask(t);
-              setShowExistingTaskSection(false);
-              break;
-            case "Question":
-              t.type = TaskTypes.Question;
-              setNewTask(t);
-              setShowExistingTaskSection(false);
-              break;
-            case "Risk":
-              t.type = TaskTypes.Risk;
-              setNewTask(t);
-              setShowExistingTaskSection(false);
-              break;
-            case "Existing Problem":
-              setShowExistingTaskSection(true);
-              setExistingTaskFilter(TaskTypes.Problem);
-              break;
-            case "Existing Idea":
-              setShowExistingTaskSection(true);
-              setExistingTaskFilter(TaskTypes.Idea);
-              break;
-            case "Existing Question":
-              setShowExistingTaskSection(true);
-              setExistingTaskFilter(TaskTypes.Question);
-              break;
-            case "Existing Risk":
-              setShowExistingTaskSection(true);
-              setExistingTaskFilter(TaskTypes.Risk);
-              break;
-          }
-        }}
+        options={sortSearch(options, searchInput)}
+        onInputChange={(e) => handleSearchInputChange(e)}
         label="Select type"
+        optionsFilter={() => true}
+        autoWidth
+        dropdownHeight={options.length * 48}
       />
       <ExistingTaskSection
         visible={showExistingTaskSection}
@@ -179,4 +186,4 @@ export function NewTaskSection(props: {
       )}
     </div>
   );
-}
+};

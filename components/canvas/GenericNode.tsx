@@ -12,6 +12,8 @@ import { QIPRContainer } from "./QIPRContainer";
 import { NodeShape } from "./NodeShape";
 import { NodeTooltip } from "./NodeTooltip";
 import { NodeTooltipSection } from "./NodeTooltipSection";
+import { getNodeHelperText } from "./utils/getNodeHelperText";
+import { useNodeAdd } from "./hooks/useNodeAdd";
 
 export const GenericNode = ({
   data: {
@@ -22,7 +24,6 @@ export const GenericNode = ({
     isValidDropTarget,
     isDropTarget,
     handleClickNode,
-    handleClickAddNode,
     userCanEdit,
     merging,
     shapeHeight,
@@ -32,11 +33,14 @@ export const GenericNode = ({
 }: NodeProps<NodeData>) => {
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
+  const { addNode, isNodeButtonDisabled } = useNodeAdd();
 
   useEffect(() => {
     setHovering(false);
     setHoveringShape(false);
   }, [dragging]);
+
+  const nodeHelperText = getNodeHelperText(type);
 
   const renderNodeButtons = () => {
     const nodeButtonsPosition =
@@ -45,23 +49,14 @@ export const GenericNode = ({
         : type === NodeTypes.output
         ? Position.Left
         : undefined;
-    if (
-      userCanEdit &&
-      hovering &&
-      !merging &&
-      nodeButtonsPosition &&
-      handleClickAddNode
-    ) {
+    if (userCanEdit && hovering && !merging && nodeButtonsPosition) {
       return (
         <NodeButtonsContainer position={nodeButtonsPosition}>
           <MainActivityButton
             onClick={() =>
-              handleClickAddNode(
-                id,
-                NodeTypes.mainActivity,
-                nodeButtonsPosition
-              )
+              addNode(id, NodeTypes.mainActivity, nodeButtonsPosition)
             }
+            disabled={isNodeButtonDisabled(id, nodeButtonsPosition)}
           />
         </NodeButtonsContainer>
       );
@@ -87,7 +82,11 @@ export const GenericNode = ({
           onMouseEnter={() => !dragging && setHoveringShape(true)}
           onMouseLeave={() => setHoveringShape(false)}
         >
-          <NodeDescription header={type} description={description} />
+          <NodeDescription
+            header={type}
+            description={description}
+            helperText={nodeHelperText}
+          />
         </NodeShape>
         <QIPRContainer tasks={tasks} />
       </NodeCard>

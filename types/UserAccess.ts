@@ -1,7 +1,8 @@
-export type userAccessRole = "Owner" | "Admin" | "Contributor" | "Reader";
+import { userAccessRole } from "./UserAccessRole";
 
 export type userAccess = {
   accessId: number;
   role: userAccessRole;
   user: string;
+  fullName: string | null;
 };

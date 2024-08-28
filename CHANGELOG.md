@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.4.0](https://github.com/equinor/flyt/compare/v2.3.0...v2.4.0) (2024-08-06)
+
+### Features
+
+- Deletable Edges ([#763](https://github.com/equinor/flyt/issues/763)) ([a516a13](https://github.com/equinor/flyt/commit/a516a1369050b1ed8764a6e7db88b19728684806))
+- Handle missing PQIR description ([#772](https://github.com/equinor/flyt/issues/772)) ([b8f85a6](https://github.com/equinor/flyt/commit/b8f85a6cf4ccd234d984b83501aa02f1c454ff73))
+- Improved PQIR unit search ([#771](https://github.com/equinor/flyt/issues/771)) ([1e66358](https://github.com/equinor/flyt/commit/1e663588444bb787a178237d900eca14eb4c3acd))
+- SIOC helper text ([#770](https://github.com/equinor/flyt/issues/770)) ([c3ddf5e](https://github.com/equinor/flyt/commit/c3ddf5e3f3a1d99bf77748955fe6a87256947619))
+
+### Bug Fixes
+
+- Suppress drag events during node click ([#773](https://github.com/equinor/flyt/issues/773)) ([7cf08e6](https://github.com/equinor/flyt/commit/7cf08e6cf555f558fa85c51035191a67a7beb187))
+- update mad api base url ([#777](https://github.com/equinor/flyt/issues/777)) ([1987b6f](https://github.com/equinor/flyt/commit/1987b6f3b001a52eee334f031559c92c8a33724b))
+- Upgrade dependencies ([#766](https://github.com/equinor/flyt/issues/766)) ([a37a28e](https://github.com/equinor/flyt/commit/a37a28e35db60cc0c74c2bbbd31c024d13fe262d))
+
 ## [2.3.0](https://github.com/equinor/flyt/compare/v2.2.0...v2.3.0) (2024-06-19)
 
 ### Features
