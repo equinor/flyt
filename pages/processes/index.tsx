@@ -17,7 +17,7 @@ import { useInfiniteQuery } from "react-query";
 import { useRouter } from "next/router";
 
 export default function AllProcesses() {
-  const itemsPerPage = 35;
+  const itemsPerPage = 15;
 
   const router = useRouter();
   const query = useInfiniteQuery(
@@ -53,7 +53,7 @@ export default function AllProcesses() {
         query.hasNextPage &&
         !query.isFetchingNextPage &&
         window.innerHeight + document.documentElement.scrollTop >=
-          document.documentElement.offsetHeight
+          document.documentElement.offsetHeight - 128
       ) {
         void query.fetchNextPage();
       }

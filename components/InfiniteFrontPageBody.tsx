@@ -1,4 +1,4 @@
-import { Typography } from "@equinor/eds-core-react";
+import { Button, Typography } from "@equinor/eds-core-react";
 import styles from "../pages/processes/FrontPage.module.scss";
 import { ProjectListSection } from "./ProjectListSection";
 import { unknownErrorToString } from "@/utils/isError";
@@ -10,7 +10,14 @@ export function InfiniteFrontPageBody(props: {
   query: UseInfiniteQueryResult<{ projects: Project[]; totalItems: number }>;
 }) {
   const { showNewProcessButton, query } = props;
-  const { data, isLoading, error, isFetchingNextPage } = query;
+  const {
+    data,
+    isLoading,
+    error,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+  } = query;
 
   if (error) {
     return (
@@ -38,6 +45,11 @@ export function InfiniteFrontPageBody(props: {
       <div className={styles.footer}>
         {isFetchingNextPage && (
           <Typography variant="body_short">Loading more...</Typography>
+        )}
+        {hasNextPage && !isFetchingNextPage && (
+          <Button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
+            Load More
+          </Button>
         )}
       </div>
     </>
