@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.5.0](https://github.com/equinor/flyt/compare/v2.4.0...v2.5.0) (2024-08-28)
+
+
+### Features
+
+* Full name of users ([#778](https://github.com/equinor/flyt/issues/778)) ([2523e98](https://github.com/equinor/flyt/commit/2523e9829d6ad192400b641818901f2df3458e04))
+
+
+### Bug Fixes
+
+* Disable spamming of add card buttons ([#784](https://github.com/equinor/flyt/issues/784)) ([668f1fa](https://github.com/equinor/flyt/commit/668f1fa802d925f62f0ee942b72240c0f6a7d89b))
+* display AxiosError message ([#774](https://github.com/equinor/flyt/issues/774)) ([76033a0](https://github.com/equinor/flyt/commit/76033a0e02572d190290b3ac52851582dd0faef9))
+
 ## [2.4.0](https://github.com/equinor/flyt/compare/v2.3.0...v2.4.0) (2024-08-06)
 
 ### Features
