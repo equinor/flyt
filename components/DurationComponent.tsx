@@ -5,7 +5,7 @@ import {
   getTimeDefinitionValue,
   getTimeDefinitionValues,
 } from "@/utils/unitDefinitions";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 type DurationComponent = {
   selectedNode: NodeData;

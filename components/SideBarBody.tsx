@@ -22,6 +22,16 @@ export function SideBarBody(props: {
   canEdit: boolean;
 }) {
   const { selectedNode, setShowNewTaskSection } = props;
+  const minMaxDuration = formatMinMaxTotalDuration(
+    selectedNode?.totalDurations
+  );
+
+  // TextField doesnt calculate height, so we split duration into low and high estimation strings
+  // and use 41 as a breakpoint for number of characters before adding a new line
+  const getDurationTextfieldRows = () => {
+    const parts = minMaxDuration.split("\n");
+    return parts.reduce((acc, part) => acc + Math.ceil(part.length / 41), 0);
+  };
 
   switch (selectedNode?.type) {
     case NodeTypes.root:
@@ -107,14 +117,18 @@ export function SideBarBody(props: {
             onChange={props.onChangeDescription}
           />
           <div style={{ paddingTop: 12 }} />
-          <TextField
-            disabled
-            label={"Duration"}
-            type={"string"}
-            id={"vsmObjectTime"}
-            value={formatMinMaxTotalDuration(selectedNode?.totalDurations)}
-            helperText={"Duration is automatically calculated"}
-          />
+          {selectedNode.totalDurations && (
+            <TextField
+              readOnly
+              label={"Duration"}
+              type={"string"}
+              id={"vsmObjectTime"}
+              value={minMaxDuration}
+              multiline
+              helperText={"Duration is automatically calculated"}
+              rows={getDurationTextfieldRows()}
+            />
+          )}
           <QIPSection
             canEdit={props.canEdit}
             object={selectedNode}

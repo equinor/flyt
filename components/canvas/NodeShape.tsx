@@ -6,7 +6,7 @@ type NodeShape = {
   color: string;
   width: number;
   height: number;
-  children: JSX.Element | JSX.Element[];
+  children: React.ReactNode;
   onMouseEnter?: MouseEventHandler<HTMLDivElement>;
   onMouseLeave?: MouseEventHandler<HTMLDivElement>;
 };

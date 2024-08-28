@@ -83,12 +83,33 @@ export const formatTotalDuration = (
     }
   });
 
-  return sumDuration.trim();
+  return sumDuration.length === 0 ? "0" : sumDuration.trim();
 };
 
 export const formatMinMaxTotalDuration = (
   totalDurations: NodeData["totalDurations"]
-) =>
-  `${formatTotalDuration(
+) => {
+  const minTotalDuration = formatTotalDuration(
     totalDurations?.minTotalDuration
-  )} - ${formatTotalDuration(totalDurations?.maxTotalDuration)}`;
+  );
+  const maxTotalDuration = formatTotalDuration(
+    totalDurations?.maxTotalDuration
+  );
+  if (minTotalDuration === maxTotalDuration)
+    return `Estimate: ${minTotalDuration}`;
+  else
+    return `Low estimate: ${minTotalDuration}\nHigh estimate: ${maxTotalDuration}`;
+};
+
+export const formatMinMaxTotalDurationShort = (
+  totalDurations: NodeData["totalDurations"]
+) => {
+  const minTotalDuration = formatTotalDuration(
+    totalDurations?.minTotalDuration
+  );
+  const maxTotalDuration = formatTotalDuration(
+    totalDurations?.maxTotalDuration
+  );
+  if (minTotalDuration === maxTotalDuration) return minTotalDuration;
+  return `${minTotalDuration} - ${maxTotalDuration}`;
+};

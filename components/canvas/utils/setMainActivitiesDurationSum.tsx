@@ -5,6 +5,9 @@ import { NodeData } from "@/types/NodeData";
 
 let possibleTotalDurations: (typeof timeDefinitions)[] = [];
 
+const isNoDurations = (nodes: Node<NodeData>[]) =>
+  nodes.every((node) => node.data.duration === null);
+
 const addToCurrentDuration = (
   currentDuration: typeof timeDefinitions,
   node: Node<NodeData>
@@ -63,15 +66,17 @@ const getMinMaxTotalDurations = () => {
 };
 
 export const setMainActivitiesDurationSum = (nodes: Node<NodeData>[]) => {
-  possibleTotalDurations = [];
   return nodes.map((node) => {
     if (node.type === NodeTypes.mainActivity) {
+      possibleTotalDurations = [];
       const subtreeNodes = nodes.filter(
         (n) => n.data.columnId === node.data.columnId
       );
-      setPossibleTotalDurations(node, subtreeNodes);
-      const minMaxTotalDurations = getMinMaxTotalDurations();
-      node.data.totalDurations = minMaxTotalDurations;
+      if (!isNoDurations(subtreeNodes)) {
+        setPossibleTotalDurations(node, subtreeNodes);
+        const minMaxTotalDurations = getMinMaxTotalDurations();
+        node.data.totalDurations = minMaxTotalDurations;
+      }
     }
     return node;
   });
