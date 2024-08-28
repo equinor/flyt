@@ -1,5 +1,6 @@
 import { AxiosPromise } from "axios";
 import BaseAPIServices from "./BaseAPIServices";
+import { UserAccessSearch } from "@/types/UserAccessSearch";
 
 const baseUrl = "/api/v2.0";
 
@@ -11,6 +12,7 @@ export const add = (newUser: {
   user: string;
   vsmId: number;
   role: string;
+  fullName: string;
 }): AxiosPromise =>
   BaseAPIServices.post(`${baseUrl}/userAccess`, newUser).then(
     (value) => value.data
@@ -34,7 +36,7 @@ export const update = (props: {
  * @param props
  */
 export const remove = (props: {
-  accessId: string;
+  accessId: number;
   vsmId: number;
 }): AxiosPromise =>
   BaseAPIServices.delete(
@@ -42,16 +44,48 @@ export const remove = (props: {
   );
 
 /**
- * Retrieve registered users or search for a short-name.
- * @param userName - The short-name of the user to search for.
+ * Retrieve Equinor registered users by searching for a short or full name.
+ * @param userName - The short or full name of the user to search for.
  * @returns - Array of users.
  */
-export const searchUser = (userName: string): Promise<User[]> =>
-  BaseAPIServices.get(`${baseUrl}/userAccess/userSearch?q=${userName}`).then(
-    (value) => value.data as User[]
+export const searchUser = (userName: string): Promise<UserAccessSearch[]> =>
+  BaseAPIServices.get(`${baseUrl}/users/query?startsWith=${userName}`).then(
+    (res) => res.data
   );
 
-export const getUserById = (userId: number | string): Promise<User> =>
+/**
+ * Retrieve Flyt registered users by searching for a shortname.
+ * @param shortName - The shortname of the user to search for.
+ * @returns - Array of users.
+ */
+export const getUserByShortname = (shortName: string): Promise<User[]> =>
+  BaseAPIServices.get(`${baseUrl}/userAccess/userSearch?q=${shortName}`).then(
+    (res) => res.data as User[]
+  );
+
+/**
+ * Retrieve Flyt registered users by searching for a full or short name.
+ * @param fullOrShortName - The full or short name of the users to search for.
+ * @returns - Array of users.
+ */
+export const getUsersByFullOrShortName = (
+  fullOrShortName: string
+): Promise<User[]> =>
+  BaseAPIServices.get(
+    `${baseUrl}/userAccess/UserSearchByUsernameAndFullName?q=${fullOrShortName}`
+  ).then((res) => res.data as User[]);
+
+/**
+ * Retrieve Flyt registered user by searching for an ID.
+ * @param userId - The ID of the user to search for.
+ * @returns - User.
+ */
+export const getUserById = (
+  userId: number | string
+): Promise<{
+  pkUser: number;
+  userName: string;
+}> =>
   BaseAPIServices.get(`${baseUrl}/userAccess/userById/${userId}`).then(
     (res) => res.data as User
   );
