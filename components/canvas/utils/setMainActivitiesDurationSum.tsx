@@ -2,20 +2,21 @@ import { NodeTypes } from "@/types/NodeTypes";
 import { Node } from "reactflow";
 import { timeDefinitions, getDurationInSeconds } from "@/utils/unitDefinitions";
 import { NodeData } from "@/types/NodeData";
+import { TimeDefinition } from "@/types/TimeDefinition";
 
-let possibleTotalDurations: (typeof timeDefinitions)[] = [];
+let possibleTotalDurations: TimeDefinition[][] = [];
 
 const isNoDurations = (nodes: Node<NodeData>[]) =>
   nodes.every((node) => node.data.duration === null);
 
 const addToCurrentDuration = (
-  currentDuration: typeof timeDefinitions,
+  currentDuration: TimeDefinition[],
   node: Node<NodeData>
 ) => {
-  if (node.data.unit && node.data.duration) {
+  if (node.data.unit && node.data.duration !== null) {
     return currentDuration.map((td) => {
-      if (td.value === node.data.unit && node.data.duration) {
-        return { ...td, duration: td.duration + node.data.duration };
+      if (td.value === node.data.unit && node.data.duration !== null) {
+        return { ...td, duration: (td.duration || 0) + node.data.duration };
       } else {
         return td;
       }
@@ -28,12 +29,17 @@ const addToCurrentDuration = (
 const setPossibleTotalDurations = (
   node: Node<NodeData>,
   subtreeNodes: Node<NodeData>[],
-  currentDuration: typeof timeDefinitions = timeDefinitions
+  currentDuration: TimeDefinition[] = timeDefinitions
 ) => {
   currentDuration = addToCurrentDuration(currentDuration, node);
 
   if (node.data.children.length === 0) {
-    possibleTotalDurations.push(currentDuration);
+    const hasOneOrMoreDurations = currentDuration.some(
+      (td) => td.duration !== null
+    );
+    if (hasOneOrMoreDurations) {
+      possibleTotalDurations.push(currentDuration);
+    }
   }
 
   node.data.children.forEach((childId) => {
@@ -47,7 +53,9 @@ const getMinMaxTotalDurations = () => {
   const possibleTotalDurationsInSeconds = possibleTotalDurations.map(
     (tdDuration) =>
       tdDuration.reduce((acc, item) => {
-        return acc + getDurationInSeconds(item.value, item.duration);
+        return item.duration
+          ? acc + getDurationInSeconds(item.value, item.duration)
+          : acc;
       }, 0)
   );
 

@@ -1,5 +1,5 @@
 import { NodeDataApi } from "./NodeDataApi";
-import { timeDefinitions } from "../utils/unitDefinitions";
+import { TimeDefinition } from "./TimeDefinition";
 
 export type NodeData = {
   parents: string[];
@@ -17,8 +17,8 @@ export type NodeData = {
   shapeHeight: number;
   shapeWidth: number;
   totalDurations?: {
-    minTotalDuration: typeof timeDefinitions;
-    maxTotalDuration: typeof timeDefinitions;
+    minTotalDuration: TimeDefinition[];
+    maxTotalDuration: TimeDefinition[];
   };
 } & NodeDataApi;
 

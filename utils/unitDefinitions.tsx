@@ -1,12 +1,13 @@
 import { NodeData } from "@/types/NodeData";
+import { TimeDefinition } from "@/types/TimeDefinition";
 
-export const timeDefinitions = [
-  { value: "Minute", displayName: "Minute(s)", duration: 0 },
-  { value: "Hour", displayName: "Hour(s)", duration: 0 },
-  { value: "Day", displayName: "Day(s)", duration: 0 },
-  { value: "Week", displayName: "Week(s)", duration: 0 },
-  { value: "Month", displayName: "Month(s)", duration: 0 },
-  { value: "Year", displayName: "Year(s)", duration: 0 },
+export const timeDefinitions: TimeDefinition[] = [
+  { value: "Minute", displayName: "Minute(s)", duration: null },
+  { value: "Hour", displayName: "Hour(s)", duration: null },
+  { value: "Day", displayName: "Day(s)", duration: null },
+  { value: "Week", displayName: "Week(s)", duration: null },
+  { value: "Month", displayName: "Month(s)", duration: null },
+  { value: "Year", displayName: "Year(s)", duration: null },
 ];
 
 export const getDurationInSeconds = (value: string, duration: number) => {
@@ -68,22 +69,26 @@ export const formatDuration = (
   return `${duration} ${cUnit}s`;
 };
 
+const isOnlyZeroDurations = (timeDurations: TimeDefinition[]) =>
+  timeDurations.every((td) => !td.duration || td.duration === 0);
+
 export const formatTotalDuration = (
-  timeDurations?: typeof timeDefinitions
+  timeDurations?: TimeDefinition[]
 ): string => {
   if (!timeDurations) return "";
+  if (isOnlyZeroDurations(timeDurations)) return "0";
 
   let sumDuration = "";
   const reversedTimeDurations = timeDurations.slice().reverse();
 
   reversedTimeDurations?.forEach((d) => {
-    if (d.duration !== 0) {
+    if (typeof d.duration === "number") {
       const cUnit = getShortDisplayName(d.displayName);
       sumDuration += `${d.duration}${cUnit} `;
     }
   });
 
-  return sumDuration.length === 0 ? "0" : sumDuration.trim();
+  return sumDuration.trim();
 };
 
 export const formatMinMaxTotalDuration = (

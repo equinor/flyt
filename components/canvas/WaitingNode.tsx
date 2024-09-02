@@ -156,7 +156,11 @@ export const WaitingNode = ({
       </NodeCard>
       <TargetHandle hidden={!mergeOption} />
       <SourceHandle />
-      <NodeTooltip isVisible={!!(hoveringShape && (description || duration))}>
+      <NodeTooltip
+        isVisible={
+          !!(hoveringShape && (description || typeof duration === "number"))
+        }
+      >
         {description && (
           <NodeTooltipSection header={"Description"} text={description} />
         )}

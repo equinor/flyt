@@ -160,7 +160,12 @@ export const SubActivityNode = ({
       <TargetHandle hidden={!mergeOption} />
       <SourceHandle />
       <NodeTooltip
-        isVisible={!!(hoveringShape && (description || role || duration))}
+        isVisible={
+          !!(
+            hoveringShape &&
+            (description || role || typeof duration === "number")
+          )
+        }
       >
         {description && (
           <NodeTooltipSection header={"Description"} text={description} />
