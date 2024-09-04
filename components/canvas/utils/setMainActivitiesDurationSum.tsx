@@ -29,23 +29,34 @@ const addToCurrentDuration = (
 const setPossibleTotalDurations = (
   node: Node<NodeData>,
   subtreeNodes: Node<NodeData>[],
-  currentDuration: TimeDefinition[] = timeDefinitions
+  currentDuration: TimeDefinition[] = timeDefinitions,
+  visited = new Set()
 ) => {
-  currentDuration = addToCurrentDuration(currentDuration, node);
+  if (!visited.has(node.id)) {
+    currentDuration = addToCurrentDuration(currentDuration, node);
+  }
 
-  if (node.data.children.length === 0) {
+  if (node.data.children.length === 0 || visited.has(node.id)) {
     const hasOneOrMoreDurations = currentDuration.some(
       (td) => td.duration !== null
     );
     if (hasOneOrMoreDurations) {
       possibleTotalDurations.push(currentDuration);
     }
+    return;
   }
+
+  visited.add(node.id);
 
   node.data.children.forEach((childId) => {
     const childNode = subtreeNodes.find((node) => node.id === childId);
     childNode &&
-      setPossibleTotalDurations(childNode, subtreeNodes, currentDuration);
+      setPossibleTotalDurations(
+        childNode,
+        subtreeNodes,
+        currentDuration,
+        visited
+      );
   });
 };
 
