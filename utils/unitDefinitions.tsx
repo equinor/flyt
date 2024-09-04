@@ -82,7 +82,7 @@ export const formatTotalDuration = (
   const reversedTimeDurations = timeDurations.slice().reverse();
 
   reversedTimeDurations?.forEach((d) => {
-    if (typeof d.duration === "number") {
+    if (d.duration) {
       const cUnit = getShortDisplayName(d.displayName);
       sumDuration += `${d.duration}${cUnit} `;
     }
