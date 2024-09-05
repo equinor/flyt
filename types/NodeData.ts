@@ -1,4 +1,5 @@
 import { NodeDataApi } from "./NodeDataApi";
+import { TimeDefinition } from "./TimeDefinition";
 
 export type NodeData = {
   parents: string[];
@@ -15,6 +16,10 @@ export type NodeData = {
   isChoiceChild?: boolean;
   shapeHeight: number;
   shapeWidth: number;
+  totalDurations?: {
+    minTotalDuration: TimeDefinition[];
+    maxTotalDuration: TimeDefinition[];
+  };
 } & NodeDataApi;
 
 export type NodeDataHidden = Pick<

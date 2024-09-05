@@ -1,5 +1,6 @@
 const baseUrl = "/api/v2.0";
 
+import { NodeData } from "@/types/NodeData";
 import BaseAPIServices from "./BaseAPIServices";
 import { NodeDataApi } from "@/types/NodeDataApi";
 import { Graph } from "types/Graph";
@@ -22,7 +23,7 @@ export const addVertice = (
   ).then((r) => r.data);
 
 export const patchGraph = (
-  data: NodeDataApi,
+  data: NodeData,
   projectId: string | string[],
   vertexId: string
 ): Promise<NodeDataApi> =>

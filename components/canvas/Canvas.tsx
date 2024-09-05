@@ -12,7 +12,7 @@ import ReactFlow, {
   useNodesState,
 } from "reactflow";
 import "reactflow/dist/style.css";
-import { NodeDataFull } from "types/NodeData";
+import { NodeData, NodeDataFull } from "types/NodeData";
 import { NodeDataApi } from "types/NodeDataApi";
 import { NodeTypes } from "types/NodeTypes";
 import { Project } from "types/Project";
@@ -26,11 +26,11 @@ import { ToBeToggle } from "./ToBeToggle";
 import { useAccess } from "./hooks/useAccess";
 import { useCenterCanvas } from "./hooks/useCenterCanvas";
 import { setLayout } from "./hooks/useLayout";
-import { useNodeAdd } from "./hooks/useNodeAdd";
 import { useNodeDrag } from "./hooks/useNodeDrag";
 import { useNodeMerge } from "./hooks/useNodeMerge";
 import { useWebSocket } from "./hooks/useWebSocket";
 import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
+import { setMainActivitiesDurationSum } from "./utils/setMainActivitiesDurationSum";
 import { useEdgeDelete } from "./hooks/useEdgeDelete";
 import { ScrimDelete } from "../ScrimDelete";
 import { MiniMapCustom } from "@/components/canvas/MiniMapCustom";
@@ -48,14 +48,14 @@ const Canvas = ({
   graph: { vertices: apiNodes, edges: apiEdges },
   project,
 }: CanvasProps) => {
-  const [selectedNode, setSelectedNode] = useState<NodeDataApi | undefined>(
+  const [selectedNode, setSelectedNode] = useState<Node<NodeData> | undefined>(
     undefined
   );
   const { userCanEdit } = useAccess(project);
 
   const shapeSize = { height: 140, width: 140 };
 
-  let tempNodes: Node<NodeDataFull>[] = [];
+  let tempNodes: Node<NodeData>[] = [];
   const tempEdges: Edge[] = apiEdges.map((e) => ({ ...e, label: e.edgeValue }));
 
   const [isEditingEdgeText, setIsEditingEdgeText] = useState(false);
@@ -76,6 +76,11 @@ const Canvas = ({
   const { socketConnected, socketReason } = useWebSocket();
 
   let columnId: string | null = null;
+
+  const handleSetSelectedNode = (id?: string) => {
+    const node = tempNodes.find((n) => n.id === id);
+    node && setSelectedNode(node as Node<NodeData>);
+  };
 
   const createNodes = (
     node: NodeDataApi,
@@ -115,7 +120,7 @@ const Canvas = ({
         id: node.id,
         data: {
           ...node,
-          handleClickNode: () => setSelectedNode(node),
+          handleClickNode: () => handleSetSelectedNode(node.id),
           handleMerge: (sourceId, targetId) =>
             sourceId && targetId && mergeNode.mutate({ sourceId, targetId }),
           mergeable:
@@ -230,13 +235,8 @@ const Canvas = ({
       return;
     }
 
-    if (selectedNode) {
-      const updatedSelectedNode = apiNodes.find(
-        (node) => node.id === selectedNode.id
-      );
-      setSelectedNode(updatedSelectedNode);
-    }
     createNodes(root);
+    tempNodes = setMainActivitiesDurationSum(tempNodes);
     setNodesDepth();
     const {
       tempNodes: tempWithHiddenNodes,
@@ -255,6 +255,8 @@ const Canvas = ({
     );
     setNodes(finalNodes);
     setEdges(finalEdges);
+
+    selectedNode && handleSetSelectedNode(selectedNode.id);
   }, [apiNodes, apiEdges, userCanEdit]);
 
   useCenterCanvas();
@@ -284,7 +286,7 @@ const Canvas = ({
       <ResetProcessButton />
       {selectedNode && (
         <DeleteNodeDialog
-          objectToDelete={selectedNode}
+          objectToDelete={selectedNode.data}
           visible={visibleDeleteNodeScrim}
           onClose={() => {
             setVisibleDeleteNodeScrim(false);
@@ -318,7 +320,7 @@ const Canvas = ({
         onClose={() => setSelectedNode(undefined)}
         onDelete={() => setVisibleDeleteNodeScrim(true)}
         canEdit={userCanEdit}
-        selectedNode={selectedNode}
+        selectedNode={selectedNode?.data}
       />
       <ReactFlow
         nodes={nodes}
