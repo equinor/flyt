@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Connection, Position, useStore } from "reactflow";
-import { formatDuration } from "types/unitDefinitions";
+import { formatDuration } from "@/utils/unitDefinitions";
 import { Icon, Typography } from "@equinor/eds-core-react";
 import { time as timeIcon } from "@equinor/eds-icons";
 
@@ -168,7 +168,11 @@ export const WaitingNode = ({
       </NodeCard>
       <TargetHandle hidden={!mergeOption} />
       <SourceHandle />
-      <NodeTooltip isVisible={!!(hoveringShape && (description || duration))}>
+      <NodeTooltip
+        isVisible={
+          !!(hoveringShape && (description || typeof duration === "number"))
+        }
+      >
         {description && (
           <NodeTooltipSection header={"Description"} text={description} />
         )}

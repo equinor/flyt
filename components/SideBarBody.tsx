@@ -2,15 +2,17 @@ import { DurationComponent } from "./DurationComponent";
 import { QIPSection } from "./QIPSection";
 import { TextField } from "@equinor/eds-core-react";
 import dynamic from "next/dynamic";
-import { NodeDataApi } from "@/types/NodeDataApi";
+import { NodeData } from "../types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
 import { getNodeHelperText } from "./canvas/utils/getNodeHelperText";
+import { formatMinMaxTotalDuration } from "@/utils/unitDefinitions";
+
 const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
   ssr: false,
 });
 
 export function SideBarBody(props: {
-  selectedNode: NodeDataApi;
+  selectedNode: NodeData;
   onChangeDescription: (value?: string) => void;
   onChangeRole: (event: { target: { value: string } }) => void;
   onChangeDuration: (e: {
@@ -21,6 +23,16 @@ export function SideBarBody(props: {
   canEdit: boolean;
 }) {
   const { selectedNode, setShowNewTaskSection } = props;
+  const minMaxDuration = formatMinMaxTotalDuration(
+    selectedNode?.totalDurations
+  );
+
+  // TextField doesnt calculate height, so we split duration into low and high estimation strings
+  // and use 41 as a breakpoint for number of characters before adding a new line
+  const getDurationTextfieldRows = () => {
+    const parts = minMaxDuration.split("\n");
+    return parts.reduce((acc, part) => acc + Math.ceil(part.length / 41), 0);
+  };
 
   switch (selectedNode?.type) {
     case NodeTypes.root:
@@ -109,6 +121,19 @@ export function SideBarBody(props: {
             label={"Description"}
             onChange={props.onChangeDescription}
           />
+          <div style={{ paddingTop: 12 }} />
+          {selectedNode.totalDurations && (
+            <TextField
+              readOnly
+              label={"Duration"}
+              type={"string"}
+              id={"vsmObjectTime"}
+              value={minMaxDuration}
+              multiline
+              helperText={"Duration is automatically calculated"}
+              rows={getDurationTextfieldRows()}
+            />
+          )}
           <QIPSection
             canEdit={props.canEdit}
             object={selectedNode}

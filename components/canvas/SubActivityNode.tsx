@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Connection, Position, useStore } from "reactflow";
 import { FormatNodeText } from "./utils/FormatNodeText";
-import { formatDuration } from "types/unitDefinitions";
+import { formatDuration } from "@/utils/unitDefinitions";
 import styles from "./Node.module.scss";
 import { SubActivityButton } from "./SubActivityButton";
 import { NodeButtonsContainer } from "./NodeButtonsContainer";
@@ -15,7 +15,7 @@ import { TargetHandle } from "./TargetHandle";
 import { NodeDescription } from "./NodeDescription";
 import { NodeCard } from "./NodeCard";
 import colors from "theme/colors";
-import { Typography } from "@equinor/eds-core-react";
+import { NodeDuration } from "./NodeDuration";
 import { SourceHandle } from "./SourceHandle";
 import { NodeTooltip } from "./NodeTooltip";
 import { QIPRContainer } from "./QIPRContainer";
@@ -165,18 +165,19 @@ export const SubActivityNode = ({
               {role}
             </FormatNodeText>
           </div>
-          <div className={styles["node__time-container"]}>
-            <Typography variant="caption" className={styles["node__info-text"]}>
-              {formatDuration(duration, unit)}
-            </Typography>
-          </div>
+          <NodeDuration duration={formatDuration(duration, unit)} />
         </NodeShape>
         <QIPRContainer tasks={tasks} />
       </NodeCard>
       <TargetHandle hidden={!mergeOption} />
       <SourceHandle />
       <NodeTooltip
-        isVisible={!!(hoveringShape && (description || role || duration))}
+        isVisible={
+          !!(
+            hoveringShape &&
+            (description || role || typeof duration === "number")
+          )
+        }
       >
         {description && (
           <NodeTooltipSection header={"Description"} text={description} />

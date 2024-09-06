@@ -13,15 +13,16 @@ import { notifyOthers } from "@/services/notifyOthers";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useProjectId } from "@/hooks/useProjectId";
 import dynamic from "next/dynamic";
-import { NodeDataApi } from "@/types/NodeDataApi";
+import { NodeData } from "@/types/NodeData";
 import { sortSearch } from "@/utils/sortSearch";
+
 const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
   ssr: false,
 });
 
 export const NewTaskSection = (props: {
   onClose: () => void;
-  selectedNode: NodeDataApi;
+  selectedNode: NodeData;
 }) => {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});

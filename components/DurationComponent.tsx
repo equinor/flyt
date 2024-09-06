@@ -1,15 +1,15 @@
-import { NodeDataApi } from "@/types/NodeDataApi";
+import { NodeData } from "../types/NodeData";
 import { Autocomplete, TextField } from "@equinor/eds-core-react";
 import {
   getTimeDefinitionDisplayName,
   getTimeDefinitionValue,
-  getTimeDefinitioDisplayNames,
-} from "@/types/unitDefinitions";
+  getTimeDefinitionDisplayNames,
+} from "@/utils/unitDefinitions";
 import { ChangeEvent, useEffect, useState } from "react";
 import { sortSearch } from "@/utils/sortSearch";
 
 type DurationComponent = {
-  selectedNode: NodeDataApi;
+  selectedNode: NodeData;
   onChangeDuration: (e: {
     duration: number | null;
     unit: string | null;
@@ -28,7 +28,7 @@ export function DurationComponent({
   const [unit, setUnit] = useState<string | null>(selectedNode.unit);
   const [unitSearchInput, setUnitSearchInput] = useState("");
 
-  const timeDefinitioDisplayNames = getTimeDefinitioDisplayNames();
+  const timeDefinitionDisplayNames = getTimeDefinitionDisplayNames();
 
   useEffect(() => {
     setDuration(selectedNode.duration);
@@ -68,7 +68,7 @@ export function DurationComponent({
       <div style={{ padding: 8 }} />
       <Autocomplete
         disabled={disabled}
-        options={sortSearch(timeDefinitioDisplayNames, unitSearchInput)}
+        options={sortSearch(timeDefinitionDisplayNames, unitSearchInput)}
         onInputChange={handleUnitChange}
         selectedOptions={[
           unit ? getTimeDefinitionDisplayName(unit) : undefined,
