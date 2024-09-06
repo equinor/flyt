@@ -7,12 +7,13 @@ import ReactFlow, {
   Controls,
   Edge,
   Node,
+  Position,
   ReactFlowProvider,
   useEdgesState,
   useNodesState,
 } from "reactflow";
 import "reactflow/dist/style.css";
-import { NodeDataFull } from "types/NodeData";
+import { NodeData, NodeDataFull } from "types/NodeData";
 import { NodeDataApi } from "types/NodeDataApi";
 import { NodeTypes } from "types/NodeTypes";
 import { Project } from "types/Project";
@@ -38,6 +39,9 @@ import { ZoomLevel } from "@/components/canvas/ZoomLevel";
 import { edgeElementTypes } from "@/components/canvas/EdgeElementTypes";
 import { createHiddenNodes } from "@/components/canvas/utils/createHiddenNodes";
 import { createEdges } from "./utils/createEdges";
+import { useCopyPaste } from "./hooks/useCopyPaste";
+import { copyPasteNodeValidator } from "./utils/copyPasteValidators";
+import { validTarget } from "./utils/validTarget";
 
 type CanvasProps = {
   graph: Graph;
@@ -51,7 +55,11 @@ const Canvas = ({
   const [selectedNode, setSelectedNode] = useState<NodeDataApi | undefined>(
     undefined
   );
+  const [hoveredNode, setHoveredNode] = useState<Node<NodeData> | undefined>(
+    undefined
+  );
   const { userCanEdit } = useAccess(project);
+  const { addNode } = useNodeAdd();
 
   const shapeSize = { height: 140, width: 140 };
 
@@ -74,6 +82,14 @@ const Canvas = ({
   const { deleteEdgeMutation } = useEdgeDelete();
 
   const { socketConnected, socketReason } = useWebSocket();
+  useCopyPaste(
+    hoveredNode,
+    (node: Node<NodeData>) =>
+      hoveredNode?.id &&
+      validTarget(node, hoveredNode, nodes, false) &&
+      addNode(hoveredNode.id, node.data, Position.Bottom),
+    copyPasteNodeValidator
+  );
 
   let columnId: string | null = null;
 
@@ -337,6 +353,8 @@ const Canvas = ({
         onNodeDragStop={onNodeDragStop}
         elevateEdgesOnSelect={true}
         edgesFocusable={userCanEdit}
+        onNodeMouseEnter={(e, node) => setHoveredNode(node)}
+        onNodeMouseLeave={() => setHoveredNode(undefined)}
         onEdgeMouseEnter={(event, edge) => handleSetSelectedEdge(edge)}
         onEdgeMouseLeave={() => handleSetSelectedEdge(undefined)}
         attributionPosition="bottom-right"
