@@ -42,6 +42,7 @@ import { createEdges } from "./utils/createEdges";
 import { useCopyPaste } from "./hooks/useCopyPaste";
 import { copyPasteNodeValidator } from "./utils/copyPasteValidators";
 import { validTarget } from "./utils/validTarget";
+import { useNodeAdd } from "./hooks/useNodeAdd";
 
 type CanvasProps = {
   graph: Graph;
