@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.6.0](https://github.com/equinor/flyt/compare/v2.5.0...v2.6.0) (2024-09-11)
+
+
+### Features
+
+* infinite scroll ([#788](https://github.com/equinor/flyt/issues/788)) ([ac85041](https://github.com/equinor/flyt/commit/ac850415f47c6922fafc0c8327079ed8a86c7922))
+* Main activity duration summary ([#768](https://github.com/equinor/flyt/issues/768)) ([2195660](https://github.com/equinor/flyt/commit/21956608bb28fec0c4f85b958aa848ea2ad2b84e))
+
+
+### Bug Fixes
+
+* Upgrade dependencies ([#796](https://github.com/equinor/flyt/issues/796)) ([494d1e7](https://github.com/equinor/flyt/commit/494d1e7fd7ec534d70b4ade0bef34f5cae029b3c))
+
 ## [2.5.0](https://github.com/equinor/flyt/compare/v2.4.0...v2.5.0) (2024-08-28)
 
 
