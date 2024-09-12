@@ -53,4 +53,6 @@ export const useCopyPaste = (
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [target]);
+
+  return { copyToClipboard, paste };
 };
