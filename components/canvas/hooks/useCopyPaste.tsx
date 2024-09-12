@@ -1,18 +1,19 @@
 import { useStoreDispatch } from "@/hooks/storeHooks";
+import { NodeData } from "@/types/NodeData";
 import { unknownErrorToString } from "@/utils/isError";
 import { useEffect } from "react";
+import { Node } from "reactflow";
 
 export const useCopyPaste = (
-  target: any,
+  target: Node<NodeData> | undefined,
   action: (target: any) => void,
   validator?: (target: any) => void
 ) => {
   const dispatch = useStoreDispatch();
 
-  const copyToClipboard = async (target: any) => {
+  const copyToClipboard = async (target: Node<NodeData> | undefined) => {
     try {
-      const valid = validator ? validator(target) : true;
-      if (valid) {
+      if (target) {
         await navigator.clipboard.writeText(JSON.stringify(target));
         dispatch.setSnackMessage("Copied 📋");
       }
