@@ -1,4 +1,5 @@
 import { useStoreDispatch } from "@/hooks/storeHooks";
+import { unknownErrorToString } from "@/utils/isError";
 import { useEffect } from "react";
 
 export const useCopyPaste = (
@@ -16,9 +17,7 @@ export const useCopyPaste = (
         dispatch.setSnackMessage("Copied 📋");
       }
     } catch (error) {
-      if (error instanceof Error) {
-        console.error(error.message);
-      }
+      dispatch.setSnackMessage(unknownErrorToString(error));
     }
   };
 
@@ -28,13 +27,10 @@ export const useCopyPaste = (
       targetToPaste = JSON.parse(targetToPaste);
       const valid = validator ? validator(targetToPaste) : true;
       if (valid) {
-        dispatch.setSnackMessage("Pasted 📝");
         action(targetToPaste);
       }
     } catch (error) {
-      if (error instanceof Error) {
-        console.error(error.message);
-      }
+      dispatch.setSnackMessage(unknownErrorToString(error));
     }
   };
 
