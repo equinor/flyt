@@ -36,9 +36,17 @@ export const useCopyPaste = (
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.metaKey || event.ctrlKey) && event.key === "c") {
+      if (
+        (event.metaKey || event.ctrlKey) &&
+        event.key === "c" &&
+        event.target == document.body
+      ) {
         copyToClipboard(target);
-      } else if ((event.metaKey || event.ctrlKey) && event.key === "v") {
+      } else if (
+        (event.metaKey || event.ctrlKey) &&
+        event.key === "v" &&
+        event.target == document.body
+      ) {
         paste();
       }
     };
