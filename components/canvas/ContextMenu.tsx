@@ -32,16 +32,23 @@ export const ContextMenu = ({
       return (
         <>
           <Menu.Item onClick={() => copyToClipBoard?.(node)}>
-            Copy {modifierKey}C
+            <div>Copy</div>
+            <div>{modifierKey}C</div>
           </Menu.Item>
-          <Menu.Item onClick={paste}>Paste {modifierKey}V</Menu.Item>
+          <Menu.Item onClick={paste}>
+            <div>Paste</div>
+            <div>{modifierKey}V</div>
+          </Menu.Item>
           <Menu.Item onClick={() => onEditNode?.(node)}>Edit</Menu.Item>
           <MenuItemExandable text="Add">
             <Menu.Item>Sub Activity</Menu.Item>
             <Menu.Item>Choice</Menu.Item>
             <Menu.Item>Waiting</Menu.Item>
           </MenuItemExandable>
-          <Menu.Item onClick={() => onDelete?.(node)}>Delete ⌫</Menu.Item>
+          <Menu.Item onClick={() => onDelete?.(node)}>
+            <div>Delete</div>
+            <div>⌫</div>
+          </Menu.Item>
         </>
       );
     }
