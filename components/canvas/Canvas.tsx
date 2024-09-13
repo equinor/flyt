@@ -366,7 +366,7 @@ const Canvas = ({
         onNodeDragStop={onNodeDragStop}
         elevateEdgesOnSelect={true}
         edgesFocusable={userCanEdit}
-        onNodeMouseEnter={(e, node) => {
+        onNodeMouseEnter={(_, node) => {
           !menuData && setHoveredNode(node);
         }}
         onNodeMouseLeave={() => {
