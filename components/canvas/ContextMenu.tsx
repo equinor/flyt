@@ -2,11 +2,13 @@ import { NodeData } from "@/types/NodeData";
 import { capitalizeFirstLetter } from "@/utils/stringHelpers";
 import { Menu } from "@equinor/eds-core-react";
 import { useCallback, useState } from "react";
-import { Node } from "reactflow";
+import { Node, Position } from "reactflow";
 import { MenuItemExandable } from "../MenuItemExandable";
 import styles from "./ContextMenu.module.scss";
 import type { MenuData } from "./hooks/useContextMenu";
 import { getOptionsAddNode } from "./utils/getOptionsAddNode";
+import { getNodeTypeName } from "@/utils/getNodeTypeName";
+import { useNodeAdd } from "./hooks/useNodeAdd";
 
 type ContextMenuProps = {
   menuData: MenuData;
@@ -26,6 +28,7 @@ export const ContextMenu = ({
   onEditNode,
 }: ContextMenuProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
+  const { addNode, isNodeButtonDisabled } = useNodeAdd();
 
   const modifierKey = window.navigator.platform === "MacIntel" ? "⌘" : "Ctrl";
 
@@ -41,7 +44,15 @@ export const ContextMenu = ({
               key={position}
             >
               {nodeTypes.map((nodeType) => (
-                <Menu.Item key={nodeType}>{nodeType}</Menu.Item>
+                <Menu.Item
+                  disabled={isNodeButtonDisabled(node.id, position as Position)}
+                  key={nodeType}
+                  onClick={() =>
+                    addNode(node.id, { type: nodeType }, position as Position)
+                  }
+                >
+                  {getNodeTypeName(nodeType)}
+                </Menu.Item>
               ))}
             </MenuItemExandable>
           ))}
