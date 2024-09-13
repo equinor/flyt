@@ -1,10 +1,12 @@
 import { NodeData } from "@/types/NodeData";
+import { capitalizeFirstLetter } from "@/utils/stringHelpers";
 import { Menu } from "@equinor/eds-core-react";
 import { useCallback, useState } from "react";
 import { Node } from "reactflow";
 import { MenuItemExandable } from "../MenuItemExandable";
 import styles from "./ContextMenu.module.scss";
 import type { MenuData } from "./hooks/useContextMenu";
+import { getOptionsAddNode } from "./utils/getOptionsAddNode";
 
 type ContextMenuProps = {
   menuData: MenuData;
@@ -27,6 +29,27 @@ export const ContextMenu = ({
 
   const modifierKey = window.navigator.platform === "MacIntel" ? "⌘" : "Ctrl";
 
+  const renderOptionsAddNode = (node: Node<NodeData>) => {
+    const optionsAddNode = getOptionsAddNode(node);
+    const entries = Object.entries(optionsAddNode);
+    if (entries.length > 0) {
+      return (
+        <MenuItemExandable text="Add">
+          {entries.map(([position, nodeTypes]) => (
+            <MenuItemExandable
+              text={capitalizeFirstLetter(position)}
+              key={position}
+            >
+              {nodeTypes.map((nodeType) => (
+                <Menu.Item key={nodeType}>{nodeType}</Menu.Item>
+              ))}
+            </MenuItemExandable>
+          ))}
+        </MenuItemExandable>
+      );
+    }
+  };
+
   const renderNodeMenuItems = useCallback(() => {
     if (node) {
       return (
@@ -40,11 +63,7 @@ export const ContextMenu = ({
             <div>{modifierKey}V</div>
           </Menu.Item>
           <Menu.Item onClick={() => onEditNode?.(node)}>Edit</Menu.Item>
-          <MenuItemExandable text="Add">
-            <Menu.Item>Sub Activity</Menu.Item>
-            <Menu.Item>Choice</Menu.Item>
-            <Menu.Item>Waiting</Menu.Item>
-          </MenuItemExandable>
+          {renderOptionsAddNode(node)}
           <Menu.Item onClick={() => onDelete?.(node)}>
             <div>Delete</div>
             <div>⌫</div>
