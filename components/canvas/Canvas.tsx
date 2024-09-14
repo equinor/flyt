@@ -372,7 +372,7 @@ const Canvas = ({
         onNodeMouseLeave={() => {
           !menuData && setHoveredNode(undefined);
         }}
-        onEdgeMouseEnter={(event, edge) => handleSetSelectedEdge(edge)}
+        onEdgeMouseEnter={(_, edge) => handleSetSelectedEdge(edge)}
         onEdgeMouseLeave={() => handleSetSelectedEdge(undefined)}
         attributionPosition="bottom-right"
         connectionRadius={100}
@@ -395,6 +395,7 @@ const Canvas = ({
             centerCanvas={centerCanvas}
             onDelete={(node) => setNodeToBeDeleted(node)}
             onEditNode={(node) => setSelectedNode(node)}
+            canvasRef={ref}
           />
         )}
       </ReactFlow>

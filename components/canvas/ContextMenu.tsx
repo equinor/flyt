@@ -1,14 +1,14 @@
 import { NodeData } from "@/types/NodeData";
+import { getNodeTypeName } from "@/utils/getNodeTypeName";
 import { capitalizeFirstLetter } from "@/utils/stringHelpers";
 import { Menu } from "@equinor/eds-core-react";
-import { useCallback, useState } from "react";
+import { RefObject, useState } from "react";
 import { Node, Position } from "reactflow";
 import { MenuItemExandable } from "../MenuItemExandable";
 import styles from "./ContextMenu.module.scss";
 import type { MenuData } from "./hooks/useContextMenu";
-import { getOptionsAddNode } from "./utils/getOptionsAddNode";
-import { getNodeTypeName } from "@/utils/getNodeTypeName";
 import { useNodeAdd } from "./hooks/useNodeAdd";
+import { getOptionsAddNode } from "./utils/getOptionsAddNode";
 
 type ContextMenuProps = {
   menuData: MenuData;
@@ -17,6 +17,7 @@ type ContextMenuProps = {
   paste?: () => void;
   onDelete?: (node: Node<NodeData>) => void;
   onEditNode?: (node: Node<NodeData>) => void;
+  canvasRef?: RefObject<HTMLDivElement>;
 };
 
 export const ContextMenu = ({
@@ -26,9 +27,20 @@ export const ContextMenu = ({
   paste,
   onDelete,
   onEditNode,
+  canvasRef,
 }: ContextMenuProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
+
+  const isReversedExpandDirection = (fullyExpandedWidth: number) => {
+    const anchorOffsetLeft = anchorEl?.offsetLeft;
+    const canvasEdgeRight = canvasRef?.current?.getBoundingClientRect().right;
+    return !!(
+      canvasEdgeRight &&
+      anchorOffsetLeft &&
+      canvasEdgeRight - anchorOffsetLeft < fullyExpandedWidth
+    );
+  };
 
   const modifierKey = window.navigator.platform === "MacIntel" ? "⌘" : "Ctrl";
 
@@ -36,11 +48,14 @@ export const ContextMenu = ({
     const optionsAddNode = getOptionsAddNode(node);
     const entries = Object.entries(optionsAddNode);
     if (entries.length > 0) {
+      const fullyExpandedWidth = 400;
+      const reversedExpandDir = isReversedExpandDirection(fullyExpandedWidth);
       return (
-        <MenuItemExandable text="Add">
+        <MenuItemExandable text="Add" reverseExpandDir={reversedExpandDir}>
           {entries.map(([position, nodeTypes]) => (
             <MenuItemExandable
               text={capitalizeFirstLetter(position)}
+              reverseExpandDir={reversedExpandDir}
               key={position}
             >
               {nodeTypes.map((nodeType) => (
@@ -61,7 +76,7 @@ export const ContextMenu = ({
     }
   };
 
-  const renderNodeMenuItems = useCallback(() => {
+  const renderNodeMenuItems = () => {
     if (node) {
       return (
         <>
@@ -82,7 +97,7 @@ export const ContextMenu = ({
         </>
       );
     }
-  }, [node, copyToClipBoard, modifierKey, paste, onDelete, onEditNode]);
+  };
 
   return (
     <div ref={setAnchorEl} className={styles.menu} style={{ ...position }}>

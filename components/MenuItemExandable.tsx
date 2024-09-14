@@ -5,11 +5,13 @@ import styles from "./MenuItemExpandable.module.scss";
 
 type MenuItemExandableProps = {
   text: string;
+  reverseExpandDir?: boolean;
   children: ReactElement | ReactElement[];
 };
 
 export const MenuItemExandable = ({
   text,
+  reverseExpandDir,
   children,
 }: MenuItemExandableProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
@@ -28,9 +30,12 @@ export const MenuItemExandable = ({
         className={styles.expandArrowContainer}
       />
       <Menu
+        style={{
+          marginLeft: reverseExpandDir ? "4px" : "-4px",
+        }}
         open={isExpanded}
         anchorEl={anchorEl}
-        placement="right-start"
+        placement={reverseExpandDir ? "left-start" : "right-start"}
         className={styles.menu}
       >
         {children}
