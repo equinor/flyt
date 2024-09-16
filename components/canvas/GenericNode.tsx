@@ -54,7 +54,7 @@ export const GenericNode = ({
         <NodeButtonsContainer position={nodeButtonsPosition}>
           <MainActivityButton
             onClick={() =>
-              addNode(id, NodeTypes.mainActivity, nodeButtonsPosition)
+              addNode(id, { type: NodeTypes.mainActivity }, nodeButtonsPosition)
             }
             disabled={isNodeButtonDisabled(id, nodeButtonsPosition)}
           />

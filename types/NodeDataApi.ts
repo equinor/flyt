@@ -14,3 +14,8 @@ export type NodeDataApi = {
   children: string[];
   tasks: Task[];
 };
+
+export type NodeDataApiRequestBody = Pick<NodeDataApi, "type"> &
+  Partial<
+    Pick<NodeDataApi, "description" | "role" | "duration" | "unit" | "tasks">
+  >;

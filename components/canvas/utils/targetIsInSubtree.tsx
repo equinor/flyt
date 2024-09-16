@@ -1,10 +1,10 @@
 import { Node } from "reactflow";
-import { NodeData } from "@/types/NodeData";
+import { NodeDataFull } from "@/types/NodeData";
 
 export const targetIsInSubtree = (
-  node: Node<NodeData>,
-  target: Node<NodeData>,
-  nodes: Node<NodeData>[],
+  node: Node<NodeDataFull>,
+  target: Node<NodeDataFull>,
+  nodes: Node<NodeDataFull>[],
   visited = new Set()
 ) => {
   if (node.data.columnId !== target.data.columnId) return false;

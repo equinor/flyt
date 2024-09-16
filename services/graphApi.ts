@@ -2,7 +2,7 @@ const baseUrl = "/api/v2.0";
 
 import { NodeData } from "@/types/NodeData";
 import BaseAPIServices from "./BaseAPIServices";
-import { NodeDataApi } from "@/types/NodeDataApi";
+import { NodeDataApi, NodeDataApiRequestBody } from "@/types/NodeDataApi";
 import { Graph } from "types/Graph";
 import { NodeTypes } from "types/NodeTypes";
 
@@ -13,7 +13,7 @@ export const getGraph = (projectId: string | string[]): Promise<Graph> => {
 };
 
 export const addVertice = (
-  data: { type: NodeTypes },
+  data: NodeDataApiRequestBody,
   projectId: string,
   parentId: string
 ): Promise<unknown> =>
