@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "react-query";
 import { Position } from "reactflow";
-import { NodeTypes } from "types/NodeTypes";
+import { NodeDataApiRequestBody } from "@/types/NodeDataApi";
 import { useStoreDispatch } from "@/hooks/storeHooks";
 import {
   addVertice,
@@ -15,7 +15,7 @@ import { useState } from "react";
 
 export type NodeAddParams = {
   parentId: string;
-  type: NodeTypes;
+  data: NodeDataApiRequestBody;
   position: Position;
 };
 
@@ -31,16 +31,16 @@ export const useNodeAdd = () => {
   } | null>(null);
 
   const mutation = useMutation(
-    ({ parentId, type, position }: NodeAddParams) => {
+    ({ parentId, data, position }: NodeAddParams) => {
       setNodeAddingChild({ id: parentId, position: position });
       dispatch.setSnackMessage("⏳ Adding new card...");
       switch (position) {
         case Position.Left:
-          return addVerticeLeft({ type }, projectId, parentId);
+          return addVerticeLeft(data, projectId, parentId);
         case Position.Right:
-          return addVerticeRight({ type }, projectId, parentId);
+          return addVerticeRight(data, projectId, parentId);
         default:
-          return addVertice({ type }, projectId, parentId);
+          return addVertice(data, projectId, parentId);
       }
     },
     {
@@ -55,8 +55,11 @@ export const useNodeAdd = () => {
     }
   );
 
-  const addNode = (parentId: string, type: NodeTypes, position: Position) =>
-    mutation.mutate({ parentId, type, position });
+  const addNode = (
+    parentId: string,
+    data: NodeDataApiRequestBody,
+    position: Position
+  ) => mutation.mutate({ parentId, data, position });
 
   const isNodeButtonDisabled = (nodeId: string, position: Position) =>
     nodeAddingChild?.id === nodeId && nodeAddingChild?.position === position;

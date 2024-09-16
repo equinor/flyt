@@ -57,7 +57,7 @@ export const ChoiceNode = ({
               onClick={() =>
                 addNode(
                   lastChild || id,
-                  NodeTypes.subActivity,
+                  { type: NodeTypes.subActivity },
                   lastChild ? Position.Right : Position.Bottom
                 )
               }
@@ -67,7 +67,7 @@ export const ChoiceNode = ({
               onClick={() =>
                 addNode(
                   lastChild || id,
-                  NodeTypes.choice,
+                  { type: NodeTypes.choice },
                   lastChild ? Position.Right : Position.Bottom
                 )
               }
@@ -77,7 +77,7 @@ export const ChoiceNode = ({
               onClick={() =>
                 addNode(
                   lastChild || id,
-                  NodeTypes.waiting,
+                  { type: NodeTypes.waiting },
                   lastChild ? Position.Right : Position.Bottom
                 )
               }
@@ -94,32 +94,40 @@ export const ChoiceNode = ({
               <NodeButtonsContainer position={Position.Right}>
                 <SubActivityButton
                   onClick={() =>
-                    addNode(id, NodeTypes.subActivity, Position.Right)
+                    addNode(id, { type: NodeTypes.subActivity }, Position.Right)
                   }
                   disabled={isNodeButtonDisabled(id, Position.Right)}
                 />
                 <ChoiceButton
-                  onClick={() => addNode(id, NodeTypes.choice, Position.Right)}
+                  onClick={() =>
+                    addNode(id, { type: NodeTypes.choice }, Position.Right)
+                  }
                   disabled={isNodeButtonDisabled(id, Position.Right)}
                 />
                 <WaitingButton
-                  onClick={() => addNode(id, NodeTypes.waiting, Position.Right)}
+                  onClick={() =>
+                    addNode(id, { type: NodeTypes.waiting }, Position.Right)
+                  }
                   disabled={isNodeButtonDisabled(id, Position.Right)}
                 />
               </NodeButtonsContainer>
               <NodeButtonsContainer position={Position.Left}>
                 <SubActivityButton
                   onClick={() =>
-                    addNode(id, NodeTypes.subActivity, Position.Left)
+                    addNode(id, { type: NodeTypes.subActivity }, Position.Left)
                   }
                   disabled={isNodeButtonDisabled(id, Position.Left)}
                 />
                 <ChoiceButton
-                  onClick={() => addNode(id, NodeTypes.choice, Position.Left)}
+                  onClick={() =>
+                    addNode(id, { type: NodeTypes.choice }, Position.Left)
+                  }
                   disabled={isNodeButtonDisabled(id, Position.Left)}
                 />
                 <WaitingButton
-                  onClick={() => addNode(id, NodeTypes.waiting, Position.Left)}
+                  onClick={() =>
+                    addNode(id, { type: NodeTypes.waiting }, Position.Left)
+                  }
                   disabled={isNodeButtonDisabled(id, Position.Left)}
                 />
               </NodeButtonsContainer>
