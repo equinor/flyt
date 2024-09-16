@@ -21,19 +21,18 @@ export function DeleteNodeDialog(props: {
   const { projectId } = useProjectId();
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
-  const { choice, mainActivity } = NodeTypes;
+  const { choice, mainActivity, subActivity, waiting } = NodeTypes;
 
   const deleteMutation = useMutation(
     ({
       id,
       projectId,
-      type,
+      includeChildren,
     }: {
       id: string;
       projectId: string;
-      type: string;
-    }) =>
-      deleteVertice(id, projectId, type === mainActivity || type === choice),
+      includeChildren: boolean;
+    }) => deleteVertice(id, projectId, includeChildren),
     {
       onSuccess() {
         handleClose();
@@ -48,23 +47,26 @@ export function DeleteNodeDialog(props: {
   if (!props.visible) return null;
 
   const handleClose = () => props.onClose();
-  const handleDelete = () =>
+  const handleDelete = (includeChildren: boolean) =>
     deleteMutation.mutate({
       id: props.objectToDelete.id,
       projectId: props.objectToDelete.projectId,
-      type: props.objectToDelete.type,
+      includeChildren: includeChildren,
     });
 
   const { type } = props.objectToDelete;
 
   const header = `Delete ${getNodeTypeName(type).toLowerCase()}`;
-  let warningMessage = "This will delete the selected card.";
+  let warningMessage = "This will delete the selected card";
+  let checkboxMessage = undefined;
   if (type === mainActivity) {
     warningMessage =
       "This will delete everything under it.\nAre you sure you want to proceed?";
   } else if (type === choice) {
     warningMessage =
       "This will delete all connected alternatives.\nAre you sure you want to proceed?";
+  } else if (type === subActivity || type === waiting) {
+    checkboxMessage = "Also delete everything under it";
   }
   const confirmMessage = "Delete";
   return (
@@ -73,10 +75,11 @@ export function DeleteNodeDialog(props: {
       open
       header={header}
       onClose={handleClose}
-      onConfirm={handleDelete}
+      onConfirm={(_, includeChildren) => handleDelete(includeChildren)}
       error={deleteMutation.error}
       warningMessage={warningMessage}
       confirmMessage={confirmMessage}
+      checkboxMessage={checkboxMessage}
       isLoading={deleteMutation.isLoading}
     />
   );

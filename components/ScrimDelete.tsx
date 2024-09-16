@@ -2,16 +2,18 @@ import { Button, Icon, Scrim, Typography } from "@equinor/eds-core-react";
 import styles from "./ScrimDelete.module.scss";
 import { close as closeIcon, delete_forever } from "@equinor/eds-icons";
 import { unknownErrorToString } from "@/utils/isError";
-import { CircularProgress } from "@equinor/eds-core-react";
+import { CircularProgress, Switch } from "@equinor/eds-core-react";
+import { ChangeEvent, useState } from "react";
 
 type ScrimDelete = {
   id: string;
   open: boolean;
-  onConfirm: (id: string) => void;
+  onConfirm: (id: string, checked: boolean) => void;
   onClose: () => void;
   header?: string;
   warningMessage?: string;
   confirmMessage?: string;
+  checkboxMessage?: string;
   error?: unknown;
   isLoading?: boolean;
 };
@@ -24,9 +26,12 @@ export const ScrimDelete = ({
   header,
   warningMessage,
   confirmMessage,
+  checkboxMessage,
   error,
   isLoading,
 }: ScrimDelete) => {
+  const [checked, setChecked] = useState(false);
+
   return (
     <Scrim isDismissable open={open} onClose={onClose}>
       <div className={styles.scrimWrapper}>
@@ -52,6 +57,14 @@ export const ScrimDelete = ({
                 </Typography>
               )}
               <Typography variant={"h4"}>{warningMessage}</Typography>
+              {checkboxMessage && (
+                <Switch
+                  label={checkboxMessage}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setChecked(e.target.checked)
+                  }
+                />
+              )}
             </div>
             <div className={styles.buttonsGroup}>
               <Button variant={"outlined"} onClick={() => onClose()}>
@@ -60,7 +73,7 @@ export const ScrimDelete = ({
               <Button
                 variant={"contained"}
                 color={"danger"}
-                onClick={() => onConfirm(id)}
+                onClick={() => onConfirm(id, checked)}
               >
                 <Icon data={delete_forever} title="Delete" size={16} />
                 {confirmMessage}
