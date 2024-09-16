@@ -1,9 +1,15 @@
-import { Button, Icon, Scrim, Typography } from "@equinor/eds-core-react";
-import styles from "./ScrimDelete.module.scss";
-import { close as closeIcon, delete_forever } from "@equinor/eds-icons";
 import { unknownErrorToString } from "@/utils/isError";
-import { CircularProgress, Switch } from "@equinor/eds-core-react";
+import {
+  Button,
+  Checkbox,
+  CircularProgress,
+  Icon,
+  Scrim,
+  Typography,
+} from "@equinor/eds-core-react";
+import { close as closeIcon, delete_forever } from "@equinor/eds-icons";
 import { ChangeEvent, useState } from "react";
+import styles from "./ScrimDelete.module.scss";
 
 type ScrimDelete = {
   id: string;
@@ -58,7 +64,7 @@ export const ScrimDelete = ({
               )}
               <Typography variant={"h4"}>{warningMessage}</Typography>
               {checkboxMessage && (
-                <Switch
+                <Checkbox
                   label={checkboxMessage}
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     setChecked(e.target.checked)

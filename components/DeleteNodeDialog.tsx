@@ -61,12 +61,12 @@ export function DeleteNodeDialog(props: {
   let checkboxMessage = undefined;
   if (type === mainActivity) {
     warningMessage =
-      "This will delete everything under it.\nAre you sure you want to proceed?";
+      "This will delete all of its following cards.\nAre you sure you want to proceed?";
   } else if (type === choice) {
     warningMessage =
       "This will delete all connected alternatives.\nAre you sure you want to proceed?";
   } else if (type === subActivity || type === waiting) {
-    checkboxMessage = "Also delete everything under it";
+    checkboxMessage = "Delete all of its following cards";
   }
   const confirmMessage = "Delete";
   return (
