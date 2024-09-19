@@ -2,7 +2,7 @@ import { DurationComponent } from "./DurationComponent";
 import { QIPSection } from "./QIPSection";
 import { TextField } from "@equinor/eds-core-react";
 import dynamic from "next/dynamic";
-import { NodeData } from "../types/NodeData";
+import { NodeDataInteractable } from "../types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
 import { getNodeHelperText } from "./canvas/utils/getNodeHelperText";
 import { formatMinMaxTotalDuration } from "@/utils/unitDefinitions";
@@ -12,7 +12,7 @@ const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
 });
 
 export function SideBarBody(props: {
-  selectedNode: NodeData;
+  selectedNode: NodeDataInteractable;
   onChangeDescription: (value?: string) => void;
   onChangeRole: (event: { target: { value: string } }) => void;
   onChangeDuration: (e: {

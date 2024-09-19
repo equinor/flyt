@@ -7,7 +7,7 @@ import { notifyOthers } from "@/services/notifyOthers";
 import { unknownErrorToString } from "@/utils/isError";
 import { useUserAccount } from "./useUserAccount";
 import { useProjectId } from "@/hooks/useProjectId";
-import { NodeData } from "@/types/NodeData";
+import { NodeDataInteractable } from "@/types/NodeData";
 
 export type NodeMergeParams = {
   sourceId: string;
@@ -15,7 +15,7 @@ export type NodeMergeParams = {
 };
 
 export const useNodeMerge = () => {
-  const { getNodes, setNodes } = useReactFlow<NodeData>();
+  const { getNodes, setNodes } = useReactFlow<NodeDataInteractable>();
   const { projectId } = useProjectId();
   const connectionNodeIdSelector = (state: ReactFlowState) =>
     state.connectionNodeId;
@@ -62,7 +62,7 @@ export const useNodeMerge = () => {
           mergeOption:
             sourceNode &&
             sourceNode.id !== node.id &&
-            node.data.columnId == sourceNode?.data?.columnId &&
+            node.data.column?.id == sourceNode?.data?.column?.id &&
             !sourceNode.data.children.find((childId) => childId === node.id) &&
             !sourceNode.data.parents.find((parentId) => parentId === node.id),
         };

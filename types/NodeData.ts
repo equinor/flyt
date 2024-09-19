@@ -1,11 +1,17 @@
-import { NodeDataApi } from "./NodeDataApi";
+import { NodeDataCommonApi, NodeDataLinkedProcessApi } from "./NodeDataApi";
+import { NodeTypes } from "./NodeTypes";
 import { TimeDefinition } from "./TimeDefinition";
+
+export type Column = {
+  id: string;
+  firstNodeType: NodeTypes;
+} | null;
 
 export type NodeData = {
   parents: string[];
   isDropTarget?: boolean;
   isValidDropTarget?: boolean;
-  columnId: string | null;
+  column: Column;
   mergeOption?: boolean;
   handleMerge?: (sourceId: string | null, targetId: string | null) => void;
   handleClickNode?: () => void;
@@ -13,28 +19,37 @@ export type NodeData = {
   merging?: boolean;
   userCanEdit?: boolean;
   depth?: number;
-  isChoiceChild?: boolean;
+  parentTypes?: NodeTypes[];
   shapeHeight: number;
   shapeWidth: number;
   totalDurations?: {
     minTotalDuration: TimeDefinition[];
     maxTotalDuration: TimeDefinition[];
   };
-} & NodeDataApi;
+};
+
+export type NodeDataCommon = NodeData & NodeDataCommonApi;
+
+export type NodeDataLinkedProcess = NodeData & NodeDataLinkedProcessApi;
 
 export type NodeDataHidden = Pick<
   NodeData,
-  | "columnId"
+  | "column"
   | "parents"
   | "depth"
-  | "children"
   | "merging"
   | "isValidDropTarget"
   | "isDropTarget"
   | "mergeOption"
-  | "isChoiceChild"
+  | "parentTypes"
   | "shapeHeight"
   | "shapeWidth"
->;
+> &
+  Pick<NodeDataCommonApi, "children">;
 
-export type NodeDataFull = NodeData | NodeDataHidden;
+export type NodeDataFull =
+  | NodeDataCommon
+  | NodeDataLinkedProcess
+  | NodeDataHidden;
+
+export type NodeDataInteractable = NodeDataCommon | NodeDataLinkedProcess;

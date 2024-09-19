@@ -7,7 +7,7 @@ import { SubActivityButton } from "./SubActivityButton";
 import { NodeButtonsContainer } from "./NodeButtonsContainer";
 import { ChoiceButton } from "./ChoiceButton";
 import { WaitingButton } from "./WaitingButton";
-import { NodeData } from "types/NodeData";
+import { NodeDataCommon } from "types/NodeData";
 import { NodeProps } from "reactflow";
 import { NodeTypes } from "types/NodeTypes";
 import { MergeButton } from "./MergeButton";
@@ -22,6 +22,8 @@ import { QIPRContainer } from "./QIPRContainer";
 import { NodeTooltipSection } from "./NodeTooltipSection";
 import { NodeShape } from "./NodeShape";
 import { useNodeAdd } from "./hooks/useNodeAdd";
+import { getNodeTypeName } from "@/utils/getNodeTypeName";
+import { isChoiceChild } from "./utils/nodeRelationsHelper";
 
 export const SubActivityNode = ({
   data: {
@@ -38,14 +40,14 @@ export const SubActivityNode = ({
     mergeOption,
     handleClickNode,
     handleMerge,
-    isChoiceChild,
+    parentTypes,
     userCanEdit,
     mergeable,
     shapeHeight,
     shapeWidth,
   },
   dragging,
-}: NodeProps<NodeData>) => {
+}: NodeProps<NodeDataCommon>) => {
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
   const connectionNodeId = useStore((state) => state.connectionNodeId);
@@ -85,7 +87,7 @@ export const SubActivityNode = ({
               />
             )}
           </NodeButtonsContainer>
-          {isChoiceChild && (
+          {isChoiceChild(parentTypes) && (
             <>
               <NodeButtonsContainer position={Position.Right}>
                 <SubActivityButton
@@ -154,7 +156,7 @@ export const SubActivityNode = ({
           onMouseLeave={() => setHoveringShape(false)}
         >
           <NodeDescription
-            header={!description ? type : undefined}
+            header={!description ? getNodeTypeName(type) : undefined}
             description={description}
           />
           <div className={styles["node__role-container"]}>

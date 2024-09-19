@@ -1,12 +1,12 @@
 import styles from "./VSMCanvas.module.scss";
 import { Button, Icon, Typography } from "@equinor/eds-core-react";
 import { canDeleteNode } from "../utils/canDeleteNode";
-import { NodeData } from "../types/NodeData";
+import { NodeDataInteractable } from "../types/NodeData";
 import { close, delete_forever } from "@equinor/eds-icons";
 import { getNodeTypeName } from "utils/getNodeTypeName";
 
 export function SideBarHeader(props: {
-  object: NodeData;
+  object: NodeDataInteractable;
   onClose: () => void;
   onDelete: () => void;
   canEdit: boolean;

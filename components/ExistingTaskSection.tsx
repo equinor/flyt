@@ -4,7 +4,7 @@ import { useStoreDispatch } from "@/hooks/storeHooks";
 import styles from "./ExistingTaskSection.module.scss";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getTasksForProject, linkTask, unlinkTask } from "@/services/taskApi";
-import { NodeData } from "@/types/NodeData";
+import { NodeDataInteractable } from "@/types/NodeData";
 import { unknownErrorToString } from "utils/isError";
 import { notifyOthers } from "@/services/notifyOthers";
 import { useAccount, useMsal } from "@azure/msal-react";
@@ -15,7 +15,7 @@ import { TaskTypes } from "@/types/TaskTypes";
 export function ExistingTaskSection(props: {
   visible: boolean;
   existingTaskFilter: TaskTypes | null;
-  selectedNode: NodeData;
+  selectedNode: NodeDataInteractable;
 }) {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});

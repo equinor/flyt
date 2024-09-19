@@ -1,49 +1,68 @@
+import { userAccess } from "@/types/UserAccess";
 import { useEffect, useState } from "react";
 import { Connection, NodeProps, Position, useStore } from "reactflow";
-import { NodeButtonsContainer } from "./NodeButtonsContainer";
-import { SubActivityButton } from "./SubActivityButton";
-import { ChoiceButton } from "./ChoiceButton";
-import { WaitingButton } from "./WaitingButton";
-import { NodeTypes } from "types/NodeTypes";
-import { TargetHandle } from "./TargetHandle";
-import { MergeButton } from "./MergeButton";
-import { NodeDataCommon } from "types/NodeData";
 import colors from "theme/colors";
+import { NodeDataLinkedProcess } from "types/NodeData";
+import { NodeTypes } from "types/NodeTypes";
+import { ChoiceButton } from "./ChoiceButton";
+import { useNodeAdd } from "./hooks/useNodeAdd";
+import { MergeButton } from "./MergeButton";
+import { NodeButtonsContainer } from "./NodeButtonsContainer";
 import { NodeCard } from "./NodeCard";
 import { NodeDescription } from "./NodeDescription";
-import { SourceHandle } from "./SourceHandle";
 import { NodeShape } from "./NodeShape";
 import { NodeTooltip } from "./NodeTooltip";
 import { NodeTooltipSection } from "./NodeTooltipSection";
-import { useNodeAdd } from "./hooks/useNodeAdd";
-import { getNodeTypeName } from "@/utils/getNodeTypeName";
-import { isChoiceChild } from "./utils/nodeRelationsHelper";
+import { NodeUserDots } from "./NodeUserDots";
+import { SourceHandle } from "./SourceHandle";
+import { SubActivityButton } from "./SubActivityButton";
+import { TargetHandle } from "./TargetHandle";
+import { fullNameListToString } from "./utils/fullnameListToString";
+import { WaitingButton } from "./WaitingButton";
+import styles from "./Node.module.scss";
+import {
+  isChoiceChild,
+  isMainActivityColumn,
+} from "./utils/nodeRelationsHelper";
 
-export const ChoiceNode = ({
+export const LinkedProcessNode = ({
   data: {
-    id,
-    description,
     type,
-    isDropTarget,
+    tasks,
+    id,
+    userAccesses,
+    column,
     isValidDropTarget,
+    isDropTarget,
+    merging,
+    mergeOption,
     handleClickNode,
+    handleMerge,
     parentTypes,
     userCanEdit,
-    children,
-    mergeOption,
-    merging,
-    handleMerge,
     mergeable,
     shapeHeight,
     shapeWidth,
   },
   dragging,
-}: NodeProps<NodeDataCommon>) => {
+}: NodeProps<NodeDataLinkedProcess>) => {
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
-  const { addNode, isNodeButtonDisabled } = useNodeAdd();
   const connectionNodeId = useStore((state) => state.connectionNodeId);
-  const lastChild = children[children?.length - 1];
+  const { addNode, isNodeButtonDisabled } = useNodeAdd();
+
+  const dummyUserAccess: userAccess[] = [
+    {
+      accessId: 123456789,
+      user: "Test",
+      role: "Owner",
+      fullName: "Test User",
+    },
+  ];
+
+  const name = "Testing process hierarchy";
+  const updated = "Edited 2 hrs ago";
+  const fullNames = fullNameListToString(dummyUserAccess);
 
   useEffect(() => {
     setHovering(false);
@@ -51,37 +70,25 @@ export const ChoiceNode = ({
   }, [dragging, connectionNodeId]);
 
   const renderNodeButtons = () => {
-    if (userCanEdit && hovering && !merging) {
+    if (userCanEdit && hovering && !merging && isMainActivityColumn(column)) {
       return (
         <>
           <NodeButtonsContainer position={Position.Bottom}>
             <SubActivityButton
               onClick={() =>
-                addNode(
-                  lastChild || id,
-                  { type: NodeTypes.subActivity },
-                  lastChild ? Position.Right : Position.Bottom
-                )
+                addNode(id, { type: NodeTypes.subActivity }, Position.Bottom)
               }
               disabled={isNodeButtonDisabled(id, Position.Bottom)}
             />
             <ChoiceButton
               onClick={() =>
-                addNode(
-                  lastChild || id,
-                  { type: NodeTypes.choice },
-                  lastChild ? Position.Right : Position.Bottom
-                )
+                addNode(id, { type: NodeTypes.choice }, Position.Bottom)
               }
               disabled={isNodeButtonDisabled(id, Position.Bottom)}
             />
             <WaitingButton
               onClick={() =>
-                addNode(
-                  lastChild || id,
-                  { type: NodeTypes.waiting },
-                  lastChild ? Position.Right : Position.Bottom
-                )
+                addNode(id, { type: NodeTypes.waiting }, Position.Bottom)
               }
               disabled={isNodeButtonDisabled(id, Position.Bottom)}
             />
@@ -142,9 +149,7 @@ export const ChoiceNode = ({
 
   return (
     <div
-      onMouseEnter={() => {
-        !dragging && setHovering(true);
-      }}
+      onMouseEnter={() => !dragging && setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
       <NodeCard
@@ -154,25 +159,27 @@ export const ChoiceNode = ({
         darkened={isValidDropTarget === false}
       >
         <NodeShape
-          shape={"rhombus"}
-          color={colors.NODE_CHOICE}
+          shape={"square"}
+          color={colors.WHITE}
           width={shapeWidth}
           height={shapeHeight}
+          className={styles["node-shape-container--linkedProcess"]}
           onMouseEnter={() => !dragging && setHoveringShape(true)}
           onMouseLeave={() => setHoveringShape(false)}
         >
-          <NodeDescription
-            header={!description ? getNodeTypeName(type) : undefined}
-            description={description}
+          <NodeDescription header={name} helperText={updated} />
+          <NodeUserDots
+            userAccesses={dummyUserAccess}
+            onClick={handleClickNode}
           />
         </NodeShape>
       </NodeCard>
       <TargetHandle hidden={!mergeOption} />
       <SourceHandle />
-      <NodeTooltip isVisible={!!(hoveringShape && description)}>
-        {description && (
-          <NodeTooltipSection header={"Description"} text={description} />
-        )}
+      <NodeTooltip isVisible={hoveringShape}>
+        <NodeTooltipSection header={"Title"} text={name} />
+        <NodeTooltipSection header={"Last Updated"} text={updated} />
+        <NodeTooltipSection header={"Users"} text={fullNames} />
       </NodeTooltip>
       {renderNodeButtons()}
     </div>

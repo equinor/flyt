@@ -1,6 +1,6 @@
 import { moveVertice, moveVerticeRightOfTarget } from "@/services/graphApi";
 import { notifyOthers } from "@/services/notifyOthers";
-import { NodeData } from "@/types/NodeData";
+import { NodeDataInteractable } from "@/types/NodeData";
 import { NodeTypes } from "@/types/NodeTypes";
 import { unknownErrorToString } from "@/utils/isError";
 import { MouseEvent, useEffect, useRef, useState } from "react";
@@ -13,10 +13,14 @@ import { useUserAccount } from "./useUserAccount";
 import { useProjectId } from "@/hooks/useProjectId";
 
 export const useNodeDrag = () => {
-  const [source, setSource] = useState<Node<NodeData> | undefined>(undefined);
-  const [target, setTarget] = useState<Node<NodeData> | undefined>(undefined);
-  const { setNodes, getNodes } = useReactFlow<NodeData>();
-  const dragRef = useRef<Node<NodeData> | null>(null);
+  const [source, setSource] = useState<Node<NodeDataInteractable> | undefined>(
+    undefined
+  );
+  const [target, setTarget] = useState<Node<NodeDataInteractable> | undefined>(
+    undefined
+  );
+  const { setNodes, getNodes } = useReactFlow<NodeDataInteractable>();
+  const dragRef = useRef<Node<NodeDataInteractable> | null>(null);
   const dispatch = useStoreDispatch();
   const account = useUserAccount();
   const queryClient = useQueryClient();
@@ -34,7 +38,10 @@ export const useNodeDrag = () => {
     );
   }, [target]);
 
-  const onNodeDragStart = (_evt: MouseEvent, nodeDragging: Node<NodeData>) => {
+  const onNodeDragStart = (
+    _evt: MouseEvent,
+    nodeDragging: Node<NodeDataInteractable>
+  ) => {
     dragRef.current = nodeDragging;
     setNodes((nodes) =>
       nodes.map((node) => {
@@ -48,7 +55,7 @@ export const useNodeDrag = () => {
     setSource(nodeDragging);
   };
 
-  const onNodeDrag = (_evt: MouseEvent, node: Node<NodeData>) => {
+  const onNodeDrag = (_evt: MouseEvent, node: Node<NodeDataInteractable>) => {
     if (!node.width || !node.height) return;
     const centerX = node.position.x + node.width / 2;
     const centerY = node.position.y + node.height / 2;
@@ -65,7 +72,10 @@ export const useNodeDrag = () => {
     setTarget(targetNode);
   };
 
-  const onNodeDragStop = (_evt: MouseEvent, node: Node<NodeData>) => {
+  const onNodeDragStop = (
+    _evt: MouseEvent,
+    node: Node<NodeDataInteractable>
+  ) => {
     if (validTarget(node, target, getNodes())) {
       moveNode.mutate({
         nodeId: node.id,
@@ -123,11 +133,14 @@ export const useNodeDrag = () => {
     }
   );
 
-  const includeChildren = (source: Node<NodeData>, target: Node<NodeData>) => {
+  const includeChildren = (
+    source: Node<NodeDataInteractable>,
+    target: Node<NodeDataInteractable>
+  ) => {
     if (target.data.children.length === 0) {
       if (source?.data?.type === NodeTypes.choice) {
         return true;
-      } else if (target.data.columnId === source.data.columnId) {
+      } else if (target.data.column?.id === source.data.column?.id) {
         const nodes = getNodes();
         return !targetIsInSubtree(source, target, nodes);
       }

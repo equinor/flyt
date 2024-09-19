@@ -1,7 +1,8 @@
+import { Project } from "./Project";
 import { Task } from "./Task";
 import { NodeTypes } from "types/NodeTypes";
 
-export type NodeDataApi = {
+export type NodeDataCommonApi = {
   id: string;
   type: NodeTypes;
   projectId: string;
@@ -15,7 +16,19 @@ export type NodeDataApi = {
   tasks: Task[];
 };
 
-export type NodeDataApiRequestBody = Pick<NodeDataApi, "type"> &
+export type NodeDataLinkedProcessApi = NodeDataCommonApi &
+  Pick<Project, "name" | "updated" | "userAccesses"> & {
+    linkedProcessId: string;
+  };
+
+export type NodeDataInteractableApi =
+  | NodeDataCommonApi
+  | NodeDataLinkedProcessApi;
+
+export type NodeDataApiRequestBody = Pick<NodeDataCommonApi, "type"> &
   Partial<
-    Pick<NodeDataApi, "description" | "role" | "duration" | "unit" | "tasks">
+    Pick<
+      NodeDataCommonApi,
+      "description" | "role" | "duration" | "unit" | "tasks"
+    >
   >;

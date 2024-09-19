@@ -1,6 +1,6 @@
 import { ProcessLabel } from "./ProcessLabel";
 import { userAccess } from "./UserAccess";
-import { NodeDataApi } from "./NodeDataApi";
+import { NodeDataCommonApi } from "./NodeDataApi";
 
 // Todo: Structure is out of date. Update to match new structure.
 export type Project = {
@@ -12,7 +12,7 @@ export type Project = {
   created: string; // date
   updated: string; // date
   updatedBy: string;
-  objects: NodeDataApi[];
+  objects: NodeDataCommonApi[];
   userAccesses: userAccess[];
   duplicateOf?: number;
   isFavorite?: boolean;

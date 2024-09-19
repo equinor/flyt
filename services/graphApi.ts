@@ -2,7 +2,7 @@ const baseUrl = "/api/v2.0";
 
 import { NodeData } from "@/types/NodeData";
 import BaseAPIServices from "./BaseAPIServices";
-import { NodeDataApi, NodeDataApiRequestBody } from "@/types/NodeDataApi";
+import { NodeDataCommonApi, NodeDataApiRequestBody } from "@/types/NodeDataApi";
 import { Graph } from "types/Graph";
 import { NodeTypes } from "types/NodeTypes";
 
@@ -26,7 +26,7 @@ export const patchGraph = (
   data: NodeData,
   projectId: string | string[],
   vertexId: string
-): Promise<NodeDataApi> =>
+): Promise<NodeDataCommonApi> =>
   BaseAPIServices.put(
     `${baseUrl}/graph/${projectId}/vertices/${vertexId}`,
     data

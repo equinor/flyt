@@ -13,8 +13,8 @@ import ReactFlow, {
   useNodesState,
 } from "reactflow";
 import "reactflow/dist/style.css";
-import { NodeData, NodeDataFull } from "types/NodeData";
-import { NodeDataApi } from "types/NodeDataApi";
+import { Column, NodeDataFull, NodeDataInteractable } from "types/NodeData";
+import { NodeDataCommonApi, NodeDataInteractableApi } from "types/NodeDataApi";
 import { NodeTypes } from "types/NodeTypes";
 import { Project } from "types/Project";
 import { Graph } from "@/types/Graph";
@@ -43,6 +43,7 @@ import { useCopyPaste } from "./hooks/useCopyPaste";
 import { copyPasteNodeValidator } from "./utils/copyPasteValidators";
 import { validTarget } from "./utils/validTarget";
 import { useNodeAdd } from "./hooks/useNodeAdd";
+import { ProcessHierarchy } from "./ProcessHierarchy/ProcessHierarcy";
 
 type CanvasProps = {
   graph: Graph;
@@ -53,18 +54,18 @@ const Canvas = ({
   graph: { vertices: apiNodes, edges: apiEdges },
   project,
 }: CanvasProps) => {
-  const [selectedNode, setSelectedNode] = useState<Node<NodeData> | undefined>(
-    undefined
-  );
-  const [hoveredNode, setHoveredNode] = useState<Node<NodeData> | undefined>(
-    undefined
-  );
+  const [selectedNode, setSelectedNode] = useState<
+    Node<NodeDataInteractable> | undefined
+  >(undefined);
+  const [hoveredNode, setHoveredNode] = useState<
+    Node<NodeDataInteractable> | undefined
+  >(undefined);
   const { userCanEdit } = useAccess(project);
   const { addNode } = useNodeAdd();
 
   const shapeSize = { height: 140, width: 140 };
 
-  let tempNodes: Node<NodeData>[] = [];
+  let tempNodes: Node<NodeDataFull>[] = [];
   const tempEdges: Edge[] = apiEdges.map((e) => ({ ...e, label: e.edgeValue }));
 
   const [isEditingEdgeText, setIsEditingEdgeText] = useState(false);
@@ -85,23 +86,23 @@ const Canvas = ({
   const { socketConnected, socketReason } = useWebSocket();
   useCopyPaste(
     hoveredNode,
-    (node: Node<NodeData>) =>
+    (node: Node<NodeDataInteractable>) =>
       hoveredNode?.id &&
       validTarget(node, hoveredNode, nodes, false) &&
       addNode(hoveredNode.id, node.data, Position.Bottom),
     copyPasteNodeValidator
   );
 
-  let columnId: string | null = null;
+  let column: Column = null;
 
   const handleSetSelectedNode = (id?: string) => {
     const node = tempNodes.find((n) => n.id === id);
-    node && setSelectedNode(node as Node<NodeData>);
+    node && setSelectedNode(node as Node<NodeDataInteractable>);
   };
 
   const createNodes = (
-    node: NodeDataApi,
-    parent: NodeDataApi | null = null
+    node: NodeDataInteractableApi,
+    parent: NodeDataInteractableApi | null = null
   ) => {
     if (parent) {
       if (
@@ -111,7 +112,10 @@ const Canvas = ({
         node.type === NodeTypes.input ||
         node.type === NodeTypes.customer
       ) {
-        columnId = node.id;
+        column = {
+          id: node.id,
+          firstNodeType: node.type,
+        };
       }
 
       const duplicateNode = tempNodes.find(
@@ -123,9 +127,7 @@ const Canvas = ({
           const newData = tempNode.data;
           if (tempNode.id === node.id) {
             newData.parents.push(parent.id);
-            if (parent.type === NodeTypes.choice) {
-              newData.isChoiceChild = true;
-            }
+            newData.parentTypes && newData.parentTypes.push(parent.type);
             return { ...tempNode, data: newData };
           }
           return tempNode;
@@ -144,14 +146,14 @@ const Canvas = ({
             node.children.length === 0 || node.type === NodeTypes.choice,
           merging: merging,
           parents: [parent.id],
+          parentTypes: [parent.type],
           userCanEdit,
-          isChoiceChild: parent.type === NodeTypes.choice,
-          columnId,
+          column: column,
           shapeHeight: shapeSize.height,
           shapeWidth: shapeSize.width,
         },
         position: { x: 0, y: 0 },
-        type: node.type,
+        type: NodeTypes.linkedProcess,
         height: shapeSize.height,
         width: shapeSize.width + getQIPRContainerWidth(node.tasks),
         deletable: false,
@@ -162,7 +164,7 @@ const Canvas = ({
         data: {
           ...node,
           parents: [],
-          columnId: node.id,
+          column: column,
           shapeHeight: shapeSize.height,
           shapeWidth: shapeSize.width,
         },
@@ -243,7 +245,7 @@ const Canvas = ({
 
   useLayoutEffect(() => {
     const root = apiNodes.find(
-      (node: NodeDataApi) => node.type === NodeTypes.root
+      (node: NodeDataCommonApi) => node.type === NodeTypes.root
     );
 
     if (!root) {
@@ -253,7 +255,9 @@ const Canvas = ({
     }
 
     createNodes(root);
-    tempNodes = setMainActivitiesDurationSum(tempNodes);
+    tempNodes = setMainActivitiesDurationSum(
+      tempNodes as Node<NodeDataInteractable>[]
+    );
     setNodesDepth();
     const {
       tempNodes: tempWithHiddenNodes,
@@ -284,6 +288,7 @@ const Canvas = ({
         userCanEdit={userCanEdit}
         handleClickLabel={() => setVisibleLabelScrim(true)}
       />
+      <ProcessHierarchy />
       <ManageLabelBox
         handleClose={() => setVisibleLabelScrim(false)}
         isVisible={visibleLabelScrim}

@@ -1,4 +1,4 @@
-import { NodeData } from "../types/NodeData";
+import { NodeDataInteractable } from "../types/NodeData";
 import { Autocomplete, TextField } from "@equinor/eds-core-react";
 import {
   getTimeDefinitionDisplayName,
@@ -9,7 +9,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { sortSearch } from "@/utils/sortSearch";
 
 type DurationComponent = {
-  selectedNode: NodeData;
+  selectedNode: NodeDataInteractable;
   onChangeDuration: (e: {
     duration: number | null;
     unit: string | null;

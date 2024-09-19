@@ -1,6 +1,6 @@
 import { NodeTypes } from "@/types/NodeTypes";
 import { uid } from "@/utils/uuid";
-import { NodeDataFull } from "@/types/NodeData";
+import { NodeDataFull, NodeDataHidden } from "@/types/NodeData";
 import { Node, Edge } from "reactflow";
 
 export const createHiddenNodes = (
@@ -88,11 +88,11 @@ const createHiddenNode = (
   parentNode: Node<NodeDataFull>,
   depth: number,
   shapeSize: { height: number; width: number }
-) => ({
+): Node<NodeDataHidden> => ({
   id,
   data: {
     parents: [parentNode.id],
-    columnId: parentNode.data.columnId,
+    column: parentNode.data.column,
     depth: depth,
     children: [],
     shapeHeight: shapeSize.height,

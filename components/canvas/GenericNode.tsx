@@ -1,4 +1,4 @@
-import { NodeData } from "types/NodeData";
+import { NodeDataInteractable } from "types/NodeData";
 import { useState, useEffect } from "react";
 import { Handle, NodeProps, Position } from "reactflow";
 import stylesNodeButtons from "./NodeButtons.module.scss";
@@ -30,7 +30,7 @@ export const GenericNode = ({
     shapeWidth,
   },
   dragging,
-}: NodeProps<NodeData>) => {
+}: NodeProps<NodeDataInteractable>) => {
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();

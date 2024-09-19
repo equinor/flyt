@@ -9,7 +9,7 @@ import { NodeButtonsContainer } from "./NodeButtonsContainer";
 import { SubActivityButton } from "./SubActivityButton";
 import { ChoiceButton } from "./ChoiceButton";
 import { WaitingButton } from "./WaitingButton";
-import { NodeData } from "types/NodeData";
+import { NodeDataCommon } from "types/NodeData";
 import { NodeProps } from "reactflow";
 import { NodeTypes } from "types/NodeTypes";
 import { MergeButton } from "./MergeButton";
@@ -23,6 +23,8 @@ import { NodeTooltip } from "./NodeTooltip";
 import { NodeTooltipSection } from "./NodeTooltipSection";
 import { QIPRContainer } from "./QIPRContainer";
 import { useNodeAdd } from "./hooks/useNodeAdd";
+import { getNodeTypeName } from "@/utils/getNodeTypeName";
+import { isChoiceChild } from "./utils/nodeRelationsHelper";
 
 export const WaitingNode = ({
   data: {
@@ -39,13 +41,13 @@ export const WaitingNode = ({
     handleClickNode,
     handleMerge,
     merging,
-    isChoiceChild,
+    parentTypes,
     userCanEdit,
     shapeHeight,
     shapeWidth,
   },
   dragging,
-}: NodeProps<NodeData>) => {
+}: NodeProps<NodeDataCommon>) => {
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
   const connectionNodeId = useStore((state) => state.connectionNodeId);
@@ -85,7 +87,7 @@ export const WaitingNode = ({
               />
             )}
           </NodeButtonsContainer>
-          {isChoiceChild && (
+          {isChoiceChild(parentTypes) && (
             <>
               <NodeButtonsContainer position={Position.Right}>
                 <SubActivityButton
@@ -154,7 +156,7 @@ export const WaitingNode = ({
           onMouseLeave={() => setHoveringShape(false)}
         >
           <NodeDescription
-            header={!description ? type : undefined}
+            header={!description ? getNodeTypeName(type) : undefined}
             description={description}
           />
           <div className={styles["node__waitingtime-container"]}>
