@@ -2,7 +2,7 @@ import { Button, Icon, Scrim, Tooltip } from "@equinor/eds-core-react";
 import { useState } from "react";
 import { faveProject, unfaveProject } from "services/projectApi";
 import { useMutation, useQueryClient } from "react-query";
-
+import colors from "@/theme/colors";
 import { AccessBox } from "components/AccessBox";
 import { Heart } from "components/Heart";
 import { Labels } from "components/Labels/Labels";
@@ -15,14 +15,26 @@ import Link from "next/link";
 import { Project } from "@/types/Project";
 import { useAccess } from "../canvas/hooks/useAccess";
 
-export function ProjectCard(props: { vsm: Project }) {
+type ProjectCardProps = {
+  vsm: Project;
+  readOnly?: boolean;
+  onClick?: (vsm: Project) => void;
+  selected?: boolean;
+};
+
+export const ProjectCard = ({
+  vsm,
+  readOnly,
+  onClick,
+  selected,
+}: ProjectCardProps) => {
   const queryClient = useQueryClient();
   const [isMutatingFavourite, setIsMutatingFavourite] = useState(false);
 
   const [visibleScrim, setVisibleScrim] = useState(false);
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
 
-  const { isAdmin, userCanEdit } = useAccess(props.vsm);
+  const { isAdmin, userCanEdit } = useAccess(vsm);
 
   const handleSettled = () => {
     queryClient.invalidateQueries().then(() => setIsMutatingFavourite(false));
@@ -31,7 +43,7 @@ export function ProjectCard(props: { vsm: Project }) {
   const faveMutation = useMutation(
     () => {
       setIsMutatingFavourite(true);
-      return faveProject(props.vsm.vsmProjectID);
+      return faveProject(vsm.vsmProjectID);
     },
     {
       onSettled: handleSettled,
@@ -41,7 +53,7 @@ export function ProjectCard(props: { vsm: Project }) {
   const unfaveMutation = useMutation(
     () => {
       setIsMutatingFavourite(true);
-      return unfaveProject(props.vsm.vsmProjectID);
+      return unfaveProject(vsm.vsmProjectID);
     },
     {
       onSettled: handleSettled,
@@ -50,25 +62,34 @@ export function ProjectCard(props: { vsm: Project }) {
 
   return (
     <>
-      <Link href={`/process/${props.vsm.vsmProjectID}`} className={styles.card}>
+      <Link
+        href={`/process/${vsm.vsmProjectID}`}
+        onClickCapture={(e) => readOnly && e.preventDefault()}
+        className={styles.card}
+        style={{
+          background: selected ? colors.EQUINOR_SELECTED_HIGHLIGHT : "",
+        }}
+        onClick={() => onClick && onClick(vsm)}
+      >
         <div className={styles.section}>
-          <ProjectCardHeader vsm={props.vsm} />
+          <ProjectCardHeader vsm={vsm} />
           <Heart
-            isFavourite={props.vsm.isFavorite ?? false}
+            isFavourite={vsm.isFavorite ?? false}
             fave={() => faveMutation.mutate()}
             unfave={() => unfaveMutation.mutate()}
             isLoading={isMutatingFavourite}
+            disabled={readOnly}
           />
         </div>
         <div className={`${styles.section} ${styles.labelSection}`}>
-          <Labels labels={props.vsm.labels} />
+          <Labels labels={vsm.labels} />
         </div>
         <div className={`${styles.section} ${styles.bottomSection}`}>
           <UserDots
-            userAccesses={props.vsm.userAccesses}
-            setVisibleScrim={(any: boolean) => setVisibleScrim(any)}
+            userAccesses={vsm.userAccesses}
+            onClick={() => !readOnly && setVisibleScrim(true)}
           />
-          {userCanEdit && (
+          {userCanEdit && !readOnly && (
             <Tooltip title="Manage process labels" placement="right">
               <Button
                 color="primary"
@@ -92,7 +113,7 @@ export function ProjectCard(props: { vsm: Project }) {
         isDismissable
       >
         <AccessBox
-          project={props.vsm}
+          project={vsm}
           handleClose={() => setVisibleScrim(false)}
           isAdmin={isAdmin}
         />
@@ -101,8 +122,8 @@ export function ProjectCard(props: { vsm: Project }) {
       <ManageLabelBox
         handleClose={() => setVisibleLabelScrim(false)}
         isVisible={visibleLabelScrim}
-        process={props.vsm}
+        process={vsm}
       />
     </>
   );
-}
+};

@@ -43,7 +43,7 @@ import { useCopyPaste } from "./hooks/useCopyPaste";
 import { copyPasteNodeValidator } from "./utils/copyPasteValidators";
 import { validTarget } from "./utils/validTarget";
 import { useNodeAdd } from "./hooks/useNodeAdd";
-import { ProcessHierarchy } from "./ProcessHierarchy/ProcessHierarcy";
+import { ProcessConnectionForm } from "./ProcessConnectionForm";
 
 type CanvasProps = {
   graph: Graph;
@@ -72,6 +72,8 @@ const Canvas = ({
   const [nodes, setNodes, onNodesChange] = useNodesState<NodeDataFull>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
+  const [visibleLinkSubprocessDialog, setVisibleLinkSubprocessDialog] =
+    useState(true);
   const [visibleDeleteNodeScrim, setVisibleDeleteNodeScrim] = useState(false);
   const [edgeToBeDeletedId, setEdgeToBeDeletedId] = useState<
     string | undefined
@@ -288,7 +290,11 @@ const Canvas = ({
         userCanEdit={userCanEdit}
         handleClickLabel={() => setVisibleLabelScrim(true)}
       />
-      <ProcessHierarchy />
+      <ProcessConnectionForm
+        project={project}
+        isOpen={visibleLinkSubprocessDialog}
+        onClose={() => setVisibleLinkSubprocessDialog(false)}
+      />
       <ManageLabelBox
         handleClose={() => setVisibleLabelScrim(false)}
         isVisible={visibleLabelScrim}

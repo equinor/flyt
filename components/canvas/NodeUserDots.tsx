@@ -11,7 +11,7 @@ export const NodeUserDots = ({ userAccesses, onClick }: NodeUserDotsProps) => (
   <div className={styles["node__userdots-container"]}>
     <UserDots
       userAccesses={userAccesses}
-      setVisibleScrim={() => onClick && onClick()}
+      onClick={() => onClick && onClick()}
       hideTooltip
     />
   </div>

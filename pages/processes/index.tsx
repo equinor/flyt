@@ -1,7 +1,7 @@
 import { ActiveFilterSection } from "components/Labels/ActiveFilterSection";
 import { FilterLabelButton } from "components/Labels/FilterLabelButton";
 import { FilterUserButton } from "components/FilterUserButton";
-import { InfiniteFrontPageBody } from "components/InfiniteFrontPageBody";
+import { ProjectList } from "components/ProjectList";
 import Head from "next/head";
 import { Layouts } from "@/layouts/LayoutWrapper";
 import { SearchField } from "components/SearchField";
@@ -9,13 +9,15 @@ import { SideNavBar } from "components/SideNavBar";
 import { SortSelect } from "@/components/SortSelect";
 import { Typography } from "@equinor/eds-core-react";
 import styles from "./FrontPage.module.scss";
-import { useProcessesQuery } from "@/hooks/useProcessesQuery";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { getQueryAllProcesses } from "@/components/canvas/utils/projectQueries";
 
 export default function AllProcesses() {
-  const { query } = useProcessesQuery();
+  const query = getQueryAllProcesses(35);
+  useInfiniteScroll(query);
 
   return (
-    <div>
+    <>
       <Head>
         <title>Flyt | All processes</title>
         <link rel={"icon"} href={"/favicon.ico"} />
@@ -40,10 +42,10 @@ export default function AllProcesses() {
               <ActiveFilterSection />
             </div>
           </div>
-          <InfiniteFrontPageBody showNewProcessButton={true} query={query} />
+          <ProjectList showNewProcessButton={true} query={query} />
         </div>
       </main>
-    </div>
+    </>
   );
 }
 

@@ -6,10 +6,10 @@ import styles from "./UserDots.module.scss";
 
 export function UserDots(props: {
   userAccesses: userAccess[];
-  setVisibleScrim: (any: boolean) => void;
+  onClick: () => void;
   hideTooltip?: boolean;
 }): JSX.Element {
-  const { userAccesses, setVisibleScrim, hideTooltip } = props;
+  const { userAccesses, onClick, hideTooltip } = props;
   const shownUsers =
     userAccesses.length > 3 ? userAccesses.slice(0, 3) : userAccesses;
   const numberOtherUsers = userAccesses.length - shownUsers.length;
@@ -22,7 +22,7 @@ export function UserDots(props: {
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          setVisibleScrim(true);
+          onClick();
         }}
       >
         <UserDotsAccordion users={shownUsers} />

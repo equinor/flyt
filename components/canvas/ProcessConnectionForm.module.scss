@@ -1,0 +1,53 @@
+@import "styles/_variables.scss";
+
+.container {
+  width: 80vw !important;
+  min-height: 880px;
+  min-width: 480px;
+}
+
+.title {
+  align-self: center !important;
+}
+
+.custom-content-container {
+  display: flex;
+  flex-direction: column;
+  row-gap: 30px;
+  height: 80vh;
+}
+
+.actions-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+  column-gap: 15px;
+}
+
+.projects-container {
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
+  background-color: $equinor_LIGHT_GRAY;
+  padding: 15px;
+}
+
+.confirm-title {
+  margin-bottom: 100px !important;
+  text-align: center !important;
+}
+
+.confirm-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: $equinor_LIGHT_GRAY;
+  padding: 80px;
+  height: 100%;
+}
+
+.confirm-arrow {
+  margin-bottom: 15px;
+}
