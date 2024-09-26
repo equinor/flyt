@@ -42,61 +42,58 @@ export const ContextMenu = ({
     );
   };
 
-  const modifierKey = window.navigator.platform === "MacIntel" ? "⌘" : "Ctrl";
+  const modifierKey = navigator.userAgent.includes("Mac") ? "⌘" : "Ctrl";
 
   const renderOptionsAddNode = (node: Node<NodeData>) => {
     const optionsAddNode = getOptionsAddNode(node);
-    const entries = Object.entries(optionsAddNode);
-    if (entries.length > 0) {
-      const fullyExpandedWidth = 400;
-      const reversedExpandDir = isReversedExpandDirection(fullyExpandedWidth);
-      return (
-        <MenuItemExandable text="Add" reverseExpandDir={reversedExpandDir}>
-          {entries.map(([position, nodeTypes]) => (
-            <MenuItemExandable
-              text={capitalizeFirstLetter(position)}
-              reverseExpandDir={reversedExpandDir}
-              key={position}
-            >
-              {nodeTypes.map((nodeType) => (
-                <Menu.Item
-                  disabled={isNodeButtonDisabled(node.id, position as Position)}
-                  key={nodeType}
-                  onClick={() =>
-                    addNode(node.id, { type: nodeType }, position as Position)
-                  }
-                >
-                  {getNodeTypeName(nodeType)}
-                </Menu.Item>
-              ))}
-            </MenuItemExandable>
-          ))}
-        </MenuItemExandable>
-      );
-    }
+    if (optionsAddNode.length === 0) return;
+    const fullyExpandedWidth = 400;
+    const reversedExpandDir = isReversedExpandDirection(fullyExpandedWidth);
+    return (
+      <MenuItemExandable text="Add" reverseExpandDir={reversedExpandDir}>
+        {optionsAddNode.map(([position, nodeTypes]) => (
+          <MenuItemExandable
+            text={capitalizeFirstLetter(position)}
+            reverseExpandDir={reversedExpandDir}
+            key={position}
+          >
+            {nodeTypes.map((nodeType) => (
+              <Menu.Item
+                disabled={isNodeButtonDisabled(node.id, position as Position)}
+                key={nodeType}
+                onClick={() =>
+                  addNode(node.id, { type: nodeType }, position as Position)
+                }
+              >
+                {getNodeTypeName(nodeType)}
+              </Menu.Item>
+            ))}
+          </MenuItemExandable>
+        ))}
+      </MenuItemExandable>
+    );
   };
 
   const renderNodeMenuItems = () => {
-    if (node) {
-      return (
-        <>
-          <Menu.Item onClick={() => copyToClipBoard?.(node)}>
-            <div>Copy</div>
-            <div>{modifierKey}C</div>
-          </Menu.Item>
-          <Menu.Item onClick={paste}>
-            <div>Paste</div>
-            <div>{modifierKey}V</div>
-          </Menu.Item>
-          <Menu.Item onClick={() => onEditNode?.(node)}>Edit</Menu.Item>
-          {renderOptionsAddNode(node)}
-          <Menu.Item onClick={() => onDelete?.(node)}>
-            <div>Delete</div>
-            <div>⌫</div>
-          </Menu.Item>
-        </>
-      );
-    }
+    if (!node) return;
+    return (
+      <>
+        <Menu.Item onClick={() => copyToClipBoard?.(node)}>
+          <div>Copy</div>
+          <div>{modifierKey}+C</div>
+        </Menu.Item>
+        <Menu.Item onClick={paste}>
+          <div>Paste</div>
+          <div>{modifierKey}+V</div>
+        </Menu.Item>
+        <Menu.Item onClick={() => onEditNode?.(node)}>Edit</Menu.Item>
+        {renderOptionsAddNode(node)}
+        <Menu.Item onClick={() => onDelete?.(node)}>
+          <div>Delete</div>
+          <div>⌫</div>
+        </Menu.Item>
+      </>
+    );
   };
 
   return (

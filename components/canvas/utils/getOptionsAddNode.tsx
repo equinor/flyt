@@ -42,5 +42,5 @@ export const getOptionsAddNode = (node: Node<NodeData>) => {
     };
   }
 
-  return options;
+  return Object.entries(options);
 };
