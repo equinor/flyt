@@ -54,20 +54,29 @@ export function DeleteNodeDialog(props: {
       includeChildren: includeChildren,
     });
 
-  const { type } = props.objectToDelete;
+  const { type, children } = props.objectToDelete;
+  const hasChildren = children.length > 0;
 
   const header = `Delete ${getNodeTypeName(type).toLowerCase()}`;
-  let warningMessage = "This will delete the selected card";
-  let checkboxMessage = undefined;
-  if (type === mainActivity) {
-    warningMessage =
-      "This will delete all of its following cards.\nAre you sure you want to proceed?";
-  } else if (type === choice) {
-    warningMessage =
-      "This will delete all connected alternatives.\nAre you sure you want to proceed?";
-  } else if (type === subActivity || type === waiting) {
-    checkboxMessage = "Delete all of its following cards";
-  }
+
+  const getWarningMessage = () => {
+    if (type === mainActivity && hasChildren) {
+      return "This will delete all of its following cards.\nAre you sure you want to proceed?";
+    } else if (type === choice && hasChildren) {
+      return "This will delete all connected alternatives.\nAre you sure you want to proceed?";
+    }
+    return "This will delete the selected card";
+  };
+
+  const getCheckboxMessage = () => {
+    if ((type === subActivity || type === waiting) && hasChildren) {
+      return "Delete all of its following cards";
+    }
+  };
+
+  const warningMessage = getWarningMessage();
+  const checkboxMessage = getCheckboxMessage();
+
   const confirmMessage = "Delete";
   return (
     <ScrimDelete
