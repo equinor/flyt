@@ -1,30 +1,52 @@
 import { NodeData } from "@/types/NodeData";
 import { NodeTypes } from "@/types/NodeTypes";
-import { Node } from "reactflow";
+import { Node, Position } from "reactflow";
 
-const optionsMatrix = {
+type OptionsMatrix = {
+  [key in NodeTypes]: {
+    [key in Position]?: NodeTypes[];
+  };
+};
+
+const optionsMatrix: OptionsMatrix = {
   [NodeTypes.root]: {},
   [NodeTypes.supplier]: {},
   [NodeTypes.input]: {
-    right: [NodeTypes.mainActivity],
+    [Position.Right]: [NodeTypes.mainActivity],
   },
   [NodeTypes.output]: {
-    left: [NodeTypes.mainActivity],
+    [Position.Left]: [NodeTypes.mainActivity],
   },
   [NodeTypes.customer]: {},
   [NodeTypes.mainActivity]: {
-    bottom: [NodeTypes.subActivity, NodeTypes.choice, NodeTypes.waiting],
-    left: [NodeTypes.mainActivity],
-    right: [NodeTypes.mainActivity],
+    [Position.Bottom]: [
+      NodeTypes.subActivity,
+      NodeTypes.choice,
+      NodeTypes.waiting,
+    ],
+    [Position.Left]: [NodeTypes.mainActivity],
+    [Position.Right]: [NodeTypes.mainActivity],
   },
   [NodeTypes.subActivity]: {
-    bottom: [NodeTypes.subActivity, NodeTypes.choice, NodeTypes.waiting],
+    [Position.Bottom]: [
+      NodeTypes.subActivity,
+      NodeTypes.choice,
+      NodeTypes.waiting,
+    ],
   },
   [NodeTypes.waiting]: {
-    bottom: [NodeTypes.subActivity, NodeTypes.choice, NodeTypes.waiting],
+    [Position.Bottom]: [
+      NodeTypes.subActivity,
+      NodeTypes.choice,
+      NodeTypes.waiting,
+    ],
   },
   [NodeTypes.choice]: {
-    bottom: [NodeTypes.subActivity, NodeTypes.choice, NodeTypes.waiting],
+    [Position.Bottom]: [
+      NodeTypes.subActivity,
+      NodeTypes.choice,
+      NodeTypes.waiting,
+    ],
   },
   [NodeTypes.text]: {},
   [NodeTypes.hidden]: {},
@@ -42,5 +64,5 @@ export const getOptionsAddNode = (node: Node<NodeData>) => {
     };
   }
 
-  return Object.entries(options);
+  return Object.entries(options) as [Position, NodeTypes[]][];
 };

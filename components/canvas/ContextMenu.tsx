@@ -3,7 +3,7 @@ import { getNodeTypeName } from "@/utils/getNodeTypeName";
 import { capitalizeFirstLetter } from "@/utils/stringHelpers";
 import { Menu } from "@equinor/eds-core-react";
 import { RefObject, useState } from "react";
-import { Node, Position } from "reactflow";
+import { Node } from "reactflow";
 import { MenuItemExandable } from "../MenuItemExandable";
 import styles from "./ContextMenu.module.scss";
 import type { MenuData } from "./hooks/useContextMenu";
@@ -59,11 +59,9 @@ export const ContextMenu = ({
           >
             {nodeTypes.map((nodeType) => (
               <Menu.Item
-                disabled={isNodeButtonDisabled(node.id, position as Position)}
+                disabled={isNodeButtonDisabled(node.id, position)}
                 key={nodeType}
-                onClick={() =>
-                  addNode(node.id, { type: nodeType }, position as Position)
-                }
+                onClick={() => addNode(node.id, { type: nodeType }, position)}
               >
                 {getNodeTypeName(nodeType)}
               </Menu.Item>
