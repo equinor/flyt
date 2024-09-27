@@ -7,6 +7,7 @@ import addNewWait from "../../../public/CanvasTutorial/add-new-wait.gif";
 import mergeActivities from "../../../public/CanvasTutorial/merge-activities.gif";
 import renameEdge from "../../../public/CanvasTutorial/rename-edge.gif";
 import deleteEdge from "../../../public/CanvasTutorial/delete-edge.gif";
+import copyPaste from "../../../public/CanvasTutorial/copy-paste.gif";
 import mainActivity from "../../../public/CanvasTutorial/main-activity.svg";
 import subActivity from "../../../public/CanvasTutorial/sub-activity.svg";
 import choice from "../../../public/CanvasTutorial/choice.svg";
@@ -115,11 +116,21 @@ export const CanvasTutorial = () => {
               containerRef={refs["delete-edge"]}
               title="Remove lines"
               image={deleteEdge}
-              style={{ marginBottom: "32px" }}
             >
               Hover over a removable line. Click the remove button to remove the
               line. Removeable lines are only found above a subactivity that has
               multiple parent connections.
+            </CanvasTutorialSection>
+            <CanvasTutorialSection
+              containerRef={refs["copy-paste"]}
+              title="Copy and paste"
+              image={copyPaste}
+              style={{ marginBottom: "32px" }}
+            >
+              Hover over a card. Right click to open the context menu. Press the
+              &quot;Copy&quot; button to copy the card. Hover over the card you
+              want to add the copied card beneath. Right click and press the
+              &quot;Paste&quot; button.
             </CanvasTutorialSection>
           </div>
         </Dialog.CustomContent>
