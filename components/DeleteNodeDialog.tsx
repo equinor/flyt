@@ -20,19 +20,18 @@ export function DeleteNodeDialog(props: {
   const { projectId } = useProjectId();
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
-  const { choice, mainActivity } = NodeTypes;
+  const { choice, mainActivity, subActivity, waiting } = NodeTypes;
 
   const deleteMutation = useMutation(
     ({
       id,
       projectId,
-      type,
+      includeChildren,
     }: {
       id: string;
       projectId: string;
-      type: string;
-    }) =>
-      deleteVertice(id, projectId, type === mainActivity || type === choice),
+      includeChildren: boolean;
+    }) => deleteVertice(id, projectId, includeChildren),
     {
       onSuccess() {
         handleClose();
@@ -45,24 +44,36 @@ export function DeleteNodeDialog(props: {
   );
 
   const handleClose = () => props.onClose();
-  const handleDelete = () =>
+  const handleDelete = (includeChildren: boolean) =>
     deleteMutation.mutate({
       id: props.objectToDelete.id,
       projectId: props.objectToDelete.projectId,
-      type: props.objectToDelete.type,
+      includeChildren: includeChildren,
     });
 
-  const { type } = props.objectToDelete;
+  const { type, children } = props.objectToDelete;
+  const hasChildren = children.length > 0;
 
   const header = `Delete ${getNodeTypeName(type).toLowerCase()}`;
-  let warningMessage = "This will delete the selected card.";
-  if (type === mainActivity) {
-    warningMessage =
-      "This will delete everything under it.\nAre you sure you want to proceed?";
-  } else if (type === choice) {
-    warningMessage =
-      "This will delete all connected alternatives.\nAre you sure you want to proceed?";
-  }
+
+  const getWarningMessage = () => {
+    if (type === mainActivity && hasChildren) {
+      return "This will delete all of its following cards.\nAre you sure you want to proceed?";
+    } else if (type === choice && hasChildren) {
+      return "This will delete all connected alternatives.\nAre you sure you want to proceed?";
+    }
+    return "This will delete the selected card";
+  };
+
+  const getCheckboxMessage = () => {
+    if ((type === subActivity || type === waiting) && hasChildren) {
+      return "Delete all of its following cards";
+    }
+  };
+
+  const warningMessage = getWarningMessage();
+  const checkboxMessage = getCheckboxMessage();
+
   const confirmMessage = "Delete";
   return (
     <ScrimDelete
@@ -70,10 +81,11 @@ export function DeleteNodeDialog(props: {
       open
       header={header}
       onClose={handleClose}
-      onConfirm={handleDelete}
+      onConfirm={(_, includeChildren) => handleDelete(includeChildren)}
       error={deleteMutation.error}
       warningMessage={warningMessage}
       confirmMessage={confirmMessage}
+      checkboxMessage={checkboxMessage}
       isLoading={deleteMutation.isLoading}
     />
   );
