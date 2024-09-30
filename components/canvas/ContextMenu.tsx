@@ -8,7 +8,7 @@ import { MenuItemExandable } from "../MenuItemExandable";
 import styles from "./ContextMenu.module.scss";
 import type { MenuData } from "./hooks/useContextMenu";
 import { useNodeAdd } from "./hooks/useNodeAdd";
-import { getOptionsAddNode } from "./utils/getOptionsAddNode";
+import { getOptionsAddNode } from "./utils/nodeValidityHelper";
 
 type ContextMenuProps = {
   menuData: MenuData;
@@ -74,22 +74,28 @@ export const ContextMenu = ({
 
   const renderNodeMenuItems = () => {
     if (!node) return;
+    const { deletable, copyable } = node.data;
     return (
       <>
-        <Menu.Item onClick={() => copyToClipBoard?.(node)}>
-          <div>Copy</div>
-          <div>{modifierKey}+C</div>
-        </Menu.Item>
-        <Menu.Item onClick={paste}>
-          <div>Paste</div>
-          <div>{modifierKey}+V</div>
-        </Menu.Item>
+        {copyable && (
+          <>
+            <Menu.Item onClick={() => copyToClipBoard?.(node)}>
+              <div>Copy</div>
+              <div>{modifierKey}+C</div>
+            </Menu.Item>
+            <Menu.Item onClick={paste}>
+              <div>Paste</div>
+              <div>{modifierKey}+V</div>
+            </Menu.Item>
+          </>
+        )}
         <Menu.Item onClick={() => onEditNode?.(node)}>Edit</Menu.Item>
         {renderOptionsAddNode(node)}
-        <Menu.Item onClick={() => onDelete?.(node)}>
-          <div>Delete</div>
-          <div>⌫</div>
-        </Menu.Item>
+        {deletable && (
+          <Menu.Item onClick={() => onDelete?.(node)}>
+            <div>Delete</div>
+          </Menu.Item>
+        )}
       </>
     );
   };

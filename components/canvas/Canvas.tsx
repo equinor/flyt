@@ -45,6 +45,7 @@ import { validTarget } from "./utils/validTarget";
 import { useNodeAdd } from "./hooks/useNodeAdd";
 import { useContextMenu } from "./hooks/useContextMenu";
 import { ContextMenu } from "./ContextMenu";
+import { nodeValidityMap } from "./utils/nodeValidityHelper";
 
 type CanvasProps = {
   graph: Graph;
@@ -154,6 +155,8 @@ const Canvas = ({
           mergeable:
             node.children.length === 0 || node.type === NodeTypes.choice,
           merging: merging,
+          deletable: nodeValidityMap[node.type].deletable,
+          copyable: nodeValidityMap[node.type].copyable,
           parents: [parent.id],
           userCanEdit,
           isChoiceChild: parent.type === NodeTypes.choice,
@@ -172,6 +175,8 @@ const Canvas = ({
         id: node.id,
         data: {
           ...node,
+          deletable: nodeValidityMap[node.type].deletable,
+          copyable: nodeValidityMap[node.type].copyable,
           parents: [],
           columnId: node.id,
           shapeHeight: shapeSize.height,
