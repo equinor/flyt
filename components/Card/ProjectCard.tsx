@@ -16,14 +16,14 @@ import { Project } from "@/types/Project";
 import { useAccess } from "../canvas/hooks/useAccess";
 
 type ProjectCardProps = {
-  vsm: Project;
+  project: Project;
   readOnly?: boolean;
   onClick?: (vsm: Project) => void;
   selected?: boolean;
 };
 
 export const ProjectCard = ({
-  vsm,
+  project,
   readOnly,
   onClick,
   selected,
@@ -34,7 +34,7 @@ export const ProjectCard = ({
   const [visibleScrim, setVisibleScrim] = useState(false);
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
 
-  const { isAdmin, userCanEdit } = useAccess(vsm);
+  const { isAdmin, userCanEdit } = useAccess(project);
 
   const handleSettled = () => {
     queryClient.invalidateQueries().then(() => setIsMutatingFavourite(false));
@@ -43,7 +43,7 @@ export const ProjectCard = ({
   const faveMutation = useMutation(
     () => {
       setIsMutatingFavourite(true);
-      return faveProject(vsm.vsmProjectID);
+      return faveProject(project.vsmProjectID);
     },
     {
       onSettled: handleSettled,
@@ -53,7 +53,7 @@ export const ProjectCard = ({
   const unfaveMutation = useMutation(
     () => {
       setIsMutatingFavourite(true);
-      return unfaveProject(vsm.vsmProjectID);
+      return unfaveProject(project.vsmProjectID);
     },
     {
       onSettled: handleSettled,
@@ -63,18 +63,18 @@ export const ProjectCard = ({
   return (
     <>
       <Link
-        href={`/process/${vsm.vsmProjectID}`}
+        href={`/process/${project.vsmProjectID}`}
         onClickCapture={(e) => readOnly && e.preventDefault()}
         className={styles.card}
         style={{
           background: selected ? colors.EQUINOR_SELECTED_HIGHLIGHT : "",
         }}
-        onClick={() => onClick && onClick(vsm)}
+        onClick={() => onClick && onClick(project)}
       >
         <div className={styles.section}>
-          <ProjectCardHeader vsm={vsm} />
+          <ProjectCardHeader project={project} />
           <Heart
-            isFavourite={vsm.isFavorite ?? false}
+            isFavourite={project.isFavorite ?? false}
             fave={() => faveMutation.mutate()}
             unfave={() => unfaveMutation.mutate()}
             isLoading={isMutatingFavourite}
@@ -82,11 +82,11 @@ export const ProjectCard = ({
           />
         </div>
         <div className={`${styles.section} ${styles.labelSection}`}>
-          <Labels labels={vsm.labels} />
+          <Labels labels={project.labels} />
         </div>
         <div className={`${styles.section} ${styles.bottomSection}`}>
           <UserDots
-            userAccesses={vsm.userAccesses}
+            userAccesses={project.userAccesses}
             onClick={() => !readOnly && setVisibleScrim(true)}
           />
           {userCanEdit && !readOnly && (
@@ -113,7 +113,7 @@ export const ProjectCard = ({
         isDismissable
       >
         <AccessBox
-          project={vsm}
+          project={project}
           handleClose={() => setVisibleScrim(false)}
           isAdmin={isAdmin}
         />
@@ -122,7 +122,7 @@ export const ProjectCard = ({
       <ManageLabelBox
         handleClose={() => setVisibleLabelScrim(false)}
         isVisible={visibleLabelScrim}
-        process={vsm}
+        process={project}
       />
     </>
   );

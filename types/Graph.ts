@@ -1,7 +1,7 @@
-import { NodeDataInteractableApi } from "./NodeDataApi";
+import { NodeDataApi } from "./NodeDataApi";
 import { EdgeDataApi } from "./EdgeDataApi";
 
 export type Graph = {
-  vertices: NodeDataInteractableApi[];
+  vertices: NodeDataApi[];
   edges: EdgeDataApi[];
 };

@@ -60,6 +60,10 @@
   filter: brightness(0.85);
 }
 
+.node--selected {
+  @extend .node--highlighted;
+}
+
 .node__description-container {
   padding: 7.5px 10px;
   overflow: hidden;

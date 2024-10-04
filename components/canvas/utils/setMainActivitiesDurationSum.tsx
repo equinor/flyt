@@ -1,17 +1,17 @@
 import { NodeTypes } from "@/types/NodeTypes";
 import { Node } from "reactflow";
 import { timeDefinitions, getDurationInSeconds } from "@/utils/unitDefinitions";
-import { NodeDataInteractable } from "@/types/NodeData";
+import { NodeDataCommon } from "@/types/NodeData";
 import { TimeDefinition } from "@/types/TimeDefinition";
 
 let possibleTotalDurations: TimeDefinition[][] = [];
 
-const isNoDurations = (nodes: Node<NodeDataInteractable>[]) =>
+const isNoDurations = (nodes: Node<NodeDataCommon>[]) =>
   nodes.every((node) => node.data.duration === null);
 
 const addToCurrentDuration = (
   currentDuration: TimeDefinition[],
-  node: Node<NodeDataInteractable>
+  node: Node<NodeDataCommon>
 ) => {
   if (node.data.unit && node.data.duration !== null) {
     return currentDuration.map((td) => {
@@ -27,8 +27,8 @@ const addToCurrentDuration = (
 };
 
 const setPossibleTotalDurations = (
-  node: Node<NodeDataInteractable>,
-  subtreeNodes: Node<NodeDataInteractable>[],
+  node: Node<NodeDataCommon>,
+  subtreeNodes: Node<NodeDataCommon>[],
   currentDuration: TimeDefinition[] = timeDefinitions,
   visited = new Set()
 ) => {
@@ -84,9 +84,7 @@ const getMinMaxTotalDurations = () => {
   };
 };
 
-export const setMainActivitiesDurationSum = (
-  nodes: Node<NodeDataInteractable>[]
-) => {
+export const setMainActivitiesDurationSum = (nodes: Node<NodeDataCommon>[]) => {
   return nodes.map((node) => {
     if (node.type === NodeTypes.mainActivity) {
       possibleTotalDurations = [];

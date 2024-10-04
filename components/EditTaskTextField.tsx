@@ -6,7 +6,7 @@ import { unknownErrorToString } from "@/utils/isError";
 import { updateTask } from "@/services/taskApi";
 import { notifyOthers } from "@/services/notifyOthers";
 import { useAccount, useMsal } from "@azure/msal-react";
-import { NodeDataInteractable } from "../types/NodeData";
+import { NodeDataCommon } from "../types/NodeData";
 import { useProjectId } from "@/hooks/useProjectId";
 import dynamic from "next/dynamic";
 const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
@@ -16,7 +16,7 @@ const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
 export function EditTaskTextField(props: {
   task: Task;
   canEdit: boolean;
-  vsmObject: NodeDataInteractable;
+  vsmObject: NodeDataCommon;
 }) {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});

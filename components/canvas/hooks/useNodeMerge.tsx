@@ -7,7 +7,7 @@ import { notifyOthers } from "@/services/notifyOthers";
 import { unknownErrorToString } from "@/utils/isError";
 import { useUserAccount } from "./useUserAccount";
 import { useProjectId } from "@/hooks/useProjectId";
-import { NodeDataInteractable } from "@/types/NodeData";
+import { NodeDataCommon } from "@/types/NodeData";
 
 export type NodeMergeParams = {
   sourceId: string;
@@ -15,7 +15,7 @@ export type NodeMergeParams = {
 };
 
 export const useNodeMerge = () => {
-  const { getNodes, setNodes } = useReactFlow<NodeDataInteractable>();
+  const { getNodes, setNodes } = useReactFlow<NodeDataCommon>();
   const { projectId } = useProjectId();
   const connectionNodeIdSelector = (state: ReactFlowState) =>
     state.connectionNodeId;

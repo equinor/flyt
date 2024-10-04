@@ -39,7 +39,9 @@ export const MainActivityNode = ({
     shapeHeight,
     shapeWidth,
     totalDurations,
+    disabled,
   },
+  selected,
   dragging,
 }: NodeProps<NodeDataCommon>) => {
   const [hovering, setHovering] = useState(false);
@@ -102,14 +104,15 @@ export const MainActivityNode = ({
 
   return (
     <div
-      onMouseEnter={() => !dragging && setHovering(true)}
+      onMouseEnter={() => !disabled && !dragging && setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
       <NodeCard
         onClick={handleClickNode}
         hovering={hovering && !merging}
         highlighted={isDropTarget && isValidDropTarget}
-        darkened={isValidDropTarget === false}
+        disabled={disabled || isValidDropTarget === false}
+        selected={selected}
       >
         <NodeShape
           shape={"square"}

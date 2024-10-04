@@ -1,9 +1,9 @@
 import { NodeTypes } from "../types/NodeTypes";
-import { NodeDataInteractable } from "../types/NodeData";
+import { NodeDataCommon } from "../types/NodeData";
 
-export const canDeleteNode = (vsmObject: NodeDataInteractable): boolean => {
-  if (!vsmObject || !vsmObject.type) return false;
-  const { type } = vsmObject;
+export const canDeleteNode = (node: NodeDataCommon): boolean => {
+  if (!node || !node.type) return false;
+  const { type } = node;
   return (
     type === NodeTypes.mainActivity ||
     type === NodeTypes.subActivity ||

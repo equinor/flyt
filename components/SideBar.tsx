@@ -1,12 +1,12 @@
 import styles from "./VSMCanvas.module.scss";
 import { SideBarContent } from "./SideBarContent";
-import { NodeDataInteractable } from "../types/NodeData";
+import { NodeDataCommon } from "../types/NodeData";
 
 export function SideBar(props: {
   onClose: () => void;
   onDelete: () => void;
   canEdit: boolean;
-  selectedNode?: NodeDataInteractable;
+  selectedNode?: NodeDataCommon;
 }): JSX.Element {
   const selectedNode = props.selectedNode;
   if (!selectedNode) return <></>;

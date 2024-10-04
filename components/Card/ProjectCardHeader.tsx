@@ -1,17 +1,19 @@
-import moment from "moment";
 import styles from "./ProjectCardHeader.module.scss";
 import { Project } from "types/Project";
+import { formatDateTimeString } from "@/utils/formatUpdated";
 
 type ProjectCardHeaderProps = {
-  vsm: Project;
+  project: Project;
 };
 
-export const ProjectCardHeader = ({ vsm }: ProjectCardHeaderProps) => (
-  <div className={styles.vsmTitleContainer}>
-    <h1 className={styles.vsmTitle}>{vsm.name || "Untitled process"}</h1>
-    {!!vsm.updated && (
+export const ProjectCardHeader = ({ project }: ProjectCardHeaderProps) => (
+  <div className={styles.projectTitleContainer}>
+    <h1 className={styles.projectTitle}>
+      {project.name || "Untitled process"}
+    </h1>
+    {!!project.updated && (
       <p className={styles.lastEditedLabel}>
-        Modified {moment(vsm.updated).fromNow()}
+        Modified {formatDateTimeString(project.updated)}
       </p>
     )}
   </div>

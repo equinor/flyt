@@ -1,12 +1,13 @@
-import { userAccess } from "@/types/UserAccess";
+import { formatDateTimeString } from "@/utils/formatUpdated";
 import { useEffect, useState } from "react";
 import { Connection, NodeProps, Position, useStore } from "reactflow";
 import colors from "theme/colors";
-import { NodeDataLinkedProcess } from "types/NodeData";
+import { NodeDataCommon } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
 import { ChoiceButton } from "./ChoiceButton";
 import { useNodeAdd } from "./hooks/useNodeAdd";
 import { MergeButton } from "./MergeButton";
+import styles from "./Node.module.scss";
 import { NodeButtonsContainer } from "./NodeButtonsContainer";
 import { NodeCard } from "./NodeCard";
 import { NodeDescription } from "./NodeDescription";
@@ -18,19 +19,16 @@ import { SourceHandle } from "./SourceHandle";
 import { SubActivityButton } from "./SubActivityButton";
 import { TargetHandle } from "./TargetHandle";
 import { fullNameListToString } from "./utils/fullnameListToString";
-import { WaitingButton } from "./WaitingButton";
-import styles from "./Node.module.scss";
 import {
   isChoiceChild,
   isMainActivityColumn,
 } from "./utils/nodeRelationsHelper";
+import { WaitingButton } from "./WaitingButton";
 
 export const LinkedProcessNode = ({
   data: {
-    type,
-    tasks,
     id,
-    userAccesses,
+    linkedProjectData,
     column,
     isValidDropTarget,
     isDropTarget,
@@ -43,26 +41,22 @@ export const LinkedProcessNode = ({
     mergeable,
     shapeHeight,
     shapeWidth,
+    disabled,
   },
+  selected,
   dragging,
-}: NodeProps<NodeDataLinkedProcess>) => {
+}: NodeProps<NodeDataCommon>) => {
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
   const connectionNodeId = useStore((state) => state.connectionNodeId);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
 
-  const dummyUserAccess: userAccess[] = [
-    {
-      accessId: 123456789,
-      user: "Test",
-      role: "Owner",
-      fullName: "Test User",
-    },
-  ];
-
-  const name = "Testing process hierarchy";
-  const updated = "Edited 2 hrs ago";
-  const fullNames = fullNameListToString(dummyUserAccess);
+  const name = linkedProjectData?.name;
+  const userAccesses = linkedProjectData?.userAccesses;
+  const fullNames = userAccesses && fullNameListToString(userAccesses);
+  const formattedUpdated =
+    linkedProjectData?.updated &&
+    formatDateTimeString(linkedProjectData.updated);
 
   useEffect(() => {
     setHovering(false);
@@ -149,14 +143,15 @@ export const LinkedProcessNode = ({
 
   return (
     <div
-      onMouseEnter={() => !dragging && setHovering(true)}
+      onMouseEnter={() => !disabled && !dragging && setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
       <NodeCard
         onClick={handleClickNode}
         hovering={hovering && !merging}
         highlighted={isDropTarget && isValidDropTarget}
-        darkened={isValidDropTarget === false}
+        disabled={disabled || isValidDropTarget === false}
+        selected={selected}
       >
         <NodeShape
           shape={"square"}
@@ -167,19 +162,26 @@ export const LinkedProcessNode = ({
           onMouseEnter={() => !dragging && setHoveringShape(true)}
           onMouseLeave={() => setHoveringShape(false)}
         >
-          <NodeDescription header={name} helperText={updated} />
-          <NodeUserDots
-            userAccesses={dummyUserAccess}
-            onClick={handleClickNode}
+          <NodeDescription
+            header={name ?? undefined}
+            helperText={formattedUpdated}
           />
+          {userAccesses && (
+            <NodeUserDots
+              userAccesses={userAccesses}
+              onClick={handleClickNode}
+            />
+          )}
         </NodeShape>
       </NodeCard>
       <TargetHandle hidden={!mergeOption} />
       <SourceHandle />
       <NodeTooltip isVisible={hoveringShape}>
-        <NodeTooltipSection header={"Title"} text={name} />
-        <NodeTooltipSection header={"Last Updated"} text={updated} />
-        <NodeTooltipSection header={"Users"} text={fullNames} />
+        {name && <NodeTooltipSection header={"Title"} text={name} />}
+        {formattedUpdated && (
+          <NodeTooltipSection header={"Last Updated"} text={formattedUpdated} />
+        )}
+        {fullNames && <NodeTooltipSection header={"Users"} text={fullNames} />}
       </NodeTooltip>
       {renderNodeButtons()}
     </div>

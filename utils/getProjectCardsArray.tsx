@@ -13,15 +13,15 @@ export const placeholderProjectCardsArray = (numberOfCards: number) =>
 export const projectCardsArray = (
   projects: Project[],
   readOnly?: boolean,
-  onCardClick?: (vsm: Project) => void,
+  onCardClick?: (project: Project) => void,
   selectedCard?: Project
 ) =>
-  projects?.map((vsm: Project) => (
+  projects?.map((project: Project) => (
     <ProjectCard
-      key={vsm.vsmProjectID}
-      vsm={vsm}
+      key={project.vsmProjectID}
+      project={project}
       readOnly={readOnly}
       onClick={onCardClick}
-      selected={selectedCard?.vsmProjectID === vsm.vsmProjectID}
+      selected={selectedCard?.vsmProjectID === project.vsmProjectID}
     />
   ));

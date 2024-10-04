@@ -1,11 +1,11 @@
-import { NodeDataFull, NodeDataInteractable } from "types/NodeData";
+import { NodeDataFull, NodeDataCommon } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
 import { Node } from "reactflow";
 import { targetIsInSubtree } from "./targetIsInSubtree";
 
 export const validTarget = (
-  source: Node<NodeDataInteractable> | undefined,
-  target: Node<NodeDataInteractable> | undefined,
+  source: Node<NodeDataCommon> | undefined,
+  target: Node<NodeDataCommon> | undefined,
   nodes: Node<NodeDataFull>[],
   isDragAndDrop = true
 ): boolean => {

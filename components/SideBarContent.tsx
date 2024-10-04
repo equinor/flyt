@@ -3,7 +3,7 @@ import { SideBarHeader } from "./SideBarHeader";
 import { NewTaskSection } from "./NewTaskSection";
 import { SideBarBody } from "./SideBarBody";
 import { useMutation, useQueryClient } from "react-query";
-import { NodeDataInteractable } from "@/types/NodeData";
+import { NodeDataCommon } from "@/types/NodeData";
 import { patchGraph } from "services/graphApi";
 import { debounce } from "@/utils/debounce";
 import styles from "./VSMCanvas.module.scss";
@@ -24,7 +24,7 @@ export function SideBarContent(props: {
   onClose: () => void;
   onDelete: () => void;
   canEdit: boolean;
-  selectedNode: NodeDataInteractable;
+  selectedNode: NodeDataCommon;
   isLoading: boolean;
 }) {
   const { accounts } = useMsal();
@@ -34,7 +34,7 @@ export function SideBarContent(props: {
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
   const vsmObjectMutation = useMutation(
-    (patchedObject: NodeDataInteractable) =>
+    (patchedObject: NodeDataCommon) =>
       patchGraph(patchedObject, projectId, patchedObject.id),
     {
       onSuccess() {
@@ -47,7 +47,7 @@ export function SideBarContent(props: {
   );
 
   function patchNode(
-    selectedNode: NodeDataInteractable,
+    selectedNode: NodeDataCommon,
     updates: {
       description?: string;
       role?: string;

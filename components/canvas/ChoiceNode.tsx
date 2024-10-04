@@ -36,7 +36,9 @@ export const ChoiceNode = ({
     mergeable,
     shapeHeight,
     shapeWidth,
+    disabled,
   },
+  selected,
   dragging,
 }: NodeProps<NodeDataCommon>) => {
   const [hovering, setHovering] = useState(false);
@@ -143,7 +145,7 @@ export const ChoiceNode = ({
   return (
     <div
       onMouseEnter={() => {
-        !dragging && setHovering(true);
+        !disabled && !dragging && setHovering(true);
       }}
       onMouseLeave={() => setHovering(false)}
     >
@@ -151,7 +153,8 @@ export const ChoiceNode = ({
         onClick={handleClickNode}
         hovering={hovering && !merging}
         highlighted={isDropTarget && isValidDropTarget}
-        darkened={isValidDropTarget === false}
+        disabled={disabled || isValidDropTarget === false}
+        selected={selected}
       >
         <NodeShape
           shape={"rhombus"}

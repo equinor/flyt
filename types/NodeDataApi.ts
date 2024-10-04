@@ -2,7 +2,7 @@ import { Project } from "./Project";
 import { Task } from "./Task";
 import { NodeTypes } from "types/NodeTypes";
 
-export type NodeDataCommonApi = {
+export type NodeDataApi = {
   id: string;
   type: NodeTypes;
   projectId: string;
@@ -14,21 +14,11 @@ export type NodeDataCommonApi = {
   unit: string | null;
   children: string[];
   tasks: Task[];
+  linkedProject: string | null;
+  linkedProjectData: Project | null;
 };
 
-export type NodeDataLinkedProcessApi = NodeDataCommonApi &
-  Pick<Project, "name" | "updated" | "userAccesses"> & {
-    linkedProcessId: string;
-  };
-
-export type NodeDataInteractableApi =
-  | NodeDataCommonApi
-  | NodeDataLinkedProcessApi;
-
-export type NodeDataApiRequestBody = Pick<NodeDataCommonApi, "type"> &
+export type NodeDataApiRequestBody = Pick<NodeDataApi, "type"> &
   Partial<
-    Pick<
-      NodeDataCommonApi,
-      "description" | "role" | "duration" | "unit" | "tasks"
-    >
+    Pick<NodeDataApi, "description" | "role" | "duration" | "unit" | "tasks">
   >;

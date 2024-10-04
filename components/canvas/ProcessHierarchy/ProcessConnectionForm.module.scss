@@ -10,10 +10,14 @@
   align-self: center !important;
 }
 
+.flow {
+  background-color: $canvas;
+}
+
 .custom-content-container {
   display: flex;
   flex-direction: column;
-  row-gap: 30px;
+  row-gap: 20px;
   height: 80vh;
 }
 
@@ -50,4 +54,15 @@
 
 .confirm-arrow {
   margin-bottom: 15px;
+}
+
+.confirm-arrow--rotated {
+  @extend .confirm-arrow;
+  transform: rotate(-90deg);
+}
+
+.confirm-horizontal {
+  display: flex;
+  align-items: center;
+  column-gap: 60px;
 }

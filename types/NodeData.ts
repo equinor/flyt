@@ -1,4 +1,4 @@
-import { NodeDataCommonApi, NodeDataLinkedProcessApi } from "./NodeDataApi";
+import { NodeDataApi } from "./NodeDataApi";
 import { NodeTypes } from "./NodeTypes";
 import { TimeDefinition } from "./TimeDefinition";
 
@@ -26,11 +26,10 @@ export type NodeData = {
     minTotalDuration: TimeDefinition[];
     maxTotalDuration: TimeDefinition[];
   };
+  disabled?: boolean;
 };
 
-export type NodeDataCommon = NodeData & NodeDataCommonApi;
-
-export type NodeDataLinkedProcess = NodeData & NodeDataLinkedProcessApi;
+export type NodeDataCommon = NodeData & NodeDataApi;
 
 export type NodeDataHidden = Pick<
   NodeData,
@@ -45,11 +44,6 @@ export type NodeDataHidden = Pick<
   | "shapeHeight"
   | "shapeWidth"
 > &
-  Pick<NodeDataCommonApi, "children">;
+  Pick<NodeDataApi, "children">;
 
-export type NodeDataFull =
-  | NodeDataCommon
-  | NodeDataLinkedProcess
-  | NodeDataHidden;
-
-export type NodeDataInteractable = NodeDataCommon | NodeDataLinkedProcess;
+export type NodeDataFull = NodeDataCommon | NodeDataHidden;

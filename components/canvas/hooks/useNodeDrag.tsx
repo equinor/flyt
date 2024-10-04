@@ -1,6 +1,6 @@
 import { moveVertice, moveVerticeRightOfTarget } from "@/services/graphApi";
 import { notifyOthers } from "@/services/notifyOthers";
-import { NodeDataInteractable } from "@/types/NodeData";
+import { NodeDataCommon } from "@/types/NodeData";
 import { NodeTypes } from "@/types/NodeTypes";
 import { unknownErrorToString } from "@/utils/isError";
 import { MouseEvent, useEffect, useRef, useState } from "react";
@@ -13,14 +13,14 @@ import { useUserAccount } from "./useUserAccount";
 import { useProjectId } from "@/hooks/useProjectId";
 
 export const useNodeDrag = () => {
-  const [source, setSource] = useState<Node<NodeDataInteractable> | undefined>(
+  const [source, setSource] = useState<Node<NodeDataCommon> | undefined>(
     undefined
   );
-  const [target, setTarget] = useState<Node<NodeDataInteractable> | undefined>(
+  const [target, setTarget] = useState<Node<NodeDataCommon> | undefined>(
     undefined
   );
-  const { setNodes, getNodes } = useReactFlow<NodeDataInteractable>();
-  const dragRef = useRef<Node<NodeDataInteractable> | null>(null);
+  const { setNodes, getNodes } = useReactFlow<NodeDataCommon>();
+  const dragRef = useRef<Node<NodeDataCommon> | null>(null);
   const dispatch = useStoreDispatch();
   const account = useUserAccount();
   const queryClient = useQueryClient();
@@ -40,7 +40,7 @@ export const useNodeDrag = () => {
 
   const onNodeDragStart = (
     _evt: MouseEvent,
-    nodeDragging: Node<NodeDataInteractable>
+    nodeDragging: Node<NodeDataCommon>
   ) => {
     dragRef.current = nodeDragging;
     setNodes((nodes) =>
@@ -55,7 +55,7 @@ export const useNodeDrag = () => {
     setSource(nodeDragging);
   };
 
-  const onNodeDrag = (_evt: MouseEvent, node: Node<NodeDataInteractable>) => {
+  const onNodeDrag = (_evt: MouseEvent, node: Node<NodeDataCommon>) => {
     if (!node.width || !node.height) return;
     const centerX = node.position.x + node.width / 2;
     const centerY = node.position.y + node.height / 2;
@@ -72,10 +72,7 @@ export const useNodeDrag = () => {
     setTarget(targetNode);
   };
 
-  const onNodeDragStop = (
-    _evt: MouseEvent,
-    node: Node<NodeDataInteractable>
-  ) => {
+  const onNodeDragStop = (_evt: MouseEvent, node: Node<NodeDataCommon>) => {
     if (validTarget(node, target, getNodes())) {
       moveNode.mutate({
         nodeId: node.id,
@@ -134,8 +131,8 @@ export const useNodeDrag = () => {
   );
 
   const includeChildren = (
-    source: Node<NodeDataInteractable>,
-    target: Node<NodeDataInteractable>
+    source: Node<NodeDataCommon>,
+    target: Node<NodeDataCommon>
   ) => {
     if (target.data.children.length === 0) {
       if (source?.data?.type === NodeTypes.choice) {
