@@ -87,7 +87,7 @@ const Canvas = ({
   const { onNodeDragStart, onNodeDrag, onNodeDragStop } = useNodeDrag();
   const { mutate: mergeNode, merging } = useNodeMerge();
   const { deleteEdgeMutation } = useEdgeDelete();
-  const { menuData, onNodeContextMenu, onPaneContextMenu } =
+  const { menuData, onNodeContextMenu, onPaneContextMenu, closeContextMenu } =
     useContextMenu(ref);
 
   useEffect(() => {
@@ -366,6 +366,7 @@ const Canvas = ({
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onPaneClick={() => setSelectedNode(undefined)}
+        onMoveStart={() => closeContextMenu()}
         minZoom={0.2}
         nodesDraggable={userCanEdit}
         nodesConnectable={true}

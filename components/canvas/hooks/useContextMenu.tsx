@@ -57,9 +57,11 @@ export const useContextMenu = (ref: RefObject<HTMLDivElement>) => {
     [setMenuData]
   );
 
+  const closeContextMenu = () => setMenuData(null);
+
   useEffect(() => {
     document.body.addEventListener("click", () => {
-      setMenuData(null);
+      closeContextMenu();
     });
   }, []);
 
@@ -71,5 +73,6 @@ export const useContextMenu = (ref: RefObject<HTMLDivElement>) => {
     menuData,
     onNodeContextMenu,
     onPaneContextMenu,
+    closeContextMenu,
   };
 };
