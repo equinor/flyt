@@ -14,6 +14,7 @@ import { NodeTooltip } from "./NodeTooltip";
 import { NodeTooltipSection } from "./NodeTooltipSection";
 import { getNodeHelperText } from "./utils/getNodeHelperText";
 import { useNodeAdd } from "./hooks/useNodeAdd";
+import { SourceHandle } from "./SourceHandle";
 
 export const GenericNode = ({
   data: {
@@ -99,6 +100,7 @@ export const GenericNode = ({
         position={Position.Top}
         isConnectable={false}
       />
+      <SourceHandle />
       <NodeTooltip isVisible={!!(hoveringShape && description)}>
         {description && (
           <NodeTooltipSection header={"Description"} text={description} />
