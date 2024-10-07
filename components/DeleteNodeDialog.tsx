@@ -81,7 +81,11 @@ export function DeleteNodeDialog(props: {
       open
       header={header}
       onClose={handleClose}
-      onConfirm={(_, includeChildren) => handleDelete(includeChildren)}
+      onConfirm={(_, includeChildren) =>
+        handleDelete(
+          type === mainActivity || type === choice || includeChildren
+        )
+      }
       error={deleteMutation.error}
       warningMessage={warningMessage}
       confirmMessage={confirmMessage}
