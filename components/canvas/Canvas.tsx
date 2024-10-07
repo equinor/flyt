@@ -100,7 +100,11 @@ const Canvas = ({
     (node: Node<NodeData>) =>
       hoveredNode?.id &&
       validTarget(node, hoveredNode, nodes, false) &&
-      addNode(hoveredNode.id, node.data, Position.Bottom),
+      addNode(
+        hoveredNode.id,
+        node.data,
+        node.type === NodeTypes.mainActivity ? Position.Right : Position.Bottom
+      ),
     copyPasteNodeValidator
   );
 
