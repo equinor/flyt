@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.7.0](https://github.com/equinor/flyt/compare/v2.6.0...v2.7.0) (2024-10-08)
+
+
+### Features
+
+* Copy and paste cards ([#794](https://github.com/equinor/flyt/issues/794)) ([17605e5](https://github.com/equinor/flyt/commit/17605e5ae24794ecb44d3ddae0f6c87922a265be))
+* Option to also delete all following cards ([#802](https://github.com/equinor/flyt/issues/802)) ([cc1ae8a](https://github.com/equinor/flyt/commit/cc1ae8a25e43efca6d452d7379235460341fadc6))
+* update delete choice/main activity warning text ([#814](https://github.com/equinor/flyt/issues/814)) ([532cd0b](https://github.com/equinor/flyt/commit/532cd0b8ecefbce718636d2af132c59f50441690)), closes [#805](https://github.com/equinor/flyt/issues/805)
+
 ## [2.6.0](https://github.com/equinor/flyt/compare/v2.5.0...v2.6.0) (2024-09-11)
 
 
