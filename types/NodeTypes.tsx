@@ -4,7 +4,6 @@ export enum NodeTypes {
   input = "Input",
   mainActivity = "MainActivity",
   subActivity = "SubActivity",
-  text = "Text",
   waiting = "Waiting",
   output = "Output",
   customer = "Customer",

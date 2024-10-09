@@ -1,5 +1,6 @@
 import { NodeData } from "@/types/NodeData";
 import { TimeDefinition } from "@/types/TimeDefinition";
+import { capitalizeFirstLetter } from "./stringHelpers";
 
 export const timeDefinitions: TimeDefinition[] = [
   { value: "Minute", displayName: "Minute(s)", duration: null },
@@ -38,13 +39,6 @@ export const getTimeDefinitionValue = (displayName: string) =>
 
 export const getTimeDefinitionDisplayName = (value: string) =>
   timeDefinitions.find((item) => item.value === value)?.displayName || "";
-
-/**
- * Capitalize the first letter and lowercase the rest.
- * @param s
- */
-const capitalizeFirstLetter = (s: string): string =>
-  `${s}`.charAt(0).toUpperCase() + `${s}`.slice(1).toLowerCase();
 
 const getShortDisplayName = (displayName: string) =>
   displayName.slice(0, displayName === "Month(s)" ? 2 : 1).toLowerCase();
