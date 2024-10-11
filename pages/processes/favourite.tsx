@@ -11,7 +11,7 @@ import { SideNavBar } from "components/SideNavBar";
 import { SortSelect } from "../../components/SortSelect";
 import { Typography } from "@equinor/eds-core-react";
 import { getProjects } from "../../services/projectApi";
-import { stringToArray } from "utils/stringToArray";
+import { stringToArray } from "utils/stringHelpers";
 import styles from "./FrontPage.module.scss";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
