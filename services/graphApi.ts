@@ -4,7 +4,6 @@ import { NodeData } from "@/types/NodeData";
 import BaseAPIServices from "./BaseAPIServices";
 import { NodeDataApi, NodeDataApiRequestBody } from "@/types/NodeDataApi";
 import { Graph } from "types/Graph";
-import { NodeTypes } from "types/NodeTypes";
 
 export const getGraph = (projectId: string | string[]): Promise<Graph> => {
   return BaseAPIServices.get(`${baseUrl}/graph/${projectId}`).then(
@@ -55,7 +54,7 @@ export const moveVertice = (
   ).then((r) => r.data);
 
 export const addVerticeLeft = (
-  data: { type: NodeTypes },
+  data: NodeDataApiRequestBody,
   projectId: string,
   neighbourId: string
 ): Promise<unknown> =>
@@ -65,7 +64,7 @@ export const addVerticeLeft = (
   ).then((r) => r.data);
 
 export const addVerticeRight = (
-  data: { type: NodeTypes },
+  data: NodeDataApiRequestBody,
   projectId: string,
   neighbourId: string
 ): Promise<unknown> =>
