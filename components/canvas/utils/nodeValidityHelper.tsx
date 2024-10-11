@@ -104,7 +104,10 @@ export const getOptionsAddNode = (node: Node<NodeData>) => {
   if (isChoiceChild) {
     validPositions = {
       ...validPositions,
+      /*
+      Add this back in when the order of choice children has been fixed
       left: [NodeTypes.subActivity, NodeTypes.choice, NodeTypes.waiting],
+      */
       right: [NodeTypes.subActivity, NodeTypes.choice, NodeTypes.waiting],
     };
   }
