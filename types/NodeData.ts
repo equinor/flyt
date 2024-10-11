@@ -35,6 +35,7 @@ export type NodeDataHidden = Pick<
   | "isChoiceChild"
   | "shapeHeight"
   | "shapeWidth"
+  | "order"
 >;
 
 export type NodeDataFull = NodeData | NodeDataHidden;

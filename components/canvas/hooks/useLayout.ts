@@ -28,6 +28,7 @@ const createColumn = (
       height: node.height,
       columnId: node.data.columnId,
       type: node.type,
+      ordernum: node.data.order ? node.data.order : 0,
     });
   });
 

@@ -11,18 +11,21 @@ index 0c2cc94..c2ac4bb 100644
    graphlib: require("./lib/graphlib"),
  
 diff --git a/node_modules/dagre/lib/layout.js b/node_modules/dagre/lib/layout.js
-index 26b0730..8f8cc0b 100644
+index 26b0730..c64c266 100644
 --- a/node_modules/dagre/lib/layout.js
 +++ b/node_modules/dagre/lib/layout.js
-@@ -95,7 +95,7 @@ function updateInputGraph(inputGraph, layoutGraph) {
+@@ -95,9 +95,9 @@ function updateInputGraph(inputGraph, layoutGraph) {
  }
  
  var graphNumAttrs = ["nodesep", "edgesep", "ranksep", "marginx", "marginy"];
 -var graphDefaults = { ranksep: 50, edgesep: 20, nodesep: 50, rankdir: "tb" };
 +var graphDefaults = { ranksep: 50, edgesep: 20, nodesep: 50, rankdir: "tb", keeporder: false };
  var graphAttrs = ["acyclicer", "ranker", "rankdir", "align"];
- var nodeNumAttrs = ["width", "height"];
+-var nodeNumAttrs = ["width", "height"];
++var nodeNumAttrs = ["width", "height", "ordernum"];
  var nodeDefaults = { width: 0, height: 0 };
+ var edgeNumAttrs = ["minlen", "weight", "width", "height", "labeloffset"];
+ var edgeDefaults = {
 @@ -118,6 +118,7 @@ function buildLayoutGraph(inputGraph) {
  
    g.setGraph(_.merge({},
@@ -72,3 +75,31 @@ index 4ac2d9f..518ca51 100644
  }
  
  function buildLayerGraphs(g, ranks, relationship) {
+diff --git a/node_modules/dagre/lib/order/init-order.js b/node_modules/dagre/lib/order/init-order.js
+index 124a948..90be4e8 100644
+--- a/node_modules/dagre/lib/order/init-order.js
++++ b/node_modules/dagre/lib/order/init-order.js
+@@ -31,8 +31,22 @@ function initOrder(g) {
+     _.forEach(g.successors(v), dfs);
+   }
+ 
+-  var orderedVs = _.sortBy(simpleNodes, function(v) { return g.node(v).rank; });
++  var orderedVs = _.sortBy(simpleNodes, function(v) { return g._label.keeporder ? g.node(v).ordernum : g.node(v).rank; });
+   _.forEach(orderedVs, dfs);
+ 
++  if(g._label.keeporder) {
++    _.forEach(layers, function(layer) {
++      layer.sort(function(v1, v2) {
++        var order1 = g.node(v1).ordernum;
++        var order2 = g.node(v2).ordernum;
++        if (order1 !== undefined && order2 !== undefined) {
++          return order1 - order2;
++        } else {
++          return 0;
++        }
++      });
++    });
++  }
++
+   return layers;
+ }
