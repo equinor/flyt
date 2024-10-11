@@ -1,7 +1,7 @@
 import { CanvasButtons } from "components/CanvasButtons";
 import { ManageLabelBox } from "components/Labels/ManageLabelBox";
 import { ResetProcessButton } from "components/ResetProcessButton";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import ReactFlow, {
   ControlButton,
   Controls,
@@ -43,6 +43,9 @@ import { useCopyPaste } from "./hooks/useCopyPaste";
 import { copyPasteNodeValidator } from "./utils/copyPasteValidators";
 import { validTarget } from "./utils/validTarget";
 import { useNodeAdd } from "./hooks/useNodeAdd";
+import { useContextMenu } from "./hooks/useContextMenu";
+import { ContextMenu } from "./ContextMenu";
+import { nodeValidityMap } from "./utils/nodeValidityHelper";
 
 type CanvasProps = {
   graph: Graph;
@@ -61,6 +64,7 @@ const Canvas = ({
   );
   const { userCanEdit } = useAccess(project);
   const { addNode } = useNodeAdd();
+  const ref = useRef<HTMLDivElement>(null);
 
   const shapeSize = { height: 140, width: 140 };
 
@@ -71,7 +75,9 @@ const Canvas = ({
   const [nodes, setNodes, onNodesChange] = useNodesState<NodeDataFull>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-  const [visibleDeleteNodeScrim, setVisibleDeleteNodeScrim] = useState(false);
+  const [nodeToBeDeleted, setNodeToBeDeleted] = useState<
+    Node<NodeData> | undefined
+  >(undefined);
   const [edgeToBeDeletedId, setEdgeToBeDeletedId] = useState<
     string | undefined
   >(undefined);
@@ -81,14 +87,24 @@ const Canvas = ({
   const { onNodeDragStart, onNodeDrag, onNodeDragStop } = useNodeDrag();
   const { mutate: mergeNode, merging } = useNodeMerge();
   const { deleteEdgeMutation } = useEdgeDelete();
+  const { menuData, onNodeContextMenu, onPaneContextMenu, closeContextMenu } =
+    useContextMenu(ref);
+
+  useEffect(() => {
+    !menuData && setHoveredNode(undefined);
+  }, [menuData]);
 
   const { socketConnected, socketReason } = useWebSocket();
-  useCopyPaste(
+  const { copyToClipboard, paste } = useCopyPaste(
     hoveredNode,
     (node: Node<NodeData>) =>
       hoveredNode?.id &&
       validTarget(node, hoveredNode, nodes, false) &&
-      addNode(hoveredNode.id, node.data, Position.Bottom),
+      addNode(
+        hoveredNode.id,
+        node.data,
+        node.type === NodeTypes.mainActivity ? Position.Right : Position.Bottom
+      ),
     copyPasteNodeValidator
   );
 
@@ -143,6 +159,8 @@ const Canvas = ({
           mergeable:
             node.children.length === 0 || node.type === NodeTypes.choice,
           merging: merging,
+          deletable: nodeValidityMap[node.type].deletable,
+          copyable: nodeValidityMap[node.type].copyable,
           parents: [parent.id],
           userCanEdit,
           isChoiceChild: parent.type === NodeTypes.choice,
@@ -161,6 +179,8 @@ const Canvas = ({
         id: node.id,
         data: {
           ...node,
+          deletable: nodeValidityMap[node.type].deletable,
+          copyable: nodeValidityMap[node.type].copyable,
           parents: [],
           columnId: node.id,
           shapeHeight: shapeSize.height,
@@ -276,7 +296,7 @@ const Canvas = ({
     selectedNode && handleSetSelectedNode(selectedNode.id);
   }, [apiNodes, apiEdges, userCanEdit]);
 
-  useCenterCanvas();
+  const { centerCanvas } = useCenterCanvas();
 
   return (
     <>
@@ -301,12 +321,11 @@ const Canvas = ({
       />
       <ToBeToggle />
       <ResetProcessButton />
-      {selectedNode && (
+      {nodeToBeDeleted && (
         <DeleteNodeDialog
-          objectToDelete={selectedNode.data}
-          visible={visibleDeleteNodeScrim}
+          objectToDelete={nodeToBeDeleted.data}
           onClose={() => {
-            setVisibleDeleteNodeScrim(false);
+            setNodeToBeDeleted(undefined);
             setSelectedNode(undefined);
           }}
         />
@@ -335,7 +354,7 @@ const Canvas = ({
       )}
       <SideBar
         onClose={() => setSelectedNode(undefined)}
-        onDelete={() => setVisibleDeleteNodeScrim(true)}
+        onDelete={() => setNodeToBeDeleted(selectedNode)}
         canEdit={userCanEdit}
         selectedNode={selectedNode?.data}
       />
@@ -347,6 +366,7 @@ const Canvas = ({
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onPaneClick={() => setSelectedNode(undefined)}
+        onMoveStart={() => closeContextMenu()}
         minZoom={0.2}
         nodesDraggable={userCanEdit}
         nodesConnectable={true}
@@ -356,13 +376,20 @@ const Canvas = ({
         onNodeDragStop={onNodeDragStop}
         elevateEdgesOnSelect={true}
         edgesFocusable={userCanEdit}
-        onNodeMouseEnter={(_, node) => setHoveredNode(node)}
-        onNodeMouseLeave={() => setHoveredNode(undefined)}
-        onEdgeMouseEnter={(event, edge) => handleSetSelectedEdge(edge)}
+        onNodeMouseEnter={(_, node) => {
+          !menuData && setHoveredNode(node);
+        }}
+        onNodeMouseLeave={() => {
+          !menuData && setHoveredNode(undefined);
+        }}
+        onEdgeMouseEnter={(_, edge) => handleSetSelectedEdge(edge)}
         onEdgeMouseLeave={() => handleSetSelectedEdge(undefined)}
         attributionPosition="bottom-right"
         connectionRadius={100}
         nodeDragThreshold={15}
+        onNodeContextMenu={onNodeContextMenu}
+        onPaneContextMenu={onPaneContextMenu}
+        ref={ref}
       >
         <MiniMapCustom />
         <Controls className={styles.controls} showInteractive={false}>
@@ -370,6 +397,17 @@ const Canvas = ({
             <ZoomLevel />
           </ControlButton>
         </Controls>
+        {menuData && (
+          <ContextMenu
+            menuData={menuData}
+            copyToClipBoard={copyToClipboard}
+            paste={paste}
+            centerCanvas={centerCanvas}
+            onDelete={(node) => setNodeToBeDeleted(node)}
+            onEditNode={(node) => setSelectedNode(node)}
+            canvasRef={ref}
+          />
+        )}
       </ReactFlow>
     </>
   );

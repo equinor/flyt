@@ -13,7 +13,6 @@ import { ScrimDelete } from "./ScrimDelete";
 export function DeleteNodeDialog(props: {
   objectToDelete: NodeData;
   onClose: () => void;
-  visible: boolean;
 }) {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
@@ -43,8 +42,6 @@ export function DeleteNodeDialog(props: {
         dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
-
-  if (!props.visible) return null;
 
   const handleClose = () => props.onClose();
   const handleDelete = (includeChildren: boolean) =>
@@ -84,7 +81,11 @@ export function DeleteNodeDialog(props: {
       open
       header={header}
       onClose={handleClose}
-      onConfirm={(_, includeChildren) => handleDelete(includeChildren)}
+      onConfirm={(_, includeChildren) =>
+        handleDelete(
+          type === mainActivity || type === choice || includeChildren
+        )
+      }
       error={deleteMutation.error}
       warningMessage={warningMessage}
       confirmMessage={confirmMessage}

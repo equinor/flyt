@@ -3,7 +3,7 @@ import { Button, Chip } from "@equinor/eds-core-react";
 import { getLabel } from "services/labelsApi";
 import { getUpdatedLabel } from "utils/getUpdatedLabel";
 import { getUserById } from "services/userApi";
-import { stringToArray } from "utils/stringToArray";
+import { stringToArray } from "utils/stringHelpers";
 import { toggleQueryParam } from "utils/toggleQueryParam";
 import { unknownErrorToString } from "utils/isError";
 import { useQuery } from "react-query";
