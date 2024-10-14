@@ -13,7 +13,6 @@ import { ScrimDelete } from "./ScrimDelete";
 export function DeleteNodeDialog(props: {
   objectToDelete: NodeDataCommon;
   onClose: () => void;
-  visible: boolean;
 }) {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
@@ -44,8 +43,6 @@ export function DeleteNodeDialog(props: {
     }
   );
 
-  if (!props.visible) return null;
-
   const handleClose = () => props.onClose();
   const handleDelete = (includeChildren: boolean) =>
     deleteMutation.mutate({
@@ -54,20 +51,29 @@ export function DeleteNodeDialog(props: {
       includeChildren: includeChildren,
     });
 
-  const { type } = props.objectToDelete;
+  const { type, children } = props.objectToDelete;
+  const hasChildren = children.length > 0;
 
   const header = `Delete ${getNodeTypeName(type).toLowerCase()}`;
-  let warningMessage = "This will delete the selected card";
-  let checkboxMessage = undefined;
-  if (type === mainActivity) {
-    warningMessage =
-      "This will delete all of its following cards.\nAre you sure you want to proceed?";
-  } else if (type === choice) {
-    warningMessage =
-      "This will delete all connected alternatives.\nAre you sure you want to proceed?";
-  } else if (type === subActivity || type === waiting) {
-    checkboxMessage = "Delete all of its following cards";
-  }
+
+  const getWarningMessage = () => {
+    const typeIsMainActivityOrChoice = type === mainActivity || type === choice;
+
+    if (typeIsMainActivityOrChoice && hasChildren) {
+      return "This will delete **ALL** the cards below.\nAre you sure you want to proceed?";
+    }
+    return "This will delete the selected card";
+  };
+
+  const getCheckboxMessage = () => {
+    if ((type === subActivity || type === waiting) && hasChildren) {
+      return "Delete all of its following cards";
+    }
+  };
+
+  const warningMessage = getWarningMessage();
+  const checkboxMessage = getCheckboxMessage();
+
   const confirmMessage = "Delete";
   return (
     <ScrimDelete
@@ -75,7 +81,11 @@ export function DeleteNodeDialog(props: {
       open
       header={header}
       onClose={handleClose}
-      onConfirm={(_, includeChildren) => handleDelete(includeChildren)}
+      onConfirm={(_, includeChildren) =>
+        handleDelete(
+          type === mainActivity || type === choice || includeChildren
+        )
+      }
       error={deleteMutation.error}
       warningMessage={warningMessage}
       confirmMessage={confirmMessage}

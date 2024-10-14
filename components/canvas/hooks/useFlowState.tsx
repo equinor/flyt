@@ -27,6 +27,9 @@ export const useFlowState = (
   const [hoveredNode, setHoveredNode] = useState<
     Node<NodeDataCommon> | undefined
   >(undefined);
+  const [nodeToBeDeleted, setNodeToBeDeleted] = useState<
+    Node<NodeDataCommon> | undefined
+  >(undefined);
   const [isEditingEdgeText, setIsEditingEdgeText] = useState(false);
   const [edgeToBeDeletedId, setEdgeToBeDeletedId] = useState<
     string | undefined
@@ -110,6 +113,8 @@ export const useFlowState = (
     setSelectedNode,
     hoveredNode,
     setHoveredNode,
+    nodeToBeDeleted,
+    setNodeToBeDeleted,
     handleSetSelectedEdge,
     edgeToBeDeletedId,
     setEdgeToBeDeletedId,

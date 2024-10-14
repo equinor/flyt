@@ -1,6 +1,6 @@
 import { getProjects } from "@/services/projectApi";
 import { Project } from "@/types/Project";
-import { stringToArray } from "@/utils/stringToArray";
+import { stringToArray } from "@/utils/stringHelpers";
 import router from "next/router";
 import { useInfiniteQuery } from "react-query";
 

@@ -3,6 +3,7 @@ import { NodeTypes } from "@/types/NodeTypes";
 import { getQIPRContainerWidth } from "./getQIPRContainerWidth";
 import { Column, NodeDataCommon } from "@/types/NodeData";
 import { Node } from "reactflow";
+import { nodeValidityMap } from "./nodeValidityHelper";
 
 const createNode = (
   node: NodeDataApi,
@@ -57,6 +58,8 @@ const createNode = (
         mergeable:
           node.children?.length === 0 || node.type === NodeTypes.choice,
         merging,
+        deletable: nodeValidityMap[node.type].deletable,
+        copyable: nodeValidityMap[node.type].copyable,
         parents: [parent.id],
         parentTypes: [parent.type],
         userCanEdit,
@@ -76,6 +79,8 @@ const createNode = (
       id: node.id,
       data: {
         ...node,
+        deletable: nodeValidityMap[node.type].deletable,
+        copyable: nodeValidityMap[node.type].copyable,
         parents: [],
         column,
         shapeHeight: shapeSize.height,

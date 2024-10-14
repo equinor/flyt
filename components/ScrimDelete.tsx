@@ -10,6 +10,7 @@ import {
 import { close as closeIcon, delete_forever } from "@equinor/eds-icons";
 import { ChangeEvent, useState } from "react";
 import styles from "./ScrimDelete.module.scss";
+import { TypographyMarkdown } from "./TypographyMarkdown";
 
 type ScrimDelete = {
   id: string;
@@ -62,7 +63,9 @@ export const ScrimDelete = ({
                   {unknownErrorToString(error)}
                 </Typography>
               )}
-              <Typography variant={"h4"}>{warningMessage}</Typography>
+              <TypographyMarkdown variant={"h4"}>
+                {warningMessage}
+              </TypographyMarkdown>
               {checkboxMessage && (
                 <Checkbox
                   label={checkboxMessage}

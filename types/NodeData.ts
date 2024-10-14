@@ -17,6 +17,8 @@ export type NodeData = {
   handleClickNode?: () => void;
   mergeable?: boolean;
   merging?: boolean;
+  deletable: boolean;
+  copyable: boolean;
   userCanEdit?: boolean;
   depth?: number;
   parentTypes?: NodeTypes[];

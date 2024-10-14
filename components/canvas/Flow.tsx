@@ -3,7 +3,8 @@ import { MiniMapCustom } from "@/components/canvas/MiniMapCustom";
 import { ZoomLevel } from "@/components/canvas/ZoomLevel";
 import { EdgeDataApi } from "@/types/EdgeDataApi";
 import { NodeDataApi } from "@/types/NodeDataApi";
-import { useEffect, useState } from "react";
+import { NodeTypes } from "@/types/NodeTypes";
+import { useEffect, useRef } from "react";
 import ReactFlow, {
   ControlButton,
   Controls,
@@ -17,8 +18,10 @@ import { DeleteNodeDialog } from "../DeleteNodeDialog";
 import { ScrimDelete } from "../ScrimDelete";
 import { SideBar } from "../SideBar";
 import styles from "./Canvas.module.scss";
+import { ContextMenu } from "./ContextMenu";
 import { nodeElementTypes } from "./NodeElementTypes";
 import { useCenterCanvas } from "./hooks/useCenterCanvas";
+import { useContextMenu } from "./hooks/useContextMenu";
 import { useCopyPaste } from "./hooks/useCopyPaste";
 import { useEdgeDelete } from "./hooks/useEdgeDelete";
 import { useFlowState } from "./hooks/useFlowState";
@@ -34,7 +37,6 @@ type CanvasProps = {
 };
 
 const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
-  const [visibleDeleteNodeScrim, setVisibleDeleteNodeScrim] = useState(false);
   const {
     nodes,
     edges,
@@ -44,6 +46,8 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
     setSelectedNode,
     hoveredNode,
     setHoveredNode,
+    nodeToBeDeleted,
+    setNodeToBeDeleted,
     handleSetSelectedEdge,
     edgeToBeDeletedId,
     setEdgeToBeDeletedId,
@@ -51,15 +55,22 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
   const { addNode } = useNodeAdd();
   const { onNodeDragStart, onNodeDrag, onNodeDragStop } = useNodeDrag();
   const { deleteEdgeMutation } = useEdgeDelete();
+  const { centerCanvas } = useCenterCanvas();
 
-  useCenterCanvas();
+  const ref = useRef<HTMLDivElement>(null);
+  const { menuData, onNodeContextMenu, onPaneContextMenu, closeContextMenu } =
+    useContextMenu(ref);
 
-  useCopyPaste(
+  const { copyToClipboard, paste } = useCopyPaste(
     hoveredNode,
     (node: Node<NodeDataCommon>) =>
       hoveredNode?.id &&
       validTarget(node, hoveredNode, nodes, false) &&
-      addNode(hoveredNode.id, node.data, Position.Bottom),
+      addNode(
+        hoveredNode.id,
+        node.data,
+        node.type === NodeTypes.mainActivity ? Position.Right : Position.Bottom
+      ),
     copyPasteNodeValidator
   );
 
@@ -74,12 +85,11 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
 
   return (
     <>
-      {selectedNode && (
+      {nodeToBeDeleted && (
         <DeleteNodeDialog
-          objectToDelete={selectedNode.data}
-          visible={visibleDeleteNodeScrim}
+          objectToDelete={nodeToBeDeleted.data}
           onClose={() => {
-            setVisibleDeleteNodeScrim(false);
+            setNodeToBeDeleted(undefined);
             setSelectedNode(undefined);
           }}
         />
@@ -108,7 +118,7 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
       )}
       <SideBar
         onClose={() => setSelectedNode(undefined)}
-        onDelete={() => setVisibleDeleteNodeScrim(true)}
+        onDelete={() => setNodeToBeDeleted(selectedNode)}
         canEdit={userCanEdit}
         selectedNode={selectedNode?.data}
       />
@@ -120,6 +130,7 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onPaneClick={() => setSelectedNode(undefined)}
+        onMoveStart={() => closeContextMenu()}
         minZoom={0.2}
         nodesDraggable={userCanEdit}
         nodesConnectable={true}
@@ -129,13 +140,20 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
         onNodeDragStop={onNodeDragStop}
         elevateEdgesOnSelect={true}
         edgesFocusable={userCanEdit}
-        onNodeMouseEnter={(_, node) => setHoveredNode(node)}
-        onNodeMouseLeave={() => setHoveredNode(undefined)}
+        onNodeMouseEnter={(_, node) => {
+          !menuData && setHoveredNode(node);
+        }}
+        onNodeMouseLeave={() => {
+          !menuData && setHoveredNode(undefined);
+        }}
         onEdgeMouseEnter={(_, edge) => handleSetSelectedEdge(edge)}
         onEdgeMouseLeave={() => handleSetSelectedEdge(undefined)}
         attributionPosition="bottom-right"
         connectionRadius={100}
         nodeDragThreshold={15}
+        onNodeContextMenu={onNodeContextMenu}
+        onPaneContextMenu={onPaneContextMenu}
+        ref={ref}
       >
         <MiniMapCustom />
         <Controls className={styles.controls} showInteractive={false}>
@@ -143,6 +161,17 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
             <ZoomLevel />
           </ControlButton>
         </Controls>
+        {menuData && (
+          <ContextMenu
+            menuData={menuData}
+            copyToClipBoard={copyToClipboard}
+            paste={paste}
+            centerCanvas={centerCanvas}
+            onDelete={(node) => setNodeToBeDeleted(node)}
+            onEditNode={(node) => setSelectedNode(node)}
+            canvasRef={ref}
+          />
+        )}
       </ReactFlow>
     </>
   );
