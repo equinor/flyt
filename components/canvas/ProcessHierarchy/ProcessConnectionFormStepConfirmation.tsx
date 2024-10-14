@@ -2,6 +2,7 @@ import { ProjectCard } from "@/components/Card/ProjectCard";
 import { NodeDataCommon } from "@/types/NodeData";
 import { NodeTypes } from "@/types/NodeTypes";
 import { Project } from "@/types/Project";
+import { getProjectName } from "@/utils/getProjectName";
 import { Typography } from "@equinor/eds-core-react";
 import Image from "next/image";
 import { Node } from "reactflow";
@@ -19,14 +20,17 @@ export const ProcessConnectionFormStepConfirmation = ({
   selectedCard,
   selectedNode,
 }: ProcessConnectionFormStepConfirmation) => {
+  const projectName = getProjectName(project);
+  const linkedProjectName = getProjectName(selectedCard);
+
   const getTitle = () => {
     switch (selectedNode?.type) {
       case NodeTypes.input:
-        return `"${project?.name}" will be chained after "${selectedCard?.name}"`;
+        return `"${projectName}" will be chained after "${linkedProjectName}"`;
       case NodeTypes.output:
-        return `"${selectedCard?.name}" will be chained after "${project?.name}"`;
+        return `"${linkedProjectName}" will be chained after "${projectName}"`;
       default:
-        return `"${selectedCard?.name}" will be a subprocess of "${project?.name}"`;
+        return `"${linkedProjectName}" will be a subprocess of "${projectName}"`;
     }
   };
 
