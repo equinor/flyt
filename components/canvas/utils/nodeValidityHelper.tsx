@@ -1,7 +1,7 @@
 import { NodeDataCommon } from "@/types/NodeData";
 import { NodeTypes } from "@/types/NodeTypes";
 import { Node, Position } from "reactflow";
-import { isChoiceChild } from "./nodeRelationsHelper";
+import { isChoiceChild, isGenericColumn } from "./nodeRelationsHelper";
 
 type NodeValidity = {
   validPositions: {
@@ -53,6 +53,7 @@ export const nodeValidityMap: NodeValidityMap = {
         NodeTypes.subActivity,
         NodeTypes.choice,
         NodeTypes.waiting,
+        NodeTypes.linkedProcess,
       ],
       [Position.Left]: [NodeTypes.mainActivity],
       [Position.Right]: [NodeTypes.mainActivity],
@@ -66,6 +67,7 @@ export const nodeValidityMap: NodeValidityMap = {
         NodeTypes.subActivity,
         NodeTypes.choice,
         NodeTypes.waiting,
+        NodeTypes.linkedProcess,
       ],
     },
     copyable: true,
@@ -77,6 +79,7 @@ export const nodeValidityMap: NodeValidityMap = {
         NodeTypes.subActivity,
         NodeTypes.choice,
         NodeTypes.waiting,
+        NodeTypes.linkedProcess,
       ],
     },
     copyable: true,
@@ -88,6 +91,7 @@ export const nodeValidityMap: NodeValidityMap = {
         NodeTypes.subActivity,
         NodeTypes.choice,
         NodeTypes.waiting,
+        NodeTypes.linkedProcess,
       ],
     },
     copyable: true,
@@ -99,6 +103,7 @@ export const nodeValidityMap: NodeValidityMap = {
         NodeTypes.subActivity,
         NodeTypes.choice,
         NodeTypes.waiting,
+        NodeTypes.linkedProcess,
       ],
     },
     copyable: true,
@@ -111,8 +116,8 @@ export const nodeValidityMap: NodeValidityMap = {
   },
 };
 
-export const getOptionsAddNode = (node: Node<NodeDataCommon>) => {
-  const { type, parentTypes } = node.data;
+export const getNodeValidPositions = (node: Node<NodeDataCommon>) => {
+  const { type, parentTypes, column } = node.data;
   let validPositions = nodeValidityMap[type].validPositions;
 
   if (isChoiceChild(parentTypes)) {
@@ -126,5 +131,12 @@ export const getOptionsAddNode = (node: Node<NodeDataCommon>) => {
     };
   }
 
-  return Object.entries(validPositions) as [Position, NodeTypes[]][];
+  if (type === NodeTypes.linkedProcess && isGenericColumn(column)) {
+    validPositions = {
+      ...validPositions,
+      bottom: [NodeTypes.linkedProcess],
+    };
+  }
+
+  return validPositions;
 };

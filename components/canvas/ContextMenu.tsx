@@ -3,12 +3,13 @@ import { getNodeTypeName } from "@/utils/getNodeTypeName";
 import { capitalizeFirstLetter } from "@/utils/stringHelpers";
 import { Menu } from "@equinor/eds-core-react";
 import { RefObject, useState } from "react";
-import { Node } from "reactflow";
+import { Node, Position } from "reactflow";
 import { MenuItemExandable } from "../MenuItemExandable";
 import styles from "./ContextMenu.module.scss";
 import type { MenuData } from "./hooks/useContextMenu";
 import { useNodeAdd } from "./hooks/useNodeAdd";
-import { getOptionsAddNode } from "./utils/nodeValidityHelper";
+import { getNodeValidPositions } from "./utils/nodeValidityHelper";
+import { NodeTypes } from "@/types/NodeTypes";
 
 type ContextMenuProps = {
   menuData: MenuData;
@@ -45,13 +46,16 @@ export const ContextMenu = ({
   const modifierKey = navigator.userAgent.includes("Mac") ? "⌘" : "Ctrl";
 
   const renderOptionsAddNode = (node: Node<NodeDataCommon>) => {
-    const optionsAddNode = getOptionsAddNode(node);
-    if (optionsAddNode.length === 0) return;
+    const nodeValidPositions = Object.entries(getNodeValidPositions(node)) as [
+      Position,
+      NodeTypes[]
+    ][];
+    if (nodeValidPositions.length === 0) return;
     const fullyExpandedWidth = 400;
     const reversedExpandDir = isReversedExpandDirection(fullyExpandedWidth);
     return (
       <MenuItemExandable text="Add" reverseExpandDir={reversedExpandDir}>
-        {optionsAddNode.map(([position, nodeTypes]) => (
+        {nodeValidPositions.map(([position, nodeTypes]) => (
           <MenuItemExandable
             text={capitalizeFirstLetter(position)}
             reverseExpandDir={reversedExpandDir}

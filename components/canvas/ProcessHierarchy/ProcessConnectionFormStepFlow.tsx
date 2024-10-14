@@ -20,7 +20,7 @@ export const ProcessConnectionFormStepFlow = ({
   return (
     <>
       <Typography className={styles.title} variant="h3">
-        Select the card that the process card will be put beneath
+        Select the card that the new process card will be added below
       </Typography>
       <ReactFlow
         className={styles.flow}
