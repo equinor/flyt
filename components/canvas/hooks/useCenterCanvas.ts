@@ -1,26 +1,27 @@
-import { useCallback, useEffect } from "react";
-import { FitViewOptions, useReactFlow } from "reactflow";
-import { useProjectId } from "../../../hooks/useProjectId";
+import { useCallback, useEffect, useState } from "react";
+import { FitViewOptions, useNodesInitialized, useReactFlow } from "reactflow";
 
 export const useCenterCanvas = () => {
   const { fitView, setViewport, getViewport } = useReactFlow();
-  const { projectId } = useProjectId();
+  const [isInitialized, setIsInitialized] = useState(false);
+  const nodesInitialized = useNodesInitialized();
   const fitViewOptions: FitViewOptions = {
     includeHiddenNodes: true,
     maxZoom: 0.8,
   };
 
   const centerCanvas = useCallback(() => {
-    window.requestAnimationFrame(() => {
-      fitView(fitViewOptions);
-      const viewport = getViewport();
-      setViewport({ ...viewport, y: 75 });
-    });
+    fitView(fitViewOptions);
+    const viewport = getViewport();
+    setViewport({ ...viewport, y: 75 });
   }, [fitView, getViewport, setViewport]);
 
   useEffect(() => {
-    centerCanvas();
-  }, [centerCanvas, projectId]);
+    if (nodesInitialized && !isInitialized) {
+      setIsInitialized(true);
+      centerCanvas();
+    }
+  }, [nodesInitialized]);
 
   return { centerCanvas };
 };
