@@ -8,7 +8,7 @@ import { MenuItemExandable } from "../MenuItemExandable";
 import styles from "./ContextMenu.module.scss";
 import type { MenuData } from "./hooks/useContextMenu";
 import { useNodeAdd } from "./hooks/useNodeAdd";
-import { getNodeValidPositions } from "./utils/nodeValidityHelper";
+import { getNodeValidPositionsContextMenu } from "./utils/nodeValidityHelper";
 import { NodeTypes } from "@/types/NodeTypes";
 
 type ContextMenuProps = {
@@ -46,10 +46,9 @@ export const ContextMenu = ({
   const modifierKey = navigator.userAgent.includes("Mac") ? "⌘" : "Ctrl";
 
   const renderOptionsAddNode = (node: Node<NodeDataCommon>) => {
-    const nodeValidPositions = Object.entries(getNodeValidPositions(node)) as [
-      Position,
-      NodeTypes[]
-    ][];
+    const nodeValidPositions = Object.entries(
+      getNodeValidPositionsContextMenu(node)
+    ) as [Position, NodeTypes[]][];
     if (nodeValidPositions.length === 0) return;
     const fullyExpandedWidth = 400;
     const reversedExpandDir = isReversedExpandDirection(fullyExpandedWidth);
@@ -93,7 +92,9 @@ export const ContextMenu = ({
             </Menu.Item>
           </>
         )}
-        <Menu.Item onClick={() => onEditNode?.(node)}>Edit</Menu.Item>
+        {node.type !== NodeTypes.linkedProcess && (
+          <Menu.Item onClick={() => onEditNode?.(node)}>Edit</Menu.Item>
+        )}
         {renderOptionsAddNode(node)}
         {deletable && (
           <Menu.Item onClick={() => onDelete?.(node)}>

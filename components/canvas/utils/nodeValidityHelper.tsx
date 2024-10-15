@@ -2,6 +2,7 @@ import { NodeDataCommon } from "@/types/NodeData";
 import { NodeTypes } from "@/types/NodeTypes";
 import { Node, Position } from "reactflow";
 import { isChoiceChild, isGenericColumn } from "./nodeRelationsHelper";
+import { isKey } from "@/utils/isKey";
 
 type NodeValidity = {
   validPositions: {
@@ -106,7 +107,7 @@ export const nodeValidityMap: NodeValidityMap = {
         NodeTypes.linkedProcess,
       ],
     },
-    copyable: true,
+    copyable: false,
     deletable: true,
   },
   [NodeTypes.hidden]: {
@@ -138,5 +139,22 @@ export const getNodeValidPositions = (node: Node<NodeDataCommon>) => {
     };
   }
 
+  return validPositions;
+};
+
+export const getNodeValidPositionsContextMenu = (
+  node: Node<NodeDataCommon>
+) => {
+  const validPositions = getNodeValidPositions(node);
+  for (const key in validPositions) {
+    if (isKey(validPositions, key)) {
+      validPositions[key] = validPositions[key]?.filter(
+        (nodeType: NodeTypes) => nodeType !== "LinkedProcess"
+      );
+      if (validPositions[key]?.length === 0) {
+        delete validPositions[key];
+      }
+    }
+  }
   return validPositions;
 };
