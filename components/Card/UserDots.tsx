@@ -16,7 +16,7 @@ export function UserDots(props: {
   const fullNames = fullNameListToString(userAccesses);
 
   return (
-    <Tooltip title={fullNames} hidden={hideTooltip}>
+    <Tooltip title={fullNames} hidden={hideTooltip} placement="top">
       <button
         className={styles.buttonUserDots}
         onClick={(e) => {
