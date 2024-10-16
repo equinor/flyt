@@ -36,6 +36,7 @@
   overflow: scroll;
   background-color: $equinor_LIGHT_GRAY;
   padding: 15px;
+  height: 100%;
 }
 
 .confirm-title {
@@ -50,6 +51,7 @@
   background-color: $equinor_LIGHT_GRAY;
   padding: 80px;
   height: 100%;
+  overflow: scroll;
 }
 
 .confirm-arrow {
