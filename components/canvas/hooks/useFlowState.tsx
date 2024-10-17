@@ -2,8 +2,14 @@ import { EdgeDataApi } from "@/types/EdgeDataApi";
 import { NodeDataCommon, NodeDataFull } from "@/types/NodeData";
 import { NodeDataApi } from "@/types/NodeDataApi";
 import { NodeTypes } from "@/types/NodeTypes";
-import { useLayoutEffect, useState } from "react";
-import { Edge, Node, useEdgesState, useNodesState } from "reactflow";
+import { useEffect, useLayoutEffect, useState } from "react";
+import {
+  Edge,
+  Node,
+  useEdgesState,
+  useNodesInitialized,
+  useNodesState,
+} from "reactflow";
 import { createEdges } from "../utils/createEdges";
 import { createHiddenNodes } from "../utils/createHiddenNodes";
 import { createNodes } from "../utils/createNodes";
@@ -35,6 +41,7 @@ export const useFlowState = (
     string | undefined
   >(undefined);
 
+  const nodesInitialized = useNodesInitialized();
   const { mutate: mergeNode, merging } = useNodeMerge();
   useCenterCanvas();
 
@@ -58,6 +65,20 @@ export const useFlowState = (
       setEdges(updatedEdges);
     }
   };
+
+  const updateNodesSelectedProp = () => {
+    if (nodesInitialized) {
+      const updatedNodes = nodes.map((n) => ({
+        ...n,
+        selected: n.id === selectedNode?.id,
+      }));
+      setNodes(updatedNodes);
+    }
+  };
+
+  useEffect(() => {
+    updateNodesSelectedProp();
+  }, [selectedNode]);
 
   useLayoutEffect(() => {
     const root = apiNodes.find(
@@ -101,7 +122,7 @@ export const useFlowState = (
     setNodes(finalNodes);
     setEdges(finalEdges);
 
-    selectedNode && handleClickNode(selectedNode.id);
+    //selectedNode && handleClickNode(selectedNode.id);
   }, [apiNodes, apiEdges, userCanEdit]);
 
   return {

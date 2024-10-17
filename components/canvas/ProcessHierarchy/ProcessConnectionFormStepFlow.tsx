@@ -28,7 +28,8 @@ export const ProcessConnectionFormStepFlow = ({
         edges={edges}
         nodeTypes={nodeElementTypes}
         edgeTypes={edgeElementTypes}
-        draggable
+        selectNodesOnDrag={false}
+        draggable={false}
       />
     </>
   );

@@ -138,6 +138,7 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
         onNodeDragStart={onNodeDragStart}
         onNodeDrag={onNodeDrag}
         onNodeDragStop={onNodeDragStop}
+        selectNodesOnDrag={false}
         elevateEdgesOnSelect={true}
         edgesFocusable={userCanEdit}
         onNodeMouseEnter={(_, node) => {
@@ -148,7 +149,6 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
         }}
         onEdgeMouseEnter={(_, edge) => handleSetSelectedEdge(edge)}
         onEdgeMouseLeave={() => handleSetSelectedEdge(undefined)}
-        attributionPosition="bottom-right"
         connectionRadius={100}
         nodeDragThreshold={15}
         onNodeContextMenu={onNodeContextMenu}
