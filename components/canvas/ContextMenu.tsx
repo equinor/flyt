@@ -10,6 +10,7 @@ import type { MenuData } from "./hooks/useContextMenu";
 import { useNodeAdd } from "./hooks/useNodeAdd";
 import { getNodeValidPositionsContextMenu } from "./utils/nodeValidityHelper";
 import { NodeTypes } from "@/types/NodeTypes";
+import { getModifierKey } from "@/utils/getModifierKey";
 
 type ContextMenuProps = {
   menuData: MenuData;
@@ -32,6 +33,7 @@ export const ContextMenu = ({
 }: ContextMenuProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
+  const modifierKey = getModifierKey();
 
   const isReversedExpandDirection = (fullyExpandedWidth: number) => {
     const anchorOffsetLeft = anchorEl?.offsetLeft;
@@ -42,8 +44,6 @@ export const ContextMenu = ({
       canvasEdgeRight - anchorOffsetLeft < fullyExpandedWidth
     );
   };
-
-  const modifierKey = navigator.userAgent.includes("Mac") ? "⌘" : "Ctrl";
 
   const renderOptionsAddNode = (node: Node<NodeDataCommon>) => {
     const nodeValidPositions = Object.entries(
