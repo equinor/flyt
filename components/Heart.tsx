@@ -3,19 +3,28 @@ import { favorite_filled, favorite_outlined } from "@equinor/eds-icons";
 import styles from "./Heart.module.scss";
 import { colors } from "@/theme/colors";
 
-export function Heart(props: {
+type HeartProps = {
   isFavourite: boolean;
-  isLoading: boolean;
-  fave: () => void;
-  unfave: () => void;
-}) {
+  isLoading?: boolean;
+  fave?: () => void;
+  unfave?: () => void;
+  disabled?: boolean;
+};
+
+export function Heart({
+  isFavourite,
+  isLoading,
+  fave,
+  unfave,
+  disabled,
+}: HeartProps) {
   const handleClick = (e: any) => {
     e.preventDefault();
     e.stopPropagation();
-    props.isFavourite ? props.unfave() : props.fave();
+    isFavourite && unfave ? unfave() : fave && fave();
   };
 
-  if (props.isLoading) {
+  if (isLoading) {
     return (
       <Button
         className={styles.heart}
@@ -27,12 +36,13 @@ export function Heart(props: {
       </Button>
     );
   }
-  if (props.isFavourite) {
+  if (isFavourite) {
     return (
       <Button
         className={styles.favedHeart}
         onClick={handleClick}
         variant="ghost_icon"
+        disabled={disabled}
       >
         <Icon
           color={colors.infographic_primary__energy_red_100}
@@ -42,7 +52,12 @@ export function Heart(props: {
     );
   }
   return (
-    <Button className={styles.heart} onClick={handleClick} variant="ghost_icon">
+    <Button
+      className={styles.heart}
+      disabled={disabled}
+      onClick={handleClick}
+      variant="ghost_icon"
+    >
       <Icon data={favorite_outlined} />
     </Button>
   );

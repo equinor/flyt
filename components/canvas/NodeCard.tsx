@@ -4,7 +4,8 @@ type NodeCard = {
   onClick?: () => void;
   hovering?: boolean;
   highlighted?: boolean;
-  darkened?: boolean;
+  selected?: boolean;
+  disabled?: boolean;
   children?: JSX.Element[] | JSX.Element;
 };
 
@@ -12,18 +13,19 @@ export const NodeCard = ({
   onClick,
   hovering,
   highlighted,
-  darkened,
+  selected,
+  disabled,
   children,
 }: NodeCard) => (
   <div
-    className={`${styles.container} ${
-      hovering ? styles["container--hover"] : ""
-    } ${
-      styles[
-        highlighted ? "node--highlighted" : darkened ? "node--darkened" : ""
-      ]
-    }`}
-    onClick={onClick}
+    className={`
+      ${styles.container}
+      ${hovering && styles["container--hover"]}
+      ${highlighted && styles["node--highlighted"]}
+      ${disabled && styles["node--darkened"]}
+      ${selected && styles["node--selected"]}
+    `}
+    onClick={() => !disabled && onClick && onClick()}
   >
     {children}
   </div>

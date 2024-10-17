@@ -1,4 +1,4 @@
-import { NodeData } from "@/types/NodeData";
+import { NodeDataCommon } from "@/types/NodeData";
 import { Node } from "reactflow";
 import { RefObject, useCallback, useEffect, useState, MouseEvent } from "react";
 
@@ -11,7 +11,7 @@ type Position = {
 
 export type MenuData = {
   position: Position;
-  node?: Node<NodeData>;
+  node?: Node<NodeDataCommon>;
 };
 
 export const useContextMenu = (ref: RefObject<HTMLDivElement>) => {
@@ -33,7 +33,7 @@ export const useContextMenu = (ref: RefObject<HTMLDivElement>) => {
   });
 
   const onNodeContextMenu = useCallback(
-    (event: MouseEvent, node: Node<NodeData>) => {
+    (event: MouseEvent, node: Node<NodeDataCommon>) => {
       event.preventDefault();
       if (pane) {
         setMenuData({

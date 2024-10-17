@@ -6,7 +6,7 @@ import { ChoiceButton } from "./ChoiceButton";
 import { WaitingButton } from "./WaitingButton";
 import { NodeButtonsContainer } from "./NodeButtonsContainer";
 import stylesNodeButtons from "./NodeButtons.module.scss";
-import { NodeData } from "types/NodeData";
+import { NodeDataCommon } from "types/NodeData";
 import { NodeProps } from "reactflow";
 import { NodeTypes } from "types/NodeTypes";
 import { NodeDescription } from "./NodeDescription";
@@ -23,6 +23,7 @@ import {
   formatMinMaxTotalDuration,
   formatMinMaxTotalDurationShort,
 } from "@/utils/unitDefinitions";
+import { getNodeTypeName } from "@/utils/getNodeTypeName";
 
 export const MainActivityNode = ({
   data: {
@@ -38,9 +39,11 @@ export const MainActivityNode = ({
     shapeHeight,
     shapeWidth,
     totalDurations,
+    disabled,
   },
+  selected,
   dragging,
-}: NodeProps<NodeData>) => {
+}: NodeProps<NodeDataCommon>) => {
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
@@ -101,14 +104,15 @@ export const MainActivityNode = ({
 
   return (
     <div
-      onMouseEnter={() => !dragging && setHovering(true)}
+      onMouseEnter={() => !disabled && !dragging && setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
       <NodeCard
         onClick={handleClickNode}
         hovering={hovering && !merging}
         highlighted={isDropTarget && isValidDropTarget}
-        darkened={isValidDropTarget === false}
+        disabled={disabled || isValidDropTarget === false}
+        selected={selected}
       >
         <NodeShape
           shape={"square"}
@@ -119,7 +123,7 @@ export const MainActivityNode = ({
           onMouseLeave={() => setHoveringShape(false)}
         >
           <NodeDescription
-            header={!description ? type : undefined}
+            header={!description ? getNodeTypeName(type) : undefined}
             description={description}
           />
           {formattedDurationSumShort && (

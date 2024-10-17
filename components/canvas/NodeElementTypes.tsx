@@ -6,6 +6,7 @@ import { WaitingNode } from "./WaitingNode";
 import { RootNode } from "./RootNode";
 import { HiddenNode } from "./HiddenNode";
 import { NodeTypes } from "reactflow";
+import { LinkedProcessNode } from "./LinkedProcessNode";
 
 export const nodeElementTypes: NodeTypes = {
   Root: RootNode,
@@ -18,4 +19,5 @@ export const nodeElementTypes: NodeTypes = {
   SubActivity: SubActivityNode,
   Waiting: WaitingNode,
   Choice: ChoiceNode,
+  LinkedProcess: LinkedProcessNode,
 };

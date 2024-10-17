@@ -1,6 +1,8 @@
-import { NodeData } from "@/types/NodeData";
+import { NodeDataCommon } from "@/types/NodeData";
 import { NodeTypes } from "@/types/NodeTypes";
 import { Node, Position } from "reactflow";
+import { isChoiceChild, isGenericColumn } from "./nodeRelationsHelper";
+import { isKey } from "@/utils/isKey";
 
 type NodeValidity = {
   validPositions: {
@@ -27,6 +29,7 @@ export const nodeValidityMap: NodeValidityMap = {
   },
   [NodeTypes.input]: {
     validPositions: {
+      [Position.Bottom]: [NodeTypes.linkedProcess],
       [Position.Right]: [NodeTypes.mainActivity],
     },
     copyable: false,
@@ -34,6 +37,7 @@ export const nodeValidityMap: NodeValidityMap = {
   },
   [NodeTypes.output]: {
     validPositions: {
+      [Position.Bottom]: [NodeTypes.linkedProcess],
       [Position.Left]: [NodeTypes.mainActivity],
     },
     copyable: false,
@@ -50,6 +54,7 @@ export const nodeValidityMap: NodeValidityMap = {
         NodeTypes.subActivity,
         NodeTypes.choice,
         NodeTypes.waiting,
+        NodeTypes.linkedProcess,
       ],
       [Position.Left]: [NodeTypes.mainActivity],
       [Position.Right]: [NodeTypes.mainActivity],
@@ -63,6 +68,7 @@ export const nodeValidityMap: NodeValidityMap = {
         NodeTypes.subActivity,
         NodeTypes.choice,
         NodeTypes.waiting,
+        NodeTypes.linkedProcess,
       ],
     },
     copyable: true,
@@ -74,6 +80,7 @@ export const nodeValidityMap: NodeValidityMap = {
         NodeTypes.subActivity,
         NodeTypes.choice,
         NodeTypes.waiting,
+        NodeTypes.linkedProcess,
       ],
     },
     copyable: true,
@@ -85,9 +92,22 @@ export const nodeValidityMap: NodeValidityMap = {
         NodeTypes.subActivity,
         NodeTypes.choice,
         NodeTypes.waiting,
+        NodeTypes.linkedProcess,
       ],
     },
     copyable: true,
+    deletable: true,
+  },
+  [NodeTypes.linkedProcess]: {
+    validPositions: {
+      [Position.Bottom]: [
+        NodeTypes.subActivity,
+        NodeTypes.choice,
+        NodeTypes.waiting,
+        NodeTypes.linkedProcess,
+      ],
+    },
+    copyable: false,
     deletable: true,
   },
   [NodeTypes.hidden]: {
@@ -97,11 +117,11 @@ export const nodeValidityMap: NodeValidityMap = {
   },
 };
 
-export const getOptionsAddNode = (node: Node<NodeData>) => {
-  const { type, isChoiceChild } = node.data;
+export const getNodeValidPositions = (node: Node<NodeDataCommon>) => {
+  const { type, parentTypes, column } = node.data;
   let validPositions = nodeValidityMap[type].validPositions;
 
-  if (isChoiceChild) {
+  if (isChoiceChild(parentTypes)) {
     validPositions = {
       ...validPositions,
       /*
@@ -112,5 +132,29 @@ export const getOptionsAddNode = (node: Node<NodeData>) => {
     };
   }
 
-  return Object.entries(validPositions) as [Position, NodeTypes[]][];
+  if (type === NodeTypes.linkedProcess && isGenericColumn(column)) {
+    validPositions = {
+      ...validPositions,
+      bottom: [NodeTypes.linkedProcess],
+    };
+  }
+
+  return validPositions;
+};
+
+export const getNodeValidPositionsContextMenu = (
+  node: Node<NodeDataCommon>
+) => {
+  const validPositions = getNodeValidPositions(node);
+  for (const key in validPositions) {
+    if (isKey(validPositions, key)) {
+      validPositions[key] = validPositions[key]?.filter(
+        (nodeType: NodeTypes) => nodeType !== "LinkedProcess"
+      );
+      if (validPositions[key]?.length === 0) {
+        delete validPositions[key];
+      }
+    }
+  }
+  return validPositions;
 };

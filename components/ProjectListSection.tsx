@@ -2,26 +2,31 @@ import {
   placeholderProjectCardsArray,
   projectCardsArray,
 } from "../utils/getProjectCardsArray";
-
 import Masonry from "react-masonry-css";
 import { NewProcessButton } from "./NewProcessButton";
 import { Typography } from "@equinor/eds-core-react";
 import styles from "./ProjectListSection.module.scss";
 import { Project } from "../types/Project";
 
-export function ProjectListSection(props: {
+type ProjectListSectionProps = {
   projects: Project[];
   isLoading: boolean;
   expectedNumberOfProjects: number;
-  showNewProcessButton: boolean;
-}): JSX.Element {
-  const {
-    isLoading,
-    projects,
-    showNewProcessButton,
-    expectedNumberOfProjects,
-  } = props;
+  showNewProcessButton?: boolean;
+  readOnly?: boolean;
+  onCardClick?: (vsm: Project) => void;
+  selectedCard?: Project;
+};
 
+export const ProjectListSection = ({
+  projects,
+  isLoading,
+  expectedNumberOfProjects,
+  showNewProcessButton,
+  readOnly,
+  onCardClick,
+  selectedCard,
+}: ProjectListSectionProps) => {
   if (projects?.length < 1) {
     return (
       <div className={styles.emptyVsmCardContainer}>
@@ -48,8 +53,8 @@ export function ProjectListSection(props: {
         {showNewProcessButton && <NewProcessButton />}
         {isLoading
           ? placeholderProjectCardsArray(expectedNumberOfProjects)
-          : projectCardsArray(projects)}
+          : projectCardsArray(projects, readOnly, onCardClick, selectedCard)}
       </Masonry>
     </>
   );
-}
+};

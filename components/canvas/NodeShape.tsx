@@ -6,6 +6,7 @@ type NodeShape = {
   color: string;
   width: number;
   height: number;
+  className?: string;
   children: React.ReactNode;
   onMouseEnter?: MouseEventHandler<HTMLDivElement>;
   onMouseLeave?: MouseEventHandler<HTMLDivElement>;
@@ -17,13 +18,14 @@ export const NodeShape = ({
   width,
   height,
   children,
+  className,
   onMouseEnter,
   onMouseLeave,
 }: NodeShape) => {
   const square = (
     <div
       style={{ height: height, width: width }}
-      className={`${styles["node-shape-container"]} ${styles["node-shape-container--square"]}`}
+      className={`${styles["node-shape-container"]} ${styles["node-shape-container--square"]} ${className}`}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >

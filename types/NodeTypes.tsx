@@ -8,5 +8,6 @@ export enum NodeTypes {
   output = "Output",
   customer = "Customer",
   choice = "Choice",
+  linkedProcess = "LinkedProcess",
   hidden = "Hidden",
 }

@@ -18,6 +18,10 @@
   align-items: center;
 }
 
+.node-shape-container--linkedProcess {
+  border: 2px solid silver;
+}
+
 .node-shape--square {
   display: flex;
   flex-direction: column;
@@ -54,6 +58,10 @@
 
 .node--darkened {
   filter: brightness(0.85);
+}
+
+.node--selected {
+  @extend .node--highlighted;
 }
 
 .node__description-container {
@@ -114,4 +122,14 @@
 
 .node__helper-text {
   @extend .node__placeholder-text, .node__description;
+}
+
+.node__userdots-container {
+  display: flex;
+  justify-content: right;
+  padding: 7.5px;
+}
+
+.node__userdots-container :hover {
+  cursor: grab;
 }

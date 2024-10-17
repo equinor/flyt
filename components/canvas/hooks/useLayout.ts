@@ -26,7 +26,7 @@ const createColumn = (
     dagreGraph.setNode(node.id, {
       width: node.width,
       height: node.height,
-      columnId: node.data.columnId,
+      column: node.data.column,
       type: node.type,
     });
   });
@@ -65,7 +65,7 @@ export function setLayout(
   const layout: Node<NodeDataFull>[] = [];
   const root = nodes.find((node) => node.type === NodeTypes.root);
   root?.data.children.forEach((nodeId) => {
-    const columnNodes = nodes.filter((node) => node.data.columnId === nodeId);
+    const columnNodes = nodes.filter((node) => node.data.column?.id === nodeId);
     const columnEdges = edges.filter((edge) =>
       columnNodes.find((node) => node.id === edge.source)
     );
