@@ -8,7 +8,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { Node, Position, useReactFlow } from "reactflow";
 import { useStoreDispatch } from "@/hooks/storeHooks";
 import { targetIsInSubtree } from "../utils/targetIsInSubtree";
-import { validTarget } from "../utils/validTarget";
+import { isValidTarget } from "../utils/isValidTarget";
 import { useUserAccount } from "./useUserAccount";
 import { useProjectId } from "@/hooks/useProjectId";
 
@@ -40,7 +40,7 @@ export const useNodeDrag = () => {
       nodes.map((node) => {
         node.data = {
           ...node.data,
-          isValidDropTarget: validTarget(nodeDragging, node, getNodes()),
+          isValidDropTarget: isValidTarget(nodeDragging, node, getNodes()),
         };
         return node;
       })
@@ -66,7 +66,7 @@ export const useNodeDrag = () => {
   };
 
   const onNodeDragStop = (_evt: MouseEvent, node: Node<NodeData>) => {
-    if (validTarget(node, target, getNodes())) {
+    if (isValidTarget(node, target, getNodes())) {
       moveNode.mutate({
         nodeId: node.id,
         targetId: target?.id ?? "",

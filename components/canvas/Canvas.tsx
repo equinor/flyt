@@ -7,7 +7,6 @@ import ReactFlow, {
   Controls,
   Edge,
   Node,
-  Position,
   ReactFlowProvider,
   useEdgesState,
   useNodesState,
@@ -41,11 +40,11 @@ import { createHiddenNodes } from "@/components/canvas/utils/createHiddenNodes";
 import { createEdges } from "./utils/createEdges";
 import { useCopyPaste } from "./hooks/useCopyPaste";
 import { copyPasteNodeValidator } from "./utils/copyPasteValidators";
-import { validTarget } from "./utils/validTarget";
 import { useNodeAdd } from "./hooks/useNodeAdd";
 import { useContextMenu } from "./hooks/useContextMenu";
 import { ContextMenu } from "./ContextMenu";
 import { nodeValidityMap } from "./utils/nodeValidityHelper";
+import { handlePasteNode } from "./utils/handlePasteNode";
 
 type CanvasProps = {
   graph: Graph;
@@ -98,13 +97,7 @@ const Canvas = ({
   const { copyToClipboard, paste } = useCopyPaste(
     hoveredNode,
     (node: Node<NodeData>) =>
-      hoveredNode?.id &&
-      validTarget(node, hoveredNode, nodes, false) &&
-      addNode(
-        hoveredNode.id,
-        node.data,
-        node.type === NodeTypes.mainActivity ? Position.Right : Position.Bottom
-      ),
+      handlePasteNode(node, hoveredNode, nodes, addNode),
     copyPasteNodeValidator
   );
 
