@@ -1,6 +1,6 @@
 import { NodeTypes } from "../types/NodeTypes";
 
-export const getNodeTypeName = (type?: NodeTypes): string => {
+export const getNodeTypeName = (type: NodeTypes): string => {
   switch (type) {
     case NodeTypes.root:
       return "Process";
@@ -21,6 +21,6 @@ export const getNodeTypeName = (type?: NodeTypes): string => {
     case NodeTypes.choice:
       return "Choice";
     default:
-      return type || "Unknown";
+      return type;
   }
 };
