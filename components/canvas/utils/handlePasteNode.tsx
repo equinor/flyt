@@ -15,23 +15,21 @@ export const handlePasteNode = (
     position: Position
   ) => void
 ) => {
-  const sourceType = getNodeTypeName(source.data.type);
-  const targetType = getNodeTypeName(target?.data.type);
-
   if (!target?.id) {
     throw new Error(
       "Unable to paste: Hover a card before attempting to paste ⛔"
     );
   }
-  if (isValidTarget(source, target, nodes, false)) {
-    addNode(
-      target.id,
-      source.data,
-      source.type === NodeTypes.mainActivity ? Position.Right : Position.Bottom
-    );
-  } else {
+  if (!isValidTarget(source, target, nodes, false)) {
+    const sourceType = getNodeTypeName(source.data.type);
+    const targetType = getNodeTypeName(target.data.type);
     throw new Error(
       `Unable to paste: ${sourceType} card is not allowed below ${targetType} card ⛔`
     );
   }
+  addNode(
+    target.id,
+    source.data,
+    source.type === NodeTypes.mainActivity ? Position.Right : Position.Bottom
+  );
 };
