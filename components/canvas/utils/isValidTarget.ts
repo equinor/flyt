@@ -3,7 +3,7 @@ import { NodeTypes } from "types/NodeTypes";
 import { Node } from "reactflow";
 import { targetIsInSubtree } from "./targetIsInSubtree";
 
-export const validTarget = (
+export const isValidTarget = (
   source: Node<NodeData> | undefined,
   target: Node<NodeData> | undefined,
   nodes: Node<NodeDataFull>[],
