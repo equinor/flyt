@@ -31,6 +31,10 @@ export const useCopyPaste = (
         action(targetToPaste);
       }
     } catch (error) {
+      if (error instanceof DOMException || error instanceof SyntaxError) {
+        dispatch.setSnackMessage("Unable to paste: Invalid copied item ⛔");
+        return;
+      }
       dispatch.setSnackMessage(unknownErrorToString(error));
     }
   };

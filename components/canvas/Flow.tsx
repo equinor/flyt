@@ -3,13 +3,11 @@ import { MiniMapCustom } from "@/components/canvas/MiniMapCustom";
 import { ZoomLevel } from "@/components/canvas/ZoomLevel";
 import { EdgeDataApi } from "@/types/EdgeDataApi";
 import { NodeDataApi } from "@/types/NodeDataApi";
-import { NodeTypes } from "@/types/NodeTypes";
 import { useEffect, useRef } from "react";
 import ReactFlow, {
   ControlButton,
   Controls,
   Node,
-  Position,
   ReactFlowProvider,
 } from "reactflow";
 import "reactflow/dist/style.css";
@@ -28,7 +26,7 @@ import { useFlowState } from "./hooks/useFlowState";
 import { useNodeAdd } from "./hooks/useNodeAdd";
 import { useNodeDrag } from "./hooks/useNodeDrag";
 import { copyPasteNodeValidator } from "./utils/copyPasteValidators";
-import { validTarget } from "./utils/validTarget";
+import { handlePasteNode } from "./utils/handlePasteNode";
 
 type CanvasProps = {
   apiNodes: NodeDataApi[];
@@ -64,13 +62,7 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
   const { copyToClipboard, paste } = useCopyPaste(
     hoveredNode,
     (node: Node<NodeDataCommon>) =>
-      hoveredNode?.id &&
-      validTarget(node, hoveredNode, nodes, false) &&
-      addNode(
-        hoveredNode.id,
-        node.data,
-        node.type === NodeTypes.mainActivity ? Position.Right : Position.Bottom
-      ),
+      handlePasteNode(node, hoveredNode, nodes, addNode),
     copyPasteNodeValidator
   );
 

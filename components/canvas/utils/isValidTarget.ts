@@ -4,7 +4,7 @@ import { Node } from "reactflow";
 import { targetIsInSubtree } from "./targetIsInSubtree";
 import { getNodeValidPositions } from "./nodeValidityHelper";
 
-export const validTarget = (
+export const isValidTarget = (
   source: Node<NodeDataCommon> | undefined,
   target: Node<NodeDataCommon> | undefined,
   nodes: Node<NodeDataFull>[],
