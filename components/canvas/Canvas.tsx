@@ -1,3 +1,8 @@
+import { edgeElementTypes } from "@/components/canvas/EdgeElementTypes";
+import { MiniMapCustom } from "@/components/canvas/MiniMapCustom";
+import { ZoomLevel } from "@/components/canvas/ZoomLevel";
+import { createHiddenNodes } from "@/components/canvas/utils/createHiddenNodes";
+import { Graph } from "@/types/Graph";
 import { CanvasButtons } from "components/CanvasButtons";
 import { ManageLabelBox } from "components/Labels/ManageLabelBox";
 import { ResetProcessButton } from "components/ResetProcessButton";
@@ -17,32 +22,28 @@ import { NodeData, NodeDataFull } from "types/NodeData";
 import { NodeDataApi } from "types/NodeDataApi";
 import { NodeTypes } from "types/NodeTypes";
 import { Project } from "types/Project";
-import { Graph } from "@/types/Graph";
 import { DeleteNodeDialog } from "../DeleteNodeDialog";
 import { LiveIndicator } from "../LiveIndicator";
+import { ScrimDelete } from "../ScrimDelete";
 import { SideBar } from "../SideBar";
 import styles from "./Canvas.module.scss";
 import { nodeElementTypes } from "./NodeElementTypes";
 import { ToBeToggle } from "./ToBeToggle";
 import { useAccess } from "./hooks/useAccess";
 import { useCenterCanvas } from "./hooks/useCenterCanvas";
+import { useCopyPaste } from "./hooks/useCopyPaste";
+import { useEdgeDelete } from "./hooks/useEdgeDelete";
 import { setLayout } from "./hooks/useLayout";
+import { useNodeAdd } from "./hooks/useNodeAdd";
 import { useNodeDrag } from "./hooks/useNodeDrag";
 import { useNodeMerge } from "./hooks/useNodeMerge";
+import { useSelectedNodeForEditing } from "./hooks/useSelectedNodeForEditing";
 import { useWebSocket } from "./hooks/useWebSocket";
+import { copyPasteNodeValidator } from "./utils/copyPasteValidators";
+import { createEdges } from "./utils/createEdges";
 import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
 import { setMainActivitiesDurationSum } from "./utils/setMainActivitiesDurationSum";
-import { useEdgeDelete } from "./hooks/useEdgeDelete";
-import { ScrimDelete } from "../ScrimDelete";
-import { MiniMapCustom } from "@/components/canvas/MiniMapCustom";
-import { ZoomLevel } from "@/components/canvas/ZoomLevel";
-import { edgeElementTypes } from "@/components/canvas/EdgeElementTypes";
-import { createHiddenNodes } from "@/components/canvas/utils/createHiddenNodes";
-import { createEdges } from "./utils/createEdges";
-import { useCopyPaste } from "./hooks/useCopyPaste";
-import { copyPasteNodeValidator } from "./utils/copyPasteValidators";
 import { validTarget } from "./utils/validTarget";
-import { useNodeAdd } from "./hooks/useNodeAdd";
 
 type CanvasProps = {
   graph: Graph;
@@ -56,6 +57,7 @@ const Canvas = ({
   const [selectedNode, setSelectedNode] = useState<Node<NodeData> | undefined>(
     undefined
   );
+  const { setSelectedNodeForEditing } = useSelectedNodeForEditing();
   const [hoveredNode, setHoveredNode] = useState<Node<NodeData> | undefined>(
     undefined
   );
@@ -96,7 +98,7 @@ const Canvas = ({
 
   const handleSetSelectedNode = (id?: string) => {
     const node = tempNodes.find((n) => n.id === id);
-    node && setSelectedNode(node as Node<NodeData>);
+    if (node) setSelectedNode(node);
   };
 
   const createNodes = (
@@ -346,7 +348,10 @@ const Canvas = ({
         edgeTypes={edgeElementTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        onPaneClick={() => setSelectedNode(undefined)}
+        onPaneClick={() => {
+          setSelectedNode(undefined);
+          setSelectedNodeForEditing(null);
+        }}
         minZoom={0.2}
         nodesDraggable={userCanEdit}
         nodesConnectable={true}

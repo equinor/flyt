@@ -10,6 +10,7 @@ import { StoreProvider } from "easy-peasy";
 import { msalInstance } from "@/auth/msalHelpers";
 import store from "../store/store";
 import { PropsWithChildren, ReactNode } from "react";
+import { SelectedNodeForEditingProvider } from "@/components/canvas/hooks/useSelectedNodeForEditing";
 
 const queryClient = new QueryClient();
 type MyAppProps = {
@@ -21,11 +22,13 @@ export default function MyApp({ Component, pageProps }: MyAppProps) {
     // Todo: get rid of the StoreProvider. (Simplify our workflow by using React-Query for server state data-handling and interactions)
     <StoreProvider store={store}>
       <QueryClientProvider client={queryClient}>
-        <MsalProvider instance={msalInstance}>
-          <LayoutWrapper {...pageProps}>
-            <Component {...pageProps} />
-          </LayoutWrapper>
-        </MsalProvider>
+        <SelectedNodeForEditingProvider>
+          <MsalProvider instance={msalInstance}>
+            <LayoutWrapper {...pageProps}>
+              <Component {...pageProps} />
+            </LayoutWrapper>
+          </MsalProvider>
+        </SelectedNodeForEditingProvider>
         <div onWheel={(e) => e.stopPropagation()}>
           <ReactQueryDevtools initialIsOpen={false} position={"bottom-right"} />
         </div>
