@@ -9,14 +9,14 @@ import { notifyOthers } from "@/services/notifyOthers";
 import { Task } from "@/types/Task";
 import { unknownErrorToString } from "@/utils/isError";
 import { useStoreDispatch } from "@/hooks/storeHooks";
-import { NodeData } from "../types/NodeData";
+import { NodeDataCommon } from "../types/NodeData";
 import { TaskTypes } from "types/TaskTypes";
 import { getTaskShorthand } from "utils/getTaskShorthand";
 import { useProjectId } from "@/hooks/useProjectId";
 
 export function EditTaskSection(props: {
   task: Task;
-  object: NodeData;
+  object: NodeDataCommon;
   canEdit: boolean;
 }) {
   const { task, object } = props;
@@ -33,7 +33,7 @@ export function EditTaskSection(props: {
       solvedTask,
       solved,
     }: {
-      node: NodeData;
+      node: NodeDataCommon;
       solvedTask: Task;
       solved: boolean;
     }) => solveTask(projectId, node.id, solvedTask.id ?? "", solved),

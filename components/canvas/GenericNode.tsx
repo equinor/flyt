@@ -1,4 +1,4 @@
-import { NodeData } from "types/NodeData";
+import { NodeDataCommon } from "types/NodeData";
 import { useState, useEffect } from "react";
 import { Handle, NodeProps, Position } from "reactflow";
 import stylesNodeButtons from "./NodeButtons.module.scss";
@@ -14,6 +14,7 @@ import { NodeTooltip } from "./NodeTooltip";
 import { NodeTooltipSection } from "./NodeTooltipSection";
 import { getNodeHelperText } from "./utils/getNodeHelperText";
 import { useNodeAdd } from "./hooks/useNodeAdd";
+import { SourceHandle } from "./SourceHandle";
 
 export const GenericNode = ({
   data: {
@@ -28,9 +29,11 @@ export const GenericNode = ({
     merging,
     shapeHeight,
     shapeWidth,
+    disabled,
   },
+  selected,
   dragging,
-}: NodeProps<NodeData>) => {
+}: NodeProps<NodeDataCommon>) => {
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
@@ -65,14 +68,15 @@ export const GenericNode = ({
 
   return (
     <div
-      onMouseEnter={() => !dragging && setHovering(true)}
+      onMouseEnter={() => !disabled && !dragging && setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
       <NodeCard
         onClick={handleClickNode}
         hovering={hovering && !merging}
         highlighted={isDropTarget && isValidDropTarget}
-        darkened={isValidDropTarget === false}
+        disabled={disabled || isValidDropTarget === false}
+        selected={selected}
       >
         <NodeShape
           shape={"square"}
@@ -96,6 +100,7 @@ export const GenericNode = ({
         position={Position.Top}
         isConnectable={false}
       />
+      <SourceHandle />
       <NodeTooltip isVisible={!!(hoveringShape && description)}>
         {description && (
           <NodeTooltipSection header={"Description"} text={description} />

@@ -1,23 +1,24 @@
-import { NodeData } from "@/types/NodeData";
+import { NodeDataCommon } from "@/types/NodeData";
 import { getNodeTypeName } from "@/utils/getNodeTypeName";
 import { capitalizeFirstLetter } from "@/utils/stringHelpers";
 import { Menu } from "@equinor/eds-core-react";
 import { RefObject, useState } from "react";
-import { Node } from "reactflow";
+import { Node, Position } from "reactflow";
 import { MenuItemExandable } from "../MenuItemExandable";
 import styles from "./ContextMenu.module.scss";
 import type { MenuData } from "./hooks/useContextMenu";
 import { useNodeAdd } from "./hooks/useNodeAdd";
-import { getOptionsAddNode } from "./utils/nodeValidityHelper";
+import { getNodeValidPositionsContextMenu } from "./utils/nodeValidityHelper";
+import { NodeTypes } from "@/types/NodeTypes";
 import { getModifierKey } from "@/utils/getModifierKey";
 
 type ContextMenuProps = {
   menuData: MenuData;
   centerCanvas: () => void;
-  copyToClipBoard?: (target: Node<NodeData>) => Promise<void>;
+  copyToClipBoard?: (target: Node<NodeDataCommon>) => Promise<void>;
   paste?: () => void;
-  onDelete?: (node: Node<NodeData>) => void;
-  onEditNode?: (node: Node<NodeData>) => void;
+  onDelete?: (node: Node<NodeDataCommon>) => void;
+  onEditNode?: (node: Node<NodeDataCommon>) => void;
   canvasRef?: RefObject<HTMLDivElement>;
 };
 
@@ -44,14 +45,16 @@ export const ContextMenu = ({
     );
   };
 
-  const renderOptionsAddNode = (node: Node<NodeData>) => {
-    const optionsAddNode = getOptionsAddNode(node);
-    if (optionsAddNode.length === 0) return;
+  const renderOptionsAddNode = (node: Node<NodeDataCommon>) => {
+    const nodeValidPositions = Object.entries(
+      getNodeValidPositionsContextMenu(node)
+    ) as [Position, NodeTypes[]][];
+    if (nodeValidPositions.length === 0) return;
     const fullyExpandedWidth = 400;
     const reversedExpandDir = isReversedExpandDirection(fullyExpandedWidth);
     return (
       <MenuItemExandable text="Add" reverseExpandDir={reversedExpandDir}>
-        {optionsAddNode.map(([position, nodeTypes]) => (
+        {nodeValidPositions.map(([position, nodeTypes]) => (
           <MenuItemExandable
             text={capitalizeFirstLetter(position)}
             reverseExpandDir={reversedExpandDir}
@@ -89,7 +92,9 @@ export const ContextMenu = ({
             </Menu.Item>
           </>
         )}
-        <Menu.Item onClick={() => onEditNode?.(node)}>Edit</Menu.Item>
+        {node.type !== NodeTypes.linkedProcess && (
+          <Menu.Item onClick={() => onEditNode?.(node)}>Edit</Menu.Item>
+        )}
         {renderOptionsAddNode(node)}
         {deletable && (
           <Menu.Item onClick={() => onDelete?.(node)}>

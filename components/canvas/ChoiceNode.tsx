@@ -7,7 +7,7 @@ import { WaitingButton } from "./WaitingButton";
 import { NodeTypes } from "types/NodeTypes";
 import { TargetHandle } from "./TargetHandle";
 import { MergeButton } from "./MergeButton";
-import { NodeData } from "types/NodeData";
+import { NodeDataCommon } from "types/NodeData";
 import colors from "theme/colors";
 import { NodeCard } from "./NodeCard";
 import { NodeDescription } from "./NodeDescription";
@@ -16,6 +16,8 @@ import { NodeShape } from "./NodeShape";
 import { NodeTooltip } from "./NodeTooltip";
 import { NodeTooltipSection } from "./NodeTooltipSection";
 import { useNodeAdd } from "./hooks/useNodeAdd";
+import { getNodeTypeName } from "@/utils/getNodeTypeName";
+import { isChoiceChild } from "./utils/nodeRelationsHelper";
 
 export const ChoiceNode = ({
   data: {
@@ -25,7 +27,7 @@ export const ChoiceNode = ({
     isDropTarget,
     isValidDropTarget,
     handleClickNode,
-    isChoiceChild,
+    parentTypes,
     userCanEdit,
     children,
     mergeOption,
@@ -34,9 +36,11 @@ export const ChoiceNode = ({
     mergeable,
     shapeHeight,
     shapeWidth,
+    disabled,
   },
+  selected,
   dragging,
-}: NodeProps<NodeData>) => {
+}: NodeProps<NodeDataCommon>) => {
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
@@ -89,7 +93,7 @@ export const ChoiceNode = ({
               />
             )}
           </NodeButtonsContainer>
-          {isChoiceChild && (
+          {isChoiceChild(parentTypes) && (
             <>
               <NodeButtonsContainer position={Position.Right}>
                 <SubActivityButton
@@ -141,7 +145,7 @@ export const ChoiceNode = ({
   return (
     <div
       onMouseEnter={() => {
-        !dragging && setHovering(true);
+        !disabled && !dragging && setHovering(true);
       }}
       onMouseLeave={() => setHovering(false)}
     >
@@ -149,7 +153,8 @@ export const ChoiceNode = ({
         onClick={handleClickNode}
         hovering={hovering && !merging}
         highlighted={isDropTarget && isValidDropTarget}
-        darkened={isValidDropTarget === false}
+        disabled={disabled || isValidDropTarget === false}
+        selected={selected}
       >
         <NodeShape
           shape={"rhombus"}
@@ -160,7 +165,7 @@ export const ChoiceNode = ({
           onMouseLeave={() => setHoveringShape(false)}
         >
           <NodeDescription
-            header={!description ? type : undefined}
+            header={!description ? getNodeTypeName(type) : undefined}
             description={description}
           />
         </NodeShape>

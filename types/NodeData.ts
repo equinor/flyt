@@ -1,11 +1,17 @@
 import { NodeDataApi } from "./NodeDataApi";
+import { NodeTypes } from "./NodeTypes";
 import { TimeDefinition } from "./TimeDefinition";
+
+export type Column = {
+  id: string;
+  firstNodeType: NodeTypes;
+} | null;
 
 export type NodeData = {
   parents: string[];
   isDropTarget?: boolean;
   isValidDropTarget?: boolean;
-  columnId: string | null;
+  column: Column;
   mergeOption?: boolean;
   handleMerge?: (sourceId: string | null, targetId: string | null) => void;
   handleClickNode?: () => void;
@@ -15,28 +21,31 @@ export type NodeData = {
   copyable: boolean;
   userCanEdit?: boolean;
   depth?: number;
-  isChoiceChild?: boolean;
+  parentTypes?: NodeTypes[];
   shapeHeight: number;
   shapeWidth: number;
   totalDurations?: {
     minTotalDuration: TimeDefinition[];
     maxTotalDuration: TimeDefinition[];
   };
-} & NodeDataApi;
+  disabled?: boolean;
+};
+
+export type NodeDataCommon = NodeData & NodeDataApi;
 
 export type NodeDataHidden = Pick<
   NodeData,
-  | "columnId"
+  | "column"
   | "parents"
   | "depth"
-  | "children"
   | "merging"
   | "isValidDropTarget"
   | "isDropTarget"
   | "mergeOption"
-  | "isChoiceChild"
+  | "parentTypes"
   | "shapeHeight"
   | "shapeWidth"
->;
+> &
+  Pick<NodeDataApi, "children">;
 
-export type NodeDataFull = NodeData | NodeDataHidden;
+export type NodeDataFull = NodeDataCommon | NodeDataHidden;

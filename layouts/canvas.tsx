@@ -47,6 +47,7 @@ import { unknownErrorToString } from "@/utils/isError";
 import { useRouter } from "next/router";
 import { useProjectId } from "@/hooks/useProjectId";
 import { EditableTitle } from "components/EditableTitle";
+import { getProjectName } from "@/utils/getProjectName";
 
 export const CanvasLayout = ({ children }: { children: ReactNode }) => {
   const isAuthenticated = useIsAuthenticated();
@@ -109,6 +110,7 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
   const userCanEdit = myAccess !== "Reader";
   const userCannotEdit = !userCanEdit;
   const isAdmin = myAccess === "Admin" || myAccess === "Owner";
+  const projectName = getProjectName(project);
 
   const [visibleShareScrim, setVisibleShareScrim] = useState(false);
   const [visibleRenameScrim, setVisibleRenameScrim] = useState(false);
@@ -237,7 +239,7 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
             <div className={styles.centerButton}>
               {project ? (
                 <EditableTitle
-                  defaultText={project.name || "Untitled process"}
+                  defaultText={projectName}
                   readOnly={!userCanEdit}
                   onSubmit={(text) => updateProjectName(text)}
                 />
