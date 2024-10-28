@@ -5,6 +5,7 @@ import styles from "./NodeTooltipSection.module.scss";
 import { FormatNodeText } from "./utils/FormatNodeText";
 import { DurationComponent } from "../DurationComponent";
 import { ChangeEvent } from "react";
+import MarkdownEditor from "../MarkdownEditor";
 
 type NodeTooltipSectionProps = {
   header?: string;
@@ -24,7 +25,10 @@ export const NodeTooltipSection = ({
   const { patchDescription, patchDuration, patchRole } =
     useVSMObjectMutation(nodeData);
 
-  const shouldDisplayHeader = !(isEditing && variant === "duration");
+  const shouldDisplayHeader = !(
+    isEditing &&
+    (variant === "duration" || variant === "description")
+  );
 
   const renderInput = () => {
     switch (variant) {
@@ -51,14 +55,11 @@ export const NodeTooltipSection = ({
         );
       case "description":
         return (
-          <NodeInput
-            initialValue={text}
-            id={`${nodeData.id}-description`}
-            multiline
-            onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
-              patchDescription(e.target.value)
-            }
-            disabled={!nodeData.userCanEdit}
+          <MarkdownEditor
+            canEdit={nodeData.userCanEdit}
+            defaultText={text || ""}
+            label={"Description"}
+            onChange={(value) => patchDescription(value)}
           />
         );
     }

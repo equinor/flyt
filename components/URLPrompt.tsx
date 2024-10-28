@@ -70,12 +70,6 @@ export function URLPrompt(props: {
         }
       }}
       style={{
-        overflow: "hidden",
-        position: "absolute",
-        top: 0,
-        left: 0,
-        zIndex: 1000,
-        display: "block",
         boxSizing: "border-box",
         width: "100%",
         height: "100%",
