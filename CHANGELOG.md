@@ -1,30 +1,40 @@
 # Changelog
 
-## [2.6.0](https://github.com/equinor/flyt/compare/v2.5.0...v2.6.0) (2024-09-11)
-
+## [2.7.0](https://github.com/equinor/flyt/compare/v2.6.0...v2.7.0) (2024-10-18)
 
 ### Features
 
-* infinite scroll ([#788](https://github.com/equinor/flyt/issues/788)) ([ac85041](https://github.com/equinor/flyt/commit/ac850415f47c6922fafc0c8327079ed8a86c7922))
-* Main activity duration summary ([#768](https://github.com/equinor/flyt/issues/768)) ([2195660](https://github.com/equinor/flyt/commit/21956608bb28fec0c4f85b958aa848ea2ad2b84e))
-
+- Copy and paste cards ([#794](https://github.com/equinor/flyt/issues/794)) ([17605e5](https://github.com/equinor/flyt/commit/17605e5ae24794ecb44d3ddae0f6c87922a265be))
+- Copy and paste tutorial ([#815](https://github.com/equinor/flyt/issues/815)) ([30b59f8](https://github.com/equinor/flyt/commit/30b59f85594c6c8736b3d0778ed6899638000e04))
+- Option to also delete all following cards ([#802](https://github.com/equinor/flyt/issues/802)) ([cc1ae8a](https://github.com/equinor/flyt/commit/cc1ae8a25e43efca6d452d7379235460341fadc6))
+- Right click context menu ([#800](https://github.com/equinor/flyt/issues/800)) ([deb61c0](https://github.com/equinor/flyt/commit/deb61c0740f9b08bcbbc8d2b66520e55afa6a96b))
+- update delete choice/main activity warning text ([#814](https://github.com/equinor/flyt/issues/814)) ([532cd0b](https://github.com/equinor/flyt/commit/532cd0b8ecefbce718636d2af132c59f50441690)), closes [#805](https://github.com/equinor/flyt/issues/805)
 
 ### Bug Fixes
 
-* Upgrade dependencies ([#796](https://github.com/equinor/flyt/issues/796)) ([494d1e7](https://github.com/equinor/flyt/commit/494d1e7fd7ec534d70b4ade0bef34f5cae029b3c))
+- Copy paste error messages ([#818](https://github.com/equinor/flyt/issues/818)) ([7cbc742](https://github.com/equinor/flyt/commit/7cbc7422e5d67121b12819694b983c31af7b5788))
+
+## [2.6.0](https://github.com/equinor/flyt/compare/v2.5.0...v2.6.0) (2024-09-11)
+
+### Features
+
+- infinite scroll ([#788](https://github.com/equinor/flyt/issues/788)) ([ac85041](https://github.com/equinor/flyt/commit/ac850415f47c6922fafc0c8327079ed8a86c7922))
+- Main activity duration summary ([#768](https://github.com/equinor/flyt/issues/768)) ([2195660](https://github.com/equinor/flyt/commit/21956608bb28fec0c4f85b958aa848ea2ad2b84e))
+
+### Bug Fixes
+
+- Upgrade dependencies ([#796](https://github.com/equinor/flyt/issues/796)) ([494d1e7](https://github.com/equinor/flyt/commit/494d1e7fd7ec534d70b4ade0bef34f5cae029b3c))
 
 ## [2.5.0](https://github.com/equinor/flyt/compare/v2.4.0...v2.5.0) (2024-08-28)
 
-
 ### Features
 
-* Full name of users ([#778](https://github.com/equinor/flyt/issues/778)) ([2523e98](https://github.com/equinor/flyt/commit/2523e9829d6ad192400b641818901f2df3458e04))
-
+- Full name of users ([#778](https://github.com/equinor/flyt/issues/778)) ([2523e98](https://github.com/equinor/flyt/commit/2523e9829d6ad192400b641818901f2df3458e04))
 
 ### Bug Fixes
 
-* Disable spamming of add card buttons ([#784](https://github.com/equinor/flyt/issues/784)) ([668f1fa](https://github.com/equinor/flyt/commit/668f1fa802d925f62f0ee942b72240c0f6a7d89b))
-* display AxiosError message ([#774](https://github.com/equinor/flyt/issues/774)) ([76033a0](https://github.com/equinor/flyt/commit/76033a0e02572d190290b3ac52851582dd0faef9))
+- Disable spamming of add card buttons ([#784](https://github.com/equinor/flyt/issues/784)) ([668f1fa](https://github.com/equinor/flyt/commit/668f1fa802d925f62f0ee942b72240c0f6a7d89b))
+- display AxiosError message ([#774](https://github.com/equinor/flyt/issues/774)) ([76033a0](https://github.com/equinor/flyt/commit/76033a0e02572d190290b3ac52851582dd0faef9))
 
 ## [2.4.0](https://github.com/equinor/flyt/compare/v2.3.0...v2.4.0) (2024-08-06)
 

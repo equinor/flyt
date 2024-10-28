@@ -11,13 +11,14 @@ import { useQuery } from "react-query";
 import { getProject } from "@/services/projectApi";
 import { useProjectId } from "@/hooks/useProjectId";
 import { TaskCategory } from "@/types/TaskCategory";
+import { getProjectName } from "@/utils/getProjectName";
 
 export default function CategoriesPage(): JSX.Element {
   const { projectId } = useProjectId();
   const { data: project } = useQuery(["project", projectId], () =>
     getProject(projectId)
   );
-  const projectTitle = project?.name;
+  const projectTitle = getProjectName(project);
 
   const [categories, setCategories] = useState<TaskCategory[]>([]);
 
@@ -97,7 +98,7 @@ export default function CategoriesPage(): JSX.Element {
   return (
     <>
       <Head>
-        <title>{projectTitle || "Untitled VSM"} - Categorisation</title>
+        <title>{projectTitle} - Categorisation</title>
       </Head>
       <div
         style={{

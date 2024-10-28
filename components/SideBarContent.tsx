@@ -1,4 +1,4 @@
-import { NodeData } from "@/types/NodeData";
+import { NodeDataCommon } from "@/types/NodeData";
 import { Button, Icon, Typography } from "@equinor/eds-core-react";
 import { close as closeIcon } from "@equinor/eds-icons";
 import { Fragment, useState } from "react";
@@ -18,7 +18,7 @@ export function SideBarContent(props: {
   onClose: () => void;
   onDelete: () => void;
   canEdit: boolean;
-  selectedNode: NodeData;
+  selectedNode: NodeDataCommon;
   isLoading: boolean;
 }) {
   const { patchDescription, patchDuration, patchRole, error } =

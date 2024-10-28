@@ -1,30 +1,34 @@
-import React, { useEffect, useState } from "react";
-import { Connection, Position, useStore } from "reactflow";
-import { FormatNodeText } from "./utils/FormatNodeText";
+import { getNodeTypeName } from "@/utils/getNodeTypeName";
 import { formatDuration } from "@/utils/unitDefinitions";
-import styles from "./Node.module.scss";
-import { SubActivityButton } from "./SubActivityButton";
-import { NodeButtonsContainer } from "./NodeButtonsContainer";
-import { ChoiceButton } from "./ChoiceButton";
-import { WaitingButton } from "./WaitingButton";
-import { NodeData } from "types/NodeData";
-import { NodeProps } from "reactflow";
-import { NodeTypes } from "types/NodeTypes";
-import { MergeButton } from "./MergeButton";
-import { TargetHandle } from "./TargetHandle";
-import { NodeDescription } from "./NodeDescription";
-import { NodeCard } from "./NodeCard";
+import { useEffect, useState } from "react";
+import { Connection, NodeProps, Position, useStore } from "reactflow";
 import colors from "theme/colors";
+import { NodeDataCommon } from "types/NodeData";
+import { NodeTypes } from "types/NodeTypes";
+import { ChoiceButton } from "./ChoiceButton";
+import { MergeButton } from "./MergeButton";
+import styles from "./Node.module.scss";
+import { NodeButtonsContainer } from "./NodeButtonsContainer";
+import { NodeCard } from "./NodeCard";
+import { NodeDescription } from "./NodeDescription";
 import { NodeDuration } from "./NodeDuration";
-import { SourceHandle } from "./SourceHandle";
-import { NodeTooltip, NodeTooltipContainer } from "./NodeTooltip";
-import { QIPRContainer } from "./QIPRContainer";
-import { NodeTooltipSection } from "./NodeTooltipSection";
 import { NodeShape } from "./NodeShape";
+import { NodeTooltip } from "./NodeTooltip";
+import { QIPRContainer } from "./QIPRContainer";
+import { SourceHandle } from "./SourceHandle";
+import { SubActivityButton } from "./SubActivityButton";
+import { TargetHandle } from "./TargetHandle";
+import { WaitingButton } from "./WaitingButton";
 import { useNodeAdd } from "./hooks/useNodeAdd";
 import { useSelectedNodeForEditing } from "./hooks/useSelectedNodeForEditing";
+import { FormatNodeText } from "./utils/FormatNodeText";
+import { isChoiceChild } from "./utils/nodeRelationsHelper";
 
-export const SubActivityNode = ({ data, dragging }: NodeProps<NodeData>) => {
+export const SubActivityNode = ({
+  data,
+  dragging,
+  selected,
+}: NodeProps<NodeDataCommon>) => {
   const {
     description,
     role,
@@ -39,11 +43,12 @@ export const SubActivityNode = ({ data, dragging }: NodeProps<NodeData>) => {
     mergeOption,
     handleClickNode,
     handleMerge,
-    isChoiceChild,
+    parentTypes,
     userCanEdit,
     mergeable,
     shapeHeight,
     shapeWidth,
+    disabled,
   } = data;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
@@ -89,7 +94,7 @@ export const SubActivityNode = ({ data, dragging }: NodeProps<NodeData>) => {
               />
             )}
           </NodeButtonsContainer>
-          {isChoiceChild && (
+          {isChoiceChild(parentTypes) && (
             <>
               <NodeButtonsContainer position={Position.Right}>
                 <SubActivityButton
@@ -140,14 +145,15 @@ export const SubActivityNode = ({ data, dragging }: NodeProps<NodeData>) => {
 
   return (
     <div
-      onMouseEnter={() => !dragging && setHovering(true)}
+      onMouseEnter={() => !disabled && !dragging && setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
       <NodeCard
         onClick={() => setSelectedNodeForEditing(id)}
         hovering={hovering && !merging}
         highlighted={isDropTarget && isValidDropTarget}
-        darkened={isValidDropTarget === false}
+        disabled={disabled || isValidDropTarget === false}
+        selected={selected}
       >
         <NodeShape
           shape={"square"}
@@ -158,7 +164,7 @@ export const SubActivityNode = ({ data, dragging }: NodeProps<NodeData>) => {
           onMouseLeave={() => setHoveringShape(false)}
         >
           <NodeDescription
-            header={!description ? type : undefined}
+            header={!description ? getNodeTypeName(type) : undefined}
             description={description}
           />
           <div className={styles["node__role-container"]}>

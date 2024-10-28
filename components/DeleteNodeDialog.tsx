@@ -4,16 +4,15 @@ import { getNodeTypeName } from "@/utils/getNodeTypeName";
 import { notifyOthers } from "@/services/notifyOthers";
 import { unknownErrorToString } from "@/utils/isError";
 import { useStoreDispatch } from "hooks/storeHooks";
-import { NodeData } from "@/types/NodeData";
+import { NodeDataCommon } from "@/types/NodeData";
 import { NodeTypes } from "@/types/NodeTypes";
 import { deleteVertice } from "services/graphApi";
 import { useProjectId } from "@/hooks/useProjectId";
 import { ScrimDelete } from "./ScrimDelete";
 
 export function DeleteNodeDialog(props: {
-  objectToDelete: NodeData;
+  objectToDelete: NodeDataCommon;
   onClose: () => void;
-  visible: boolean;
 }) {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
@@ -44,8 +43,6 @@ export function DeleteNodeDialog(props: {
     }
   );
 
-  if (!props.visible) return null;
-
   const handleClose = () => props.onClose();
   const handleDelete = (includeChildren: boolean) =>
     deleteMutation.mutate({
@@ -60,10 +57,10 @@ export function DeleteNodeDialog(props: {
   const header = `Delete ${getNodeTypeName(type).toLowerCase()}`;
 
   const getWarningMessage = () => {
-    if (type === mainActivity && hasChildren) {
-      return "This will delete all of its following cards.\nAre you sure you want to proceed?";
-    } else if (type === choice && hasChildren) {
-      return "This will delete all connected alternatives.\nAre you sure you want to proceed?";
+    const typeIsMainActivityOrChoice = type === mainActivity || type === choice;
+
+    if (typeIsMainActivityOrChoice && hasChildren) {
+      return "This will delete **ALL** the cards below.\nAre you sure you want to proceed?";
     }
     return "This will delete the selected card";
   };
@@ -84,7 +81,11 @@ export function DeleteNodeDialog(props: {
       open
       header={header}
       onClose={handleClose}
-      onConfirm={(_, includeChildren) => handleDelete(includeChildren)}
+      onConfirm={(_, includeChildren) =>
+        handleDelete(
+          type === mainActivity || type === choice || includeChildren
+        )
+      }
       error={deleteMutation.error}
       warningMessage={warningMessage}
       confirmMessage={confirmMessage}

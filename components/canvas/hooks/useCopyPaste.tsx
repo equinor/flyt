@@ -31,23 +31,19 @@ export const useCopyPaste = (
         action(targetToPaste);
       }
     } catch (error) {
+      if (error instanceof DOMException || error instanceof SyntaxError) {
+        dispatch.setSnackMessage("Unable to paste: Invalid copied item ⛔");
+        return;
+      }
       dispatch.setSnackMessage(unknownErrorToString(error));
     }
   };
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (
-        (event.metaKey || event.ctrlKey) &&
-        event.key === "c" &&
-        event.target == document.body
-      ) {
+      if (target && (event.metaKey || event.ctrlKey) && event.key === "c") {
         copyToClipboard(target);
-      } else if (
-        (event.metaKey || event.ctrlKey) &&
-        event.key === "v" &&
-        event.target == document.body
-      ) {
+      } else if ((event.metaKey || event.ctrlKey) && event.key === "v") {
         paste();
       }
     };
@@ -58,4 +54,6 @@ export const useCopyPaste = (
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [target]);
+
+  return { copyToClipboard, paste };
 };

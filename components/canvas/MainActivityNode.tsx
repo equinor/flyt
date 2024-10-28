@@ -1,31 +1,34 @@
-import { useEffect, useState } from "react";
-import { Handle, Position } from "reactflow";
-import { MainActivityButton } from "./MainActivityButton";
-import { SubActivityButton } from "./SubActivityButton";
-import { ChoiceButton } from "./ChoiceButton";
-import { WaitingButton } from "./WaitingButton";
-import { NodeButtonsContainer } from "./NodeButtonsContainer";
-import stylesNodeButtons from "./NodeButtons.module.scss";
-import { NodeData } from "types/NodeData";
-import { NodeProps } from "reactflow";
-import { NodeTypes } from "types/NodeTypes";
-import { NodeDescription } from "./NodeDescription";
-import { NodeCard } from "./NodeCard";
-import colors from "theme/colors";
-import { SourceHandle } from "./SourceHandle";
-import { NodeShape } from "./NodeShape";
-import { QIPRContainer } from "./QIPRContainer";
-import { NodeTooltipSection } from "./NodeTooltipSection";
-import { NodeTooltip, NodeTooltipContainer } from "./NodeTooltip";
-import { useNodeAdd } from "./hooks/useNodeAdd";
-import { NodeDuration } from "./NodeDuration";
+import { getNodeTypeName } from "@/utils/getNodeTypeName";
 import {
   formatMinMaxTotalDuration,
   formatMinMaxTotalDurationShort,
 } from "@/utils/unitDefinitions";
+import { useEffect, useState } from "react";
+import { Handle, NodeProps, Position } from "reactflow";
+import colors from "theme/colors";
+import { NodeDataCommon } from "types/NodeData";
+import { NodeTypes } from "types/NodeTypes";
+import { ChoiceButton } from "./ChoiceButton";
+import { useNodeAdd } from "./hooks/useNodeAdd";
 import { useSelectedNodeForEditing } from "./hooks/useSelectedNodeForEditing";
+import { MainActivityButton } from "./MainActivityButton";
+import stylesNodeButtons from "./NodeButtons.module.scss";
+import { NodeButtonsContainer } from "./NodeButtonsContainer";
+import { NodeCard } from "./NodeCard";
+import { NodeDescription } from "./NodeDescription";
+import { NodeDuration } from "./NodeDuration";
+import { NodeShape } from "./NodeShape";
+import { NodeTooltip } from "./NodeTooltip";
+import { QIPRContainer } from "./QIPRContainer";
+import { SourceHandle } from "./SourceHandle";
+import { SubActivityButton } from "./SubActivityButton";
+import { WaitingButton } from "./WaitingButton";
 
-export const MainActivityNode = ({ data, dragging }: NodeProps<NodeData>) => {
+export const MainActivityNode = ({
+  data,
+  dragging,
+  selected,
+}: NodeProps<NodeDataCommon>) => {
   const {
     description,
     type,
@@ -39,6 +42,7 @@ export const MainActivityNode = ({ data, dragging }: NodeProps<NodeData>) => {
     shapeHeight,
     shapeWidth,
     totalDurations,
+    disabled,
   } = data;
   const { selectedNodeForEditing, setSelectedNodeForEditing } =
     useSelectedNodeForEditing();
@@ -105,14 +109,15 @@ export const MainActivityNode = ({ data, dragging }: NodeProps<NodeData>) => {
 
   return (
     <div
-      onMouseEnter={() => !dragging && setHovering(true)}
+      onMouseEnter={() => !disabled && !dragging && setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
       <NodeCard
         onClick={() => setSelectedNodeForEditing(id)}
         hovering={hovering && !merging && !isEditingNode}
         highlighted={isDropTarget && isValidDropTarget}
-        darkened={isValidDropTarget === false}
+        disabled={disabled || isValidDropTarget === false}
+        selected={selected}
       >
         <NodeShape
           shape={"square"}
@@ -123,7 +128,7 @@ export const MainActivityNode = ({ data, dragging }: NodeProps<NodeData>) => {
           onMouseLeave={() => setHoveringShape(false)}
         >
           <NodeDescription
-            header={!description ? type : undefined}
+            header={!description ? getNodeTypeName(type) : undefined}
             description={description}
           />
           {formattedDurationSumShort && (

@@ -10,6 +10,7 @@ const sectionQueryValues = [
   "merge-activities",
   "rename-edge",
   "delete-edge",
+  "copy-paste",
 ] as const;
 
 export type SectionQueryValue = (typeof sectionQueryValues)[number];
@@ -55,6 +56,7 @@ const useSectionRefs = () => {
   const mergeActivitiesRef = useRef<HTMLDivElement>(null);
   const renameEdgeRef = useRef<HTMLDivElement>(null);
   const deleteEdgeRef = useRef<HTMLDivElement>(null);
+  const copyPasteRef = useRef<HTMLDivElement>(null);
 
   const refs: { [key in SectionQueryValue]: RefObject<HTMLDivElement> } = {
     "add-new-main-activity": addNewMainActivityRef,
@@ -64,6 +66,7 @@ const useSectionRefs = () => {
     "merge-activities": mergeActivitiesRef,
     "rename-edge": renameEdgeRef,
     "delete-edge": deleteEdgeRef,
+    "copy-paste": copyPasteRef,
   };
 
   return refs;

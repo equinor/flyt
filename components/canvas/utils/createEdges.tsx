@@ -15,8 +15,8 @@ const createLongEdges = (
   nodes: Node<NodeDataFull>[],
   longEdges: Edge[],
   shapeSize: { height: number; width: number }
-) => {
-  return longEdges.map((e) => {
+) =>
+  longEdges.map((e) => {
     const points: XYPosition[] = [];
     e.data?.hiddenNodeTree.forEach((nId: string) => {
       const hiddenNode = nodes.find((n) => n.id === nId);
@@ -34,7 +34,6 @@ const createLongEdges = (
     e.data.points = points;
     return e;
   });
-};
 
 export const createEdges = (
   nodes: Node<NodeDataFull>[],

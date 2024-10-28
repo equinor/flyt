@@ -1,54 +1,23 @@
-import { useState } from "react";
-
 import { ActiveFilterSection } from "components/Labels/ActiveFilterSection";
 import { FilterLabelButton } from "components/Labels/FilterLabelButton";
 import { FilterUserButton } from "components/FilterUserButton";
-import { FrontPageBody } from "components/FrontPageBody";
+import { ProjectList } from "../../components/ProjectList";
 import Head from "next/head";
 import { Layouts } from "../../layouts/LayoutWrapper";
 import { SearchField } from "components/SearchField";
 import { SideNavBar } from "components/SideNavBar";
 import { SortSelect } from "../../components/SortSelect";
 import { Typography } from "@equinor/eds-core-react";
-import { getProjects } from "../../services/projectApi";
-import { stringToArray } from "utils/stringToArray";
 import styles from "./FrontPage.module.scss";
-import { useQuery } from "react-query";
-import { useRouter } from "next/router";
+import { getQueryFavProcesses } from "@/components/canvas/utils/projectQueries";
+import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 
 export default function FavoriteProcesses(): JSX.Element {
-  const [page, setPage] = useState(1);
-  const itemsPerPage = 16;
-
-  const router = useRouter();
-  const query = useQuery(
-    [
-      "favProjects",
-      page,
-      "isFavourite",
-      itemsPerPage,
-      router.query.q,
-      router.query.user,
-      router.query.rl,
-      router.query.orderBy,
-    ],
-    () =>
-      getProjects({
-        page,
-        items: itemsPerPage,
-        onlyFavorites: true,
-        q: stringToArray(router.query.q),
-        ru: stringToArray(router.query.user),
-        rl: stringToArray(router.query.rl),
-        orderBy: `${router.query.orderBy}`,
-      })
-  );
-
-  // rl stands for "required label"
-  const labelIdArray = router.query.rl ? `${router.query.rl}`.split(",") : null;
+  const query = getQueryFavProcesses(16);
+  useInfiniteScroll(query);
 
   return (
-    <div>
+    <>
       <Head>
         <title>Flyt | Favorite processes</title>
         <link rel={"icon"} href={"/favicon.ico"} />
@@ -73,15 +42,10 @@ export default function FavoriteProcesses(): JSX.Element {
               <ActiveFilterSection />
             </div>
           </div>
-          <FrontPageBody
-            itemsPerPage={itemsPerPage}
-            query={query}
-            showNewProcessButton={false}
-            onChangePage={(pageNumber: number) => setPage(pageNumber)}
-          />
+          <ProjectList query={query} showNewProcessButton={false} />
         </div>
       </main>
-    </div>
+    </>
   );
 }
 

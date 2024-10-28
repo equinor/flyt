@@ -12,8 +12,6 @@ export const getNodeTypeName = (type: NodeTypes): string => {
       return "Main Activity";
     case NodeTypes.subActivity:
       return "Sub Activity";
-    case NodeTypes.text:
-      return "Text";
     case NodeTypes.waiting:
       return "Waiting";
     case NodeTypes.output:

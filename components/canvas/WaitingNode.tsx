@@ -1,31 +1,36 @@
-import { useEffect, useState } from "react";
-import { Connection, Position, useStore } from "reactflow";
 import { formatDuration } from "@/utils/unitDefinitions";
 import { Icon, Typography } from "@equinor/eds-core-react";
 import { time as timeIcon } from "@equinor/eds-icons";
+import { useEffect, useState } from "react";
+import { Connection, Position, useStore } from "reactflow";
 
+import { getNodeTypeName } from "@/utils/getNodeTypeName";
+import { NodeProps } from "reactflow";
+import colors from "theme/colors";
+import { NodeDataCommon } from "types/NodeData";
+import { NodeTypes } from "types/NodeTypes";
+import { ChoiceButton } from "./ChoiceButton";
+import { MergeButton } from "./MergeButton";
 import styles from "./Node.module.scss";
 import { NodeButtonsContainer } from "./NodeButtonsContainer";
-import { SubActivityButton } from "./SubActivityButton";
-import { ChoiceButton } from "./ChoiceButton";
-import { WaitingButton } from "./WaitingButton";
-import { NodeData } from "types/NodeData";
-import { NodeProps } from "reactflow";
-import { NodeTypes } from "types/NodeTypes";
-import { MergeButton } from "./MergeButton";
-import { TargetHandle } from "./TargetHandle";
-import { NodeDescription } from "./NodeDescription";
 import { NodeCard } from "./NodeCard";
-import colors from "theme/colors";
-import { SourceHandle } from "./SourceHandle";
+import { NodeDescription } from "./NodeDescription";
 import { NodeShape } from "./NodeShape";
-import { NodeTooltip, NodeTooltipContainer } from "./NodeTooltip";
-import { NodeTooltipSection } from "./NodeTooltipSection";
+import { NodeTooltip } from "./NodeTooltip";
 import { QIPRContainer } from "./QIPRContainer";
+import { SourceHandle } from "./SourceHandle";
+import { SubActivityButton } from "./SubActivityButton";
+import { TargetHandle } from "./TargetHandle";
+import { WaitingButton } from "./WaitingButton";
 import { useNodeAdd } from "./hooks/useNodeAdd";
 import { useSelectedNodeForEditing } from "./hooks/useSelectedNodeForEditing";
+import { isChoiceChild } from "./utils/nodeRelationsHelper";
 
-export const WaitingNode = ({ data, dragging }: NodeProps<NodeData>) => {
+export const WaitingNode = ({
+  data,
+  dragging,
+  selected,
+}: NodeProps<NodeDataCommon>) => {
   const {
     description,
     id,
@@ -40,10 +45,11 @@ export const WaitingNode = ({ data, dragging }: NodeProps<NodeData>) => {
     handleClickNode,
     handleMerge,
     merging,
-    isChoiceChild,
+    parentTypes,
     userCanEdit,
     shapeHeight,
     shapeWidth,
+    disabled,
   } = data;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
@@ -90,7 +96,7 @@ export const WaitingNode = ({ data, dragging }: NodeProps<NodeData>) => {
               />
             )}
           </NodeButtonsContainer>
-          {isChoiceChild && (
+          {isChoiceChild(parentTypes) && (
             <>
               <NodeButtonsContainer position={Position.Right}>
                 <SubActivityButton
@@ -141,14 +147,15 @@ export const WaitingNode = ({ data, dragging }: NodeProps<NodeData>) => {
 
   return (
     <div
-      onMouseEnter={() => !dragging && setHovering(true)}
+      onMouseEnter={() => !disabled && !dragging && setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
       <NodeCard
         onClick={() => setSelectedNodeForEditing(id)}
         hovering={hovering && !merging}
         highlighted={isDropTarget && isValidDropTarget}
-        darkened={isValidDropTarget === false}
+        disabled={disabled || isValidDropTarget === false}
+        selected={selected}
       >
         <NodeShape
           shape={"square"}
@@ -159,7 +166,7 @@ export const WaitingNode = ({ data, dragging }: NodeProps<NodeData>) => {
           onMouseLeave={() => setHoveringShape(false)}
         >
           <NodeDescription
-            header={!description ? type : undefined}
+            header={!description ? getNodeTypeName(type) : undefined}
             description={description}
           />
           <div className={styles["node__waitingtime-container"]}>

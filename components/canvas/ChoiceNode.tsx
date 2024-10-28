@@ -1,31 +1,36 @@
+import { getNodeTypeName } from "@/utils/getNodeTypeName";
 import { useEffect, useState } from "react";
 import { Connection, NodeProps, Position, useStore } from "reactflow";
-import { NodeButtonsContainer } from "./NodeButtonsContainer";
-import { SubActivityButton } from "./SubActivityButton";
-import { ChoiceButton } from "./ChoiceButton";
-import { WaitingButton } from "./WaitingButton";
-import { NodeTypes } from "types/NodeTypes";
-import { TargetHandle } from "./TargetHandle";
-import { MergeButton } from "./MergeButton";
-import { NodeData } from "types/NodeData";
 import colors from "theme/colors";
+import { NodeDataCommon } from "types/NodeData";
+import { NodeTypes } from "types/NodeTypes";
+import { ChoiceButton } from "./ChoiceButton";
+import { MergeButton } from "./MergeButton";
+import { NodeButtonsContainer } from "./NodeButtonsContainer";
 import { NodeCard } from "./NodeCard";
 import { NodeDescription } from "./NodeDescription";
-import { SourceHandle } from "./SourceHandle";
 import { NodeShape } from "./NodeShape";
-import { NodeTooltip, NodeTooltipContainer } from "./NodeTooltip";
-import { NodeTooltipSection } from "./NodeTooltipSection";
+import { NodeTooltip } from "./NodeTooltip";
+import { SourceHandle } from "./SourceHandle";
+import { SubActivityButton } from "./SubActivityButton";
+import { TargetHandle } from "./TargetHandle";
+import { WaitingButton } from "./WaitingButton";
 import { useNodeAdd } from "./hooks/useNodeAdd";
 import { useSelectedNodeForEditing } from "./hooks/useSelectedNodeForEditing";
+import { isChoiceChild } from "./utils/nodeRelationsHelper";
 
-export const ChoiceNode = ({ data, dragging }: NodeProps<NodeData>) => {
+export const ChoiceNode = ({
+  data,
+  dragging,
+  selected,
+}: NodeProps<NodeDataCommon>) => {
   const {
     id,
     description,
     type,
     isDropTarget,
     isValidDropTarget,
-    isChoiceChild,
+    parentTypes,
     userCanEdit,
     children,
     mergeOption,
@@ -34,6 +39,7 @@ export const ChoiceNode = ({ data, dragging }: NodeProps<NodeData>) => {
     mergeable,
     shapeHeight,
     shapeWidth,
+    disabled,
   } = data;
   const { selectedNodeForEditing, setSelectedNodeForEditing } =
     useSelectedNodeForEditing();
@@ -90,7 +96,7 @@ export const ChoiceNode = ({ data, dragging }: NodeProps<NodeData>) => {
               />
             )}
           </NodeButtonsContainer>
-          {isChoiceChild && (
+          {isChoiceChild(parentTypes) && (
             <>
               <NodeButtonsContainer position={Position.Right}>
                 <SubActivityButton
@@ -142,7 +148,7 @@ export const ChoiceNode = ({ data, dragging }: NodeProps<NodeData>) => {
   return (
     <div
       onMouseEnter={() => {
-        !dragging && setHovering(true);
+        !disabled && !dragging && setHovering(true);
       }}
       onMouseLeave={() => setHovering(false)}
     >
@@ -150,7 +156,8 @@ export const ChoiceNode = ({ data, dragging }: NodeProps<NodeData>) => {
         onClick={() => setSelectedNodeForEditing(id)}
         hovering={hovering && !merging}
         highlighted={isDropTarget && isValidDropTarget}
-        darkened={isValidDropTarget === false}
+        disabled={disabled || isValidDropTarget === false}
+        selected={selected}
       >
         <NodeShape
           shape={"rhombus"}
@@ -161,7 +168,7 @@ export const ChoiceNode = ({ data, dragging }: NodeProps<NodeData>) => {
           onMouseLeave={() => setHoveringShape(false)}
         >
           <NodeDescription
-            header={!description ? type : undefined}
+            header={!description ? getNodeTypeName(type) : undefined}
             description={description}
           />
         </NodeShape>

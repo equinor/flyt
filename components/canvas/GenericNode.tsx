@@ -1,22 +1,26 @@
-import { NodeData } from "types/NodeData";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Handle, NodeProps, Position } from "reactflow";
-import stylesNodeButtons from "./NodeButtons.module.scss";
-import { NodeButtonsContainer } from "./NodeButtonsContainer";
-import { MainActivityButton } from "./MainActivityButton";
-import { NodeTypes } from "types/NodeTypes";
-import { NodeDescription } from "./NodeDescription";
-import { NodeCard } from "./NodeCard";
 import colors from "theme/colors";
-import { QIPRContainer } from "./QIPRContainer";
-import { NodeShape } from "./NodeShape";
-import { NodeTooltip, NodeTooltipContainer } from "./NodeTooltip";
-import { NodeTooltipSection } from "./NodeTooltipSection";
-import { getNodeHelperText } from "./utils/getNodeHelperText";
+import { NodeDataCommon } from "types/NodeData";
+import { NodeTypes } from "types/NodeTypes";
 import { useNodeAdd } from "./hooks/useNodeAdd";
 import { useSelectedNodeForEditing } from "./hooks/useSelectedNodeForEditing";
+import { MainActivityButton } from "./MainActivityButton";
+import stylesNodeButtons from "./NodeButtons.module.scss";
+import { NodeButtonsContainer } from "./NodeButtonsContainer";
+import { NodeCard } from "./NodeCard";
+import { NodeDescription } from "./NodeDescription";
+import { NodeShape } from "./NodeShape";
+import { NodeTooltip } from "./NodeTooltip";
+import { QIPRContainer } from "./QIPRContainer";
+import { SourceHandle } from "./SourceHandle";
+import { getNodeHelperText } from "./utils/getNodeHelperText";
 
-export const GenericNode = ({ data, dragging }: NodeProps<NodeData>) => {
+export const GenericNode = ({
+  data,
+  dragging,
+  selected,
+}: NodeProps<NodeDataCommon>) => {
   const {
     id,
     description,
@@ -29,6 +33,7 @@ export const GenericNode = ({ data, dragging }: NodeProps<NodeData>) => {
     merging,
     shapeHeight,
     shapeWidth,
+    disabled,
   } = data;
 
   const [hovering, setHovering] = useState(false);
@@ -70,14 +75,15 @@ export const GenericNode = ({ data, dragging }: NodeProps<NodeData>) => {
 
   return (
     <div
-      onMouseEnter={() => !dragging && setHovering(true)}
+      onMouseEnter={() => !disabled && !dragging && setHovering(true)}
       onMouseLeave={() => setHovering(false)}
     >
       <NodeCard
         onClick={() => setSelectedNodeForEditing(id)}
         hovering={hovering && !merging}
         highlighted={isDropTarget && isValidDropTarget}
-        darkened={isValidDropTarget === false}
+        disabled={disabled || isValidDropTarget === false}
+        selected={selected}
       >
         <NodeShape
           shape={"square"}
@@ -103,6 +109,7 @@ export const GenericNode = ({ data, dragging }: NodeProps<NodeData>) => {
         position={Position.Top}
         isConnectable={false}
       />
+      <SourceHandle />
       <NodeTooltip
         isHovering={hoveringShape && !!description}
         isEditing={isEditingNode}

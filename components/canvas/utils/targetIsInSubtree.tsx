@@ -7,7 +7,7 @@ export const targetIsInSubtree = (
   nodes: Node<NodeDataFull>[],
   visited = new Set()
 ) => {
-  if (node.data.columnId !== target.data.columnId) return false;
+  if (node.data.column?.id !== target.data.column?.id) return false;
   if (visited.has(node.id)) return false;
 
   visited.add(node.id);

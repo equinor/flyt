@@ -7,6 +7,7 @@ import addNewWait from "../../../public/CanvasTutorial/add-new-wait.gif";
 import mergeActivities from "../../../public/CanvasTutorial/merge-activities.gif";
 import renameEdge from "../../../public/CanvasTutorial/rename-edge.gif";
 import deleteEdge from "../../../public/CanvasTutorial/delete-edge.gif";
+import copyPaste from "../../../public/CanvasTutorial/copy-paste.gif";
 import mainActivity from "../../../public/CanvasTutorial/main-activity.svg";
 import subActivity from "../../../public/CanvasTutorial/sub-activity.svg";
 import choice from "../../../public/CanvasTutorial/choice.svg";
@@ -18,12 +19,14 @@ import { CanvasTutorialSection } from "./CanvasTutorialSection";
 import { InlineImage } from "./InlineImage";
 import { useCanvasTutorial } from "./hooks/useCanvasTutorial";
 import { ButtonWrapper } from "@/components/ButtonWrapper";
+import { getModifierKey } from "@/utils/getModifierKey";
 
 const title = "Tutorial";
 
 export const CanvasTutorial = () => {
   const { handleClose, handleInitialOpen, isOpen, onSectionButtonClick, refs } =
     useCanvasTutorial();
+  const modifierKey = getModifierKey();
 
   return (
     <>
@@ -109,17 +112,31 @@ export const CanvasTutorial = () => {
               Hover over a editable line. Look for the pencil icon to appear.
               Click the edit button to start writing. Once you have finished,
               click outside the text area to save your changes. Editable lines
-              can be found directly beneath a choice card.
+              can be found directly below a choice card.
             </CanvasTutorialSection>
             <CanvasTutorialSection
               containerRef={refs["delete-edge"]}
               title="Remove lines"
               image={deleteEdge}
-              style={{ marginBottom: "32px" }}
             >
               Hover over a removable line. Click the remove button to remove the
               line. Removeable lines are only found above a subactivity that has
               multiple parent connections.
+            </CanvasTutorialSection>
+            <CanvasTutorialSection
+              containerRef={refs["copy-paste"]}
+              title="Copy and paste"
+              image={copyPaste}
+              style={{ marginBottom: "32px" }}
+            >
+              Hover over a card. Right click to open the context menu. Press the
+              &quot;Copy&quot; button to copy the card. Hover over the card you
+              want to add the copied card below. Right click and press the
+              &quot;Paste&quot; button.
+              <br />
+              <br /> Tip: You can also press {modifierKey}+C while hovering a
+              card to copy it and {modifierKey}+V while hovering a card to paste
+              a copied card below it.
             </CanvasTutorialSection>
           </div>
         </Dialog.CustomContent>
