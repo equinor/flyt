@@ -9,6 +9,7 @@ import { NodeTooltipContainer } from "./NodeTooltip";
 import { useState } from "react";
 import { NodeTooltipSection } from "./NodeTooltipSection";
 import { AddQIPRButton } from "./AddQIPRButton";
+import { FormatNodeText } from "./utils/FormatNodeText";
 
 export const QIPRContainer = (props: { onClick?(): void; tasks: Task[] }) => {
   const [hoveredTask, setHoveredTask] = useState<Task | undefined>(undefined);
@@ -54,7 +55,9 @@ export const QIPRContainer = (props: { onClick?(): void; tasks: Task[] }) => {
               color={getTaskColor(hoveredTask)}
             />
           </div>
-          <NodeTooltipSection text={hoveredTask?.description ?? ""} />
+          <FormatNodeText variant="body_long">
+            {hoveredTask?.description ?? ""}
+          </FormatNodeText>
         </div>
       </NodeTooltipContainer>
     </div>
