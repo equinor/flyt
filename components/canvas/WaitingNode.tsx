@@ -19,13 +19,14 @@ import { NodeCard } from "./NodeCard";
 import colors from "theme/colors";
 import { SourceHandle } from "./SourceHandle";
 import { NodeShape } from "./NodeShape";
-import { NodeTooltip } from "./NodeTooltip";
+import { NodeTooltip, NodeTooltipContainer } from "./NodeTooltip";
 import { NodeTooltipSection } from "./NodeTooltipSection";
 import { QIPRContainer } from "./QIPRContainer";
 import { useNodeAdd } from "./hooks/useNodeAdd";
+import { useSelectedNodeForEditing } from "./hooks/useSelectedNodeForEditing";
 
-export const WaitingNode = ({
-  data: {
+export const WaitingNode = ({ data, dragging }: NodeProps<NodeData>) => {
+  const {
     description,
     id,
     duration,
@@ -43,13 +44,17 @@ export const WaitingNode = ({
     userCanEdit,
     shapeHeight,
     shapeWidth,
-  },
-  dragging,
-}: NodeProps<NodeData>) => {
+  } = data;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
   const connectionNodeId = useStore((state) => state.connectionNodeId);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
+  const { selectedNodeForEditing, setSelectedNodeForEditing } =
+    useSelectedNodeForEditing();
+
+  const isEditingNode = selectedNodeForEditing === id;
+
+  const shouldDisplayQIPR = tasks.length > 0 || hovering;
 
   useEffect(() => {
     setHovering(false);
@@ -140,7 +145,7 @@ export const WaitingNode = ({
       onMouseLeave={() => setHovering(false)}
     >
       <NodeCard
-        onClick={handleClickNode}
+        onClick={() => setSelectedNodeForEditing(id)}
         hovering={hovering && !merging}
         highlighted={isDropTarget && isValidDropTarget}
         darkened={isValidDropTarget === false}
@@ -164,25 +169,25 @@ export const WaitingNode = ({
             </Typography>
           </div>
         </NodeShape>
-        <QIPRContainer tasks={tasks} />
+        {shouldDisplayQIPR && (
+          <QIPRContainer tasks={tasks} onClick={handleClickNode} />
+        )}
       </NodeCard>
       <TargetHandle hidden={!mergeOption} />
       <SourceHandle />
       <NodeTooltip
-        isVisible={
-          !!(hoveringShape && (description || typeof duration === "number"))
+        isHovering={
+          hoveringShape && (!!description || typeof duration === "number")
         }
-      >
-        {description && (
-          <NodeTooltipSection header={"Description"} text={description} />
-        )}
-        {duration && (
-          <NodeTooltipSection
-            header={"Duration"}
-            text={formatDuration(duration, unit)}
-          />
-        )}
-      </NodeTooltip>
+        isEditing={isEditingNode}
+        nodeData={data}
+        includeDescription
+        description={description}
+        includeRole={false}
+        includeDuration
+        duration={formatDuration(duration, unit)}
+        includeEstimate={false}
+      />
       {renderNodeButtons()}
     </div>
   );

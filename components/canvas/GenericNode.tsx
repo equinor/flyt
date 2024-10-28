@@ -10,13 +10,14 @@ import { NodeCard } from "./NodeCard";
 import colors from "theme/colors";
 import { QIPRContainer } from "./QIPRContainer";
 import { NodeShape } from "./NodeShape";
-import { NodeTooltip } from "./NodeTooltip";
+import { NodeTooltip, NodeTooltipContainer } from "./NodeTooltip";
 import { NodeTooltipSection } from "./NodeTooltipSection";
 import { getNodeHelperText } from "./utils/getNodeHelperText";
 import { useNodeAdd } from "./hooks/useNodeAdd";
+import { useSelectedNodeForEditing } from "./hooks/useSelectedNodeForEditing";
 
-export const GenericNode = ({
-  data: {
+export const GenericNode = ({ data, dragging }: NodeProps<NodeData>) => {
+  const {
     id,
     description,
     type,
@@ -28,12 +29,14 @@ export const GenericNode = ({
     merging,
     shapeHeight,
     shapeWidth,
-  },
-  dragging,
-}: NodeProps<NodeData>) => {
+  } = data;
+
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
+  const { selectedNodeForEditing, setSelectedNodeForEditing } =
+    useSelectedNodeForEditing();
+  const isEditingNode = selectedNodeForEditing === id;
 
   useEffect(() => {
     setHovering(false);
@@ -41,6 +44,8 @@ export const GenericNode = ({
   }, [dragging]);
 
   const nodeHelperText = getNodeHelperText(type);
+
+  const shouldDisplayQIPR = tasks.length > 0 || hovering;
 
   const renderNodeButtons = () => {
     const nodeButtonsPosition =
@@ -69,7 +74,7 @@ export const GenericNode = ({
       onMouseLeave={() => setHovering(false)}
     >
       <NodeCard
-        onClick={handleClickNode}
+        onClick={() => setSelectedNodeForEditing(id)}
         hovering={hovering && !merging}
         highlighted={isDropTarget && isValidDropTarget}
         darkened={isValidDropTarget === false}
@@ -88,7 +93,9 @@ export const GenericNode = ({
             helperText={nodeHelperText}
           />
         </NodeShape>
-        <QIPRContainer tasks={tasks} />
+        {shouldDisplayQIPR && (
+          <QIPRContainer tasks={tasks} onClick={handleClickNode} />
+        )}
       </NodeCard>
       <Handle
         className={stylesNodeButtons["handle--hidden"]}
@@ -96,11 +103,16 @@ export const GenericNode = ({
         position={Position.Top}
         isConnectable={false}
       />
-      <NodeTooltip isVisible={!!(hoveringShape && description)}>
-        {description && (
-          <NodeTooltipSection header={"Description"} text={description} />
-        )}
-      </NodeTooltip>
+      <NodeTooltip
+        isHovering={hoveringShape && !!description}
+        isEditing={isEditingNode}
+        nodeData={data}
+        includeDescription
+        description={description}
+        includeRole={false}
+        includeDuration={false}
+        includeEstimate={false}
+      />
       {renderNodeButtons()}
     </div>
   );

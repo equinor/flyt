@@ -17,14 +17,15 @@ import { NodeCard } from "./NodeCard";
 import colors from "theme/colors";
 import { NodeDuration } from "./NodeDuration";
 import { SourceHandle } from "./SourceHandle";
-import { NodeTooltip } from "./NodeTooltip";
+import { NodeTooltip, NodeTooltipContainer } from "./NodeTooltip";
 import { QIPRContainer } from "./QIPRContainer";
 import { NodeTooltipSection } from "./NodeTooltipSection";
 import { NodeShape } from "./NodeShape";
 import { useNodeAdd } from "./hooks/useNodeAdd";
+import { useSelectedNodeForEditing } from "./hooks/useSelectedNodeForEditing";
 
-export const SubActivityNode = ({
-  data: {
+export const SubActivityNode = ({ data, dragging }: NodeProps<NodeData>) => {
+  const {
     description,
     role,
     duration,
@@ -43,13 +44,16 @@ export const SubActivityNode = ({
     mergeable,
     shapeHeight,
     shapeWidth,
-  },
-  dragging,
-}: NodeProps<NodeData>) => {
+  } = data;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
   const connectionNodeId = useStore((state) => state.connectionNodeId);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
+  const { selectedNodeForEditing, setSelectedNodeForEditing } =
+    useSelectedNodeForEditing();
+  const isEditingNode = selectedNodeForEditing === id;
+
+  const shouldDisplayQIPR = tasks.length > 0 || hovering;
 
   useEffect(() => {
     setHovering(false);
@@ -140,7 +144,7 @@ export const SubActivityNode = ({
       onMouseLeave={() => setHovering(false)}
     >
       <NodeCard
-        onClick={handleClickNode}
+        onClick={() => setSelectedNodeForEditing(id)}
         hovering={hovering && !merging}
         highlighted={isDropTarget && isValidDropTarget}
         darkened={isValidDropTarget === false}
@@ -167,29 +171,27 @@ export const SubActivityNode = ({
           </div>
           <NodeDuration duration={formatDuration(duration, unit)} />
         </NodeShape>
-        <QIPRContainer tasks={tasks} />
+        {shouldDisplayQIPR && (
+          <QIPRContainer tasks={tasks} onClick={handleClickNode} />
+        )}
       </NodeCard>
       <TargetHandle hidden={!mergeOption} />
       <SourceHandle />
       <NodeTooltip
-        isVisible={
-          !!(
-            hoveringShape &&
-            (description || role || typeof duration === "number")
-          )
+        isHovering={
+          hoveringShape &&
+          (!!description || !!role || typeof duration === "number")
         }
-      >
-        {description && (
-          <NodeTooltipSection header={"Description"} text={description} />
-        )}
-        {role && <NodeTooltipSection header={"Role(s)"} text={role} />}
-        {duration !== null && unit !== null && (
-          <NodeTooltipSection
-            header={"Duration"}
-            text={formatDuration(duration, unit)}
-          />
-        )}
-      </NodeTooltip>
+        isEditing={isEditingNode}
+        nodeData={data}
+        includeDescription
+        description={description}
+        includeRole
+        role={role ?? undefined}
+        includeDuration
+        duration={formatDuration(duration, unit)}
+        includeEstimate={false}
+      />
       {renderNodeButtons()}
     </div>
   );

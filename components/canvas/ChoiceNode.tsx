@@ -13,18 +13,18 @@ import { NodeCard } from "./NodeCard";
 import { NodeDescription } from "./NodeDescription";
 import { SourceHandle } from "./SourceHandle";
 import { NodeShape } from "./NodeShape";
-import { NodeTooltip } from "./NodeTooltip";
+import { NodeTooltip, NodeTooltipContainer } from "./NodeTooltip";
 import { NodeTooltipSection } from "./NodeTooltipSection";
 import { useNodeAdd } from "./hooks/useNodeAdd";
+import { useSelectedNodeForEditing } from "./hooks/useSelectedNodeForEditing";
 
-export const ChoiceNode = ({
-  data: {
+export const ChoiceNode = ({ data, dragging }: NodeProps<NodeData>) => {
+  const {
     id,
     description,
     type,
     isDropTarget,
     isValidDropTarget,
-    handleClickNode,
     isChoiceChild,
     userCanEdit,
     children,
@@ -34,9 +34,10 @@ export const ChoiceNode = ({
     mergeable,
     shapeHeight,
     shapeWidth,
-  },
-  dragging,
-}: NodeProps<NodeData>) => {
+  } = data;
+  const { selectedNodeForEditing, setSelectedNodeForEditing } =
+    useSelectedNodeForEditing();
+  const isEditingNode = selectedNodeForEditing === id;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
@@ -146,7 +147,7 @@ export const ChoiceNode = ({
       onMouseLeave={() => setHovering(false)}
     >
       <NodeCard
-        onClick={handleClickNode}
+        onClick={() => setSelectedNodeForEditing(id)}
         hovering={hovering && !merging}
         highlighted={isDropTarget && isValidDropTarget}
         darkened={isValidDropTarget === false}
@@ -167,11 +168,16 @@ export const ChoiceNode = ({
       </NodeCard>
       <TargetHandle hidden={!mergeOption} />
       <SourceHandle />
-      <NodeTooltip isVisible={!!(hoveringShape && description)}>
-        {description && (
-          <NodeTooltipSection header={"Description"} text={description} />
-        )}
-      </NodeTooltip>
+      <NodeTooltip
+        isHovering={hoveringShape && !!description}
+        isEditing={isEditingNode}
+        nodeData={data}
+        includeDescription
+        description={description}
+        includeRole={false}
+        includeDuration={false}
+        includeEstimate={false}
+      />
       {renderNodeButtons()}
     </div>
   );
