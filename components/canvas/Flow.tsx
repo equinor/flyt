@@ -27,6 +27,7 @@ import { useNodeAdd } from "./hooks/useNodeAdd";
 import { useNodeDrag } from "./hooks/useNodeDrag";
 import { copyPasteNodeValidator } from "./utils/copyPasteValidators";
 import { handlePasteNode } from "./utils/handlePasteNode";
+import { useSelectedNodeForEditing } from "./hooks/useSelectedNodeForEditing";
 
 type CanvasProps = {
   apiNodes: NodeDataApi[];
@@ -54,6 +55,7 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
   const { onNodeDragStart, onNodeDrag, onNodeDragStop } = useNodeDrag();
   const { deleteEdgeMutation } = useEdgeDelete();
   const { centerCanvas } = useCenterCanvas();
+  const { setSelectedNodeForEditing } = useSelectedNodeForEditing();
 
   const ref = useRef<HTMLDivElement>(null);
   const { menuData, onNodeContextMenu, onPaneContextMenu, closeContextMenu } =
@@ -121,7 +123,10 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
         edgeTypes={edgeElementTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        onPaneClick={() => setSelectedNode(undefined)}
+        onPaneClick={() => {
+          setSelectedNode(undefined);
+          setSelectedNodeForEditing(null);
+        }}
         onMoveStart={() => closeContextMenu()}
         minZoom={0.2}
         nodesDraggable={userCanEdit}

@@ -2,21 +2,21 @@ import { useStoreDispatch } from "@/hooks/storeHooks";
 import { useProjectId } from "@/hooks/useProjectId";
 import { patchGraph } from "@/services/graphApi";
 import { notifyOthers } from "@/services/notifyOthers";
-import { NodeData } from "@/types/NodeData";
+import { NodeDataCommon } from "@/types/NodeData";
 import { debounce } from "@/utils/debounce";
 import { unknownErrorToString } from "@/utils/isError";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQueryClient } from "react-query";
 
-export const useVSMObjectMutation = (selectedNode: NodeData) => {
+export const useVSMObjectMutation = (selectedNode: NodeDataCommon) => {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
 
   const { projectId } = useProjectId();
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
-  const { mutate, error, isLoading } = useMutation(
-    (patchedObject: NodeData) =>
+  const { mutate, error } = useMutation(
+    (patchedObject: NodeDataCommon) =>
       patchGraph(patchedObject, projectId, patchedObject.id),
     {
       onSuccess() {
@@ -29,7 +29,7 @@ export const useVSMObjectMutation = (selectedNode: NodeData) => {
   );
 
   const patchNode = (
-    selectedNode: NodeData,
+    selectedNode: NodeDataCommon,
     updates: {
       description?: string;
       role?: string;

@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import styles from "./Node.module.scss";
 
 type NodeCardProps = {
@@ -6,7 +7,7 @@ type NodeCardProps = {
   highlighted?: boolean;
   selected?: boolean;
   disabled?: boolean;
-  children?: JSX.Element[] | JSX.Element;
+  children?: ReactNode;
 };
 
 export const NodeCard = ({

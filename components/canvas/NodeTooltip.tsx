@@ -1,7 +1,7 @@
+import { NodeDataCommon } from "@/types/NodeData";
 import { ReactNode } from "react";
 import { NodeToolbar, Position } from "reactflow";
 import styles from "./NodeTooltip.module.scss";
-import { NodeData } from "@/types/NodeData";
 import { NodeTooltipSection } from "./NodeTooltipSection";
 
 type NodeTooltipContainerProps = {
@@ -39,7 +39,7 @@ type Field<IncludeKey extends string, Key extends string> =
     });
 
 type NodeTooltipProps = Pick<NodeTooltipContainerProps, "position"> & {
-  nodeData: NodeData;
+  nodeData: NodeDataCommon;
   isHovering?: boolean;
   isEditing?: boolean;
 } & Field<"includeDescription", "description"> &

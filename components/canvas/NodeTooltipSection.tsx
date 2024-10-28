@@ -1,18 +1,18 @@
-import { NodeData } from "@/types/NodeData";
+import { NodeDataCommon } from "@/types/NodeData";
+import { ChangeEvent } from "react";
+import { DurationComponent } from "../DurationComponent";
+import MarkdownEditor from "../MarkdownEditor";
 import { useVSMObjectMutation } from "./hooks/useVSMObjectMutation";
 import { NodeInput } from "./NodeInput";
 import styles from "./NodeTooltipSection.module.scss";
 import { FormatNodeText } from "./utils/FormatNodeText";
-import { DurationComponent } from "../DurationComponent";
-import { ChangeEvent } from "react";
-import MarkdownEditor from "../MarkdownEditor";
 
 type NodeTooltipSectionProps = {
   header?: string;
   text?: string;
   isEditing?: boolean;
   variant: "description" | "duration" | "role";
-  nodeData: NodeData;
+  nodeData: NodeDataCommon;
 };
 
 export const NodeTooltipSection = ({
