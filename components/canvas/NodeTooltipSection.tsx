@@ -35,7 +35,7 @@ export const NodeTooltipSection = ({
             onChangeDuration={({ duration, unit }) =>
               patchDuration(duration, unit)
             }
-            disabled={false}
+            disabled={!nodeData.userCanEdit}
           />
         );
       case "role":
@@ -46,6 +46,7 @@ export const NodeTooltipSection = ({
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               patchRole(e.target.value)
             }
+            disabled={!nodeData.userCanEdit}
           />
         );
       case "description":
@@ -57,6 +58,7 @@ export const NodeTooltipSection = ({
             onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
               patchDescription(e.target.value)
             }
+            disabled={!nodeData.userCanEdit}
           />
         );
     }
