@@ -1,0 +1,26 @@
+.container {
+  height: 100%;
+  width: 100%;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+}
+
+.panels {
+  height: 100%;
+  width: 100%;
+}
+
+.panel {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.emptyFlowText {
+  padding: 120px;
+}

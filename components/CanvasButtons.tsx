@@ -6,19 +6,17 @@ import { ProcessHierarchyButton } from "./canvas/ProcessHierarchy/ProcessHierarc
 
 type CanvasButtonsProps = {
   handleClickLabel: () => void;
-  handleClickProcessHierarchy: () => void;
   userCanEdit: boolean;
 };
 
 export const CanvasButtons = ({
   handleClickLabel,
-  handleClickProcessHierarchy,
   userCanEdit,
 }: CanvasButtonsProps) => (
   <div className={styles.container}>
     {userCanEdit && (
       <>
-        <ProcessHierarchyButton onClick={handleClickProcessHierarchy} />
+        <ProcessHierarchyButton />
         <ManageLabelsButton handleClickLabel={handleClickLabel} />
       </>
     )}

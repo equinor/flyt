@@ -9,7 +9,6 @@ import { LiveIndicator } from "../LiveIndicator";
 import { FlowWrapper } from "./Flow";
 import { useAccess } from "./hooks/useAccess";
 import { useWebSocket } from "./hooks/useWebSocket";
-import { ProcessConnectionFormWrapper } from "./ProcessHierarchy/ProcessConnectionForm";
 import { ToBeToggle } from "./ToBeToggle";
 
 type CanvasProps = {
@@ -22,8 +21,6 @@ const Canvas = ({
   project,
 }: CanvasProps) => {
   const { userCanEdit } = useAccess(project);
-  const [visibleProcessHierarchyDialog, setVisibleProcessHierarchyDialog] =
-    useState(false);
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
   const { socketConnected, socketReason } = useWebSocket();
 
@@ -32,18 +29,7 @@ const Canvas = ({
       <CanvasButtons
         userCanEdit={userCanEdit}
         handleClickLabel={() => setVisibleLabelScrim(true)}
-        handleClickProcessHierarchy={() =>
-          setVisibleProcessHierarchyDialog(true)
-        }
       />
-      {visibleProcessHierarchyDialog && (
-        <ProcessConnectionFormWrapper
-          apiNodes={apiNodes}
-          apiEdges={apiEdges}
-          project={project}
-          onClose={() => setVisibleProcessHierarchyDialog(false)}
-        />
-      )}
       <ManageLabelBox
         handleClose={() => setVisibleLabelScrim(false)}
         isVisible={visibleLabelScrim}

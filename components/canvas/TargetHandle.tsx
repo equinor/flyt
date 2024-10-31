@@ -1,12 +1,12 @@
 import styles from "./NodeButtons.module.scss";
 import { Handle, Position } from "reactflow";
 
-export const TargetHandle = (props: { hidden: boolean }) => (
+export const TargetHandle = ({ position = Position.Top, hidden = false }) => (
   <Handle
-    className={!props.hidden ? styles["handle--merge-end"] : styles.handle}
+    className={hidden ? styles.handle : styles["handle--merge-end"]}
     type="target"
-    position={Position.Top}
-    isConnectable={!props.hidden}
+    position={position}
+    isConnectable={!hidden}
     isConnectableStart={false}
   />
 );

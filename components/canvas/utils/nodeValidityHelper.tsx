@@ -110,6 +110,16 @@ export const nodeValidityMap: NodeValidityMap = {
     copyable: false,
     deletable: true,
   },
+  [NodeTypes.project]: {
+    validPositions: {
+      [Position.Bottom]: [NodeTypes.project],
+      [Position.Top]: [NodeTypes.project],
+      [Position.Left]: [NodeTypes.project],
+      [Position.Right]: [NodeTypes.project],
+    },
+    copyable: false,
+    deletable: false,
+  },
   [NodeTypes.hidden]: {
     validPositions: {},
     copyable: false,

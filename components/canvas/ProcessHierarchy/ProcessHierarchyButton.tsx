@@ -1,18 +1,15 @@
 import { ButtonWrapper } from "@/components/ButtonWrapper";
 import { tag_relations } from "@equinor/eds-icons";
+import { useRouter } from "next/router";
 
-type ProcessHierarchyButtonProps = {
-  onClick: () => void;
-};
+export const ProcessHierarchyButton = () => {
+  const router = useRouter();
 
-export const ProcessHierarchyButton = ({
-  onClick,
-}: ProcessHierarchyButtonProps) => {
   return (
     <ButtonWrapper
       icon={tag_relations}
-      onClick={onClick}
       title={"Process Hierarchy"}
+      onClick={() => router.push(`${router.asPath}/hierarchy`)}
     />
   );
 };

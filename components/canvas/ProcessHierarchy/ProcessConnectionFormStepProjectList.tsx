@@ -4,6 +4,9 @@ import { InfiniteQueryProjects } from "@/types/InfiniteQueryProjects";
 import { Project } from "@/types/Project";
 import styles from "./ProcessConnectionForm.module.scss";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
+import { FilterUserButton } from "@/components/FilterUserButton";
+import { FilterLabelButton } from "@/components/Labels/FilterLabelButton";
+import { SortSelect } from "@/components/SortSelect";
 
 type ProcessConnectionFormStepProjectListProps = {
   selectedCard?: Project;
@@ -21,6 +24,11 @@ export const ProcessConnectionFormStepProjectList = ({
   return (
     <>
       <SearchField />
+      <div className={styles["sortAndFilter-container"]}>
+        <FilterUserButton />
+        <FilterLabelButton />
+        <SortSelect />
+      </div>
       <div ref={scrollContainerRef} className={styles["projects-container"]}>
         <ProjectList
           query={query}

@@ -20,6 +20,7 @@ type ProcessConnectionFormProps = {
   onClose: () => void;
   apiNodes: NodeDataApi[];
   apiEdges: EdgeDataApi[];
+  open: boolean;
 };
 
 const ProcessConnectionForm = ({
@@ -27,6 +28,7 @@ const ProcessConnectionForm = ({
   onClose,
   apiNodes,
   apiEdges,
+  open,
 }: ProcessConnectionFormProps) => {
   const query = getQueryAllProcesses(35);
   const { step, incStep, decStep } = useFormSteps();
@@ -105,7 +107,12 @@ const ProcessConnectionForm = ({
   ];
 
   return (
-    <Dialog open onClose={onClose} isDismissable className={styles.container}>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      isDismissable
+      className={styles.container}
+    >
       <Dialog.Header>
         <Dialog.Title className={styles.title}>Connect Process</Dialog.Title>
         <Button onClick={onClose} variant="ghost_icon">
