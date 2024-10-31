@@ -3,7 +3,7 @@ import { EdgeDataApi } from "@/types/EdgeDataApi";
 import { NodeDataApi } from "@/types/NodeDataApi";
 import { NodeTypes } from "@/types/NodeTypes";
 import { Project } from "@/types/Project";
-import { Button, Dialog, Icon } from "@equinor/eds-core-react";
+import { Button, Dialog, Icon, Typography } from "@equinor/eds-core-react";
 import { close } from "@equinor/eds-icons";
 import { useState } from "react";
 import { Position, ReactFlowProvider } from "reactflow";
@@ -21,6 +21,7 @@ type ProcessConnectionFormProps = {
   apiNodes: NodeDataApi[];
   apiEdges: EdgeDataApi[];
   open: boolean;
+  userCanEdit: boolean;
 };
 
 const ProcessConnectionForm = ({
@@ -29,6 +30,7 @@ const ProcessConnectionForm = ({
   apiNodes,
   apiEdges,
   open,
+  userCanEdit,
 }: ProcessConnectionFormProps) => {
   const query = getQueryAllProcesses(35);
   const { step, incStep, decStep } = useFormSteps();
@@ -119,12 +121,23 @@ const ProcessConnectionForm = ({
           <Icon data={close} />
         </Button>
       </Dialog.Header>
-      <Dialog.CustomContent className={styles["custom-content-container"]}>
-        {steps[step].content}
-      </Dialog.CustomContent>
-      <Dialog.Actions className={styles["actions-container"]}>
-        {steps[step].actions}
-      </Dialog.Actions>
+      {!userCanEdit ? (
+        <Dialog.CustomContent className={styles["custom-content-container"]}>
+          <Typography variant="h2">
+            You do not have permission to connect this process to other
+            processes.
+          </Typography>
+        </Dialog.CustomContent>
+      ) : (
+        <>
+          <Dialog.CustomContent className={styles["custom-content-container"]}>
+            {steps[step].content}
+          </Dialog.CustomContent>
+          <Dialog.Actions className={styles["actions-container"]}>
+            {steps[step].actions}
+          </Dialog.Actions>
+        </>
+      )}
     </Dialog>
   );
 };

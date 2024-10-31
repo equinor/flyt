@@ -9,6 +9,7 @@ import { ProcessConnectionFormWrapper } from "./ProcessConnectionForm";
 import styles from "./ProcessHierarchyTabs.module.scss";
 import { ProcessesFlowWrapper } from "./ProcessesFlow";
 import { useProcessHierarchyTabs } from "./useProcessHierarchyTabs";
+import { useAccess } from "../hooks/useAccess";
 
 type ProcessHierarchyTabsProps = {
   graph: Graph;
@@ -26,6 +27,7 @@ export const ProcessHierarchyTabs = ({
     activeTab,
     handleChangeTab,
   } = useProcessHierarchyTabs();
+  const { userCanEdit } = useAccess(project);
 
   const { hierarchyNodes, chainedNodes } = useMemo(() => {
     const hierarchyNodes = getHierarchyNodes(apiNodes, project);
@@ -40,9 +42,10 @@ export const ProcessHierarchyTabs = ({
         className={styles.emptyFlowText}
         style={{ textAlign: "center" }}
       >
-        This process does not have any connected processes. <br />
-        Click the <i>Connect Process</i> button above to start connecting
-        processes.
+        This process has no connected processes. <br />
+        {userCanEdit
+          ? "Click the <i>Connect Process</i> button above to start connecting processes."
+          : "You do not have permission to connect other processes to this process."}
       </Typography>
     ) : (
       flow
@@ -57,8 +60,11 @@ export const ProcessHierarchyTabs = ({
       <Tabs.List className={styles.tabs}>
         <Tabs.Tab>Process Hierarchy</Tabs.Tab>
         <Tabs.Tab>Chained Processes</Tabs.Tab>
-        <Tabs.Tab style={{ border: "none", background: "none" }}>
-          <Button onClick={onConnectProcessClick}>
+        <Tabs.Tab
+          disabled={!userCanEdit}
+          style={{ border: "none", background: "none" }}
+        >
+          <Button disabled={!userCanEdit} onClick={onConnectProcessClick}>
             <Icon data={add} />
             Connect Process
           </Button>
@@ -87,6 +93,7 @@ export const ProcessHierarchyTabs = ({
         project={project}
         onClose={onConnectProcessClose}
         open={showNewConnectionForm}
+        userCanEdit={userCanEdit}
       />
     </Tabs>
   );

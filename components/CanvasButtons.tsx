@@ -14,12 +14,8 @@ export const CanvasButtons = ({
   userCanEdit,
 }: CanvasButtonsProps) => (
   <div className={styles.container}>
-    {userCanEdit && (
-      <>
-        <ProcessHierarchyButton />
-        <ManageLabelsButton handleClickLabel={handleClickLabel} />
-      </>
-    )}
+    <ProcessHierarchyButton />
+    {userCanEdit && <ManageLabelsButton handleClickLabel={handleClickLabel} />}
     <CategorizationPageButton />
     <CanvasTutorial />
   </div>
