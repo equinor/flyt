@@ -87,14 +87,15 @@ export const ProcessHierarchyTabs = ({
           )}
         </Tabs.Panel>
       </Tabs.Panels>
-      <ProcessConnectionFormWrapper
-        apiNodes={apiNodes}
-        apiEdges={apiEdges}
-        project={project}
-        onClose={onConnectProcessClose}
-        open={showNewConnectionForm}
-        userCanEdit={userCanEdit}
-      />
+      {showNewConnectionForm && (
+        <ProcessConnectionFormWrapper
+          apiNodes={apiNodes}
+          apiEdges={apiEdges}
+          project={project}
+          onClose={onConnectProcessClose}
+          userCanEdit={userCanEdit}
+        />
+      )}
     </Tabs>
   );
 };

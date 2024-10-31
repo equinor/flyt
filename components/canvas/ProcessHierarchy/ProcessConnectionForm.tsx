@@ -5,7 +5,7 @@ import { NodeTypes } from "@/types/NodeTypes";
 import { Project } from "@/types/Project";
 import { Button, Dialog, Icon, Typography } from "@equinor/eds-core-react";
 import { close } from "@equinor/eds-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Position, ReactFlowProvider } from "reactflow";
 import { useFlowState } from "../hooks/useFlowState";
 import { useNodeAdd } from "../hooks/useNodeAdd";
@@ -20,7 +20,6 @@ type ProcessConnectionFormProps = {
   onClose: () => void;
   apiNodes: NodeDataApi[];
   apiEdges: EdgeDataApi[];
-  open: boolean;
   userCanEdit: boolean;
 };
 
@@ -29,7 +28,6 @@ const ProcessConnectionForm = ({
   onClose,
   apiNodes,
   apiEdges,
-  open,
   userCanEdit,
 }: ProcessConnectionFormProps) => {
   const query = getQueryAllProcesses(35);
@@ -109,12 +107,7 @@ const ProcessConnectionForm = ({
   ];
 
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      isDismissable
-      className={styles.container}
-    >
+    <Dialog open onClose={onClose} isDismissable className={styles.container}>
       <Dialog.Header>
         <Dialog.Title className={styles.title}>Connect Process</Dialog.Title>
         <Button onClick={onClose} variant="ghost_icon">
