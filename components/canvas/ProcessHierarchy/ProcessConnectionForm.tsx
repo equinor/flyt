@@ -5,7 +5,7 @@ import { NodeTypes } from "@/types/NodeTypes";
 import { Project } from "@/types/Project";
 import { Button, Dialog, Icon, Typography } from "@equinor/eds-core-react";
 import { close } from "@equinor/eds-icons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Position, ReactFlowProvider } from "reactflow";
 import { useFlowState } from "../hooks/useFlowState";
 import { useNodeAdd } from "../hooks/useNodeAdd";
