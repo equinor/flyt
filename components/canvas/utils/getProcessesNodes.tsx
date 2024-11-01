@@ -18,7 +18,7 @@ const createProjectNode = (project: Project): NodeDataApi => ({
   linkedProjectData: project,
 });
 
-const getLinkedNodes = (
+const _getLinkedNodesRecursive = (
   apiNodes: NodeDataApi[],
   node: NodeDataApi,
   linkedProcesses: NodeDataApi[],
@@ -34,49 +34,45 @@ const getLinkedNodes = (
   node.children?.forEach((childId) => {
     const childNode = apiNodes.find((n) => n.id === childId);
     if (childNode) {
-      getLinkedNodes(apiNodes, childNode, linkedProcesses, visited);
+      _getLinkedNodesRecursive(apiNodes, childNode, linkedProcesses, visited);
     }
   });
 
   return linkedProcesses;
 };
 
-// Filter linked processes and reorder nodes in a hierarchical parent-child structure
+const getLinkedNodes = (apiNodes: NodeDataApi[], node: NodeDataApi) =>
+  _getLinkedNodesRecursive(apiNodes, node, []);
+
 const getRestructuredNodes = (
   apiNodes: NodeDataApi[],
-  projectNode: NodeDataApi,
-  columnFirstNodesTypes: NodeTypes[],
-  addNodesToProjectChildren = true,
-  addProjectToNodeChildren = false
+  columnFirstNodesTypes: NodeTypes[]
 ): NodeDataApi[] => {
-  const restructuredNodes: NodeDataApi[] = [];
+  let restructuredNodes: NodeDataApi[] = [];
 
   apiNodes.forEach((n) => {
     if (columnFirstNodesTypes.includes(n.type)) {
-      const linkedNodes = getLinkedNodes(apiNodes, n, []);
-      linkedNodes.forEach((linkedNode) => {
-        restructuredNodes.push(linkedNode);
-        if (addNodesToProjectChildren) {
-          projectNode.children.push(linkedNode.id);
-        }
-        if (addProjectToNodeChildren) {
-          linkedNode.children.push(projectNode.id);
-        }
-      });
+      const linkedNodes = getLinkedNodes(apiNodes, n);
+      restructuredNodes = restructuredNodes.concat(linkedNodes);
     }
   });
 
   return restructuredNodes;
 };
 
+const updateNodeChildren = (node: NodeDataApi, newChildren: NodeDataApi[]) =>
+  (node.children = node.children.concat(newChildren.map((node) => node.id)));
+
 export const getHierarchyNodes = (
   apiNodes: NodeDataApi[],
   project: Project
 ): NodeDataApi[] => {
   const projectNode = createProjectNode(project);
-  const mainActivitiesNodes = getRestructuredNodes(apiNodes, projectNode, [
+  const mainActivitiesNodes = getRestructuredNodes(apiNodes, [
     NodeTypes.mainActivity,
   ]);
+
+  updateNodeChildren(projectNode, mainActivitiesNodes);
 
   return [...mainActivitiesNodes, projectNode];
 };
@@ -87,17 +83,15 @@ export const getChainedNodes = (
 ): NodeDataApi[] => {
   const projectNode = createProjectNode(project);
 
-  const inputNodes = getRestructuredNodes(
-    apiNodes,
-    projectNode,
-    [NodeTypes.input],
-    false,
-    true
-  );
+  const inputNodes = getRestructuredNodes(apiNodes, [NodeTypes.input]);
 
-  const outputNodes = getRestructuredNodes(apiNodes, projectNode, [
-    NodeTypes.output,
-  ]);
+  inputNodes.forEach((node) => {
+    updateNodeChildren(node, [projectNode]);
+  });
+
+  const outputNodes = getRestructuredNodes(apiNodes, [NodeTypes.output]);
+
+  updateNodeChildren(projectNode, outputNodes);
 
   return [...inputNodes, ...outputNodes, projectNode];
 };

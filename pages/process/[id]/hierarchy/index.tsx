@@ -2,31 +2,16 @@ import { ButtonNavigateToProcess } from "@/components/ButtonNavigateToProcess";
 import { ProcessHierarchyTabs } from "@/components/canvas/ProcessHierarchy/ProcessHierarchyTabs";
 import { useProjectId } from "@/hooks/useProjectId";
 import { Layouts } from "@/layouts/LayoutWrapper";
-import { getGraph } from "@/services/graphApi";
-import { getProject } from "@/services/projectApi";
 import { CircularProgress } from "@equinor/eds-core-react";
 import Head from "next/head";
-import { useQueries } from "react-query";
 import styles from "./hierarchy.module.scss";
+import { useProjectQuery } from "@/hooks/useProjectQuery";
+import { useGraphQuery } from "@/hooks/useGraphQuery";
 
 export default function HierarchyPage() {
   const { projectId } = useProjectId();
-
-  const [projectQuery, graphQuery] = useQueries([
-    {
-      queryKey: ["project", projectId],
-      queryFn: () => getProject(projectId),
-      enabled: !!projectId,
-    },
-    {
-      queryKey: ["graph", projectId],
-      queryFn: () => getGraph(projectId),
-      enabled: !!projectId,
-    },
-  ]);
-
-  const project = projectQuery.data;
-  const graph = graphQuery.data;
+  const { project, isLoadingProject } = useProjectQuery(projectId);
+  const { graph, isLoadingGraph } = useGraphQuery(projectId);
 
   return (
     <>
@@ -37,7 +22,7 @@ export default function HierarchyPage() {
         <ButtonNavigateToProcess />
       </div>
       <div className={styles["hierarchy-container"]}>
-        {graphQuery.isLoading || projectQuery.isLoading ? (
+        {isLoadingGraph || isLoadingProject ? (
           <CircularProgress size={48} />
         ) : (
           graph &&

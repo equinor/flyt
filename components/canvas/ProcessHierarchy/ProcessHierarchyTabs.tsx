@@ -93,7 +93,6 @@ export const ProcessHierarchyTabs = ({
           apiEdges={apiEdges}
           project={project}
           onClose={onConnectProcessClose}
-          userCanEdit={userCanEdit}
         />
       )}
     </Tabs>

@@ -14,13 +14,13 @@ import styles from "./ProcessConnectionForm.module.scss";
 import { ProcessConnectionFormStepConfirmation } from "./ProcessConnectionFormStepConfirmation";
 import { ProcessConnectionFormStepFlow } from "./ProcessConnectionFormStepFlow";
 import { ProcessConnectionFormStepProjectList } from "./ProcessConnectionFormStepProjectList";
+import { useAccess } from "../hooks/useAccess";
 
 type ProcessConnectionFormProps = {
   project: Project;
   onClose: () => void;
   apiNodes: NodeDataApi[];
   apiEdges: EdgeDataApi[];
-  userCanEdit: boolean;
 };
 
 const ProcessConnectionForm = ({
@@ -28,7 +28,6 @@ const ProcessConnectionForm = ({
   onClose,
   apiNodes,
   apiEdges,
-  userCanEdit,
 }: ProcessConnectionFormProps) => {
   const query = getQueryAllProcesses(35);
   const { step, incStep, decStep } = useFormSteps();
@@ -42,6 +41,7 @@ const ProcessConnectionForm = ({
     [NodeTypes.supplier, NodeTypes.customer]
   );
   const { addNode } = useNodeAdd();
+  const { userCanEdit } = useAccess(project);
 
   const handleConfirm = () => {
     if (!selectedNode || !selectedCard) return;

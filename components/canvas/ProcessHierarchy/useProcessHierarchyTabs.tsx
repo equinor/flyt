@@ -1,13 +1,11 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export const useProcessHierarchyTabs = () => {
   const { query, pathname, push } = useRouter();
 
-  const [activeTab, setActiveTab] = useState(Number(query.tab) || 0);
-  const [showNewConnectionForm, setShowNewConnectionForm] = useState(
-    query.showNewConnection === "true"
-  );
+  const showNewConnectionForm = query.showNewConnection === "true";
+  const activeTab = Number(query.tab) || 0;
 
   const handleChangeTab = (index: number) => {
     if (index === 2) {
@@ -16,7 +14,6 @@ export const useProcessHierarchyTabs = () => {
         query: { ...query, showNewConnection: "true" },
       });
     } else {
-      setActiveTab(index);
       push({
         pathname,
         query: { ...query, tab: index.toString() },
@@ -37,14 +34,6 @@ export const useProcessHierarchyTabs = () => {
       query: { ...query, showNewConnection: "false" },
     });
   };
-
-  useEffect(() => {
-    setActiveTab(Number(query.tab) || 0);
-  }, [query.tab]);
-
-  useEffect(() => {
-    setShowNewConnectionForm(query.showNewConnection === "true");
-  }, [query.showNewConnection]);
 
   useEffect(() => {
     if (!query.tab || !query.showNewConnection) {
