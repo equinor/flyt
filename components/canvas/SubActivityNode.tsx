@@ -19,8 +19,10 @@ import { SourceHandle } from "./SourceHandle";
 import { SubActivityButton } from "./SubActivityButton";
 import { TargetHandle } from "./TargetHandle";
 import { WaitingButton } from "./WaitingButton";
+import { useIsEditingNode } from "./hooks/useIsEditingNode";
 import { useNodeAdd } from "./hooks/useNodeAdd";
-import { useSelectedNodeForEditing } from "./hooks/useSelectedNodeForEditing";
+import { useQIPRContainerOnClick } from "./hooks/useQIPRContainerOnClick";
+import { useShouldDisplayQIPR } from "./hooks/useShouldDisplayQIPR";
 import { FormatNodeText } from "./utils/FormatNodeText";
 import { isChoiceChild } from "./utils/nodeRelationsHelper";
 
@@ -54,11 +56,10 @@ export const SubActivityNode = ({
   const [hoveringShape, setHoveringShape] = useState(false);
   const connectionNodeId = useStore((state) => state.connectionNodeId);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
-  const { selectedNodeForEditing, setSelectedNodeForEditing } =
-    useSelectedNodeForEditing();
-  const isEditingNode = selectedNodeForEditing === id;
+  const isEditingNode = useIsEditingNode(selected);
 
-  const shouldDisplayQIPR = tasks.length > 0 || hovering;
+  const handleQIPRContainerOnClick = useQIPRContainerOnClick(data);
+  const shouldDisplayQIPR = useShouldDisplayQIPR(tasks, hovering);
 
   useEffect(() => {
     setHovering(false);
@@ -149,7 +150,7 @@ export const SubActivityNode = ({
       onMouseLeave={() => setHovering(false)}
     >
       <NodeCard
-        onClick={() => setSelectedNodeForEditing(id)}
+        onClick={handleClickNode}
         hovering={hovering && !merging}
         highlighted={isDropTarget && isValidDropTarget}
         disabled={disabled || isValidDropTarget === false}
@@ -178,7 +179,7 @@ export const SubActivityNode = ({
           <NodeDuration duration={formatDuration(duration, unit)} />
         </NodeShape>
         {shouldDisplayQIPR && (
-          <QIPRContainer tasks={tasks} onClick={handleClickNode} />
+          <QIPRContainer tasks={tasks} onClick={handleQIPRContainerOnClick} />
         )}
       </NodeCard>
       <TargetHandle hidden={!mergeOption} />

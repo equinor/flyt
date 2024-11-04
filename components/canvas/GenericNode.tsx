@@ -3,8 +3,10 @@ import { Handle, NodeProps, Position } from "reactflow";
 import colors from "theme/colors";
 import { NodeDataCommon } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
+import { useIsEditingNode } from "./hooks/useIsEditingNode";
 import { useNodeAdd } from "./hooks/useNodeAdd";
-import { useSelectedNodeForEditing } from "./hooks/useSelectedNodeForEditing";
+import { useQIPRContainerOnClick } from "./hooks/useQIPRContainerOnClick";
+import { useShouldDisplayQIPR } from "./hooks/useShouldDisplayQIPR";
 import { MainActivityButton } from "./MainActivityButton";
 import stylesNodeButtons from "./NodeButtons.module.scss";
 import { NodeButtonsContainer } from "./NodeButtonsContainer";
@@ -39,9 +41,10 @@ export const GenericNode = ({
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
-  const { selectedNodeForEditing, setSelectedNodeForEditing } =
-    useSelectedNodeForEditing();
-  const isEditingNode = selectedNodeForEditing === id;
+  const isEditingNode = useIsEditingNode(selected);
+
+  const handleQIPRContainerOnClick = useQIPRContainerOnClick(data);
+  const shouldDisplayQIPR = useShouldDisplayQIPR(tasks, hovering);
 
   useEffect(() => {
     setHovering(false);
@@ -49,8 +52,6 @@ export const GenericNode = ({
   }, [dragging]);
 
   const nodeHelperText = getNodeHelperText(type);
-
-  const shouldDisplayQIPR = tasks.length > 0 || hovering;
 
   const renderNodeButtons = () => {
     const nodeButtonsPosition =
@@ -79,7 +80,7 @@ export const GenericNode = ({
       onMouseLeave={() => setHovering(false)}
     >
       <NodeCard
-        onClick={() => setSelectedNodeForEditing(id)}
+        onClick={handleClickNode}
         hovering={hovering && !merging}
         highlighted={isDropTarget && isValidDropTarget}
         disabled={disabled || isValidDropTarget === false}
@@ -100,7 +101,7 @@ export const GenericNode = ({
           />
         </NodeShape>
         {shouldDisplayQIPR && (
-          <QIPRContainer tasks={tasks} onClick={handleClickNode} />
+          <QIPRContainer tasks={tasks} onClick={handleQIPRContainerOnClick} />
         )}
       </NodeCard>
       <Handle

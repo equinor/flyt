@@ -27,7 +27,7 @@ import { useNodeAdd } from "./hooks/useNodeAdd";
 import { useNodeDrag } from "./hooks/useNodeDrag";
 import { copyPasteNodeValidator } from "./utils/copyPasteValidators";
 import { handlePasteNode } from "./utils/handlePasteNode";
-import { useSelectedNodeForEditing } from "./hooks/useSelectedNodeForEditing";
+import { useSelectedNodeForQIPR } from "./hooks/useSelectedNodeForQIPR";
 
 type CanvasProps = {
   apiNodes: NodeDataApi[];
@@ -55,7 +55,8 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
   const { onNodeDragStart, onNodeDrag, onNodeDragStop } = useNodeDrag();
   const { deleteEdgeMutation } = useEdgeDelete();
   const { centerCanvas } = useCenterCanvas();
-  const { setSelectedNodeForEditing } = useSelectedNodeForEditing();
+  const { selectedNodeForQIPR, setSelectedNodeForQIPR } =
+    useSelectedNodeForQIPR();
 
   const ref = useRef<HTMLDivElement>(null);
   const { menuData, onNodeContextMenu, onPaneContextMenu, closeContextMenu } =
@@ -111,10 +112,10 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
         />
       )}
       <SideBar
-        onClose={() => setSelectedNode(undefined)}
+        onClose={() => setSelectedNodeForQIPR(undefined)}
         onDelete={() => setNodeToBeDeleted(selectedNode)}
         canEdit={userCanEdit}
-        selectedNode={selectedNode?.data}
+        selectedNode={selectedNodeForQIPR}
       />
       <ReactFlow
         nodes={nodes}
@@ -125,7 +126,7 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
         onEdgesChange={onEdgesChange}
         onPaneClick={() => {
           setSelectedNode(undefined);
-          setSelectedNodeForEditing(null);
+          setSelectedNodeForQIPR(undefined);
         }}
         onMoveStart={() => closeContextMenu()}
         minZoom={0.2}

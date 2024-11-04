@@ -22,8 +22,10 @@ import { SourceHandle } from "./SourceHandle";
 import { SubActivityButton } from "./SubActivityButton";
 import { TargetHandle } from "./TargetHandle";
 import { WaitingButton } from "./WaitingButton";
+import { useIsEditingNode } from "./hooks/useIsEditingNode";
 import { useNodeAdd } from "./hooks/useNodeAdd";
-import { useSelectedNodeForEditing } from "./hooks/useSelectedNodeForEditing";
+import { useQIPRContainerOnClick } from "./hooks/useQIPRContainerOnClick";
+import { useShouldDisplayQIPR } from "./hooks/useShouldDisplayQIPR";
 import { isChoiceChild } from "./utils/nodeRelationsHelper";
 
 export const WaitingNode = ({
@@ -55,12 +57,10 @@ export const WaitingNode = ({
   const [hoveringShape, setHoveringShape] = useState(false);
   const connectionNodeId = useStore((state) => state.connectionNodeId);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
-  const { selectedNodeForEditing, setSelectedNodeForEditing } =
-    useSelectedNodeForEditing();
+  const isEditingNode = useIsEditingNode(selected);
 
-  const isEditingNode = selectedNodeForEditing === id;
-
-  const shouldDisplayQIPR = tasks.length > 0 || hovering;
+  const handleQIPRContainerOnClick = useQIPRContainerOnClick(data);
+  const shouldDisplayQIPR = useShouldDisplayQIPR(tasks, hovering);
 
   useEffect(() => {
     setHovering(false);
@@ -151,7 +151,7 @@ export const WaitingNode = ({
       onMouseLeave={() => setHovering(false)}
     >
       <NodeCard
-        onClick={() => setSelectedNodeForEditing(id)}
+        onClick={handleClickNode}
         hovering={hovering && !merging}
         highlighted={isDropTarget && isValidDropTarget}
         disabled={disabled || isValidDropTarget === false}
@@ -177,7 +177,7 @@ export const WaitingNode = ({
           </div>
         </NodeShape>
         {shouldDisplayQIPR && (
-          <QIPRContainer tasks={tasks} onClick={handleClickNode} />
+          <QIPRContainer tasks={tasks} onClick={handleQIPRContainerOnClick} />
         )}
       </NodeCard>
       <TargetHandle hidden={!mergeOption} />

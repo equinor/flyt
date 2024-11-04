@@ -15,8 +15,8 @@ import { SourceHandle } from "./SourceHandle";
 import { SubActivityButton } from "./SubActivityButton";
 import { TargetHandle } from "./TargetHandle";
 import { WaitingButton } from "./WaitingButton";
+import { useIsEditingNode } from "./hooks/useIsEditingNode";
 import { useNodeAdd } from "./hooks/useNodeAdd";
-import { useSelectedNodeForEditing } from "./hooks/useSelectedNodeForEditing";
 import { isChoiceChild } from "./utils/nodeRelationsHelper";
 
 export const ChoiceNode = ({
@@ -41,14 +41,12 @@ export const ChoiceNode = ({
     shapeWidth,
     disabled,
   } = data;
-  const { selectedNodeForEditing, setSelectedNodeForEditing } =
-    useSelectedNodeForEditing();
-  const isEditingNode = selectedNodeForEditing === id;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
   const connectionNodeId = useStore((state) => state.connectionNodeId);
   const lastChild = children[children?.length - 1];
+  const isEditingNode = useIsEditingNode(selected);
 
   useEffect(() => {
     setHovering(false);
@@ -153,7 +151,7 @@ export const ChoiceNode = ({
       onMouseLeave={() => setHovering(false)}
     >
       <NodeCard
-        onClick={() => setSelectedNodeForEditing(id)}
+        onClick={data.handleClickNode}
         hovering={hovering && !merging}
         highlighted={isDropTarget && isValidDropTarget}
         disabled={disabled || isValidDropTarget === false}

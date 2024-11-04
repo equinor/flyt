@@ -1,15 +1,14 @@
-import styles from "./QIPRContainer.module.scss";
-import { getTaskColor } from "utils/getTaskColor";
-import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
-import { TextCircle } from "./entities/TextCircle";
+import { useState } from "react";
 import { Task } from "types/Task";
+import { getTaskColor } from "utils/getTaskColor";
 import { getTaskShorthand } from "utils/getTaskShorthand";
 import { taskSorter } from "utils/taskSorter";
-import { NodeTooltipContainer } from "./NodeTooltip";
-import { useState } from "react";
-import { NodeTooltipSection } from "./NodeTooltipSection";
 import { AddQIPRButton } from "./AddQIPRButton";
+import { TextCircle } from "./entities/TextCircle";
+import { NodeTooltipContainer } from "./NodeTooltip";
+import styles from "./QIPRContainer.module.scss";
 import { FormatNodeText } from "./utils/FormatNodeText";
+import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
 
 export const QIPRContainer = (props: { onClick?(): void; tasks: Task[] }) => {
   const [hoveredTask, setHoveredTask] = useState<Task | undefined>(undefined);

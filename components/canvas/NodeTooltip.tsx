@@ -2,7 +2,7 @@ import { NodeDataCommon } from "@/types/NodeData";
 import { ReactNode } from "react";
 import { NodeToolbar, Position } from "reactflow";
 import styles from "./NodeTooltip.module.scss";
-import { NodeTooltipSection } from "./NodeTooltipSection";
+import { EditableNodeTooltipSection } from "./EditableNodeTooltipSection";
 
 type NodeTooltipContainerProps = {
   children: ReactNode;
@@ -67,7 +67,7 @@ export const NodeTooltip = ({
       position={position}
     >
       {includeDescription && (
-        <NodeTooltipSection
+        <EditableNodeTooltipSection
           nodeData={nodeData}
           header={"Description"}
           text={description}
@@ -76,7 +76,7 @@ export const NodeTooltip = ({
         />
       )}
       {includeRole && (
-        <NodeTooltipSection
+        <EditableNodeTooltipSection
           nodeData={nodeData}
           header={"Role(s)"}
           text={role}
@@ -85,7 +85,7 @@ export const NodeTooltip = ({
         />
       )}
       {includeDuration && (
-        <NodeTooltipSection
+        <EditableNodeTooltipSection
           header={"Duration"}
           variant="duration"
           nodeData={nodeData}
@@ -94,7 +94,7 @@ export const NodeTooltip = ({
         />
       )}
       {includeEstimate && (
-        <NodeTooltipSection
+        <EditableNodeTooltipSection
           header={"Duration"}
           text={estimate}
           variant="duration"

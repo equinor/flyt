@@ -9,8 +9,10 @@ import colors from "theme/colors";
 import { NodeDataCommon } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
 import { ChoiceButton } from "./ChoiceButton";
+import { useIsEditingNode } from "./hooks/useIsEditingNode";
 import { useNodeAdd } from "./hooks/useNodeAdd";
-import { useSelectedNodeForEditing } from "./hooks/useSelectedNodeForEditing";
+import { useQIPRContainerOnClick } from "./hooks/useQIPRContainerOnClick";
+import { useShouldDisplayQIPR } from "./hooks/useShouldDisplayQIPR";
 import { MainActivityButton } from "./MainActivityButton";
 import stylesNodeButtons from "./NodeButtons.module.scss";
 import { NodeButtonsContainer } from "./NodeButtonsContainer";
@@ -44,14 +46,14 @@ export const MainActivityNode = ({
     totalDurations,
     disabled,
   } = data;
-  const { selectedNodeForEditing, setSelectedNodeForEditing } =
-    useSelectedNodeForEditing();
-  const isEditingNode = selectedNodeForEditing === id;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
 
-  const shouldDisplayQIPR = tasks.length > 0 || hovering;
+  const isEditingNode = useIsEditingNode(selected);
+
+  const handleQIPRContainerOnClick = useQIPRContainerOnClick(data);
+  const shouldDisplayQIPR = useShouldDisplayQIPR(tasks, hovering);
 
   const formattedDurationSum =
     totalDurations && formatMinMaxTotalDuration(totalDurations);
@@ -113,7 +115,7 @@ export const MainActivityNode = ({
       onMouseLeave={() => setHovering(false)}
     >
       <NodeCard
-        onClick={() => setSelectedNodeForEditing(id)}
+        onClick={handleClickNode}
         hovering={hovering && !merging && !isEditingNode}
         highlighted={isDropTarget && isValidDropTarget}
         disabled={disabled || isValidDropTarget === false}
@@ -136,7 +138,7 @@ export const MainActivityNode = ({
           )}
         </NodeShape>
         {shouldDisplayQIPR && (
-          <QIPRContainer tasks={tasks} onClick={handleClickNode} />
+          <QIPRContainer tasks={tasks} onClick={handleQIPRContainerOnClick} />
         )}
       </NodeCard>
       <Handle

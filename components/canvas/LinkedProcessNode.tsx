@@ -12,7 +12,7 @@ import { NodeButtonsContainer } from "./NodeButtonsContainer";
 import { NodeCard } from "./NodeCard";
 import { NodeDescription } from "./NodeDescription";
 import { NodeShape } from "./NodeShape";
-import { NodeTooltip, NodeTooltipContainer } from "./NodeTooltip";
+import { NodeTooltipContainer } from "./NodeTooltip";
 import { NodeTooltipSection } from "./NodeTooltipSection";
 import { NodeUserDots } from "./NodeUserDots";
 import { SourceHandle } from "./SourceHandle";
