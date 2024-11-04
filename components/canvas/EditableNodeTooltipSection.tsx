@@ -1,11 +1,15 @@
 import { NodeDataCommon } from "@/types/NodeData";
 import { ChangeEvent } from "react";
 import { DurationComponent } from "../DurationComponent";
-import MarkdownEditor from "../MarkdownEditor";
 import { useVSMObjectMutation } from "./hooks/useVSMObjectMutation";
 import { NodeInput } from "./NodeInput";
 import styles from "./NodeTooltipSection.module.scss";
 import { FormatNodeText } from "./utils/FormatNodeText";
+import dynamic from "next/dynamic";
+
+const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
+  ssr: false,
+});
 
 type EditableNodeTooltipSectionProps = {
   header?: string;
