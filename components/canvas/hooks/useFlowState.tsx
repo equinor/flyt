@@ -18,6 +18,7 @@ import { setNodesDepth } from "../utils/setNodesDepth";
 import { useCenterCanvas } from "./useCenterCanvas";
 import { setLayout } from "./useLayout";
 import { useNodeMerge } from "./useNodeMerge";
+import { tagSelectedNode } from "@/utils/tagSelectedNode";
 
 export const useFlowState = (
   apiNodes: NodeDataApi[],
@@ -44,6 +45,10 @@ export const useFlowState = (
   const nodesInitialized = useNodesInitialized();
   const { mutate: mergeNode, merging } = useNodeMerge();
   useCenterCanvas();
+
+  useEffect(() => {
+    console.log("SELECTED NODE", selectedNode);
+  }, [selectedNode]);
 
   let tempNodes: Node<NodeDataFull>[] = [];
   const tempEdges: Edge[] = apiEdges.map((e) => ({ ...e, label: e.edgeValue }));
@@ -119,6 +124,9 @@ export const useFlowState = (
       setIsEditingEdgeText,
       setEdgeToBeDeletedId
     );
+
+    tagSelectedNode(finalNodes, selectedNode);
+
     setNodes(finalNodes);
     setEdges(finalEdges);
 
