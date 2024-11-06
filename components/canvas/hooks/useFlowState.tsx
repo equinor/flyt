@@ -46,10 +46,6 @@ export const useFlowState = (
   const { mutate: mergeNode, merging } = useNodeMerge();
   useCenterCanvas();
 
-  useEffect(() => {
-    console.log("SELECTED NODE", selectedNode);
-  }, [selectedNode]);
-
   let tempNodes: Node<NodeDataFull>[] = [];
   const tempEdges: Edge[] = apiEdges.map((e) => ({ ...e, label: e.edgeValue }));
   const shapeSize = { height: 140, width: 140 };
