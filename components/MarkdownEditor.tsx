@@ -1,20 +1,14 @@
-import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
+import "@uiw/react-md-editor/markdown-editor.css";
 
-import {
-  Button,
-  Icon,
-  Label,
-  Tooltip,
-  Typography,
-} from "@equinor/eds-core-react";
+import { Icon, Label, Tooltip, Typography } from "@equinor/eds-core-react";
 import MDEditor, { ICommand, TextState } from "@uiw/react-md-editor";
 import { useEffect, useState } from "react";
 
+import { link } from "@equinor/eds-icons";
+import rehypeSanitize from "rehype-sanitize";
 import { SelectionInfo } from "types/SelectionInfo";
 import { URLPrompt } from "./URLPrompt";
-import { check, link } from "@equinor/eds-icons";
-import rehypeSanitize from "rehype-sanitize";
 
 import colors from "theme/colors";
 
@@ -73,7 +67,6 @@ export default function MarkdownEditor(props: {
       end: selection.end,
       linkText: selection.linkText,
     });
-    setEditMode(true);
     setIsOpenUrlPrompt(true);
   };
 
@@ -117,12 +110,7 @@ export default function MarkdownEditor(props: {
 
   return (
     // data-color-mode property is for MDEditor color theme
-    <div
-      data-color-mode="light"
-      onClick={(e) => {
-        e.stopPropagation();
-      }}
-    >
+    <div data-color-mode="light">
       <Label htmlFor="mdEditor" label={label} />
       <div style={{ display: "flex", gap: 12 }}>
         <div onClick={() => canEdit && setEditMode(true)} style={{ flex: 1 }}>
@@ -168,7 +156,9 @@ export default function MarkdownEditor(props: {
                 );
               },
               onBlur: () => {
-                if (!isOpenUrlPrompt) setEditMode(false);
+                setTimeout(() => {
+                  if (!isOpenUrlPrompt) setEditMode(false);
+                }, 250);
               },
             }}
             style={{
