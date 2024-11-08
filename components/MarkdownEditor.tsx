@@ -73,6 +73,7 @@ export default function MarkdownEditor(props: {
       end: selection.end,
       linkText: selection.linkText,
     });
+    setEditMode(true);
     setIsOpenUrlPrompt(true);
   };
 
@@ -116,7 +117,12 @@ export default function MarkdownEditor(props: {
 
   return (
     // data-color-mode property is for MDEditor color theme
-    <div data-color-mode="light">
+    <div
+      data-color-mode="light"
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
+    >
       <Label htmlFor="mdEditor" label={label} />
       <div style={{ display: "flex", gap: 12 }}>
         <div onClick={() => canEdit && setEditMode(true)} style={{ flex: 1 }}>
@@ -145,7 +151,7 @@ export default function MarkdownEditor(props: {
               style: {
                 backgroundColor: canEdit ? "rgba(247,247,247,1" : "white",
                 color: "rgba(61,61,61,1)",
-                cursor: canEdit ? "cell" : "not-allowed",
+                cursor: canEdit ? "text" : "not-allowed",
                 fontSize: "1rem",
                 fontWeight: 400,
                 lineHeight: 1.5,
@@ -160,6 +166,9 @@ export default function MarkdownEditor(props: {
                   e.target.value.length,
                   e.target.value.length
                 );
+              },
+              onBlur: () => {
+                if (!isOpenUrlPrompt) setEditMode(false);
               },
             }}
             style={{
@@ -179,23 +188,6 @@ export default function MarkdownEditor(props: {
             </Typography>
           )}
         </div>
-        {editMode && (
-          <Button
-            onClick={() => setEditMode(false)}
-            style={{
-              minWidth: 48,
-            }}
-            variant="ghost_icon"
-            disabled={missingText}
-          >
-            <Icon
-              data={check}
-              color={
-                missingText ? colors.EQUINOR_DISABLED : colors.EQUINOR_PROMINENT
-              }
-            />
-          </Button>
-        )}
       </div>
       {helperText && (
         <Typography style={{ marginTop: 12 }} variant="caption">
