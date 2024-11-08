@@ -59,7 +59,7 @@ export function DurationComponent({
       <TextField
         disabled={disabled}
         label={"Duration"}
-        type={"number"}
+        type={"text"}
         id={"vsmObjectTime"}
         min={0}
         value={`${duration === null ? "" : duration}`}
