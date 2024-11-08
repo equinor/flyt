@@ -2,12 +2,11 @@
 
 .container {
   width: 80vw !important;
-  min-height: 880px;
-  min-width: 480px;
 }
 
 .title {
   align-self: center !important;
+  margin-bottom: 12px !important;
 }
 
 .flow {
@@ -17,18 +16,18 @@
 .custom-content-container {
   display: flex;
   flex-direction: column;
-  row-gap: 20px;
-  height: 80vh;
+  height: 70vh;
   justify-content: center;
   align-items: center;
+  padding: 28px 28px 0 28px !important;
+  margin: 0 12px !important;
+  background-color: $equinor_LIGHT_GRAY;
 }
 
 .actions-container {
   display: flex;
   justify-content: center;
   width: 100%;
-  padding-right: 0 !important;
-  padding-left: 0 !important;
   column-gap: 15px;
 }
 
@@ -36,9 +35,9 @@
   display: flex;
   flex-direction: column;
   overflow: scroll;
-  background-color: $equinor_LIGHT_GRAY;
-  padding: 15px;
+  padding: 15px 15px 0 15px;
   height: 100%;
+  width: 100%;
 }
 
 .confirm-title {
@@ -50,8 +49,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: $equinor_LIGHT_GRAY;
-  padding: 80px;
+  padding: 40px;
   height: 100%;
   overflow: scroll;
 }
@@ -73,5 +71,7 @@
 
 .sortAndFilter-container {
   display: flex;
-  align-self: flex-end;
+  width: 100%;
+  padding: 15px;
+  margin-top: 16px;
 }

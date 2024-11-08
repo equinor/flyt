@@ -3,9 +3,10 @@ import { useEffect } from "react";
 
 export const useProcessHierarchyTabs = () => {
   const { query, pathname, push } = useRouter();
+  const { id, tab, showNewConnection } = query;
 
-  const showNewConnectionForm = query.showNewConnection === "true";
-  const activeTab = Number(query.tab) || 0;
+  const showNewConnectionForm = showNewConnection === "true";
+  const activeTab = Number(tab) || 0;
 
   const handleChangeTab = (index: number) => {
     if (index === 2) {
@@ -31,12 +32,12 @@ export const useProcessHierarchyTabs = () => {
   const onConnectProcessClose = () => {
     push({
       pathname,
-      query: { ...query, showNewConnection: "false" },
+      query: { id, tab, showNewConnection: "false" },
     });
   };
 
   useEffect(() => {
-    if (!query.tab || !query.showNewConnection) {
+    if (!tab || !showNewConnection) {
       push({
         pathname,
         query: { ...query, tab: "0", showNewConnection: "false" },

@@ -43,9 +43,14 @@ export const ProcessHierarchyTabs = ({
         style={{ textAlign: "center" }}
       >
         This process has no connected processes. <br />
-        {userCanEdit
-          ? "Click the <i>Connect Process</i> button above to start connecting processes."
-          : "You do not have permission to connect other processes to this process."}
+        {userCanEdit ? (
+          <span>
+            Click the <strong>Connect Process</strong> button above to start
+            connecting processes.
+          </span>
+        ) : (
+          "You do not have permission to connect other processes to this process."
+        )}
       </Typography>
     ) : (
       flow
