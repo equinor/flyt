@@ -156,6 +156,7 @@ export default function MarkdownEditor(props: {
                 );
               },
               onBlur: () => {
+                // need a small timeout for the link button to continue working
                 setTimeout(() => {
                   if (!isOpenUrlPrompt) setEditMode(false);
                 }, 250);
