@@ -24,7 +24,7 @@ export default function MarkdownEditor(props: {
 }) {
   const { canEdit, defaultText, label, onChange, helperText, requireText } =
     props;
-  const [editMode, setEditMode] = useState(false);
+  const [editMode, setEditMode] = useState(true);
   const [isOpenUrlPrompt, setIsOpenUrlPrompt] = useState(false);
   const [selectionInfo, setSelectionInfo] = useState<SelectionInfo>({
     start: 0,
