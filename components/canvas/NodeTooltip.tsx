@@ -20,6 +20,7 @@ export const NodeTooltipContainer = ({
       position={position}
       isVisible={isVisible}
       className={styles.container}
+      onMouseDownCapture={(e) => e.stopPropagation()}
     >
       {children}
     </NodeToolbar>
