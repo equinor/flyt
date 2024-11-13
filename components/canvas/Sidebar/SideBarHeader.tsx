@@ -1,8 +1,7 @@
-import styles from "./VSMCanvas.module.scss";
+import styles from "../../VSMCanvas.module.scss";
 import { Button, Icon, Typography } from "@equinor/eds-core-react";
-import { canDeleteNode } from "../utils/canDeleteNode";
-import { NodeDataCommon } from "../types/NodeData";
-import { close, delete_forever } from "@equinor/eds-icons";
+import { NodeDataCommon } from "../../../types/NodeData";
+import { close } from "@equinor/eds-icons";
 import { getNodeTypeName } from "utils/getNodeTypeName";
 
 export function SideBarHeader(props: {
@@ -17,15 +16,6 @@ export function SideBarHeader(props: {
         {getNodeTypeName(props.object?.type)}
       </Typography>
       <div className={styles.actions}>
-        <Button
-          disabled={!canDeleteNode(props.object) || !props.canEdit}
-          title={"Delete"}
-          variant={"ghost_icon"}
-          color={"danger"}
-          onClick={props.onDelete}
-        >
-          <Icon data={delete_forever} size={24} />
-        </Button>
         <Button
           title={"Close the side-menu"}
           variant={"ghost_icon"}

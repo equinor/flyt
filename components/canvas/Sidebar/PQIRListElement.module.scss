@@ -1,0 +1,58 @@
+@import "styles/variables";
+
+.container > * {
+  background-color: $equinor_LIGHT_GRAY;
+  border-radius: 5px;
+}
+
+.accordionHeader > button {
+  display: flex;
+  column-gap: 16px;
+}
+
+.accordionHeader > * > svg {
+  margin-right: 0px;
+}
+
+.accordionHeader > * :last-child {
+  margin-left: auto;
+}
+
+.panel {
+  padding: 0px !important;
+  margin-top: 18px !important;
+  border: 1px solid #dcdcdc !important;
+  background: none !important;
+}
+
+.panelContent {
+  display: flex;
+  flex-direction: column;
+  row-gap: 18px;
+  padding: 18px;
+}
+
+.panel-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+}
+
+.actionButtonsContainer {
+  display: flex;
+  column-gap: 12px;
+  justify-content: flex-end;
+}
+
+.actionButton {
+  width: 65px;
+}
+
+.textInput > * {
+  background: none !important;
+}
+
+.createPQIRButton {
+  height: 46px !important;
+}

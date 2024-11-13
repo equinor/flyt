@@ -1,6 +1,6 @@
-import styles from "./VSMCanvas.module.scss";
+import styles from "../../VSMCanvas.module.scss";
 import { SideBarContent } from "./SideBarContent";
-import { NodeDataCommon } from "../types/NodeData";
+import { NodeDataCommon } from "../../../types/NodeData";
 
 export function SideBar(props: {
   onClose: () => void;

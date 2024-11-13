@@ -122,7 +122,7 @@ export const useFlowState = (
     setNodes(finalNodes);
     setEdges(finalEdges);
 
-    //selectedNode && handleClickNode(selectedNode.id);
+    selectedNode && handleClickNode(selectedNode.id);
   }, [apiNodes, apiEdges, userCanEdit]);
 
   return {

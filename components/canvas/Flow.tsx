@@ -14,7 +14,7 @@ import "reactflow/dist/style.css";
 import { NodeDataCommon } from "types/NodeData";
 import { DeleteNodeDialog } from "../DeleteNodeDialog";
 import { ScrimDelete } from "../ScrimDelete";
-import { SideBar } from "../SideBar";
+import { SideBar } from "./Sidebar/SideBar";
 import styles from "./Canvas.module.scss";
 import { ContextMenu } from "./ContextMenu";
 import { nodeElementTypes } from "./NodeElementTypes";

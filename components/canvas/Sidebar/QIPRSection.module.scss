@@ -1,0 +1,16 @@
+@import "styles/variables";
+
+.container {
+  background-color: $equinor_LIGHT_GRAY;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  margin-bottom: 18px;
+}
+
+.pqirList {
+  display: flex;
+  flex-direction: column;
+  row-gap: 18px;
+}

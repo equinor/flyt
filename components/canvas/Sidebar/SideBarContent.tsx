@@ -1,12 +1,12 @@
 import { Fragment, useState } from "react";
 import { SideBarHeader } from "./SideBarHeader";
-import { NewTaskSection } from "./NewTaskSection";
+import { NewTaskSection } from "../../NewTaskSection";
 import { SideBarBody } from "./SideBarBody";
 import { useMutation, useQueryClient } from "react-query";
 import { NodeDataCommon } from "@/types/NodeData";
 import { patchGraph } from "services/graphApi";
 import { debounce } from "@/utils/debounce";
-import styles from "./VSMCanvas.module.scss";
+import styles from "../../VSMCanvas.module.scss";
 import { Button, Icon, Typography } from "@equinor/eds-core-react";
 import { unknownErrorToString } from "utils/isError";
 import { useStoreDispatch } from "hooks/storeHooks";
@@ -126,18 +126,7 @@ export function SideBarContent(props: {
         onDelete={props.onDelete}
         canEdit={props.canEdit}
       />
-      <SideBarBody
-        selectedNode={selectedNode}
-        onChangeDescription={(description) =>
-          patchNode(selectedNode, { description })
-        }
-        onChangeRole={(e) => patchNode(selectedNode, { role: e.target.value })}
-        onChangeDuration={(e) =>
-          patchNode(selectedNode, { duration: e.duration, unit: e.unit })
-        }
-        setShowNewTaskSection={setShowNewTaskSection}
-        canEdit={props.canEdit}
-      />
+      <SideBarBody selectedNode={selectedNode} />
     </Fragment>
   );
 }
