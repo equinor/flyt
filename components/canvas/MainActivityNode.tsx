@@ -53,7 +53,7 @@ export const MainActivityNode = ({
   const isEditingNode = useIsEditingNode(selected);
 
   const handleQIPRContainerOnClick = useQIPRContainerOnClick(data);
-  const shouldDisplayQIPR = useShouldDisplayQIPR(tasks, hovering);
+  const shouldDisplayQIPR = useShouldDisplayQIPR(tasks, hovering, selected);
 
   const formattedDurationSum =
     totalDurations && formatMinMaxTotalDuration(totalDurations);

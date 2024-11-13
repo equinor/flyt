@@ -44,7 +44,7 @@ export const GenericNode = ({
   const isEditingNode = useIsEditingNode(selected);
 
   const handleQIPRContainerOnClick = useQIPRContainerOnClick(data);
-  const shouldDisplayQIPR = useShouldDisplayQIPR(tasks, hovering);
+  const shouldDisplayQIPR = useShouldDisplayQIPR(tasks, hovering, selected);
 
   useEffect(() => {
     setHovering(false);
