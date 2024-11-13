@@ -8,6 +8,7 @@ import mergeActivities from "../../../public/CanvasTutorial/merge-activities.gif
 import renameEdge from "../../../public/CanvasTutorial/rename-edge.gif";
 import deleteEdge from "../../../public/CanvasTutorial/delete-edge.gif";
 import copyPaste from "../../../public/CanvasTutorial/copy-paste.gif";
+import processHierarchy from "../../../public/CanvasTutorial/process-hierarchy.gif";
 import mainActivity from "../../../public/CanvasTutorial/main-activity.svg";
 import subActivity from "../../../public/CanvasTutorial/sub-activity.svg";
 import choice from "../../../public/CanvasTutorial/choice.svg";
@@ -127,7 +128,6 @@ export const CanvasTutorial = () => {
               containerRef={refs["copy-paste"]}
               title="Copy and paste"
               image={copyPaste}
-              style={{ marginBottom: "32px" }}
             >
               Hover over a card. Right click to open the context menu. Press the
               &quot;Copy&quot; button to copy the card. Hover over the card you
@@ -137,6 +137,19 @@ export const CanvasTutorial = () => {
               <br /> Tip: You can also press {modifierKey}+C while hovering a
               card to copy it and {modifierKey}+V while hovering a card to paste
               a copied card below it.
+            </CanvasTutorialSection>
+            <CanvasTutorialSection
+              containerRef={refs["process-hierarchy"]}
+              title="Process hierarchy"
+              image={processHierarchy}
+              style={{ marginBottom: "32px" }}
+            >
+              Navigate to the Process Hierarchy page and click &quot;Connect
+              Process&quot;. Select a card. Choose a main activity, sub
+              activity, waiting or choice card to add a subprocess. Choose an
+              input or output card to add a chained process. Next, select the
+              process you want to connect to. Click &quot;Confirm&quot; to
+              finalize.
             </CanvasTutorialSection>
           </div>
         </Dialog.CustomContent>
