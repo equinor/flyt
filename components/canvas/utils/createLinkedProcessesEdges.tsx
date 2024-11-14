@@ -2,7 +2,7 @@ import { NodeDataCommon } from "@/types/NodeData";
 import { uid } from "@/utils/uuid";
 import { Edge, MarkerType, Node } from "reactflow";
 
-export const createProcessHierarchyEdges = (
+export const createLinkedProcessesEdges = (
   nodes: Node<NodeDataCommon>[],
   color = "#5C5C5C"
 ): Edge[] => {

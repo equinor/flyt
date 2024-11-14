@@ -86,7 +86,7 @@ export function getVSMLayout(
   return layout;
 }
 
-export const getHierarchyLayout = (
+export const getLinkedProcessesLayout = (
   nodes: Node<NodeDataCommon>[],
   edges: Edge[],
   isHorizontalFlow = false

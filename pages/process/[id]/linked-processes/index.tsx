@@ -1,14 +1,14 @@
 import { ButtonNavigateToProcess } from "@/components/ButtonNavigateToProcess";
-import { ProcessHierarchyTabs } from "@/components/canvas/ProcessHierarchy/ProcessHierarchyTabs";
+import { LinkedProcessesTabs } from "@/components/canvas/LinkedProcesses/LinkedProcessesTabs";
 import { useProjectId } from "@/hooks/useProjectId";
 import { Layouts } from "@/layouts/LayoutWrapper";
 import { CircularProgress } from "@equinor/eds-core-react";
 import Head from "next/head";
-import styles from "./hierarchy.module.scss";
+import styles from "./linkedProcesses.module.scss";
 import { useProjectQuery } from "@/hooks/useProjectQuery";
 import { useGraphQuery } from "@/hooks/useGraphQuery";
 
-export default function HierarchyPage() {
+export default function LinkedProcessesPage() {
   const { projectId } = useProjectId();
   const { project, isLoadingProject } = useProjectQuery(projectId);
   const { graph, isLoadingGraph } = useGraphQuery(projectId);
@@ -16,22 +16,22 @@ export default function HierarchyPage() {
   return (
     <>
       <Head>
-        <title>{project?.name} - Hierarchy</title>
+        <title>{project?.name} - Linked Processes</title>
       </Head>
       <div className={styles["button-back"]}>
         <ButtonNavigateToProcess />
       </div>
-      <div className={styles["hierarchy-container"]}>
+      <div className={styles["linkedProcesses-container"]}>
         {isLoadingGraph || isLoadingProject ? (
           <CircularProgress size={48} />
         ) : (
           graph &&
-          project && <ProcessHierarchyTabs graph={graph} project={project} />
+          project && <LinkedProcessesTabs graph={graph} project={project} />
         )}
       </div>
     </>
   );
 }
 
-HierarchyPage.layout = Layouts.Canvas;
-HierarchyPage.auth = true;
+LinkedProcessesPage.layout = Layouts.Canvas;
+LinkedProcessesPage.auth = true;

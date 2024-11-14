@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-export const useProcessHierarchyTabs = () => {
+export const useLinkedProcessesTabs = () => {
   const { query, pathname, push } = useRouter();
   const { id, tab, showNewConnection } = query;
 

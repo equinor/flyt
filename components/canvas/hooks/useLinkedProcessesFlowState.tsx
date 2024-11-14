@@ -2,11 +2,11 @@ import { NodeDataFull } from "@/types/NodeData";
 import { NodeDataApi } from "@/types/NodeDataApi";
 import { useLayoutEffect } from "react";
 import { useEdgesState, useNodesState } from "reactflow";
-import { createProcessHierarchyEdges } from "../utils/createProcessHierarchyEdges";
-import { createProcessHierarchyNodes } from "../utils/createProcessHierarchyNodes";
-import { getHierarchyLayout } from "../utils/getLayout";
+import { createLinkedProcessesEdges } from "../utils/createLinkedProcessesEdges";
+import { createLinkedProcessesNodes } from "../utils/createLinkedProcessesNodes";
+import { getLinkedProcessesLayout } from "../utils/getLayout";
 
-export const useHierarchyFlowState = (
+export const useLinkedProcessesFlowState = (
   apiNodes: NodeDataApi[],
   isHorizontalFlow = false
 ) => {
@@ -15,14 +15,14 @@ export const useHierarchyFlowState = (
   const shapeSize = { height: 130, width: 290 };
 
   useLayoutEffect(() => {
-    const tempNodes = createProcessHierarchyNodes(
+    const tempNodes = createLinkedProcessesNodes(
       apiNodes,
       shapeSize,
       isHorizontalFlow
     );
-    const finalEdges = createProcessHierarchyEdges(tempNodes);
+    const finalEdges = createLinkedProcessesEdges(tempNodes);
 
-    const finalNodes = getHierarchyLayout(
+    const finalNodes = getLinkedProcessesLayout(
       tempNodes,
       finalEdges,
       isHorizontalFlow

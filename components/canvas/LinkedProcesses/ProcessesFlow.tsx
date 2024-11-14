@@ -8,7 +8,7 @@ import "reactflow/dist/style.css";
 import { edgeElementTypes } from "../EdgeElementTypes";
 import { nodeElementTypes } from "../NodeElementTypes";
 import { useCenterCanvas } from "../hooks/useCenterCanvas";
-import { useHierarchyFlowState } from "../hooks/useHierarchyFlowState";
+import { useLinkedProcessesFlowState } from "../hooks/useLinkedProcessesFlowState";
 
 type ProcessesFlowProps = {
   apiNodes: NodeDataApi[];
@@ -20,7 +20,10 @@ const ProcessesFlow = ({
   isHorizontalFlow = false,
 }: ProcessesFlowProps) => {
   const { projectId } = useProjectId();
-  const { nodes, edges } = useHierarchyFlowState(apiNodes, isHorizontalFlow);
+  const { nodes, edges } = useLinkedProcessesFlowState(
+    apiNodes,
+    isHorizontalFlow
+  );
 
   useCenterCanvas();
 
@@ -30,7 +33,7 @@ const ProcessesFlow = ({
     if (clickedNodeProjectId !== projectId) {
       router.replace(
         {
-          pathname: `/process/${clickedNodeProjectId}/hierarchy`,
+          pathname: `/process/${clickedNodeProjectId}/linked-processes`,
           query: router.query,
         },
         undefined

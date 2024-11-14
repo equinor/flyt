@@ -6,27 +6,27 @@ import { add } from "@equinor/eds-icons";
 import { ReactNode, useMemo } from "react";
 import { getChainedNodes, getHierarchyNodes } from "../utils/getProcessesNodes";
 import { ProcessConnectionFormWrapper } from "./ProcessConnectionForm";
-import styles from "./ProcessHierarchyTabs.module.scss";
+import styles from "./LinkedProcessesTabs.module.scss";
 import { ProcessesFlowWrapper } from "./ProcessesFlow";
-import { useProcessHierarchyTabs } from "./useProcessHierarchyTabs";
+import { useLinkedProcessesTabs } from "./useLinkedProcessesTabs";
 import { useAccess } from "../hooks/useAccess";
 
-type ProcessHierarchyTabsProps = {
+type LinkedProcessesTabsProps = {
   graph: Graph;
   project: Project;
 };
 
-export const ProcessHierarchyTabs = ({
+export const LinkedProcessesTabs = ({
   graph: { vertices: apiNodes, edges: apiEdges },
   project,
-}: ProcessHierarchyTabsProps) => {
+}: LinkedProcessesTabsProps) => {
   const {
     showNewConnectionForm,
     onConnectProcessClick,
     onConnectProcessClose,
     activeTab,
     handleChangeTab,
-  } = useProcessHierarchyTabs();
+  } = useLinkedProcessesTabs();
   const { userCanEdit } = useAccess(project);
 
   const { hierarchyNodes, chainedNodes } = useMemo(() => {
@@ -42,7 +42,7 @@ export const ProcessHierarchyTabs = ({
         className={styles.emptyFlowText}
         style={{ textAlign: "center" }}
       >
-        This process has no connected processes. <br />
+        No connected processes. <br />
         {userCanEdit ? (
           <span>
             Click the <strong>Connect Process</strong> button above to start

@@ -26,7 +26,7 @@ const createNode = (
   };
 };
 
-export const createProcessHierarchyNodes = (
+export const createLinkedProcessesNodes = (
   apiNodes: NodeDataApi[],
   shapeSize: { height: number; width: number },
   isHorizontalFlow: boolean
