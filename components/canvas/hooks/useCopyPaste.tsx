@@ -7,6 +7,7 @@ import { Node } from "reactflow";
 export const useCopyPaste = (
   target: Node<NodeData> | undefined,
   action: (target: any) => void,
+  anyNodeIsSelected: boolean,
   validator?: (target: any) => void
 ) => {
   const dispatch = useStoreDispatch();
@@ -41,6 +42,7 @@ export const useCopyPaste = (
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      if (anyNodeIsSelected) return;
       if (target && (event.metaKey || event.ctrlKey) && event.key === "c") {
         copyToClipboard(target);
       } else if ((event.metaKey || event.ctrlKey) && event.key === "v") {
@@ -53,7 +55,7 @@ export const useCopyPaste = (
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [target]);
+  }, [target, anyNodeIsSelected]);
 
   return { copyToClipboard, paste };
 };
