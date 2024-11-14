@@ -14,7 +14,7 @@ const buttons: Omit<CanvasTutorialSectionButtonProps, "onClick">[] = [
   { section: "rename-edge", title: "Write on lines" },
   { section: "delete-edge", title: "Remove lines" },
   { section: "copy-paste", title: "Copy and paste" },
-  { section: "process-hierarchy", title: "Process hierarchy" },
+  { section: "link-processes", title: "Link processes" },
 ];
 
 type CanvasTutorialButtonGroupProps = {

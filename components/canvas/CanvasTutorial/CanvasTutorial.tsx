@@ -8,7 +8,7 @@ import mergeActivities from "../../../public/CanvasTutorial/merge-activities.gif
 import renameEdge from "../../../public/CanvasTutorial/rename-edge.gif";
 import deleteEdge from "../../../public/CanvasTutorial/delete-edge.gif";
 import copyPaste from "../../../public/CanvasTutorial/copy-paste.gif";
-import processHierarchy from "../../../public/CanvasTutorial/process-hierarchy.gif";
+import linkProcesses from "../../../public/CanvasTutorial/link-processes.gif";
 import mainActivity from "../../../public/CanvasTutorial/main-activity.svg";
 import subActivity from "../../../public/CanvasTutorial/sub-activity.svg";
 import choice from "../../../public/CanvasTutorial/choice.svg";
@@ -139,17 +139,16 @@ export const CanvasTutorial = () => {
               a copied card below it.
             </CanvasTutorialSection>
             <CanvasTutorialSection
-              containerRef={refs["process-hierarchy"]}
-              title="Process hierarchy"
-              image={processHierarchy}
+              containerRef={refs["link-processes"]}
+              title="Link processes"
+              image={linkProcesses}
               style={{ marginBottom: "32px" }}
             >
-              Navigate to the Process Hierarchy page and click &quot;Connect
-              Process&quot;. Select a card. Choose a main activity, sub
-              activity, waiting or choice card to add a subprocess. Choose an
-              input or output card to add a chained process. Next, select the
-              process you want to connect to. Click &quot;Confirm&quot; to
-              finalize.
+              Navigate to the Link Processes page and click &quot;Connect
+              Process&quot;. Select a card; main activity, sub activity, waiting
+              or choice to connect a sub-process. Input or output cards can also
+              be selected to chain the process. Select the process you want to
+              connect/chain, and click &quot;Confirm&quot; to finalize.
             </CanvasTutorialSection>
           </div>
         </Dialog.CustomContent>
