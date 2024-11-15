@@ -54,7 +54,14 @@ export const QIPRContainer = (props: { onClick?(): void; tasks: Task[] }) => {
               color={getTaskColor(hoveredTask)}
             />
           </div>
-          <FormatNodeText variant="body_long">
+          <FormatNodeText
+            variant="body_long"
+            style={{
+              alignSelf: "center",
+              paddingLeft: "8px",
+              paddingRight: "8px",
+            }}
+          >
             {hoveredTask?.description ?? ""}
           </FormatNodeText>
         </div>

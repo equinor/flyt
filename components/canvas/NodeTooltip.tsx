@@ -1,19 +1,21 @@
 import { NodeDataCommon } from "@/types/NodeData";
 import { ReactNode } from "react";
-import { NodeToolbar, Position } from "reactflow";
-import styles from "./NodeTooltip.module.scss";
+import { NodeToolbar, NodeToolbarProps, Position } from "reactflow";
 import { EditableNodeTooltipSection } from "./EditableNodeTooltipSection";
+import styles from "./NodeTooltip.module.scss";
 
 type NodeTooltipContainerProps = {
   children: ReactNode;
   isVisible?: boolean;
   position?: Position;
+  style?: NodeToolbarProps["style"];
 };
 
 export const NodeTooltipContainer = ({
   children,
   isVisible,
   position,
+  style,
 }: NodeTooltipContainerProps) => {
   return (
     <NodeToolbar
@@ -21,6 +23,7 @@ export const NodeTooltipContainer = ({
       isVisible={isVisible}
       className={styles.container}
       onMouseDownCapture={(e) => e.stopPropagation()}
+      style={style}
     >
       {children}
     </NodeToolbar>
@@ -62,12 +65,20 @@ export const NodeTooltip = ({
   position,
   nodeData,
 }: NodeTooltipProps) => {
+  const editingStyle = { minWidth: "300px" };
+  const tooltipStyle = isEditing ? editingStyle : undefined;
+  const shouldDisplayDescription =
+    includeDescription && (isEditing || description);
+  const shouldDisplayRole = includeRole && (isEditing || role);
+  const shouldDisplayDuration = includeDuration && (isEditing || duration);
+  const shouldDisplayEstimate = includeEstimate && estimate;
   return (
     <NodeTooltipContainer
       isVisible={isHovering || isEditing}
       position={position}
+      style={tooltipStyle}
     >
-      {includeDescription && (
+      {shouldDisplayDescription && (
         <EditableNodeTooltipSection
           nodeData={nodeData}
           header={"Description"}
@@ -76,7 +87,7 @@ export const NodeTooltip = ({
           isEditing={isEditing}
         />
       )}
-      {includeRole && (
+      {shouldDisplayRole && (
         <EditableNodeTooltipSection
           nodeData={nodeData}
           header={"Role(s)"}
@@ -85,7 +96,7 @@ export const NodeTooltip = ({
           isEditing={isEditing}
         />
       )}
-      {includeDuration && (
+      {shouldDisplayDuration && (
         <EditableNodeTooltipSection
           header={"Duration"}
           variant="duration"
@@ -94,7 +105,7 @@ export const NodeTooltip = ({
           isEditing={isEditing}
         />
       )}
-      {includeEstimate && (
+      {shouldDisplayEstimate && (
         <EditableNodeTooltipSection
           header={"Duration"}
           text={estimate}
