@@ -1,7 +1,12 @@
 import { useStoreDispatch } from "@/hooks/storeHooks";
 import { useProjectId } from "@/hooks/useProjectId";
 import { notifyOthers } from "@/services/notifyOthers";
-import { createTask, linkTask, unlinkTask } from "@/services/taskApi";
+import {
+  createTask,
+  deleteTask,
+  linkTask,
+  unlinkTask,
+} from "@/services/taskApi";
 import { NodeDataCommon } from "@/types/NodeData";
 import { Task } from "@/types/Task";
 import { unknownErrorToString } from "@/utils/isError";
@@ -54,7 +59,7 @@ export const usePQIR = (pqir: Task | null, selectedNode: NodeDataCommon) => {
     {
       onSuccess: () => {
         dispatch.setSnackMessage("✅ QIPR created!");
-        void notifyOthers(`Created a new Q/I/P/R`, projectId, account);
+        void notifyOthers(`Created a new QIPR`, projectId, account);
         return queryClient.invalidateQueries();
       },
       onError: (e: Error | null) =>
@@ -72,7 +77,7 @@ export const usePQIR = (pqir: Task | null, selectedNode: NodeDataCommon) => {
       {
         onSuccess: () => {
           dispatch.setSnackMessage("✅ QIPR linked!");
-          void notifyOthers("Added a Q/I/P to a card", projectId, account);
+          void notifyOthers("Added a QIPR to a card", projectId, account);
           return queryClient.invalidateQueries();
         },
         onError: (e: Error | null) =>
@@ -90,7 +95,25 @@ export const usePQIR = (pqir: Task | null, selectedNode: NodeDataCommon) => {
       {
         onSuccess() {
           dispatch.setSnackMessage("✅ QIPR unlinked!");
-          void notifyOthers("Removed Q/I/P from a card", projectId, account);
+          void notifyOthers("Removed QIPR from a card", projectId, account);
+          return queryClient.invalidateQueries();
+        },
+        onError: (e: Error | null) =>
+          dispatch.setSnackMessage(unknownErrorToString(e)),
+      }
+    );
+
+  const deletePQIR =
+    pqir &&
+    useMutation(
+      () => {
+        dispatch.setSnackMessage("⏳ Deleting PQIR...");
+        return deleteTask(projectId, selectedNode.id, pqir.id);
+      },
+      {
+        onSuccess() {
+          dispatch.setSnackMessage("🗑️ QIPR deleted!");
+          void notifyOthers("Deleted a PQIR", projectId, account);
           return queryClient.invalidateQueries();
         },
         onError: (e: Error | null) =>
@@ -102,6 +125,7 @@ export const usePQIR = (pqir: Task | null, selectedNode: NodeDataCommon) => {
     createPQIR,
     linkPQIR,
     unlinkPQIR,
+    deletePQIR,
     description,
     setDescription,
     selectedType,

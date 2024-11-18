@@ -23,7 +23,7 @@ import { useProjectId } from "@/hooks/useProjectId";
 export function SideBarContent(props: {
   onClose: () => void;
   onDelete: () => void;
-  canEdit: boolean;
+  userCanEdit: boolean;
   selectedNode: NodeDataCommon;
   isLoading: boolean;
 }) {
@@ -124,9 +124,12 @@ export function SideBarContent(props: {
         object={selectedNode}
         onClose={props.onClose}
         onDelete={props.onDelete}
-        canEdit={props.canEdit}
+        canEdit={props.userCanEdit}
       />
-      <SideBarBody selectedNode={selectedNode} />
+      <SideBarBody
+        selectedNode={selectedNode}
+        userCanEdit={props.userCanEdit}
+      />
     </Fragment>
   );
 }

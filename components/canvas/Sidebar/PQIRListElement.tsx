@@ -1,3 +1,4 @@
+import { NodeDataCommon } from "@/types/NodeData";
 import { Task } from "@/types/Task";
 import {
   Accordion,
@@ -7,28 +8,30 @@ import {
   TextField,
   Typography,
 } from "@equinor/eds-core-react";
-import { TextCircle } from "../entities/TextCircle";
-import { ChangeEvent } from "react";
 import { add, delete_to_trash, minimize } from "@equinor/eds-icons";
+import { ChangeEvent } from "react";
+import { TextCircle } from "../entities/TextCircle";
 import styles from "./PQIRListElement.module.scss";
 import { PQIRTypeSelection } from "./PQIRTypeSelection";
-import { NodeDataCommon } from "@/types/NodeData";
 import { usePQIR } from "./usePQIR";
 
 type PQIRListElement = {
   pqir: Task;
   isSelectedSection?: boolean;
   selectedNode: NodeDataCommon;
+  userCanEdit: boolean;
 };
 
 export const PQIRListELement = ({
   pqir,
   isSelectedSection,
   selectedNode,
+  userCanEdit,
 }: PQIRListElement) => {
   const {
     linkPQIR,
     unlinkPQIR,
+    deletePQIR,
     description,
     setDescription,
     selectedType,
@@ -51,6 +54,51 @@ export const PQIRListELement = ({
     </Button>
   );
 
+  const panelSectionTop = (
+    <div className={styles["panel-top"]}>
+      <PQIRTypeSelection
+        selectedType={selectedType}
+        onClick={(type) => setSelectedType(type)}
+      />
+      <div>
+        {solved !== null && (
+          <Checkbox
+            defaultChecked={solved}
+            onChange={(e) => setSolved(e.target.checked)}
+          />
+        )}
+        <Button variant="ghost_icon" onClick={() => deletePQIR?.mutate()}>
+          <Icon data={delete_to_trash} />
+        </Button>
+      </div>
+    </div>
+  );
+
+  const panelSectionMiddle = (
+    <TextField
+      id={pqir.id}
+      value={description}
+      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+        setDescription(e.target.value)
+      }
+      multiline
+      rows={5}
+      className={styles.textInput}
+      readOnly={!userCanEdit}
+    />
+  );
+
+  const panelSectionBottom = (
+    <div className={styles.actionButtonsContainer}>
+      <Button
+        className={styles.actionButton}
+        disabled={description !== description}
+      >
+        Save
+      </Button>
+    </div>
+  );
+
   return (
     <Accordion.Item
       className={styles.container}
@@ -59,46 +107,16 @@ export const PQIRListELement = ({
     >
       <Accordion.Header className={styles.accordionHeader}>
         <TextCircle text={shorthand} color={color} />
-        <Typography>{pqir.description}</Typography>
-        {selectOrDeselectButton}
+        <Typography className={styles.pqirDescription}>
+          {pqir.description}
+        </Typography>
+        {userCanEdit ? selectOrDeselectButton : ""}
       </Accordion.Header>
       <Accordion.Panel className={styles.panel}>
         <div className={styles.panelContent}>
-          <div className={styles["panel-top"]}>
-            <PQIRTypeSelection
-              selectedType={selectedType}
-              onClick={(type) => setSelectedType(type)}
-            />
-            <div>
-              {solved !== null && (
-                <Checkbox
-                  defaultChecked={solved}
-                  onChange={(e) => setSolved(e.target.checked)}
-                />
-              )}
-              <Button variant="ghost_icon">
-                <Icon data={delete_to_trash} />
-              </Button>
-            </div>
-          </div>
-          <TextField
-            id={pqir.id}
-            value={description}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setDescription(e.target.value)
-            }
-            multiline
-            rows={5}
-            className={styles.textInput}
-          />
-          <div className={styles.actionButtonsContainer}>
-            <Button
-              className={styles.actionButton}
-              disabled={description !== description}
-            >
-              Save
-            </Button>
-          </div>
+          {userCanEdit && panelSectionTop}
+          {panelSectionMiddle}
+          {userCanEdit && panelSectionBottom}
         </div>
       </Accordion.Panel>
     </Accordion.Item>

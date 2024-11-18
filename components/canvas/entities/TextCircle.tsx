@@ -29,6 +29,7 @@ export const TextCircle = ({
         border,
         height: "30px",
         width: "30px",
+        flexShrink: "0",
       }}
       variant="contained_icon"
       onClick={onClick}

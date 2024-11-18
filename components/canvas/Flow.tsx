@@ -111,7 +111,7 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
       <SideBar
         onClose={() => setSelectedNode(undefined)}
         onDelete={() => setNodeToBeDeleted(selectedNode)}
-        canEdit={userCanEdit}
+        userCanEdit={userCanEdit}
         selectedNode={selectedNode?.data}
       />
       <ReactFlow

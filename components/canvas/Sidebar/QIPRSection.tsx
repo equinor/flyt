@@ -1,41 +1,53 @@
 import { Task } from "@/types/Task";
-import { Accordion, Button, Icon, Typography } from "@equinor/eds-core-react";
+import { Accordion, Typography } from "@equinor/eds-core-react";
 import { PQIRListELement } from "./PQIRListElement";
 import styles from "./QIPRSection.module.scss";
-import { add } from "@equinor/eds-icons";
 import { NewPQIR } from "./NewPQIR";
-import { Node } from "reactflow";
 import { NodeDataCommon } from "@/types/NodeData";
 
 type QIPRSectionProps = {
   title: string;
   pqirs?: Task[];
+  emptyPQIRsText: string;
   isSelectedSection?: boolean;
   selectedNode: NodeDataCommon;
+  userCanEdit: boolean;
 };
 
 export const QIPRSection = ({
   title,
   pqirs,
+  emptyPQIRsText,
   isSelectedSection,
   selectedNode,
+  userCanEdit,
 }: QIPRSectionProps) => {
-  const pqirList = () =>
-    pqirs?.map((pqir, index) => (
-      <PQIRListELement
-        key={index}
-        pqir={pqir}
-        isSelectedSection={isSelectedSection}
-        selectedNode={selectedNode}
-      />
-    ));
+  const pqirList = pqirs?.map((pqir, index) => (
+    <PQIRListELement
+      key={index}
+      pqir={pqir}
+      isSelectedSection={isSelectedSection}
+      selectedNode={selectedNode}
+      userCanEdit={userCanEdit}
+    />
+  ));
 
   return (
-    <div className={styles.container} style={{ position: "sticky" }}>
-      <Typography>{title}</Typography>
+    <div className={styles.container}>
+      <Typography group="input" variant="label" style={{ fontSize: "16px" }}>
+        {title}
+      </Typography>
       <Accordion className={styles["pqirList"]}>
-        {isSelectedSection && <NewPQIR selectedNode={selectedNode} />}
-        {pqirList()}
+        {userCanEdit && isSelectedSection && (
+          <NewPQIR selectedNode={selectedNode} />
+        )}
+        {pqirList?.length ? (
+          pqirList
+        ) : (
+          <Typography style={{ textAlign: "center" }}>
+            {emptyPQIRsText}
+          </Typography>
+        )}
       </Accordion>
     </div>
   );
