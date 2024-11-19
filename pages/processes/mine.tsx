@@ -34,7 +34,7 @@ export default function MyProcesses() {
   const myUserId = users?.find((user) => user.userName === shortName)?.pkUser;
   const requiredUsers = stringToArray(router.query.user);
   const query = getQueryMyProcesses(15, myUserId, requiredUsers);
-  useInfiniteScroll(query);
+  useInfiniteScroll(query, 128);
 
   return (
     <>
