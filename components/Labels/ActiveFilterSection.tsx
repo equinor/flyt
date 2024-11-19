@@ -18,7 +18,14 @@ export function ActiveFilterSection(): JSX.Element {
   const userIdArray = stringToArray(user);
 
   return (
-    <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap" }}>
+    <div
+      style={{
+        display: "flex",
+        flex: "1",
+        alignItems: "center",
+        flexWrap: "wrap",
+      }}
+    >
       {labelIdArray?.map((id) => (
         <SingleLabel key={`Label-${id}`} id={id} />
       ))}

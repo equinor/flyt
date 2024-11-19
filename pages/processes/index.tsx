@@ -14,7 +14,7 @@ import { getQueryAllProcesses } from "@/components/canvas/utils/projectQueries";
 
 export default function AllProcesses() {
   const query = getQueryAllProcesses(35);
-  useInfiniteScroll(query);
+  useInfiniteScroll(query, 128);
 
   return (
     <>

@@ -2,26 +2,20 @@ import { CategorizationPageButton } from "./CategorizationPageButton";
 import styles from "./CanvasButtons.module.scss";
 import { ManageLabelsButton } from "./Labels/ManageLabelsButton";
 import { CanvasTutorial } from "@/components/canvas/CanvasTutorial/CanvasTutorial";
-import { ProcessHierarchyButton } from "./canvas/ProcessHierarchy/ProcessHierarchyButton";
+import { LinkedProcessesButton } from "./canvas/LinkedProcesses/LinkedProcessesButton";
 
 type CanvasButtonsProps = {
   handleClickLabel: () => void;
-  handleClickProcessHierarchy: () => void;
   userCanEdit: boolean;
 };
 
 export const CanvasButtons = ({
   handleClickLabel,
-  handleClickProcessHierarchy,
   userCanEdit,
 }: CanvasButtonsProps) => (
   <div className={styles.container}>
-    {userCanEdit && (
-      <>
-        <ProcessHierarchyButton onClick={handleClickProcessHierarchy} />
-        <ManageLabelsButton handleClickLabel={handleClickLabel} />
-      </>
-    )}
+    <LinkedProcessesButton />
+    {userCanEdit && <ManageLabelsButton handleClickLabel={handleClickLabel} />}
     <CategorizationPageButton />
     <CanvasTutorial />
   </div>

@@ -14,7 +14,7 @@ import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 
 export default function FavoriteProcesses(): JSX.Element {
   const query = getQueryFavProcesses(16);
-  useInfiniteScroll(query);
+  useInfiniteScroll(query, 128);
 
   return (
     <>

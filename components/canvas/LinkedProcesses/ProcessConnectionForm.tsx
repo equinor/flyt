@@ -3,7 +3,7 @@ import { EdgeDataApi } from "@/types/EdgeDataApi";
 import { NodeDataApi } from "@/types/NodeDataApi";
 import { NodeTypes } from "@/types/NodeTypes";
 import { Project } from "@/types/Project";
-import { Button, Dialog, Icon } from "@equinor/eds-core-react";
+import { Button, Dialog, Icon, Typography } from "@equinor/eds-core-react";
 import { close } from "@equinor/eds-icons";
 import { useState } from "react";
 import { Position, ReactFlowProvider } from "reactflow";
@@ -14,6 +14,7 @@ import styles from "./ProcessConnectionForm.module.scss";
 import { ProcessConnectionFormStepConfirmation } from "./ProcessConnectionFormStepConfirmation";
 import { ProcessConnectionFormStepFlow } from "./ProcessConnectionFormStepFlow";
 import { ProcessConnectionFormStepProjectList } from "./ProcessConnectionFormStepProjectList";
+import { useAccess } from "../hooks/useAccess";
 
 type ProcessConnectionFormProps = {
   project: Project;
@@ -40,6 +41,7 @@ const ProcessConnectionForm = ({
     [NodeTypes.supplier, NodeTypes.customer]
   );
   const { addNode } = useNodeAdd();
+  const { userCanEdit } = useAccess(project);
 
   const handleConfirm = () => {
     if (!selectedNode || !selectedCard) return;
@@ -112,12 +114,23 @@ const ProcessConnectionForm = ({
           <Icon data={close} />
         </Button>
       </Dialog.Header>
-      <Dialog.CustomContent className={styles["custom-content-container"]}>
-        {steps[step].content}
-      </Dialog.CustomContent>
-      <Dialog.Actions className={styles["actions-container"]}>
-        {steps[step].actions}
-      </Dialog.Actions>
+      {!userCanEdit ? (
+        <Dialog.CustomContent className={styles["custom-content-container"]}>
+          <Typography variant="h2">
+            You do not have permission to connect this process to other
+            processes.
+          </Typography>
+        </Dialog.CustomContent>
+      ) : (
+        <>
+          <Dialog.CustomContent className={styles["custom-content-container"]}>
+            {steps[step].content}
+          </Dialog.CustomContent>
+          <Dialog.Actions className={styles["actions-container"]}>
+            {steps[step].actions}
+          </Dialog.Actions>
+        </>
+      )}
     </Dialog>
   );
 };

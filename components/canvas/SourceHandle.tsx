@@ -1,11 +1,11 @@
 import styles from "./NodeButtons.module.scss";
 import { Handle, Position } from "reactflow";
 
-export const SourceHandle = () => (
+export const SourceHandle = ({ position = Position.Bottom }) => (
   <Handle
     className={styles["handle--hidden"]}
     type="source"
-    position={Position.Bottom}
+    position={position}
     isConnectable={false}
     isConnectableEnd={false}
   />
