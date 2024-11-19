@@ -4,7 +4,6 @@ import { NodeDataCommon } from "../../../types/NodeData";
 
 export function SideBar(props: {
   onClose: () => void;
-  onDelete: () => void;
   userCanEdit: boolean;
   selectedNode?: NodeDataCommon;
 }): JSX.Element {
@@ -19,7 +18,6 @@ export function SideBar(props: {
       >
         <SideBarContent
           onClose={props.onClose}
-          onDelete={props.onDelete}
           userCanEdit={props.userCanEdit}
           selectedNode={selectedNode}
           isLoading={!selectedNode}

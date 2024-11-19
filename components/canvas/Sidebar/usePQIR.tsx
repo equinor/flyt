@@ -3,9 +3,9 @@ import { useProjectId } from "@/hooks/useProjectId";
 import { notifyOthers } from "@/services/notifyOthers";
 import {
   createTask,
-  deleteTask,
   linkTask,
   unlinkTask,
+  updateTask,
 } from "@/services/taskApi";
 import { NodeDataCommon } from "@/types/NodeData";
 import { Task } from "@/types/Task";
@@ -13,7 +13,7 @@ import { unknownErrorToString } from "@/utils/isError";
 import { useMutation, useQueryClient } from "react-query";
 import { useUserAccount } from "../hooks/useUserAccount";
 import { TaskTypes } from "@/types/TaskTypes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getTaskColor } from "@/utils/getTaskColor";
 import { getTaskShorthand } from "@/utils/getTaskShorthand";
 
@@ -24,14 +24,26 @@ export const usePQIR = (pqir: Task | null, selectedNode: NodeDataCommon) => {
   const account = useUserAccount();
 
   const solvedDefaultValue = !pqir ? false : pqir.solved;
-  const color = getTaskColor(pqir?.type);
+  const [solved, setSolved] = useState(solvedDefaultValue);
+
+  const descriptionDefaultValue = pqir?.description || "";
+  const [description, setDescription] = useState(descriptionDefaultValue);
+
+  const selectedTypeDefaultValue = pqir?.type || TaskTypes.Problem;
+  const [selectedType, setSelectedType] = useState(selectedTypeDefaultValue);
+
+  const color = getTaskColor(pqir?.type, pqir?.solved);
   const shorthand = getTaskShorthand(pqir || undefined);
 
-  const [description, setDescription] = useState(pqir?.description || "");
-  const [selectedType, setSelectedType] = useState(
-    pqir?.type || TaskTypes.Problem
-  );
-  const [solved, setSolved] = useState(solvedDefaultValue);
+  const setDefaultValues = () => {
+    setSolved(solvedDefaultValue);
+    setDescription(descriptionDefaultValue);
+    setSelectedType(selectedTypeDefaultValue);
+  };
+
+  useEffect(() => {
+    setDefaultValues();
+  }, [selectedNode]);
 
   const handleSetSelectedType = (type: TaskTypes) => {
     const solvableType = [TaskTypes.Problem, TaskTypes.Risk].includes(type);
@@ -103,17 +115,27 @@ export const usePQIR = (pqir: Task | null, selectedNode: NodeDataCommon) => {
       }
     );
 
-  const deletePQIR =
+  const updatePQIR =
     pqir &&
     useMutation(
       () => {
-        dispatch.setSnackMessage("⏳ Deleting PQIR...");
-        return deleteTask(projectId, selectedNode.id, pqir.id);
+        dispatch.setSnackMessage("⏳ Updating PQIR...");
+        return updateTask(
+          {
+            ...pqir,
+            description: description,
+            type: selectedType,
+            solved: solved,
+          },
+          projectId,
+          pqir.id,
+          selectedNode.id
+        );
       },
       {
-        onSuccess() {
-          dispatch.setSnackMessage("🗑️ QIPR deleted!");
-          void notifyOthers("Deleted a PQIR", projectId, account);
+        onSuccess: () => {
+          dispatch.setSnackMessage("✅ QIPR updated!");
+          void notifyOthers("Updated a QIPR", projectId, account);
           return queryClient.invalidateQueries();
         },
         onError: (e: Error | null) =>
@@ -125,7 +147,7 @@ export const usePQIR = (pqir: Task | null, selectedNode: NodeDataCommon) => {
     createPQIR,
     linkPQIR,
     unlinkPQIR,
-    deletePQIR,
+    updatePQIR,
     description,
     setDescription,
     selectedType,

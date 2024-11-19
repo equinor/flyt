@@ -27,6 +27,7 @@ import { useNodeAdd } from "./hooks/useNodeAdd";
 import { useNodeDrag } from "./hooks/useNodeDrag";
 import { copyPasteNodeValidator } from "./utils/copyPasteValidators";
 import { handlePasteNode } from "./utils/handlePasteNode";
+import { useStoreState, useStoreDispatch } from "@/hooks/storeHooks";
 
 type CanvasProps = {
   apiNodes: NodeDataApi[];
@@ -54,6 +55,8 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
   const { onNodeDragStart, onNodeDrag, onNodeDragStop } = useNodeDrag();
   const { deleteEdgeMutation } = useEdgeDelete();
   const { centerCanvas } = useCenterCanvas();
+  const pqirToBeDeletedId = useStoreState((state) => state.pqirToBeDeletedId);
+  const dispatch = useStoreDispatch();
 
   const ref = useRef<HTMLDivElement>(null);
   const { menuData, onNodeContextMenu, onPaneContextMenu, closeContextMenu } =
@@ -77,40 +80,45 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
 
   return (
     <>
-      {nodeToBeDeleted && (
-        <DeleteNodeDialog
-          objectToDelete={nodeToBeDeleted.data}
-          onClose={() => {
-            setNodeToBeDeleted(undefined);
-            setSelectedNode(undefined);
-          }}
-        />
-      )}
-      {edgeToBeDeletedId && (
-        <ScrimDelete
-          id={edgeToBeDeletedId}
-          open={!!edgeToBeDeletedId}
-          onConfirm={(id) => {
-            deleteEdgeMutation.mutate(
-              { edgeId: id },
-              {
-                onSuccess() {
-                  setEdgeToBeDeletedId(undefined);
-                },
-              }
-            );
-          }}
-          onClose={() => setEdgeToBeDeletedId(undefined)}
-          header={"Delete line"}
-          warningMessage={"Are you sure you want to delete this line?"}
-          confirmMessage={"Delete"}
-          isLoading={deleteEdgeMutation.isLoading}
-          error={deleteEdgeMutation.error}
-        />
-      )}
+      <DeleteNodeDialog
+        open={!!nodeToBeDeleted?.data}
+        objectToDelete={nodeToBeDeleted?.data}
+        onClose={() => {
+          setNodeToBeDeleted(undefined);
+          setSelectedNode(undefined);
+        }}
+      />
+      <ScrimDelete
+        id={"scrimDeleteEdge"}
+        open={!!edgeToBeDeletedId}
+        onConfirm={(id) => {
+          deleteEdgeMutation.mutate(
+            { edgeId: id },
+            {
+              onSuccess() {
+                setEdgeToBeDeletedId(undefined);
+              },
+            }
+          );
+        }}
+        onClose={() => setEdgeToBeDeletedId(undefined)}
+        header="Delete line"
+        warningMessage="Are you sure you want to delete this line?"
+        confirmMessage="Delete"
+        isLoading={deleteEdgeMutation.isLoading}
+        error={deleteEdgeMutation.error}
+      />
+      <ScrimDelete
+        id={"scrimDeletePQIR"}
+        open={!!pqirToBeDeletedId}
+        onClose={() => dispatch.setPQIRToBeDeletedId(null)}
+        onConfirm={() => console.log(pqirToBeDeletedId)}
+        header="Delete PQIR"
+        warningMessage="Are you sure you want to delete this PQIR?"
+        confirmMessage="Delete"
+      />
       <SideBar
         onClose={() => setSelectedNode(undefined)}
-        onDelete={() => setNodeToBeDeleted(selectedNode)}
         userCanEdit={userCanEdit}
         selectedNode={selectedNode?.data}
       />

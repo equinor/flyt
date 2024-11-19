@@ -30,7 +30,7 @@ export const SideBarBody = ({
       return <Typography>{unknownErrorToString(errorPQIRs)}</Typography>;
     }
     return (
-      <>
+      <div className={styles.container}>
         <QIPRSection
           title="Selected card's PQIRs"
           emptyPQIRsText="This card has no PQIRs"
@@ -46,9 +46,9 @@ export const SideBarBody = ({
           selectedNode={selectedNode}
           userCanEdit={userCanEdit}
         />
-      </>
+      </div>
     );
   };
 
-  return <div className={styles.container}>{renderContent()}</div>;
+  return renderContent();
 };

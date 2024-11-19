@@ -22,7 +22,6 @@ import { useProjectId } from "@/hooks/useProjectId";
  */
 export function SideBarContent(props: {
   onClose: () => void;
-  onDelete: () => void;
   userCanEdit: boolean;
   selectedNode: NodeDataCommon;
   isLoading: boolean;
@@ -45,27 +44,6 @@ export function SideBarContent(props: {
         dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
-
-  function patchNode(
-    selectedNode: NodeDataCommon,
-    updates: {
-      description?: string;
-      role?: string;
-      duration?: number | null;
-      unit?: string | null;
-    }
-  ) {
-    debounce(
-      () => {
-        vsmObjectMutation.mutate({
-          ...{ ...selectedNode, ...updates },
-          id: selectedNode.id,
-        });
-      },
-      1500,
-      `update ${Object.keys(updates)[0]} - ${selectedNode.id}`
-    );
-  }
 
   const selectedNode = props.selectedNode;
   const [showNewTaskSection, setShowNewTaskSection] = useState(false);
@@ -123,7 +101,6 @@ export function SideBarContent(props: {
       <SideBarHeader
         object={selectedNode}
         onClose={props.onClose}
-        onDelete={props.onDelete}
         canEdit={props.userCanEdit}
       />
       <SideBarBody

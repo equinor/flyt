@@ -14,6 +14,7 @@ import { TextCircle } from "../entities/TextCircle";
 import styles from "./PQIRListElement.module.scss";
 import { PQIRTypeSelection } from "./PQIRTypeSelection";
 import { usePQIR } from "./usePQIR";
+import { useStoreDispatch } from "@/hooks/storeHooks";
 
 type PQIRListElement = {
   pqir: Task;
@@ -31,7 +32,7 @@ export const PQIRListELement = ({
   const {
     linkPQIR,
     unlinkPQIR,
-    deletePQIR,
+    updatePQIR,
     description,
     setDescription,
     selectedType,
@@ -41,6 +42,7 @@ export const PQIRListELement = ({
     color,
     shorthand,
   } = usePQIR(pqir, selectedNode);
+  const dispatch = useStoreDispatch();
 
   const selectOrDeselectButton = (
     <Button
@@ -67,7 +69,10 @@ export const PQIRListELement = ({
             onChange={(e) => setSolved(e.target.checked)}
           />
         )}
-        <Button variant="ghost_icon" onClick={() => deletePQIR?.mutate()}>
+        <Button
+          variant="ghost_icon"
+          onClick={() => dispatch.setPQIRToBeDeletedId(pqir.id)}
+        >
           <Icon data={delete_to_trash} />
         </Button>
       </div>
@@ -91,8 +96,8 @@ export const PQIRListELement = ({
   const panelSectionBottom = (
     <div className={styles.actionButtonsContainer}>
       <Button
+        onClick={() => updatePQIR?.mutate()}
         className={styles.actionButton}
-        disabled={description !== description}
       >
         Save
       </Button>

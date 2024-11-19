@@ -4,6 +4,7 @@ import { PQIRListELement } from "./PQIRListElement";
 import styles from "./QIPRSection.module.scss";
 import { NewPQIR } from "./NewPQIR";
 import { NodeDataCommon } from "@/types/NodeData";
+import { taskSorter } from "@/utils/taskSorter";
 
 type QIPRSectionProps = {
   title: string;
@@ -22,15 +23,17 @@ export const QIPRSection = ({
   selectedNode,
   userCanEdit,
 }: QIPRSectionProps) => {
-  const pqirList = pqirs?.map((pqir, index) => (
-    <PQIRListELement
-      key={index}
-      pqir={pqir}
-      isSelectedSection={isSelectedSection}
-      selectedNode={selectedNode}
-      userCanEdit={userCanEdit}
-    />
-  ));
+  const pqirList = pqirs
+    ?.sort(taskSorter())
+    .map((pqir, index) => (
+      <PQIRListELement
+        key={index}
+        pqir={pqir}
+        isSelectedSection={isSelectedSection}
+        selectedNode={selectedNode}
+        userCanEdit={userCanEdit}
+      />
+    ));
 
   return (
     <div className={styles.container}>

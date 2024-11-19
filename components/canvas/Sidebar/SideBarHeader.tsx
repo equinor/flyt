@@ -7,7 +7,6 @@ import { getNodeTypeName } from "utils/getNodeTypeName";
 export function SideBarHeader(props: {
   object: NodeDataCommon;
   onClose: () => void;
-  onDelete: () => void;
   canEdit: boolean;
 }): JSX.Element {
   return (

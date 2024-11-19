@@ -1,6 +1,10 @@
 import { TaskTypes } from "@/types/TaskTypes";
 
-export function getTaskColor(type?: TaskTypes): string {
+export function getTaskColor(
+  type?: TaskTypes,
+  solved?: boolean | null
+): string {
+  if (solved) return "#dcdcdc";
   switch (type) {
     case TaskTypes.Problem:
       return "#eb0000";
