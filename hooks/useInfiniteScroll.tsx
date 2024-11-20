@@ -1,20 +1,23 @@
 import { InfiniteQueryProjects } from "@/types/InfiniteQueryProjects";
 import { useEffect, useRef } from "react";
 
-export const useInfiniteScroll = (query: InfiniteQueryProjects) => {
+export const useInfiniteScroll = (
+  query: InfiniteQueryProjects,
+  offset: number
+) => {
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
   const getIsBottomReached = () => {
     if (scrollContainerRef.current) {
       return (
-        scrollContainerRef.current.scrollTop ===
+        scrollContainerRef.current.scrollTop + offset >
         scrollContainerRef.current.scrollHeight -
           scrollContainerRef.current.clientHeight
       );
     } else {
       return (
-        window.innerHeight + document.documentElement.scrollTop >=
-        document.documentElement.offsetHeight - 128
+        window.innerHeight + document.documentElement.scrollTop + offset >=
+        document.documentElement.offsetHeight
       );
     }
   };

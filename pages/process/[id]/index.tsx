@@ -3,39 +3,20 @@ import styles from "./ProjectPage.module.scss";
 import Head from "next/head";
 import { Typography } from "@equinor/eds-core-react";
 import { Layouts } from "@/layouts/LayoutWrapper";
-import { useQuery } from "react-query";
-import { getProject } from "@/services/projectApi";
-import { getGraph } from "services/graphApi";
 import { displayErrorResponse } from "@/utils/isError";
 import { CanvasWrapper } from "@/components/canvas/Canvas";
 import { CircularProgress } from "@equinor/eds-core-react";
 import { useProjectId } from "@/hooks/useProjectId";
+import { useProjectQuery } from "@/hooks/useProjectQuery";
+import { useGraphQuery } from "@/hooks/useGraphQuery";
 
 export default function Project() {
   const { projectId } = useProjectId();
+  const { project, isLoadingProject, projectError } =
+    useProjectQuery(projectId);
+  const { graph, isLoadingGraph, graphError } = useGraphQuery(projectId);
 
-  const {
-    isLoading: isLoadingProject,
-    data: project,
-    error: errorProject,
-  } = useQuery(
-    ["project", projectId],
-    () => {
-      return getProject(projectId);
-    },
-    {
-      enabled: !!projectId,
-      refetchOnWindowFocus: false,
-    }
-  );
-
-  const {
-    isLoading: isLoadingGraph,
-    data: graph,
-    error: errorGraph,
-  } = useQuery(["graph", projectId], () => getGraph(projectId));
-
-  if (errorProject || errorGraph) {
+  if (projectError || graphError) {
     return (
       <div className={commonStyles.container}>
         <Head>
@@ -45,7 +26,7 @@ export default function Project() {
 
         <main className={commonStyles.main}>
           <Typography variant="h1">
-            {displayErrorResponse(errorProject || errorGraph)}
+            {displayErrorResponse(projectError || graphError)}
           </Typography>
           <p>
             We have some troubles with this process. Please try to refresh the
