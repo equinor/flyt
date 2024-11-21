@@ -153,7 +153,7 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
         nodeDragThreshold={15}
         onNodeContextMenu={onNodeContextMenu}
         onPaneContextMenu={onPaneContextMenu}
-        preventScrolling={!selectedNode}
+        preventScrolling={selectedNode && hoveredNode?.id !== selectedNode.id}
         ref={ref}
       >
         <MiniMapCustom />
