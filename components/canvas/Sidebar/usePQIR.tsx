@@ -22,6 +22,7 @@ export const usePQIR = (pqir: Task | null, selectedNode: NodeDataCommon) => {
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
   const account = useUserAccount();
+  const [isEditing, setIsEditing] = useState(false);
 
   const solvedDefaultValue = !pqir ? false : pqir.solved;
   const [solved, setSolved] = useState(solvedDefaultValue);
@@ -35,6 +36,11 @@ export const usePQIR = (pqir: Task | null, selectedNode: NodeDataCommon) => {
   const color = getTaskColor(pqir?.type, pqir?.solved);
   const shorthand = getTaskShorthand(pqir || undefined);
 
+  const hasChanges =
+    solvedDefaultValue !== solved ||
+    descriptionDefaultValue !== description ||
+    selectedTypeDefaultValue !== selectedType;
+
   const setDefaultValues = () => {
     setSolved(solvedDefaultValue);
     setDescription(descriptionDefaultValue);
@@ -44,6 +50,11 @@ export const usePQIR = (pqir: Task | null, selectedNode: NodeDataCommon) => {
   useEffect(() => {
     setDefaultValues();
   }, [selectedNode]);
+
+  const handleEditing = (isEditingCurrent: boolean) => {
+    !isEditingCurrent && setDefaultValues();
+    setIsEditing(isEditingCurrent);
+  };
 
   const handleSetSelectedType = (type: TaskTypes) => {
     const solvableType = [TaskTypes.Problem, TaskTypes.Risk].includes(type);
@@ -70,6 +81,7 @@ export const usePQIR = (pqir: Task | null, selectedNode: NodeDataCommon) => {
     },
     {
       onSuccess: () => {
+        setIsEditing(false);
         dispatch.setSnackMessage("✅ QIPR created!");
         void notifyOthers(`Created a new QIPR`, projectId, account);
         return queryClient.invalidateQueries();
@@ -88,6 +100,7 @@ export const usePQIR = (pqir: Task | null, selectedNode: NodeDataCommon) => {
       },
       {
         onSuccess: () => {
+          setIsEditing(false);
           dispatch.setSnackMessage("✅ QIPR linked!");
           void notifyOthers("Added a QIPR to a card", projectId, account);
           return queryClient.invalidateQueries();
@@ -106,6 +119,7 @@ export const usePQIR = (pqir: Task | null, selectedNode: NodeDataCommon) => {
       },
       {
         onSuccess() {
+          setIsEditing(false);
           dispatch.setSnackMessage("✅ QIPR unlinked!");
           void notifyOthers("Removed QIPR from a card", projectId, account);
           return queryClient.invalidateQueries();
@@ -134,6 +148,7 @@ export const usePQIR = (pqir: Task | null, selectedNode: NodeDataCommon) => {
       },
       {
         onSuccess: () => {
+          pqir.solved !== solved && setIsEditing(false);
           dispatch.setSnackMessage("✅ QIPR updated!");
           void notifyOthers("Updated a QIPR", projectId, account);
           return queryClient.invalidateQueries();
@@ -156,5 +171,9 @@ export const usePQIR = (pqir: Task | null, selectedNode: NodeDataCommon) => {
     setSolved,
     color,
     shorthand,
+    setDefaultValues,
+    isEditing,
+    setIsEditing: handleEditing,
+    hasChanges,
   };
 };

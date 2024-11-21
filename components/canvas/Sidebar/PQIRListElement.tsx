@@ -41,6 +41,9 @@ export const PQIRListELement = ({
     setSolved,
     color,
     shorthand,
+    isEditing,
+    setIsEditing,
+    hasChanges,
   } = usePQIR(pqir, selectedNode);
   const dispatch = useStoreDispatch();
 
@@ -65,7 +68,7 @@ export const PQIRListELement = ({
       <div>
         {solved !== null && (
           <Checkbox
-            defaultChecked={solved}
+            checked={solved}
             onChange={(e) => setSolved(e.target.checked)}
           />
         )}
@@ -98,6 +101,7 @@ export const PQIRListELement = ({
       <Button
         onClick={() => updatePQIR?.mutate()}
         className={styles.actionButton}
+        disabled={!hasChanges}
       >
         Save
       </Button>
@@ -109,6 +113,8 @@ export const PQIRListELement = ({
       className={styles.container}
       chevronPosition="left"
       key={pqir.id}
+      onExpandedChange={(e) => setIsEditing(e)}
+      isExpanded={isEditing}
     >
       <Accordion.Header className={styles.accordionHeader}>
         <TextCircle text={shorthand} color={color} />
