@@ -40,6 +40,7 @@ export const ChoiceNode = ({
     shapeHeight,
     shapeWidth,
     disabled,
+    handleClickNode,
   } = data;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
@@ -151,7 +152,7 @@ export const ChoiceNode = ({
       onMouseLeave={() => setHovering(false)}
     >
       <NodeCard
-        onClick={data.handleClickNode}
+        onClick={handleClickNode}
         hovering={hovering && !merging}
         highlighted={isDropTarget && isValidDropTarget}
         disabled={disabled || isValidDropTarget === false}
