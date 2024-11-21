@@ -3,14 +3,13 @@ import "../styles/globals.scss";
 import App, { AppContext } from "next/app";
 import { QueryClient, QueryClientProvider } from "react-query";
 
+import { msalInstance } from "@/auth/msalHelpers";
 import { LayoutWrapper } from "@/layouts/LayoutWrapper";
 import { MsalProvider } from "@azure/msal-react";
-import { ReactQueryDevtools } from "react-query/devtools";
 import { StoreProvider } from "easy-peasy";
-import { msalInstance } from "@/auth/msalHelpers";
-import store from "../store/store";
 import { PropsWithChildren, ReactNode } from "react";
-import { SelectedNodeForQIPRProvider } from "@/components/canvas/hooks/useSelectedNodeForQIPR";
+import { ReactQueryDevtools } from "react-query/devtools";
+import store from "../store/store";
 
 const queryClient = new QueryClient();
 type MyAppProps = {
@@ -22,13 +21,11 @@ export default function MyApp({ Component, pageProps }: MyAppProps) {
     // Todo: get rid of the StoreProvider. (Simplify our workflow by using React-Query for server state data-handling and interactions)
     <StoreProvider store={store}>
       <QueryClientProvider client={queryClient}>
-        <SelectedNodeForQIPRProvider>
-          <MsalProvider instance={msalInstance}>
-            <LayoutWrapper {...pageProps}>
-              <Component {...pageProps} />
-            </LayoutWrapper>
-          </MsalProvider>
-        </SelectedNodeForQIPRProvider>
+        <MsalProvider instance={msalInstance}>
+          <LayoutWrapper {...pageProps}>
+            <Component {...pageProps} />
+          </LayoutWrapper>
+        </MsalProvider>
         <div onWheel={(e) => e.stopPropagation()}>
           <ReactQueryDevtools initialIsOpen={false} position={"bottom-right"} />
         </div>

@@ -27,7 +27,10 @@ import { useNodeAdd } from "./hooks/useNodeAdd";
 import { useNodeDrag } from "./hooks/useNodeDrag";
 import { copyPasteNodeValidator } from "./utils/copyPasteValidators";
 import { handlePasteNode } from "./utils/handlePasteNode";
-import { useSelectedNodeForQIPR } from "./hooks/useSelectedNodeForQIPR";
+import {
+  SelectedNodeForQIPRProvider,
+  useSelectedNodeForQIPR,
+} from "./hooks/useSelectedNodeForQIPR";
 
 type CanvasProps = {
   apiNodes: NodeDataApi[];
@@ -180,8 +183,10 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
 
 export const FlowWrapper = (props: CanvasProps) => {
   return (
-    <ReactFlowProvider>
-      <Flow {...props} />
-    </ReactFlowProvider>
+    <SelectedNodeForQIPRProvider>
+      <ReactFlowProvider>
+        <Flow {...props} />
+      </ReactFlowProvider>
+    </SelectedNodeForQIPRProvider>
   );
 };
