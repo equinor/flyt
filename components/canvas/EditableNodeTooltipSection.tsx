@@ -63,7 +63,7 @@ export const EditableNodeTooltipSection = ({
             canEdit={nodeData.userCanEdit}
             defaultText={text || ""}
             label={"Description"}
-            onChange={(value) => patchDescription(value)}
+            onChange={patchDescription}
           />
         );
     }
