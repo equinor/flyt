@@ -93,6 +93,9 @@ export const PQIRListELement = ({
       rows={5}
       className={styles.textInput}
       readOnly={!userCanEdit}
+      variant={!description ? "error" : undefined}
+      helperText={!description ? "Description is required" : ""}
+      maxLength={4000}
     />
   );
 
@@ -101,7 +104,7 @@ export const PQIRListELement = ({
       <Button
         onClick={() => updatePQIR?.mutate()}
         className={styles.actionButton}
-        disabled={!hasChanges}
+        disabled={!hasChanges || !description}
       >
         Save
       </Button>
@@ -110,13 +113,15 @@ export const PQIRListELement = ({
 
   return (
     <Accordion.Item
-      className={styles.container}
       chevronPosition="left"
       key={pqir.id}
       onExpandedChange={(e) => setIsEditing(e)}
       isExpanded={isEditing}
     >
-      <Accordion.Header className={styles.accordionHeader}>
+      <Accordion.Header
+        className={styles.accordionHeader}
+        style={{ borderRadius: isEditing ? "5px 5px 0 0" : "5px" }}
+      >
         <TextCircle text={shorthand} color={color} />
         <Typography className={styles.pqirDescription}>
           {pqir.description}

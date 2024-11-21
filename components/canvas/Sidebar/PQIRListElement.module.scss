@@ -1,9 +1,5 @@
 @import "styles/variables";
 
-.container > * {
-  border-radius: 5px;
-}
-
 .accordionHeader > button {
   display: flex;
   column-gap: 16px;
@@ -25,9 +21,10 @@
 
 .panel {
   padding: 0px !important;
-  margin-top: 18px !important;
   border: 1px solid #dcdcdc !important;
+  border-top: none !important;
   background: none !important;
+  border-radius: 0 0 5px 5px;
 }
 
 .panelContent {
