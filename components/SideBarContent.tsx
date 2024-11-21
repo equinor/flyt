@@ -3,7 +3,7 @@ import { Button, Icon, Typography } from "@equinor/eds-core-react";
 import { close as closeIcon } from "@equinor/eds-icons";
 import { Fragment, useState } from "react";
 import { unknownErrorToString } from "utils/isError";
-import { useVSMObjectMutation } from "./canvas/hooks/useVSMObjectMutation";
+import { useNodeUpdate } from "./canvas/hooks/useNodeUpdate";
 import { NewTaskSection } from "./NewTaskSection";
 import { SideBarBody } from "./SideBarBody";
 import { SideBarHeader } from "./SideBarHeader";
@@ -21,8 +21,9 @@ export function SideBarContent(props: {
   selectedNode: NodeDataCommon;
   isLoading: boolean;
 }) {
-  const { patchDescription, patchDuration, patchRole, error } =
-    useVSMObjectMutation(props.selectedNode);
+  const { patchDescription, patchDuration, patchRole, error } = useNodeUpdate(
+    props.selectedNode
+  );
 
   const selectedNode = props.selectedNode;
   const [showNewTaskSection, setShowNewTaskSection] = useState(false);

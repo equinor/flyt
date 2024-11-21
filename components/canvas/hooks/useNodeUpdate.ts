@@ -8,7 +8,7 @@ import { unknownErrorToString } from "@/utils/isError";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQueryClient } from "react-query";
 
-export const useVSMObjectMutation = (selectedNode: NodeDataCommon) => {
+export const useNodeUpdate = (selectedNode: NodeDataCommon) => {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
 

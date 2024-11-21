@@ -1,7 +1,7 @@
 import { NodeDataCommon } from "@/types/NodeData";
 import { ChangeEvent } from "react";
 import { DurationComponent } from "../DurationComponent";
-import { useVSMObjectMutation } from "./hooks/useVSMObjectMutation";
+import { useNodeUpdate } from "./hooks/useNodeUpdate";
 import { NodeInput } from "./NodeInput";
 import styles from "./NodeTooltipSection.module.scss";
 import { FormatNodeText } from "./utils/FormatNodeText";
@@ -27,7 +27,7 @@ export const EditableNodeTooltipSection = ({
   nodeData,
 }: EditableNodeTooltipSectionProps) => {
   const { patchDescription, patchDuration, patchRole } =
-    useVSMObjectMutation(nodeData);
+    useNodeUpdate(nodeData);
 
   const shouldDisplayHeader = !(
     isEditing &&
