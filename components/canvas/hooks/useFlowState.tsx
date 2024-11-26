@@ -18,6 +18,7 @@ import { setNodesDepth } from "../utils/setNodesDepth";
 import { useCenterCanvas } from "./useCenterCanvas";
 import { getVSMLayout } from "../utils/getLayout";
 import { useNodeMerge } from "./useNodeMerge";
+import { tagSelectedNode } from "@/utils/tagSelectedNode";
 
 export const useFlowState = (
   apiNodes: NodeDataApi[],
@@ -119,6 +120,9 @@ export const useFlowState = (
       setIsEditingEdgeText,
       setEdgeToBeDeletedId
     );
+
+    tagSelectedNode(finalNodes, selectedNode);
+
     setNodes(finalNodes);
     setEdges(finalEdges);
 

@@ -1,19 +1,13 @@
+import { NodeDataCommon } from "@/types/NodeData";
+import { Button, Icon, Typography } from "@equinor/eds-core-react";
+import { close as closeIcon } from "@equinor/eds-icons";
 import { Fragment, useState } from "react";
-import { SideBarHeader } from "./SideBarHeader";
+import { unknownErrorToString } from "utils/isError";
+import { useNodeUpdate } from "./canvas/hooks/useNodeUpdate";
 import { NewTaskSection } from "./NewTaskSection";
 import { SideBarBody } from "./SideBarBody";
-import { useMutation, useQueryClient } from "react-query";
-import { NodeDataCommon } from "@/types/NodeData";
-import { patchGraph } from "services/graphApi";
-import { debounce } from "@/utils/debounce";
+import { SideBarHeader } from "./SideBarHeader";
 import styles from "./VSMCanvas.module.scss";
-import { Button, Icon, Typography } from "@equinor/eds-core-react";
-import { unknownErrorToString } from "utils/isError";
-import { useStoreDispatch } from "hooks/storeHooks";
-import { close as closeIcon } from "@equinor/eds-icons";
-import { notifyOthers } from "@/services/notifyOthers";
-import { useAccount, useMsal } from "@azure/msal-react";
-import { useProjectId } from "@/hooks/useProjectId";
 
 /**
  * Process specific content stuff
@@ -27,45 +21,9 @@ export function SideBarContent(props: {
   selectedNode: NodeDataCommon;
   isLoading: boolean;
 }) {
-  const { accounts } = useMsal();
-  const account = useAccount(accounts[0] || {});
-
-  const { projectId } = useProjectId();
-  const dispatch = useStoreDispatch();
-  const queryClient = useQueryClient();
-  const vsmObjectMutation = useMutation(
-    (patchedObject: NodeDataCommon) =>
-      patchGraph(patchedObject, projectId, patchedObject.id),
-    {
-      onSuccess() {
-        void notifyOthers("Updated a card", projectId, account);
-        return queryClient.invalidateQueries();
-      },
-      onError: (e: Error | null) =>
-        dispatch.setSnackMessage(unknownErrorToString(e)),
-    }
+  const { patchDescription, patchDuration, patchRole, error } = useNodeUpdate(
+    props.selectedNode
   );
-
-  function patchNode(
-    selectedNode: NodeDataCommon,
-    updates: {
-      description?: string;
-      role?: string;
-      duration?: number | null;
-      unit?: string | null;
-    }
-  ) {
-    debounce(
-      () => {
-        vsmObjectMutation.mutate({
-          ...{ ...selectedNode, ...updates },
-          id: selectedNode.id,
-        });
-      },
-      1500,
-      `update ${Object.keys(updates)[0]} - ${selectedNode.id}`
-    );
-  }
 
   const selectedNode = props.selectedNode;
   const [showNewTaskSection, setShowNewTaskSection] = useState(false);
@@ -89,7 +47,7 @@ export function SideBarContent(props: {
       </div>
     );
   }
-  if (vsmObjectMutation.error) {
+  if (error) {
     return (
       <div className={styles.sideBarLoadingText}>
         <div className={styles.headerContainer}>
@@ -105,7 +63,7 @@ export function SideBarContent(props: {
             </Button>
           </div>
         </div>
-        <p>{unknownErrorToString(vsmObjectMutation.error)}</p>
+        <p>{unknownErrorToString(error)}</p>
       </div>
     );
   }
@@ -128,13 +86,9 @@ export function SideBarContent(props: {
       />
       <SideBarBody
         selectedNode={selectedNode}
-        onChangeDescription={(description) =>
-          patchNode(selectedNode, { description })
-        }
-        onChangeRole={(e) => patchNode(selectedNode, { role: e.target.value })}
-        onChangeDuration={(e) =>
-          patchNode(selectedNode, { duration: e.duration, unit: e.unit })
-        }
+        onChangeDescription={patchDescription}
+        onChangeRole={(e) => patchRole(e.target.value)}
+        onChangeDuration={(e) => patchDuration(e.duration, e.unit)}
         setShowNewTaskSection={setShowNewTaskSection}
         canEdit={props.canEdit}
       />

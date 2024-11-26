@@ -1,27 +1,33 @@
-import styles from "./QIPRContainer.module.scss";
-import { getTaskColor } from "utils/getTaskColor";
-import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
-import { TextCircle } from "./entities/TextCircle";
+import { useState } from "react";
 import { Task } from "types/Task";
+import { getTaskColor } from "utils/getTaskColor";
 import { getTaskShorthand } from "utils/getTaskShorthand";
 import { taskSorter } from "utils/taskSorter";
-import { NodeTooltip } from "./NodeTooltip";
-import { useState } from "react";
-import { NodeTooltipSection } from "./NodeTooltipSection";
+import { AddQIPRButton } from "./AddQIPRButton";
+import { TextCircle } from "./entities/TextCircle";
+import { NodeTooltipContainer } from "./NodeTooltip";
+import styles from "./QIPRContainer.module.scss";
+import { FormatNodeText } from "./utils/FormatNodeText";
+import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
 
 export const QIPRContainer = (props: { onClick?(): void; tasks: Task[] }) => {
   const [hoveredTask, setHoveredTask] = useState<Task | undefined>(undefined);
 
   return (
-    props.tasks?.length > 0 && (
-      <div
-        className={styles.QIPRContainer}
-        onClick={props.onClick}
-        style={{
-          width: getQIPRContainerWidth(props.tasks),
-        }}
-      >
-        {props.tasks
+    <div
+      className={styles.QIPRContainer}
+      onClick={(e) => {
+        e.stopPropagation();
+        props.onClick?.();
+      }}
+      style={{
+        width: getQIPRContainerWidth(props.tasks),
+      }}
+    >
+      {props.tasks.length === 0 ? (
+        <AddQIPRButton onClick={() => undefined} />
+      ) : (
+        props.tasks
           ?.filter((task) => !task.solved)
           .sort(taskSorter())
           .map((task, index) => {
@@ -38,19 +44,28 @@ export const QIPRContainer = (props: { onClick?(): void; tasks: Task[] }) => {
                 />
               </div>
             );
-          })}
-        <NodeTooltip isVisible={!!hoveredTask}>
-          <div className={styles["tooltip-content"]}>
-            <div className={styles["tooltip-qipr-icon"]}>
-              <TextCircle
-                text={getTaskShorthand(hoveredTask)}
-                color={getTaskColor(hoveredTask)}
-              />
-            </div>
-            <NodeTooltipSection text={hoveredTask?.description ?? ""} />
+          })
+      )}
+      <NodeTooltipContainer isVisible={!!hoveredTask}>
+        <div className={styles["tooltip-content"]}>
+          <div className={styles["tooltip-qipr-icon"]}>
+            <TextCircle
+              text={getTaskShorthand(hoveredTask)}
+              color={getTaskColor(hoveredTask)}
+            />
           </div>
-        </NodeTooltip>
-      </div>
-    )
+          <FormatNodeText
+            variant="body_long"
+            style={{
+              alignSelf: "center",
+              paddingLeft: "8px",
+              paddingRight: "8px",
+            }}
+          >
+            {hoveredTask?.description ?? ""}
+          </FormatNodeText>
+        </div>
+      </NodeTooltipContainer>
+    </div>
   );
 };

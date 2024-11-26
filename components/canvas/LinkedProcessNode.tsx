@@ -12,7 +12,7 @@ import { NodeButtonsContainer } from "./NodeButtonsContainer";
 import { NodeCard } from "./NodeCard";
 import { NodeDescription } from "./NodeDescription";
 import { NodeShape } from "./NodeShape";
-import { NodeTooltip } from "./NodeTooltip";
+import { NodeTooltipContainer } from "./NodeTooltip";
 import { NodeTooltipSection } from "./NodeTooltipSection";
 import { NodeUserDots } from "./NodeUserDots";
 import { SourceHandle } from "./SourceHandle";
@@ -177,13 +177,13 @@ export const LinkedProcessNode = ({
       </NodeCard>
       <TargetHandle hidden={!mergeOption} />
       <SourceHandle />
-      <NodeTooltip isVisible={hoveringShape}>
+      <NodeTooltipContainer isVisible={hoveringShape}>
         {name && <NodeTooltipSection header={"Title"} text={name} />}
         {formattedUpdated && (
           <NodeTooltipSection header={"Last Updated"} text={formattedUpdated} />
         )}
         {fullNames && <NodeTooltipSection header={"Users"} text={fullNames} />}
-      </NodeTooltip>
+      </NodeTooltipContainer>
       {renderNodeButtons()}
     </div>
   );

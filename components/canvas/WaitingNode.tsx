@@ -1,33 +1,39 @@
-import { useEffect, useState } from "react";
-import { Connection, Position, useStore } from "reactflow";
 import { formatDuration } from "@/utils/unitDefinitions";
 import { Icon, Typography } from "@equinor/eds-core-react";
 import { time as timeIcon } from "@equinor/eds-icons";
+import { useEffect, useState } from "react";
+import { Connection, Position, useStore } from "reactflow";
 
+import { getNodeTypeName } from "@/utils/getNodeTypeName";
+import { NodeProps } from "reactflow";
+import colors from "theme/colors";
+import { NodeDataCommon } from "types/NodeData";
+import { NodeTypes } from "types/NodeTypes";
+import { ChoiceButton } from "./ChoiceButton";
+import { MergeButton } from "./MergeButton";
 import styles from "./Node.module.scss";
 import { NodeButtonsContainer } from "./NodeButtonsContainer";
-import { SubActivityButton } from "./SubActivityButton";
-import { ChoiceButton } from "./ChoiceButton";
-import { WaitingButton } from "./WaitingButton";
-import { NodeDataCommon } from "types/NodeData";
-import { NodeProps } from "reactflow";
-import { NodeTypes } from "types/NodeTypes";
-import { MergeButton } from "./MergeButton";
-import { TargetHandle } from "./TargetHandle";
-import { NodeDescription } from "./NodeDescription";
 import { NodeCard } from "./NodeCard";
-import colors from "theme/colors";
-import { SourceHandle } from "./SourceHandle";
+import { NodeDescription } from "./NodeDescription";
 import { NodeShape } from "./NodeShape";
 import { NodeTooltip } from "./NodeTooltip";
-import { NodeTooltipSection } from "./NodeTooltipSection";
 import { QIPRContainer } from "./QIPRContainer";
+import { SourceHandle } from "./SourceHandle";
+import { SubActivityButton } from "./SubActivityButton";
+import { TargetHandle } from "./TargetHandle";
+import { WaitingButton } from "./WaitingButton";
+import { useIsEditingNode } from "./hooks/useIsEditingNode";
 import { useNodeAdd } from "./hooks/useNodeAdd";
-import { getNodeTypeName } from "@/utils/getNodeTypeName";
+import { useQIPRContainerOnClick } from "./hooks/useQIPRContainerOnClick";
+import { useShouldDisplayQIPR } from "./hooks/useShouldDisplayQIPR";
 import { isChoiceChild } from "./utils/nodeRelationsHelper";
 
 export const WaitingNode = ({
-  data: {
+  data,
+  dragging,
+  selected,
+}: NodeProps<NodeDataCommon>) => {
+  const {
     description,
     id,
     duration,
@@ -46,14 +52,15 @@ export const WaitingNode = ({
     shapeHeight,
     shapeWidth,
     disabled,
-  },
-  selected,
-  dragging,
-}: NodeProps<NodeDataCommon>) => {
+  } = data;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
   const connectionNodeId = useStore((state) => state.connectionNodeId);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
+  const isEditingNode = useIsEditingNode(selected);
+
+  const handleQIPRContainerOnClick = useQIPRContainerOnClick(data);
+  const shouldDisplayQIPR = useShouldDisplayQIPR(tasks, hovering, selected);
 
   useEffect(() => {
     setHovering(false);
@@ -169,25 +176,25 @@ export const WaitingNode = ({
             </Typography>
           </div>
         </NodeShape>
-        <QIPRContainer tasks={tasks} />
+        {shouldDisplayQIPR && (
+          <QIPRContainer tasks={tasks} onClick={handleQIPRContainerOnClick} />
+        )}
       </NodeCard>
       <TargetHandle hidden={!mergeOption} />
       <SourceHandle />
       <NodeTooltip
-        isVisible={
-          !!(hoveringShape && (description || typeof duration === "number"))
+        isHovering={
+          hoveringShape && (!!description || typeof duration === "number")
         }
-      >
-        {description && (
-          <NodeTooltipSection header={"Description"} text={description} />
-        )}
-        {duration && (
-          <NodeTooltipSection
-            header={"Duration"}
-            text={formatDuration(duration, unit)}
-          />
-        )}
-      </NodeTooltip>
+        isEditing={isEditingNode}
+        nodeData={data}
+        includeDescription
+        description={description}
+        includeRole={false}
+        includeDuration
+        duration={formatDuration(duration, unit)}
+        includeEstimate={false}
+      />
       {renderNodeButtons()}
     </div>
   );

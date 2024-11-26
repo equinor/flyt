@@ -27,6 +27,10 @@ import { useNodeAdd } from "./hooks/useNodeAdd";
 import { useNodeDrag } from "./hooks/useNodeDrag";
 import { copyPasteNodeValidator } from "./utils/copyPasteValidators";
 import { handlePasteNode } from "./utils/handlePasteNode";
+import {
+  SelectedNodeForQIPRProvider,
+  useSelectedNodeForQIPR,
+} from "./hooks/useSelectedNodeForQIPR";
 
 type CanvasProps = {
   apiNodes: NodeDataApi[];
@@ -54,15 +58,19 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
   const { onNodeDragStart, onNodeDrag, onNodeDragStop } = useNodeDrag();
   const { deleteEdgeMutation } = useEdgeDelete();
   const { centerCanvas } = useCenterCanvas();
+  const { selectedNodeForQIPR, setSelectedNodeForQIPR } =
+    useSelectedNodeForQIPR();
 
   const ref = useRef<HTMLDivElement>(null);
   const { menuData, onNodeContextMenu, onPaneContextMenu, closeContextMenu } =
     useContextMenu(ref);
+  const anyNodeIsSelected = selectedNode !== undefined;
 
   const { copyToClipboard, paste } = useCopyPaste(
     hoveredNode,
     (node: Node<NodeDataCommon>) =>
       handlePasteNode(node, hoveredNode, nodes, addNode),
+    anyNodeIsSelected,
     copyPasteNodeValidator
   );
 
@@ -109,10 +117,10 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
         />
       )}
       <SideBar
-        onClose={() => setSelectedNode(undefined)}
+        onClose={() => setSelectedNodeForQIPR(undefined)}
         onDelete={() => setNodeToBeDeleted(selectedNode)}
         canEdit={userCanEdit}
-        selectedNode={selectedNode?.data}
+        selectedNode={selectedNodeForQIPR}
       />
       <ReactFlow
         nodes={nodes}
@@ -121,7 +129,10 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
         edgeTypes={edgeElementTypes}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        onPaneClick={() => setSelectedNode(undefined)}
+        onPaneClick={() => {
+          setSelectedNode(undefined);
+          setSelectedNodeForQIPR(undefined);
+        }}
         onMoveStart={() => closeContextMenu()}
         minZoom={0.2}
         nodesDraggable={userCanEdit}
@@ -145,6 +156,7 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
         nodeDragThreshold={15}
         onNodeContextMenu={onNodeContextMenu}
         onPaneContextMenu={onPaneContextMenu}
+        preventScrolling={selectedNode && hoveredNode?.id !== selectedNode.id}
         ref={ref}
       >
         <MiniMapCustom />
@@ -171,8 +183,10 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
 
 export const FlowWrapper = (props: CanvasProps) => {
   return (
-    <ReactFlowProvider>
-      <Flow {...props} />
-    </ReactFlowProvider>
+    <SelectedNodeForQIPRProvider>
+      <ReactFlowProvider>
+        <Flow {...props} />
+      </ReactFlowProvider>
+    </SelectedNodeForQIPRProvider>
   );
 };

@@ -1,20 +1,14 @@
-import "@uiw/react-md-editor/markdown-editor.css";
 import "@uiw/react-markdown-preview/markdown.css";
+import "@uiw/react-md-editor/markdown-editor.css";
 
-import {
-  Button,
-  Icon,
-  Label,
-  Tooltip,
-  Typography,
-} from "@equinor/eds-core-react";
+import { Icon, Label, Tooltip, Typography } from "@equinor/eds-core-react";
 import MDEditor, { ICommand, TextState } from "@uiw/react-md-editor";
 import { useEffect, useState } from "react";
 
+import { link } from "@equinor/eds-icons";
+import rehypeSanitize from "rehype-sanitize";
 import { SelectionInfo } from "types/SelectionInfo";
 import { URLPrompt } from "./URLPrompt";
-import { check, link } from "@equinor/eds-icons";
-import rehypeSanitize from "rehype-sanitize";
 
 import colors from "theme/colors";
 
@@ -30,7 +24,7 @@ export default function MarkdownEditor(props: {
 }) {
   const { canEdit, defaultText, label, onChange, helperText, requireText } =
     props;
-  const [editMode, setEditMode] = useState(false);
+  const [editMode, setEditMode] = useState(canEdit);
   const [isOpenUrlPrompt, setIsOpenUrlPrompt] = useState(false);
   const [selectionInfo, setSelectionInfo] = useState<SelectionInfo>({
     start: 0,
@@ -145,7 +139,7 @@ export default function MarkdownEditor(props: {
               style: {
                 backgroundColor: canEdit ? "rgba(247,247,247,1" : "white",
                 color: "rgba(61,61,61,1)",
-                cursor: canEdit ? "cell" : "not-allowed",
+                cursor: canEdit ? "text" : "not-allowed",
                 fontSize: "1rem",
                 fontWeight: 400,
                 lineHeight: 1.5,
@@ -160,6 +154,12 @@ export default function MarkdownEditor(props: {
                   e.target.value.length,
                   e.target.value.length
                 );
+              },
+              onBlur: () => {
+                // need a small timeout for the link button to continue working
+                setTimeout(() => {
+                  if (!isOpenUrlPrompt) setEditMode(false);
+                }, 250);
               },
             }}
             style={{
@@ -179,23 +179,6 @@ export default function MarkdownEditor(props: {
             </Typography>
           )}
         </div>
-        {editMode && (
-          <Button
-            onClick={() => setEditMode(false)}
-            style={{
-              minWidth: 48,
-            }}
-            variant="ghost_icon"
-            disabled={missingText}
-          >
-            <Icon
-              data={check}
-              color={
-                missingText ? colors.EQUINOR_DISABLED : colors.EQUINOR_PROMINENT
-              }
-            />
-          </Button>
-        )}
       </div>
       {helperText && (
         <Typography style={{ marginTop: 12 }} variant="caption">

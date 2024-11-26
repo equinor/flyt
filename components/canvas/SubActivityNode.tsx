@@ -1,32 +1,37 @@
-import React, { useEffect, useState } from "react";
-import { Connection, Position, useStore } from "reactflow";
-import { FormatNodeText } from "./utils/FormatNodeText";
+import { getNodeTypeName } from "@/utils/getNodeTypeName";
 import { formatDuration } from "@/utils/unitDefinitions";
-import styles from "./Node.module.scss";
-import { SubActivityButton } from "./SubActivityButton";
-import { NodeButtonsContainer } from "./NodeButtonsContainer";
-import { ChoiceButton } from "./ChoiceButton";
-import { WaitingButton } from "./WaitingButton";
-import { NodeDataCommon } from "types/NodeData";
-import { NodeProps } from "reactflow";
-import { NodeTypes } from "types/NodeTypes";
-import { MergeButton } from "./MergeButton";
-import { TargetHandle } from "./TargetHandle";
-import { NodeDescription } from "./NodeDescription";
-import { NodeCard } from "./NodeCard";
+import { useEffect, useState } from "react";
+import { Connection, NodeProps, Position, useStore } from "reactflow";
 import colors from "theme/colors";
+import { NodeDataCommon } from "types/NodeData";
+import { NodeTypes } from "types/NodeTypes";
+import { ChoiceButton } from "./ChoiceButton";
+import { MergeButton } from "./MergeButton";
+import styles from "./Node.module.scss";
+import { NodeButtonsContainer } from "./NodeButtonsContainer";
+import { NodeCard } from "./NodeCard";
+import { NodeDescription } from "./NodeDescription";
 import { NodeDuration } from "./NodeDuration";
-import { SourceHandle } from "./SourceHandle";
+import { NodeShape } from "./NodeShape";
 import { NodeTooltip } from "./NodeTooltip";
 import { QIPRContainer } from "./QIPRContainer";
-import { NodeTooltipSection } from "./NodeTooltipSection";
-import { NodeShape } from "./NodeShape";
+import { SourceHandle } from "./SourceHandle";
+import { SubActivityButton } from "./SubActivityButton";
+import { TargetHandle } from "./TargetHandle";
+import { WaitingButton } from "./WaitingButton";
+import { useIsEditingNode } from "./hooks/useIsEditingNode";
 import { useNodeAdd } from "./hooks/useNodeAdd";
-import { getNodeTypeName } from "@/utils/getNodeTypeName";
+import { useQIPRContainerOnClick } from "./hooks/useQIPRContainerOnClick";
+import { useShouldDisplayQIPR } from "./hooks/useShouldDisplayQIPR";
+import { FormatNodeText } from "./utils/FormatNodeText";
 import { isChoiceChild } from "./utils/nodeRelationsHelper";
 
 export const SubActivityNode = ({
-  data: {
+  data,
+  dragging,
+  selected,
+}: NodeProps<NodeDataCommon>) => {
+  const {
     description,
     role,
     duration,
@@ -46,14 +51,15 @@ export const SubActivityNode = ({
     shapeHeight,
     shapeWidth,
     disabled,
-  },
-  selected,
-  dragging,
-}: NodeProps<NodeDataCommon>) => {
+  } = data;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
   const connectionNodeId = useStore((state) => state.connectionNodeId);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
+  const isEditingNode = useIsEditingNode(selected);
+
+  const handleQIPRContainerOnClick = useQIPRContainerOnClick(data);
+  const shouldDisplayQIPR = useShouldDisplayQIPR(tasks, hovering, selected);
 
   useEffect(() => {
     setHovering(false);
@@ -172,29 +178,27 @@ export const SubActivityNode = ({
           </div>
           <NodeDuration duration={formatDuration(duration, unit)} />
         </NodeShape>
-        <QIPRContainer tasks={tasks} />
+        {shouldDisplayQIPR && (
+          <QIPRContainer tasks={tasks} onClick={handleQIPRContainerOnClick} />
+        )}
       </NodeCard>
       <TargetHandle hidden={!mergeOption} />
       <SourceHandle />
       <NodeTooltip
-        isVisible={
-          !!(
-            hoveringShape &&
-            (description || role || typeof duration === "number")
-          )
+        isHovering={
+          hoveringShape &&
+          (!!description || !!role || typeof duration === "number")
         }
-      >
-        {description && (
-          <NodeTooltipSection header={"Description"} text={description} />
-        )}
-        {role && <NodeTooltipSection header={"Role(s)"} text={role} />}
-        {duration !== null && unit !== null && (
-          <NodeTooltipSection
-            header={"Duration"}
-            text={formatDuration(duration, unit)}
-          />
-        )}
-      </NodeTooltip>
+        isEditing={isEditingNode}
+        nodeData={data}
+        includeDescription
+        description={description}
+        includeRole
+        role={role ?? undefined}
+        includeDuration
+        duration={formatDuration(duration, unit)}
+        includeEstimate={false}
+      />
       {renderNodeButtons()}
     </div>
   );

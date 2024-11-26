@@ -1,32 +1,37 @@
-import { useEffect, useState } from "react";
-import { Handle, Position } from "reactflow";
-import { MainActivityButton } from "./MainActivityButton";
-import { SubActivityButton } from "./SubActivityButton";
-import { ChoiceButton } from "./ChoiceButton";
-import { WaitingButton } from "./WaitingButton";
-import { NodeButtonsContainer } from "./NodeButtonsContainer";
-import stylesNodeButtons from "./NodeButtons.module.scss";
-import { NodeDataCommon } from "types/NodeData";
-import { NodeProps } from "reactflow";
-import { NodeTypes } from "types/NodeTypes";
-import { NodeDescription } from "./NodeDescription";
-import { NodeCard } from "./NodeCard";
-import colors from "theme/colors";
-import { SourceHandle } from "./SourceHandle";
-import { NodeShape } from "./NodeShape";
-import { QIPRContainer } from "./QIPRContainer";
-import { NodeTooltipSection } from "./NodeTooltipSection";
-import { NodeTooltip } from "./NodeTooltip";
-import { useNodeAdd } from "./hooks/useNodeAdd";
-import { NodeDuration } from "./NodeDuration";
+import { getNodeTypeName } from "@/utils/getNodeTypeName";
 import {
   formatMinMaxTotalDuration,
   formatMinMaxTotalDurationShort,
 } from "@/utils/unitDefinitions";
-import { getNodeTypeName } from "@/utils/getNodeTypeName";
+import { useEffect, useState } from "react";
+import { Handle, NodeProps, Position } from "reactflow";
+import colors from "theme/colors";
+import { NodeDataCommon } from "types/NodeData";
+import { NodeTypes } from "types/NodeTypes";
+import { ChoiceButton } from "./ChoiceButton";
+import { useIsEditingNode } from "./hooks/useIsEditingNode";
+import { useNodeAdd } from "./hooks/useNodeAdd";
+import { useQIPRContainerOnClick } from "./hooks/useQIPRContainerOnClick";
+import { useShouldDisplayQIPR } from "./hooks/useShouldDisplayQIPR";
+import { MainActivityButton } from "./MainActivityButton";
+import stylesNodeButtons from "./NodeButtons.module.scss";
+import { NodeButtonsContainer } from "./NodeButtonsContainer";
+import { NodeCard } from "./NodeCard";
+import { NodeDescription } from "./NodeDescription";
+import { NodeDuration } from "./NodeDuration";
+import { NodeShape } from "./NodeShape";
+import { NodeTooltip } from "./NodeTooltip";
+import { QIPRContainer } from "./QIPRContainer";
+import { SourceHandle } from "./SourceHandle";
+import { SubActivityButton } from "./SubActivityButton";
+import { WaitingButton } from "./WaitingButton";
 
 export const MainActivityNode = ({
-  data: {
+  data,
+  dragging,
+  selected,
+}: NodeProps<NodeDataCommon>) => {
+  const {
     description,
     type,
     tasks,
@@ -40,13 +45,15 @@ export const MainActivityNode = ({
     shapeWidth,
     totalDurations,
     disabled,
-  },
-  selected,
-  dragging,
-}: NodeProps<NodeDataCommon>) => {
+  } = data;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
+
+  const isEditingNode = useIsEditingNode(selected);
+
+  const handleQIPRContainerOnClick = useQIPRContainerOnClick(data);
+  const shouldDisplayQIPR = useShouldDisplayQIPR(tasks, hovering, selected);
 
   const formattedDurationSum =
     totalDurations && formatMinMaxTotalDuration(totalDurations);
@@ -109,7 +116,7 @@ export const MainActivityNode = ({
     >
       <NodeCard
         onClick={handleClickNode}
-        hovering={hovering && !merging}
+        hovering={hovering && !merging && !isEditingNode}
         highlighted={isDropTarget && isValidDropTarget}
         disabled={disabled || isValidDropTarget === false}
         selected={selected}
@@ -130,7 +137,9 @@ export const MainActivityNode = ({
             <NodeDuration duration={formattedDurationSumShort} />
           )}
         </NodeShape>
-        <QIPRContainer tasks={tasks} />
+        {shouldDisplayQIPR && (
+          <QIPRContainer tasks={tasks} onClick={handleQIPRContainerOnClick} />
+        )}
       </NodeCard>
       <Handle
         className={stylesNodeButtons["handle--hidden"]}
@@ -140,15 +149,16 @@ export const MainActivityNode = ({
       />
       <SourceHandle />
       <NodeTooltip
-        isVisible={!!(hoveringShape && (description || formattedDurationSum))}
-      >
-        {description && (
-          <NodeTooltipSection header={"Description"} text={description} />
-        )}
-        {formattedDurationSum && (
-          <NodeTooltipSection header={"Duration"} text={formattedDurationSum} />
-        )}
-      </NodeTooltip>
+        isHovering={hoveringShape && (!!description || !!formattedDurationSum)}
+        isEditing={isEditingNode}
+        nodeData={data}
+        includeDescription
+        description={description}
+        includeRole={false}
+        includeDuration={false}
+        includeEstimate
+        estimate={formattedDurationSum}
+      />
       {renderNodeButtons()}
     </div>
   );

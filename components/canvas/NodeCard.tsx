@@ -1,12 +1,13 @@
+import { ReactNode } from "react";
 import styles from "./Node.module.scss";
 
-type NodeCard = {
+type NodeCardProps = {
   onClick?: () => void;
   hovering?: boolean;
   highlighted?: boolean;
   selected?: boolean;
   disabled?: boolean;
-  children?: JSX.Element[] | JSX.Element;
+  children?: ReactNode;
 };
 
 export const NodeCard = ({
@@ -16,7 +17,7 @@ export const NodeCard = ({
   selected,
   disabled,
   children,
-}: NodeCard) => (
+}: NodeCardProps) => (
   <div
     className={`
       ${styles.container}

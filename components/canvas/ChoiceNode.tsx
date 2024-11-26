@@ -1,32 +1,35 @@
+import { getNodeTypeName } from "@/utils/getNodeTypeName";
 import { useEffect, useState } from "react";
 import { Connection, NodeProps, Position, useStore } from "reactflow";
-import { NodeButtonsContainer } from "./NodeButtonsContainer";
-import { SubActivityButton } from "./SubActivityButton";
-import { ChoiceButton } from "./ChoiceButton";
-import { WaitingButton } from "./WaitingButton";
-import { NodeTypes } from "types/NodeTypes";
-import { TargetHandle } from "./TargetHandle";
-import { MergeButton } from "./MergeButton";
-import { NodeDataCommon } from "types/NodeData";
 import colors from "theme/colors";
+import { NodeDataCommon } from "types/NodeData";
+import { NodeTypes } from "types/NodeTypes";
+import { ChoiceButton } from "./ChoiceButton";
+import { MergeButton } from "./MergeButton";
+import { NodeButtonsContainer } from "./NodeButtonsContainer";
 import { NodeCard } from "./NodeCard";
 import { NodeDescription } from "./NodeDescription";
-import { SourceHandle } from "./SourceHandle";
 import { NodeShape } from "./NodeShape";
 import { NodeTooltip } from "./NodeTooltip";
-import { NodeTooltipSection } from "./NodeTooltipSection";
+import { SourceHandle } from "./SourceHandle";
+import { SubActivityButton } from "./SubActivityButton";
+import { TargetHandle } from "./TargetHandle";
+import { WaitingButton } from "./WaitingButton";
+import { useIsEditingNode } from "./hooks/useIsEditingNode";
 import { useNodeAdd } from "./hooks/useNodeAdd";
-import { getNodeTypeName } from "@/utils/getNodeTypeName";
 import { isChoiceChild } from "./utils/nodeRelationsHelper";
 
 export const ChoiceNode = ({
-  data: {
+  data,
+  dragging,
+  selected,
+}: NodeProps<NodeDataCommon>) => {
+  const {
     id,
     description,
     type,
     isDropTarget,
     isValidDropTarget,
-    handleClickNode,
     parentTypes,
     userCanEdit,
     children,
@@ -37,15 +40,14 @@ export const ChoiceNode = ({
     shapeHeight,
     shapeWidth,
     disabled,
-  },
-  selected,
-  dragging,
-}: NodeProps<NodeDataCommon>) => {
+    handleClickNode,
+  } = data;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
   const connectionNodeId = useStore((state) => state.connectionNodeId);
   const lastChild = children[children?.length - 1];
+  const isEditingNode = useIsEditingNode(selected);
 
   useEffect(() => {
     setHovering(false);
@@ -172,11 +174,16 @@ export const ChoiceNode = ({
       </NodeCard>
       <TargetHandle hidden={!mergeOption} />
       <SourceHandle />
-      <NodeTooltip isVisible={!!(hoveringShape && description)}>
-        {description && (
-          <NodeTooltipSection header={"Description"} text={description} />
-        )}
-      </NodeTooltip>
+      <NodeTooltip
+        isHovering={hoveringShape && !!description}
+        isEditing={isEditingNode}
+        nodeData={data}
+        includeDescription
+        description={description}
+        includeRole={false}
+        includeDuration={false}
+        includeEstimate={false}
+      />
       {renderNodeButtons()}
     </div>
   );
