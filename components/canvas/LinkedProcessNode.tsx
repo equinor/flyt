@@ -1,29 +1,30 @@
 import { formatDateTimeString } from "@/utils/formatUpdated";
+import { getProjectName } from "@/utils/getProjectName";
 import { useEffect, useState } from "react";
 import { Connection, NodeProps, Position, useStore } from "reactflow";
 import colors from "theme/colors";
 import { NodeDataCommon } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
 import { ChoiceButton } from "./ChoiceButton";
-import { useNodeAdd } from "./hooks/useNodeAdd";
 import { MergeButton } from "./MergeButton";
 import styles from "./Node.module.scss";
 import { NodeButtonsContainer } from "./NodeButtonsContainer";
 import { NodeCard } from "./NodeCard";
 import { NodeDescription } from "./NodeDescription";
 import { NodeShape } from "./NodeShape";
-import { NodeTooltip } from "./NodeTooltip";
+import { NodeTooltipContainer } from "./NodeTooltip";
 import { NodeTooltipSection } from "./NodeTooltipSection";
 import { NodeUserDots } from "./NodeUserDots";
 import { SourceHandle } from "./SourceHandle";
 import { SubActivityButton } from "./SubActivityButton";
 import { TargetHandle } from "./TargetHandle";
+import { WaitingButton } from "./WaitingButton";
+import { useNodeAdd } from "./hooks/useNodeAdd";
 import { fullNameListToString } from "./utils/fullnameListToString";
 import {
   isChoiceChild,
   isMainActivityColumn,
 } from "./utils/nodeRelationsHelper";
-import { WaitingButton } from "./WaitingButton";
 
 export const LinkedProcessNode = ({
   data: {
@@ -51,7 +52,7 @@ export const LinkedProcessNode = ({
   const connectionNodeId = useStore((state) => state.connectionNodeId);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
 
-  const name = linkedProjectData?.name;
+  const name = getProjectName(linkedProjectData || undefined);
   const userAccesses = linkedProjectData?.userAccesses;
   const fullNames = userAccesses && fullNameListToString(userAccesses);
   const formattedUpdated =
@@ -176,13 +177,13 @@ export const LinkedProcessNode = ({
       </NodeCard>
       <TargetHandle hidden={!mergeOption} />
       <SourceHandle />
-      <NodeTooltip isVisible={hoveringShape}>
+      <NodeTooltipContainer isVisible={hoveringShape}>
         {name && <NodeTooltipSection header={"Title"} text={name} />}
         {formattedUpdated && (
           <NodeTooltipSection header={"Last Updated"} text={formattedUpdated} />
         )}
         {fullNames && <NodeTooltipSection header={"Users"} text={fullNames} />}
-      </NodeTooltip>
+      </NodeTooltipContainer>
       {renderNodeButtons()}
     </div>
   );

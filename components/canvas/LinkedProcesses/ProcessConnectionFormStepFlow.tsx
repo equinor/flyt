@@ -5,6 +5,7 @@ import { edgeElementTypes } from "../EdgeElementTypes";
 import { useCenterCanvas } from "../hooks/useCenterCanvas";
 import { nodeElementTypes } from "../NodeElementTypes";
 import styles from "./ProcessConnectionForm.module.scss";
+import { CanvasTypeProvider } from "../hooks/useCanvasType";
 
 type ProcessConnectionFormStepFlowProps = {
   nodes: Node<NodeDataFull>[];
@@ -22,15 +23,17 @@ export const ProcessConnectionFormStepFlow = ({
       <Typography className={styles.title} variant="h3">
         Select the card that the new process card will be added below
       </Typography>
-      <ReactFlow
-        className={styles.flow}
-        nodes={nodes}
-        edges={edges}
-        nodeTypes={nodeElementTypes}
-        edgeTypes={edgeElementTypes}
-        selectNodesOnDrag={false}
-        draggable={false}
-      />
+      <CanvasTypeProvider type="select_process_card">
+        <ReactFlow
+          className={styles.flow}
+          nodes={nodes}
+          edges={edges}
+          nodeTypes={nodeElementTypes}
+          edgeTypes={edgeElementTypes}
+          selectNodesOnDrag={false}
+          draggable={false}
+        />
+      </CanvasTypeProvider>
     </>
   );
 };

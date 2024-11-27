@@ -16,8 +16,9 @@ import { createNodes } from "../utils/createNodes";
 import { setMainActivitiesDurationSum } from "../utils/setMainActivitiesDurationSum";
 import { setNodesDepth } from "../utils/setNodesDepth";
 import { useCenterCanvas } from "./useCenterCanvas";
-import { setLayout } from "./useLayout";
+import { getVSMLayout } from "../utils/getLayout";
 import { useNodeMerge } from "./useNodeMerge";
+import { tagSelectedNode } from "@/utils/tagSelectedNode";
 
 export const useFlowState = (
   apiNodes: NodeDataApi[],
@@ -109,7 +110,7 @@ export const useFlowState = (
       tempEdges: tempWithHiddenEdges,
       longEdges,
     } = createHiddenNodes(tempNodes, tempEdges, shapeSize);
-    const finalNodes = setLayout(tempWithHiddenNodes, tempWithHiddenEdges);
+    const finalNodes = getVSMLayout(tempWithHiddenNodes, tempWithHiddenEdges);
     const finalEdges = createEdges(
       finalNodes,
       tempWithHiddenEdges,
@@ -119,6 +120,9 @@ export const useFlowState = (
       setIsEditingEdgeText,
       setEdgeToBeDeletedId
     );
+
+    tagSelectedNode(finalNodes, selectedNode);
+
     setNodes(finalNodes);
     setEdges(finalEdges);
 

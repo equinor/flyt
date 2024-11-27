@@ -3,13 +3,13 @@ import "../styles/globals.scss";
 import App, { AppContext } from "next/app";
 import { QueryClient, QueryClientProvider } from "react-query";
 
+import { msalInstance } from "@/auth/msalHelpers";
 import { LayoutWrapper } from "@/layouts/LayoutWrapper";
 import { MsalProvider } from "@azure/msal-react";
-import { ReactQueryDevtools } from "react-query/devtools";
 import { StoreProvider } from "easy-peasy";
-import { msalInstance } from "@/auth/msalHelpers";
-import store from "../store/store";
 import { PropsWithChildren, ReactNode } from "react";
+import { ReactQueryDevtools } from "react-query/devtools";
+import store from "../store/store";
 
 const queryClient = new QueryClient();
 type MyAppProps = {

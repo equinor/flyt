@@ -1,23 +1,29 @@
-import { NodeDataCommon } from "types/NodeData";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Handle, NodeProps, Position } from "reactflow";
+import colors from "theme/colors";
+import { NodeDataCommon } from "types/NodeData";
+import { NodeTypes } from "types/NodeTypes";
+import { useIsEditingNode } from "./hooks/useIsEditingNode";
+import { useNodeAdd } from "./hooks/useNodeAdd";
+import { useQIPRContainerOnClick } from "./hooks/useQIPRContainerOnClick";
+import { useShouldDisplayQIPR } from "./hooks/useShouldDisplayQIPR";
+import { MainActivityButton } from "./MainActivityButton";
 import stylesNodeButtons from "./NodeButtons.module.scss";
 import { NodeButtonsContainer } from "./NodeButtonsContainer";
-import { MainActivityButton } from "./MainActivityButton";
-import { NodeTypes } from "types/NodeTypes";
-import { NodeDescription } from "./NodeDescription";
 import { NodeCard } from "./NodeCard";
-import colors from "theme/colors";
-import { QIPRContainer } from "./QIPRContainer";
+import { NodeDescription } from "./NodeDescription";
 import { NodeShape } from "./NodeShape";
 import { NodeTooltip } from "./NodeTooltip";
-import { NodeTooltipSection } from "./NodeTooltipSection";
-import { getNodeHelperText } from "./utils/getNodeHelperText";
-import { useNodeAdd } from "./hooks/useNodeAdd";
+import { QIPRContainer } from "./QIPRContainer";
 import { SourceHandle } from "./SourceHandle";
+import { getNodeHelperText } from "./utils/getNodeHelperText";
 
 export const GenericNode = ({
-  data: {
+  data,
+  dragging,
+  selected,
+}: NodeProps<NodeDataCommon>) => {
+  const {
     id,
     description,
     type,
@@ -30,13 +36,15 @@ export const GenericNode = ({
     shapeHeight,
     shapeWidth,
     disabled,
-  },
-  selected,
-  dragging,
-}: NodeProps<NodeDataCommon>) => {
+  } = data;
+
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
+  const isEditingNode = useIsEditingNode(selected);
+
+  const handleQIPRContainerOnClick = useQIPRContainerOnClick(data);
+  const shouldDisplayQIPR = useShouldDisplayQIPR(tasks, hovering, selected);
 
   useEffect(() => {
     setHovering(false);
@@ -92,7 +100,9 @@ export const GenericNode = ({
             helperText={nodeHelperText}
           />
         </NodeShape>
-        <QIPRContainer tasks={tasks} />
+        {shouldDisplayQIPR && (
+          <QIPRContainer tasks={tasks} onClick={handleQIPRContainerOnClick} />
+        )}
       </NodeCard>
       <Handle
         className={stylesNodeButtons["handle--hidden"]}
@@ -101,11 +111,16 @@ export const GenericNode = ({
         isConnectable={false}
       />
       <SourceHandle />
-      <NodeTooltip isVisible={!!(hoveringShape && description)}>
-        {description && (
-          <NodeTooltipSection header={"Description"} text={description} />
-        )}
-      </NodeTooltip>
+      <NodeTooltip
+        isHovering={hoveringShape && !!description}
+        isEditing={isEditingNode}
+        nodeData={data}
+        includeDescription
+        description={description}
+        includeRole={false}
+        includeDuration={false}
+        includeEstimate={false}
+      />
       {renderNodeButtons()}
     </div>
   );

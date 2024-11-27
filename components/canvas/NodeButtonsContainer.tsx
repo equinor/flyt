@@ -26,6 +26,7 @@ export const NodeButtonsContainer = (props: {
       className={`${styles.nodeButtonsContainer} ${styles[getClassName()]}`}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
+      onClick={(e) => e.stopPropagation()}
     >
       {hovering ? (
         props.children
