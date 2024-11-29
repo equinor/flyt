@@ -16,6 +16,7 @@ export const PQIRTypeSelection = ({
   for (const taskType of Object.values(TaskTypes)) {
     const pqirTypeSelection = (
       <TextCircle
+        key={taskType}
         text={taskType.slice(0, 1)}
         color={getTaskColor(taskType)}
         outlined={taskType !== selectedType}

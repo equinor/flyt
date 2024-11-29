@@ -76,7 +76,8 @@ export const unlinkTask = (
   vsmObjectId: string,
   taskId: string
 ) =>
-  BaseAPIServices.delete(
-    baseUrl + `/graph/${projectId}/vertices/${vsmObjectId}/tasks/${taskId}`,
+  BaseAPIServices.post(
+    baseUrl +
+      `/graph/${projectId}/vertices/${vsmObjectId}/tasks/${taskId}/unlink`,
     null
   );

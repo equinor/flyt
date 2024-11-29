@@ -28,10 +28,11 @@ import { useNodeDrag } from "./hooks/useNodeDrag";
 import { copyPasteNodeValidator } from "./utils/copyPasteValidators";
 import { handlePasteNode } from "./utils/handlePasteNode";
 import {
-  SelectedNodeForQIPRProvider,
-  useSelectedNodeForQIPR,
-} from "./hooks/useSelectedNodeForQIPR";
+  SelectedNodeForPQIRidProvider,
+  useSelectedNodeForPQIRid,
+} from "./hooks/useSelectedNodeForPQIRid";
 import { useStoreState, useStoreDispatch } from "@/hooks/storeHooks";
+import { useSelectedNodeForPQIR } from "./hooks/useSelectedNodeForPQIR";
 
 type CanvasProps = {
   apiNodes: NodeDataApi[];
@@ -59,9 +60,9 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
   const { onNodeDragStart, onNodeDrag, onNodeDragStop } = useNodeDrag();
   const { deleteEdgeMutation } = useEdgeDelete();
   const { centerCanvas } = useCenterCanvas();
-  const { selectedNodeForQIPR, setSelectedNodeForQIPR } =
-    useSelectedNodeForQIPR();
   const pqirToBeDeletedId = useStoreState((state) => state.pqirToBeDeletedId);
+  const { setSelectedNodeForPQIRid } = useSelectedNodeForPQIRid();
+  const selectedNodeForPQIR = useSelectedNodeForPQIR();
   const dispatch = useStoreDispatch();
 
   const ref = useRef<HTMLDivElement>(null);
@@ -126,9 +127,9 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
         confirmMessage="Delete"
       />
       <SideBar
-        onClose={() => setSelectedNodeForQIPR(undefined)}
+        onClose={() => setSelectedNodeForPQIRid(undefined)}
         userCanEdit={userCanEdit}
-        selectedNode={selectedNodeForQIPR}
+        selectedNode={selectedNodeForPQIR?.data}
       />
       <ReactFlow
         nodes={nodes}
@@ -139,7 +140,7 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
         onEdgesChange={onEdgesChange}
         onPaneClick={() => {
           setSelectedNode(undefined);
-          setSelectedNodeForQIPR(undefined);
+          setSelectedNodeForPQIRid(undefined);
         }}
         onMoveStart={() => closeContextMenu()}
         minZoom={0.2}
@@ -191,10 +192,10 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
 
 export const FlowWrapper = (props: CanvasProps) => {
   return (
-    <SelectedNodeForQIPRProvider>
+    <SelectedNodeForPQIRidProvider>
       <ReactFlowProvider>
         <Flow {...props} />
       </ReactFlowProvider>
-    </SelectedNodeForQIPRProvider>
+    </SelectedNodeForPQIRidProvider>
   );
 };
