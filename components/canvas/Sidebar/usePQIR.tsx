@@ -59,7 +59,7 @@ export const usePQIR = (pqir: Task | null, selectedNode: NodeDataCommon) => {
   const handleSetSelectedType = (type: TaskTypes) => {
     const solvableType = [TaskTypes.Problem, TaskTypes.Risk].includes(type);
     if (solved === null && solvableType) {
-      setSolved(solvedDefaultValue);
+      setSolved(solvedDefaultValue || false);
     } else if (solved !== null && !solvableType) {
       setSolved(null);
     }

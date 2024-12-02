@@ -66,7 +66,7 @@ export const PQIRListELement = ({
         onClick={(type) => setSelectedType(type)}
       />
       <div>
-        {solved !== null && (
+        {solved !== null && isSelectedSection && (
           <Checkbox
             checked={solved}
             onChange={(e) => setSolved(e.target.checked)}
