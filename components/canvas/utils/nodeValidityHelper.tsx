@@ -55,6 +55,7 @@ export const nodeValidityMap: NodeValidityMap = {
         NodeTypes.choice,
         NodeTypes.waiting,
         NodeTypes.linkedProcess,
+        NodeTypes.mainActivity,
       ],
       [Position.Left]: [NodeTypes.mainActivity],
       [Position.Right]: [NodeTypes.mainActivity],
