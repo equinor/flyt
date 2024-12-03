@@ -1,10 +1,10 @@
-import { Button, Checkbox, Icon, TextField } from "@equinor/eds-core-react";
-import { add } from "@equinor/eds-icons";
-import { ChangeEvent } from "react";
-import styles from "./PQIRListElement.module.scss";
-import { PQIRTypeSelection } from "./PQIRTypeSelection";
-import { uid } from "@/utils/uuid";
 import { NodeDataCommon } from "@/types/NodeData";
+import { uid } from "@/utils/uuid";
+import { Button, Checkbox, Icon } from "@equinor/eds-core-react";
+import { add } from "@equinor/eds-icons";
+import styles from "./PQIRListElement.module.scss";
+import { PQIRListElementTextField } from "./PQIRListElementTextField";
+import { PQIRTypeSelection } from "./PQIRTypeSelection";
 import { usePQIR } from "./usePQIR";
 
 type NewPQIRProps = {
@@ -39,19 +39,6 @@ export const NewPQIR = ({ selectedNode }: NewPQIRProps) => {
     </div>
   );
 
-  const panelSectionMiddle = () => (
-    <TextField
-      id={uid()}
-      value={description}
-      onChange={(e: ChangeEvent<HTMLInputElement>) =>
-        setDescription(e.target.value)
-      }
-      multiline
-      rows={5}
-      className={styles.textInput}
-    />
-  );
-
   const panelSectionBottom = () => (
     <div className={styles.actionButtonsContainer}>
       <Button
@@ -64,6 +51,7 @@ export const NewPQIR = ({ selectedNode }: NewPQIRProps) => {
       <Button
         className={styles.actionButton}
         onClick={() => createPQIR.mutate()}
+        disabled={!description}
       >
         Create
       </Button>
@@ -83,7 +71,12 @@ export const NewPQIR = ({ selectedNode }: NewPQIRProps) => {
     <div className={styles.panel}>
       <div className={styles.panelContent}>
         {panelSectionTop()}
-        {panelSectionMiddle()}
+        <PQIRListElementTextField
+          id={uid()}
+          value={description}
+          onEdit={(e) => setDescription(e)}
+          userCanEdit
+        />
         {panelSectionBottom()}
       </div>
     </div>

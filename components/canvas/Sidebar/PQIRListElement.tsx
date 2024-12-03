@@ -1,3 +1,4 @@
+import { useStoreDispatch } from "@/hooks/storeHooks";
 import { NodeDataCommon } from "@/types/NodeData";
 import { Task } from "@/types/Task";
 import {
@@ -12,9 +13,9 @@ import { add, delete_to_trash, minimize } from "@equinor/eds-icons";
 import { ChangeEvent } from "react";
 import { TextCircle } from "../entities/TextCircle";
 import styles from "./PQIRListElement.module.scss";
+import { PQIRListElementTextField } from "./PQIRListElementTextField";
 import { PQIRTypeSelection } from "./PQIRTypeSelection";
 import { usePQIR } from "./usePQIR";
-import { useStoreDispatch } from "@/hooks/storeHooks";
 
 type PQIRListElement = {
   pqir: Task;
@@ -82,23 +83,6 @@ export const PQIRListELement = ({
     </div>
   );
 
-  const panelSectionMiddle = (
-    <TextField
-      id={pqir.id}
-      value={description}
-      onChange={(e: ChangeEvent<HTMLInputElement>) =>
-        setDescription(e.target.value)
-      }
-      multiline
-      rows={5}
-      className={styles.textInput}
-      readOnly={!userCanEdit}
-      variant={!description ? "error" : undefined}
-      helperText={!description ? "Description is required" : ""}
-      maxLength={4000}
-    />
-  );
-
   const panelSectionBottom = (
     <div className={styles.actionButtonsContainer}>
       <Button
@@ -131,7 +115,12 @@ export const PQIRListELement = ({
       <Accordion.Panel className={styles.panel}>
         <div className={styles.panelContent}>
           {userCanEdit && panelSectionTop}
-          {panelSectionMiddle}
+          <PQIRListElementTextField
+            id={pqir.id}
+            value={description}
+            userCanEdit={userCanEdit}
+            onEdit={(e) => setDescription(e)}
+          />
           {userCanEdit && panelSectionBottom}
         </div>
       </Accordion.Panel>
