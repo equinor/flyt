@@ -1,6 +1,6 @@
 import { usePQIRs } from "@/components/canvas/hooks/usePQIRs";
 import { NodeDataCommon } from "../../../types/NodeData";
-import { QIPRSection } from "./QIPRSection";
+import { PQIRSection } from "./PQIRSection";
 import styles from "./SidebarBody.module.scss";
 import { CircularProgress, Typography } from "@equinor/eds-core-react";
 import { unknownErrorToString } from "@/utils/isError";
@@ -31,7 +31,7 @@ export const SideBarBody = ({
     }
     return (
       <div className={styles.container}>
-        <QIPRSection
+        <PQIRSection
           title="Selected card's PQIRs"
           emptyPQIRsText="This card has no PQIRs"
           pqirs={selectedNode.tasks}
@@ -39,7 +39,7 @@ export const SideBarBody = ({
           selectedNode={selectedNode}
           userCanEdit={userCanEdit}
         />
-        <QIPRSection
+        <PQIRSection
           title="Other PQIR's in this process"
           emptyPQIRsText="This process has no other PQIRs"
           pqirs={otherPQIRs}
