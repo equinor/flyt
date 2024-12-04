@@ -1,6 +1,7 @@
 import { edgeElementTypes } from "@/components/canvas/EdgeElementTypes";
 import { MiniMapCustom } from "@/components/canvas/MiniMapCustom";
 import { ZoomLevel } from "@/components/canvas/ZoomLevel";
+import { useStoreDispatch, useStoreState } from "@/hooks/storeHooks";
 import { EdgeDataApi } from "@/types/EdgeDataApi";
 import { NodeDataApi } from "@/types/NodeDataApi";
 import { useEffect, useRef } from "react";
@@ -14,10 +15,11 @@ import "reactflow/dist/style.css";
 import { NodeDataCommon } from "types/NodeData";
 import { DeleteNodeDialog } from "../DeleteNodeDialog";
 import { ScrimDelete } from "../ScrimDelete";
-import { SideBar } from "./Sidebar/SideBar";
 import styles from "./Canvas.module.scss";
 import { ContextMenu } from "./ContextMenu";
 import { nodeElementTypes } from "./NodeElementTypes";
+import { SideBar } from "./Sidebar/SideBar";
+import { usePQIRMutations } from "./Sidebar/usePQIRMutations";
 import { useCenterCanvas } from "./hooks/useCenterCanvas";
 import { useContextMenu } from "./hooks/useContextMenu";
 import { useCopyPaste } from "./hooks/useCopyPaste";
@@ -25,14 +27,13 @@ import { useEdgeDelete } from "./hooks/useEdgeDelete";
 import { useFlowState } from "./hooks/useFlowState";
 import { useNodeAdd } from "./hooks/useNodeAdd";
 import { useNodeDrag } from "./hooks/useNodeDrag";
-import { copyPasteNodeValidator } from "./utils/copyPasteValidators";
-import { handlePasteNode } from "./utils/handlePasteNode";
+import { useSelectedNodeForPQIR } from "./hooks/useSelectedNodeForPQIR";
 import {
   SelectedNodeForPQIRidProvider,
   useSelectedNodeForPQIRid,
 } from "./hooks/useSelectedNodeForPQIRid";
-import { useStoreState, useStoreDispatch } from "@/hooks/storeHooks";
-import { useSelectedNodeForPQIR } from "./hooks/useSelectedNodeForPQIR";
+import { copyPasteNodeValidator } from "./utils/copyPasteValidators";
+import { handlePasteNode } from "./utils/handlePasteNode";
 
 type CanvasProps = {
   apiNodes: NodeDataApi[];
@@ -56,6 +57,7 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
     edgeToBeDeletedId,
     setEdgeToBeDeletedId,
   } = useFlowState(apiNodes, apiEdges, userCanEdit);
+  const { deletePQIR } = usePQIRMutations();
   const { addNode } = useNodeAdd();
   const { onNodeDragStart, onNodeDrag, onNodeDragStop } = useNodeDrag();
   const { deleteEdgeMutation } = useEdgeDelete();
@@ -121,7 +123,15 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
         id={"scrimDeletePQIR"}
         open={!!pqirToBeDeletedId}
         onClose={() => dispatch.setPQIRToBeDeletedId(null)}
-        onConfirm={() => console.log(pqirToBeDeletedId)}
+        onConfirm={() => {
+          dispatch.setPQIRToBeDeletedId(null);
+          pqirToBeDeletedId &&
+            selectedNodeForPQIR?.id &&
+            deletePQIR.mutate({
+              pqirId: pqirToBeDeletedId,
+              selectedNodeId: selectedNodeForPQIR.id,
+            });
+        }}
         header="Delete PQIR"
         warningMessage="Are you sure you want to delete this PQIR?"
         confirmMessage="Delete"

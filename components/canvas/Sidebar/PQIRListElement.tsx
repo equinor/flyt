@@ -6,16 +6,15 @@ import {
   Button,
   Checkbox,
   Icon,
-  TextField,
   Typography,
 } from "@equinor/eds-core-react";
 import { add, delete_to_trash, minimize } from "@equinor/eds-icons";
-import { ChangeEvent } from "react";
 import { TextCircle } from "../entities/TextCircle";
 import styles from "./PQIRListElement.module.scss";
 import { PQIRListElementTextField } from "./PQIRListElementTextField";
 import { PQIRTypeSelection } from "./PQIRTypeSelection";
 import { usePQIR } from "./usePQIR";
+import { usePQIRMutations } from "./usePQIRMutations";
 
 type PQIRListElement = {
   pqir: Task;
@@ -31,9 +30,6 @@ export const PQIRListELement = ({
   userCanEdit,
 }: PQIRListElement) => {
   const {
-    linkPQIR,
-    unlinkPQIR,
-    updatePQIR,
     description,
     setDescription,
     selectedType,
@@ -42,18 +38,21 @@ export const PQIRListELement = ({
     setSolved,
     color,
     shorthand,
-    isEditing,
-    setIsEditing,
     hasChanges,
   } = usePQIR(pqir, selectedNode);
+  const { linkPQIR, unlinkPQIR, updatePQIR } = usePQIRMutations();
   const dispatch = useStoreDispatch();
+  const selectedNodeId = selectedNode.id;
+  const pqirId = pqir.id;
 
   const selectOrDeselectButton = (
     <Button
       variant="ghost_icon"
       onClick={(e) => {
         e.stopPropagation();
-        isSelectedSection ? unlinkPQIR?.mutate() : linkPQIR?.mutate();
+        isSelectedSection
+          ? unlinkPQIR.mutate({ selectedNodeId, pqirId })
+          : linkPQIR.mutate({ selectedNodeId, pqirId });
       }}
     >
       <Icon data={isSelectedSection ? minimize : add} />
@@ -86,7 +85,17 @@ export const PQIRListELement = ({
   const panelSectionBottom = (
     <div className={styles.actionButtonsContainer}>
       <Button
-        onClick={() => updatePQIR?.mutate()}
+        onClick={() =>
+          updatePQIR?.mutate({
+            pqir: {
+              ...pqir,
+              description: description,
+              type: selectedType,
+              solved: solved,
+            },
+            selectedNodeId,
+          })
+        }
         className={styles.actionButton}
         disabled={!hasChanges || !description}
       >
@@ -96,15 +105,10 @@ export const PQIRListELement = ({
   );
 
   return (
-    <Accordion.Item
-      chevronPosition="left"
-      key={pqir.id}
-      onExpandedChange={(e) => setIsEditing(e)}
-      isExpanded={isEditing}
-    >
+    <Accordion.Item chevronPosition="left" key={pqir.id}>
       <Accordion.Header
         className={styles.accordionHeader}
-        style={{ borderRadius: isEditing ? "5px 5px 0 0" : "5px" }}
+        style={{ borderRadius: "5px" }}
       >
         <TextCircle text={shorthand} color={color} />
         <Typography className={styles.pqirDescription}>

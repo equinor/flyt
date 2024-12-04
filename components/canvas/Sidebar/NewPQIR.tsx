@@ -6,6 +6,7 @@ import styles from "./PQIRListElement.module.scss";
 import { PQIRListElementTextField } from "./PQIRListElementTextField";
 import { PQIRTypeSelection } from "./PQIRTypeSelection";
 import { usePQIR } from "./usePQIR";
+import { usePQIRMutations } from "./usePQIRMutations";
 
 type NewPQIRProps = {
   selectedNode: NodeDataCommon;
@@ -13,7 +14,6 @@ type NewPQIRProps = {
 
 export const NewPQIR = ({ selectedNode }: NewPQIRProps) => {
   const {
-    createPQIR,
     description,
     setDescription,
     selectedType,
@@ -23,6 +23,7 @@ export const NewPQIR = ({ selectedNode }: NewPQIRProps) => {
     isEditing,
     setIsEditing,
   } = usePQIR(null, selectedNode);
+  const { createPQIR } = usePQIRMutations();
 
   const panelSectionTop = () => (
     <div className={styles["panel-top"]}>
@@ -39,7 +40,7 @@ export const NewPQIR = ({ selectedNode }: NewPQIRProps) => {
     </div>
   );
 
-  const panelSectionBottom = () => (
+  const panelSectionBottom = (selectedNodeId: string) => (
     <div className={styles.actionButtonsContainer}>
       <Button
         variant="outlined"
@@ -50,7 +51,21 @@ export const NewPQIR = ({ selectedNode }: NewPQIRProps) => {
       </Button>
       <Button
         className={styles.actionButton}
-        onClick={() => createPQIR.mutate()}
+        onClick={() =>
+          createPQIR.mutate(
+            {
+              description,
+              selectedType,
+              solved,
+              selectedNodeId,
+            },
+            {
+              onSuccess() {
+                setIsEditing(false);
+              },
+            }
+          )
+        }
         disabled={!description}
       >
         Create
@@ -77,7 +92,7 @@ export const NewPQIR = ({ selectedNode }: NewPQIRProps) => {
           onEdit={(e) => setDescription(e)}
           userCanEdit
         />
-        {panelSectionBottom()}
+        {panelSectionBottom(selectedNode.id)}
       </div>
     </div>
   );
