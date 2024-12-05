@@ -10,7 +10,7 @@ import { deleteVertice } from "services/graphApi";
 import { useProjectId } from "@/hooks/useProjectId";
 import { ScrimDelete } from "./ScrimDelete";
 
-type DeleteNodeDialog = {
+type DeleteNodeDialogProps = {
   objectToDelete?: NodeDataCommon;
   onClose: () => void;
   open: boolean;
@@ -20,7 +20,7 @@ export const DeleteNodeDialog = ({
   objectToDelete,
   onClose,
   open,
-}: DeleteNodeDialog) => {
+}: DeleteNodeDialogProps) => {
   if (!objectToDelete) return;
 
   const { accounts } = useMsal();

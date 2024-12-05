@@ -22,33 +22,29 @@ export const SideBarBody = ({
     )
   );
 
-  const renderContent = () => {
-    if (isLoadingPQIRs) {
-      return <CircularProgress style={{ alignSelf: "center" }} />;
-    }
-    if (errorPQIRs) {
-      return <Typography>{unknownErrorToString(errorPQIRs)}</Typography>;
-    }
-    return (
-      <div className={styles.container}>
-        <PQIRSection
-          title="Selected card's PQIRs"
-          emptyPQIRsText="This card has no PQIRs"
-          pqirs={selectedNode.tasks}
-          isSelectedSection
-          selectedNode={selectedNode}
-          userCanEdit={userCanEdit}
-        />
-        <PQIRSection
-          title="Other PQIR's in this process"
-          emptyPQIRsText="This process has no other PQIRs"
-          pqirs={otherPQIRs}
-          selectedNode={selectedNode}
-          userCanEdit={userCanEdit}
-        />
-      </div>
-    );
-  };
-
-  return renderContent();
+  if (isLoadingPQIRs) {
+    return <CircularProgress style={{ alignSelf: "center" }} />;
+  }
+  if (errorPQIRs) {
+    return <Typography>{unknownErrorToString(errorPQIRs)}</Typography>;
+  }
+  return (
+    <div className={styles.container}>
+      <PQIRSection
+        title="Selected card's PQIRs"
+        emptyPQIRsText="This card has no PQIRs"
+        pqirs={selectedNode.tasks}
+        isSelectedSection
+        selectedNode={selectedNode}
+        userCanEdit={userCanEdit}
+      />
+      <PQIRSection
+        title="Other PQIR's in this process"
+        emptyPQIRsText="This process has no other PQIRs"
+        pqirs={otherPQIRs}
+        selectedNode={selectedNode}
+        userCanEdit={userCanEdit}
+      />
+    </div>
+  );
 };
