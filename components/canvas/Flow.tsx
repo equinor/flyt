@@ -133,7 +133,8 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
             });
         }}
         header="Delete PQIR"
-        warningMessage="Are you sure you want to delete this PQIR?"
+        warningMessage={`Are you sure you want to delete this PQIR?\  
+        It will be deleted from all the cards in the whole process`}
         confirmMessage="Delete"
       />
       <SideBar
