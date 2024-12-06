@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.9.0](https://github.com/equinor/flyt/compare/v2.8.0...v2.9.0) (2024-12-06)
+
+
+### Features
+
+* enable writing directly on cards ([#823](https://github.com/equinor/flyt/issues/823)) ([34aad3f](https://github.com/equinor/flyt/commit/34aad3f350cea798d17d6a7072386a4fef4a0186))
+
+
+### Bug Fixes
+
+* Main activity can now be moved ([#838](https://github.com/equinor/flyt/issues/838)) ([591a405](https://github.com/equinor/flyt/commit/591a405b9859a906693de710bd5d992f5e3c9fee))
+
 ## [2.8.0](https://github.com/equinor/flyt/compare/v2.7.0...v2.8.0) (2024-11-20)
 
 
