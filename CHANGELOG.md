@@ -2,12 +2,11 @@
 
 ## [2.8.0](https://github.com/equinor/flyt/compare/v2.7.0...v2.8.0) (2024-11-20)
 
-
 ### Features
 
-* Link processes tutorial ([#830](https://github.com/equinor/flyt/issues/830)) ([568eed8](https://github.com/equinor/flyt/commit/568eed8340c7bba8750e9e65f9252d3e305ee361))
-* Process hierarchy ([#816](https://github.com/equinor/flyt/issues/816)) ([ad89e23](https://github.com/equinor/flyt/commit/ad89e23814a92dae1aa00e8978846b50ae989cd9))
-* Process Hierarchy Model ([#824](https://github.com/equinor/flyt/issues/824)) ([f3c8cd1](https://github.com/equinor/flyt/commit/f3c8cd1f93bf197a9d63561a1c1d2b0259e4239e))
+- Link processes tutorial ([#830](https://github.com/equinor/flyt/issues/830)) ([568eed8](https://github.com/equinor/flyt/commit/568eed8340c7bba8750e9e65f9252d3e305ee361))
+- Process hierarchy ([#816](https://github.com/equinor/flyt/issues/816)) ([ad89e23](https://github.com/equinor/flyt/commit/ad89e23814a92dae1aa00e8978846b50ae989cd9))
+- Process Hierarchy Model ([#824](https://github.com/equinor/flyt/issues/824)) ([f3c8cd1](https://github.com/equinor/flyt/commit/f3c8cd1f93bf197a9d63561a1c1d2b0259e4239e))
 
 ## [2.7.0](https://github.com/equinor/flyt/compare/v2.6.0...v2.7.0) (2024-10-18)
 

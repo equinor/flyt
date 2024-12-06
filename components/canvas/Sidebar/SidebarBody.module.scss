@@ -1,0 +1,10 @@
+@import "styles/variables";
+
+.container {
+  background-color: $equinor_LIGHT_GRAY;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 18px;
+  flex: 1;
+}

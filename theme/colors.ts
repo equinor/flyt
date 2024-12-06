@@ -10,7 +10,7 @@ export default {
 
   EQUINOR_GRAY: "#666666",
   EQUINOR_MEDIUM_GRAY: "#C2C2C2",
-  EQUINOR_LIGHT_GRAY: "#F2F2F2",
+  EQUINOR_LIGHT_GRAY: "#F7F7F7",
 
   MINT: "#DEFAEB",
   WHITE: "#FFF",
@@ -22,6 +22,7 @@ export default {
   DANGER: "#EB0000",
 
   CANVAS: "#f7f7f7",
+  CANVAS_LINES: "C2C2C2",
 
   NODE_GENERIC: "#00d889",
   NODE_MAINACTIVITY: "#00c1ff",

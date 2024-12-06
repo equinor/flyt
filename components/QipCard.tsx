@@ -18,7 +18,7 @@ import { useProjectId } from "@/hooks/useProjectId";
 export function QipCard(props: { task: Task; onClick?: () => void }) {
   const task = props.task;
   const { description, category: categories, id: taskId, solved } = task;
-  const taskColor = getTaskColor(task);
+  const taskColor = getTaskColor(task.type);
   const [isLoading, setIsLoading] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
   const { projectId } = useProjectId();

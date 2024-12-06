@@ -43,7 +43,7 @@ export const CustomEdge = ({
               ? colors.EQUINOR_PROMINENT
               : data.hovered
               ? colors.EQUINOR_HOVER
-              : colors.EQUINOR_MEDIUM_GRAY
+              : colors.CANVAS_LINES
           }`,
         }}
       />
