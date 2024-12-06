@@ -18,6 +18,7 @@ import { WaitingButton } from "./WaitingButton";
 import { useIsEditingNode } from "./hooks/useIsEditingNode";
 import { useNodeAdd } from "./hooks/useNodeAdd";
 import { isChoiceChild } from "./utils/nodeRelationsHelper";
+import { useNodeRef } from "./hooks/useNodeRef";
 
 export const ChoiceNode = ({
   data,
@@ -48,6 +49,7 @@ export const ChoiceNode = ({
   const connectionNodeId = useStore((state) => state.connectionNodeId);
   const lastChild = children[children?.length - 1];
   const isEditingNode = useIsEditingNode(selected);
+  const ref = useNodeRef();
 
   useEffect(() => {
     setHovering(false);
@@ -150,6 +152,7 @@ export const ChoiceNode = ({
         !disabled && !dragging && setHovering(true);
       }}
       onMouseLeave={() => setHovering(false)}
+      ref={ref}
     >
       <NodeCard
         onClick={handleClickNode}
@@ -183,6 +186,7 @@ export const ChoiceNode = ({
         includeRole={false}
         includeDuration={false}
         includeEstimate={false}
+        nodeRef={ref}
       />
       {renderNodeButtons()}
     </div>
