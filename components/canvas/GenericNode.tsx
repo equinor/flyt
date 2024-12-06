@@ -17,6 +17,7 @@ import { NodeTooltip } from "./NodeTooltip";
 import { QIPRContainer } from "./QIPRContainer";
 import { SourceHandle } from "./SourceHandle";
 import { getNodeHelperText } from "./utils/getNodeHelperText";
+import { useNodeRef } from "./hooks/useNodeRef";
 
 export const GenericNode = ({
   data,
@@ -45,6 +46,7 @@ export const GenericNode = ({
 
   const handleQIPRContainerOnClick = useQIPRContainerOnClick(data);
   const shouldDisplayQIPR = useShouldDisplayQIPR(tasks, hovering, selected);
+  const ref = useNodeRef();
 
   useEffect(() => {
     setHovering(false);
@@ -78,6 +80,7 @@ export const GenericNode = ({
     <div
       onMouseEnter={() => !disabled && !dragging && setHovering(true)}
       onMouseLeave={() => setHovering(false)}
+      ref={ref}
     >
       <NodeCard
         onClick={handleClickNode}
@@ -120,6 +123,7 @@ export const GenericNode = ({
         includeRole={false}
         includeDuration={false}
         includeEstimate={false}
+        nodeRef={ref}
       />
       {renderNodeButtons()}
     </div>

@@ -25,6 +25,7 @@ import {
   isChoiceChild,
   isMainActivityColumn,
 } from "./utils/nodeRelationsHelper";
+import { useNodeRef } from "./hooks/useNodeRef";
 
 export const LinkedProcessNode = ({
   data: {
@@ -51,6 +52,7 @@ export const LinkedProcessNode = ({
   const [hoveringShape, setHoveringShape] = useState(false);
   const connectionNodeId = useStore((state) => state.connectionNodeId);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
+  const ref = useNodeRef();
 
   const name = getProjectName(linkedProjectData || undefined);
   const userAccesses = linkedProjectData?.userAccesses;
@@ -146,6 +148,7 @@ export const LinkedProcessNode = ({
     <div
       onMouseEnter={() => !disabled && !dragging && setHovering(true)}
       onMouseLeave={() => setHovering(false)}
+      ref={ref}
     >
       <NodeCard
         onClick={handleClickNode}
@@ -177,7 +180,7 @@ export const LinkedProcessNode = ({
       </NodeCard>
       <TargetHandle hidden={!mergeOption} />
       <SourceHandle />
-      <NodeTooltipContainer isVisible={hoveringShape}>
+      <NodeTooltipContainer isVisible={hoveringShape} nodeRef={ref}>
         {name && <NodeTooltipSection header={"Title"} text={name} />}
         {formattedUpdated && (
           <NodeTooltipSection header={"Last Updated"} text={formattedUpdated} />
