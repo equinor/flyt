@@ -1,0 +1,56 @@
+@import "styles/variables";
+
+.accordionHeader > button {
+  display: flex;
+  column-gap: 16px;
+  width: 100% !important;
+}
+
+.accordionHeader > * > svg {
+  margin-right: 0px;
+}
+
+.accordionHeader > * :last-child {
+  margin-left: auto;
+}
+
+.pqirDescription {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.panel {
+  padding: 0px !important;
+  background: none !important;
+  border-radius: 0 0 5px 5px;
+}
+
+.panelContent {
+  display: flex;
+  flex-direction: column;
+  row-gap: 18px;
+  padding: 18px;
+}
+
+.panel-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+}
+
+.actionButtonsContainer {
+  display: flex;
+  column-gap: 12px;
+  justify-content: flex-end;
+}
+
+.actionButton {
+  width: 65px;
+}
+
+.createPQIRButton {
+  height: 46px !important;
+}

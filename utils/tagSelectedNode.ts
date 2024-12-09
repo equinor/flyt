@@ -3,12 +3,12 @@ import { Node } from "reactflow";
 /**
  * Make sure selected node has `selected` set to `true`
  */
-export const tagSelectedNode = <T, U>(
+export const tagSelectedNode = <T>(
   nodes: Node<T>[],
-  selectedNode: Node<U> | undefined
+  id: string | undefined
 ) => {
-  if (selectedNode) {
-    const targetNode = nodes.find((node) => node.id === selectedNode.id);
+  if (id) {
+    const targetNode = nodes.find((node) => node.id === id);
     if (targetNode) targetNode.selected = true;
   }
 };

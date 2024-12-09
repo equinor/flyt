@@ -1,6 +1,7 @@
 import { edgeElementTypes } from "@/components/canvas/EdgeElementTypes";
 import { MiniMapCustom } from "@/components/canvas/MiniMapCustom";
 import { ZoomLevel } from "@/components/canvas/ZoomLevel";
+import { useStoreDispatch, useStoreState } from "@/hooks/storeHooks";
 import { EdgeDataApi } from "@/types/EdgeDataApi";
 import { NodeDataApi } from "@/types/NodeDataApi";
 import { useEffect, useRef } from "react";
@@ -14,10 +15,11 @@ import "reactflow/dist/style.css";
 import { NodeDataCommon } from "types/NodeData";
 import { DeleteNodeDialog } from "../DeleteNodeDialog";
 import { ScrimDelete } from "../ScrimDelete";
-import { SideBar } from "../SideBar";
 import styles from "./Canvas.module.scss";
 import { ContextMenu } from "./ContextMenu";
 import { nodeElementTypes } from "./NodeElementTypes";
+import { SideBar } from "./Sidebar/SideBar";
+import { usePQIRMutations } from "./Sidebar/usePQIRMutations";
 import { useCenterCanvas } from "./hooks/useCenterCanvas";
 import { useContextMenu } from "./hooks/useContextMenu";
 import { useCopyPaste } from "./hooks/useCopyPaste";
@@ -25,12 +27,13 @@ import { useEdgeDelete } from "./hooks/useEdgeDelete";
 import { useFlowState } from "./hooks/useFlowState";
 import { useNodeAdd } from "./hooks/useNodeAdd";
 import { useNodeDrag } from "./hooks/useNodeDrag";
+import { useSelectedNodeForPQIR } from "./hooks/useSelectedNodeForPQIR";
+import {
+  SelectedNodeForPQIRidProvider,
+  useSelectedNodeForPQIRid,
+} from "./hooks/useSelectedNodeForPQIRid";
 import { copyPasteNodeValidator } from "./utils/copyPasteValidators";
 import { handlePasteNode } from "./utils/handlePasteNode";
-import {
-  SelectedNodeForQIPRProvider,
-  useSelectedNodeForQIPR,
-} from "./hooks/useSelectedNodeForQIPR";
 
 type CanvasProps = {
   apiNodes: NodeDataApi[];
@@ -54,12 +57,15 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
     edgeToBeDeletedId,
     setEdgeToBeDeletedId,
   } = useFlowState(apiNodes, apiEdges, userCanEdit);
+  const { deletePQIR } = usePQIRMutations();
   const { addNode } = useNodeAdd();
   const { onNodeDragStart, onNodeDrag, onNodeDragStop } = useNodeDrag();
   const { deleteEdgeMutation } = useEdgeDelete();
   const { centerCanvas } = useCenterCanvas();
-  const { selectedNodeForQIPR, setSelectedNodeForQIPR } =
-    useSelectedNodeForQIPR();
+  const pqirToBeDeletedId = useStoreState((state) => state.pqirToBeDeletedId);
+  const { setSelectedNodeForPQIRid } = useSelectedNodeForPQIRid();
+  const selectedNodeForPQIR = useSelectedNodeForPQIR();
+  const dispatch = useStoreDispatch();
 
   const ref = useRef<HTMLDivElement>(null);
   const { menuData, onNodeContextMenu, onPaneContextMenu, closeContextMenu } =
@@ -85,42 +91,56 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
 
   return (
     <>
-      {nodeToBeDeleted && (
-        <DeleteNodeDialog
-          objectToDelete={nodeToBeDeleted.data}
-          onClose={() => {
-            setNodeToBeDeleted(undefined);
-            setSelectedNode(undefined);
-          }}
-        />
-      )}
-      {edgeToBeDeletedId && (
-        <ScrimDelete
-          id={edgeToBeDeletedId}
-          open={!!edgeToBeDeletedId}
-          onConfirm={(id) => {
-            deleteEdgeMutation.mutate(
-              { edgeId: id },
-              {
-                onSuccess() {
-                  setEdgeToBeDeletedId(undefined);
-                },
-              }
-            );
-          }}
-          onClose={() => setEdgeToBeDeletedId(undefined)}
-          header={"Delete line"}
-          warningMessage={"Are you sure you want to delete this line?"}
-          confirmMessage={"Delete"}
-          isLoading={deleteEdgeMutation.isLoading}
-          error={deleteEdgeMutation.error}
-        />
-      )}
+      <DeleteNodeDialog
+        open={!!nodeToBeDeleted?.data}
+        objectToDelete={nodeToBeDeleted?.data}
+        onClose={() => {
+          setNodeToBeDeleted(undefined);
+          setSelectedNode(undefined);
+        }}
+      />
+      <ScrimDelete
+        id={"scrimDeleteEdge"}
+        open={!!edgeToBeDeletedId}
+        onConfirm={(id) => {
+          deleteEdgeMutation.mutate(
+            { edgeId: id },
+            {
+              onSuccess() {
+                setEdgeToBeDeletedId(undefined);
+              },
+            }
+          );
+        }}
+        onClose={() => setEdgeToBeDeletedId(undefined)}
+        header="Delete line"
+        warningMessage="Are you sure you want to delete this line?"
+        confirmMessage="Delete"
+        isLoading={deleteEdgeMutation.isLoading}
+        error={deleteEdgeMutation.error}
+      />
+      <ScrimDelete
+        id={"scrimDeletePQIR"}
+        open={!!pqirToBeDeletedId}
+        onClose={() => dispatch.setPQIRToBeDeletedId(null)}
+        onConfirm={() => {
+          dispatch.setPQIRToBeDeletedId(null);
+          pqirToBeDeletedId &&
+            selectedNodeForPQIR?.id &&
+            deletePQIR.mutate({
+              pqirId: pqirToBeDeletedId,
+              selectedNodeId: selectedNodeForPQIR.id,
+            });
+        }}
+        header="Delete PQIR"
+        warningMessage={`Are you sure you want to delete this PQIR?\  
+        It will be deleted from all the cards in the whole process`}
+        confirmMessage="Delete"
+      />
       <SideBar
-        onClose={() => setSelectedNodeForQIPR(undefined)}
-        onDelete={() => setNodeToBeDeleted(selectedNode)}
-        canEdit={userCanEdit}
-        selectedNode={selectedNodeForQIPR}
+        onClose={() => setSelectedNodeForPQIRid(undefined)}
+        userCanEdit={userCanEdit}
+        selectedNode={selectedNodeForPQIR?.data}
       />
       <ReactFlow
         nodes={nodes}
@@ -131,7 +151,7 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
         onEdgesChange={onEdgesChange}
         onPaneClick={() => {
           setSelectedNode(undefined);
-          setSelectedNodeForQIPR(undefined);
+          setSelectedNodeForPQIRid(undefined);
         }}
         onMoveStart={() => closeContextMenu()}
         minZoom={0.2}
@@ -183,10 +203,10 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
 
 export const FlowWrapper = (props: CanvasProps) => {
   return (
-    <SelectedNodeForQIPRProvider>
+    <SelectedNodeForPQIRidProvider>
       <ReactFlowProvider>
         <Flow {...props} />
       </ReactFlowProvider>
-    </SelectedNodeForQIPRProvider>
+    </SelectedNodeForPQIRidProvider>
   );
 };

@@ -40,7 +40,7 @@ export const QIPRContainer = (props: { onClick?(): void; tasks: Task[] }) => {
               >
                 <TextCircle
                   text={getTaskShorthand(task)}
-                  color={getTaskColor(task)}
+                  color={getTaskColor(task.type)}
                 />
               </div>
             );
@@ -51,7 +51,7 @@ export const QIPRContainer = (props: { onClick?(): void; tasks: Task[] }) => {
           <div className={styles["tooltip-qipr-icon"]}>
             <TextCircle
               text={getTaskShorthand(hoveredTask)}
-              color={getTaskColor(hoveredTask)}
+              color={getTaskColor(hoveredTask?.type)}
             />
           </div>
           <FormatNodeText

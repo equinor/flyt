@@ -10,10 +10,19 @@ import { deleteVertice } from "services/graphApi";
 import { useProjectId } from "@/hooks/useProjectId";
 import { ScrimDelete } from "./ScrimDelete";
 
-export function DeleteNodeDialog(props: {
-  objectToDelete: NodeDataCommon;
+type DeleteNodeDialogProps = {
+  objectToDelete?: NodeDataCommon;
   onClose: () => void;
-}) {
+  open: boolean;
+};
+
+export const DeleteNodeDialog = ({
+  objectToDelete,
+  onClose,
+  open,
+}: DeleteNodeDialogProps) => {
+  if (!objectToDelete) return;
+
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
 
@@ -43,15 +52,15 @@ export function DeleteNodeDialog(props: {
     }
   );
 
-  const handleClose = () => props.onClose();
+  const handleClose = () => onClose();
   const handleDelete = (includeChildren: boolean) =>
     deleteMutation.mutate({
-      id: props.objectToDelete.id,
-      projectId: props.objectToDelete.projectId,
+      id: objectToDelete.id,
+      projectId: objectToDelete.projectId,
       includeChildren: includeChildren,
     });
 
-  const { type, children } = props.objectToDelete;
+  const { type, children } = objectToDelete;
   const hasChildren = children.length > 0;
 
   const header = `Delete ${getNodeTypeName(type).toLowerCase()}`;
@@ -73,12 +82,12 @@ export function DeleteNodeDialog(props: {
 
   const warningMessage = getWarningMessage();
   const checkboxMessage = getCheckboxMessage();
-
   const confirmMessage = "Delete";
+
   return (
     <ScrimDelete
-      id={props.objectToDelete.id}
-      open
+      id={objectToDelete.id}
+      open={open}
       header={header}
       onClose={handleClose}
       onConfirm={(_, includeChildren) =>
@@ -93,4 +102,4 @@ export function DeleteNodeDialog(props: {
       isLoading={deleteMutation.isLoading}
     />
   );
-}
+};

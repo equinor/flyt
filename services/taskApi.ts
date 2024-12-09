@@ -11,7 +11,11 @@ export const getTasksForProject = (
     (value) => value.data as Task[]
   );
 
-export const createTask = (data: Task, projectId: string, vertexId: string) =>
+export const createTask = (
+  data: Pick<Task, "description" | "type" | "solved">,
+  projectId: string,
+  vertexId: string
+) =>
   BaseAPIServices.post(
     `${baseUrl}/graph/${projectId}/vertices/${vertexId}/tasks`,
     data
@@ -72,7 +76,8 @@ export const unlinkTask = (
   vsmObjectId: string,
   taskId: string
 ) =>
-  BaseAPIServices.delete(
-    baseUrl + `/graph/${projectId}/vertices/${vsmObjectId}/tasks/${taskId}`,
+  BaseAPIServices.post(
+    baseUrl +
+      `/graph/${projectId}/vertices/${vsmObjectId}/tasks/${taskId}/unlink`,
     null
   );
