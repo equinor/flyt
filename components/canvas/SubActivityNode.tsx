@@ -25,6 +25,7 @@ import { useQIPRContainerOnClick } from "./hooks/useQIPRContainerOnClick";
 import { useShouldDisplayQIPR } from "./hooks/useShouldDisplayQIPR";
 import { FormatNodeText } from "./utils/FormatNodeText";
 import { isChoiceChild } from "./utils/nodeRelationsHelper";
+import { useNodeRef } from "./hooks/useNodeRef";
 
 export const SubActivityNode = ({
   data,
@@ -60,6 +61,7 @@ export const SubActivityNode = ({
 
   const handleQIPRContainerOnClick = useQIPRContainerOnClick(data);
   const shouldDisplayQIPR = useShouldDisplayQIPR(tasks, hovering, selected);
+  const ref = useNodeRef();
 
   useEffect(() => {
     setHovering(false);
@@ -148,6 +150,7 @@ export const SubActivityNode = ({
     <div
       onMouseEnter={() => !disabled && !dragging && setHovering(true)}
       onMouseLeave={() => setHovering(false)}
+      ref={ref}
     >
       <NodeCard
         onClick={handleClickNode}
@@ -198,6 +201,7 @@ export const SubActivityNode = ({
         includeDuration
         duration={formatDuration(duration, unit)}
         includeEstimate={false}
+        nodeRef={ref}
       />
       {renderNodeButtons()}
     </div>

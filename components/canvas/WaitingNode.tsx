@@ -27,6 +27,7 @@ import { useNodeAdd } from "./hooks/useNodeAdd";
 import { useQIPRContainerOnClick } from "./hooks/useQIPRContainerOnClick";
 import { useShouldDisplayQIPR } from "./hooks/useShouldDisplayQIPR";
 import { isChoiceChild } from "./utils/nodeRelationsHelper";
+import { useNodeRef } from "./hooks/useNodeRef";
 
 export const WaitingNode = ({
   data,
@@ -61,6 +62,7 @@ export const WaitingNode = ({
 
   const handleQIPRContainerOnClick = useQIPRContainerOnClick(data);
   const shouldDisplayQIPR = useShouldDisplayQIPR(tasks, hovering, selected);
+  const ref = useNodeRef();
 
   useEffect(() => {
     setHovering(false);
@@ -149,6 +151,7 @@ export const WaitingNode = ({
     <div
       onMouseEnter={() => !disabled && !dragging && setHovering(true)}
       onMouseLeave={() => setHovering(false)}
+      ref={ref}
     >
       <NodeCard
         onClick={handleClickNode}
@@ -194,6 +197,7 @@ export const WaitingNode = ({
         includeDuration
         duration={formatDuration(duration, unit)}
         includeEstimate={false}
+        nodeRef={ref}
       />
       {renderNodeButtons()}
     </div>
