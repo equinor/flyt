@@ -21,6 +21,7 @@ export const PQIRTypeSelection = ({
         color={getTaskColor(taskType)}
         outlined={taskType !== selectedType}
         onClick={() => onClick(taskType)}
+        title={taskType}
       />
     );
     pqirTypes.push(pqirTypeSelection);

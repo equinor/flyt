@@ -35,6 +35,7 @@ export const NewPQIR = ({ selectedNode }: NewPQIRProps) => {
         <Checkbox
           defaultChecked={solved}
           onChange={(e) => setSolved(e.target.checked)}
+          title="Mark as solved"
         />
       )}
     </div>

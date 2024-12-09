@@ -54,6 +54,7 @@ export const PQIRListELement = ({
           ? unlinkPQIR.mutate({ selectedNodeId, pqirId })
           : linkPQIR.mutate({ selectedNodeId, pqirId });
       }}
+      title={isSelectedSection ? "Remove PQIR from card" : "Add PQIR to card"}
     >
       <Icon data={isSelectedSection ? minimize : add} />
     </Button>
@@ -70,11 +71,13 @@ export const PQIRListELement = ({
           <Checkbox
             checked={solved}
             onChange={(e) => setSolved(e.target.checked)}
+            title="Mark as solved"
           />
         )}
         <Button
           variant="ghost_icon"
           onClick={() => dispatch.setPQIRToBeDeletedId(pqir.id)}
+          title="Delete PQIR"
         >
           <Icon data={delete_to_trash} />
         </Button>

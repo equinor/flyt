@@ -6,6 +6,7 @@ type TextCircleProps = {
   text: string;
   outlined?: boolean;
   onClick?: () => void;
+  title?: string;
 };
 
 export const TextCircle = ({
@@ -13,6 +14,7 @@ export const TextCircle = ({
   text,
   outlined,
   onClick,
+  title,
 }: TextCircleProps) => {
   const [hovering, setHovering] = useState(false);
 
@@ -35,6 +37,7 @@ export const TextCircle = ({
       onClick={onClick}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
+      title={title}
     >
       <Typography variant="body_short" color={textColor}>
         {text}
