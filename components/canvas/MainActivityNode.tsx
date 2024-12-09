@@ -3,7 +3,7 @@ import {
   formatMinMaxTotalDuration,
   formatMinMaxTotalDurationShort,
 } from "@/utils/unitDefinitions";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Handle, NodeProps, Position } from "reactflow";
 import colors from "theme/colors";
 import { NodeDataCommon } from "types/NodeData";

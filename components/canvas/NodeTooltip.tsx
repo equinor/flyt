@@ -2,7 +2,7 @@ import { NodeDataCommon } from "@/types/NodeData";
 import React, {
   ReactNode,
   RefObject,
-  useEffect,
+  useLayoutEffect,
   useRef,
   useState,
 } from "react";
@@ -13,7 +13,6 @@ import styles from "./NodeTooltip.module.scss";
 type NodeTooltipContainerProps = {
   children: ReactNode;
   isVisible?: boolean;
-  position?: Position;
   style?: NodeToolbarProps["style"];
   isEditing?: boolean;
   nodeRef?: RefObject<HTMLDivElement>;
@@ -22,20 +21,19 @@ type NodeTooltipContainerProps = {
 export const NodeTooltipContainer = ({
   children,
   isVisible,
-  position,
   style,
   isEditing,
   nodeRef,
 }: NodeTooltipContainerProps) => {
   const toolTipRef = useRef<HTMLDivElement>(null);
-  const [tooltipPosition, settooltipPosition] = useState<Position | undefined>(
+  const [tooltipPosition, setTooltipPosition] = useState<Position | undefined>(
     undefined
   );
   const [offset, setoffset] = useState(10);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const tooltipNode = document.querySelector(".react-flow__node-toolbar");
     const appHeaderSpace = 70;
-    if (!tooltipNode) settooltipPosition(undefined);
+    if (!tooltipNode) setTooltipPosition(undefined);
     if (toolTipRef?.current && tooltipNode) {
       const viewPortBottom = toolTipRef.current.getBoundingClientRect().bottom;
       const toolTipHeight = tooltipNode?.getBoundingClientRect().height;
@@ -43,10 +41,10 @@ export const NodeTooltipContainer = ({
       const availableSpace =
         viewPortBottom - (nodeHeight ?? 0) - appHeaderSpace;
       if (toolTipHeight > availableSpace) {
-        settooltipPosition(Position.Bottom);
+        setTooltipPosition(Position.Bottom);
         setoffset(30);
       } else {
-        settooltipPosition(Position.Top);
+        setTooltipPosition(Position.Top);
         setoffset(10);
       }
     }
@@ -80,7 +78,7 @@ type Field<IncludeKey extends string, Key extends string> =
       [k in Key]: string | undefined;
     });
 
-type NodeTooltipProps = Pick<NodeTooltipContainerProps, "position"> & {
+type NodeTooltipProps = Pick<NodeTooltipContainerProps, "isEditing"> & {
   nodeData: NodeDataCommon;
   isHovering?: boolean;
   isEditing?: boolean;
@@ -101,7 +99,6 @@ export const NodeTooltip = ({
   estimate,
   isHovering,
   isEditing,
-  position,
   nodeData,
   nodeRef,
 }: NodeTooltipProps) => {
@@ -115,7 +112,6 @@ export const NodeTooltip = ({
   return (
     <NodeTooltipContainer
       isVisible={isHovering || isEditing}
-      position={position}
       style={tooltipStyle}
       isEditing={isEditing}
       nodeRef={nodeRef}
