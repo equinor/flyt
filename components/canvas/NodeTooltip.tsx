@@ -78,7 +78,7 @@ type Field<IncludeKey extends string, Key extends string> =
       [k in Key]: string | undefined;
     });
 
-type NodeTooltipProps = Pick<NodeTooltipContainerProps, "isVisible"> & {
+type NodeTooltipProps = {
   nodeData: NodeDataCommon;
   isHovering?: boolean;
   isEditing?: boolean;
