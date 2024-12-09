@@ -121,7 +121,7 @@ export const useFlowState = (
       setEdgeToBeDeletedId
     );
 
-    tagSelectedNode(finalNodes, selectedNode);
+    tagSelectedNode(finalNodes, selectedNode?.id);
 
     setNodes(finalNodes);
     setEdges(finalEdges);

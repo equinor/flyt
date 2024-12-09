@@ -5,7 +5,7 @@ export type Task = {
   type: TaskTypes;
   projectId: string;
   description: string;
-  solved: boolean;
+  solved: boolean | null;
   number: number;
   category: any;
 };

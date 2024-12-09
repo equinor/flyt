@@ -10,8 +10,7 @@ export const taskSorter =
     if (!a.solved && b.solved) return -1;
 
     return (
-      Object.keys(TaskTypes).indexOf(a.type.toLocaleLowerCase()) -
-        Object.keys(TaskTypes).indexOf(b.type.toLocaleLowerCase()) ||
-      a.number - b.number
+      Object.keys(TaskTypes).indexOf(a.type) -
+        Object.keys(TaskTypes).indexOf(b.type) || a.number - b.number
     );
   };

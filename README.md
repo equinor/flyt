@@ -1,4 +1,4 @@
-## Flyt - (aka VSM/Value Stream Mapping)
+## Flyt - (aka VSM/Value Stream Mapping) [![SCM Compliance](https://scm-compliance-api.radix.equinor.com/repos/equinor/Flyt/badge)](https://scm-compliance-api.radix.equinor.com/repos/equinor/Flyt/badge)
 
 ![image](https://github.com/equinor/flyt/assets/115637685/b2cbc217-1b39-4668-b891-afed82edcd01)
 

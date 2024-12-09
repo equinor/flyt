@@ -1,11 +1,10 @@
-import styles from "./VSMCanvas.module.scss";
+import styles from "../../VSMCanvas.module.scss";
 import { SideBarContent } from "./SideBarContent";
-import { NodeDataCommon } from "../types/NodeData";
+import { NodeDataCommon } from "../../../types/NodeData";
 
 export function SideBar(props: {
   onClose: () => void;
-  onDelete: () => void;
-  canEdit: boolean;
+  userCanEdit: boolean;
   selectedNode?: NodeDataCommon;
 }): JSX.Element {
   const selectedNode = props.selectedNode;
@@ -15,17 +14,14 @@ export function SideBar(props: {
       <div
         onWheel={(event) => event.stopPropagation()}
         onClick={(event) => event.stopPropagation()}
-        className={styles.vsmSideMenu}
+        className={styles.sidebar}
       >
-        <div className={styles.letItBreath}>
-          <SideBarContent
-            onClose={props.onClose}
-            onDelete={props.onDelete}
-            canEdit={props.canEdit}
-            selectedNode={selectedNode}
-            isLoading={!selectedNode}
-          />
-        </div>
+        <SideBarContent
+          onClose={props.onClose}
+          userCanEdit={props.userCanEdit}
+          selectedNode={selectedNode}
+          isLoading={!selectedNode}
+        />
       </div>
     </div>
   );
