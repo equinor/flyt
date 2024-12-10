@@ -1,11 +1,15 @@
-import MarkdownEditor from "@/components/MarkdownEditor";
 import { NodeDataCommon } from "@/types/NodeData";
 import { Button, Checkbox, Icon } from "@equinor/eds-core-react";
 import { add } from "@equinor/eds-icons";
+import dynamic from "next/dynamic";
 import styles from "./PQIRListElement.module.scss";
 import { PQIRTypeSelection } from "./PQIRTypeSelection";
 import { usePQIR } from "./usePQIR";
 import { usePQIRMutations } from "./usePQIRMutations";
+
+const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
+  ssr: false,
+});
 
 type NewPQIRProps = {
   selectedNode: NodeDataCommon;

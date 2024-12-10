@@ -1,4 +1,3 @@
-import MarkdownEditor from "@/components/MarkdownEditor";
 import { useStoreDispatch } from "@/hooks/storeHooks";
 import { NodeDataCommon } from "@/types/NodeData";
 import { Task } from "@/types/Task";
@@ -10,11 +9,16 @@ import {
   Typography,
 } from "@equinor/eds-core-react";
 import { add, delete_to_trash, minimize } from "@equinor/eds-icons";
+import dynamic from "next/dynamic";
 import { TextCircle } from "../entities/TextCircle";
 import styles from "./PQIRListElement.module.scss";
 import { PQIRTypeSelection } from "./PQIRTypeSelection";
 import { usePQIR } from "./usePQIR";
 import { usePQIRMutations } from "./usePQIRMutations";
+
+const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
+  ssr: false,
+});
 
 type PQIRListElement = {
   pqir: Task;
