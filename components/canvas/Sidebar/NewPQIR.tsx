@@ -1,9 +1,8 @@
+import MarkdownEditor from "@/components/MarkdownEditor";
 import { NodeDataCommon } from "@/types/NodeData";
-import { uid } from "@/utils/uuid";
 import { Button, Checkbox, Icon } from "@equinor/eds-core-react";
 import { add } from "@equinor/eds-icons";
 import styles from "./PQIRListElement.module.scss";
-import { PQIRListElementTextField } from "./PQIRListElementTextField";
 import { PQIRTypeSelection } from "./PQIRTypeSelection";
 import { usePQIR } from "./usePQIR";
 import { usePQIRMutations } from "./usePQIRMutations";
@@ -87,11 +86,11 @@ export const NewPQIR = ({ selectedNode }: NewPQIRProps) => {
     <div className={styles.panel}>
       <div className={styles.panelContent}>
         {panelSectionTop()}
-        <PQIRListElementTextField
-          id={uid()}
-          value={description}
-          onEdit={(e) => setDescription(e)}
-          userCanEdit
+        <MarkdownEditor
+          defaultText={description}
+          onChange={(value) => value && setDescription(value)}
+          canEdit
+          requireText
         />
         {panelSectionBottom(selectedNode.id)}
       </div>

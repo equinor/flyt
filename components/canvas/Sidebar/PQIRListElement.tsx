@@ -1,3 +1,4 @@
+import MarkdownEditor from "@/components/MarkdownEditor";
 import { useStoreDispatch } from "@/hooks/storeHooks";
 import { NodeDataCommon } from "@/types/NodeData";
 import { Task } from "@/types/Task";
@@ -11,7 +12,6 @@ import {
 import { add, delete_to_trash, minimize } from "@equinor/eds-icons";
 import { TextCircle } from "../entities/TextCircle";
 import styles from "./PQIRListElement.module.scss";
-import { PQIRListElementTextField } from "./PQIRListElementTextField";
 import { PQIRTypeSelection } from "./PQIRTypeSelection";
 import { usePQIR } from "./usePQIR";
 import { usePQIRMutations } from "./usePQIRMutations";
@@ -122,11 +122,11 @@ export const PQIRListELement = ({
       <Accordion.Panel className={styles.panel}>
         <div className={styles.panelContent}>
           {userCanEdit && panelSectionTop}
-          <PQIRListElementTextField
-            id={pqir.id}
-            value={description}
-            userCanEdit={userCanEdit}
-            onEdit={(e) => setDescription(e)}
+          <MarkdownEditor
+            defaultText={description}
+            onChange={(value) => value && setDescription(value)}
+            canEdit={userCanEdit}
+            requireText
           />
           {userCanEdit && panelSectionBottom}
         </div>
