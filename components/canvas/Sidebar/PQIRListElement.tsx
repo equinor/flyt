@@ -9,12 +9,16 @@ import {
   Typography,
 } from "@equinor/eds-core-react";
 import { add, delete_to_trash, minimize } from "@equinor/eds-icons";
+import dynamic from "next/dynamic";
 import { TextCircle } from "../entities/TextCircle";
 import styles from "./PQIRListElement.module.scss";
-import { PQIRListElementTextField } from "./PQIRListElementTextField";
 import { PQIRTypeSelection } from "./PQIRTypeSelection";
 import { usePQIR } from "./usePQIR";
 import { usePQIRMutations } from "./usePQIRMutations";
+
+const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
+  ssr: false,
+});
 
 type PQIRListElement = {
   pqir: Task;
@@ -122,11 +126,11 @@ export const PQIRListELement = ({
       <Accordion.Panel className={styles.panel}>
         <div className={styles.panelContent}>
           {userCanEdit && panelSectionTop}
-          <PQIRListElementTextField
-            id={pqir.id}
-            value={description}
-            userCanEdit={userCanEdit}
-            onEdit={(e) => setDescription(e)}
+          <MarkdownEditor
+            defaultText={description}
+            onChange={(value) => value && setDescription(value)}
+            canEdit={userCanEdit}
+            requireText
           />
           {userCanEdit && panelSectionBottom}
         </div>

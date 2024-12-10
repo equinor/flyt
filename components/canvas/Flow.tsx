@@ -70,7 +70,7 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const { menuData, onNodeContextMenu, onPaneContextMenu, closeContextMenu } =
     useContextMenu(ref);
-  const anyNodeIsSelected = selectedNode !== undefined;
+  const anyNodeIsSelected = selectedNode !== undefined || !!selectedNodeForPQIR;
 
   const { copyToClipboard, paste } = useCopyPaste(
     hoveredNode,
