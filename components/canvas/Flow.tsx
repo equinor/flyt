@@ -100,7 +100,7 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
         }}
       />
       <ScrimDelete
-        id={"scrimDeleteEdge"}
+        id={edgeToBeDeletedId}
         open={!!edgeToBeDeletedId}
         onConfirm={(id) => {
           deleteEdgeMutation.mutate(
