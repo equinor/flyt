@@ -13,7 +13,7 @@ import styles from "./ScrimDelete.module.scss";
 import { TypographyMarkdown } from "./TypographyMarkdown";
 
 type ScrimDelete = {
-  id: string;
+  id?: string;
   open: boolean;
   onConfirm: (id: string, checked: boolean) => void;
   onClose: () => void;
@@ -82,7 +82,7 @@ export const ScrimDelete = ({
               <Button
                 variant={"contained"}
                 color={"danger"}
-                onClick={() => onConfirm(id, checked)}
+                onClick={() => id && onConfirm(id, checked)}
               >
                 <Icon data={delete_forever} title="Delete" size={16} />
                 {confirmMessage}
