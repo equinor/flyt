@@ -17,7 +17,7 @@ Icon.add({ link });
 export default function MarkdownEditor(props: {
   canEdit?: boolean;
   defaultText: string;
-  label: string;
+  label?: string;
   onChange?: (value?: string) => void;
   helperText?: string;
   requireText?: boolean;
@@ -137,7 +137,7 @@ export default function MarkdownEditor(props: {
             previewOptions={{
               rehypePlugins: [[rehypeSanitize]],
               style: {
-                backgroundColor: canEdit ? "rgba(247,247,247,1" : "white",
+                backgroundColor: "rgba(247,247,247,1",
                 color: "rgba(61,61,61,1)",
                 cursor: canEdit ? "text" : "not-allowed",
                 fontSize: "1rem",
