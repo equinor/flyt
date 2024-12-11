@@ -30,24 +30,47 @@ export const NodeTooltipContainer = ({
     undefined
   );
   const [offset, setoffset] = useState(10);
+  const calculateTooltipPosition = (toolTipHeight: number) => {
+    const appHeaderSpace = 70;
+    if (!toolTipRef?.current) return;
+    const viewPortBottom = toolTipRef.current.getBoundingClientRect().bottom;
+    const nodeHeight = nodeRef?.current?.getBoundingClientRect().height;
+    const availableSpace = viewPortBottom - (nodeHeight ?? 0) - appHeaderSpace;
+    if (toolTipHeight > availableSpace) {
+      setTooltipPosition(Position.Bottom);
+      setoffset(30);
+    } else {
+      setTooltipPosition(Position.Top);
+      setoffset(10);
+    }
+  };
+
   useLayoutEffect(() => {
     const tooltipNode = document.querySelector(".react-flow__node-toolbar");
-    const appHeaderSpace = 70;
-    if (!tooltipNode) setTooltipPosition(undefined);
-    if (toolTipRef?.current && tooltipNode) {
-      const viewPortBottom = toolTipRef.current.getBoundingClientRect().bottom;
-      const toolTipHeight = tooltipNode?.getBoundingClientRect().height;
-      const nodeHeight = nodeRef?.current?.getBoundingClientRect().height;
-      const availableSpace =
-        viewPortBottom - (nodeHeight ?? 0) - appHeaderSpace;
-      if (toolTipHeight > availableSpace) {
-        setTooltipPosition(Position.Bottom);
-        setoffset(30);
-      } else {
-        setTooltipPosition(Position.Top);
-        setoffset(10);
+    if (!tooltipNode) return;
+    const calculatePositionIfNeeded = () => {
+      const hasChildren =
+        (tooltipNode.querySelector("div")?.childElementCount ?? 0) > 0;
+      const toolTipHeight = tooltipNode.getBoundingClientRect().height;
+      if (hasChildren && toolTipHeight) {
+        calculateTooltipPosition(toolTipHeight);
+        return true;
       }
-    }
+      return false;
+    };
+    // Check initially if tooltipNode DOM has updated data to calculate position
+    if (calculatePositionIfNeeded()) return;
+    const observer = new MutationObserver(() => {
+      if (calculatePositionIfNeeded()) observer.disconnect(); //disconnect observer when position is calculated
+    });
+
+    observer.observe(tooltipNode, {
+      attributes: true,
+      childList: true,
+      subtree: true,
+    });
+
+    return () => observer.disconnect();
   }, [isVisible, toolTipRef, isEditing]);
 
   return (
