@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.9.0](https://github.com/equinor/flyt/compare/v2.8.0...v2.9.0) (2024-12-12)
+
+
+### Features
+
+* display edit box and tooltip below the card when cropped ([#842](https://github.com/equinor/flyt/issues/842)) ([759d01c](https://github.com/equinor/flyt/commit/759d01c963ccc037d897961467f81b23ea7a61f0))
+* enable writing directly on cards ([#823](https://github.com/equinor/flyt/issues/823)) ([34aad3f](https://github.com/equinor/flyt/commit/34aad3f350cea798d17d6a7072386a4fef4a0186))
+* Redesign sidebar ([#839](https://github.com/equinor/flyt/issues/839)) ([9a39225](https://github.com/equinor/flyt/commit/9a3922508c4829387afb7044654a02908c025d38))
+
+
+### Bug Fixes
+
+* Main activity can now be moved ([#838](https://github.com/equinor/flyt/issues/838)) ([591a405](https://github.com/equinor/flyt/commit/591a405b9859a906693de710bd5d992f5e3c9fee))
+* Redesign sidebar description ([#846](https://github.com/equinor/flyt/issues/846)) ([c499138](https://github.com/equinor/flyt/commit/c499138b7955d316604e3fef193f47a23496d50f))
+* Unable to delete edge bug ([#848](https://github.com/equinor/flyt/issues/848)) ([5f4d668](https://github.com/equinor/flyt/commit/5f4d668a506eea871d33d97ea4211e054164ecf2))
+
 ## [2.8.0](https://github.com/equinor/flyt/compare/v2.7.0...v2.8.0) (2024-11-20)
 
 ### Features
