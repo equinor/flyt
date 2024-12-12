@@ -25,6 +25,7 @@ import { QIPRContainer } from "./QIPRContainer";
 import { SourceHandle } from "./SourceHandle";
 import { SubActivityButton } from "./SubActivityButton";
 import { WaitingButton } from "./WaitingButton";
+import { useNodeRef } from "./hooks/useNodeRef";
 
 export const MainActivityNode = ({
   data,
@@ -54,6 +55,7 @@ export const MainActivityNode = ({
 
   const handleQIPRContainerOnClick = useQIPRContainerOnClick(data);
   const shouldDisplayQIPR = useShouldDisplayQIPR(tasks, hovering, selected);
+  const ref = useNodeRef();
 
   const formattedDurationSum =
     totalDurations && formatMinMaxTotalDuration(totalDurations);
@@ -113,6 +115,7 @@ export const MainActivityNode = ({
     <div
       onMouseEnter={() => !disabled && !dragging && setHovering(true)}
       onMouseLeave={() => setHovering(false)}
+      ref={ref}
     >
       <NodeCard
         onClick={handleClickNode}
@@ -158,6 +161,7 @@ export const MainActivityNode = ({
         includeDuration={false}
         includeEstimate
         estimate={formattedDurationSum}
+        nodeRef={ref}
       />
       {renderNodeButtons()}
     </div>
