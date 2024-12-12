@@ -97,6 +97,7 @@ const createHiddenNode = (
     children: [],
     shapeHeight: shapeSize.height,
     shapeWidth: shapeSize.width,
+    type: NodeTypes.hidden,
   },
   position: { x: 0, y: 0 },
   type: NodeTypes.hidden,
