@@ -1,10 +1,11 @@
-import { useNodes } from "reactflow";
+import { useReactFlow } from "reactflow";
 import { useSelectedNodeForPQIRid } from "./useSelectedNodeForPQIRid";
-import { NodeDataCommon } from "@/types/NodeData";
 
 export const useSelectedNodeForPQIR = () => {
-  const nodes = useNodes<NodeDataCommon>();
+  const flow = useReactFlow();
   const { selectedNodeForPQIRid } = useSelectedNodeForPQIRid();
-  const id = selectedNodeForPQIRid;
-  return nodes.find((node) => node.id === id);
+  if (selectedNodeForPQIRid) {
+    const nodes = flow.getNodes();
+    return nodes.find((node) => node.id === selectedNodeForPQIRid);
+  }
 };
