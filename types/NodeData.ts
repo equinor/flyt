@@ -46,6 +46,6 @@ export type NodeDataHidden = Pick<
   | "shapeHeight"
   | "shapeWidth"
 > &
-  Pick<NodeDataApi, "children">;
+  Pick<NodeDataApi, "children" | "type">;
 
 export type NodeDataFull = NodeDataCommon | NodeDataHidden;
