@@ -2,6 +2,9 @@ import { getNodeTypeName } from "@/utils/getNodeTypeName";
 import { formatDuration } from "@/utils/unitDefinitions";
 import { useEffect, useState } from "react";
 import { Connection, NodeProps, Position, useStore } from "reactflow";
+import { Button, Icon } from "@equinor/eds-core-react";
+import { delete_forever } from "@equinor/eds-icons";
+import { canDeleteNode } from "@/utils/canDeleteNode";
 import colors from "theme/colors";
 import { NodeDataCommon } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
@@ -52,6 +55,7 @@ export const SubActivityNode = ({
     shapeHeight,
     shapeWidth,
     disabled,
+    handleNodeDelete,
   } = data;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
@@ -167,10 +171,26 @@ export const SubActivityNode = ({
           onMouseEnter={() => !dragging && setHoveringShape(true)}
           onMouseLeave={() => setHoveringShape(false)}
         >
-          <NodeDescription
-            header={!description ? getNodeTypeName(type) : undefined}
-            description={description}
-          />
+          <div className={styles["node__description-delete-container"]}>
+            <NodeDescription
+              header={!description ? getNodeTypeName(type) : undefined}
+              description={description}
+            />
+            {hovering && !merging && (
+              <Button
+                disabled={!canDeleteNode(data) || !userCanEdit}
+                variant="ghost_icon"
+                title="Delete Node"
+                color="danger"
+                onClick={(event) => {
+                  handleNodeDelete && handleNodeDelete();
+                  event.stopPropagation();
+                }}
+              >
+                <Icon data={delete_forever} />
+              </Button>
+            )}
+          </div>
           <div className={styles["node__role-container"]}>
             <FormatNodeText
               variant="caption"

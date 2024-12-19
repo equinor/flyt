@@ -1,6 +1,6 @@
 import { formatDuration } from "@/utils/unitDefinitions";
-import { Icon, Typography } from "@equinor/eds-core-react";
-import { time as timeIcon } from "@equinor/eds-icons";
+import { Button, Icon, Typography } from "@equinor/eds-core-react";
+import { delete_forever, time as timeIcon } from "@equinor/eds-icons";
 import { useEffect, useState } from "react";
 import { Connection, Position, useStore } from "reactflow";
 
@@ -28,6 +28,7 @@ import { useQIPRContainerOnClick } from "./hooks/useQIPRContainerOnClick";
 import { useShouldDisplayQIPR } from "./hooks/useShouldDisplayQIPR";
 import { isChoiceChild } from "./utils/nodeRelationsHelper";
 import { useNodeRef } from "./hooks/useNodeRef";
+import { canDeleteNode } from "@/utils/canDeleteNode";
 
 export const WaitingNode = ({
   data,
@@ -53,6 +54,7 @@ export const WaitingNode = ({
     shapeHeight,
     shapeWidth,
     disabled,
+    handleNodeDelete,
   } = data;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
@@ -168,10 +170,26 @@ export const WaitingNode = ({
           onMouseEnter={() => !dragging && setHoveringShape(true)}
           onMouseLeave={() => setHoveringShape(false)}
         >
-          <NodeDescription
-            header={!description ? getNodeTypeName(type) : undefined}
-            description={description}
-          />
+          <div className={styles["node__description-delete-container"]}>
+            <NodeDescription
+              header={!description ? getNodeTypeName(type) : undefined}
+              description={description}
+            />
+            {hovering && !merging && (
+              <Button
+                disabled={!canDeleteNode(data) || !userCanEdit}
+                variant="ghost_icon"
+                title="Delete Node"
+                color="danger"
+                onClick={(event) => {
+                  handleNodeDelete && handleNodeDelete();
+                  event.stopPropagation();
+                }}
+              >
+                <Icon data={delete_forever} />
+              </Button>
+            )}
+          </div>
           <div className={styles["node__waitingtime-container"]}>
             <Icon data={timeIcon} size={24} style={{ marginRight: 5 }} />
             <Typography variant="caption">
