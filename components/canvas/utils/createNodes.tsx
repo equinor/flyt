@@ -13,6 +13,7 @@ const createNode = (
   merging: boolean,
   mergeNode: { mutate: (args: { sourceId: string; targetId: string }) => void },
   handleClickNode: (id: string) => void,
+  handleNodeDelete: (id: string) => void,
   disabledNodeTypes?: NodeTypes[],
   parent: NodeDataApi | null = null,
   column: Column | null = null,
@@ -53,6 +54,7 @@ const createNode = (
       data: {
         ...node,
         handleClickNode: () => handleClickNode(node.id),
+        handleNodeDelete: () => handleNodeDelete(node.id),
         handleMerge: (sourceId, targetId) =>
           sourceId && targetId && mergeNode.mutate({ sourceId, targetId }),
         mergeable:
@@ -105,6 +107,7 @@ const createNode = (
         merging,
         mergeNode,
         handleClickNode,
+        handleNodeDelete,
         disabledNodeTypes,
         node,
         column,
@@ -122,6 +125,7 @@ export const createNodes = (
   merging: boolean,
   mergeNode: { mutate: (args: { sourceId: string; targetId: string }) => void },
   handleClickNode: (id: string) => void,
+  handleNodeDelete: (id: string) => void,
   disabledNodeTypes: NodeTypes[] = []
 ) => {
   const root = apiNodes.find(
@@ -140,6 +144,7 @@ export const createNodes = (
     merging,
     mergeNode,
     handleClickNode,
+    handleNodeDelete,
     disabledNodeTypes
   );
 };

@@ -37,6 +37,7 @@
   height: 70%;
   transform: rotate(45deg);
   border-radius: 4px;
+  align-items: center;
 }
 
 .node-shape--rhombus > * {
@@ -115,6 +116,7 @@
 
 .node-shape--rhombus .node__description {
   text-align: center;
+  -webkit-line-clamp: 3;
 }
 
 .node__placeholder-text {
@@ -133,4 +135,15 @@
 
 .node__userdots-container :hover {
   cursor: grab;
+}
+
+.node__description-delete-container {
+  display: flex;
+  flex: 1;
+}
+
+.node-rhombus-delete-container {
+  position: absolute;
+  top: -5px;
+  right: -10px;
 }

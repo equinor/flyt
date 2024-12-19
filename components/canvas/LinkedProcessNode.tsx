@@ -2,6 +2,8 @@ import { formatDateTimeString } from "@/utils/formatUpdated";
 import { getProjectName } from "@/utils/getProjectName";
 import { useEffect, useState } from "react";
 import { Connection, NodeProps, Position, useStore } from "reactflow";
+import { Button, Icon } from "@equinor/eds-core-react";
+import { delete_forever } from "@equinor/eds-icons";
 import colors from "theme/colors";
 import { NodeDataCommon } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
@@ -28,7 +30,11 @@ import {
 import { useNodeRef } from "./hooks/useNodeRef";
 
 export const LinkedProcessNode = ({
-  data: {
+  data,
+  selected,
+  dragging,
+}: NodeProps<NodeDataCommon>) => {
+  const {
     id,
     linkedProjectData,
     column,
@@ -44,10 +50,8 @@ export const LinkedProcessNode = ({
     shapeHeight,
     shapeWidth,
     disabled,
-  },
-  selected,
-  dragging,
-}: NodeProps<NodeDataCommon>) => {
+    handleNodeDelete,
+  } = data;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
   const connectionNodeId = useStore((state) => state.connectionNodeId);
@@ -166,10 +170,26 @@ export const LinkedProcessNode = ({
           onMouseEnter={() => !dragging && setHoveringShape(true)}
           onMouseLeave={() => setHoveringShape(false)}
         >
-          <NodeDescription
-            header={name ?? undefined}
-            helperText={formattedUpdated}
-          />
+          <div className={styles["node__description-delete-container"]}>
+            <NodeDescription
+              header={name ?? undefined}
+              helperText={formattedUpdated}
+            />
+            {hovering && !merging && (
+              <Button
+                disabled={!userCanEdit}
+                variant="ghost_icon"
+                title="Delete Node"
+                color="danger"
+                onClick={(event) => {
+                  handleNodeDelete && handleNodeDelete();
+                  event.stopPropagation();
+                }}
+              >
+                <Icon data={delete_forever} />
+              </Button>
+            )}
+          </div>
           {userAccesses && (
             <NodeUserDots
               userAccesses={userAccesses}

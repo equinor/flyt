@@ -5,6 +5,9 @@ import {
 } from "@/utils/unitDefinitions";
 import { useEffect, useState } from "react";
 import { Handle, NodeProps, Position } from "reactflow";
+import { Button, Icon } from "@equinor/eds-core-react";
+import { delete_forever } from "@equinor/eds-icons";
+import { canDeleteNode } from "@/utils/canDeleteNode";
 import colors from "theme/colors";
 import { NodeDataCommon } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
@@ -26,6 +29,7 @@ import { SourceHandle } from "./SourceHandle";
 import { SubActivityButton } from "./SubActivityButton";
 import { WaitingButton } from "./WaitingButton";
 import { useNodeRef } from "./hooks/useNodeRef";
+import styles from "./Node.module.scss";
 
 export const MainActivityNode = ({
   data,
@@ -46,6 +50,7 @@ export const MainActivityNode = ({
     shapeWidth,
     totalDurations,
     disabled,
+    handleNodeDelete,
   } = data;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
@@ -132,10 +137,26 @@ export const MainActivityNode = ({
           onMouseEnter={() => !dragging && setHoveringShape(true)}
           onMouseLeave={() => setHoveringShape(false)}
         >
-          <NodeDescription
-            header={!description ? getNodeTypeName(type) : undefined}
-            description={description}
-          />
+          <div className={styles["node__description-delete-container"]}>
+            <NodeDescription
+              header={!description ? getNodeTypeName(type) : undefined}
+              description={description}
+            />
+            {hovering && !merging && (
+              <Button
+                disabled={!canDeleteNode(data) || !userCanEdit}
+                variant="ghost_icon"
+                title="Delete Node"
+                color="danger"
+                onClick={(event) => {
+                  handleNodeDelete && handleNodeDelete();
+                  event.stopPropagation();
+                }}
+              >
+                <Icon data={delete_forever} />
+              </Button>
+            )}
+          </div>
           {formattedDurationSumShort && (
             <NodeDuration duration={formattedDurationSumShort} />
           )}

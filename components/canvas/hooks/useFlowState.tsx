@@ -57,6 +57,12 @@ export const useFlowState = (
     setSelectedNode(node as Node<NodeDataCommon>);
   };
 
+  const handleNodeDelete = (id?: string) => {
+    const node = tempNodes.find((n) => n.id === id);
+    if (!node) return;
+    setNodeToBeDeleted(node as Node<NodeDataCommon>);
+  };
+
   const handleSetSelectedEdge = (selectedEdge: Edge | undefined) => {
     if (userCanEdit && !isEditingEdge) {
       const updatedEdges = edges.map((e) => {
@@ -99,6 +105,7 @@ export const useFlowState = (
       merging,
       mergeNode,
       handleClickNode,
+      handleNodeDelete,
       disabledNodeTypes
     );
     tempNodes = setMainActivitiesDurationSum(

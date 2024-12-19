@@ -1,11 +1,15 @@
 import { getNodeTypeName } from "@/utils/getNodeTypeName";
 import { useEffect, useState } from "react";
 import { Connection, NodeProps, Position, useStore } from "reactflow";
+import { Button, Icon } from "@equinor/eds-core-react";
+import { canDeleteNode } from "@/utils/canDeleteNode";
+import { delete_forever } from "@equinor/eds-icons";
 import colors from "theme/colors";
 import { NodeDataCommon } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
 import { ChoiceButton } from "./ChoiceButton";
 import { MergeButton } from "./MergeButton";
+import styles from "./Node.module.scss";
 import { NodeButtonsContainer } from "./NodeButtonsContainer";
 import { NodeCard } from "./NodeCard";
 import { NodeDescription } from "./NodeDescription";
@@ -42,6 +46,7 @@ export const ChoiceNode = ({
     shapeWidth,
     disabled,
     handleClickNode,
+    handleNodeDelete,
   } = data;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
@@ -188,6 +193,22 @@ export const ChoiceNode = ({
         includeEstimate={false}
         nodeRef={ref}
       />
+      <div className={styles["node-rhombus-delete-container"]}>
+        {hovering && !merging && (
+          <Button
+            disabled={!canDeleteNode(data) || !userCanEdit}
+            variant="ghost_icon"
+            title="Delete Node"
+            color="danger"
+            onClick={(event) => {
+              handleNodeDelete && handleNodeDelete();
+              event.stopPropagation();
+            }}
+          >
+            <Icon data={delete_forever} />
+          </Button>
+        )}
+      </div>
       {renderNodeButtons()}
     </div>
   );
