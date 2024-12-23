@@ -14,6 +14,8 @@ export const timeDefinitions: TimeDefinition[] = [
 
 export const getDurationInSeconds = (value: string, duration: number) => {
   switch (value) {
+    case "Second":
+      return duration;
     case "Minute":
       return duration * 60;
     case "Hour":
