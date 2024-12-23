@@ -3,6 +3,7 @@ import { TimeDefinition } from "@/types/TimeDefinition";
 import { capitalizeFirstLetter } from "./stringHelpers";
 
 export const timeDefinitions: TimeDefinition[] = [
+  { value: "Second", displayName: "Second(s)", duration: null },
   { value: "Minute", displayName: "Minute(s)", duration: null },
   { value: "Hour", displayName: "Hour(s)", duration: null },
   { value: "Day", displayName: "Day(s)", duration: null },
