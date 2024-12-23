@@ -2,8 +2,6 @@ import { formatDateTimeString } from "@/utils/formatUpdated";
 import { getProjectName } from "@/utils/getProjectName";
 import { useEffect, useState } from "react";
 import { Connection, NodeProps, Position, useStore } from "reactflow";
-import { Button, Icon } from "@equinor/eds-core-react";
-import { delete_forever } from "@equinor/eds-icons";
 import colors from "theme/colors";
 import { NodeDataCommon } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
@@ -28,6 +26,7 @@ import {
   isMainActivityColumn,
 } from "./utils/nodeRelationsHelper";
 import { useNodeRef } from "./hooks/useNodeRef";
+import { NodeDelete } from "./NodeDelete";
 
 export const LinkedProcessNode = ({
   data,
@@ -176,18 +175,11 @@ export const LinkedProcessNode = ({
               helperText={formattedUpdated}
             />
             {hovering && !merging && (
-              <Button
-                disabled={!userCanEdit}
-                variant="ghost_icon"
-                title="Delete Node"
-                color="danger"
-                onClick={(event) => {
-                  handleNodeDelete && handleNodeDelete();
-                  event.stopPropagation();
-                }}
-              >
-                <Icon data={delete_forever} />
-              </Button>
+              <NodeDelete
+                data={data}
+                userCanEdit={userCanEdit}
+                handleNodeDelete={handleNodeDelete}
+              />
             )}
           </div>
           {userAccesses && (

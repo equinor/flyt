@@ -2,9 +2,6 @@ import { getNodeTypeName } from "@/utils/getNodeTypeName";
 import { formatDuration } from "@/utils/unitDefinitions";
 import { useEffect, useState } from "react";
 import { Connection, NodeProps, Position, useStore } from "reactflow";
-import { Button, Icon } from "@equinor/eds-core-react";
-import { delete_forever } from "@equinor/eds-icons";
-import { canDeleteNode } from "@/utils/canDeleteNode";
 import colors from "theme/colors";
 import { NodeDataCommon } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
@@ -29,6 +26,7 @@ import { useShouldDisplayQIPR } from "./hooks/useShouldDisplayQIPR";
 import { FormatNodeText } from "./utils/FormatNodeText";
 import { isChoiceChild } from "./utils/nodeRelationsHelper";
 import { useNodeRef } from "./hooks/useNodeRef";
+import { NodeDelete } from "./NodeDelete";
 
 export const SubActivityNode = ({
   data,
@@ -177,18 +175,11 @@ export const SubActivityNode = ({
               description={description}
             />
             {hovering && !merging && (
-              <Button
-                disabled={!canDeleteNode(data) || !userCanEdit}
-                variant="ghost_icon"
-                title="Delete Node"
-                color="danger"
-                onClick={(event) => {
-                  handleNodeDelete && handleNodeDelete();
-                  event.stopPropagation();
-                }}
-              >
-                <Icon data={delete_forever} />
-              </Button>
+              <NodeDelete
+                data={data}
+                userCanEdit={userCanEdit}
+                handleNodeDelete={handleNodeDelete}
+              />
             )}
           </div>
           <div className={styles["node__role-container"]}>

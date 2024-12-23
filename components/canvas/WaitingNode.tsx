@@ -1,6 +1,6 @@
 import { formatDuration } from "@/utils/unitDefinitions";
-import { Button, Icon, Typography } from "@equinor/eds-core-react";
-import { delete_forever, time as timeIcon } from "@equinor/eds-icons";
+import { Icon, Typography } from "@equinor/eds-core-react";
+import { time as timeIcon } from "@equinor/eds-icons";
 import { useEffect, useState } from "react";
 import { Connection, Position, useStore } from "reactflow";
 
@@ -28,7 +28,7 @@ import { useQIPRContainerOnClick } from "./hooks/useQIPRContainerOnClick";
 import { useShouldDisplayQIPR } from "./hooks/useShouldDisplayQIPR";
 import { isChoiceChild } from "./utils/nodeRelationsHelper";
 import { useNodeRef } from "./hooks/useNodeRef";
-import { canDeleteNode } from "@/utils/canDeleteNode";
+import { NodeDelete } from "./NodeDelete";
 
 export const WaitingNode = ({
   data,
@@ -176,18 +176,11 @@ export const WaitingNode = ({
               description={description}
             />
             {hovering && !merging && (
-              <Button
-                disabled={!canDeleteNode(data) || !userCanEdit}
-                variant="ghost_icon"
-                title="Delete Node"
-                color="danger"
-                onClick={(event) => {
-                  handleNodeDelete && handleNodeDelete();
-                  event.stopPropagation();
-                }}
-              >
-                <Icon data={delete_forever} />
-              </Button>
+              <NodeDelete
+                data={data}
+                userCanEdit={userCanEdit}
+                handleNodeDelete={handleNodeDelete}
+              />
             )}
           </div>
           <div className={styles["node__waitingtime-container"]}>
