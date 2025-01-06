@@ -79,7 +79,10 @@ export const NodeTooltipContainer = ({
         position={tooltipPosition}
         isVisible={isVisible}
         className={styles.container}
-        onMouseDownCapture={(e) => e.stopPropagation()}
+        onMouseDownCapture={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+        }}
         style={style}
         offset={offset}
       >
