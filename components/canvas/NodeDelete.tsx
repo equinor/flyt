@@ -7,18 +7,20 @@ type NodeDelete = {
   data: Node["data"];
   userCanEdit?: boolean;
   handleNodeDelete?: () => void;
+  title: string;
 };
 
 export const NodeDelete = ({
   data,
   userCanEdit,
   handleNodeDelete,
+  title,
 }: NodeDelete) => {
   return (
     <Button
       disabled={!canDeleteNode(data) || !userCanEdit}
       variant="ghost_icon"
-      title="Delete Node"
+      title={title}
       color="danger"
       onClick={(event) => {
         handleNodeDelete && handleNodeDelete();

@@ -179,6 +179,7 @@ export const SubActivityNode = ({
                 data={data}
                 userCanEdit={userCanEdit}
                 handleNodeDelete={handleNodeDelete}
+                title="Delete Sub Activity"
               />
             )}
           </div>

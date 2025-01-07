@@ -145,6 +145,7 @@ export const MainActivityNode = ({
                 data={data}
                 userCanEdit={userCanEdit}
                 handleNodeDelete={handleNodeDelete}
+                title="Delete Main Activity"
               />
             )}
           </div>

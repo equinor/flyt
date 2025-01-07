@@ -197,6 +197,7 @@ export const ChoiceNode = ({
             data={data}
             userCanEdit={userCanEdit}
             handleNodeDelete={handleNodeDelete}
+            title="Delete Choice"
           />
         )}
       </div>

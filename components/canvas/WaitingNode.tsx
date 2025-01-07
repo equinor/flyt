@@ -180,6 +180,7 @@ export const WaitingNode = ({
                 data={data}
                 userCanEdit={userCanEdit}
                 handleNodeDelete={handleNodeDelete}
+                title="Delete Waiting"
               />
             )}
           </div>

@@ -179,6 +179,7 @@ export const LinkedProcessNode = ({
                 data={data}
                 userCanEdit={userCanEdit}
                 handleNodeDelete={handleNodeDelete}
+                title="Delete Linked Process"
               />
             )}
           </div>
