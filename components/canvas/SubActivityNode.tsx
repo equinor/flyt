@@ -26,6 +26,7 @@ import { useShouldDisplayQIPR } from "./hooks/useShouldDisplayQIPR";
 import { FormatNodeText } from "./utils/FormatNodeText";
 import { isChoiceChild } from "./utils/nodeRelationsHelper";
 import { useNodeRef } from "./hooks/useNodeRef";
+import { NodeDelete } from "./NodeDelete";
 
 export const SubActivityNode = ({
   data,
@@ -52,6 +53,7 @@ export const SubActivityNode = ({
     shapeHeight,
     shapeWidth,
     disabled,
+    handleNodeDelete,
   } = data;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
@@ -167,10 +169,20 @@ export const SubActivityNode = ({
           onMouseEnter={() => !dragging && setHoveringShape(true)}
           onMouseLeave={() => setHoveringShape(false)}
         >
-          <NodeDescription
-            header={!description ? getNodeTypeName(type) : undefined}
-            description={description}
-          />
+          <div className={styles["node__description-delete-container"]}>
+            <NodeDescription
+              header={!description ? getNodeTypeName(type) : undefined}
+              description={description}
+            />
+            {hovering && !merging && (
+              <NodeDelete
+                data={data}
+                userCanEdit={userCanEdit}
+                handleNodeDelete={handleNodeDelete}
+                title="Delete Sub Activity"
+              />
+            )}
+          </div>
           <div className={styles["node__role-container"]}>
             <FormatNodeText
               variant="caption"

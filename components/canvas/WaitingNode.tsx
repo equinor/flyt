@@ -28,6 +28,7 @@ import { useQIPRContainerOnClick } from "./hooks/useQIPRContainerOnClick";
 import { useShouldDisplayQIPR } from "./hooks/useShouldDisplayQIPR";
 import { isChoiceChild } from "./utils/nodeRelationsHelper";
 import { useNodeRef } from "./hooks/useNodeRef";
+import { NodeDelete } from "./NodeDelete";
 
 export const WaitingNode = ({
   data,
@@ -53,6 +54,7 @@ export const WaitingNode = ({
     shapeHeight,
     shapeWidth,
     disabled,
+    handleNodeDelete,
   } = data;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
@@ -168,10 +170,20 @@ export const WaitingNode = ({
           onMouseEnter={() => !dragging && setHoveringShape(true)}
           onMouseLeave={() => setHoveringShape(false)}
         >
-          <NodeDescription
-            header={!description ? getNodeTypeName(type) : undefined}
-            description={description}
-          />
+          <div className={styles["node__description-delete-container"]}>
+            <NodeDescription
+              header={!description ? getNodeTypeName(type) : undefined}
+              description={description}
+            />
+            {hovering && !merging && (
+              <NodeDelete
+                data={data}
+                userCanEdit={userCanEdit}
+                handleNodeDelete={handleNodeDelete}
+                title="Delete Waiting"
+              />
+            )}
+          </div>
           <div className={styles["node__waitingtime-container"]}>
             <Icon data={timeIcon} size={24} style={{ marginRight: 5 }} />
             <Typography variant="caption">

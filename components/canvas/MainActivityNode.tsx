@@ -26,6 +26,8 @@ import { SourceHandle } from "./SourceHandle";
 import { SubActivityButton } from "./SubActivityButton";
 import { WaitingButton } from "./WaitingButton";
 import { useNodeRef } from "./hooks/useNodeRef";
+import styles from "./Node.module.scss";
+import { NodeDelete } from "./NodeDelete";
 
 export const MainActivityNode = ({
   data,
@@ -46,6 +48,7 @@ export const MainActivityNode = ({
     shapeWidth,
     totalDurations,
     disabled,
+    handleNodeDelete,
   } = data;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
@@ -132,10 +135,20 @@ export const MainActivityNode = ({
           onMouseEnter={() => !dragging && setHoveringShape(true)}
           onMouseLeave={() => setHoveringShape(false)}
         >
-          <NodeDescription
-            header={!description ? getNodeTypeName(type) : undefined}
-            description={description}
-          />
+          <div className={styles["node__description-delete-container"]}>
+            <NodeDescription
+              header={!description ? getNodeTypeName(type) : undefined}
+              description={description}
+            />
+            {hovering && !merging && (
+              <NodeDelete
+                data={data}
+                userCanEdit={userCanEdit}
+                handleNodeDelete={handleNodeDelete}
+                title="Delete Main Activity"
+              />
+            )}
+          </div>
           {formattedDurationSumShort && (
             <NodeDuration duration={formattedDurationSumShort} />
           )}

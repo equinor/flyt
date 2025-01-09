@@ -26,9 +26,14 @@ import {
   isMainActivityColumn,
 } from "./utils/nodeRelationsHelper";
 import { useNodeRef } from "./hooks/useNodeRef";
+import { NodeDelete } from "./NodeDelete";
 
 export const LinkedProcessNode = ({
-  data: {
+  data,
+  selected,
+  dragging,
+}: NodeProps<NodeDataCommon>) => {
+  const {
     id,
     linkedProjectData,
     column,
@@ -44,10 +49,8 @@ export const LinkedProcessNode = ({
     shapeHeight,
     shapeWidth,
     disabled,
-  },
-  selected,
-  dragging,
-}: NodeProps<NodeDataCommon>) => {
+    handleNodeDelete,
+  } = data;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
   const connectionNodeId = useStore((state) => state.connectionNodeId);
@@ -166,10 +169,20 @@ export const LinkedProcessNode = ({
           onMouseEnter={() => !dragging && setHoveringShape(true)}
           onMouseLeave={() => setHoveringShape(false)}
         >
-          <NodeDescription
-            header={name ?? undefined}
-            helperText={formattedUpdated}
-          />
+          <div className={styles["node__description-delete-container"]}>
+            <NodeDescription
+              header={name ?? undefined}
+              helperText={formattedUpdated}
+            />
+            {hovering && !merging && (
+              <NodeDelete
+                data={data}
+                userCanEdit={userCanEdit}
+                handleNodeDelete={handleNodeDelete}
+                title="Delete Linked Process"
+              />
+            )}
+          </div>
           {userAccesses && (
             <NodeUserDots
               userAccesses={userAccesses}

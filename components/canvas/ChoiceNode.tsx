@@ -6,6 +6,7 @@ import { NodeDataCommon } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
 import { ChoiceButton } from "./ChoiceButton";
 import { MergeButton } from "./MergeButton";
+import styles from "./Node.module.scss";
 import { NodeButtonsContainer } from "./NodeButtonsContainer";
 import { NodeCard } from "./NodeCard";
 import { NodeDescription } from "./NodeDescription";
@@ -19,6 +20,7 @@ import { useIsEditingNode } from "./hooks/useIsEditingNode";
 import { useNodeAdd } from "./hooks/useNodeAdd";
 import { isChoiceChild } from "./utils/nodeRelationsHelper";
 import { useNodeRef } from "./hooks/useNodeRef";
+import { NodeDelete } from "./NodeDelete";
 
 export const ChoiceNode = ({
   data,
@@ -42,6 +44,7 @@ export const ChoiceNode = ({
     shapeWidth,
     disabled,
     handleClickNode,
+    handleNodeDelete,
   } = data;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
@@ -188,6 +191,16 @@ export const ChoiceNode = ({
         includeEstimate={false}
         nodeRef={ref}
       />
+      <div className={styles["node-rhombus-delete-container"]}>
+        {hovering && !merging && (
+          <NodeDelete
+            data={data}
+            userCanEdit={userCanEdit}
+            handleNodeDelete={handleNodeDelete}
+            title="Delete Choice"
+          />
+        )}
+      </div>
       {renderNodeButtons()}
     </div>
   );

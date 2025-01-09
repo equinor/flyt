@@ -8,6 +8,7 @@ export const canDeleteNode = (node: NodeDataCommon): boolean => {
     type === NodeTypes.mainActivity ||
     type === NodeTypes.subActivity ||
     type === NodeTypes.waiting ||
-    type === NodeTypes.choice
+    type === NodeTypes.choice ||
+    type === NodeTypes.linkedProcess
   );
 };
