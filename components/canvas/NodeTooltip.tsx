@@ -79,7 +79,15 @@ export const NodeTooltipContainer = ({
         position={tooltipPosition}
         isVisible={isVisible}
         className={styles.container}
-        onMouseDownCapture={(e) => e.stopPropagation()}
+        onMouseDownCapture={(e) => {
+          e.stopPropagation();
+          if (
+            e.target instanceof HTMLElement &&
+            e.target.getAttribute("role") === "listbox"
+          ) {
+            e.preventDefault();
+          }
+        }}
         style={style}
         offset={offset}
       >
