@@ -29,7 +29,8 @@ export const DeleteNodeDialog = ({
   const { projectId } = useProjectId();
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
-  const { choice, mainActivity, subActivity, waiting } = NodeTypes;
+  const { choice, mainActivity, subActivity, waiting, linkedProcess } =
+    NodeTypes;
 
   const deleteMutation = useMutation(
     ({
@@ -67,9 +68,13 @@ export const DeleteNodeDialog = ({
 
   const getWarningMessage = () => {
     const typeIsMainActivityOrChoice = type === mainActivity || type === choice;
+    const typeIsLinkedProcess = type === linkedProcess;
 
     if (typeIsMainActivityOrChoice && hasChildren) {
       return "This will delete **ALL** the cards below.\nAre you sure you want to proceed?";
+    }
+    if (typeIsLinkedProcess) {
+      return "Deleting this card will only remove the link, and will not affect the other process.";
     }
     return "This will delete the selected card";
   };
