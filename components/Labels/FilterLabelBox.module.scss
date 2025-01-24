@@ -8,7 +8,7 @@
   display: flex;
   flex-direction: column;
 
-  width: min(90vw, 600px);
+  width: min(90vw, 1300px);
   height: 80vh;
 
   animation-name: fade-in;
@@ -46,6 +46,7 @@
   flex-direction: column;
   justify-content: left;
   overflow: auto;
+  flex-grow: 1;
 }
 
 .labelCounter {
@@ -53,8 +54,26 @@
 }
 
 .labelContainer {
+  height: 100px;
   display: flex;
-  flex-wrap: wrap;
+  background-color: $equinor_LIGHT_GRAY;
+  padding: 16px;
+  gap: 20px;
+  flex-grow: 1;
+  overflow: auto;
+}
+
+@media (max-width: 768px) {
+  .labelContainer {
+    flex-direction: column;
+  }
+}
+
+@media (min-width: 769px) {
+  .labelContainer {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
 }
 
 .button:hover {
