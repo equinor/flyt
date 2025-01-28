@@ -14,7 +14,6 @@ export const RoleSelect = (props: {
       onChange={(event) => props.onChange(event.target.value)}
       disabled={props.disabled}
     >
-      <option value="Admin">Admin</option>
       <option value="Contributor">Contributor</option>
       <option value="Remove">Remove</option>
     </select>

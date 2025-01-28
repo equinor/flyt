@@ -1,1 +1,1 @@
-export type userAccessRole = "Owner" | "Admin" | "Contributor" | "Reader";
+export type userAccessRole = "Contributor" | "Reader";
