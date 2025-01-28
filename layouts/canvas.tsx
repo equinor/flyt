@@ -299,7 +299,7 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
                     ? "Delete the current process"
                     : "Only the Contributor can delete this process"
                 }`}
-                disabled={isAdmin}
+                disabled={!isAdmin}
                 onKeyDown={(e) => {
                   if (e.code === "Enter") setVisibleDeleteScrim(true);
                 }}
