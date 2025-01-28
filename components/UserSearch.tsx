@@ -7,6 +7,7 @@ import { ChangeEvent, useState } from "react";
 import { useQuery } from "react-query";
 import { UserItem } from "./UserItem";
 import styles from "./UserSearch.module.scss";
+import { accessRoles } from "@/types/AccessRoles";
 
 type UserSearch = {
   isAdmin: boolean;
@@ -39,7 +40,7 @@ export const UserSearch = ({
   const InfoNoEditAccess = () => (
     <div className={styles.infoCannotEdit}>
       <Typography variant="body_short">
-        You need to be owner or admin to manage sharing
+        You need to be {accessRoles.Contributor} to manage sharing
       </Typography>
     </div>
   );
