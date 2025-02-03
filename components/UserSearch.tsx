@@ -46,18 +46,21 @@ export const UserSearch = ({
   );
 
   const UserItems = () => {
-    const isSingleUser = users.length === 1;
-    return users?.map((user) => (
-      <UserItem
-        key={user.accessId}
-        shortName={user.user}
-        fullName={user.fullName}
-        role={user.role}
-        onRoleChange={(role) => onRoleChange(user, role)}
-        onRemove={() => onRemove(user)}
-        disabled={isSingleUser}
-      />
-    ));
+    const isSingleUser = users && users.length === 1;
+    return (
+      users &&
+      users.map((user) => (
+        <UserItem
+          key={user.accessId}
+          shortName={user.user}
+          fullName={user.fullName}
+          role={user.role}
+          onRoleChange={(role) => onRoleChange(user, role)}
+          onRemove={() => onRemove(user)}
+          disabled={isSingleUser}
+        />
+      ))
+    );
   };
 
   const SearchedUserItems = () =>
