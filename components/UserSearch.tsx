@@ -45,8 +45,9 @@ export const UserSearch = ({
     </div>
   );
 
-  const UserItems = () =>
-    users?.map((user) => (
+  const UserItems = () => {
+    const isSingleUser = users.length === 1;
+    return users?.map((user) => (
       <UserItem
         key={user.accessId}
         shortName={user.user}
@@ -54,9 +55,10 @@ export const UserSearch = ({
         role={user.role}
         onRoleChange={(role) => onRoleChange(user, role)}
         onRemove={() => onRemove(user)}
-        disabled={!isAdmin}
+        disabled={isSingleUser}
       />
     ));
+  };
 
   const SearchedUserItems = () =>
     usersSearched
