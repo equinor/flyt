@@ -1,0 +1,17 @@
+.liveIndicatorContainer {
+  position: absolute;
+  right: 0;
+  top: 64px;
+  z-index: 20;
+}
+
+.textContainer {
+  padding-right: 12px;
+  margin: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.iconStyle {
+  padding: 5px;
+}
