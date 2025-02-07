@@ -45,6 +45,8 @@ export const UserItem = ({
           <Icon data={add} size={16} />
         </Button>
       );
+    } else if (role === "Owner") {
+      return "Owner";
     } else {
       return (
         <RoleSelect

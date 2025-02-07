@@ -8,6 +8,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import BaseAPIServices from "../services/BaseAPIServices";
 import { accessRoles } from "@/types/AccessRoles";
+import { getOwner } from "utils/getOwner";
 import { notifyOthers } from "@/services/notifyOthers";
 import style from "./AccessBox.module.scss";
 import { unknownErrorToString } from "utils/isError";
@@ -41,6 +42,7 @@ export function AccessBox(props: {
     <div className={style.box}>
       <TopSection title={"User access"} handleClose={props.handleClose} />
       <MiddleSection
+        owner={getOwner(props.project) ?? ""}
         users={userAccesses}
         vsmId={vsmProjectID}
         loading={isLoading}
@@ -63,6 +65,7 @@ export function TopSection(props: { title: string; handleClose: () => void }) {
 }
 
 function MiddleSection(props: {
+  owner: string;
   users: userAccess[];
   vsmId: number;
   loading: boolean;
