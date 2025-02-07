@@ -17,7 +17,6 @@
   justify-content: space-between;
   align-items: center;
   border-bottom: solid 1px #dcdcdc;
-  padding: 12px 16px;
 }
 
 .scrimTitle {
@@ -28,8 +27,7 @@
   /* identical to box height, or 150% */
 
   /* Text + static icons/⚪️/Default */
-  color: #565656;
-  font-weight: 500;
+  color: #3d3d3d;
 }
 
 .spaceBetween {
@@ -59,6 +57,7 @@
 .scrimWrapper {
   background-color: white;
   border-radius: 2px;
+  padding: 24px;
   max-width: 80vw;
   max-height: 80vh;
 
@@ -67,14 +66,12 @@
   justify-content: space-between;
   max-width: 450px;
 }
-
 .scrimContent {
   font-family: Equinor;
   font-size: 16px;
   line-height: 24px;
   letter-spacing: 0em;
   text-align: left;
-  padding: 0px 16px;
 }
 
 .image {
@@ -123,19 +120,4 @@
 
 .snackbar {
   margin: 12px;
-}
-
-.boldText {
-  font-weight: bold;
-}
-
-.buttonContainer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  padding: 0px 16px 16px;
-}
-
-.deleteText {
-  padding: 16px;
 }

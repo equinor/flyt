@@ -39,6 +39,7 @@ import { UserMenu } from "@/components/AppHeader/UserMenu";
 import { disableKeyboardZoomShortcuts } from "@/utils/disableKeyboardZoomShortcuts";
 import { disableMouseWheelZoom } from "@/utils/disableMouseWheelZoom";
 import { getMyAccess } from "@/utils/getMyAccess";
+import { getOwner } from "utils/getOwner";
 import { notifyOthers } from "@/services/notifyOthers";
 import packageJson from "../package.json";
 import styles from "./default.layout.module.scss";
@@ -47,7 +48,6 @@ import { useRouter } from "next/router";
 import { useProjectId } from "@/hooks/useProjectId";
 import { EditableTitle } from "components/EditableTitle";
 import { getProjectName } from "@/utils/getProjectName";
-import { accessRoles } from "@/types/AccessRoles";
 
 export const CanvasLayout = ({ children }: { children: ReactNode }) => {
   const isAuthenticated = useIsAuthenticated();
@@ -107,10 +107,9 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
   const myAccess = getMyAccess(project ?? null, account);
-  const { Contributor, Reader } = accessRoles;
-  const userCanEdit = myAccess !== Reader;
+  const userCanEdit = myAccess !== "Reader";
   const userCannotEdit = !userCanEdit;
-  const isAdmin = myAccess === Contributor;
+  const isAdmin = myAccess === "Admin" || myAccess === "Owner";
   const projectName = getProjectName(project);
 
   const [visibleShareScrim, setVisibleShareScrim] = useState(false);
@@ -275,7 +274,7 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
               <Menu.Item
                 title={`${
                   userCannotEdit
-                    ? "Only the Contributor can rename this process"
+                    ? "Only the creator, admin or a contributor can rename this process"
                     : "Rename the current process"
                 }`}
                 disabled={userCannotEdit}
@@ -297,7 +296,7 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
                 title={`${
                   isAdmin
                     ? "Delete the current process"
-                    : "Only the Contributor can delete this process"
+                    : "Only the creator can delete this process"
                 }`}
                 disabled={!isAdmin}
                 onKeyDown={(e) => {
@@ -309,6 +308,13 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
                   Delete process
                 </Typography>
               </Menu.Item>
+              {project && (
+                <Menu.Item disabled>
+                  <Typography group="navigation" variant="menu_title" as="span">
+                    Owner: {getOwner(project)}
+                  </Typography>
+                </Menu.Item>
+              )}
             </Menu>
           </div>
         </div>
@@ -373,6 +379,7 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
           </div>
         </div>
       </Scrim>
+
       <Scrim
         open={visibleDeleteScrim}
         onClose={() => setVisibleDeleteScrim(false)}
@@ -381,7 +388,7 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
       >
         <div className={styles.scrimWrapper}>
           {isDeleting ? (
-            <Typography className={styles.deleteText}>Deleting...</Typography>
+            <Typography>Deleting...</Typography>
           ) : (
             <>
               <div className={styles.scrimHeaderWrapper}>
@@ -395,12 +402,17 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
                 )}
                 <p>
                   Are you sure you want to delete this process? By doing so you
-                  will delete
-                  <span className={styles.boldText}> ALL VERSIONS</span> as they
-                  will not be recoverable.
+                  will delete all versions of Current and To-be processes,
+                  neither of which will be recoverable.
                 </p>
               </div>
-              <div className={styles.buttonContainer}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: 12,
+                }}
+              >
                 <Button
                   autoFocus
                   variant={"outlined"}

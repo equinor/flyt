@@ -1,4 +1,4 @@
 export const accessRoles = {
   Contributor: "Contributor",
-  Reader: "Reader",
+  Admin: "Admin",
 };
