@@ -1,5 +1,6 @@
 import { ColorDot } from "./ColorDot";
 import colors from "../theme/colors";
+import styles from "./LiveIndicator.module.scss";
 
 export function LiveIndicator(props: {
   live: boolean;
@@ -7,17 +8,9 @@ export function LiveIndicator(props: {
 }): JSX.Element {
   const { live } = props;
   return (
-    <div style={{ position: "absolute", right: 0, top: 124, zIndex: 20 }}>
-      <div
-        style={{
-          paddingRight: 12,
-          margin: 12,
-          display: "flex",
-          alignItems: "center",
-        }}
-        title={props.title}
-      >
-        <div style={{ padding: 5 }}>
+    <div className={styles.liveIndicatorContainer}>
+      <div className={styles.textContainer} title={props.title}>
+        <div className={styles.iconStyle}>
           <ColorDot color={live ? colors.SUCCESS : colors.ERROR} />
         </div>
         {live ? <p>Live</p> : <p>Disconnected</p>}

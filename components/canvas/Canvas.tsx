@@ -1,7 +1,6 @@
 import { Graph } from "@/types/Graph";
 import { CanvasButtons } from "components/CanvasButtons";
 import { ManageLabelBox } from "components/Labels/ManageLabelBox";
-import { ResetProcessButton } from "components/ResetProcessButton";
 import { useState } from "react";
 import "reactflow/dist/style.css";
 import { Project } from "types/Project";
@@ -9,7 +8,6 @@ import { LiveIndicator } from "../LiveIndicator";
 import { FlowWrapper } from "./Flow";
 import { useAccess } from "./hooks/useAccess";
 import { useWebSocket } from "./hooks/useWebSocket";
-import { ToBeToggle } from "./ToBeToggle";
 
 type CanvasProps = {
   graph: Graph;
@@ -45,8 +43,9 @@ const Canvas = ({
               }.`
         }
       />
-      <ToBeToggle />
-      <ResetProcessButton />
+      {/* Note: Current and To Be Toggle button is hidden as To Be function is not fully developed. */}
+      {/* <ToBeToggle />
+      <ResetProcessButton /> */}
       <FlowWrapper
         apiNodes={apiNodes}
         apiEdges={apiEdges}
