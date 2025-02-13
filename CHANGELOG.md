@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.10.0](https://github.com/equinor/flyt/compare/v2.9.0...v2.10.0) (2025-02-13)
+
+
+### Features
+
+* Hide Current/To Be toggle ([#882](https://github.com/equinor/flyt/issues/882)) ([9a96ffd](https://github.com/equinor/flyt/commit/9a96ffdebc38b29195fd78a65f907a447c1e839e))
+
+
+### Bug Fixes
+
+* Rearrange the mainactivity to left ([#894](https://github.com/equinor/flyt/issues/894)) ([494d14c](https://github.com/equinor/flyt/commit/494d14cc9337d7403e9f0d4538b936d774bad91c))
+
 ## [2.9.0](https://github.com/equinor/flyt/compare/v2.8.0...v2.9.0) (2025-02-07)
 
 
