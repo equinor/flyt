@@ -4,6 +4,8 @@ import { PQIRSection } from "./PQIRSection";
 import styles from "./SidebarBody.module.scss";
 import { CircularProgress, Typography } from "@equinor/eds-core-react";
 import { unknownErrorToString } from "@/utils/isError";
+import { useSelectedNodeForPQIR } from "../hooks/useSelectedNodeForPQIR";
+import { Task } from "@/types/Task";
 
 type SideBarBodyProps = {
   selectedNode: NodeDataCommon;
@@ -15,11 +17,13 @@ export const SideBarBody = ({
   userCanEdit,
 }: SideBarBodyProps) => {
   const { pqirs, isLoadingPQIRs, errorPQIRs } = usePQIRs();
-
-  const otherPQIRs = pqirs?.filter((pqir) =>
-    selectedNode.tasks.every(
-      (selectedNodePQIR) => selectedNodePQIR.id !== pqir.id
-    )
+  const selectedNodeForPQIR = useSelectedNodeForPQIR();
+  const otherPQIRs = pqirs?.filter(
+    (pqir) =>
+      selectedNodeForPQIR &&
+      selectedNodeForPQIR.data.tasks.every(
+        (selectedNodePQIR: Task) => selectedNodePQIR.id !== pqir.id
+      )
   );
 
   if (isLoadingPQIRs) {
@@ -33,7 +37,7 @@ export const SideBarBody = ({
       <PQIRSection
         title="Selected card's PQIRs"
         emptyPQIRsText="This card has no PQIRs"
-        pqirs={selectedNode.tasks}
+        pqirs={selectedNodeForPQIR?.data?.tasks}
         isSelectedSection
         selectedNode={selectedNode}
         userCanEdit={userCanEdit}
