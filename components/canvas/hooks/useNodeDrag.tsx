@@ -1,4 +1,8 @@
-import { moveVertice, moveVerticeRightOfTarget } from "@/services/graphApi";
+import {
+  moveVertice,
+  moveVerticeLeftOfTarget,
+  moveVerticeRightOfTarget,
+} from "@/services/graphApi";
 import { notifyOthers } from "@/services/notifyOthers";
 import { NodeDataCommon } from "@/types/NodeData";
 import { NodeTypes } from "@/types/NodeTypes";
@@ -77,11 +81,7 @@ export const useNodeDrag = () => {
       moveNode.mutate({
         nodeId: node.id,
         targetId: target?.id ?? "",
-        position:
-          node.type === NodeTypes.mainActivity &&
-          target?.type === NodeTypes.mainActivity
-            ? Position.Right
-            : Position.Bottom,
+        position: target ? getPosition(node, target) : Position.Bottom,
         includeChildren: target ? includeChildren(node, target) : false,
       });
       setTarget(undefined);
@@ -111,13 +111,25 @@ export const useNodeDrag = () => {
       includeChildren: boolean;
     }) => {
       dispatch.setSnackMessage("⏳ Moving card...");
-      return position === Position.Bottom
-        ? moveVertice(
-            { vertexToMoveId: nodeId, vertexDestinationParentId: targetId },
-            projectId,
-            includeChildren
-          )
-        : moveVerticeRightOfTarget({ vertexId: nodeId }, targetId, projectId);
+      if (position === Position.Right) {
+        return moveVerticeRightOfTarget(
+          { vertexId: nodeId },
+          targetId,
+          projectId
+        );
+      }
+      if (position === Position.Left) {
+        return moveVerticeLeftOfTarget(
+          { vertexId: nodeId },
+          targetId,
+          projectId
+        );
+      }
+      return moveVertice(
+        { vertexToMoveId: nodeId, vertexDestinationParentId: targetId },
+        projectId,
+        includeChildren
+      );
     },
     {
       onSuccess: () => {
@@ -143,6 +155,21 @@ export const useNodeDrag = () => {
       }
     }
     return false;
+  };
+
+  const getPosition = (
+    source: Node<NodeDataCommon>,
+    target: Node<NodeDataCommon>
+  ) => {
+    if (
+      source.type === NodeTypes.mainActivity &&
+      target?.type === NodeTypes.mainActivity
+    ) {
+      return (source.data?.order ?? 0) > (target.data?.order ?? 0)
+        ? Position.Left
+        : Position.Right;
+    }
+    return Position.Bottom;
   };
 
   return {
