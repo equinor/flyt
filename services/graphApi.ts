@@ -83,6 +83,16 @@ export const moveVerticeRightOfTarget = (
     data
   ).then((r) => r.data);
 
+export const moveVerticeLeftOfTarget = (
+  data: { vertexId: string },
+  targetId: string,
+  projectId: string
+): Promise<unknown> =>
+  BaseAPIServices.put(
+    `${baseUrl}/graph/${projectId}/vertices/${targetId}/left`,
+    data
+  ).then((r) => r.data);
+
 export const mergeVertices = (
   data: { fromVertexId: string; toVertexId: string },
   projectId: string
