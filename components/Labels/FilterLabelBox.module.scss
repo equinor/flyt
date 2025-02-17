@@ -63,13 +63,13 @@
   overflow: auto;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .labelContainer {
     flex-direction: column;
   }
 }
 
-@media (min-width: 769px) {
+@media (min-width: 1025px) {
   .labelContainer {
     flex-direction: row;
     flex-wrap: wrap;

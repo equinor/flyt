@@ -11,6 +11,7 @@ import { useQuery } from "react-query";
 import { useRouter } from "next/router";
 import LabelCategory from "./LabelCategory";
 import { toggleLabels } from "@/utils/toggleLabels";
+import { getCategorizedLabels } from "@/utils/getCategorizedLabels";
 
 export function FilterLabelBox(props: { handleClose: () => void }) {
   const [searchText, setSearchText] = useState("");
@@ -109,20 +110,27 @@ function LabelSection(props: {
     return <p>{unknownErrorToString(error)}</p>;
   }
 
+  const [categorisedLabels, noOfLabels] = getCategorizedLabels(labels);
+
   return (
     <div className={styles.labelSection}>
       <div>
         <p className={styles.labelCounter}>
-          {`${labels.length}`} {labels.length == 1 ? "label" : "labels"}{" "}
-          discovered
+          {`${noOfLabels}`} {noOfLabels == 1 ? "label" : "labels"} discovered
         </p>
       </div>
       <div className={styles.labelContainer}>
-        <LabelCategory
-          labels={labels}
-          isActive={isActive}
-          handleLabels={handleLabels}
-        />
+        {categorisedLabels &&
+          Object.keys(categorisedLabels).map((categoryName) => {
+            return (
+              <LabelCategory
+                categoryName={categoryName}
+                labels={categorisedLabels[categoryName]}
+                isActive={isActive}
+                handleLabels={handleLabels}
+              />
+            );
+          })}
       </div>
     </div>
   );
