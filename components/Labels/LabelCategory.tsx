@@ -1,4 +1,4 @@
-import { Chip, Paper, Typography } from "@equinor/eds-core-react";
+import { Chip, Typography } from "@equinor/eds-core-react";
 import React from "react";
 import styles from "./LabelCategory.module.scss";
 import { ProcessLabel } from "@/types/ProcessLabel";

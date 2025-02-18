@@ -1,10 +1,9 @@
-import { Button, Chip, Icon, Paper, Search } from "@equinor/eds-core-react";
+import { Button, Icon, Search } from "@equinor/eds-core-react";
 import { useState } from "react";
 
 import { close } from "@equinor/eds-icons";
 import { debounce } from "utils/debounce";
 import { getLabels } from "services/labelsApi";
-import { getUpdatedLabel } from "utils/getUpdatedLabel";
 import styles from "./FilterLabelBox.module.scss";
 import { unknownErrorToString } from "utils/isError";
 import { useQuery } from "react-query";
