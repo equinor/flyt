@@ -123,6 +123,7 @@ function LabelSection(props: {
           Object.keys(categorisedLabels).map((categoryName) => {
             return (
               <LabelCategory
+                key={categoryName}
                 categoryName={categoryName}
                 labels={categorisedLabels[categoryName]}
                 isActive={isActive}
