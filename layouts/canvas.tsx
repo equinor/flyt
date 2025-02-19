@@ -363,6 +363,7 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
           <div className={styles.scrimContent}>
             <TextField
               autoFocus
+              className={styles.renameInput}
               label={"Add title"}
               defaultValue={project?.name ?? undefined}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
