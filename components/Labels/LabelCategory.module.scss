@@ -1,0 +1,25 @@
+@import "styles/_variables.scss";
+
+.categoryContainer {
+  gap: 8px;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.labelsContainer {
+  border-radius: 4px;
+  padding: 16px;
+  gap: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  background-color: white;
+  flex-grow: 1;
+}
+
+.categoryTitle {
+  font-size: 12px;
+  font-weight: 400;
+  color: $text-default;
+}
