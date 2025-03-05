@@ -1,14 +1,16 @@
-import { Button, Chip, Icon, Search } from "@equinor/eds-core-react";
+import { Button, Icon, Search } from "@equinor/eds-core-react";
 import { useState } from "react";
 
 import { close } from "@equinor/eds-icons";
 import { debounce } from "utils/debounce";
 import { getLabels } from "services/labelsApi";
-import { getUpdatedLabel } from "utils/getUpdatedLabel";
 import styles from "./FilterLabelBox.module.scss";
 import { unknownErrorToString } from "utils/isError";
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
+import LabelCategory from "./LabelCategory";
+import { toggleLabels } from "@/utils/toggleLabels";
+import { getCategorizedLabels } from "@/utils/getCategorizedLabels";
 
 export function FilterLabelBox(props: { handleClose: () => void }) {
   const [searchText, setSearchText] = useState("");
@@ -82,8 +84,12 @@ function LabelSection(props: {
   const router = useRouter();
 
   // rl stands for "required label"
-  const handleClick = (selectedLabelId: string) => {
-    const labelIdArray = getUpdatedLabel(selectedLabelId, router.query.rl);
+  const handleLabels = (selectedLabelId: string, isSelect: boolean) => {
+    const labelIdArray = toggleLabels(
+      selectedLabelId,
+      router.query.rl,
+      isSelect
+    );
     void router.replace({
       query: { ...router.query, rl: labelIdArray },
     });
@@ -103,24 +109,28 @@ function LabelSection(props: {
     return <p>{unknownErrorToString(error)}</p>;
   }
 
+  const [categorisedLabels, noOfLabels] = getCategorizedLabels(labels);
+
   return (
     <div className={styles.labelSection}>
-      <p className={styles.labelCounter}>
-        {`${labels.length}`} {labels.length == 1 ? "label" : "labels"}{" "}
-        discovered
-      </p>
-
+      <div>
+        <p className={styles.labelCounter}>
+          {`${noOfLabels}`} {noOfLabels == 1 ? "label" : "labels"} discovered
+        </p>
+      </div>
       <div className={styles.labelContainer}>
-        {labels.map((label: any) => (
-          <Chip
-            key={label.id}
-            variant={isActive(label.id.toString()) ? "active" : undefined}
-            style={{ marginRight: "5px", marginBottom: "10px" }}
-            onClick={() => handleClick(label.id.toString())}
-          >
-            {label.text}
-          </Chip>
-        ))}
+        {categorisedLabels &&
+          Object.keys(categorisedLabels).map((categoryName) => {
+            return (
+              <LabelCategory
+                key={categoryName}
+                categoryName={categoryName}
+                labels={categorisedLabels[categoryName]}
+                isActive={isActive}
+                handleLabels={handleLabels}
+              />
+            );
+          })}
       </div>
     </div>
   );
