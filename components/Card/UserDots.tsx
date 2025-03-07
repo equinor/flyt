@@ -35,7 +35,7 @@ export function UserDots(props: {
 }
 
 function UserDotsAccordion(props: { users: userAccess[] }): JSX.Element {
-  const users = props.users.reverse();
+  const users = props.users;
   const width = users.length <= 3 ? 24 * users.length : 72;
 
   return (
