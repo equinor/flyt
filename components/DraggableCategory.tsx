@@ -39,6 +39,9 @@ export function DraggableCategory(props: {
       .then(() => {
         setIsLoading(false);
       });
+    queryClient.invalidateQueries(["tasks", props.projectId]).then(() => {
+      setIsLoading(false);
+    });
     setCategoryName(props.category.name);
   };
 
