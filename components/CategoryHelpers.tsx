@@ -20,7 +20,7 @@ export function CategoryHelpers(): JSX.Element {
             alt="Animation of dragging a category onto a Problem-card"
             unoptimized={true} //Trouble with optimizing gifs
             width={250}
-            height={200}
+            height={120}
             style={{ paddingTop: 16 }}
           />
           <p>
