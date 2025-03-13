@@ -55,22 +55,22 @@ const getLayout = (
   });
 };
 
-const getColumnMargin = (nodes: Node[], columnSpacing = 0) => {
+const getColumnMargin = (nodes: Node[]) => {
   let highestPosX = 0;
   nodes.forEach((n) => {
     const { x } = n.position;
-    if (x > highestPosX) {
-      highestPosX = x;
+    const occupiedSpace = x + (n.width ?? 175.5) + 35; //175.5 is default width of node, 35 is half of nodesep
+    if (occupiedSpace > highestPosX) {
+      highestPosX = occupiedSpace;
     }
   });
-  return highestPosX + columnSpacing;
+  return highestPosX;
 };
 
 export function getVSMLayout(
   nodes: Node<NodeDataFull>[],
   edges: Edge[]
 ): Node<NodeDataFull>[] {
-  const columnSpacing = 220;
   let margin = 0;
   const layout: Node<NodeDataFull>[] = [];
   const root = nodes.find((node) => node.type === NodeTypes.root);
@@ -80,7 +80,7 @@ export function getVSMLayout(
       columnNodes.find((node) => node.id === edge.source)
     );
     const column = getLayout(columnNodes, columnEdges, { margin: margin });
-    margin = getColumnMargin(columnNodes, columnSpacing);
+    margin = getColumnMargin(columnNodes);
     layout.push(...column);
   });
   return layout;
