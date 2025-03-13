@@ -11,6 +11,14 @@ export const getTasksForProject = (
     (value) => value.data as Task[]
   );
 
+export const getTasksforSelectedNode = (
+  projectId: string | string[],
+  vertexId: string
+): Promise<Task[]> =>
+  BaseAPIServices.get(
+    `${baseUrl}/graph/${projectId}/vertices/${vertexId}/tasks`
+  ).then((value) => value.data as Task[]);
+
 export const createTask = (
   data: Pick<Task, "description" | "type" | "solved">,
   projectId: string,
