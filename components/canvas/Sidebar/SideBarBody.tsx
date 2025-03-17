@@ -4,8 +4,8 @@ import { PQIRSection } from "./PQIRSection";
 import styles from "./SidebarBody.module.scss";
 import { CircularProgress, Typography } from "@equinor/eds-core-react";
 import { unknownErrorToString } from "@/utils/isError";
-import { useSelectedNodeForPQIR } from "../hooks/useSelectedNodeForPQIR";
 import { Task } from "@/types/Task";
+import { useSelectedNodePQIR } from "../hooks/useSelectedNodePQIR";
 
 type SideBarBodyProps = {
   selectedNode: NodeDataCommon;
@@ -17,27 +17,32 @@ export const SideBarBody = ({
   userCanEdit,
 }: SideBarBodyProps) => {
   const { pqirs, isLoadingPQIRs, errorPQIRs } = usePQIRs();
-  const selectedNodeForPQIR = useSelectedNodeForPQIR();
+  const {
+    selectedNodePQIRs,
+    isLoadingselectedNodePQIRs,
+    errorselectedNodePQIRs,
+  } = useSelectedNodePQIR(selectedNode.id);
   const otherPQIRs = pqirs?.filter(
     (pqir) =>
-      selectedNodeForPQIR &&
-      selectedNodeForPQIR.data.tasks.every(
+      selectedNodePQIRs &&
+      selectedNodePQIRs.every(
         (selectedNodePQIR: Task) => selectedNodePQIR.id !== pqir.id
       )
   );
 
-  if (isLoadingPQIRs) {
+  if (isLoadingPQIRs || isLoadingselectedNodePQIRs) {
     return <CircularProgress style={{ alignSelf: "center" }} />;
   }
-  if (errorPQIRs) {
-    return <Typography>{unknownErrorToString(errorPQIRs)}</Typography>;
+  if (errorPQIRs || errorselectedNodePQIRs) {
+    const errors = errorPQIRs ? errorPQIRs : errorselectedNodePQIRs;
+    return <Typography>{unknownErrorToString(errors)}</Typography>;
   }
   return (
     <div className={styles.container}>
       <PQIRSection
         title="Selected card's PQIRs"
         emptyPQIRsText="This card has no PQIRs"
-        pqirs={selectedNodeForPQIR?.data?.tasks}
+        pqirs={selectedNodePQIRs}
         isSelectedSection
         selectedNode={selectedNode}
         userCanEdit={userCanEdit}
