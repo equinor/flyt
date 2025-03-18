@@ -19,8 +19,9 @@ export function CategoryHelpers(): JSX.Element {
             src={"/gifs/categoryDrag.gif"}
             alt="Animation of dragging a category onto a Problem-card"
             unoptimized={true} //Trouble with optimizing gifs
-            width={800}
-            height={321}
+            width={250}
+            height={120}
+            style={{ paddingTop: 16 }}
           />
           <p>
             Drag a category into one or more of the problems, ideas or
