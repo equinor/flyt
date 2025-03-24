@@ -18,7 +18,7 @@ const createNode = (
     position: { x: 0, y: 0 },
     height: height,
     width: width,
-    type: NodeTypes.project,
+    type: isHorizontalFlow ? NodeTypes.project : NodeTypes.linkedProcess,
     deletable: false,
     sourcePosition: isHorizontalFlow ? Position.Right : undefined,
     targetPosition: isHorizontalFlow ? Position.Left : undefined,
