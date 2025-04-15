@@ -1,5 +1,25 @@
 # Changelog
 
+## [2.10.0](https://github.com/equinor/flyt/compare/v2.9.0...v2.10.0) (2025-03-18)
+
+
+### Features
+
+* All roles combined into Contributor role ([#897](https://github.com/equinor/flyt/issues/897)) ([4dae6e1](https://github.com/equinor/flyt/commit/4dae6e1b0908804e2a14f1e399a387eb365d75f6))
+* Hide Current/To Be toggle ([#882](https://github.com/equinor/flyt/issues/882)) ([9a96ffd](https://github.com/equinor/flyt/commit/9a96ffdebc38b29195fd78a65f907a447c1e839e))
+* Organized all labels into categories ([#900](https://github.com/equinor/flyt/issues/900)) ([ec78094](https://github.com/equinor/flyt/commit/ec78094038aacc07c29c7ba168588b5d0a016379))
+* Sorted labels alphabetically in each category ([#911](https://github.com/equinor/flyt/issues/911)) ([ae4d974](https://github.com/equinor/flyt/commit/ae4d974ca2c36811e5f2c28ab19e9640c8121486))
+
+
+### Bug Fixes
+
+* 833-user-dots-change-order ([#910](https://github.com/equinor/flyt/issues/910)) ([267f40b](https://github.com/equinor/flyt/commit/267f40b03841702f48b095bedf688141261a2795))
+* Category helper styles is fixed ([#904](https://github.com/equinor/flyt/issues/904)) ([39b2088](https://github.com/equinor/flyt/commit/39b2088a22a7bba8b68a63e15d3768a36202c5d5))
+* order pqir in sidebar and overlap of nodes with pqir ([#912](https://github.com/equinor/flyt/issues/912)) ([bbe55b6](https://github.com/equinor/flyt/commit/bbe55b6f4d3c0602c1a5484a488ffd92cf4ab20b))
+* order pqir in the sidebar ([#896](https://github.com/equinor/flyt/issues/896)) ([bb9815c](https://github.com/equinor/flyt/commit/bb9815c8e21a2163d8d572162a68ec74298823b7))
+* Rearrange the mainactivity to left ([#894](https://github.com/equinor/flyt/issues/894)) ([494d14c](https://github.com/equinor/flyt/commit/494d14cc9337d7403e9f0d4538b936d774bad91c))
+* rename popup ui styles updated ([#899](https://github.com/equinor/flyt/issues/899)) ([60fc61c](https://github.com/equinor/flyt/commit/60fc61c3af9841aa6d154821e409e18bc05954d9))
+
 ## [2.9.0](https://github.com/equinor/flyt/compare/v2.8.0...v2.9.0) (2025-02-07)
 
 
