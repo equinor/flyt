@@ -5,6 +5,10 @@ import { useEdgesState, useNodesState } from "reactflow";
 import { createLinkedProcessesEdges } from "../utils/createLinkedProcessesEdges";
 import { createLinkedProcessesNodes } from "../utils/createLinkedProcessesNodes";
 import { getLinkedProcessesLayout } from "../utils/getLayout";
+import {
+  chainedProcessShapeSize,
+  processhierarchyShapeSize,
+} from "../ConnectProcessShapeSize";
 
 export const useLinkedProcessesFlowState = (
   apiNodes: NodeDataApi[],
@@ -12,7 +16,9 @@ export const useLinkedProcessesFlowState = (
 ) => {
   const [nodes, setNodes] = useNodesState<NodeDataFull>([]);
   const [edges, setEdges] = useEdgesState([]);
-  const shapeSize = { height: 130, width: 290 };
+  const shapeSize = isHorizontalFlow
+    ? chainedProcessShapeSize
+    : processhierarchyShapeSize;
 
   useLayoutEffect(() => {
     const tempNodes = createLinkedProcessesNodes(
