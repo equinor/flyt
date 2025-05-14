@@ -3,7 +3,7 @@ import { useProjectId } from "@/hooks/useProjectId";
 import { patchGraph } from "@/services/graphApi";
 import { notifyOthers } from "@/services/notifyOthers";
 import { NodeDataCommon } from "@/types/NodeData";
-import { debounce } from "@/utils/debounce";
+import { UpdateNodeData, UpdateNodeDataRequestBody } from "@/types/NodeDataApi";
 import { unknownErrorToString } from "@/utils/isError";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useState } from "react";
@@ -18,7 +18,7 @@ export const useNodeUpdate = (selectedNode: NodeDataCommon) => {
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
   const { mutate, error } = useMutation(
-    (patchedObject: NodeDataCommon) =>
+    (patchedObject: UpdateNodeDataRequestBody) =>
       patchGraph(patchedObject, projectId, patchedObject.id),
     {
       onSuccess() {
@@ -30,17 +30,8 @@ export const useNodeUpdate = (selectedNode: NodeDataCommon) => {
     }
   );
 
-  const patchNode = (
-    selectedNode: NodeDataCommon,
-    updates: {
-      description?: string;
-      role?: string;
-      duration?: number | null;
-      unit?: string | null;
-    }
-  ) => {
+  const patchNode = (selectedNode: NodeDataCommon, updates: UpdateNodeData) => {
     mutate({
-      ...selectedNode,
       ...updates,
       id: selectedNode.id,
     });
