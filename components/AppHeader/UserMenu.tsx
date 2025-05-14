@@ -62,25 +62,33 @@ export const UserMenu = () => {
         anchorEl={buttonEl}
         onClose={closeMenu}
       >
-        <Menu.Item disabled>{account?.username}</Menu.Item>
+        <Menu.Item index={0} disabled>
+          {account?.username}
+        </Menu.Item>
         <Link href={"/changelog"}>
-          <Menu.Item className={styles.menuItem}>
+          <Menu.Item index={1} className={styles.menuItem}>
             Version {packageJson.version}
           </Menu.Item>
         </Link>
         {!!commitHash ? (
           <Link href={`https://github.com/equinor/flyt/commits/${commitHash}`}>
-            <Menu.Item className={styles.menuItem}>
+            <Menu.Item index={2} className={styles.menuItem}>
               Commit {commitHash.slice(0, 7)}
             </Menu.Item>
           </Link>
         ) : (
-          <Menu.Item disabled>Commit not available</Menu.Item>
+          <Menu.Item index={2} disabled>
+            Commit not available
+          </Menu.Item>
         )}
         <Link href={"/settings"}>
-          <Menu.Item className={styles.menuItem}>Settings</Menu.Item>
+          <Menu.Item index={3} className={styles.menuItem}>
+            Settings
+          </Menu.Item>
         </Link>
-        <Menu.Item onClick={() => instance.logout()}>Logout</Menu.Item>
+        <Menu.Item index={4} onClick={() => instance.logout()}>
+          Logout
+        </Menu.Item>
       </Menu>
     </>
   );
