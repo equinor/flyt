@@ -21,9 +21,17 @@ export default function MarkdownEditor(props: {
   onChange?: (value?: string) => void;
   helperText?: string;
   requireText?: boolean;
+  onBlur?: (value?: string) => void;
 }) {
-  const { canEdit, defaultText, label, onChange, helperText, requireText } =
-    props;
+  const {
+    canEdit,
+    defaultText,
+    label,
+    onChange,
+    helperText,
+    requireText,
+    onBlur,
+  } = props;
   const [editMode, setEditMode] = useState(canEdit);
   const [isOpenUrlPrompt, setIsOpenUrlPrompt] = useState(false);
   const [selectionInfo, setSelectionInfo] = useState<SelectionInfo>({
@@ -156,10 +164,8 @@ export default function MarkdownEditor(props: {
                 );
               },
               onBlur: () => {
-                // need a small timeout for the link button to continue working
-                setTimeout(() => {
-                  if (!isOpenUrlPrompt) setEditMode(false);
-                }, 250);
+                //perform data actions onblur if specified
+                onBlur && onBlur();
               },
             }}
             style={{

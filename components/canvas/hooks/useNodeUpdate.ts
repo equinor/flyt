@@ -6,11 +6,13 @@ import { NodeDataCommon } from "@/types/NodeData";
 import { debounce } from "@/utils/debounce";
 import { unknownErrorToString } from "@/utils/isError";
 import { useAccount, useMsal } from "@azure/msal-react";
+import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 
 export const useNodeUpdate = (selectedNode: NodeDataCommon) => {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
+  const [description, setdescription] = useState<string>();
 
   const { projectId } = useProjectId();
   const dispatch = useStoreDispatch();
@@ -37,23 +39,18 @@ export const useNodeUpdate = (selectedNode: NodeDataCommon) => {
       unit?: string | null;
     }
   ) => {
-    debounce(
-      () => {
-        mutate({
-          ...selectedNode,
-          ...updates,
-          id: selectedNode.id,
-        });
-      },
-      1500,
-      `update ${Object.keys(updates)[0]} - ${selectedNode.id}`
-    );
+    mutate({
+      ...selectedNode,
+      ...updates,
+      id: selectedNode.id,
+    });
   };
 
-  const patchDescription = (description?: string) =>
-    patchNode(selectedNode, { description });
-  const patchDuration = (duration: number | null, unit: string | null) =>
-    patchNode(selectedNode, { duration, unit });
-  const patchRole = (role: string) => patchNode(selectedNode, { role });
-  return { patchDescription, patchDuration, patchRole, error };
+  const patchDescription = () => patchNode(selectedNode, { description });
+  const patchDurationRole = (value: {
+    role?: string;
+    duration?: number | null;
+    unit?: string | null;
+  }) => patchNode(selectedNode, { ...value });
+  return { patchDescription, patchDurationRole, error, setdescription };
 };
