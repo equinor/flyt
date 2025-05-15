@@ -43,7 +43,7 @@ const getLayout = (
   edges.forEach((edge) => {
     dagreGraph.setEdge(edge.source, edge.target);
   });
-  console.log(dagreGraph);
+
   dagre.layout(dagreGraph);
 
   return nodes.map((node) => {
