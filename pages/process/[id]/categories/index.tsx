@@ -12,6 +12,7 @@ import { getProject } from "@/services/projectApi";
 import { useProjectId } from "@/hooks/useProjectId";
 import { TaskCategory } from "@/types/TaskCategory";
 import { getProjectName } from "@/utils/getProjectName";
+import { ExportButton } from "@/components/ExportCategory/ExportButton";
 
 export default function CategoriesPage(): JSX.Element {
   const { projectId } = useProjectId();
@@ -127,7 +128,22 @@ export default function CategoriesPage(): JSX.Element {
             overflowY: "scroll",
           }}
         >
-          <FilterCheckBoxes />
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingRight: "24px",
+            }}
+          >
+            <FilterCheckBoxes />
+            <ExportButton
+              problemChecked={problemChecked}
+              ideaChecked={ideaChecked}
+              questionChecked={questionChecked}
+              riskChecked={riskChecked}
+            />
+          </div>
           <TaskSection filterFunction={getFilter} />
         </div>
       </div>
