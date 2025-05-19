@@ -70,6 +70,7 @@ function MiddleSection(props: {
 }) {
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
+  const [isUserAddList, setisUserAddList] = useState<string[]>([]);
 
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
@@ -83,7 +84,11 @@ function MiddleSection(props: {
       fullName: UserAccessSearch["displayName"];
     }) => userApi.add(newUser),
     {
-      onSuccess: () => {
+      onSuccess: (response) => {
+        const updatedUserList = isUserAddList.filter(
+          (id) => response.data.user !== id
+        );
+        setisUserAddList(updatedUserList);
         void notifyOthers("Gave access to a new user", projectId, account);
         void queryClient.invalidateQueries();
       },
@@ -116,6 +121,10 @@ function MiddleSection(props: {
   );
 
   const handleSubmit = (user: UserAccessSearch) => {
+    if (isUserAddList?.includes(user.email)) return;
+    setisUserAddList((prev) => {
+      return [...prev, user.email];
+    });
     addUserMutation.mutate({
       user: user.shortName,
       vsmId: props.vsmId,
