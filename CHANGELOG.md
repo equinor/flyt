@@ -1,5 +1,20 @@
 # Changelog
 
+## [2.11.0](https://github.com/equinor/flyt/compare/v2.10.0...v2.11.0) (2025-05-19)
+
+
+### Features
+
+* Include PQIR in copy and paste ([#927](https://github.com/equinor/flyt/issues/927)) ([00528eb](https://github.com/equinor/flyt/commit/00528eba1afba1453ef77ba688e8c3e2acb1cd07))
+
+
+### Bug Fixes
+
+* preventing duplicate requests sharing same user ([#946](https://github.com/equinor/flyt/issues/946)) ([ff04128](https://github.com/equinor/flyt/commit/ff041288f894c094ceadf7f5c69e2ef329395b28))
+* Restructure of Process Hierarchy page cards to Linked Process card ([#926](https://github.com/equinor/flyt/issues/926)) ([2dcff54](https://github.com/equinor/flyt/commit/2dcff542ce1dc877c4bee1bdc7ca48677377f496))
+* User icon item click highlights wrong element ([#930](https://github.com/equinor/flyt/issues/930)) ([4443379](https://github.com/equinor/flyt/commit/4443379f8bbd39557d04e041cf0e79cdfd959538))
+* wrong order choice children ([#943](https://github.com/equinor/flyt/issues/943)) ([39542d1](https://github.com/equinor/flyt/commit/39542d1e758b837b29fa3a87e8a2aeb16c145dc8))
+
 ## [2.10.0](https://github.com/equinor/flyt/compare/v2.9.0...v2.10.0) (2025-03-18)
 
 
