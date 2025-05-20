@@ -1,5 +1,5 @@
 import { TextField, TextFieldProps } from "@equinor/eds-core-react";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, FocusEvent, useState } from "react";
 
 export type NodeInputProps = Omit<TextFieldProps, "value"> & {
   initialValue?: string;
@@ -7,6 +7,12 @@ export type NodeInputProps = Omit<TextFieldProps, "value"> & {
 
 export const NodeInput = (props: NodeInputProps) => {
   const [value, setValue] = useState(props.initialValue || "");
+  const handleOnBlur = (
+    e: FocusEvent<HTMLTextAreaElement, Element> &
+      FocusEvent<HTMLInputElement, Element>
+  ) => {
+    props.onBlur && props.onBlur(e);
+  };
   return (
     <TextField
       {...(props as TextFieldProps)}
@@ -15,8 +21,8 @@ export const NodeInput = (props: NodeInputProps) => {
         e: ChangeEvent<HTMLInputElement> & ChangeEvent<HTMLTextAreaElement>
       ) => {
         setValue(e.target.value);
-        props.onChange?.(e);
       }}
+      onBlur={handleOnBlur}
       style={{ backgroundColor: "transparent" }}
     />
   );

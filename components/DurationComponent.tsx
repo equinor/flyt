@@ -11,8 +11,8 @@ import { sortSearch } from "@/utils/sortSearch";
 type DurationComponent = {
   selectedNode: NodeDataCommon;
   onChangeDuration: (e: {
-    duration: number | null;
-    unit: string | null;
+    duration?: number | null;
+    unit?: string | null;
   }) => void;
   disabled: boolean;
 };
@@ -41,17 +41,17 @@ export function DurationComponent({
   const handleDurationChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = parseValue(event.target.value);
     setDuration(value);
-    onChangeDuration({
-      duration: value,
-      unit: unit,
-    });
   };
 
   const handleUnitChange = (unit: string) => {
     setUnitSearchInput(unit);
     const value = getTimeDefinitionValue(unit);
     setUnit(value);
-    onChangeDuration({ duration, unit: value });
+    onChangeDuration({ unit: value });
+  };
+
+  const handleOnBlurDuration = () => {
+    onChangeDuration({ duration });
   };
 
   return (
@@ -64,6 +64,7 @@ export function DurationComponent({
         min={0}
         value={`${duration === null ? "" : duration}`}
         onChange={handleDurationChange}
+        onBlur={handleOnBlurDuration}
       />
       <div style={{ padding: 8 }} />
       <Autocomplete
