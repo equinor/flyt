@@ -111,6 +111,7 @@ export default function MarkdownEditor(props: {
         setIsOpenUrlPrompt={setIsOpenUrlPrompt}
         setSelectionInfo={setSelectionInfo}
         setAndPatchText={setAndPatchText}
+        setEditMode={setEditMode}
         text={text ?? ""}
       />
     );
@@ -166,6 +167,9 @@ export default function MarkdownEditor(props: {
               onBlur: () => {
                 //perform data actions onblur if specified
                 onBlur && onBlur();
+                setTimeout(() => {
+                  if (!isOpenUrlPrompt) setEditMode(false);
+                }, 250);
               },
             }}
             style={{

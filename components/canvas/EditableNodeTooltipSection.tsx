@@ -61,7 +61,9 @@ export const EditableNodeTooltipSection = ({
             canEdit={nodeData.userCanEdit}
             defaultText={text || ""}
             label={"Description"}
-            onChange={(value) => value && setdescription(value)}
+            onChange={(value) => {
+              value ? setdescription(value) : setdescription("");
+            }}
             onBlur={patchDescription}
           />
         );
