@@ -26,7 +26,7 @@ export const EditableNodeTooltipSection = ({
   variant = "description",
   nodeData,
 }: EditableNodeTooltipSectionProps) => {
-  const { patchDescription, patchDuration, patchRole } =
+  const { patchDescription, patchDurationRole, setdescription } =
     useNodeUpdate(nodeData);
 
   const shouldDisplayHeader = !(
@@ -40,9 +40,7 @@ export const EditableNodeTooltipSection = ({
         return (
           <DurationComponent
             selectedNode={nodeData}
-            onChangeDuration={({ duration, unit }) =>
-              patchDuration(duration, unit)
-            }
+            onChangeDuration={(value) => patchDurationRole(value)}
             disabled={!nodeData.userCanEdit}
           />
         );
@@ -51,10 +49,10 @@ export const EditableNodeTooltipSection = ({
           <NodeInput
             initialValue={text}
             id={`${nodeData.id}-role`}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              patchRole(e.target.value)
-            }
             disabled={!nodeData.userCanEdit}
+            onBlur={(e: ChangeEvent<HTMLInputElement>) =>
+              patchDurationRole({ role: e.target.value })
+            }
           />
         );
       case "description":
@@ -63,7 +61,10 @@ export const EditableNodeTooltipSection = ({
             canEdit={nodeData.userCanEdit}
             defaultText={text || ""}
             label={"Description"}
-            onChange={patchDescription}
+            onChange={(value) => {
+              value ? setdescription(value) : setdescription("");
+            }}
+            onBlur={patchDescription}
           />
         );
     }

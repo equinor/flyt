@@ -29,6 +29,7 @@ export function URLPrompt(props: {
   setIsOpenUrlPrompt: Dispatch<SetStateAction<boolean>>;
   setSelectionInfo: Dispatch<SetStateAction<SelectionInfo>>;
   setAndPatchText: (text: string) => void;
+  setEditMode?: Dispatch<SetStateAction<boolean | undefined>>;
   text: string;
 }) {
   const {
@@ -36,6 +37,7 @@ export function URLPrompt(props: {
     setAndPatchText,
     setIsOpenUrlPrompt,
     setSelectionInfo,
+    setEditMode,
     text,
   } = props;
 
@@ -45,6 +47,7 @@ export function URLPrompt(props: {
     setSelectionInfo({ ...selectionInfo, linkText: "" });
     setUrl("");
     setIsOpenUrlPrompt(false);
+    setEditMode && setEditMode(true);
   };
 
   const onConfirmURLPrompt = (url: string) => {

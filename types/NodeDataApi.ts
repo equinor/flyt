@@ -22,3 +22,10 @@ export type NodeDataApiRequestBody = Pick<NodeDataApi, "type"> &
   Partial<
     Pick<NodeDataApi, "description" | "role" | "duration" | "unit" | "tasks">
   >;
+
+export type UpdateNodeData = Partial<
+  Pick<NodeDataApi, "description" | "role" | "duration" | "unit">
+>;
+
+export type UpdateNodeDataRequestBody = UpdateNodeData &
+  Pick<NodeDataApi, "id">;
