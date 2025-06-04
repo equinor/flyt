@@ -8,4 +8,6 @@ export type Task = {
   solved: boolean | null;
   number: number;
   category: any;
+  activityType: string;
+  role: string;
 };
