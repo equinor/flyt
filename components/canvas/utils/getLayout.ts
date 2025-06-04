@@ -2,6 +2,7 @@ import { Node, Edge } from "reactflow";
 import dagre, { Node as DagreNode } from "dagre";
 import { NodeDataCommon, NodeDataFull } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
+import { CustomEdge, getEdgeOrder } from "./getEdgeOrder";
 
 type Options = {
   rankdir?: string;
@@ -36,6 +37,8 @@ const getLayout = (
       type: node.type,
     });
   });
+
+  edges = getEdgeOrder(edges, nodes);
 
   edges.forEach((edge) => {
     dagreGraph.setEdge(edge.source, edge.target);
