@@ -3,12 +3,14 @@ import { unarchive } from "@equinor/eds-icons";
 import React, { useState } from "react";
 import { ExportModal } from "./ExportModal";
 
-export const ExportButton = (props: {
+type ExportButtonProps = {
   problemChecked: boolean;
   ideaChecked: boolean;
   questionChecked: boolean;
   riskChecked: boolean;
-}) => {
+};
+
+export const ExportButton = (props: ExportButtonProps) => {
   const { problemChecked, ideaChecked, questionChecked, riskChecked } = props;
   const [isExportModalVisible, setisExportModalVisible] = useState(false);
   const handleClose = () => {

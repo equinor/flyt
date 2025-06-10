@@ -5,7 +5,8 @@ import { getFormattedPQIRData } from "./getFormattedPQIRData";
 
 export function exportToSpreadsheetFiles(
   tasks: Task[] | undefined,
-  value: string
+  value: string,
+  projectTitle: string
 ) {
   const data = tasks ? getFormattedPQIRData(tasks) : [];
 
@@ -16,15 +17,20 @@ export function exportToSpreadsheetFiles(
   const workbook = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
 
+  //Naming file using current date
+  const currentDate = new Date();
+  const formattedDate = currentDate.toJSON().split("T")[0];
+  const fileName = `${projectTitle}_PQIR_${formattedDate}`;
+
   // Export to xlsx
   if (value === "Excel") {
-    XLSX.writeFileXLSX(workbook, "outputnew.xlsx");
+    XLSX.writeFileXLSX(workbook, `${fileName}.xlsx`);
   }
 
   // Export to CSV
   else {
     const csv = XLSX.utils.sheet_to_csv(worksheet);
     const csvBlob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    saveAs(csvBlob, `csvfile.csv`);
+    saveAs(csvBlob, `${fileName}.csv`);
   }
 }

@@ -16,6 +16,8 @@ import { exportToSpreadsheetFiles } from "@/utils/exportToSpreadsheetFiles";
 import { exportPQIRFormat } from "@/types/ExportFormat";
 import { unknownErrorToString } from "@/utils/isError";
 import { TaskTypes } from "@/types/TaskTypes";
+import { getProjectName } from "@/utils/getProjectName";
+import { getProject } from "@/services/projectApi";
 
 type ExportModal = {
   handleClose: () => void;
@@ -55,6 +57,10 @@ export const ExportModal = (props: ExportModal) => {
   const [exportFormatValue, setexportFormatValue] = useState("");
 
   const { projectId } = useProjectId();
+  const { data: project } = useQuery(["project", projectId], () =>
+    getProject(projectId)
+  );
+  const projectTitle = getProjectName(project);
 
   const {
     data: tasks,
@@ -73,6 +79,15 @@ export const ExportModal = (props: ExportModal) => {
     setexportFormatValue(value);
   };
 
+  const getExportDisabled = () => {
+    const checkedPQIRsDisable =
+      (isProblemSelected && categoriesLinkedToProblems.length) ||
+      (isQuestionSelected && categoriesLinkedToQuestion.length) ||
+      (isIdeaSelected && categoriesLinkedToIdea.length) ||
+      (isRiskSelected && categoriesLinkedToRisk.length);
+    return !(checkedPQIRsDisable && exportFormatValue);
+  };
+
   const handleExportPQIR = () => {
     const checkedPQIRs: string[] = [];
     if (isProblemSelected && categoriesLinkedToProblems.length)
@@ -86,7 +101,12 @@ export const ExportModal = (props: ExportModal) => {
     const filteredPQIRs = tasks?.filter((task) =>
       checkedPQIRs.includes(task.type)
     );
-    exportToSpreadsheetFiles(filteredPQIRs, exportFormatValue);
+    const modifiedPQIRs = filteredPQIRs?.map((task) => {
+      task.activityType = task.activityType ?? "-";
+      task.role = task.role ?? "-";
+      return task;
+    });
+    exportToSpreadsheetFiles(modifiedPQIRs, exportFormatValue, projectTitle);
   };
 
   if (isLoadingTasks) return <Typography>Loading...</Typography>;
@@ -144,10 +164,7 @@ export const ExportModal = (props: ExportModal) => {
           >
             Cancel
           </Button>
-          <Button
-            disabled={exportFormatValue ? false : true}
-            onClick={handleExportPQIR}
-          >
+          <Button disabled={getExportDisabled()} onClick={handleExportPQIR}>
             Export
           </Button>
         </div>
