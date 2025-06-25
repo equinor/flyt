@@ -90,13 +90,13 @@ export const ExportModal = (props: ExportModal) => {
 
   const handleExportPQIR = () => {
     const checkedPQIRs: string[] = [];
-    if (isProblemSelected && categoriesLinkedToProblems.length)
+    if (isProblemSelected && categoriesLinkedToProblems?.length)
       checkedPQIRs.push(TaskTypes.Problem);
-    if (isQuestionSelected && categoriesLinkedToQuestion.length)
+    if (isQuestionSelected && categoriesLinkedToQuestion?.length)
       checkedPQIRs.push(TaskTypes.Question);
-    if (isIdeaSelected && categoriesLinkedToIdea.length)
+    if (isIdeaSelected && categoriesLinkedToIdea?.length)
       checkedPQIRs.push(TaskTypes.Idea);
-    if (isRiskSelected && categoriesLinkedToRisk.length)
+    if (isRiskSelected && categoriesLinkedToRisk?.length)
       checkedPQIRs.push(TaskTypes.Risk);
     const filteredPQIRs = tasks?.filter((task) =>
       checkedPQIRs.includes(task.type)
