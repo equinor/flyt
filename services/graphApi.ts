@@ -1,8 +1,11 @@
 const baseUrl = "/api/v2.0";
 
-import { NodeData } from "@/types/NodeData";
 import BaseAPIServices from "./BaseAPIServices";
-import { NodeDataApi, NodeDataApiRequestBody } from "@/types/NodeDataApi";
+import {
+  NodeDataApi,
+  NodeDataApiRequestBody,
+  UpdateNodeDataRequestBody,
+} from "@/types/NodeDataApi";
 import { Graph } from "types/Graph";
 
 export const getGraph = (projectId: string | string[]): Promise<Graph> => {
@@ -22,7 +25,7 @@ export const addVertice = (
   ).then((r) => r.data);
 
 export const patchGraph = (
-  data: NodeData,
+  data: UpdateNodeDataRequestBody,
   projectId: string | string[],
   vertexId: string
 ): Promise<NodeDataApi> =>
