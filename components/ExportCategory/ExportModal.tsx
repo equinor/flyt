@@ -18,6 +18,7 @@ import { unknownErrorToString } from "@/utils/isError";
 import { TaskTypes } from "@/types/TaskTypes";
 import { getProjectName } from "@/utils/getProjectName";
 import { getProject } from "@/services/projectApi";
+import { useStoreDispatch } from "@/hooks/storeHooks";
 
 type ExportModal = {
   handleClose: () => void;
@@ -61,6 +62,7 @@ export const ExportModal = (props: ExportModal) => {
     getProject(projectId)
   );
   const projectTitle = getProjectName(project);
+  const dispatch = useStoreDispatch();
 
   const {
     data: tasks,
@@ -106,7 +108,14 @@ export const ExportModal = (props: ExportModal) => {
       task.role = task.role ?? "-";
       return task;
     });
-    exportToSpreadsheetFiles(modifiedPQIRs, exportFormatValue, projectTitle);
+    try {
+      exportToSpreadsheetFiles(modifiedPQIRs, exportFormatValue, projectTitle);
+      handleClose();
+      dispatch.setSnackMessage("The file has been successfully downloaded.");
+      dispatch.setDownloadSnackbar(true);
+    } catch (error) {
+      console.log("ERROR", error);
+    }
   };
 
   if (isLoadingTasks) return <Typography>Loading...</Typography>;
@@ -151,6 +160,7 @@ export const ExportModal = (props: ExportModal) => {
         </Typography>
         <Autocomplete
           label=""
+          placeholder="Choose Export Format"
           options={exportPQIRFormat}
           optionLabel={(option) => option.type}
           onInputChange={handleExportFormat}
