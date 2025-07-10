@@ -48,6 +48,7 @@
     "axios": "^1.7.7",
     "dagre": "^0.8.5",
     "easy-peasy": "5.2.0",
+    "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "jsonwebtoken": "9.0.1",
     "moment": "2.29.4",
@@ -70,8 +71,7 @@
     "sharp": "0.32.6",
     "socket.io": "4.7.5",
     "socket.io-client": "4.7.5",
-    "styled-components": "5.3.3",
-    "xlsx": "^0.18.5"
+    "styled-components": "5.3.3"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.5.0",

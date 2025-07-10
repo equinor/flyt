@@ -52,8 +52,8 @@ export const ExportModal = (props: ExportModal) => {
   } = props;
 
   const [isProblemSelected, setisProblemSelected] = useState(problemChecked);
-  const [isQuestionSelected, setisQuestionSelected] = useState(ideaChecked);
-  const [isIdeaSelected, setisIdeaSelected] = useState(questionChecked);
+  const [isQuestionSelected, setisQuestionSelected] = useState(questionChecked);
+  const [isIdeaSelected, setisIdeaSelected] = useState(ideaChecked);
   const [isRiskSelected, setisRiskSelected] = useState(riskChecked);
   const [exportFormatValue, setexportFormatValue] = useState("");
 
