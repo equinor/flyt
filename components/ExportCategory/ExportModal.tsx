@@ -90,6 +90,13 @@ export const ExportModal = (props: ExportModal) => {
     return !(checkedPQIRsDisable && exportFormatValue);
   };
 
+  const handleSnackMessage = () => {
+    setTimeout(() => {
+      dispatch.setSnackMessage("The file has been successfully downloaded.");
+      dispatch.setDownloadSnackbar(true);
+    }, 1000);
+  };
+
   const handleExportPQIR = () => {
     const checkedPQIRs: string[] = [];
     if (isProblemSelected && categoriesLinkedToProblems?.length)
@@ -111,8 +118,7 @@ export const ExportModal = (props: ExportModal) => {
     try {
       exportToSpreadsheetFiles(modifiedPQIRs, exportFormatValue, projectTitle);
       handleClose();
-      dispatch.setSnackMessage("The file has been successfully downloaded.");
-      dispatch.setDownloadSnackbar(true);
+      handleSnackMessage();
     } catch (error) {
       console.log("ERROR", error);
     }

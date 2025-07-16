@@ -19,6 +19,7 @@ export const exportToSpreadsheetFiles = async (
     header: key,
     key: key,
   }));
+  worksheet.getRow(1).font = { bold: true };
 
   //Add the data into worksheet
   data.forEach((item) => {

@@ -1,10 +1,11 @@
 import { Task } from "@/types/Task";
 import { exportPQIRHeaders } from "../types/ExportFormat";
+import { taskSorter } from "./taskSorter";
 
 export const getFormattedPQIRData = (tasks: Task[]) => {
   const { id, type, description, activityType, category, stakeholder } =
     exportPQIRHeaders;
-  return tasks.map((task) => {
+  return tasks?.sort(taskSorter()).map((task) => {
     const categories = task?.category.length
       ? task.category.map((category: { name: string }) => category.name).join()
       : "-";
