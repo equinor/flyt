@@ -1,0 +1,29 @@
+.defaultStyle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 20px;
+  background-color: rgb(46, 46, 46);
+  padding: 14px;
+  border-radius: 4px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  color: white;
+  z-index: 1000;
+}
+
+.downloadSnackMessageStyle {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 20px;
+  background-color: #e6faec;
+  padding: 14px;
+  border-radius: 4px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  color: #007079;
+  z-index: 1000;
+  font-size: 16px;
+}

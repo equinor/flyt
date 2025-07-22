@@ -1,0 +1,61 @@
+.exportBox {
+  background: #fff;
+  border-radius: 4px;
+  width: 328px;
+  height: 465px;
+  animation-name: fade-in;
+  animation-duration: 0.5s;
+}
+
+.topSectionBox {
+  padding: 11px 24px;
+  border-bottom: 1px solid #dcdcdc;
+  display: flex;
+  justify-content: space-between;
+}
+
+.title {
+  color: #000000;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0px;
+}
+
+.subTitle {
+  color: #00000066;
+  font-size: 12px;
+  font-weight: 500;
+  margin: 4px 0px 0px;
+}
+
+.contentBox {
+  padding: 16px 24px;
+}
+
+.contentTitle {
+  color: #000000;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.contentText {
+  color: #3d3d3d;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.spacingForExportBox {
+  margin-top: 16px !important;
+  margin-bottom: 6px !important;
+}
+
+.footer {
+  padding-top: 30px;
+  padding-bottom: 14px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.cancelBtn {
+  margin-right: 8px !important;
+}

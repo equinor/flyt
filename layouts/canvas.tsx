@@ -101,6 +101,7 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
   const dispatch = useStoreDispatch();
 
   const snackMessage = useStoreState((state) => state.snackMessage);
+  const downloadSnackbar = useStoreState((state) => state.downloadSnackbar);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState(null);
 
@@ -220,6 +221,11 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
     } else {
       void router.push(`/process/${project.vsmProjectID}/duplicate`);
     }
+  }
+
+  function handleCloseSnackbar() {
+    dispatch.setSnackMessage("");
+    dispatch.setDownloadSnackbar(false);
   }
 
   return (
@@ -425,7 +431,8 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
       {snackMessage && (
         <MySnackBar
           autoHideDuration={3000}
-          onClose={() => dispatch.setSnackMessage("")}
+          onClose={handleCloseSnackbar}
+          downloadSnackbar={downloadSnackbar}
         >
           {`${snackMessage}`}
         </MySnackBar>
