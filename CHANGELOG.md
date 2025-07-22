@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.12.0](https://github.com/equinor/flyt/compare/v2.11.0...v2.12.0) (2025-07-22)
+
+
+### Features
+
+* add export option in category page ([#941](https://github.com/equinor/flyt/issues/941)) ([e3da3bd](https://github.com/equinor/flyt/commit/e3da3bdb258bad4e3b06e53d3862321107a9d08b))
+
+
+### Bug Fixes
+
+* content wiped out when in another field ([#945](https://github.com/equinor/flyt/issues/945)) ([c1c7c56](https://github.com/equinor/flyt/commit/c1c7c56e2a4d3a3492380caa5f86f4d3a69fc0f6))
+* Snyk issues Upgrade packages next and socket.io ([#990](https://github.com/equinor/flyt/issues/990)) ([c3d3109](https://github.com/equinor/flyt/commit/c3d3109ef2ac82cdd013d214e69da06b9106bae5))
+
 ## [2.11.0](https://github.com/equinor/flyt/compare/v2.10.0...v2.11.0) (2025-05-19)
 
 
