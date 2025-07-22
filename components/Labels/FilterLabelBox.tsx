@@ -84,9 +84,9 @@ function LabelSection(props: {
   const router = useRouter();
 
   // rl stands for "required label"
-  const handleLabels = (selectedLabelId: string, isSelect: boolean) => {
+  const handleLabels = (label: any, isSelect: boolean) => {
     const labelIdArray = toggleLabels(
-      selectedLabelId,
+      label.id.toString(),
       router.query.rl,
       isSelect
     );

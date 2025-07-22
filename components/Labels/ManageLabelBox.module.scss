@@ -8,8 +8,8 @@
   display: flex;
   flex-direction: column;
 
-  width: min(90vw, 600px);
-  height: 70vh;
+  width: min(90vw, 1300px);
+  height: 80vh;
 
   animation-name: fade-in;
   animation-duration: 0.5s;
@@ -42,4 +42,28 @@
   flex-wrap: wrap;
   overflow: auto;
   margin-top: 30px;
+}
+
+.labelContainer {
+  height: 100px;
+  display: flex;
+  background-color: $equinor_LIGHT_GRAY;
+  padding: 16px;
+  gap: 20px;
+  flex-grow: 1;
+  overflow: auto;
+  margin-top: 15px;
+}
+
+@media (max-width: 1024px) {
+  .labelContainer {
+    flex-direction: column;
+  }
+}
+
+@media (min-width: 1025px) {
+  .labelContainer {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
 }

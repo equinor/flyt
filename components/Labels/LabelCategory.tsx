@@ -31,11 +31,9 @@ export default function LabelCategory(props: {
               key={label.id}
               variant={isLabelActive ? "active" : undefined}
               style={chipInlineStyle}
-              onClick={() => handleLabels(label.id.toString(), true)}
+              onClick={() => handleLabels(label, true)}
               onDelete={
-                isLabelActive
-                  ? () => handleLabels(label.id.toString(), false)
-                  : undefined
+                isLabelActive ? () => handleLabels(label, false) : undefined
               }
             >
               {label.text}

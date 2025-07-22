@@ -13,6 +13,8 @@ import { ProcessLabel } from "@/types/ProcessLabel";
 import styles from "./ManageLabelBox.module.scss";
 import { unknownErrorToString } from "utils/isError";
 import { Project } from "types/Project";
+import { getCategorizedLabels } from "@/utils/getCategorizedLabels";
+import LabelCategory from "./LabelCategory";
 
 export function ManageLabelBox(props: {
   isVisible: boolean;
@@ -75,8 +77,8 @@ function AddSection(props: { process: Project }) {
     { onSettled: () => queryClient.invalidateQueries() }
   );
 
-  const handleSelect = (item: string) => {
-    const trimmedItem = item.trim();
+  const handleSelect = (item: ProcessLabel) => {
+    const trimmedItem = item.text.trim();
     if (!trimmedItem) {
       return null;
     }
@@ -95,12 +97,26 @@ function AddSection(props: { process: Project }) {
     }
   );
 
-  const handleDelete = (item: number) => {
+  const handleDelete = (item: ProcessLabel) => {
     removeLabelMutation.mutate({
       processID: props.process.vsmProjectID,
-      labelID: item,
+      labelID: item.id,
     });
   };
+
+  const isActive = (id: string) => {
+    if (props.process.labels) {
+      return props.process.labels.some(
+        (element) => element.id.toString() == id
+      );
+    }
+  };
+
+  const handleLabels = (label: any, isAdd: boolean) => {
+    if (isAdd) handleSelect(label);
+    else handleDelete(label);
+  };
+  const [categorisedLabels] = getCategorizedLabels(labels || []);
 
   return (
     <>
@@ -113,41 +129,19 @@ function AddSection(props: { process: Project }) {
         value={term}
       />
       {error && <p>{unknownErrorToString(error)}</p>}
-      <div className={styles.labelSection}>
-        {props.process.labels?.map((label) => (
-          <Chip
-            key={label.id}
-            onDelete={() => handleDelete(label.id)}
-            style={{
-              marginRight: "10px",
-              marginBottom: "10px",
-            }}
-            variant="active"
-          >
-            {label.text}
-          </Chip>
-        ))}
-
-        {labels?.map(function (label) {
-          if (
-            !props.process.labels.some(
-              (existingLabel) => existingLabel.text == label.text
-            )
-          ) {
+      <div className={styles.labelContainer}>
+        {categorisedLabels &&
+          Object.keys(categorisedLabels).map((categoryName) => {
             return (
-              <Chip
-                key={label.id}
-                onClick={() => handleSelect(label.text)}
-                style={{
-                  marginRight: "10px",
-                  marginBottom: "10px",
-                }}
-              >
-                {label.text}
-              </Chip>
+              <LabelCategory
+                key={categoryName}
+                categoryName={categoryName}
+                labels={categorisedLabels[categoryName]}
+                isActive={isActive}
+                handleLabels={handleLabels}
+              />
             );
-          }
-        })}
+          })}
       </div>
     </>
   );
