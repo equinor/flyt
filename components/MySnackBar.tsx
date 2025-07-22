@@ -1,9 +1,13 @@
 import { ReactNode, useEffect } from "react";
+import { Icon, Scrim } from "@equinor/eds-core-react";
+import { download_done } from "@equinor/eds-icons";
+import styles from "./MySnackBar.module.scss";
 
 export const MySnackBar = (props: {
   children: ReactNode;
   autoHideDuration: number;
   onClose: () => void;
+  downloadSnackbar: boolean;
 }): JSX.Element => {
   useEffect(() => {
     setTimeout(() => {
@@ -11,25 +15,31 @@ export const MySnackBar = (props: {
     }, props.autoHideDuration);
   }, []);
 
-  return (
-    <div
-      onClick={() => {
-        props.onClose();
-      }}
-      style={{
-        position: "absolute",
-        bottom: 0,
-        right: 0,
-        margin: 20,
-        backgroundColor: "rgb(46,46,46)",
-        padding: 14,
-        borderRadius: 4,
-        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-        color: "white",
-        zIndex: 1000,
-      }}
-    >
-      {props.children}
-    </div>
+  const renderSnackbar = () => {
+    return (
+      <div
+        onClick={() => {
+          props.onClose();
+        }}
+        className={
+          props.downloadSnackbar
+            ? styles.downloadSnackMessageStyle
+            : styles.defaultStyle
+        }
+      >
+        {props.downloadSnackbar ? (
+          <Icon data={download_done} color={"#007079"} />
+        ) : null}
+        {props.children}
+      </div>
+    );
+  };
+
+  return props.downloadSnackbar ? (
+    <Scrim open isDismissable onClose={props.onClose}>
+      {renderSnackbar()}
+    </Scrim>
+  ) : (
+    <>{renderSnackbar()}</>
   );
 };
