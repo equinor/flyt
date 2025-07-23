@@ -4,12 +4,11 @@ import styles from "./LabelCategory.module.scss";
 import { ProcessLabel } from "@/types/ProcessLabel";
 
 const chipInlineStyle: React.CSSProperties = {
-  marginRight: "5px",
-  marginBottom: "10px",
   height: "auto",
   gridTemplateColumns: "auto",
   whiteSpace: "normal",
   wordBreak: "break-word",
+  padding: "4px 16px",
 };
 
 export default function LabelCategory(props: {
