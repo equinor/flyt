@@ -15,7 +15,7 @@ export default function LabelCategory(props: {
   categoryName: string;
   labels: ProcessLabel[];
   isActive: (id: string) => boolean | undefined;
-  handleLabels: (id: string, isSelect: boolean) => void;
+  handleLabels: (label: ProcessLabel, isSelect: boolean) => void;
 }) {
   const { categoryName, labels, isActive, handleLabels } = props;
 

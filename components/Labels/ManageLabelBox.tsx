@@ -112,7 +112,7 @@ function AddSection(props: { process: Project }) {
     }
   };
 
-  const handleLabels = (label: any, isAdd: boolean) => {
+  const handleLabels = (label: ProcessLabel, isAdd: boolean) => {
     if (isAdd) handleSelect(label);
     else handleDelete(label);
   };

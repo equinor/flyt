@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import LabelCategory from "./LabelCategory";
 import { toggleLabels } from "@/utils/toggleLabels";
 import { getCategorizedLabels } from "@/utils/getCategorizedLabels";
+import { ProcessLabel } from "@/types/ProcessLabel";
 
 export function FilterLabelBox(props: { handleClose: () => void }) {
   const [searchText, setSearchText] = useState("");
@@ -76,7 +77,7 @@ function SearchSection(props: { setSearchText: (searchText: string) => void }) {
 }
 
 function LabelSection(props: {
-  labels: any;
+  labels: ProcessLabel[] | undefined;
   isLoading: boolean;
   error: unknown;
 }) {
@@ -84,7 +85,7 @@ function LabelSection(props: {
   const router = useRouter();
 
   // rl stands for "required label"
-  const handleLabels = (label: any, isSelect: boolean) => {
+  const handleLabels = (label: ProcessLabel, isSelect: boolean) => {
     const labelIdArray = toggleLabels(
       label.id.toString(),
       router.query.rl,
@@ -109,7 +110,7 @@ function LabelSection(props: {
     return <p>{unknownErrorToString(error)}</p>;
   }
 
-  const [categorisedLabels, noOfLabels] = getCategorizedLabels(labels);
+  const [categorisedLabels, noOfLabels] = getCategorizedLabels(labels ?? []);
 
   return (
     <div className={styles.labelSection}>
