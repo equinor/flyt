@@ -4,19 +4,18 @@ import styles from "./LabelCategory.module.scss";
 import { ProcessLabel } from "@/types/ProcessLabel";
 
 const chipInlineStyle: React.CSSProperties = {
-  marginRight: "5px",
-  marginBottom: "10px",
   height: "auto",
   gridTemplateColumns: "auto",
   whiteSpace: "normal",
   wordBreak: "break-word",
+  padding: "4px 16px",
 };
 
 export default function LabelCategory(props: {
   categoryName: string;
   labels: ProcessLabel[];
   isActive: (id: string) => boolean | undefined;
-  handleLabels: (id: string, isSelect: boolean) => void;
+  handleLabels: (label: ProcessLabel, isSelect: boolean) => void;
 }) {
   const { categoryName, labels, isActive, handleLabels } = props;
 
@@ -31,11 +30,9 @@ export default function LabelCategory(props: {
               key={label.id}
               variant={isLabelActive ? "active" : undefined}
               style={chipInlineStyle}
-              onClick={() => handleLabels(label.id.toString(), true)}
+              onClick={() => handleLabels(label, true)}
               onDelete={
-                isLabelActive
-                  ? () => handleLabels(label.id.toString(), false)
-                  : undefined
+                isLabelActive ? () => handleLabels(label, false) : undefined
               }
             >
               {label.text}
