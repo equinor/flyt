@@ -9,5 +9,5 @@ export const exportPQIRHeaders = {
   description: "Description",
   activityType: "Activity Type",
   category: "Category",
-  stakeholder: "Stakeholder",
+  role: "Role",
 };
