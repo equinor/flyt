@@ -3,7 +3,7 @@ import { exportPQIRHeaders } from "../types/ExportFormat";
 import { taskSorter } from "./taskSorter";
 
 export const getFormattedPQIRData = (tasks: Task[]) => {
-  const { id, type, description, activityType, category, stakeholder } =
+  const { id, type, description, activityType, category, role } =
     exportPQIRHeaders;
   return tasks?.sort(taskSorter()).map((task) => {
     const categories = task?.category.length
@@ -14,9 +14,9 @@ export const getFormattedPQIRData = (tasks: Task[]) => {
       .filter((item, index) => activityTypes.indexOf(item) === index)
       .join(",");
     const idType = task.type.slice(0, 1);
-    const stakeholders = task?.role.split(",") || [];
-    const unqiueStakeholder = stakeholders
-      .filter((item, index) => stakeholders.indexOf(item) === index)
+    const roles = task?.role.split(",") || [];
+    const unqiueRole = roles
+      .filter((item, index) => roles.indexOf(item) === index)
       .join(",");
 
     return {
@@ -25,7 +25,7 @@ export const getFormattedPQIRData = (tasks: Task[]) => {
       [description]: task?.description || "-",
       [activityType]: unqiueActivityType || "-",
       [category]: categories,
-      [stakeholder]: unqiueStakeholder || "-",
+      [role]: unqiueRole || "-",
     };
   });
 };

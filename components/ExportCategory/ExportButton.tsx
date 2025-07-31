@@ -19,7 +19,7 @@ export const ExportButton = (props: ExportButtonProps) => {
   return (
     <>
       <Button onClick={() => setisExportModalVisible(true)}>
-        Export
+        Export PQIRs
         <Icon data={unarchive} />
       </Button>
       <Scrim open={isExportModalVisible} onClose={handleClose} isDismissable>

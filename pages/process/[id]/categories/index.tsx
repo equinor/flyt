@@ -67,7 +67,6 @@ export default function CategoriesPage(): JSX.Element {
         style={{
           paddingLeft: 24,
           paddingRight: 24,
-          paddingTop: 12,
           display: "flex",
           flexWrap: "wrap",
         }}
@@ -132,7 +131,7 @@ export default function CategoriesPage(): JSX.Element {
             style={{
               display: "flex",
               alignItems: "center",
-              justifyContent: "space-between",
+              paddingTop: "12px",
               paddingRight: "24px",
             }}
           >
