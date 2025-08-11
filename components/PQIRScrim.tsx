@@ -41,7 +41,7 @@ export const PQIRScrim = ({
         </div>
 
         <div className={styles.horizontalLine} />
-        <div className={styles.mm}>
+        <div className={styles.bodyWrapper}>
           <div>
             <Typography className={styles.scrimBody} variant="body_short">
               Would you like to mark it as solved only for this card or for all
@@ -49,8 +49,8 @@ export const PQIRScrim = ({
             </Typography>
           </div>
           <div className={styles.buttons}>
-            <Button onClick={onSaveAllCards} variant="contained">
-              AllCards
+            <Button onClick={onSaveAllCards} variant="outlined">
+              All Cards
             </Button>
             <Button onClick={onSaveThisCard} variant="outlined">
               This Card only
