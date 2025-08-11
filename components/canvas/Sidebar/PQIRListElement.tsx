@@ -15,6 +15,12 @@ import styles from "./PQIRListElement.module.scss";
 import { PQIRTypeSelection } from "./PQIRTypeSelection";
 import { usePQIR } from "./usePQIR";
 import { usePQIRMutations } from "./usePQIRMutations";
+import { useState } from "react";
+import { PQIRScrim } from "@/components/PQIRScrim";
+import { createPortal } from "react-dom";
+import { useProjectId } from "@/hooks/useProjectId";
+import { getTasksforSelectedNode } from "@/services/taskApi";
+import { useReactFlow } from "reactflow";
 
 const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
   ssr: false,
@@ -45,10 +51,44 @@ export const PQIRListELement = ({
     hasChanges,
   } = usePQIR(pqir, selectedNode);
   const { linkPQIR, unlinkPQIR, updatePQIR } = usePQIRMutations();
+  const { projectId } = useProjectId();
+  const [showScrim, setShowScrim] = useState(false);
   const dispatch = useStoreDispatch();
+  const { getNodes } = useReactFlow();
   const selectedNodeId = selectedNode.id;
   const pqirId = pqir.id;
+  const nodes = getNodes();
 
+  const handleSaveClick = async () => {
+    try {
+      const linkedCards: string[] = [];
+
+      for (const node of nodes) {
+        const tasks = await getTasksforSelectedNode(projectId, node.id);
+
+        if (tasks.some((task) => task.id === pqir.id && !task.solved)) {
+          linkedCards.push(node.id);
+        }
+      }
+
+      if (solved && linkedCards.length > 1) {
+        setShowScrim(true);
+      } else {
+        updatePQIR.mutate({
+          pqir: {
+            ...pqir,
+            description: description,
+            type: selectedType,
+            solved: solved,
+          },
+          selectedNodeId,
+          isSolvedSingleCard: false,
+        });
+      }
+    } catch (err) {
+      console.error("Error fetching linked cards");
+    }
+  };
   const selectOrDeselectButton = (
     <Button
       variant="ghost_icon"
@@ -88,26 +128,50 @@ export const PQIRListELement = ({
       </div>
     </div>
   );
-
   const panelSectionBottom = (
     <div className={styles.actionButtonsContainer}>
       <Button
-        onClick={() =>
-          updatePQIR?.mutate({
-            pqir: {
-              ...pqir,
-              description: description,
-              type: selectedType,
-              solved: solved,
-            },
-            selectedNodeId,
-          })
-        }
+        onClick={handleSaveClick}
         className={styles.actionButton}
         disabled={!hasChanges || !description}
       >
         Save
       </Button>
+
+      {showScrim &&
+        createPortal(
+          <PQIRScrim
+            onClose={() => setShowScrim(false)}
+            onSaveThisCard={async () => {
+              updatePQIR?.mutate({
+                pqir: {
+                  ...pqir,
+                  description: description,
+                  type: selectedType,
+                  solved: solved,
+                },
+                selectedNodeId,
+                isSolvedSingleCard: true,
+              });
+
+              setShowScrim(false);
+            }}
+            onSaveAllCards={() => {
+              updatePQIR?.mutate({
+                pqir: {
+                  ...pqir,
+                  description: description,
+                  type: selectedType,
+                  solved: solved,
+                },
+                selectedNodeId,
+                isSolvedSingleCard: false,
+              });
+              setShowScrim(false);
+            }}
+          />,
+          document.body
+        )}
     </div>
   );
 
