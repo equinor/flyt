@@ -99,9 +99,26 @@ export const usePQIRMutations = () => {
   );
 
   const updatePQIR = useMutation(
-    ({ pqir, selectedNodeId }: { pqir: Task; selectedNodeId: string }) => {
+    ({
+      pqir,
+      selectedNodeId,
+      isSolvedSingleCard,
+    }: {
+      pqir: Task;
+      selectedNodeId: string;
+      isSolvedSingleCard: boolean;
+    }) => {
       dispatch.setSnackMessage("⏳ Updating PQIR...");
-      return updateTask(pqir, projectId, pqir.id, selectedNodeId);
+
+      return updateTask(
+        {
+          ...pqir,
+          isSolvedSingleCard,
+        },
+        projectId,
+        pqir.id,
+        selectedNodeId
+      );
     },
     {
       onSuccess: () => {

@@ -1,5 +1,5 @@
 import BaseAPIServices from "./BaseAPIServices";
-import { Task } from "@/types/Task";
+import { Task, TaskUpdatePayload } from "@/types/Task";
 
 const baseUrl = "/api/v2.0";
 
@@ -31,13 +31,14 @@ export const createTask = (
 
 // Saves or updates a task
 export const updateTask = (
-  data: Task,
+  data: TaskUpdatePayload,
   projectId: string | string[],
   taskId: string,
   vertexId: string
 ) =>
   BaseAPIServices.patch(
     `${baseUrl}/graph/${projectId}/vertices/${vertexId}/tasks/${taskId}`,
+
     data
   );
 
