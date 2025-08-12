@@ -59,7 +59,7 @@
     "patch-package": "^8.0.0",
     "react": "^18.2.0",
     "react-device-detect": "2.2.3",
-    "react-dom": "^19.1.1",
+    "react-dom": "^18.2.0",
     "react-is": "18.2.0",
     "react-markdown": "8.0.4",
     "react-masonry-css": "1.0.16",
