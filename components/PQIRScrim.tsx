@@ -1,5 +1,6 @@
 import { Scrim, Button, Typography, Icon } from "@equinor/eds-core-react";
 import styles from "./PQIRScrim.module.scss";
+import { close as closeIcon } from "@equinor/eds-icons";
 
 type Props = {
   onClose: () => void;
@@ -16,43 +17,38 @@ export const PQIRScrim = ({
     <Scrim isDismissable open={true} onClose={onClose}>
       <div className={styles.wrapper}>
         <div className={styles.scrimHeaderWrapper}>
-          <div className={styles.headerText}>
-            <Typography variant="h6" className={styles.headerText}>
-              This PQIR is linked to multiple cards
-            </Typography>
-          </div>
-          <Button
-            onClick={onClose}
-            style={{ backgroundColor: "white", border: "none" }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
+          <Typography className={styles.headerText}>
+            This PQIR is linked to multiple cards
+          </Typography>
+          <div className={styles.closeIconWrapper}>
+            <Button
+              onClick={onClose}
+              variant="ghost_icon"
+              className={styles.closeButton}
             >
-              <path
-                d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"
-                fill="#007079"
-              />
-            </svg>
-          </Button>
+              <Icon data={closeIcon} title="add" size={24} />
+            </Button>
+          </div>
+        </div>
+        <div className={styles.horizontalBox}>
+          <div className={styles.horizontalLine} />
         </div>
 
-        <div className={styles.horizontalLine} />
         <div className={styles.bodyWrapper}>
-          <div>
-            <Typography className={styles.scrimBody} variant="body_short">
-              Would you like to mark it as solved only for this card or for all
-              associated cards?
-            </Typography>
-          </div>
+          <Typography className={styles.scrimBody} variant="body_short">
+            Would you like to mark it as solved only for this card , or for all
+            associated cards?
+          </Typography>
+
           <div className={styles.buttons}>
-            <Button onClick={onSaveAllCards} variant="outlined">
+            <Button
+              onClick={onSaveAllCards}
+              variant="ghost"
+              className={styles.textButton}
+            >
               All Cards
             </Button>
-            <Button onClick={onSaveThisCard} variant="outlined">
+            <Button onClick={onSaveThisCard} variant="contained">
               This Card only
             </Button>
           </div>
