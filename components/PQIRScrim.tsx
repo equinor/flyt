@@ -26,7 +26,7 @@ export const PQIRScrim = ({
               variant="ghost_icon"
               className={styles.closeButton}
             >
-              <Icon data={closeIcon} title="add" size={24} />
+              <Icon data={closeIcon} title="close" size={24} />
             </Button>
           </div>
         </div>
@@ -49,7 +49,7 @@ export const PQIRScrim = ({
               All Cards
             </Button>
             <Button onClick={onSaveThisCard} variant="contained">
-              This Card only
+              This Card Only
             </Button>
           </div>
         </div>
