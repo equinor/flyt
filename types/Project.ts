@@ -15,4 +15,5 @@ export type Project = {
   userAccesses: userAccess[];
   duplicateOf?: number;
   isFavorite?: boolean;
+  undoRedoStatus: { disableUndo: boolean; disableRedo: boolean };
 };

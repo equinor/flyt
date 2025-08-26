@@ -27,7 +27,7 @@ export default function Project() {
   const account = useAccount(accounts[0] || {});
   const delteMutation = useMutation(
     () => {
-      return deleteProcess(projectId, account?.username ?? "");
+      return deleteProcess(projectId);
     },
     {
       onSuccess: (response) => {

@@ -9,30 +9,14 @@ const baseUrl = "/api/v2.0";
  * @param projectId
  */
 
-export const undoProcess = (
-  projectId: string,
-  userMail: string,
-  process: []
-) => {
-  return BaseAPIServices.post(
-    `${baseUrl}/undoRedo/undo/${projectId}/${userMail}`,
-    process
-  );
+export const undoProcess = (projectId: string) => {
+  return BaseAPIServices.get(`${baseUrl}/undoRedo/undo/${projectId}`);
 };
 
-export const redoProcess = (
-  projectId: string,
-  userMail: string,
-  process: []
-) => {
-  return BaseAPIServices.post(
-    `${baseUrl}/undoRedo/redo/${projectId}/${userMail}`,
-    process
-  );
+export const redoProcess = (projectId: string) => {
+  return BaseAPIServices.get(`${baseUrl}/undoRedo/redo/${projectId}`);
 };
 
-export const deleteProcess = (projectId: string, userMail: string) => {
-  return BaseAPIServices.delete(
-    `${baseUrl}/undoRedo/clear/${projectId}/${userMail}`
-  );
+export const deleteProcess = (projectId: string) => {
+  return BaseAPIServices.delete(`${baseUrl}/undoRedo/clear/${projectId}`);
 };

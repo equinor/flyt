@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { redo, undo } from "@equinor/eds-icons";
 import { ButtonWrapper } from "@/components/ButtonWrapper";
 import { useProjectId } from "@/hooks/useProjectId";
@@ -9,22 +9,34 @@ import { useStoreDispatch } from "@/hooks/storeHooks";
 import { unknownErrorToString } from "@/utils/isError";
 import { notifyOthers } from "@/services/notifyOthers";
 import styles from "./UndoRedoButton.module.scss";
+import { useProjectQuery } from "@/hooks/useProjectQuery";
 
 const undoStyle: React.CSSProperties = {
   borderRight: "1px solid #F7F7F7",
 };
 
 export const UndoRedoButton = () => {
-  const [isUndoDisabled, setisUndoDisabled] = useState(false);
-  const [isRedoDisabled, setisRedoDisabled] = useState(false);
   const { projectId } = useProjectId();
+  const { project } = useProjectQuery(projectId);
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
+  const [isUndoDisabled, setisUndoDisabled] = useState(
+    project?.undoRedoStatus.disableUndo
+  );
+  const [isRedoDisabled, setisRedoDisabled] = useState(
+    project?.undoRedoStatus.disableRedo
+  );
+
+  useEffect(() => {
+    setisUndoDisabled(project?.undoRedoStatus.disableUndo);
+    setisRedoDisabled(project?.undoRedoStatus.disableRedo);
+  }, [project]);
+
   const undoMutation = useMutation(
-    (payload: any) => {
-      return undoProcess(projectId, account?.username ?? "", payload);
+    () => {
+      return undoProcess(projectId);
     },
     {
       onSuccess: (response) => {
@@ -38,8 +50,8 @@ export const UndoRedoButton = () => {
     }
   );
   const redoMutation = useMutation(
-    (payload: any) => {
-      return redoProcess(projectId, account?.username ?? "", payload);
+    () => {
+      return redoProcess(projectId);
     },
     {
       onSuccess: (response) => {
@@ -53,15 +65,11 @@ export const UndoRedoButton = () => {
     }
   );
   const handleUndo = () => {
-    undoMutation.mutate({
-      userId: account?.username,
-    });
+    undoMutation.mutate();
   };
 
   const handleRedo = () => {
-    redoMutation.mutate({
-      userId: account?.username,
-    });
+    redoMutation.mutate();
   };
 
   return (
