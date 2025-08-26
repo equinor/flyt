@@ -20,7 +20,7 @@ export function ButtonWrapper(props: {
       >
         <Icon
           data={props.icon}
-          color={props.disabled ? "rgb(234 234 234)" : "#007079"}
+          color={props.disabled ? "#BEBEBE" : "#007079"}
         />
       </button>
     </Tooltip>
