@@ -42,6 +42,7 @@
     "@types/node": "18.17.0",
     "@types/node-fetch": "2.6.4",
     "@types/react": "18.2.46",
+    "@types/react-dom": "^19.1.7",
     "@typescript-eslint/eslint-plugin": "5.62.0",
     "@typescript-eslint/parser": "5.62.0",
     "@uiw/react-md-editor": "3.11.2",
