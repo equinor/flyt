@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.13.0](https://github.com/equinor/flyt/compare/v2.12.0...v2.13.0) (2025-08-28)
+
+
+### Features
+
+* pqir visibility issue ([#1003](https://github.com/equinor/flyt/issues/1003)) ([ee5c2a6](https://github.com/equinor/flyt/commit/ee5c2a69f885caa02567688618d5e9db99fd274d))
+
 ## [2.12.0](https://github.com/equinor/flyt/compare/v2.11.0...v2.12.0) (2025-07-31)
 
 
