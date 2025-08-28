@@ -12,7 +12,6 @@ import { useProjectQuery } from "@/hooks/useProjectQuery";
 import { useGraphQuery } from "@/hooks/useGraphQuery";
 import { useStoreDispatch } from "@/hooks/storeHooks";
 import { deleteProcess } from "@/services/undoRedoApi";
-import { useAccount, useMsal } from "@azure/msal-react";
 import commonStyles from "../../../styles/common.module.scss";
 import styles from "./ProjectPage.module.scss";
 
@@ -23,16 +22,11 @@ export default function Project() {
   const { graph, isLoadingGraph, graphError } = useGraphQuery(projectId);
   const router = useRouter();
   const dispatch = useStoreDispatch();
-  const { accounts } = useMsal();
-  const account = useAccount(accounts[0] || {});
   const delteMutation = useMutation(
     () => {
       return deleteProcess(projectId);
     },
     {
-      onSuccess: (response) => {
-        console.log("response", response);
-      },
       onError: (e: Error | null) =>
         dispatch.setSnackMessage(unknownErrorToString(e)),
     }
@@ -42,8 +36,6 @@ export default function Project() {
     const handleRouteChange = (url: string) => {
       if (url.startsWith("/processes") || url === "/") {
         delteMutation.mutate();
-      } else {
-        console.log("url", url);
       }
     };
     router.events.on("routeChangeStart", handleRouteChange);
