@@ -11,3 +11,7 @@ export type Task = {
   activityType: string;
   role: string;
 };
+
+export type TaskUpdatePayload = Task & {
+  isSolvedSingleCard?: boolean;
+};
