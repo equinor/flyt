@@ -1,0 +1,116 @@
+name: "🆕 New Feature Request"
+description: "A friendly form to guide you in describing and sharing the new request with the team."
+title: "Feature request"
+labels: ["feat"]
+
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: Feature Request Description
+      description: "Copy and paste the description written in italics from the Service-Now ticket. Add Figma and Service-Now links. For reference on how to structure this, please see: https://github.com/equinor/mad-project-ah-workorders/issues/1257#issuecomment-2996374905"
+    validations:
+      required: true
+
+  - type: textarea
+    id: implementation
+    attributes:
+      label: Implementation Details
+      description: "Describe the feature workflow"
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptancecriteria
+    attributes:
+      label: Acceptance Criteria
+      description: "List the acceptance criteria in checkbox format for the given feature in detail."
+    validations:
+      required: true
+
+  - type: checkboxes
+    attributes:
+      label: Definition of Ready Requirement
+      description: "The Definition of Ready for Requirement means the team has all the information they need to start working on a feature. Not all listed items may be applicable to every feature."
+      options:
+        - label: Requirement description
+        - label: Priority
+        - label: Acceptance criteria are defined
+        - label: Dependencies and technical details
+        - label: Comments
+        - label: Estimation
+        - label: Deliver date
+        - label: Static testing
+        - label: The feature description is understood by the team
+        - label: The Service-Now ticket is linked
+        - label: The Figma design is linked (if applicable)
+    validations:
+      required: true
+
+  - type: checkboxes
+    attributes:
+      label: Definition of Ready Build
+      description: "The Definition of Ready for Build means the team has completed all the necessary steps to move forward to deploy the build. Not all listed items may be applicable to every feature."
+      options:
+        - label: Developer test
+        - label: Code review
+        - label: Unit testing
+        - label: Unit integrations testing
+        - label: Deploy to the next env - document in the ticket
+        - label: UX test
+        - label: Documentation is updated or planned (if any)
+    validations:
+      required: true
+
+  - type: checkboxes
+    attributes:
+      label: Definition of Ready Testing
+      description: "The Definition of Ready for Testing means the team has what they need to begin testing the feature. Not all listed items may be applicable to every feature."
+      options:
+        - label: Testcase
+        - label: Test environment is defined
+        - label: Limitations/discrepancy is communicated (if any)
+        - label: Equinor accept to start UAT (if any)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: inTest
+    attributes:
+      label: Test environment
+      options:
+        - Not started
+        - In progress
+        - Blocked
+        - Done
+    validations:
+      required: true
+
+  - type: dropdown
+    id: inQA
+    attributes:
+      label: QA environment
+      options:
+        - Not started
+        - In progress
+        - Blocked
+        - Done
+    validations:
+      required: true
+
+  - type: checkboxes
+    attributes:
+      label: Definition of Done
+      description: "The Definition of Done means the team has completed everything required for the feature to be considered finished and ready for production."
+      options:
+        - label: Acceptance criteria are met
+        - label: Documentation is updated (if any)
+        - label: Product Owner has reviewed and accepted the feature
+        - label: CAP/Change Process requirements are fulfilled
+        - label: Ready for GO-LIVE
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: "📝 **Notes:** Any dependencies or challenges faced during feature development should be mentioned in the ticket comments."
