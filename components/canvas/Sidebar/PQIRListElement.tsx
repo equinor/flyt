@@ -6,9 +6,15 @@ import {
   Button,
   Checkbox,
   Icon,
+  Tooltip,
   Typography,
 } from "@equinor/eds-core-react";
-import { add, delete_to_trash, minimize } from "@equinor/eds-icons";
+import {
+  add,
+  delete_to_trash,
+  minimize,
+  remove_outlined,
+} from "@equinor/eds-icons";
 import dynamic from "next/dynamic";
 import { TextCircle } from "../entities/TextCircle";
 import styles from "./PQIRListElement.module.scss";
@@ -110,33 +116,60 @@ export const PQIRListELement = ({
         selectedType={selectedType}
         onClick={(type) => setSelectedType(type)}
       />
-      <div>
-        {solved !== null && isSelectedSection && (
-          <Checkbox
-            checked={solved}
-            onChange={(e) => setSolved(e.target.checked)}
-            title="Mark as solved"
-          />
-        )}
-        <Button
-          variant="ghost_icon"
-          onClick={() => dispatch.setPQIRToBeDeletedId(pqir.id)}
-          title="Delete PQIR"
-        >
-          <Icon data={delete_to_trash} />
-        </Button>
-      </div>
+      <div></div>
     </div>
   );
   const panelSectionBottom = (
     <div className={styles.actionButtonsContainer}>
-      <Button
-        onClick={handleSaveClick}
-        className={styles.actionButton}
-        disabled={!hasChanges || !description}
-      >
-        Save
-      </Button>
+      <div className={styles.actionIconContainer}>
+        {solved !== null && isSelectedSection && (
+          <div className={styles.actioncontainer}>
+            <Tooltip title="Mark PQIR as solved" placement="top">
+              <Checkbox
+                checked={solved}
+                onChange={(e) => setSolved(e.target.checked)}
+                className={styles.checkBoxStyle}
+              />
+            </Tooltip>
+            <Typography className={styles.actionText}>Solved</Typography>
+          </div>
+        )}
+        {isSelectedSection && (
+          <div className={styles.actioncontainer}>
+            <Tooltip title="Remove PQIR from selected card" placement="top">
+              <Button
+                variant="ghost_icon"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  unlinkPQIR.mutate({ selectedNodeId, pqirId });
+                }}
+                className={styles.actionIcon}
+              >
+                <Icon data={remove_outlined} />
+              </Button>
+            </Tooltip>
+            <Typography className={styles.actionText}>Remove</Typography>
+          </div>
+        )}
+        <div className={styles.actioncontainer}>
+          <Tooltip title="Delete PQIR from process" placement="top">
+            <Button
+              variant="ghost_icon"
+              onClick={() => dispatch.setPQIRToBeDeletedId(pqir.id)}
+              className={styles.actionIcon}
+            >
+              <Icon data={delete_to_trash} />
+            </Button>
+          </Tooltip>
+          <Typography className={styles.actionText}>Delete</Typography>
+        </div>
+      </div>
+
+      {!(!hasChanges || !description) && (
+        <Button onClick={handleSaveClick} className={styles.actionButton}>
+          Save
+        </Button>
+      )}
 
       {showScrim &&
         createPortal(

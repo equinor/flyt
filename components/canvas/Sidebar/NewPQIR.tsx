@@ -1,5 +1,11 @@
 import { NodeDataCommon } from "@/types/NodeData";
-import { Button, Checkbox, Icon } from "@equinor/eds-core-react";
+import {
+  Button,
+  Checkbox,
+  Icon,
+  Tooltip,
+  Typography,
+} from "@equinor/eds-core-react";
 import { add } from "@equinor/eds-icons";
 import dynamic from "next/dynamic";
 import styles from "./PQIRListElement.module.scss";
@@ -34,46 +40,55 @@ export const NewPQIR = ({ selectedNode }: NewPQIRProps) => {
         selectedType={selectedType}
         onClick={(type) => setSelectedType(type)}
       />
-      {solved !== null && (
-        <Checkbox
-          defaultChecked={solved}
-          onChange={(e) => setSolved(e.target.checked)}
-          title="Mark as solved"
-        />
-      )}
     </div>
   );
 
   const panelSectionBottom = (selectedNodeId: string) => (
     <div className={styles.actionButtonsContainer}>
-      <Button
-        variant="outlined"
-        className={styles.actionButton}
-        onClick={() => setIsEditing(false)}
-      >
-        Cancel
-      </Button>
-      <Button
-        className={styles.actionButton}
-        onClick={() =>
-          createPQIR.mutate(
-            {
-              description,
-              selectedType,
-              solved,
-              selectedNodeId,
-            },
-            {
-              onSuccess() {
-                setIsEditing(false);
+      <div>
+        {solved !== null && (
+          <div className={styles.actioncontainer}>
+            <Tooltip title="Mark PQIR as solved" placement="top">
+              <Checkbox
+                defaultChecked={solved}
+                onChange={(e) => setSolved(e.target.checked)}
+                className={styles.checkBoxStyle}
+              />
+            </Tooltip>
+            <Typography className={styles.actionText}>Solved</Typography>
+          </div>
+        )}
+      </div>
+      <div className={styles.actionButtonsContainer}>
+        <Button
+          variant="outlined"
+          className={styles.actionButton}
+          onClick={() => setIsEditing(false)}
+        >
+          Cancel
+        </Button>
+        <Button
+          className={styles.actionButton}
+          onClick={() =>
+            createPQIR.mutate(
+              {
+                description,
+                selectedType,
+                solved,
+                selectedNodeId,
               },
-            }
-          )
-        }
-        disabled={!description}
-      >
-        Create
-      </Button>
+              {
+                onSuccess() {
+                  setIsEditing(false);
+                },
+              }
+            )
+          }
+          disabled={!description}
+        >
+          Create
+        </Button>
+      </div>
     </div>
   );
 
