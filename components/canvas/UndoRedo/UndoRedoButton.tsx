@@ -23,15 +23,15 @@ export const UndoRedoButton = () => {
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
   const [isUndoDisabled, setisUndoDisabled] = useState(
-    project?.undoRedoStatus.disableUndo
+    project?.undoRedoStatus?.disableUndo ?? true
   );
   const [isRedoDisabled, setisRedoDisabled] = useState(
-    project?.undoRedoStatus.disableRedo
+    project?.undoRedoStatus?.disableRedo ?? true
   );
 
   useEffect(() => {
-    setisUndoDisabled(project?.undoRedoStatus.disableUndo);
-    setisRedoDisabled(project?.undoRedoStatus.disableRedo);
+    setisUndoDisabled(project?.undoRedoStatus?.disableUndo ?? true);
+    setisRedoDisabled(project?.undoRedoStatus?.disableRedo ?? true);
   }, [project]);
 
   const undoMutation = useMutation(
