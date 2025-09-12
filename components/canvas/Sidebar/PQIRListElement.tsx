@@ -116,7 +116,6 @@ export const PQIRListELement = ({
         selectedType={selectedType}
         onClick={(type) => setSelectedType(type)}
       />
-      <div></div>
     </div>
   );
   const panelSectionBottom = (
