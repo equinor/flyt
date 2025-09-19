@@ -16,7 +16,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { chevron_down, close, share } from "@equinor/eds-icons";
+import { chevron_down, close, download, share } from "@equinor/eds-icons";
 import {
   faveProject,
   getProject,
@@ -48,6 +48,7 @@ import { useProjectId } from "@/hooks/useProjectId";
 import { EditableTitle } from "components/EditableTitle";
 import { getProjectName } from "@/utils/getProjectName";
 import { accessRoles } from "@/types/AccessRoles";
+import { downloadCanvasAsPNG } from "@/utils/downloadCanvas";
 
 export const CanvasLayout = ({ children }: { children: ReactNode }) => {
   const isAuthenticated = useIsAuthenticated();
@@ -320,7 +321,16 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
         </div>
 
         <div style={{ display: "flex", alignItems: "center" }}>
-          <TooltipImproved title={"Share"}>
+          <TooltipImproved title="Download as image">
+            <Button
+              variant={"ghost_icon"}
+              style={{ marginRight: 8 }}
+              onClick={downloadCanvasAsPNG}
+            >
+              <Icon data={download} />
+            </Button>
+          </TooltipImproved>
+          <TooltipImproved title={"share "}>
             <Button
               variant={"ghost_icon"}
               style={{ marginRight: 8 }}
