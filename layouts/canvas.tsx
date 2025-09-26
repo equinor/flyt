@@ -330,7 +330,7 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
               <Icon data={download} />
             </Button>
           </TooltipImproved>
-          <TooltipImproved title={"share "}>
+          <TooltipImproved title={"Share "}>
             <Button
               variant={"ghost_icon"}
               style={{ marginRight: 8 }}
