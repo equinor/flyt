@@ -1,11 +1,14 @@
 import * as htmlToPng from "html-to-image";
 
-export async function downloadCanvasAsPNG() {
+function getDownloadFileName(processName?: string): string {
+  const name = processName?.trim() || "Untitled-process";
+
+  return `${name.replace(/\s+/g, "-").replace(/[^a-zA-Z0-9-_]/g, "")}.png`;
+}
+
+export async function downloadCanvasAsPNG(processName?: string) {
   const node = document.querySelector(".react-flow") as HTMLElement;
-  if (!node) {
-    console.log("React flow canvas not found");
-    return;
-  }
+
   htmlToPng
     .toPng(node, {
       pixelRatio: 6,
@@ -15,8 +18,8 @@ export async function downloadCanvasAsPNG() {
       skipFonts: true,
     } as any)
     .then((dataUrl) => {
-      const link = document.createElement("a");
-      link.download = `flow_${new Date().toISOString().slice(0, 10)}.png`;
+      const link = document.createElement("a") as HTMLAnchorElement;
+      link.download = getDownloadFileName(processName) as string;
       link.href = dataUrl;
       link.click();
     })

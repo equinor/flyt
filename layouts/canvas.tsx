@@ -325,7 +325,10 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
             <Button
               variant={"ghost_icon"}
               style={{ marginRight: 8 }}
-              onClick={downloadCanvasAsPNG}
+              onClick={() => {
+                console.log("projectname", getProjectName(project));
+                downloadCanvasAsPNG(getProjectName(project));
+              }}
             >
               <Icon data={download} />
             </Button>
