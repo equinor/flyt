@@ -27,3 +27,46 @@
   z-index: 1000;
   font-size: 16px;
 }
+
+.successStyle {
+  position: fixed;
+  top: 75px;
+  left: 0;
+  right: 0;
+  background: #e6faec;
+  color: #007079;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 2000;
+  gap: 8px;
+  margin-left: 28px;
+  margin-right: 23px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.14), 0 3px 4px 0 rgba(0, 0, 0, 0.12);
+}
+.errorStyle {
+  position: fixed;
+  top: 75px;
+  left: 0;
+  right: 0;
+  background: #ffe7d6;
+  color: #ad6200;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 2000;
+  gap: 8px;
+  margin-left: 28px;
+  margin-right: 23px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.14), 0 3px 4px 0 rgba(0, 0, 0, 0.12);
+}
+
+.message {
+  flex: 1;
+  margin: 0 10px;
+}
+.closeIcon {
+  cursor: pointer;
+}
