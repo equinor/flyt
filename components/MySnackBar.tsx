@@ -1,6 +1,13 @@
 import { ReactNode, useEffect } from "react";
-import { Icon, Scrim } from "@equinor/eds-core-react";
-import { download_done } from "@equinor/eds-icons";
+import { Button, Icon, Scrim } from "@equinor/eds-core-react";
+import {
+  check_circle_outlined,
+  close,
+  download_done,
+  error_outlined,
+  warning_outlined,
+  refresh,
+} from "@equinor/eds-icons";
 import styles from "./MySnackBar.module.scss";
 
 export const MySnackBar = (props: {
@@ -8,12 +15,43 @@ export const MySnackBar = (props: {
   autoHideDuration: number;
   onClose: () => void;
   downloadSnackbar: boolean;
+  variant?: "success" | "error";
+  onRetry?: () => void;
 }): JSX.Element => {
   useEffect(() => {
     setTimeout(() => {
       props.onClose();
     }, props.autoHideDuration);
   }, []);
+
+  if (props.variant === "success") {
+    return (
+      <div className={styles.successStyle}>
+        <Icon data={download_done} color={"#007079"} />
+        <span className={styles.message}>{props.children} </span>
+        <Icon
+          data={close}
+          onClick={props.onClose}
+          className={styles.closeIcon}
+        />
+      </div>
+    );
+  }
+
+  if (props.variant === "error") {
+    return (
+      <div className={styles.errorStyle}>
+        <Icon data={warning_outlined} color={"#FF9200"} />
+        <span className={styles.message}>{props.children} </span>
+        {props.onRetry && (
+          <Button variant="outlined" onClick={props.onRetry}>
+            <Icon data={refresh} size={24} />
+            Retry
+          </Button>
+        )}
+      </div>
+    );
+  }
 
   const renderSnackbar = () => {
     return (

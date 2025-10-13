@@ -99,6 +99,10 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
     }
   );
 
+  const retryDownload = () => {
+    downloadCanvasAsPNG(getProjectName(project));
+  };
+
   const dispatch = useStoreDispatch();
 
   const snackMessage = useStoreState((state) => state.snackMessage);
@@ -442,9 +446,19 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
 
       {snackMessage && (
         <MySnackBar
-          autoHideDuration={3000}
+          autoHideDuration={10000}
           onClose={handleCloseSnackbar}
           downloadSnackbar={downloadSnackbar}
+          variant={
+            downloadSnackbar
+              ? snackMessage.startsWith("Oops")
+                ? "error"
+                : "success"
+              : undefined
+          }
+          onRetry={
+            snackMessage.startsWith("Oops") ? () => retryDownload() : undefined
+          }
         >
           {`${snackMessage}`}
         </MySnackBar>
