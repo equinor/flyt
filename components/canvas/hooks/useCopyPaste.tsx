@@ -8,6 +8,7 @@ export const useCopyPaste = (
   target: Node<NodeData> | undefined,
   action: (target: any) => void,
   anyNodeIsSelected: boolean,
+  userCanEdit: boolean,
   validator?: (target: any) => void
 ) => {
   const dispatch = useStoreDispatch();
@@ -43,9 +44,18 @@ export const useCopyPaste = (
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (anyNodeIsSelected) return;
-      if (target && (event.metaKey || event.ctrlKey) && event.key === "c") {
+      if (
+        target &&
+        (event.metaKey || event.ctrlKey) &&
+        event.key === "c" &&
+        userCanEdit
+      ) {
         copyToClipboard(target);
-      } else if ((event.metaKey || event.ctrlKey) && event.key === "v") {
+      } else if (
+        (event.metaKey || event.ctrlKey) &&
+        event.key === "v" &&
+        userCanEdit
+      ) {
         paste();
       }
     };

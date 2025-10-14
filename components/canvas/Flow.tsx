@@ -77,6 +77,7 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
     (node: Node<NodeDataCommon>) =>
       handlePasteNode(node, hoveredNode, nodes, addNode),
     anyNodeIsSelected,
+    userCanEdit,
     copyPasteNodeValidator
   );
 
@@ -194,6 +195,7 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
             onDelete={(node) => setNodeToBeDeleted(node)}
             onEditNode={(node) => setSelectedNode(node)}
             canvasRef={ref}
+            userCanEdit={userCanEdit}
           />
         )}
       </ReactFlow>
