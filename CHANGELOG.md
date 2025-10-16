@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.13.0](https://github.com/equinor/flyt/compare/v2.12.0...v2.13.0) (2025-10-16)
+
+
+### Features
+
+* pqir visibility issue ([#1003](https://github.com/equinor/flyt/issues/1003)) ([ee5c2a6](https://github.com/equinor/flyt/commit/ee5c2a69f885caa02567688618d5e9db99fd274d))
+* UI Revamp - Add Solved, Remove, Delete at bottom in Create New PQIR ([#1014](https://github.com/equinor/flyt/issues/1014)) ([0aa6006](https://github.com/equinor/flyt/commit/0aa6006cdb7bececf6fa894280015a57392dcd17))
+
 ## [2.12.0](https://github.com/equinor/flyt/compare/v2.11.0...v2.12.0) (2025-07-31)
 
 
