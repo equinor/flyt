@@ -44,19 +44,12 @@ export const useCopyPaste = (
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (anyNodeIsSelected) return;
-      if (
-        target &&
-        (event.metaKey || event.ctrlKey) &&
-        event.key === "c" &&
-        userCanEdit
-      ) {
-        copyToClipboard(target);
-      } else if (
-        (event.metaKey || event.ctrlKey) &&
-        event.key === "v" &&
-        userCanEdit
-      ) {
-        paste();
+      if (userCanEdit && (event.metaKey || event.ctrlKey)) {
+        if (target && event.key === "c") {
+          copyToClipboard(target);
+        } else if (event.key === "v") {
+          paste();
+        }
       }
     };
 
