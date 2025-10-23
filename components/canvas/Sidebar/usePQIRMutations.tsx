@@ -89,7 +89,7 @@ export const usePQIRMutations = () => {
     },
     {
       onSuccess() {
-        dispatch.setSnackMessage("✅ PQIR unlinked!");
+        dispatch.setSnackMessage("⛔️ PQIR removed from card!");
         void notifyOthers("Removed PQIR from a card", projectId, account);
         return queryClient.invalidateQueries();
       },
