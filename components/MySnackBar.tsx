@@ -27,12 +27,15 @@ export const MySnackBar = (props: {
   if (props.variant === "success") {
     return (
       <div className={styles.successStyle}>
-        <Icon data={download_done} color={"#007079"} />
-        <span className={styles.message}>{props.children} </span>
+        <Icon data={download_done} color={"#007079"} size={24} />
+        <span className={styles.message} style={{ fontSize: "16px" }}>
+          {props.children}{" "}
+        </span>
         <Icon
           data={close}
           onClick={props.onClose}
           className={styles.closeIcon}
+          size={16}
         />
       </div>
     );
@@ -41,11 +44,18 @@ export const MySnackBar = (props: {
   if (props.variant === "error") {
     return (
       <div className={styles.errorStyle}>
-        <Icon data={warning_outlined} color={"#FF9200"} />
-        <span className={styles.message}>{props.children} </span>
+        <Icon data={warning_outlined} color={"#FF9200"} size={24} />
+        <span className={styles.message} style={{ fontSize: "16px" }}>
+          {props.children}{" "}
+        </span>
         {props.onRetry && (
-          <Button variant="outlined" onClick={props.onRetry}>
-            <Icon data={refresh} size={24} />
+          <Button
+            variant="outlined"
+            className={styles.retryButton}
+            onClick={props.onRetry}
+            style={{ fontSize: "14px" }}
+          >
+            <Icon data={refresh} />
             Retry
           </Button>
         )}

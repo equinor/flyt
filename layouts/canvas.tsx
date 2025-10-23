@@ -446,7 +446,7 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
 
       {snackMessage && (
         <MySnackBar
-          autoHideDuration={10000}
+          autoHideDuration={3000}
           onClose={handleCloseSnackbar}
           downloadSnackbar={downloadSnackbar}
           variant={
