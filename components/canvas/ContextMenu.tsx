@@ -64,7 +64,9 @@ export const ContextMenu = ({
           >
             {nodeTypes.map((nodeType) => (
               <Menu.Item
-                disabled={isNodeButtonDisabled(node.id, position)}
+                disabled={
+                  isNodeButtonDisabled(node.id, position) || !userCanEdit
+                }
                 key={nodeType}
                 onClick={() => addNode(node.id, { type: nodeType }, position)}
               >
@@ -102,7 +104,7 @@ export const ContextMenu = ({
         )}
         {renderOptionsAddNode(node)}
         {deletable && (
-          <Menu.Item onClick={() => onDelete?.(node)}>
+          <Menu.Item disabled={!userCanEdit} onClick={() => onDelete?.(node)}>
             <div>Delete</div>
           </Menu.Item>
         )}
