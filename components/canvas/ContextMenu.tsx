@@ -20,6 +20,7 @@ type ContextMenuProps = {
   onDelete?: (node: Node<NodeDataCommon>) => void;
   onEditNode?: (node: Node<NodeDataCommon>) => void;
   canvasRef?: RefObject<HTMLDivElement>;
+  userCanEdit: boolean;
 };
 
 export const ContextMenu = ({
@@ -30,6 +31,7 @@ export const ContextMenu = ({
   onDelete,
   onEditNode,
   canvasRef,
+  userCanEdit,
 }: ContextMenuProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
@@ -62,7 +64,9 @@ export const ContextMenu = ({
           >
             {nodeTypes.map((nodeType) => (
               <Menu.Item
-                disabled={isNodeButtonDisabled(node.id, position)}
+                disabled={
+                  isNodeButtonDisabled(node.id, position) || !userCanEdit
+                }
                 key={nodeType}
                 onClick={() => addNode(node.id, { type: nodeType }, position)}
               >
@@ -82,11 +86,14 @@ export const ContextMenu = ({
       <>
         {copyable && (
           <>
-            <Menu.Item onClick={() => copyToClipBoard?.(node)}>
+            <Menu.Item
+              disabled={!userCanEdit}
+              onClick={() => copyToClipBoard?.(node)}
+            >
               <div>Copy</div>
               <div>{modifierKey}+C</div>
             </Menu.Item>
-            <Menu.Item onClick={paste}>
+            <Menu.Item disabled={!userCanEdit} onClick={paste}>
               <div>Paste</div>
               <div>{modifierKey}+V</div>
             </Menu.Item>
@@ -97,7 +104,7 @@ export const ContextMenu = ({
         )}
         {renderOptionsAddNode(node)}
         {deletable && (
-          <Menu.Item onClick={() => onDelete?.(node)}>
+          <Menu.Item disabled={!userCanEdit} onClick={() => onDelete?.(node)}>
             <div>Delete</div>
           </Menu.Item>
         )}
