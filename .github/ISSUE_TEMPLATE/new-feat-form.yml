@@ -44,6 +44,7 @@ body:
         - label: The feature description is understood by the team
         - label: The Service-Now ticket is linked
         - label: The Figma design is linked (if applicable)
+        - label: UX handover has been done
     validations:
       required: true
 
