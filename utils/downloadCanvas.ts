@@ -9,14 +9,15 @@ function getDownloadFileName(processName?: string): string {
 
 export async function downloadCanvasAsPNG(processName?: string) {
   const node = document.querySelector(".react-flow") as HTMLElement;
+  await document.fonts.ready;
 
   htmlToPng
     .toPng(node, {
       pixelRatio: 6,
-      backgroundColor: "black",
+      backgroundColor: "white",
       cacheBust: true,
+      skipExternalFonts: true,
       style: { transform: "none" },
-      skipFonts: true,
     } as any)
     .then((dataUrl) => {
       store
