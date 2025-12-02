@@ -27,6 +27,7 @@ export const NetworkToast: React.FC = () => {
   const { socketConnected, socketReason, reconnect } = useWebSocket();
   const message = snackMessage ?? "";
   const lower = message.toLowerCase();
+
   const isNetworkMessage =
     downloadSnackbar &&
     !!message &&
@@ -38,17 +39,20 @@ export const NetworkToast: React.FC = () => {
   useEffect(() => {
     if (!isOffline) return;
 
-    const interval = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev === 1) {
-          reconnect();
-          return 3;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [isOffline]);
+    let timer: NodeJS.Timeout;
+
+    if (countdown > 0) {
+      timer = setTimeout(() => {
+        setCountdown((prev) => prev - 1);
+      }, 1000);
+    } else {
+      timer = setTimeout(() => {
+        reconnect();
+        setCountdown(3);
+      }, 4000);
+    }
+    return () => clearTimeout(timer);
+  }, [isOffline, countdown, reconnect]);
 
   useEffect(() => {
     if (!isReconnected) return;
