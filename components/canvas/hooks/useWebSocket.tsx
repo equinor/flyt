@@ -26,6 +26,8 @@ export const useWebSocket = () => {
 
     socket.on("connect", () => {
       setSocketConnected(true);
+      dispatch.setNetworkSnackMessage("");
+      dispatch.setDownloadSnackbar(false);
       if (!firstConnect.current) {
         dispatch.setNetworkSnackMessage(
           "Reconnected successfully. You're back online!"
@@ -38,6 +40,7 @@ export const useWebSocket = () => {
     socket.on("disconnect", (reason) => {
       setSocketConnected(false);
       setSocketReason(reason);
+      if (firstConnect.current) return;
       dispatch.setNetworkSnackMessage(
         "You're offline. Please check your internet connection."
       );
@@ -45,7 +48,6 @@ export const useWebSocket = () => {
     });
 
     socket.on("connect_error", (error) => {
-      console.log("Error", error);
       setSocketConnected(false);
       setSocketReason(error.message);
     });
