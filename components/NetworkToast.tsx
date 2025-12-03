@@ -65,7 +65,6 @@ export const NetworkToast: React.FC = () => {
 
   if (!isNetworkMessage) return null;
 
-  // const IconData=isOffline?warning_outlined:check_circle_outlined;
   const IconColor = isOffline ? "#9B4900" : "#007079";
   const containerClass = isOffline
     ? styles.networkOffline
