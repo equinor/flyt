@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.13.1](https://github.com/equinor/flyt/compare/v2.13.0...v2.13.1) (2025-12-04)
+
+
+### Bug Fixes
+
+* changed bg color and font ([#1049](https://github.com/equinor/flyt/issues/1049)) ([cb95b57](https://github.com/equinor/flyt/commit/cb95b570ca9ada6761d6a226acc5fcd426df6ae7))
+* upgraded versions ([#1055](https://github.com/equinor/flyt/issues/1055)) ([ddf0380](https://github.com/equinor/flyt/commit/ddf0380363116a10cc54e8f51aac4aa343fd21ad))
+
 ## [2.13.0](https://github.com/equinor/flyt/compare/v2.12.0...v2.13.0) (2025-11-05)
 
 
