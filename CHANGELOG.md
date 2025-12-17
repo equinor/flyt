@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.13.2](https://github.com/equinor/flyt/compare/v2.13.1...v2.13.2) (2025-12-17)
+
+
+### Bug Fixes
+
+* next is upgraded ([#1060](https://github.com/equinor/flyt/issues/1060)) ([5de7492](https://github.com/equinor/flyt/commit/5de7492f7845afff74d988ce4597ca05d7bea4b5))
+
 ## [2.13.1](https://github.com/equinor/flyt/compare/v2.13.0...v2.13.1) (2025-12-04)
 
 
