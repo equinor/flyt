@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.13.2](https://github.com/equinor/flyt/compare/v2.13.1...v2.13.2) (2025-12-30)
+
+
+### Bug Fixes
+
+* implemented back button. ([#1062](https://github.com/equinor/flyt/issues/1062)) ([3b7b5b6](https://github.com/equinor/flyt/commit/3b7b5b614c46c29f8083e6fc37d0da101d5f7b95))
+* next is upgraded ([#1060](https://github.com/equinor/flyt/issues/1060)) ([5de7492](https://github.com/equinor/flyt/commit/5de7492f7845afff74d988ce4597ca05d7bea4b5))
+
 ## [2.13.1](https://github.com/equinor/flyt/compare/v2.13.0...v2.13.1) (2025-12-04)
 
 
