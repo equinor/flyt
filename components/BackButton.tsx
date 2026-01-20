@@ -6,7 +6,7 @@ export function BackButton(): JSX.Element {
   const router = useRouter();
 
   return (
-    <div style={{ position: "absolute", top: "77px", left: "14px" }}>
+    <div style={{ position: "absolute", left: "14px" }}>
       <Button variant="ghost" onClick={() => router.back()}>
         <Icon data={arrow_back_ios} color={"#007079"} />
         Back
