@@ -13,55 +13,65 @@ export const useWebSocket = () => {
   const dispatch = useStoreDispatch();
   const account = useUserAccount();
   const queryClient = useQueryClient();
-  const firstConnect = useRef(true);
-  let socket: Socket;
 
-  const connectSocket = async () => {
-    const accessToken = await getAccessToken();
-    socket = io({
-      path: "/api/socket",
-      auth: { token: accessToken },
-      reconnection: false,
-    });
+  const socketRef = useRef<Socket | null>(null);
+  const hasConnectedOnce = useRef(false);
 
-    socket.on("connect", () => {
-      setSocketConnected(true);
-      dispatch.setNetworkSnackMessage("");
-      dispatch.setDownloadSnackbar(false);
-      if (!firstConnect.current) {
+  useEffect(() => {
+    let socket: Socket;
+
+    const connectSocket = async () => {
+      const accessToken = await getAccessToken();
+      socket = io({
+        path: "/api/socket",
+        auth: { token: accessToken },
+        reconnection: false,
+      });
+
+      socketRef.current = socket;
+
+      socket.on("connect", () => {
+        setSocketConnected(true);
+
+        if (hasConnectedOnce.current) {
+          dispatch.setNetworkSnackMessage(
+            "Reconnected successfully. You're back online! "
+          );
+          dispatch.setDownloadSnackbar(true);
+        }
+        hasConnectedOnce.current = true;
+      });
+
+      socket.on("disconnect", (reason) => {
+        setSocketConnected(false);
+        setSocketReason(reason);
+
+        if (reason === "io client disconnect") return;
+
+        if (!hasConnectedOnce.current) return;
+
         dispatch.setNetworkSnackMessage(
-          "Reconnected successfully. You're back online!"
+          " You're offline. Please check your internet connection."
         );
         dispatch.setDownloadSnackbar(true);
-      }
-      firstConnect.current = false;
-    });
+      });
 
-    socket.on("disconnect", (reason) => {
-      setSocketConnected(false);
-      setSocketReason(reason);
-      if (firstConnect.current) return;
-      dispatch.setNetworkSnackMessage(
-        "You're offline. Please check your internet connection."
-      );
-      dispatch.setDownloadSnackbar(true);
-    });
+      socket.on("connect_error", (error) => {
+        console.log("Error", error);
+        setSocketConnected(false);
+        setSocketReason(error.message);
+      });
 
-    socket.on("connect_error", (error) => {
-      setSocketConnected(false);
-      setSocketReason(error.message);
-    });
+      socket.on(`room-${projectId}`, (payload) => {
+        if (payload.user !== account?.username?.split("@")[0]) {
+          dispatch.setSnackMessage(
+            `${payload.fullName ? payload.fullName : "Someone"} ${payload.msg}`
+          );
+        }
+        queryClient.invalidateQueries();
+      });
+    };
 
-    socket.on(`room-${projectId}`, (payload) => {
-      if (payload.user !== account?.username?.split("@")[0]) {
-        dispatch.setSnackMessage(
-          `${payload.fullName ? payload.fullName : "Someone"} ${payload.msg}`
-        );
-      }
-      queryClient.invalidateQueries();
-    });
-  };
-  useEffect(() => {
     connectSocket();
 
     return () => {
@@ -71,5 +81,12 @@ export const useWebSocket = () => {
     };
   }, [projectId, account, dispatch]);
 
-  return { socketConnected, socketReason, reconnect: connectSocket };
+  const reconnect = async () => {
+    if (!navigator.onLine) return;
+    if (socketRef.current?.connected) return;
+
+    socketRef.current?.connect();
+  };
+
+  return { socketConnected, socketReason, reconnect };
 };

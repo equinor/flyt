@@ -111,7 +111,7 @@ export const NetworkToast: React.FC = () => {
         {isOffline ? (
           <div className={styles.right}>
             <span className={styles.reconnectText}>
-              Trying to reconnect in {countdown} seconds...
+              Trying to reconnect {countdown} seconds...
             </span>
             <Button
               variant="contained"
