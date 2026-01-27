@@ -34,6 +34,8 @@ import {
 } from "./hooks/useSelectedNodeForPQIRid";
 import { copyPasteNodeValidator } from "./utils/copyPasteValidators";
 import { handlePasteNode } from "./utils/handlePasteNode";
+import { useWebSocket } from "./hooks/useWebSocket";
+import NetworkToast from "../NetworkToast";
 
 type CanvasProps = {
   apiNodes: NodeDataApi[];
@@ -71,6 +73,7 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
   const { menuData, onNodeContextMenu, onPaneContextMenu, closeContextMenu } =
     useContextMenu(ref);
   const anyNodeIsSelected = selectedNode !== undefined || !!selectedNodeForPQIR;
+  const { socketConnected } = useWebSocket();
 
   const { copyToClipboard, paste } = useCopyPaste(
     hoveredNode,
@@ -143,6 +146,7 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
         userCanEdit={userCanEdit}
         selectedNode={selectedNodeForPQIR?.data}
       />
+      <NetworkToast />
       <ReactFlow
         nodes={nodes}
         edges={edges}
