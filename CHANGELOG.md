@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.14.0](https://github.com/equinor/flyt/compare/v2.13.2...v2.14.0) (2026-01-28)
+
+
+### Features
+
+* offline online status banner ([#1052](https://github.com/equinor/flyt/issues/1052)) ([17e16f4](https://github.com/equinor/flyt/commit/17e16f48c518c90dc9269ae498932b1cd19d907e))
+
+
+### Bug Fixes
+
+* prevent back button overlap ([#1067](https://github.com/equinor/flyt/issues/1067)) ([ae6a89b](https://github.com/equinor/flyt/commit/ae6a89b32add9686761e6a0877690a681223857b))
+
 ## [2.13.2](https://github.com/equinor/flyt/compare/v2.13.1...v2.13.2) (2026-01-07)
 
 
