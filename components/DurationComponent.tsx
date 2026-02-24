@@ -41,6 +41,7 @@ export function DurationComponent({
   const handleDurationChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = parseValue(event.target.value);
     setDuration(value);
+    onChangeDuration({ duration: value });
   };
 
   const handleUnitChange = (unit: string) => {
@@ -48,10 +49,6 @@ export function DurationComponent({
     const value = getTimeDefinitionValue(unit);
     setUnit(value);
     onChangeDuration({ unit: value });
-  };
-
-  const handleOnBlurDuration = () => {
-    onChangeDuration({ duration });
   };
 
   return (
@@ -64,7 +61,6 @@ export function DurationComponent({
         min={0}
         value={`${duration === null ? "" : duration}`}
         onChange={handleDurationChange}
-        onBlur={handleOnBlurDuration}
       />
       <div style={{ padding: 8 }} />
       <Autocomplete

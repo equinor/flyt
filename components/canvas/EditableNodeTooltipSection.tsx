@@ -6,6 +6,7 @@ import { NodeInput } from "./NodeInput";
 import styles from "./NodeTooltipSection.module.scss";
 import { FormatNodeText } from "./utils/FormatNodeText";
 import dynamic from "next/dynamic";
+import { useYjsText } from "@/hooks/useYjsText";
 
 const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
   ssr: false,
@@ -26,8 +27,8 @@ export const EditableNodeTooltipSection = ({
   variant = "description",
   nodeData,
 }: EditableNodeTooltipSectionProps) => {
-  const { patchDescription, patchDurationRole, setdescription } =
-    useNodeUpdate(nodeData);
+  const { patchDescription, patchDurationRole } = useNodeUpdate(nodeData);
+  const { value, onChange } = useYjsText("description", nodeData);
 
   const shouldDisplayHeader = !(
     isEditing &&
@@ -50,7 +51,7 @@ export const EditableNodeTooltipSection = ({
             initialValue={text}
             id={`${nodeData.id}-role`}
             disabled={!nodeData.userCanEdit}
-            onBlur={(e: ChangeEvent<HTMLInputElement>) =>
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
               patchDurationRole({ role: e.target.value })
             }
           />
@@ -59,12 +60,9 @@ export const EditableNodeTooltipSection = ({
         return (
           <MarkdownEditor
             canEdit={nodeData.userCanEdit}
-            defaultText={text || ""}
+            defaultText={value || ""}
             label={"Description"}
-            onChange={(value) => {
-              value ? setdescription(value) : setdescription("");
-            }}
-            onBlur={patchDescription}
+            onChange={onChange}
           />
         );
     }

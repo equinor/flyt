@@ -5,6 +5,8 @@ import { Server as NetServer } from "http";
 import validateJWTToken from "../../services/validate-azure-token";
 import getConfig from "next/config";
 import { Algorithm } from "jsonwebtoken";
+import { getDoc } from "./yjsstore";
+import * as Y from "yjs";
 
 export default function server(
   req: NextApiRequest,
@@ -35,6 +37,21 @@ export default function server(
     });
 
     io.on("connection", (socket) => {
+      console.log("socket.id", socket.id);
+      socket.on("join-doc", async (docId) => {
+        socket.join(docId);
+
+        const ydoc = await getDoc(docId);
+        const state = Y.encodeStateAsUpdate(ydoc);
+
+        socket.emit("init", state);
+
+        socket.on("yjs-update", (update) => {
+          console.log("server", update.length);
+          Y.applyUpdate(ydoc, update);
+          socket.to(docId).emit("yjs-update", update);
+        });
+      });
       // Broadcast all incoming requests to the other clients
       socket.onAny((eventName, ...args) => {
         socket.broadcast.emit(eventName, ...args);
