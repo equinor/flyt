@@ -1,5 +1,6 @@
 import { Button, Switch } from "@equinor/eds-core-react";
 import useLocalStorage from "../hooks/useLocalStorage";
+import { BackButton } from "@/components/BackButton";
 
 export default function SettingsPage(): JSX.Element {
   const [showDragHelper, setShowDragHelper] = useLocalStorage(
@@ -13,6 +14,9 @@ export default function SettingsPage(): JSX.Element {
 
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
+      <div>
+        <BackButton />
+      </div>
       <div
         style={{
           display: "flex",

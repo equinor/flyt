@@ -44,7 +44,8 @@
 .actionButtonsContainer {
   display: flex;
   column-gap: 12px;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .actionButton {
@@ -53,4 +54,34 @@
 
 .createPQIRButton {
   height: 46px !important;
+}
+
+.checkBoxStyle {
+  padding: 0px !important;
+}
+
+.checkBoxStyle > input {
+  --scale: 1 !important;
+}
+
+.actioncontainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 16px;
+}
+
+.actionIcon {
+  width: auto !important;
+  height: auto !important;
+}
+
+.actionText {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: #007079 !important;
+}
+
+.actionIconContainer {
+  display: flex;
 }

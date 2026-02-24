@@ -1,0 +1,147 @@
+.banner {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  width: 98%;
+  padding: 12px 18px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  z-index: 100;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.iconWrapper {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.message {
+  color: #1d1d1d;
+  font-feature-settings: "liga" off, "clig" off;
+  font-family: Equinor;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.reconnectText {
+  font-feature-settings: "liga" off, "clig" off;
+  font-family: Equinor;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+  color: #3d3d3d;
+}
+
+.offlineBanner {
+  background-color: #fff1e2;
+}
+.onlineBanner {
+  background-color: #eafbe8;
+}
+
+.networkOffline,
+.networkReconnect {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 18px;
+  border-radius: 8px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  min-width: 280px;
+  max-width: 90%;
+  z-index: 9999;
+}
+
+.networkOffline {
+  background: #fff4e5;
+  color: #ff9200;
+}
+.networkReconnect {
+  background: #e6f5f5;
+  color: #007079;
+}
+
+.closeBtn {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  color: #206f77;
+}
+.reconnectText {
+  color: #3d3d3d;
+  font-feature-settings: "liga" off, "clig" off;
+  font-family: Equinor;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 150% */
+}
+.retryBtn {
+  width: 132.955px;
+  height: 48px;
+  flex-shrink: 0;
+}
+.tryText {
+  color: #fff;
+  text-align: center;
+  font-feature-settings: "liga" off, "clig" off;
+  /* Navigation/Button */
+  font-family: Equinor;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 16px;
+}
+.disconnectedIconCircle {
+  width: 40px;
+  height: 40px;
+  border-radius: 48%;
+  background-color: #fbdac1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+.reconnectedIconCircle {
+  width: 40px;
+  height: 40px;
+  border-radius: 48%;
+  background-color: #cfeacc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  flex-grow: 0;
+}
+
+.bannerContainer {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(6, 6, 6, 0.5);
+  position: fixed;
+  z-index: 30;
+}

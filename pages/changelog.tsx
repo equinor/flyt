@@ -3,6 +3,7 @@ import gfm from "remark-gfm";
 import { useQuery } from "react-query";
 import { unknownErrorToString } from "../utils/isError";
 import { Layouts } from "../layouts/LayoutWrapper";
+import { BackButton } from "@/components/BackButton";
 
 export default function ChangelogPage(): JSX.Element {
   const { data, isLoading, error } = useQuery("Changelog", () =>
@@ -14,6 +15,9 @@ export default function ChangelogPage(): JSX.Element {
     return <p>Error loading changelog: {unknownErrorToString(error)}</p>;
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
+      <div>
+        <BackButton />
+      </div>
       <div style={{ maxWidth: 800 }}>
         <ReactMarkdown remarkPlugins={[gfm]}>{data?.text}</ReactMarkdown>
       </div>

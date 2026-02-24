@@ -1,5 +1,52 @@
 # Changelog
 
+## [2.14.0](https://github.com/equinor/flyt/compare/v2.13.2...v2.14.0) (2026-01-28)
+
+
+### Features
+
+* offline online status banner ([#1052](https://github.com/equinor/flyt/issues/1052)) ([17e16f4](https://github.com/equinor/flyt/commit/17e16f48c518c90dc9269ae498932b1cd19d907e))
+
+
+### Bug Fixes
+
+* prevent back button overlap ([#1067](https://github.com/equinor/flyt/issues/1067)) ([ae6a89b](https://github.com/equinor/flyt/commit/ae6a89b32add9686761e6a0877690a681223857b))
+
+## [2.13.2](https://github.com/equinor/flyt/compare/v2.13.1...v2.13.2) (2026-01-07)
+
+
+### Bug Fixes
+
+* implemented back button. ([#1062](https://github.com/equinor/flyt/issues/1062)) ([3b7b5b6](https://github.com/equinor/flyt/commit/3b7b5b614c46c29f8083e6fc37d0da101d5f7b95))
+* next is upgraded ([#1060](https://github.com/equinor/flyt/issues/1060)) ([5de7492](https://github.com/equinor/flyt/commit/5de7492f7845afff74d988ce4597ca05d7bea4b5))
+
+
+### Reverts
+
+* "fix: implemented back button." ([#1063](https://github.com/equinor/flyt/issues/1063)) ([7546ee5](https://github.com/equinor/flyt/commit/7546ee5524d5e51ae7faa958599b602cbe9578a1))
+
+## [2.13.1](https://github.com/equinor/flyt/compare/v2.13.0...v2.13.1) (2025-12-04)
+
+
+### Bug Fixes
+
+* changed bg color and font ([#1049](https://github.com/equinor/flyt/issues/1049)) ([cb95b57](https://github.com/equinor/flyt/commit/cb95b570ca9ada6761d6a226acc5fcd426df6ae7))
+* upgraded versions ([#1055](https://github.com/equinor/flyt/issues/1055)) ([ddf0380](https://github.com/equinor/flyt/commit/ddf0380363116a10cc54e8f51aac4aa343fd21ad))
+
+## [2.13.0](https://github.com/equinor/flyt/compare/v2.12.0...v2.13.0) (2025-11-05)
+
+
+### Features
+
+* Enable Users to Download Current Canvas View (PNG) ([#1016](https://github.com/equinor/flyt/issues/1016)) ([dc4d09a](https://github.com/equinor/flyt/commit/dc4d09a5aed0d773576b359c42d9b3cd9537024f))
+* pqir visibility issue ([#1003](https://github.com/equinor/flyt/issues/1003)) ([ee5c2a6](https://github.com/equinor/flyt/commit/ee5c2a69f885caa02567688618d5e9db99fd274d))
+* UI Revamp - Add Solved, Remove, Delete at bottom in Create New PQIR ([#1014](https://github.com/equinor/flyt/issues/1014)) ([0aa6006](https://github.com/equinor/flyt/commit/0aa6006cdb7bececf6fa894280015a57392dcd17))
+
+
+### Bug Fixes
+
+* disable copy, paste with non owned process ([#1025](https://github.com/equinor/flyt/issues/1025)) ([9e576a6](https://github.com/equinor/flyt/commit/9e576a64a7e1f1105f18ef01cfaa1729b045b57e))
+
 ## [2.12.0](https://github.com/equinor/flyt/compare/v2.11.0...v2.12.0) (2025-07-31)
 
 
