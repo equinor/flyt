@@ -51,7 +51,7 @@ export const useWebSocket = () => {
         if (!hasConnectedOnce.current) return;
 
         dispatch.setNetworkSnackMessage(
-          " You're offline. Please check your internet connection."
+          "You appear to be offline. Please refresh the page or check your internet connection."
         );
         dispatch.setDownloadSnackbar(true);
       });
