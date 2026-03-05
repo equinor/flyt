@@ -1,5 +1,5 @@
 import { TextField, TextFieldProps } from "@equinor/eds-core-react";
-import { ChangeEvent, FocusEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 export type NodeInputProps = Omit<TextFieldProps, "value"> & {
   initialValue?: string;
@@ -7,6 +7,10 @@ export type NodeInputProps = Omit<TextFieldProps, "value"> & {
 
 export const NodeInput = (props: NodeInputProps) => {
   const [value, setValue] = useState(props.initialValue || "");
+
+  useEffect(() => {
+    setValue(props.initialValue || "");
+  }, [props.initialValue]);
 
   return (
     <TextField

@@ -27,8 +27,7 @@ export const EditableNodeTooltipSection = ({
   variant = "description",
   nodeData,
 }: EditableNodeTooltipSectionProps) => {
-  const { patchDescription, patchDurationRole } = useNodeUpdate(nodeData);
-  const { value, onChange } = useYjsText("description", nodeData);
+  const { values, onChange } = useYjsText(nodeData);
 
   const shouldDisplayHeader = !(
     isEditing &&
@@ -40,19 +39,21 @@ export const EditableNodeTooltipSection = ({
       case "duration":
         return (
           <DurationComponent
-            selectedNode={nodeData}
-            onChangeDuration={(value) => patchDurationRole(value)}
+            durationValue={values.duration}
+            unitValue={values.unit}
+            onChangeDuration={(text) => onChange(text, "duration")}
+            onChangeUnit={(text) => onChange(text, "unit")}
             disabled={!nodeData.userCanEdit}
           />
         );
       case "role":
         return (
           <NodeInput
-            initialValue={text}
+            initialValue={values?.role}
             id={`${nodeData.id}-role`}
             disabled={!nodeData.userCanEdit}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              patchDurationRole({ role: e.target.value })
+              onChange(e.target.value, "role")
             }
           />
         );
@@ -60,9 +61,9 @@ export const EditableNodeTooltipSection = ({
         return (
           <MarkdownEditor
             canEdit={nodeData.userCanEdit}
-            defaultText={value || ""}
+            defaultText={values?.description || ""}
             label={"Description"}
-            onChange={onChange}
+            onChange={(text) => onChange(text, "description")}
           />
         );
     }
