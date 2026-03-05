@@ -37,7 +37,6 @@ export default function server(
     });
 
     io.on("connection", (socket) => {
-      console.log("socket.id", socket.id);
       socket.on("join-doc", async (docId) => {
         socket.join(docId);
 
@@ -47,7 +46,6 @@ export default function server(
         socket.emit("init", state);
 
         socket.on("yjs-update", (update) => {
-          console.log("server", update.length);
           Y.applyUpdate(ydoc, update);
           socket.to(docId).emit("yjs-update", update);
         });
