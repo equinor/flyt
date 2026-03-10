@@ -20,6 +20,7 @@ export const NodeInput = (props: NodeInputProps) => {
       onChange={(
         e: ChangeEvent<HTMLInputElement> & ChangeEvent<HTMLTextAreaElement>
       ) => {
+        props.onChange && props.onChange(e);
         setValue(e.target.value);
       }}
       onBlur={handleOnBlur}

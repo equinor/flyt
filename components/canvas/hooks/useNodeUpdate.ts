@@ -4,6 +4,7 @@ import { patchGraph } from "@/services/graphApi";
 import { notifyOthers } from "@/services/notifyOthers";
 import { NodeDataCommon } from "@/types/NodeData";
 import { UpdateNodeData, UpdateNodeDataRequestBody } from "@/types/NodeDataApi";
+import { Unit } from "@/types/NodeInput";
 import { unknownErrorToString } from "@/utils/isError";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useState } from "react";
@@ -12,7 +13,7 @@ import { useMutation, useQueryClient } from "react-query";
 export const useNodeUpdate = (selectedNode: NodeDataCommon) => {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
-  const [description, setdescription] = useState<string>();
+  const [nodeInputData, setNodeInputData] = useState<UpdateNodeData>({});
 
   const { projectId } = useProjectId();
   const dispatch = useStoreDispatch();
@@ -30,18 +31,29 @@ export const useNodeUpdate = (selectedNode: NodeDataCommon) => {
     }
   );
 
-  const patchNode = (selectedNode: NodeDataCommon, updates: UpdateNodeData) => {
+  const patchNode = (
+    field: "description" | "role" | "duration" | "unit",
+    value?: string | null
+  ) => {
+    const newValue = field === Unit ? value : nodeInputData[field];
+    if (!newValue) return;
     mutate({
-      ...updates,
+      [field]: newValue,
       id: selectedNode.id,
     });
   };
 
-  const patchDescription = () => patchNode(selectedNode, { description });
-  const patchDurationRole = (value: {
-    role?: string;
-    duration?: number | null;
-    unit?: string | null;
-  }) => patchNode(selectedNode, { ...value });
-  return { patchDescription, patchDurationRole, error, setdescription };
+  const handleInputChange = (
+    value: string | number | null | undefined,
+    field: string
+  ) => {
+    setNodeInputData((prevState) => {
+      return {
+        ...prevState,
+        [field]: value ?? "",
+      };
+    });
+  };
+
+  return { patchNode, error, handleInputChange };
 };
