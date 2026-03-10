@@ -5,6 +5,9 @@ import { edit } from "@equinor/eds-icons";
 import styles from "./EdgeLabel.module.scss";
 import { patchEdge } from "@/services/graphApi";
 import { useProjectId } from "@/hooks/useProjectId";
+import { useMutation, useQueryClient } from "react-query";
+import { unknownErrorToString } from "@/utils/isError";
+import { useStoreDispatch } from "@/hooks/storeHooks";
 
 type EdgeLabelProps = {
   id: string;
@@ -12,6 +15,10 @@ type EdgeLabelProps = {
   selected: boolean;
   readOnly: boolean;
   setIsEditingText: (e: boolean) => void;
+};
+type EdgeLabelPayload = {
+  EdgeValue?: string;
+  id: string;
 };
 export const EdgeLabel = ({
   id,
@@ -26,15 +33,32 @@ export const EdgeLabel = ({
   const [showInput, setShowInput] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const numberOfRows = Math.ceil(Math.max(value?.length ?? 0, 1) / 12);
+  const dispatch = useStoreDispatch();
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation(
+    (edgeValue: EdgeLabelPayload) =>
+      patchEdge({ EdgeValue: edgeValue?.EdgeValue }, projectId, edgeValue.id),
+    {
+      onSuccess() {
+        return queryClient.invalidateQueries();
+      },
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
+    }
+  );
 
   const updateLabel = () => {
     if (labelText !== value) {
       setEdges((edges) =>
         edges.map((edge) => (edge.id === id ? { ...edge, label: value } : edge))
       );
-      patchEdge({ EdgeValue: value }, projectId, id);
+      mutate({ EdgeValue: value, id });
     }
   };
+
+  useEffect(() => {
+    setValue(labelText);
+  }, [labelText]);
 
   useEffect(() => {
     const input = inputRef.current;

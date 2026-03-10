@@ -109,12 +109,11 @@ export const patchEdge = (
   data: { EdgeValue?: string },
   projectId: string,
   edgeId: string
-) => {
+): Promise<unknown> =>
   BaseAPIServices.post(
     `${baseUrl}/graph/${projectId}/edges/${edgeId}`,
     data
   ).then((r) => r.data);
-};
 
 export const deleteEdge = (
   edgeId: string,
