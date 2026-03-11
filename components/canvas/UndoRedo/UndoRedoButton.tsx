@@ -34,6 +34,28 @@ export const UndoRedoButton = () => {
     setisRedoDisabled(project?.undoRedoStatus?.disableRedo ?? true);
   }, [project]);
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (isUndoDisabled && isRedoDisabled) return;
+      if (event.ctrlKey) {
+        if (!isUndoDisabled && event.key === "z") handleUndo();
+        else if (!isRedoDisabled && event.key === "y") handleRedo();
+      }
+      if (event.metaKey) {
+        if (!isRedoDisabled && event.shiftKey && event.key === "z")
+          handleRedo();
+        else if (!isUndoDisabled && !event.shiftKey && event.key === "z")
+          handleUndo();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isUndoDisabled, isRedoDisabled]);
+
   const undoMutation = useMutation(
     () => {
       return undoProcess(projectId);
