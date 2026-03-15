@@ -44,9 +44,10 @@ export function DurationComponent({
     onChangeDuration(value, Duration);
   };
 
-  const handleUnitChange = (unit: string) => {
-    setUnitSearchInput(unit);
-    const value = getTimeDefinitionValue(unit);
+  const handleUnitChange = (unitVal: string) => {
+    setUnitSearchInput(unitVal);
+    const value = getTimeDefinitionValue(unitVal);
+    if (value === unit) return;
     setUnit(value);
     onChangeDuration(value, Unit);
     onBlurDuration(Unit, value);
