@@ -108,3 +108,6 @@ export const updateUserCardAccess = (
  */
 export const removeUserCardAccess = (id: number): Promise<boolean> =>
   BaseAPIServices.delete(`${baseUrl}/usercard/${id}`).then((res) => res.data);
+
+export const removeUserCardAccessUrl = (id: number) =>
+  `${baseUrl}/usercard/${id}`;

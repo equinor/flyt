@@ -13,7 +13,11 @@ import styles from "./NodeTooltip.module.scss";
 import { useUSerEditNode } from "./hooks/useUserEditNode";
 import { CardAccess } from "@/types/CardAccess";
 import { useMutation, useQueryClient } from "react-query";
-import { removeUserCardAccess, updateUserCardAccess } from "@/services/userApi";
+import {
+  removeUserCardAccess,
+  removeUserCardAccessUrl,
+  updateUserCardAccess,
+} from "@/services/userApi";
 import { useStoreDispatch } from "@/hooks/storeHooks";
 import { unknownErrorToString } from "@/utils/isError";
 import { useProjectId } from "@/hooks/useProjectId";
@@ -190,6 +194,19 @@ export const NodeTooltip = ({
       removeUserCardAccessDetails.mutate(selectedCard[0].id);
     }
   }, [isEditing]);
+
+  useEffect(() => {
+    const handleUnload = () => {
+      if (selectedCard[0] && selectedCard[0].id)
+        navigator.sendBeacon(removeUserCardAccessUrl(selectedCard[0].id));
+    };
+
+    window.addEventListener("beforeunload", handleUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleUnload);
+    };
+  }, []);
 
   return (
     <NodeTooltipContainer
