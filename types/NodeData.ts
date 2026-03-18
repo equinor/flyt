@@ -1,3 +1,4 @@
+import { CardAccess } from "./CardAccess";
 import { NodeDataApi } from "./NodeDataApi";
 import { NodeTypes } from "./NodeTypes";
 import { TimeDefinition } from "./TimeDefinition";
@@ -21,6 +22,7 @@ export type NodeData = {
   deletable: boolean;
   copyable: boolean;
   userCanEdit?: boolean;
+  userEditCardStatus?: CardAccess[];
   depth?: number;
   parentTypes?: NodeTypes[];
   shapeHeight: number;

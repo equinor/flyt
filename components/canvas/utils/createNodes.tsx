@@ -4,12 +4,14 @@ import { getQIPRContainerWidth } from "./getQIPRContainerWidth";
 import { Column, NodeDataCommon } from "@/types/NodeData";
 import { Node } from "reactflow";
 import { nodeValidityMap } from "./nodeValidityHelper";
+import { CardAccess } from "@/types/CardAccess";
 
 const createNode = (
   node: NodeDataApi,
   nodes: NodeDataApi[],
   shapeSize: { height: number; width: number },
   userCanEdit: boolean,
+  userEditCardStatus: CardAccess[],
   merging: boolean,
   mergeNode: { mutate: (args: { sourceId: string; targetId: string }) => void },
   handleClickNode: (id: string) => void,
@@ -65,6 +67,7 @@ const createNode = (
         parents: [parent.id],
         parentTypes: [parent.type],
         userCanEdit,
+        userEditCardStatus,
         column,
         shapeHeight: shapeSize.height,
         shapeWidth: shapeSize.width,
@@ -104,6 +107,7 @@ const createNode = (
         nodes,
         shapeSize,
         userCanEdit,
+        userEditCardStatus,
         merging,
         mergeNode,
         handleClickNode,
@@ -122,6 +126,7 @@ export const createNodes = (
   apiNodes: NodeDataApi[],
   shapeSize: { height: number; width: number },
   userCanEdit: boolean,
+  userEditCardStatus: CardAccess[],
   merging: boolean,
   mergeNode: { mutate: (args: { sourceId: string; targetId: string }) => void },
   handleClickNode: (id: string) => void,
@@ -141,6 +146,7 @@ export const createNodes = (
     apiNodes,
     shapeSize,
     userCanEdit,
+    userEditCardStatus,
     merging,
     mergeNode,
     handleClickNode,

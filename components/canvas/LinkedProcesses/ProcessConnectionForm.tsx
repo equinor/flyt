@@ -34,10 +34,12 @@ const ProcessConnectionForm = ({
   const [selectedCard, setSelectedCard] = useState<Project | undefined>(
     undefined
   );
+  const { userEditCardStatus } = useAccess(project);
   const { nodes, edges, selectedNode } = useFlowState(
     apiNodes,
     apiEdges,
     false,
+    userEditCardStatus,
     [NodeTypes.supplier, NodeTypes.customer]
   );
   const { addNode } = useNodeAdd();

@@ -1,3 +1,4 @@
+import { NodeDataCommon } from "../types/NodeData";
 import { Autocomplete, TextField } from "@equinor/eds-core-react";
 import {
   getTimeDefinitionDisplayName,
@@ -6,34 +7,39 @@ import {
 } from "@/utils/unitDefinitions";
 import { ChangeEvent, useEffect, useState } from "react";
 import { sortSearch } from "@/utils/sortSearch";
+import { Duration, Unit } from "@/types/NodeInput";
 
 type DurationComponent = {
-  durationValue: number | null;
-  unitValue: string | null;
-  onChangeDuration: (text: number | null) => void;
-  onChangeUnit: (text: string | null) => void;
+  selectedNode: NodeDataCommon;
+  onChangeDuration: (
+    value: string | number | null,
+    field: typeof Duration | typeof Unit
+  ) => void;
   disabled: boolean;
+  lastUpdatedDuration: number;
+  lastUpdatedUnit: string;
 };
 
 export function DurationComponent({
-  durationValue,
-  unitValue,
+  selectedNode,
   onChangeDuration,
-  onChangeUnit,
   disabled,
+  lastUpdatedDuration,
+  lastUpdatedUnit,
 }: DurationComponent) {
   const [duration, setDuration] = useState<number | null>(
-    Number(durationValue)
+    selectedNode.duration
   );
-  const [unit, setUnit] = useState<string | null>(unitValue);
+  const [unit, setUnit] = useState<string | null>(selectedNode.unit);
   const [unitSearchInput, setUnitSearchInput] = useState("");
 
   const timeDefinitionDisplayNames = getTimeDefinitionDisplayNames();
 
   useEffect(() => {
-    setDuration(Number(durationValue));
-    setUnit(unitValue);
-  }, [durationValue, unitValue]);
+    if (lastUpdatedDuration !== selectedNode.duration)
+      setDuration(selectedNode.duration);
+    if (lastUpdatedUnit !== selectedNode.role) setUnit(selectedNode.unit);
+  }, [selectedNode]);
 
   const parseValue = (value: string) =>
     value === "" ? null : parseFloat(value);
@@ -41,14 +47,15 @@ export function DurationComponent({
   const handleDurationChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = parseValue(event.target.value);
     setDuration(value);
-    onChangeDuration(value);
+    onChangeDuration(value, Duration);
   };
 
-  const handleUnitChange = (unit: string) => {
-    setUnitSearchInput(unit);
-    const value = getTimeDefinitionValue(unit);
+  const handleUnitChange = (unitVal: string) => {
+    setUnitSearchInput(unitVal);
+    const value = getTimeDefinitionValue(unitVal);
+    if (value === unit) return;
     setUnit(value);
-    onChangeUnit(value);
+    onChangeDuration(value, Unit);
   };
 
   return (

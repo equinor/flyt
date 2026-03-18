@@ -49,6 +49,7 @@ export const SubActivityNode = ({
     handleMerge,
     parentTypes,
     userCanEdit,
+    userEditCardStatus,
     mergeable,
     shapeHeight,
     shapeWidth,
@@ -205,6 +206,7 @@ export const SubActivityNode = ({
           (!!description || !!role || typeof duration === "number")
         }
         isEditing={isEditingNode}
+        userEditCardStatus={userEditCardStatus}
         nodeData={data}
         includeDescription
         description={description}
