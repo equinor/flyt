@@ -73,8 +73,7 @@
     "sharp": "0.32.6",
     "socket.io": "4.8.0",
     "socket.io-client": "4.7.5",
-    "styled-components": "5.3.3",
-    "yjs": "^13.6.29"
+    "styled-components": "5.3.3"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.5.0",
