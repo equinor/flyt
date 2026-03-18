@@ -4,15 +4,18 @@ import { patchGraph } from "@/services/graphApi";
 import { notifyOthers } from "@/services/notifyOthers";
 import { NodeDataCommon } from "@/types/NodeData";
 import { UpdateNodeData, UpdateNodeDataRequestBody } from "@/types/NodeDataApi";
+import { Unit } from "@/types/NodeInput";
 import { debounce } from "@/utils/debounce";
 import { unknownErrorToString } from "@/utils/isError";
 import { useAccount, useMsal } from "@azure/msal-react";
+import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 
 export const useNodeUpdate = (selectedNode: NodeDataCommon) => {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
-
+  const [nodeInputData, setNodeInputData] = useState<UpdateNodeData>({});
+  const [lastSentValues, setLastSentValues] = useState<UpdateNodeData>({});
   const { projectId } = useProjectId();
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
@@ -29,23 +32,39 @@ export const useNodeUpdate = (selectedNode: NodeDataCommon) => {
     }
   );
 
-  const patchNode = (selectedNode: NodeDataCommon, updates: UpdateNodeData) => {
+  const patchNode = (
+    field: "description" | "role" | "duration" | "unit",
+    value?: string | number | null | undefined
+  ) => {
+    if (!nodeInputData[field] && value) return;
     debounce(() => {
+      setLastSentValues((prevState) => {
+        return {
+          ...prevState,
+          [field]: value,
+        };
+      });
       mutate({
-        ...updates,
+        [field]: value,
         id: selectedNode.id,
       }),
         1500,
-        `update ${Object.keys(updates)[0]} - ${selectedNode.id}`;
+        `update ${field} - ${selectedNode.id}`;
     });
   };
 
-  const patchDescription = (description?: string) =>
-    patchNode(selectedNode, { description });
-  const patchDurationRole = (value: {
-    role?: string;
-    duration?: number | null;
-    unit?: string | null;
-  }) => patchNode(selectedNode, { ...value });
-  return { patchDescription, patchDurationRole, error };
+  const handleInputChange = (
+    value: string | number | null | undefined,
+    field: "description" | "role" | "duration" | "unit"
+  ) => {
+    setNodeInputData((prevState) => {
+      return {
+        ...prevState,
+        [field]: value ?? "",
+      };
+    });
+    patchNode(field, value);
+  };
+
+  return { patchNode, error, handleInputChange, lastSentValues };
 };

@@ -1,6 +1,7 @@
 import { ProcessLabel } from "./ProcessLabel";
 import { userAccess } from "./UserAccess";
 import { NodeDataApi } from "./NodeDataApi";
+import { CardAccess } from "./CardAccess";
 
 export type Project = {
   vsmProjectID: number;
@@ -15,4 +16,5 @@ export type Project = {
   userAccesses: userAccess[];
   duplicateOf?: number;
   isFavorite?: boolean;
+  userCardStatus: CardAccess[];
 };

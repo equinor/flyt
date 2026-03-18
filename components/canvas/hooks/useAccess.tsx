@@ -9,11 +9,13 @@ export const useAccess = (project: Project) => {
   const { Contributor, Reader } = accessRoles;
   const account = useUserAccount();
   const myAccess = getMyAccess(project, account);
+  const userEditCardStatus = project.userCardStatus;
   const userCanEdit = !version && myAccess !== Reader;
   const isAdmin = myAccess === Contributor;
   return {
     myAccess,
     userCanEdit,
     isAdmin,
+    userEditCardStatus,
   };
 };

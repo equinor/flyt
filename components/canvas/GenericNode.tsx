@@ -33,6 +33,7 @@ export const GenericNode = ({
     isDropTarget,
     handleClickNode,
     userCanEdit,
+    userEditCardStatus,
     merging,
     shapeHeight,
     shapeWidth,
@@ -117,6 +118,7 @@ export const GenericNode = ({
       <NodeTooltip
         isHovering={hoveringShape && !!description}
         isEditing={isEditingNode}
+        userEditCardStatus={userEditCardStatus}
         nodeData={data}
         includeDescription
         description={description}

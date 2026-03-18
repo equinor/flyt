@@ -6,64 +6,69 @@ import { NodeInput } from "./NodeInput";
 import styles from "./NodeTooltipSection.module.scss";
 import { FormatNodeText } from "./utils/FormatNodeText";
 import dynamic from "next/dynamic";
-import { useYjsText } from "@/hooks/useYjsText";
+import { Description, Duration, Role } from "@/types/NodeInput";
 
 const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
   ssr: false,
 });
-
 type EditableNodeTooltipSectionProps = {
   header?: string;
   text?: string;
   isEditing?: boolean;
+  isCardEditablebyUser?: boolean;
   variant: "description" | "duration" | "role";
   nodeData: NodeDataCommon;
 };
-
 export const EditableNodeTooltipSection = ({
   header,
   text,
   isEditing,
-  variant = "description",
+  variant = Description,
   nodeData,
+  isCardEditablebyUser,
 }: EditableNodeTooltipSectionProps) => {
-  const { values, onChange } = useYjsText(nodeData);
+  const { patchNode, handleInputChange, lastSentValues } =
+    useNodeUpdate(nodeData);
 
   const shouldDisplayHeader = !(
     isEditing &&
-    (variant === "duration" || variant === "description")
+    (variant === Duration || variant === Description)
   );
 
   const renderInput = () => {
     switch (variant) {
-      case "duration":
+      case Duration:
         return (
           <DurationComponent
-            durationValue={values.duration}
-            unitValue={values.unit}
-            onChangeDuration={(text) => onChange(text, "duration")}
-            onChangeUnit={(text) => onChange(text, "unit")}
+            selectedNode={nodeData}
+            onChangeDuration={(value, field) => handleInputChange(value, field)}
             disabled={!nodeData.userCanEdit}
+            lastUpdatedDuration={lastSentValues?.duration || 0}
+            lastUpdatedUnit={lastSentValues?.unit || ""}
           />
         );
-      case "role":
+      case Role:
         return (
           <NodeInput
-            initialValue={values?.role}
+            initialValue={text}
             id={`${nodeData.id}-role`}
             disabled={!nodeData.userCanEdit}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              onChange(e.target.value, "role")
-            }
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              handleInputChange(e.target.value, Role);
+            }}
+            lastUpdatedValue={lastSentValues?.role || ""}
           />
         );
-      case "description":
+      case Description:
         return (
           <MarkdownEditor
             canEdit={nodeData.userCanEdit}
-            defaultText={values?.description || ""}
+            defaultText={text || ""}
             label={"Description"}
-            onChange={(text) => onChange(text, "description")}
+            onChange={(value) => {
+              handleInputChange(value, Description);
+            }}
+            lastUpdatedValue={lastSentValues?.description || ""}
           />
         );
     }
@@ -76,7 +81,7 @@ export const EditableNodeTooltipSection = ({
           {header}
         </FormatNodeText>
       )}
-      {isEditing ? (
+      {isEditing && isCardEditablebyUser ? (
         renderInput()
       ) : (
         <FormatNodeText variant="body_long">{text}</FormatNodeText>
