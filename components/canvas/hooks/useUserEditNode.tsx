@@ -8,13 +8,16 @@ export const useUSerEditNode = (
 ) => {
   const account = useUserAccount();
   const shortName = account ? getUserShortName(account) : "";
-  const selectedCard = (userEditCardStatus || []).filter(
+  const selectedCardDetails = (userEditCardStatus || []).filter(
     (card) => card.cardId === id
   );
-  const isCardHasNoAccess = selectedCard.length ? false : true;
+  const selectedCard = selectedCardDetails.length
+    ? selectedCardDetails[0]
+    : null;
+  const isCardHasNoAccess = selectedCardDetails.length ? false : true;
   const isCardEditablebyUser = isCardHasNoAccess
     ? true
-    : selectedCard.some((card) => card.userId === shortName);
+    : selectedCardDetails.some((card) => card.userId === shortName);
   return {
     isCardEditablebyUser,
     shortName,

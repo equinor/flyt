@@ -16,7 +16,7 @@ type EditableNodeTooltipSectionProps = {
   text?: string;
   isEditing?: boolean;
   isCardEditablebyUser?: boolean;
-  variant: "description" | "duration" | "role";
+  variant?: "description" | "duration" | "role";
   nodeData: NodeDataCommon;
 };
 export const EditableNodeTooltipSection = ({
@@ -27,8 +27,7 @@ export const EditableNodeTooltipSection = ({
   nodeData,
   isCardEditablebyUser,
 }: EditableNodeTooltipSectionProps) => {
-  const { patchNode, handleInputChange, lastSentValues } =
-    useNodeUpdate(nodeData);
+  const { handleInputChange, lastSentValues } = useNodeUpdate(nodeData);
 
   const shouldDisplayHeader = !(
     isEditing &&
@@ -74,6 +73,14 @@ export const EditableNodeTooltipSection = ({
     }
   };
 
+  if (isEditing && !isCardEditablebyUser) {
+    return (
+      <div className={styles.container}>
+        <FormatNodeText variant="body_long">{text}</FormatNodeText>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.container}>
       {shouldDisplayHeader && (
@@ -81,7 +88,7 @@ export const EditableNodeTooltipSection = ({
           {header}
         </FormatNodeText>
       )}
-      {isEditing && isCardEditablebyUser ? (
+      {isEditing ? (
         renderInput()
       ) : (
         <FormatNodeText variant="body_long">{text}</FormatNodeText>

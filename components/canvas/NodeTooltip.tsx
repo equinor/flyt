@@ -190,23 +190,56 @@ export const NodeTooltip = ({
         projectId: Number(projectId),
         isEditable: true,
       });
-    } else if (!isEditing && !isCardHasNoAccess) {
-      removeUserCardAccessDetails.mutate(selectedCard[0].id);
+    } else if (!isEditing && isCardEditablebyUser && selectedCard) {
+      removeUserCardAccessDetails.mutate(selectedCard.id);
     }
   }, [isEditing]);
 
-  useEffect(() => {
-    const handleUnload = () => {
-      if (selectedCard[0] && selectedCard[0].id)
-        navigator.sendBeacon(removeUserCardAccessUrl(selectedCard[0].id));
-    };
-
-    window.addEventListener("beforeunload", handleUnload);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleUnload);
-    };
-  }, []);
+  const renderInput = () => {
+    return (
+      <>
+        {shouldDisplayDescription && (
+          <EditableNodeTooltipSection
+            nodeData={nodeData}
+            header={"Description"}
+            text={description}
+            variant="description"
+            isEditing={isEditing}
+            isCardEditablebyUser={isCardEditablebyUser}
+          />
+        )}
+        {shouldDisplayRole && (
+          <EditableNodeTooltipSection
+            nodeData={nodeData}
+            header={"Role(s)"}
+            text={role}
+            variant="role"
+            isEditing={isEditing}
+            isCardEditablebyUser={isCardEditablebyUser}
+          />
+        )}
+        {shouldDisplayDuration && (
+          <EditableNodeTooltipSection
+            header={"Duration"}
+            variant="duration"
+            nodeData={nodeData}
+            text={duration}
+            isEditing={isEditing}
+            isCardEditablebyUser={isCardEditablebyUser}
+          />
+        )}
+        {shouldDisplayEstimate && (
+          <EditableNodeTooltipSection
+            header={"Duration"}
+            text={estimate}
+            variant="duration"
+            nodeData={nodeData}
+            isCardEditablebyUser={isCardEditablebyUser}
+          />
+        )}
+      </>
+    );
+  };
 
   return (
     <NodeTooltipContainer
@@ -215,44 +248,15 @@ export const NodeTooltip = ({
       isEditing={isEditing}
       nodeRef={nodeRef}
     >
-      {shouldDisplayDescription && (
+      {isEditing && !isCardEditablebyUser ? (
         <EditableNodeTooltipSection
+          text={`${selectedCard?.userId} is editing`}
           nodeData={nodeData}
-          header={"Description"}
-          text={description}
-          variant="description"
-          isEditing={isEditing}
+          isEditing={true}
           isCardEditablebyUser={isCardEditablebyUser}
         />
-      )}
-      {shouldDisplayRole && (
-        <EditableNodeTooltipSection
-          nodeData={nodeData}
-          header={"Role(s)"}
-          text={role}
-          variant="role"
-          isEditing={isEditing}
-          isCardEditablebyUser={isCardEditablebyUser}
-        />
-      )}
-      {shouldDisplayDuration && (
-        <EditableNodeTooltipSection
-          header={"Duration"}
-          variant="duration"
-          nodeData={nodeData}
-          text={duration}
-          isEditing={isEditing}
-          isCardEditablebyUser={isCardEditablebyUser}
-        />
-      )}
-      {shouldDisplayEstimate && (
-        <EditableNodeTooltipSection
-          header={"Duration"}
-          text={estimate}
-          variant="duration"
-          nodeData={nodeData}
-          isCardEditablebyUser={isCardEditablebyUser}
-        />
+      ) : (
+        renderInput()
       )}
     </NodeTooltipContainer>
   );
