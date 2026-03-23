@@ -21,6 +21,8 @@ import {
 import { useStoreDispatch } from "@/hooks/storeHooks";
 import { unknownErrorToString } from "@/utils/isError";
 import { useProjectId } from "@/hooks/useProjectId";
+import { notifyOthers } from "@/services/notifyOthers";
+import { useAccount, useMsal } from "@azure/msal-react";
 
 type NodeTooltipContainerProps = {
   children: ReactNode;
@@ -160,10 +162,14 @@ export const NodeTooltip = ({
   const queryClient = useQueryClient();
   const { projectId } = useProjectId();
 
+  const { accounts } = useMsal();
+  const account = useAccount(accounts[0] || {});
+
   const updateUserAccessDetails = useMutation(
     (card: Omit<CardAccess, "id">) => updateUserCardAccess(card),
     {
       onSuccess: () => {
+        void notifyOthers("", projectId, account);
         void queryClient.invalidateQueries();
       },
       onError: (e: Error | null) =>
@@ -175,6 +181,7 @@ export const NodeTooltip = ({
     (id: number) => removeUserCardAccess(id),
     {
       onSuccess: () => {
+        void notifyOthers("", projectId, account);
         void queryClient.invalidateQueries();
       },
       onError: (e: Error | null) =>
