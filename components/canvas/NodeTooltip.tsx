@@ -169,7 +169,7 @@ export const NodeTooltip = ({
     (card: Omit<CardAccess, "id">) => updateUserCardAccess(card),
     {
       onSuccess: () => {
-        void notifyOthers("", projectId, account);
+        void notifyOthers("is modifying a card", projectId, account);
         void queryClient.invalidateQueries();
       },
       onError: (e: Error | null) =>
@@ -181,7 +181,7 @@ export const NodeTooltip = ({
     (id: number) => removeUserCardAccess(id),
     {
       onSuccess: () => {
-        void notifyOthers("", projectId, account);
+        void notifyOthers("stopped modifiying a card", projectId, account);
         void queryClient.invalidateQueries();
       },
       onError: (e: Error | null) =>
@@ -200,7 +200,7 @@ export const NodeTooltip = ({
     } else if (!isEditing && isCardEditablebyUser && selectedCard) {
       removeUserCardAccessDetails.mutate(selectedCard.id);
     }
-  }, [isEditing]);
+  }, [isEditing, userEditCardStatus]);
 
   const renderInput = () => {
     return (
