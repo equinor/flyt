@@ -44,6 +44,15 @@ export default function Project() {
     };
   }, [router]);
 
+  useEffect(() => {
+    const handleUnload = () => {
+      delteMutation.mutate();
+    };
+
+    window.addEventListener("beforeunload", handleUnload);
+    return () => window.removeEventListener("beforeunload", handleUnload);
+  }, []);
+
   if (projectError || graphError) {
     return (
       <div className={commonStyles.container}>
