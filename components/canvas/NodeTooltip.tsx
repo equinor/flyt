@@ -23,6 +23,7 @@ import { unknownErrorToString } from "@/utils/isError";
 import { useProjectId } from "@/hooks/useProjectId";
 import { notifyOthers } from "@/services/notifyOthers";
 import { useAccount, useMsal } from "@azure/msal-react";
+import { useRouter } from "next/router";
 
 type NodeTooltipContainerProps = {
   children: ReactNode;
@@ -161,6 +162,7 @@ export const NodeTooltip = ({
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
   const { projectId } = useProjectId();
+  const router = useRouter();
 
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
@@ -188,6 +190,18 @@ export const NodeTooltip = ({
         dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
+
+  useEffect(() => {
+    const handleRouteChange = (url: string) => {
+      if ((url.startsWith("/processes") || url === "/") && selectedCard) {
+        removeUserCardAccessDetails.mutate(selectedCard.id);
+      }
+    };
+    router.events.on("routeChangeStart", handleRouteChange);
+    return () => {
+      router.events.off("routeChangeStart", handleRouteChange);
+    };
+  }, [router]);
 
   useEffect(() => {
     if (isEditing && isCardHasNoAccess) {
