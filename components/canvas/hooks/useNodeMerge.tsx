@@ -38,7 +38,12 @@ export const useNodeMerge = () => {
         throw new Error("Could not connect nodes");
       }
       return mergeVertices(
-        { fromVertexId: sourceId, toVertexId: targetId },
+        {
+          fromVertexId: sourceId,
+          toVertexId: targetId,
+          label: "ConnectedLineEdge",
+          edgeValue: "",
+        },
         projectId
       );
     },
