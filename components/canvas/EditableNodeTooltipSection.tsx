@@ -6,6 +6,7 @@ import { NodeInput } from "./NodeInput";
 import styles from "./NodeTooltipSection.module.scss";
 import { FormatNodeText } from "./utils/FormatNodeText";
 import dynamic from "next/dynamic";
+import { Description, Duration, Role } from "@/types/NodeInput";
 
 const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
   ssr: false,
@@ -23,48 +24,49 @@ export const EditableNodeTooltipSection = ({
   header,
   text,
   isEditing,
-  variant = "description",
+  variant = Description,
   nodeData,
 }: EditableNodeTooltipSectionProps) => {
-  const { patchDescription, patchDurationRole, setdescription } =
-    useNodeUpdate(nodeData);
+  const { patchNode, handleInputChange } = useNodeUpdate(nodeData);
 
   const shouldDisplayHeader = !(
     isEditing &&
-    (variant === "duration" || variant === "description")
+    (variant === Duration || variant === Description)
   );
 
   const renderInput = () => {
     switch (variant) {
-      case "duration":
+      case Duration:
         return (
           <DurationComponent
             selectedNode={nodeData}
-            onChangeDuration={(value) => patchDurationRole(value)}
+            onChangeDuration={(value, field) => handleInputChange(value, field)}
+            onBlurDuration={(field, value) => patchNode(field, value)}
             disabled={!nodeData.userCanEdit}
           />
         );
-      case "role":
+      case Role:
         return (
           <NodeInput
             initialValue={text}
             id={`${nodeData.id}-role`}
             disabled={!nodeData.userCanEdit}
-            onBlur={(e: ChangeEvent<HTMLInputElement>) =>
-              patchDurationRole({ role: e.target.value })
-            }
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              handleInputChange(e.target.value, Role);
+            }}
+            onBlur={() => patchNode(Role)}
           />
         );
-      case "description":
+      case Description:
         return (
           <MarkdownEditor
             canEdit={nodeData.userCanEdit}
             defaultText={text || ""}
             label={"Description"}
             onChange={(value) => {
-              value ? setdescription(value) : setdescription("");
+              handleInputChange(value, Description);
             }}
-            onBlur={patchDescription}
+            onBlur={() => patchNode(Description)}
           />
         );
     }
