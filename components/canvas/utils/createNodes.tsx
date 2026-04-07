@@ -16,6 +16,7 @@ const createNode = (
   mergeNode: { mutate: (args: { sourceId: string; targetId: string }) => void },
   handleClickNode: (id: string) => void,
   handleNodeDelete: (id: string) => void,
+  handleTooltipOnAccessRemove: () => void,
   disabledNodeTypes?: NodeTypes[],
   parent: NodeDataApi | null = null,
   column: Column | null = null,
@@ -57,6 +58,7 @@ const createNode = (
         ...node,
         handleClickNode: () => handleClickNode(node.id),
         handleNodeDelete: () => handleNodeDelete(node.id),
+        handleTooltipOnAccessRemove: () => handleTooltipOnAccessRemove(),
         handleMerge: (sourceId, targetId) =>
           sourceId && targetId && mergeNode.mutate({ sourceId, targetId }),
         mergeable:
@@ -112,6 +114,7 @@ const createNode = (
         mergeNode,
         handleClickNode,
         handleNodeDelete,
+        handleTooltipOnAccessRemove,
         disabledNodeTypes,
         node,
         column,
@@ -131,7 +134,8 @@ export const createNodes = (
   mergeNode: { mutate: (args: { sourceId: string; targetId: string }) => void },
   handleClickNode: (id: string) => void,
   handleNodeDelete: (id: string) => void,
-  disabledNodeTypes: NodeTypes[] = []
+  disabledNodeTypes: NodeTypes[] = [],
+  handleTooltipOnAccessRemove: () => void
 ) => {
   const root = apiNodes.find(
     (node: NodeDataApi) => node.type === NodeTypes.root
@@ -151,6 +155,7 @@ export const createNodes = (
     mergeNode,
     handleClickNode,
     handleNodeDelete,
+    handleTooltipOnAccessRemove,
     disabledNodeTypes
   );
 };

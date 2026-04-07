@@ -18,6 +18,7 @@ type EditableNodeTooltipSectionProps = {
   isCardEditablebyUser?: boolean;
   variant?: "description" | "duration" | "role";
   nodeData: NodeDataCommon;
+  selectedCardId?: number | undefined;
 };
 export const EditableNodeTooltipSection = ({
   header,
@@ -26,8 +27,12 @@ export const EditableNodeTooltipSection = ({
   variant = Description,
   nodeData,
   isCardEditablebyUser,
+  selectedCardId,
 }: EditableNodeTooltipSectionProps) => {
-  const { handleInputChange, lastSentValues } = useNodeUpdate(nodeData);
+  const { handleInputChange, lastSentValues } = useNodeUpdate(
+    nodeData,
+    selectedCardId
+  );
 
   const shouldDisplayHeader = !(
     isEditing &&

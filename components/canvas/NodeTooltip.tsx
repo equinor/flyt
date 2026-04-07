@@ -13,17 +13,14 @@ import styles from "./NodeTooltip.module.scss";
 import { useUSerEditNode } from "./hooks/useUserEditNode";
 import { CardAccess } from "@/types/CardAccess";
 import { useMutation, useQueryClient } from "react-query";
-import {
-  removeUserCardAccess,
-  removeUserCardAccessUrl,
-  updateUserCardAccess,
-} from "@/services/userApi";
+import { removeUserCardAccess, updateUserCardAccess } from "@/services/userApi";
 import { useStoreDispatch } from "@/hooks/storeHooks";
 import { unknownErrorToString } from "@/utils/isError";
 import { useProjectId } from "@/hooks/useProjectId";
 import { notifyOthers } from "@/services/notifyOthers";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useRouter } from "next/router";
+import { debounce } from "@/utils/debounce";
 
 type NodeTooltipContainerProps = {
   children: ReactNode;
@@ -150,6 +147,7 @@ export const NodeTooltip = ({
   nodeRef,
   userEditCardStatus,
 }: NodeTooltipProps) => {
+  const { handleTooltipOnAccessRemove } = nodeData;
   const editingStyle = { minWidth: "300px" };
   const tooltipStyle = isEditing ? editingStyle : undefined;
   const shouldDisplayDescription =
@@ -190,6 +188,14 @@ export const NodeTooltip = ({
         dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
+  useEffect(() => {
+    const removeAccessOnInactive = () => {
+      if (!selectedCard) return;
+      removeUserCardAccessDetails.mutate(selectedCard?.id);
+      handleTooltipOnAccessRemove && handleTooltipOnAccessRemove();
+    };
+    debounce(removeAccessOnInactive, 300000, `update input - ${nodeData.id}`);
+  }, [selectedCard]);
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
@@ -227,6 +233,7 @@ export const NodeTooltip = ({
             variant="description"
             isEditing={isEditing}
             isCardEditablebyUser={isCardEditablebyUser}
+            selectedCardId={selectedCard?.id}
           />
         )}
         {shouldDisplayRole && (
@@ -237,6 +244,7 @@ export const NodeTooltip = ({
             variant="role"
             isEditing={isEditing}
             isCardEditablebyUser={isCardEditablebyUser}
+            selectedCardId={selectedCard?.id}
           />
         )}
         {shouldDisplayDuration && (
@@ -247,6 +255,7 @@ export const NodeTooltip = ({
             text={duration}
             isEditing={isEditing}
             isCardEditablebyUser={isCardEditablebyUser}
+            selectedCardId={selectedCard?.id}
           />
         )}
         {shouldDisplayEstimate && (
@@ -256,6 +265,7 @@ export const NodeTooltip = ({
             variant="duration"
             nodeData={nodeData}
             isCardEditablebyUser={isCardEditablebyUser}
+            selectedCardId={selectedCard?.id}
           />
         )}
       </>

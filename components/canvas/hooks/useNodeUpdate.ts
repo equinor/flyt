@@ -2,16 +2,19 @@ import { useStoreDispatch } from "@/hooks/storeHooks";
 import { useProjectId } from "@/hooks/useProjectId";
 import { patchGraph } from "@/services/graphApi";
 import { notifyOthers } from "@/services/notifyOthers";
+import { removeUserCardAccess } from "@/services/userApi";
 import { NodeDataCommon } from "@/types/NodeData";
 import { UpdateNodeData, UpdateNodeDataRequestBody } from "@/types/NodeDataApi";
-import { Unit } from "@/types/NodeInput";
 import { debounce } from "@/utils/debounce";
 import { unknownErrorToString } from "@/utils/isError";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 
-export const useNodeUpdate = (selectedNode: NodeDataCommon) => {
+export const useNodeUpdate = (
+  selectedNode: NodeDataCommon,
+  selectedCardId: number | undefined
+) => {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
   const [nodeInputData, setNodeInputData] = useState<UpdateNodeData>({});
@@ -31,6 +34,29 @@ export const useNodeUpdate = (selectedNode: NodeDataCommon) => {
         dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
+  const removeUserCardAccessDetails = useMutation(
+    (id: number) => removeUserCardAccess(id),
+    {
+      onSuccess: () => {
+        void notifyOthers("stopped modifiying a card", projectId, account);
+        void queryClient.invalidateQueries();
+      },
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
+    }
+  );
+  const removeAccessOfaCardOnInactivity = () => {
+    if (!selectedCardId) return;
+    debounce(
+      () => {
+        removeUserCardAccessDetails.mutate(selectedCardId);
+        selectedNode.handleTooltipOnAccessRemove &&
+          selectedNode.handleTooltipOnAccessRemove();
+      },
+      300000,
+      `update input - ${selectedNode.id}`
+    );
+  };
 
   const patchNode = (
     field: "description" | "role" | "duration" | "unit",
@@ -51,6 +77,7 @@ export const useNodeUpdate = (selectedNode: NodeDataCommon) => {
         1500,
         `update ${field} - ${selectedNode.id}`;
     });
+    removeAccessOfaCardOnInactivity();
   };
 
   const handleInputChange = (

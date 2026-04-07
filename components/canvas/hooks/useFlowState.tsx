@@ -85,6 +85,10 @@ export const useFlowState = (
     }
   };
 
+  const handleTooltipOnAccessRemove = () => {
+    setSelectedNode(undefined);
+  };
+
   useEffect(() => {
     updateNodesSelectedProp();
   }, [selectedNode]);
@@ -109,7 +113,8 @@ export const useFlowState = (
       mergeNode,
       handleClickNode,
       handleNodeDelete,
-      disabledNodeTypes
+      disabledNodeTypes,
+      handleTooltipOnAccessRemove
     );
     tempNodes = setMainActivitiesDurationSum(
       tempNodes as Node<NodeDataCommon>[]

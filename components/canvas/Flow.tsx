@@ -100,6 +100,18 @@ const Flow = ({
     }
   }, [selectedNode]);
 
+  useEffect(() => {
+    const handler = () => {
+      if (document.visibilityState === "hidden") {
+        setSelectedNode(undefined);
+      }
+    };
+    document.addEventListener("visibilitychange", handler);
+    return () => {
+      document.removeEventListener("visibilitychange", handler);
+    };
+  }, []);
+
   return (
     <>
       <DeleteNodeDialog
