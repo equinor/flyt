@@ -2,7 +2,7 @@ import { useStoreDispatch } from "@/hooks/storeHooks";
 import { useProjectId } from "@/hooks/useProjectId";
 import { patchGraph } from "@/services/graphApi";
 import { notifyOthers } from "@/services/notifyOthers";
-import { removeUserCardAccess } from "@/services/userApi";
+import { removeAccessOfaCardOnInactivity } from "@/services/userApi";
 import { NodeDataCommon } from "@/types/NodeData";
 import { UpdateNodeData, UpdateNodeDataRequestBody } from "@/types/NodeDataApi";
 import { debounce } from "@/utils/debounce";
@@ -34,29 +34,17 @@ export const useNodeUpdate = (
         dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
-  const removeUserCardAccessDetails = useMutation(
-    (id: number) => removeUserCardAccess(id),
+
+  const removeAccessOfaCardOnInactive = useMutation(
+    (id: number) => removeAccessOfaCardOnInactivity(id),
     {
       onSuccess: () => {
-        void notifyOthers("stopped modifiying a card", projectId, account);
         void queryClient.invalidateQueries();
       },
       onError: (e: Error | null) =>
         dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
-  const removeAccessOfaCardOnInactivity = () => {
-    if (!selectedCardId) return;
-    debounce(
-      () => {
-        removeUserCardAccessDetails.mutate(selectedCardId);
-        selectedNode.handleTooltipOnAccessRemove &&
-          selectedNode.handleTooltipOnAccessRemove();
-      },
-      300000,
-      `update input - ${selectedNode.id}`
-    );
-  };
 
   const patchNode = (
     field: "description" | "role" | "duration" | "unit",
@@ -77,7 +65,7 @@ export const useNodeUpdate = (
         1500,
         `update ${field} - ${selectedNode.id}`;
     });
-    removeAccessOfaCardOnInactivity();
+    selectedCardId && removeAccessOfaCardOnInactive.mutate(selectedCardId);
   };
 
   const handleInputChange = (

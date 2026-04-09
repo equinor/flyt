@@ -13,14 +13,17 @@ import styles from "./NodeTooltip.module.scss";
 import { useUSerEditNode } from "./hooks/useUserEditNode";
 import { CardAccess } from "@/types/CardAccess";
 import { useMutation, useQueryClient } from "react-query";
-import { removeUserCardAccess, updateUserCardAccess } from "@/services/userApi";
+import {
+  removeAccessOfaCardOnInactivity,
+  removeUserCardAccess,
+  updateUserCardAccess,
+} from "@/services/userApi";
 import { useStoreDispatch } from "@/hooks/storeHooks";
 import { unknownErrorToString } from "@/utils/isError";
 import { useProjectId } from "@/hooks/useProjectId";
 import { notifyOthers } from "@/services/notifyOthers";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useRouter } from "next/router";
-import { debounce } from "@/utils/debounce";
 
 type NodeTooltipContainerProps = {
   children: ReactNode;
@@ -188,13 +191,20 @@ export const NodeTooltip = ({
         dispatch.setSnackMessage(unknownErrorToString(e)),
     }
   );
+
+  const removeAccessOfaCardOnInactive = useMutation(
+    (id: number) => removeAccessOfaCardOnInactivity(id),
+    {
+      onSuccess: () => {
+        void queryClient.invalidateQueries();
+      },
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
+    }
+  );
+
   useEffect(() => {
-    const removeAccessOnInactive = () => {
-      if (!selectedCard) return;
-      removeUserCardAccessDetails.mutate(selectedCard?.id);
-      handleTooltipOnAccessRemove && handleTooltipOnAccessRemove();
-    };
-    debounce(removeAccessOnInactive, 300000, `update input - ${nodeData.id}`);
+    selectedCard && removeAccessOfaCardOnInactive.mutate(selectedCard.id);
   }, [selectedCard]);
 
   useEffect(() => {
