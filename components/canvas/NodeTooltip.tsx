@@ -204,7 +204,9 @@ export const NodeTooltip = ({
   );
 
   useEffect(() => {
-    selectedCard && removeAccessOfaCardOnInactive.mutate(selectedCard.id);
+    if (isEditing && selectedCard) {
+      removeAccessOfaCardOnInactive.mutate(selectedCard.id);
+    }
   }, [selectedCard]);
 
   useEffect(() => {
@@ -217,7 +219,7 @@ export const NodeTooltip = ({
     return () => {
       router.events.off("routeChangeStart", handleRouteChange);
     };
-  }, [router]);
+  }, [router, selectedCard]);
 
   useEffect(() => {
     if (isEditing && isCardHasNoAccess) {
