@@ -211,7 +211,7 @@ export const NodeTooltip = ({
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
-      if (url === "/" && selectedCard) {
+      if ((url.startsWith("/processes") || url === "/") && selectedCard) {
         removeUserCardAccessDetails.mutate(selectedCard.id);
       }
     };
