@@ -21,7 +21,7 @@ export default function MarkdownEditor(props: {
   onChange?: (value?: string) => void;
   helperText?: string;
   requireText?: boolean;
-  onBlur?: (value?: string) => void;
+  lastUpdatedValue?: string;
 }) {
   const {
     canEdit,
@@ -30,7 +30,7 @@ export default function MarkdownEditor(props: {
     onChange,
     helperText,
     requireText,
-    onBlur,
+    lastUpdatedValue,
   } = props;
   const [editMode, setEditMode] = useState(canEdit);
   const [isOpenUrlPrompt, setIsOpenUrlPrompt] = useState(false);
@@ -44,6 +44,7 @@ export default function MarkdownEditor(props: {
   const missingText = requireText && text?.length === 0;
 
   useEffect(() => {
+    if (lastUpdatedValue === defaultText) return;
     setText(defaultText);
   }, [defaultText]);
 
@@ -111,7 +112,6 @@ export default function MarkdownEditor(props: {
         setIsOpenUrlPrompt={setIsOpenUrlPrompt}
         setSelectionInfo={setSelectionInfo}
         setAndPatchText={setAndPatchText}
-        setEditMode={setEditMode}
         text={text ?? ""}
       />
     );
@@ -166,7 +166,6 @@ export default function MarkdownEditor(props: {
               },
               onBlur: () => {
                 //perform data actions onblur if specified
-                onBlur && onBlur();
                 setTimeout(() => {
                   if (!isOpenUrlPrompt) setEditMode(false);
                 }, 250);

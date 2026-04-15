@@ -2,6 +2,7 @@ import { NodeDataCommon } from "@/types/NodeData";
 import React, {
   ReactNode,
   RefObject,
+  useEffect,
   useLayoutEffect,
   useRef,
   useState,
@@ -9,6 +10,20 @@ import React, {
 import { NodeToolbar, NodeToolbarProps, Position } from "reactflow";
 import { EditableNodeTooltipSection } from "./EditableNodeTooltipSection";
 import styles from "./NodeTooltip.module.scss";
+import { useUSerEditNode } from "./hooks/useUserEditNode";
+import { CardAccess } from "@/types/CardAccess";
+import { useMutation, useQueryClient } from "react-query";
+import {
+  removeAccessOfaCardOnInactivity,
+  removeUserCardAccess,
+  updateUserCardAccess,
+} from "@/services/userApi";
+import { useStoreDispatch } from "@/hooks/storeHooks";
+import { unknownErrorToString } from "@/utils/isError";
+import { useProjectId } from "@/hooks/useProjectId";
+import { notifyOthers } from "@/services/notifyOthers";
+import { useAccount, useMsal } from "@azure/msal-react";
+import { useRouter } from "next/router";
 
 type NodeTooltipContainerProps = {
   children: ReactNode;
@@ -114,6 +129,7 @@ type NodeTooltipProps = {
   isHovering?: boolean;
   isEditing?: boolean;
   nodeRef: RefObject<HTMLDivElement>;
+  userEditCardStatus: CardAccess[] | undefined;
 } & Field<"includeDescription", "description"> &
   Field<"includeDuration", "duration"> &
   Field<"includeEstimate", "estimate"> &
@@ -132,7 +148,9 @@ export const NodeTooltip = ({
   isEditing,
   nodeData,
   nodeRef,
+  userEditCardStatus,
 }: NodeTooltipProps) => {
+  const { handleTooltipOnAccessRemove } = nodeData;
   const editingStyle = { minWidth: "300px" };
   const tooltipStyle = isEditing ? editingStyle : undefined;
   const shouldDisplayDescription =
@@ -140,6 +158,132 @@ export const NodeTooltip = ({
   const shouldDisplayRole = includeRole && (isEditing || role);
   const shouldDisplayDuration = includeDuration && (isEditing || duration);
   const shouldDisplayEstimate = includeEstimate && estimate;
+  const { isCardEditablebyUser, shortName, isCardHasNoAccess, selectedCard } =
+    useUSerEditNode(nodeData.id, userEditCardStatus);
+  const dispatch = useStoreDispatch();
+  const queryClient = useQueryClient();
+  const { projectId } = useProjectId();
+  const router = useRouter();
+
+  const { accounts } = useMsal();
+  const account = useAccount(accounts[0] || {});
+
+  const updateUserAccessDetails = useMutation(
+    (card: Omit<CardAccess, "id">) => updateUserCardAccess(card),
+    {
+      onSuccess: () => {
+        void notifyOthers("is modifying a card", projectId, account);
+        void queryClient.invalidateQueries();
+      },
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
+    }
+  );
+
+  const removeUserCardAccessDetails = useMutation(
+    (id: number) => removeUserCardAccess(id),
+    {
+      onSuccess: () => {
+        void notifyOthers("stopped modifiying a card", projectId, account);
+        void queryClient.invalidateQueries();
+      },
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
+    }
+  );
+
+  const removeAccessOfaCardOnInactive = useMutation(
+    (id: number) => removeAccessOfaCardOnInactivity(id),
+    {
+      onSuccess: () => {
+        void queryClient.invalidateQueries();
+      },
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
+    }
+  );
+
+  useEffect(() => {
+    if (isEditing && selectedCard) {
+      removeAccessOfaCardOnInactive.mutate(selectedCard.id);
+    }
+  }, [selectedCard]);
+
+  useEffect(() => {
+    const handleRouteChange = (url: string) => {
+      if ((url.startsWith("/processes") || url === "/") && selectedCard) {
+        removeUserCardAccessDetails.mutate(selectedCard.id);
+      }
+    };
+    router.events.on("routeChangeStart", handleRouteChange);
+    return () => {
+      router.events.off("routeChangeStart", handleRouteChange);
+    };
+  }, [router, selectedCard]);
+
+  useEffect(() => {
+    if (isEditing && isCardHasNoAccess) {
+      updateUserAccessDetails.mutate({
+        userId: shortName,
+        cardId: nodeData.id,
+        projectId: Number(projectId),
+        isEditable: true,
+      });
+    } else if (!isEditing && isCardEditablebyUser && selectedCard) {
+      removeUserCardAccessDetails.mutate(selectedCard.id);
+    }
+  }, [isEditing, userEditCardStatus]);
+
+  const renderInput = () => {
+    return (
+      <>
+        {shouldDisplayDescription && (
+          <EditableNodeTooltipSection
+            nodeData={nodeData}
+            header={"Description"}
+            text={description}
+            variant="description"
+            isEditing={isEditing}
+            isCardEditablebyUser={isCardEditablebyUser}
+            selectedCardId={selectedCard?.id}
+          />
+        )}
+        {shouldDisplayRole && (
+          <EditableNodeTooltipSection
+            nodeData={nodeData}
+            header={"Role(s)"}
+            text={role}
+            variant="role"
+            isEditing={isEditing}
+            isCardEditablebyUser={isCardEditablebyUser}
+            selectedCardId={selectedCard?.id}
+          />
+        )}
+        {shouldDisplayDuration && (
+          <EditableNodeTooltipSection
+            header={"Duration"}
+            variant="duration"
+            nodeData={nodeData}
+            text={duration}
+            isEditing={isEditing}
+            isCardEditablebyUser={isCardEditablebyUser}
+            selectedCardId={selectedCard?.id}
+          />
+        )}
+        {shouldDisplayEstimate && (
+          <EditableNodeTooltipSection
+            header={"Duration"}
+            text={estimate}
+            variant="duration"
+            nodeData={nodeData}
+            isCardEditablebyUser={isCardEditablebyUser}
+            selectedCardId={selectedCard?.id}
+          />
+        )}
+      </>
+    );
+  };
+
   return (
     <NodeTooltipContainer
       isVisible={isHovering || isEditing}
@@ -147,40 +291,15 @@ export const NodeTooltip = ({
       isEditing={isEditing}
       nodeRef={nodeRef}
     >
-      {shouldDisplayDescription && (
+      {isEditing && !isCardEditablebyUser ? (
         <EditableNodeTooltipSection
+          text={`${selectedCard?.userId} is editing`}
           nodeData={nodeData}
-          header={"Description"}
-          text={description}
-          variant="description"
-          isEditing={isEditing}
+          isEditing={true}
+          isCardEditablebyUser={isCardEditablebyUser}
         />
-      )}
-      {shouldDisplayRole && (
-        <EditableNodeTooltipSection
-          nodeData={nodeData}
-          header={"Role(s)"}
-          text={role}
-          variant="role"
-          isEditing={isEditing}
-        />
-      )}
-      {shouldDisplayDuration && (
-        <EditableNodeTooltipSection
-          header={"Duration"}
-          variant="duration"
-          nodeData={nodeData}
-          text={duration}
-          isEditing={isEditing}
-        />
-      )}
-      {shouldDisplayEstimate && (
-        <EditableNodeTooltipSection
-          header={"Duration"}
-          text={estimate}
-          variant="duration"
-          nodeData={nodeData}
-        />
+      ) : (
+        renderInput()
       )}
     </NodeTooltipContainer>
   );

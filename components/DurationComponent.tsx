@@ -7,20 +7,25 @@ import {
 } from "@/utils/unitDefinitions";
 import { ChangeEvent, useEffect, useState } from "react";
 import { sortSearch } from "@/utils/sortSearch";
+import { Duration, Unit } from "@/types/NodeInput";
 
 type DurationComponent = {
   selectedNode: NodeDataCommon;
-  onChangeDuration: (e: {
-    duration?: number | null;
-    unit?: string | null;
-  }) => void;
+  onChangeDuration: (
+    value: string | number | null,
+    field: typeof Duration | typeof Unit
+  ) => void;
   disabled: boolean;
+  lastUpdatedDuration: number;
+  lastUpdatedUnit: string;
 };
 
 export function DurationComponent({
   selectedNode,
   onChangeDuration,
   disabled,
+  lastUpdatedDuration,
+  lastUpdatedUnit,
 }: DurationComponent) {
   const [duration, setDuration] = useState<number | null>(
     selectedNode.duration
@@ -31,8 +36,9 @@ export function DurationComponent({
   const timeDefinitionDisplayNames = getTimeDefinitionDisplayNames();
 
   useEffect(() => {
-    setDuration(selectedNode.duration);
-    setUnit(selectedNode.unit);
+    if (lastUpdatedDuration !== selectedNode.duration)
+      setDuration(selectedNode.duration);
+    if (lastUpdatedUnit !== selectedNode.role) setUnit(selectedNode.unit);
   }, [selectedNode]);
 
   const parseValue = (value: string) =>
@@ -41,17 +47,15 @@ export function DurationComponent({
   const handleDurationChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = parseValue(event.target.value);
     setDuration(value);
+    onChangeDuration(value, Duration);
   };
 
-  const handleUnitChange = (unit: string) => {
-    setUnitSearchInput(unit);
-    const value = getTimeDefinitionValue(unit);
+  const handleUnitChange = (unitVal: string) => {
+    setUnitSearchInput(unitVal);
+    const value = getTimeDefinitionValue(unitVal);
+    if (value === unit) return;
     setUnit(value);
-    onChangeDuration({ unit: value });
-  };
-
-  const handleOnBlurDuration = () => {
-    onChangeDuration({ duration });
+    onChangeDuration(value, Unit);
   };
 
   return (
@@ -64,7 +68,6 @@ export function DurationComponent({
         min={0}
         value={`${duration === null ? "" : duration}`}
         onChange={handleDurationChange}
-        onBlur={handleOnBlurDuration}
       />
       <div style={{ padding: 8 }} />
       <Autocomplete

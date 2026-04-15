@@ -6,69 +6,85 @@ import { NodeInput } from "./NodeInput";
 import styles from "./NodeTooltipSection.module.scss";
 import { FormatNodeText } from "./utils/FormatNodeText";
 import dynamic from "next/dynamic";
+import { Description, Duration, Role } from "@/types/NodeInput";
 
 const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
   ssr: false,
 });
-
 type EditableNodeTooltipSectionProps = {
   header?: string;
   text?: string;
   isEditing?: boolean;
-  variant: "description" | "duration" | "role";
+  isCardEditablebyUser?: boolean;
+  variant?: "description" | "duration" | "role";
   nodeData: NodeDataCommon;
+  selectedCardId?: number | undefined;
 };
-
 export const EditableNodeTooltipSection = ({
   header,
   text,
   isEditing,
-  variant = "description",
+  variant = Description,
   nodeData,
+  isCardEditablebyUser,
+  selectedCardId,
 }: EditableNodeTooltipSectionProps) => {
-  const { patchDescription, patchDurationRole, setdescription } =
-    useNodeUpdate(nodeData);
+  const { handleInputChange, lastSentValues } = useNodeUpdate(
+    nodeData,
+    selectedCardId
+  );
 
   const shouldDisplayHeader = !(
     isEditing &&
-    (variant === "duration" || variant === "description")
+    (variant === Duration || variant === Description)
   );
 
   const renderInput = () => {
     switch (variant) {
-      case "duration":
+      case Duration:
         return (
           <DurationComponent
             selectedNode={nodeData}
-            onChangeDuration={(value) => patchDurationRole(value)}
+            onChangeDuration={(value, field) => handleInputChange(value, field)}
             disabled={!nodeData.userCanEdit}
+            lastUpdatedDuration={lastSentValues?.duration || 0}
+            lastUpdatedUnit={lastSentValues?.unit || ""}
           />
         );
-      case "role":
+      case Role:
         return (
           <NodeInput
             initialValue={text}
             id={`${nodeData.id}-role`}
             disabled={!nodeData.userCanEdit}
-            onBlur={(e: ChangeEvent<HTMLInputElement>) =>
-              patchDurationRole({ role: e.target.value })
-            }
+            onChange={(e: ChangeEvent<HTMLInputElement>) => {
+              handleInputChange(e.target.value, Role);
+            }}
+            lastUpdatedValue={lastSentValues?.role || ""}
           />
         );
-      case "description":
+      case Description:
         return (
           <MarkdownEditor
             canEdit={nodeData.userCanEdit}
             defaultText={text || ""}
             label={"Description"}
             onChange={(value) => {
-              value ? setdescription(value) : setdescription("");
+              handleInputChange(value, Description);
             }}
-            onBlur={patchDescription}
+            lastUpdatedValue={lastSentValues?.description || ""}
           />
         );
     }
   };
+
+  if (isEditing && !isCardEditablebyUser) {
+    return (
+      <div className={styles.container}>
+        <FormatNodeText variant="body_long">{text}</FormatNodeText>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>
