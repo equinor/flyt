@@ -130,6 +130,7 @@ type NodeTooltipProps = {
   isEditing?: boolean;
   nodeRef: RefObject<HTMLDivElement>;
   userEditCardStatus: CardAccess[] | undefined;
+  userCanEdit: boolean | undefined;
 } & Field<"includeDescription", "description"> &
   Field<"includeDuration", "duration"> &
   Field<"includeEstimate", "estimate"> &
@@ -149,8 +150,8 @@ export const NodeTooltip = ({
   nodeData,
   nodeRef,
   userEditCardStatus,
+  userCanEdit,
 }: NodeTooltipProps) => {
-  const { handleTooltipOnAccessRemove } = nodeData;
   const editingStyle = { minWidth: "300px" };
   const tooltipStyle = isEditing ? editingStyle : undefined;
   const shouldDisplayDescription =
@@ -204,14 +205,18 @@ export const NodeTooltip = ({
   );
 
   useEffect(() => {
-    if (isEditing && selectedCard) {
+    if (isEditing && selectedCard && userCanEdit) {
       removeAccessOfaCardOnInactive.mutate(selectedCard.id);
     }
   }, [selectedCard]);
 
   useEffect(() => {
     const handleRouteChange = (url: string) => {
-      if ((url.startsWith("/processes") || url === "/") && selectedCard) {
+      if (
+        (url.startsWith("/processes") || url === "/") &&
+        selectedCard &&
+        userCanEdit
+      ) {
         removeUserCardAccessDetails.mutate(selectedCard.id);
       }
     };
@@ -222,14 +227,19 @@ export const NodeTooltip = ({
   }, [router, selectedCard]);
 
   useEffect(() => {
-    if (isEditing && isCardHasNoAccess) {
+    if (isEditing && isCardHasNoAccess && userCanEdit) {
       updateUserAccessDetails.mutate({
         userId: shortName,
         cardId: nodeData.id,
         projectId: Number(projectId),
         isEditable: true,
       });
-    } else if (!isEditing && isCardEditablebyUser && selectedCard) {
+    } else if (
+      !isEditing &&
+      isCardEditablebyUser &&
+      selectedCard &&
+      userCanEdit
+    ) {
       removeUserCardAccessDetails.mutate(selectedCard.id);
     }
   }, [isEditing, userEditCardStatus]);
