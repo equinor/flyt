@@ -242,7 +242,7 @@ export const NodeTooltip = ({
     ) {
       removeUserCardAccessDetails.mutate(selectedCard.id);
     }
-  }, [isEditing, userEditCardStatus]);
+  }, [isEditing]);
 
   const renderInput = () => {
     return (
