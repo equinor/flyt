@@ -176,7 +176,7 @@ export const NodeTooltip = ({
         void notifyOthers("is modifying a card", projectId, account);
         void queryClient.invalidateQueries();
       },
-      onError: (e: Error | null) => {
+      onError: (e: any) => {
         if (e?.response?.data?.detail === "CardID already exists.") return;
         dispatch.setSnackMessage(unknownErrorToString(e));
       },
