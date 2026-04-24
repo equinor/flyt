@@ -192,6 +192,7 @@ export const ChoiceNode = ({
         includeDuration={false}
         includeEstimate={false}
         nodeRef={ref}
+        userCanEdit={userCanEdit}
       />
       <div className={styles["node-rhombus-delete-container"]}>
         {hovering && !merging && (

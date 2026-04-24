@@ -50,7 +50,6 @@ export const useNodeUpdate = (
     field: "description" | "role" | "duration" | "unit",
     value?: string | number | null | undefined
   ) => {
-    if (!nodeInputData[field] && value) return;
     debounce(() => {
       setLastSentValues((prevState) => {
         return {
