@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.15.0](https://github.com/equinor/flyt/compare/v2.14.0...v2.15.0) (2026-04-24)
+
+
+### Features
+
+* prevent users from editing same card at once ([#1080](https://github.com/equinor/flyt/issues/1080)) ([09df245](https://github.com/equinor/flyt/commit/09df2451a26455f1018753ec48a9b9d4c06596b0))
+
+
+### Bug Fixes
+
+* prevent locking a card when user don't have access ([#1091](https://github.com/equinor/flyt/issues/1091)) ([f27ddf3](https://github.com/equinor/flyt/commit/f27ddf3af5300a1a50376cdec84d595f7d29c3d1))
+* updated offline banner text ([#1072](https://github.com/equinor/flyt/issues/1072)) ([1c1bd45](https://github.com/equinor/flyt/commit/1c1bd4585d2ddbdd25e01d6fa3e57ab281e803b1))
+
 ## [2.14.0](https://github.com/equinor/flyt/compare/v2.13.2...v2.14.0) (2026-01-28)
 
 
