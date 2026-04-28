@@ -244,7 +244,7 @@ export const NodeTooltip = ({
     ) {
       removeUserCardAccessDetails.mutate(selectedCard.id);
     }
-  }, [isEditing]);
+  }, [isEditing, isCardEditablebyUser]);
 
   const renderInput = () => {
     return (
