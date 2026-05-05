@@ -15,7 +15,7 @@ const getLayout = (
   edges: Edge[],
   { rankdir = "TB", ranksep = 100, margin = 0 }: Options
 ): Node<NodeDataCommon | NodeDataFull>[] => {
-  const dagreGraph = new dagre.graphlib.Graph();
+  const dagreGraph = new dagre.graphlib.Graph({ directed: true });
   dagreGraph.setDefaultEdgeLabel(() => ({}));
 
   dagreGraph.setGraph({
@@ -56,7 +56,7 @@ const getLayout = (
   });
 };
 
-const getColumnMargin = (nodes: Node<NodeDataCommon | NodeDataFull>[]) => {
+const getColumnMargin = (nodes: Node<NodeDataFull>[]) => {
   let highestPosX = 0;
   nodes.forEach((n) => {
     const { x } = n.position;
