@@ -1,5 +1,5 @@
 import styles from "./NodeButtons.module.scss";
-import { Handle, Position, Connection } from "reactflow";
+import { Handle, Position, Connection } from "@xyflow/react";
 
 export type NodeButtonMerge = {
   onConnect(e: Connection): void;

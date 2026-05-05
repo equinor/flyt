@@ -7,7 +7,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { NodeToolbar, NodeToolbarProps, Position } from "reactflow";
+import { NodeToolbar, NodeToolbarProps, Position } from "@xyflow/react";
 import { EditableNodeTooltipSection } from "./EditableNodeTooltipSection";
 import styles from "./NodeTooltip.module.scss";
 import { useUSerEditNode } from "./hooks/useUserEditNode";

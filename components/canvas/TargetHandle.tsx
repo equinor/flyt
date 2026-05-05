@@ -1,5 +1,5 @@
 import styles from "./NodeButtons.module.scss";
-import { Handle, Position } from "reactflow";
+import { Handle, Position } from "@xyflow/react";
 
 export const TargetHandle = ({ position = Position.Top, hidden = false }) => (
   <Handle

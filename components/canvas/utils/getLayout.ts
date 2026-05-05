@@ -1,8 +1,8 @@
-import { Node, Edge } from "reactflow";
-import dagre, { Node as DagreNode } from "dagre";
+import { Node, Edge } from "@xyflow/react";
+import dagre from "@dagrejs/dagre";
 import { NodeDataCommon, NodeDataFull } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
-import { CustomEdge, getEdgeOrder } from "./getEdgeOrder";
+import { getEdgeOrder } from "./getEdgeOrder";
 
 type Options = {
   rankdir?: string;
@@ -11,15 +11,13 @@ type Options = {
 };
 
 const getLayout = (
-  nodes: Node[],
+  nodes: Node<NodeDataCommon | NodeDataFull>[],
   edges: Edge[],
   { rankdir = "TB", ranksep = 100, margin = 0 }: Options
-) => {
-  const dagreGraph = new dagre.graphlib.Graph<DagreNode>({
-    directed: true,
-  });
-
+): Node<NodeDataCommon | NodeDataFull>[] => {
+  const dagreGraph = new dagre.graphlib.Graph();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
+
   dagreGraph.setGraph({
     nodesep: 70,
     edgesep: 0,
@@ -58,7 +56,7 @@ const getLayout = (
   });
 };
 
-const getColumnMargin = (nodes: Node[]) => {
+const getColumnMargin = (nodes: Node<NodeDataCommon | NodeDataFull>[]) => {
   let highestPosX = 0;
   nodes.forEach((n) => {
     const { x } = n.position;

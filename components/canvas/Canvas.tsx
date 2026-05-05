@@ -2,7 +2,7 @@ import { Graph } from "@/types/Graph";
 import { CanvasButtons } from "components/CanvasButtons";
 import { ManageLabelBox } from "components/Labels/ManageLabelBox";
 import { useState } from "react";
-import "reactflow/dist/style.css";
+import "@xyflow/react/dist/style.css";
 import { Project } from "types/Project";
 import { FlowWrapper } from "./Flow";
 import { useAccess } from "./hooks/useAccess";

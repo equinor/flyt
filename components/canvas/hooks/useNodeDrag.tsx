@@ -4,12 +4,17 @@ import {
   moveVerticeRightOfTarget,
 } from "@/services/graphApi";
 import { notifyOthers } from "@/services/notifyOthers";
-import { NodeDataCommon } from "@/types/NodeData";
-import { NodeTypes } from "@/types/NodeTypes";
+import type { NodeDataCommon, NodeDataFull } from "@/types/NodeData";
+import type { NodeTypes } from "@/types/NodeTypes";
 import { unknownErrorToString } from "@/utils/isError";
 import { MouseEvent, useEffect, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { Node, Position, useReactFlow } from "reactflow";
+import {
+  type Node,
+  type OnNodeDrag,
+  type Position,
+  useReactFlow,
+} from "@xyflow/react";
 import { useStoreDispatch } from "@/hooks/storeHooks";
 import { targetIsInSubtree } from "../utils/targetIsInSubtree";
 import { isValidTarget } from "../utils/isValidTarget";
@@ -23,7 +28,7 @@ export const useNodeDrag = () => {
   const [target, setTarget] = useState<Node<NodeDataCommon> | undefined>(
     undefined
   );
-  const { setNodes, getNodes } = useReactFlow<NodeDataCommon>();
+  const { setNodes, getNodes } = useReactFlow<Node<NodeDataFull>>();
   const dragRef = useRef<Node<NodeDataCommon> | null>(null);
   const dispatch = useStoreDispatch();
   const account = useUserAccount();
@@ -32,51 +37,54 @@ export const useNodeDrag = () => {
 
   useEffect(() => {
     setNodes((nodes) =>
-      nodes.map((node) => {
-        node.data = {
+      nodes.map((node) => ({
+        ...node,
+        data: {
           ...node.data,
           isDropTarget: node.id === target?.id,
-        };
-        return node;
-      })
+        },
+      }))
     );
-  }, [target]);
+  }, [setNodes, target]);
 
-  const onNodeDragStart = (
-    _evt: MouseEvent,
-    nodeDragging: Node<NodeDataCommon>
+  const onNodeDragStart: OnNodeDrag<Node<NodeDataFull>> = (
+    _evt,
+    nodeDragging
   ) => {
     dragRef.current = nodeDragging;
     setNodes((nodes) =>
-      nodes.map((node) => {
-        node.data = {
+      nodes.map((node) => ({
+        ...node,
+        data: {
           ...node.data,
           isValidDropTarget: isValidTarget(nodeDragging, node, getNodes()),
-        };
-        return node;
-      })
+        },
+      }))
     );
-    setSource(nodeDragging);
+    setSource(nodeDragging as Node<NodeDataCommon>);
   };
 
-  const onNodeDrag = (_evt: MouseEvent, node: Node<NodeDataCommon>) => {
-    if (!node.width || !node.height) return;
-    const centerX = node.position.x + node.width / 2;
-    const centerY = node.position.y + node.height / 2;
+  const onNodeDrag: OnNodeDrag<Node<NodeDataFull>> = (_evt, node) => {
+    const nodeWidth = node.measured?.width ?? node.width;
+    const nodeHeight = node.measured?.height ?? node.height;
+    if (!nodeWidth || !nodeHeight) return;
+
+    const centerX = node.position.x + nodeWidth / 2;
+    const centerY = node.position.y + nodeHeight / 2;
 
     const targetNode = getNodes().find(
       (n) =>
         centerX > n.position.x &&
-        centerX < n.position.x + (node.width ?? 0) &&
+        centerX < n.position.x + (n.measured?.width ?? n.width ?? 0) &&
         centerY > n.position.y &&
-        centerY < n.position.y + (node.height ?? 0) &&
+        centerY < n.position.y + (n.measured?.height ?? n.height ?? 0) &&
         n.id !== node.id
     );
 
     setTarget(targetNode);
   };
 
-  const onNodeDragStop = (_evt: MouseEvent, node: Node<NodeDataCommon>) => {
+  const onNodeDragStop: OnNodeDrag<Node<NodeDataFull>> = (_evt, node) => {
     if (isValidTarget(node, target, getNodes())) {
       moveNode.mutate({
         nodeId: node.id,
@@ -89,11 +97,14 @@ export const useNodeDrag = () => {
     }
     setNodes((nodes) =>
       nodes.map((n) => {
-        n.data = { ...n.data, isValidDropTarget: undefined };
-        if (n.id === node?.id && source) {
-          n = source;
+        if (n.id === node.id && source) {
+          return source;
         }
-        return n;
+
+        return {
+          ...n,
+          data: { ...n.data, isValidDropTarget: undefined },
+        };
       })
     );
   };

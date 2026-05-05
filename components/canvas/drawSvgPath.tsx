@@ -1,4 +1,4 @@
-import type { XYPosition } from "reactflow";
+import type { XYPosition } from "@xyflow/react";
 
 export type svgLine = (
   points: XYPosition[]

@@ -5,7 +5,7 @@ import { Project } from "@/types/Project";
 import { getProjectName } from "@/utils/getProjectName";
 import { Typography } from "@equinor/eds-core-react";
 import Image from "next/image";
-import { Node } from "reactflow";
+import { Node } from "@xyflow/react";
 import processConnectionArrow from "../../../public/process-connection-arrow.svg";
 import styles from "./ProcessConnectionForm.module.scss";
 

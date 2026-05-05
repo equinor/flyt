@@ -6,7 +6,7 @@ import { Project } from "@/types/Project";
 import { Button, Dialog, Icon, Typography } from "@equinor/eds-core-react";
 import { close } from "@equinor/eds-icons";
 import { useState } from "react";
-import { Position, ReactFlowProvider } from "reactflow";
+import { Position, ReactFlowProvider } from "@xyflow/react";
 import { useFlowState } from "../hooks/useFlowState";
 import { useNodeAdd } from "../hooks/useNodeAdd";
 import { getQueryAllProcesses } from "../utils/projectQueries";

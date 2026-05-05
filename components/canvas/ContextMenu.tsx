@@ -3,7 +3,7 @@ import { getNodeTypeName } from "@/utils/getNodeTypeName";
 import { capitalizeFirstLetter } from "@/utils/stringHelpers";
 import { Menu } from "@equinor/eds-core-react";
 import { RefObject, useState } from "react";
-import { Node, Position } from "reactflow";
+import { Node, Position } from "@xyflow/react";
 import { MenuItemExandable } from "../MenuItemExandable";
 import styles from "./ContextMenu.module.scss";
 import type { MenuData } from "./hooks/useContextMenu";

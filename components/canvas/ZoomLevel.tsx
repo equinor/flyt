@@ -1,4 +1,4 @@
-import { useReactFlow, useStore } from "reactflow";
+import { useReactFlow, useStore } from "@xyflow/react";
 import { Typography } from "@equinor/eds-core-react";
 import colors from "../../theme/colors";
 import styles from "./Canvas.module.scss";

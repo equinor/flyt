@@ -1,6 +1,6 @@
 import { NodeDataCommon, NodeDataFull } from "@/types/NodeData";
 import { NodeTypes } from "@/types/NodeTypes";
-import { Position, Node } from "reactflow";
+import { Position, Node } from "@xyflow/react";
 import { isValidTarget } from "./isValidTarget";
 import { NodeDataApiRequestBody } from "@/types/NodeDataApi";
 import { getNodeTypeName } from "@/utils/getNodeTypeName";

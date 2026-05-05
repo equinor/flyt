@@ -2,7 +2,7 @@ import { useStoreDispatch } from "@/hooks/storeHooks";
 import { NodeData } from "@/types/NodeData";
 import { unknownErrorToString } from "@/utils/isError";
 import { useEffect } from "react";
-import { Node } from "reactflow";
+import { Node } from "@xyflow/react";
 
 export const useCopyPaste = (
   target: Node<NodeData> | undefined,

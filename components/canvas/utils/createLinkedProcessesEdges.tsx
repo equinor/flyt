@@ -1,6 +1,6 @@
 import { NodeDataCommon } from "@/types/NodeData";
 import { uid } from "@/utils/uuid";
-import { Edge, MarkerType, Node } from "reactflow";
+import { Edge, MarkerType, Node } from "@xyflow/react";
 
 export const createLinkedProcessesEdges = (
   nodes: Node<NodeDataCommon>[],
