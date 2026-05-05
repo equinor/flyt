@@ -126,6 +126,7 @@ export const GenericNode = ({
         includeDuration={false}
         includeEstimate={false}
         nodeRef={ref}
+        userCanEdit={userCanEdit}
       />
       {renderNodeButtons()}
     </div>

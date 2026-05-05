@@ -212,6 +212,7 @@ export const WaitingNode = ({
         duration={formatDuration(duration, unit)}
         includeEstimate={false}
         nodeRef={ref}
+        userCanEdit={userCanEdit}
       />
       {renderNodeButtons()}
     </div>
