@@ -177,6 +177,7 @@ export const MainActivityNode = ({
         includeEstimate
         estimate={formattedDurationSum}
         nodeRef={ref}
+        userCanEdit={userCanEdit}
       />
       {renderNodeButtons()}
     </div>
