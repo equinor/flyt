@@ -1,3 +1,4 @@
+import { CardAccess } from "./CardAccess";
 import { NodeDataApi } from "./NodeDataApi";
 import { NodeTypes } from "./NodeTypes";
 import { TimeDefinition } from "./TimeDefinition";
@@ -16,11 +17,13 @@ export type NodeData = {
   handleMerge?: (sourceId: string | null, targetId: string | null) => void;
   handleClickNode?: () => void;
   handleNodeDelete?: () => void;
+  handleTooltipOnAccessRemove?: () => void;
   mergeable?: boolean;
   merging?: boolean;
   deletable: boolean;
   copyable: boolean;
   userCanEdit?: boolean;
+  userEditCardStatus?: CardAccess[];
   depth?: number;
   parentTypes?: NodeTypes[];
   shapeHeight: number;

@@ -3,21 +3,17 @@ import { ChangeEvent, FocusEvent, useEffect, useState } from "react";
 
 export type NodeInputProps = Omit<TextFieldProps, "value"> & {
   initialValue?: string;
+  lastUpdatedValue?: string;
 };
 
 export const NodeInput = (props: NodeInputProps) => {
   const [value, setValue] = useState(props.initialValue || "");
 
   useEffect(() => {
-    setValue(props.initialValue || "");
+    if (props.lastUpdatedValue !== props.initialValue)
+      setValue(props.initialValue || "");
   }, [props.initialValue]);
 
-  const handleOnBlur = (
-    e: FocusEvent<HTMLTextAreaElement, Element> &
-      FocusEvent<HTMLInputElement, Element>
-  ) => {
-    props.onBlur && props.onBlur(e);
-  };
   return (
     <TextField
       {...(props as TextFieldProps)}
@@ -28,7 +24,6 @@ export const NodeInput = (props: NodeInputProps) => {
         props.onChange && props.onChange(e);
         setValue(e.target.value);
       }}
-      onBlur={handleOnBlur}
       style={{ backgroundColor: "transparent" }}
     />
   );

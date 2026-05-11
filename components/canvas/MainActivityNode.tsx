@@ -43,6 +43,7 @@ export const MainActivityNode = ({
     isDropTarget,
     handleClickNode,
     userCanEdit,
+    userEditCardStatus,
     merging,
     shapeHeight,
     shapeWidth,
@@ -167,6 +168,7 @@ export const MainActivityNode = ({
       <NodeTooltip
         isHovering={hoveringShape && (!!description || !!formattedDurationSum)}
         isEditing={isEditingNode}
+        userEditCardStatus={userEditCardStatus}
         nodeData={data}
         includeDescription
         description={description}
@@ -175,6 +177,7 @@ export const MainActivityNode = ({
         includeEstimate
         estimate={formattedDurationSum}
         nodeRef={ref}
+        userCanEdit={userCanEdit}
       />
       {renderNodeButtons()}
     </div>

@@ -11,23 +11,28 @@ import { Description, Duration, Role } from "@/types/NodeInput";
 const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
   ssr: false,
 });
-
 type EditableNodeTooltipSectionProps = {
   header?: string;
   text?: string;
   isEditing?: boolean;
-  variant: "description" | "duration" | "role";
+  isCardEditablebyUser?: boolean;
+  variant?: "description" | "duration" | "role";
   nodeData: NodeDataCommon;
+  selectedCardId?: number | undefined;
 };
-
 export const EditableNodeTooltipSection = ({
   header,
   text,
   isEditing,
   variant = Description,
   nodeData,
+  isCardEditablebyUser,
+  selectedCardId,
 }: EditableNodeTooltipSectionProps) => {
-  const { patchNode, handleInputChange } = useNodeUpdate(nodeData);
+  const { handleInputChange, lastSentValues } = useNodeUpdate(
+    nodeData,
+    selectedCardId
+  );
 
   const shouldDisplayHeader = !(
     isEditing &&
@@ -41,8 +46,9 @@ export const EditableNodeTooltipSection = ({
           <DurationComponent
             selectedNode={nodeData}
             onChangeDuration={(value, field) => handleInputChange(value, field)}
-            onBlurDuration={(field, value) => patchNode(field, value)}
             disabled={!nodeData.userCanEdit}
+            lastUpdatedDuration={lastSentValues?.duration || 0}
+            lastUpdatedUnit={lastSentValues?.unit || ""}
           />
         );
       case Role:
@@ -54,7 +60,7 @@ export const EditableNodeTooltipSection = ({
             onChange={(e: ChangeEvent<HTMLInputElement>) => {
               handleInputChange(e.target.value, Role);
             }}
-            onBlur={() => patchNode(Role)}
+            lastUpdatedValue={lastSentValues?.role || ""}
           />
         );
       case Description:
@@ -66,11 +72,19 @@ export const EditableNodeTooltipSection = ({
             onChange={(value) => {
               handleInputChange(value, Description);
             }}
-            onBlur={() => patchNode(Description)}
+            lastUpdatedValue={lastSentValues?.description || ""}
           />
         );
     }
   };
+
+  if (isEditing && !isCardEditablebyUser) {
+    return (
+      <div className={styles.container}>
+        <FormatNodeText variant="body_long">{text}</FormatNodeText>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>

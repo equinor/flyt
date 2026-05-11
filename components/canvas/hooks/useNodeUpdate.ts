@@ -2,19 +2,24 @@ import { useStoreDispatch } from "@/hooks/storeHooks";
 import { useProjectId } from "@/hooks/useProjectId";
 import { patchGraph } from "@/services/graphApi";
 import { notifyOthers } from "@/services/notifyOthers";
+import { removeAccessOfaCardOnInactivity } from "@/services/userApi";
 import { NodeDataCommon } from "@/types/NodeData";
 import { UpdateNodeData, UpdateNodeDataRequestBody } from "@/types/NodeDataApi";
-import { Unit } from "@/types/NodeInput";
+import { debounce } from "@/utils/debounce";
 import { unknownErrorToString } from "@/utils/isError";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 
-export const useNodeUpdate = (selectedNode: NodeDataCommon) => {
+export const useNodeUpdate = (
+  selectedNode: NodeDataCommon,
+  selectedCardId: number | undefined
+) => {
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
   const [nodeInputData, setNodeInputData] = useState<UpdateNodeData>({});
 
+  const [lastSentValues, setLastSentValues] = useState<UpdateNodeData>({});
   const { projectId } = useProjectId();
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
@@ -31,21 +36,41 @@ export const useNodeUpdate = (selectedNode: NodeDataCommon) => {
     }
   );
 
+  const removeAccessOfaCardOnInactive = useMutation(
+    (id: number) => removeAccessOfaCardOnInactivity(id),
+    {
+      onSuccess: () => {
+        void queryClient.invalidateQueries();
+      },
+      onError: (e: Error | null) =>
+        dispatch.setSnackMessage(unknownErrorToString(e)),
+    }
+  );
+
   const patchNode = (
     field: "description" | "role" | "duration" | "unit",
-    value?: string | null
+    value?: string | number | null | undefined
   ) => {
-    const newValue = field === Unit ? value : nodeInputData[field];
-    if (!newValue) return;
-    mutate({
-      [field]: newValue,
-      id: selectedNode.id,
+    debounce(() => {
+      setLastSentValues((prevState) => {
+        return {
+          ...prevState,
+          [field]: value,
+        };
+      });
+      mutate({
+        [field]: value,
+        id: selectedNode.id,
+      }),
+        1500,
+        `update ${field} - ${selectedNode.id}`;
     });
+    selectedCardId && removeAccessOfaCardOnInactive.mutate(selectedCardId);
   };
 
   const handleInputChange = (
     value: string | number | null | undefined,
-    field: string
+    field: "description" | "role" | "duration" | "unit"
   ) => {
     setNodeInputData((prevState) => {
       return {
@@ -55,5 +80,5 @@ export const useNodeUpdate = (selectedNode: NodeDataCommon) => {
     });
   };
 
-  return { patchNode, error, handleInputChange };
+  return { patchNode, error, handleInputChange, lastSentValues };
 };

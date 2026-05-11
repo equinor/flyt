@@ -19,11 +19,13 @@ import { useCenterCanvas } from "./useCenterCanvas";
 import { getVSMLayout } from "../utils/getLayout";
 import { useNodeMerge } from "./useNodeMerge";
 import { tagSelectedNode } from "@/utils/tagSelectedNode";
+import { CardAccess } from "@/types/CardAccess";
 
 export const useFlowState = (
   apiNodes: NodeDataApi[],
   apiEdges: EdgeDataApi[],
   userCanEdit: boolean,
+  userEditCardStatus: CardAccess[],
   disabledNodeTypes?: NodeTypes[]
 ) => {
   const [nodes, setNodes, onNodesChange] = useNodesState<NodeDataFull>([]);
@@ -83,6 +85,10 @@ export const useFlowState = (
     }
   };
 
+  const handleTooltipOnAccessRemove = () => {
+    setSelectedNode(undefined);
+  };
+
   useEffect(() => {
     updateNodesSelectedProp();
   }, [selectedNode]);
@@ -102,11 +108,13 @@ export const useFlowState = (
       apiNodes,
       shapeSize,
       userCanEdit,
+      userEditCardStatus,
       merging,
       mergeNode,
       handleClickNode,
       handleNodeDelete,
-      disabledNodeTypes
+      disabledNodeTypes,
+      handleTooltipOnAccessRemove
     );
     tempNodes = setMainActivitiesDurationSum(
       tempNodes as Node<NodeDataCommon>[]
@@ -134,7 +142,7 @@ export const useFlowState = (
     setEdges(finalEdges);
 
     selectedNode && handleClickNode(selectedNode.id);
-  }, [apiNodes, apiEdges, userCanEdit]);
+  }, [apiNodes, apiEdges, userCanEdit, userEditCardStatus]);
 
   return {
     nodes,

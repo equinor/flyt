@@ -35,6 +35,7 @@ export const ChoiceNode = ({
     isValidDropTarget,
     parentTypes,
     userCanEdit,
+    userEditCardStatus,
     children,
     mergeOption,
     merging,
@@ -183,6 +184,7 @@ export const ChoiceNode = ({
       <NodeTooltip
         isHovering={hoveringShape && !!description}
         isEditing={isEditingNode}
+        userEditCardStatus={userEditCardStatus}
         nodeData={data}
         includeDescription
         description={description}
@@ -190,6 +192,7 @@ export const ChoiceNode = ({
         includeDuration={false}
         includeEstimate={false}
         nodeRef={ref}
+        userCanEdit={userCanEdit}
       />
       <div className={styles["node-rhombus-delete-container"]}>
         {hovering && !merging && (

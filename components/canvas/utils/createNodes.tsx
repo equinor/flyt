@@ -4,16 +4,19 @@ import { getQIPRContainerWidth } from "./getQIPRContainerWidth";
 import { Column, NodeDataCommon } from "@/types/NodeData";
 import { Node } from "reactflow";
 import { nodeValidityMap } from "./nodeValidityHelper";
+import { CardAccess } from "@/types/CardAccess";
 
 const createNode = (
   node: NodeDataApi,
   nodes: NodeDataApi[],
   shapeSize: { height: number; width: number },
   userCanEdit: boolean,
+  userEditCardStatus: CardAccess[],
   merging: boolean,
   mergeNode: { mutate: (args: { sourceId: string; targetId: string }) => void },
   handleClickNode: (id: string) => void,
   handleNodeDelete: (id: string) => void,
+  handleTooltipOnAccessRemove: () => void,
   disabledNodeTypes?: NodeTypes[],
   parent: NodeDataApi | null = null,
   column: Column | null = null,
@@ -55,6 +58,7 @@ const createNode = (
         ...node,
         handleClickNode: () => handleClickNode(node.id),
         handleNodeDelete: () => handleNodeDelete(node.id),
+        handleTooltipOnAccessRemove: () => handleTooltipOnAccessRemove(),
         handleMerge: (sourceId, targetId) =>
           sourceId && targetId && mergeNode.mutate({ sourceId, targetId }),
         mergeable:
@@ -65,6 +69,7 @@ const createNode = (
         parents: [parent.id],
         parentTypes: [parent.type],
         userCanEdit,
+        userEditCardStatus,
         column,
         shapeHeight: shapeSize.height,
         shapeWidth: shapeSize.width,
@@ -104,10 +109,12 @@ const createNode = (
         nodes,
         shapeSize,
         userCanEdit,
+        userEditCardStatus,
         merging,
         mergeNode,
         handleClickNode,
         handleNodeDelete,
+        handleTooltipOnAccessRemove,
         disabledNodeTypes,
         node,
         column,
@@ -122,11 +129,13 @@ export const createNodes = (
   apiNodes: NodeDataApi[],
   shapeSize: { height: number; width: number },
   userCanEdit: boolean,
+  userEditCardStatus: CardAccess[],
   merging: boolean,
   mergeNode: { mutate: (args: { sourceId: string; targetId: string }) => void },
   handleClickNode: (id: string) => void,
   handleNodeDelete: (id: string) => void,
-  disabledNodeTypes: NodeTypes[] = []
+  disabledNodeTypes: NodeTypes[] = [],
+  handleTooltipOnAccessRemove: () => void
 ) => {
   const root = apiNodes.find(
     (node: NodeDataApi) => node.type === NodeTypes.root
@@ -141,10 +150,12 @@ export const createNodes = (
     apiNodes,
     shapeSize,
     userCanEdit,
+    userEditCardStatus,
     merging,
     mergeNode,
     handleClickNode,
     handleNodeDelete,
+    handleTooltipOnAccessRemove,
     disabledNodeTypes
   );
 };

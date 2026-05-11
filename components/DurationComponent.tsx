@@ -11,16 +11,21 @@ import { Duration, Unit } from "@/types/NodeInput";
 
 type DurationComponent = {
   selectedNode: NodeDataCommon;
-  onChangeDuration: (value: string | number | null, field: string) => void;
-  onBlurDuration: (field: "duration" | "unit", value?: string | null) => void;
+  onChangeDuration: (
+    value: string | number | null,
+    field: typeof Duration | typeof Unit
+  ) => void;
   disabled: boolean;
+  lastUpdatedDuration: number;
+  lastUpdatedUnit: string;
 };
 
 export function DurationComponent({
   selectedNode,
   onChangeDuration,
-  onBlurDuration,
   disabled,
+  lastUpdatedDuration,
+  lastUpdatedUnit,
 }: DurationComponent) {
   const [duration, setDuration] = useState<number | null>(
     selectedNode.duration
@@ -31,8 +36,9 @@ export function DurationComponent({
   const timeDefinitionDisplayNames = getTimeDefinitionDisplayNames();
 
   useEffect(() => {
-    setDuration(selectedNode.duration);
-    setUnit(selectedNode.unit);
+    if (lastUpdatedDuration !== selectedNode.duration)
+      setDuration(selectedNode.duration);
+    if (lastUpdatedUnit !== selectedNode.role) setUnit(selectedNode.unit);
   }, [selectedNode]);
 
   const parseValue = (value: string) =>
@@ -50,7 +56,6 @@ export function DurationComponent({
     if (value === unit) return;
     setUnit(value);
     onChangeDuration(value, Unit);
-    onBlurDuration(Unit, value);
   };
 
   return (
@@ -63,7 +68,6 @@ export function DurationComponent({
         min={0}
         value={`${duration === null ? "" : duration}`}
         onChange={handleDurationChange}
-        onBlur={() => onBlurDuration(Duration)}
       />
       <div style={{ padding: 8 }} />
       <Autocomplete

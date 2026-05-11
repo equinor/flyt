@@ -17,7 +17,7 @@ const Canvas = ({
   graph: { vertices: apiNodes, edges: apiEdges },
   project,
 }: CanvasProps) => {
-  const { userCanEdit } = useAccess(project);
+  const { userCanEdit, userEditCardStatus } = useAccess(project);
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
   const { socketConnected, socketReason } = useWebSocket();
 
@@ -39,6 +39,7 @@ const Canvas = ({
         apiNodes={apiNodes}
         apiEdges={apiEdges}
         userCanEdit={userCanEdit}
+        userEditCardStatus={userEditCardStatus}
       />
     </>
   );

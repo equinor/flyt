@@ -51,6 +51,7 @@ export const WaitingNode = ({
     merging,
     parentTypes,
     userCanEdit,
+    userEditCardStatus,
     shapeHeight,
     shapeWidth,
     disabled,
@@ -202,6 +203,7 @@ export const WaitingNode = ({
           hoveringShape && (!!description || typeof duration === "number")
         }
         isEditing={isEditingNode}
+        userEditCardStatus={userEditCardStatus}
         nodeData={data}
         includeDescription
         description={description}
@@ -210,6 +212,7 @@ export const WaitingNode = ({
         duration={formatDuration(duration, unit)}
         includeEstimate={false}
         nodeRef={ref}
+        userCanEdit={userCanEdit}
       />
       {renderNodeButtons()}
     </div>

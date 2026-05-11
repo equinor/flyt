@@ -36,14 +36,21 @@ import { copyPasteNodeValidator } from "./utils/copyPasteValidators";
 import { handlePasteNode } from "./utils/handlePasteNode";
 import { useWebSocket } from "./hooks/useWebSocket";
 import NetworkToast from "../NetworkToast";
+import { CardAccess } from "@/types/CardAccess";
 
 type CanvasProps = {
   apiNodes: NodeDataApi[];
   apiEdges: EdgeDataApi[];
   userCanEdit: boolean;
+  userEditCardStatus: CardAccess[];
 };
 
-const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
+const Flow = ({
+  apiNodes,
+  apiEdges,
+  userCanEdit,
+  userEditCardStatus,
+}: CanvasProps) => {
   const {
     nodes,
     edges,
@@ -58,7 +65,7 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
     handleSetSelectedEdge,
     edgeToBeDeletedId,
     setEdgeToBeDeletedId,
-  } = useFlowState(apiNodes, apiEdges, userCanEdit);
+  } = useFlowState(apiNodes, apiEdges, userCanEdit, userEditCardStatus);
   const { deletePQIR } = usePQIRMutations();
   const { addNode } = useNodeAdd();
   const { onNodeDragStart, onNodeDrag, onNodeDragStop } = useNodeDrag();
@@ -92,6 +99,18 @@ const Flow = ({ apiNodes, apiEdges, userCanEdit }: CanvasProps) => {
       setSelectedNode(undefined);
     }
   }, [selectedNode]);
+
+  useEffect(() => {
+    const handler = () => {
+      if (document.visibilityState === "hidden") {
+        setSelectedNode(undefined);
+      }
+    };
+    document.addEventListener("visibilitychange", handler);
+    return () => {
+      document.removeEventListener("visibilitychange", handler);
+    };
+  }, []);
 
   return (
     <>

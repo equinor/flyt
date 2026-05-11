@@ -1,6 +1,7 @@
 import { ProcessLabel } from "./ProcessLabel";
 import { userAccess } from "./UserAccess";
 import { NodeDataApi } from "./NodeDataApi";
+import { CardAccess } from "./CardAccess";
 
 export type Project = {
   vsmProjectID: number;
@@ -16,4 +17,5 @@ export type Project = {
   duplicateOf?: number;
   isFavorite?: boolean;
   undoRedoStatus: { disableUndo: boolean; disableRedo: boolean };
+  userCardStatus: CardAccess[];
 };

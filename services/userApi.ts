@@ -1,6 +1,7 @@
 import { AxiosPromise } from "axios";
 import BaseAPIServices from "./BaseAPIServices";
 import { UserAccessSearch } from "@/types/UserAccessSearch";
+import { CardAccess } from "@/types/CardAccess";
 
 const baseUrl = "/api/v2.0";
 
@@ -88,4 +89,27 @@ export const getUserById = (
 }> =>
   BaseAPIServices.get(`${baseUrl}/userAccess/userById/${userId}`).then(
     (res) => res.data as User
+  );
+
+/**
+ * Update access of a card
+ * @returns - CardAccessObject
+ */
+export const updateUserCardAccess = (
+  cardaccessData: Omit<CardAccess, "id">
+): Promise<CardAccess[]> =>
+  BaseAPIServices.post(`${baseUrl}/usercard`, cardaccessData).then(
+    (res) => res.data
+  );
+
+/**
+ * Delete access of a card
+ * @returns - boolean .
+ */
+export const removeUserCardAccess = (id: number): Promise<boolean> =>
+  BaseAPIServices.delete(`${baseUrl}/usercard/${id}`).then((res) => res.data);
+
+export const removeAccessOfaCardOnInactivity = (id: number): Promise<boolean> =>
+  BaseAPIServices.patch(`${baseUrl}/usercard/${id}`, undefined).then(
+    (res) => res.data
   );
