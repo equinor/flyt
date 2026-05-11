@@ -78,6 +78,7 @@ export const useNodeUpdate = (
         [field]: value ?? "",
       };
     });
+    patchNode(field, value);
   };
 
   return { patchNode, error, handleInputChange, lastSentValues };
