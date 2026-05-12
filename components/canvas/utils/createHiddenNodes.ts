@@ -1,7 +1,7 @@
 import { NodeTypes } from "@/types/NodeTypes";
 import { uid } from "@/utils/uuid";
 import { NodeDataFull, NodeDataHidden } from "@/types/NodeData";
-import { Node, Edge } from "reactflow";
+import { Node, Edge } from "@xyflow/react";
 
 export const createHiddenNodes = (
   tempNodes: Node<NodeDataFull>[],

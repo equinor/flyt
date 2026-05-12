@@ -1,6 +1,6 @@
 import { NodeDataCommon } from "@/types/NodeData";
 import { NodeTypes } from "@/types/NodeTypes";
-import { Node, Position } from "reactflow";
+import { Node, Position } from "@xyflow/react";
 import { isChoiceChild, isGenericColumn } from "./nodeRelationsHelper";
 import { isKey } from "@/utils/isKey";
 

@@ -2,14 +2,14 @@ import { EdgeDataApi } from "@/types/EdgeDataApi";
 import { NodeDataCommon, NodeDataFull } from "@/types/NodeData";
 import { NodeDataApi } from "@/types/NodeDataApi";
 import { NodeTypes } from "@/types/NodeTypes";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { use, useEffect, useLayoutEffect, useState } from "react";
 import {
   Edge,
   Node,
   useEdgesState,
   useNodesInitialized,
   useNodesState,
-} from "reactflow";
+} from "@xyflow/react";
 import { createEdges } from "../utils/createEdges";
 import { createHiddenNodes } from "../utils/createHiddenNodes";
 import { createNodes } from "../utils/createNodes";
@@ -28,8 +28,10 @@ export const useFlowState = (
   userEditCardStatus: CardAccess[],
   disabledNodeTypes?: NodeTypes[]
 ) => {
-  const [nodes, setNodes, onNodesChange] = useNodesState<NodeDataFull>([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node<NodeDataFull>>(
+    []
+  );
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [selectedNode, setSelectedNode] = useState<
     Node<NodeDataCommon> | undefined
   >(undefined);
@@ -141,7 +143,7 @@ export const useFlowState = (
     setNodes(finalNodes);
     setEdges(finalEdges);
 
-    selectedNode && handleClickNode(selectedNode.id);
+    handleClickNode(selectedNode?.id);
   }, [apiNodes, apiEdges, userCanEdit, userEditCardStatus]);
 
   return {

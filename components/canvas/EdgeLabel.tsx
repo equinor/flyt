@@ -1,4 +1,4 @@
-import { useReactFlow } from "reactflow";
+import { useReactFlow } from "@xyflow/react";
 import { useEffect, useRef, useState } from "react";
 import { Button, Icon } from "@equinor/eds-core-react";
 import { edit } from "@equinor/eds-icons";

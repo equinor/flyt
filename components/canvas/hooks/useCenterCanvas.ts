@@ -1,4 +1,8 @@
-import { FitViewOptions, useNodesInitialized, useReactFlow } from "reactflow";
+import {
+  FitViewOptions,
+  useNodesInitialized,
+  useReactFlow,
+} from "@xyflow/react";
 import { useProjectId } from "@/hooks/useProjectId";
 import { useCallback, useEffect, useState } from "react";
 
