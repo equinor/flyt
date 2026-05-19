@@ -64,6 +64,7 @@ export const UndoRedoButton = () => {
       onSuccess: (response) => {
         dispatch.setSnackMessage("✅ Undo Done!");
         setisUndoDisabled(response.data.disableUndo);
+        dispatch.setUndoRedoSynced(true);
         notifyOthers("Updated the process", projectId, account);
         queryClient.invalidateQueries(["graph", projectId]);
       },
@@ -79,6 +80,7 @@ export const UndoRedoButton = () => {
       onSuccess: (response) => {
         dispatch.setSnackMessage("✅ Redo Done!");
         setisRedoDisabled(response.data.disableUndo);
+        dispatch.setUndoRedoSynced(true);
         notifyOthers("Updated the process", projectId, account);
         queryClient.invalidateQueries(["graph", projectId]);
       },

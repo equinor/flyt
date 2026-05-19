@@ -6,12 +6,14 @@ export type ProjectModel = {
   pqirToBeDeletedId: string | null;
   downloadSnackbar: boolean;
   networkSnackMessage: string | null;
+  undoRedoSynced: boolean;
 
   //// ACTIONS ///////////////////
   setSnackMessage: Action<ProjectModel, string>;
   setPQIRToBeDeletedId: Action<ProjectModel, string | null>;
   setDownloadSnackbar: Action<ProjectModel, boolean>;
   setNetworkSnackMessage: Action<ProjectModel, string | null>;
+  setUndoRedoSynced: Action<ProjectModel, boolean>;
 };
 
 const projectModel: ProjectModel = {
@@ -20,7 +22,7 @@ const projectModel: ProjectModel = {
   pqirToBeDeletedId: null,
   downloadSnackbar: false,
   networkSnackMessage: null,
-
+  undoRedoSynced: false,
   //Actions
   setSnackMessage: action((state, payload) => {
     state.snackMessage = payload;
@@ -33,6 +35,9 @@ const projectModel: ProjectModel = {
   }),
   setNetworkSnackMessage: action((state, payload) => {
     state.networkSnackMessage = payload;
+  }),
+  setUndoRedoSynced: action((state, payload) => {
+    state.undoRedoSynced = payload;
   }),
 };
 
