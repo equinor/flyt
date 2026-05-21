@@ -49,6 +49,7 @@ import { EditableTitle } from "components/EditableTitle";
 import { getProjectName } from "@/utils/getProjectName";
 import { accessRoles } from "@/types/AccessRoles";
 import { downloadCanvasAsPNG } from "@/utils/downloadCanvas";
+import { disableKeyboardUndoRedoShortcuts } from "@/utils/disableKeyboardUndoRedoShortcuts";
 
 export const CanvasLayout = ({ children }: { children: ReactNode }) => {
   const isAuthenticated = useIsAuthenticated();
@@ -166,6 +167,7 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     disableKeyboardZoomShortcuts();
     disableMouseWheelZoom();
+    disableKeyboardUndoRedoShortcuts();
   }, []);
 
   if (!isAuthenticated) {

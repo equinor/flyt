@@ -8,6 +8,7 @@ import {
 import { ChangeEvent, useEffect, useState } from "react";
 import { sortSearch } from "@/utils/sortSearch";
 import { Duration, Unit } from "@/types/NodeInput";
+import { useStoreActions, useStoreState } from "easy-peasy";
 
 type DurationComponent = {
   selectedNode: NodeDataCommon;
@@ -34,11 +35,19 @@ export function DurationComponent({
   const [unitSearchInput, setUnitSearchInput] = useState("");
 
   const timeDefinitionDisplayNames = getTimeDefinitionDisplayNames();
+  const undoRedoSynced = useStoreState((s: any) => s.undoRedoSynced) as boolean;
+  const setUndoRedoSynced = useStoreActions((a: any) => a.setUndoRedoSynced);
 
   useEffect(() => {
+    if (undoRedoSynced) {
+      setDuration(selectedNode.duration);
+      setUnit(selectedNode.unit);
+      setUndoRedoSynced(false);
+      return;
+    }
     if (lastUpdatedDuration !== selectedNode.duration)
       setDuration(selectedNode.duration);
-    if (lastUpdatedUnit !== selectedNode.role) setUnit(selectedNode.unit);
+    if (lastUpdatedUnit !== selectedNode.unit) setUnit(selectedNode.unit);
   }, [selectedNode]);
 
   const parseValue = (value: string) =>
@@ -50,7 +59,8 @@ export function DurationComponent({
     onChangeDuration(value, Duration);
   };
 
-  const handleUnitChange = (unitVal: string) => {
+  const handleUnitChange = (unitObj: { selectedItems: string[] }) => {
+    const unitVal = unitObj?.selectedItems[0] || "";
     setUnitSearchInput(unitVal);
     const value = getTimeDefinitionValue(unitVal);
     if (value === unit) return;
@@ -73,10 +83,8 @@ export function DurationComponent({
       <Autocomplete
         disabled={disabled}
         options={sortSearch(timeDefinitionDisplayNames, unitSearchInput)}
-        onInputChange={handleUnitChange}
-        selectedOptions={[
-          unit ? getTimeDefinitionDisplayName(unit) : undefined,
-        ]}
+        onOptionsChange={handleUnitChange}
+        selectedOptions={unit ? [getTimeDefinitionDisplayName(unit)] : []}
         optionsFilter={() => true}
         label="Unit"
         autoWidth
