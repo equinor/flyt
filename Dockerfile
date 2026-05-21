@@ -18,8 +18,6 @@ RUN yarn build
 
 # Production image, copy all the files and run next
 FROM docker.io/node:24.14.1-alpine AS runner
-RUN addgroup -S -g 1001 radix-non-root-group
-RUN adduser -S -u 1001 -G radix-non-root-group radix-non-root-user
 RUN rm -rf /usr/local/lib/node_modules/npm \
 USER 1001
 ARG X_TAG
