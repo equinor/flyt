@@ -7,6 +7,8 @@ import {
   TopBar,
   Typography,
   DotProgress,
+  Card,
+  Dialog,
 } from "@equinor/eds-core-react";
 import {
   ChangeEvent,
@@ -16,7 +18,14 @@ import {
   useEffect,
   useState,
 } from "react";
-import { chevron_down, close, download, share } from "@equinor/eds-icons";
+import {
+  chevron_down,
+  close,
+  download,
+  share,
+  style,
+  tag,
+} from "@equinor/eds-icons";
 import {
   faveProject,
   getProject,
@@ -28,7 +37,7 @@ import { useAccount, useIsAuthenticated, useMsal } from "@azure/msal-react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useStoreDispatch, useStoreState } from "@/hooks/storeHooks";
 
-import { AccessBox } from "@/components/AccessBox";
+import { AccessBox, AddUserAccessSection } from "@/components/AccessBox";
 import Head from "next/head";
 import { Heart } from "components/Heart";
 import { HomeButton } from "./homeButton";
@@ -49,6 +58,296 @@ import { EditableTitle } from "components/EditableTitle";
 import { getProjectName } from "@/utils/getProjectName";
 import { accessRoles } from "@/types/AccessRoles";
 import { downloadCanvasAsPNG } from "@/utils/downloadCanvas";
+import { Project } from "@/types/Project";
+import {
+  ManageLabelBox,
+  AddLabelsSection,
+} from "@/components/Labels/ManageLabelBox";
+
+type MandatoryInfoStage = "addName" | "giveAccesses" | "addLabels";
+
+function DialogActions({ children }: { children: ReactNode }) {
+  return (
+    <Card.Actions
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        borderTop: "1px solid #dcdcdc",
+        padding: "24px 40px",
+      }}
+    >
+      {children}
+    </Card.Actions>
+  );
+}
+
+type AddNameStageProps = {};
+
+function AddNameStage() {}
+
+function GiveAccessStage() {}
+
+function AddLabelsStage() {}
+
+type MandatoryInfoBoxProps = {
+  onDiscard: () => void;
+  updateProjectName: (name: string) => Promise<void>;
+  project: Project;
+};
+
+function MandatoryInfoBox({
+  project,
+  updateProjectName,
+  onDiscard,
+}: MandatoryInfoBoxProps) {
+  const threshold = new Date();
+  threshold.setMinutes(threshold.getMinutes() + 1);
+
+  const isNew =
+    Date.parse(project.created) < threshold.getTime() &&
+    (!project.name?.trim() ||
+      project.name.trim().toLowerCase() === "untitled process");
+
+  const [newName, setNewName] = useState<string>();
+  const [showInitialRenameScrim, setShowInitialRenameScrim] =
+    useState<boolean>(isNew);
+  const [mandatoryInfoStage, setMandatoryInfoStage] = useState<
+    MandatoryInfoStage | undefined
+  >("addName");
+  const [showDiscardConfirmation, setShowDiscardConfirmation] = useState(false);
+
+  const moveToPreviousStage = () => {
+    switch (mandatoryInfoStage) {
+      case "giveAccesses":
+        setMandatoryInfoStage("addName");
+        break;
+      case "addLabels":
+        setMandatoryInfoStage("giveAccesses");
+        break;
+    }
+  };
+
+  const moveToNextStage = async () => {
+    switch (mandatoryInfoStage) {
+      case "addName":
+        await updateProjectName(newName ?? "");
+        setMandatoryInfoStage("giveAccesses");
+        break;
+      case "giveAccesses":
+        setMandatoryInfoStage("addLabels");
+        break;
+      case "addLabels":
+        setMandatoryInfoStage(undefined);
+        setShowInitialRenameScrim(false);
+        break;
+    }
+  };
+
+  return (
+    <>
+      {showDiscardConfirmation && (
+        <Dialog
+          open
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 32,
+            minWidth: 300,
+            width: "max(50vw, 400px)",
+          }}
+        >
+          <Dialog.Header style={{ padding: 0 }}>
+            <Dialog.Title style={{ padding: "24px 40px" }}>
+              <Typography variant="h2">Discard process?</Typography>
+            </Dialog.Title>
+          </Dialog.Header>
+          <Dialog.CustomContent style={{ padding: "0 40px" }}>
+            <Typography>
+              The process and all entered information will be permanently
+              deleted.
+            </Typography>
+            <Typography>This action cannot be undone.</Typography>
+          </Dialog.CustomContent>
+          <Dialog.Actions
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              borderTop: "1px solid #dcdcdc",
+              width: "stretch",
+              padding: "16px 40px",
+            }}
+          >
+            <Button onClick={() => setShowDiscardConfirmation(false)}>
+              Go Back
+            </Button>
+            <Button variant="outlined" color="danger" onClick={onDiscard}>
+              Discard Process
+            </Button>
+          </Dialog.Actions>
+        </Dialog>
+      )}
+      <Scrim
+        open={!showDiscardConfirmation && showInitialRenameScrim}
+        onWheel={(e) => e.stopPropagation()}
+      >
+        <Card
+          elevation="overlay"
+          style={{
+            position: "relative",
+            display: "flex",
+            flexDirection: "column",
+            minWidth: "max(60vw, 400px)",
+            maxWidth: "80vw",
+            maxHeight: "80vh",
+            gap: 32,
+            padding: 0,
+            borderRadius: 4,
+          }}
+        >
+          <Card.Header
+            style={{
+              padding: 0,
+              borderBottom: "1px solid #DCDCDC",
+            }}
+          >
+            <Card.HeaderTitle style={{ padding: "24px 40px" }}>
+              <Typography variant="h2">
+                {mandatoryInfoStage === "addName"
+                  ? "Give your process a name"
+                  : project.name ?? "Untitled Process"}
+              </Typography>
+            </Card.HeaderTitle>
+          </Card.Header>
+          <Card.Content
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              // gap: 24,
+              overflow: "auto",
+              padding: 0,
+            }}
+          >
+            {mandatoryInfoStage === "addName" && (
+              <TextField
+                autoFocus
+                style={{ width: "60%", minWidth: 300, padding: "16px 40px" }}
+                value={newName}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  setNewName(e.target.value ?? "")
+                }
+                id="vsmObjectName"
+                helperText="You can change the process name later."
+                placeholder="Enter process name here"
+              />
+            )}
+            {mandatoryInfoStage === "giveAccesses" && (
+              <>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 8,
+                    padding: "0 40px",
+                  }}
+                >
+                  <Typography
+                    variant="h4"
+                    style={{ display: "flex", alignItems: "center", gap: 16 }}
+                  >
+                    <Icon data={share} size={24} />
+                    Who needs writing access?
+                  </Typography>
+                  <Typography>You can add or remove access later.</Typography>
+                </div>
+
+                <div
+                  style={{
+                    padding: "16px calc(40px - 16px)",
+                  }}
+                >
+                  <AddUserAccessSection project={project} isAdmin={true} />
+                </div>
+              </>
+            )}
+            {mandatoryInfoStage === "addLabels" && (
+              <>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 8,
+                    padding: "0 40px",
+                  }}
+                >
+                  <Typography
+                    variant="h4"
+                    style={{ display: "flex", alignItems: "center", gap: 16 }}
+                  >
+                    <Icon data={tag} size={24} />
+                    Add labels
+                  </Typography>
+                  <div>
+                    <Typography>
+                      Add labels to make it easier to find relevant processes.
+                    </Typography>
+                    <Typography>
+                      Labels can be added or changed later.
+                    </Typography>
+                  </div>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 16,
+                    overflowY: "auto",
+                    padding: "16px 40px 0 40px",
+                  }}
+                >
+                  <AddLabelsSection
+                    process={project}
+                    withHorizontalCategories
+                  />
+                </div>
+              </>
+            )}
+          </Card.Content>
+          <Card.Actions
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              borderTop: "1px solid #dcdcdc",
+              padding: "24px 40px",
+            }}
+          >
+            <Button
+              variant="ghost"
+              onClick={() => setShowDiscardConfirmation(true)}
+            >
+              Discard
+            </Button>
+            <div style={{ display: "flex", gap: 8 }}>
+              {mandatoryInfoStage !== "addName" && (
+                <Button variant="outlined" onClick={moveToPreviousStage}>
+                  Back
+                </Button>
+              )}
+              <Button
+                onClick={moveToNextStage}
+                disabled={
+                  mandatoryInfoStage === "addName" &&
+                  (!newName || newName.toLowerCase() === "untitled process")
+                }
+              >
+                {mandatoryInfoStage !== "addLabels" ? "Next" : "Finish"}
+              </Button>
+            </div>
+          </Card.Actions>
+        </Card>
+      </Scrim>
+    </>
+  );
+}
 
 export const CanvasLayout = ({ children }: { children: ReactNode }) => {
   const isAuthenticated = useIsAuthenticated();
@@ -208,15 +507,20 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
         });
   }
 
-  function updateProjectName(name: string) {
+  async function updateProjectName(name: string) {
     if (name === project?.name) return;
-    projectMutation.mutate([
-      {
-        op: "replace",
-        path: "/Name",
-        value: name,
-      },
-    ]);
+
+    try {
+      await projectMutation.mutateAsync([
+        {
+          op: "replace",
+          path: "/Name",
+          value: name,
+        },
+      ]);
+    } catch (e) {
+      console.error("Failed to update project name", e);
+    }
   }
 
   function handleDuplicate() {
@@ -253,7 +557,7 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
                 <EditableTitle
                   defaultText={projectName}
                   readOnly={!userCanEdit}
-                  onSubmit={(text) => updateProjectName(text)}
+                  onSubmit={updateProjectName}
                 />
               ) : (
                 <DotProgress size={32} color={"primary"} />
@@ -366,6 +670,23 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
         </Scrim>
       )}
 
+      {project && (
+        <MandatoryInfoBox
+          project={project}
+          onDiscard={deleteVSM}
+          updateProjectName={async (newName: string) => {
+            newName = newName.trim();
+            if (
+              !newName ||
+              newName === project.name ||
+              newName.toLowerCase() === "untitled process"
+            )
+              return;
+            await updateProjectName(newName);
+            // console.log(e.target.value)
+          }}
+        />
+      )}
       <Scrim
         open={visibleRenameScrim}
         onClose={() => setVisibleRenameScrim(false)}
@@ -388,8 +709,8 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
               className={styles.renameInput}
               label={"Add title"}
               defaultValue={project?.name ?? undefined}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                updateProjectName(e.target.value)
+              onChange={async (e: ChangeEvent<HTMLInputElement>) =>
+                await updateProjectName(e.target.value)
               }
               id={"vsmObjectDescription"}
             />
