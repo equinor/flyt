@@ -119,11 +119,17 @@ export const ProjectCard = ({
         />
       </Scrim>
 
-      <ManageLabelBox
-        handleClose={() => setVisibleLabelScrim(false)}
-        isVisible={visibleLabelScrim}
-        process={project}
-      />
+      <Scrim
+        open={visibleLabelScrim}
+        onClose={() => setVisibleLabelScrim(false)}
+        isDismissable
+      >
+        <ManageLabelBox
+          handleClose={() => setVisibleLabelScrim(false)}
+          isVisible={visibleLabelScrim}
+          process={project}
+        />
+      </Scrim>
     </>
   );
 };
