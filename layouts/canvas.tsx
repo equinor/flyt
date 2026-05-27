@@ -107,7 +107,6 @@ function AddNameStage({
         style={{
           display: "flex",
           flexDirection: "column",
-          // gap: 24,
           overflow: "auto",
           padding: 0,
         }}
@@ -286,7 +285,6 @@ function AddLabelsStage({
         style={{
           display: "flex",
           flexDirection: "column",
-          // gap: 24,
           overflow: "auto",
           padding: 0,
         }}
@@ -363,7 +361,7 @@ function MandatoryInfoBox({
 
   // is created within the last minute and has default name or no name
   const isNew =
-    new Date(project.created) > threshold &&
+    Date.parse(project.created) > threshold.getTime() &&
     (!project.name?.trim() ||
       project.name.trim().toLowerCase() === "untitled process");
 
@@ -404,47 +402,45 @@ function MandatoryInfoBox({
 
   return (
     <>
-      {showDiscardConfirmation && (
-        <Dialog
-          open
+      <Dialog
+        open={showDiscardConfirmation}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          minWidth: 300,
+          width: "max(50vw, 400px)",
+          gap: 32,
+        }}
+      >
+        <Dialog.Header style={{ padding: 0, display: "flex", alignItems: "center", border: "1px solid #dcdcdc" }}>
+          <Dialog.Title style={{ padding: "24px 40px" }}>
+            <Typography variant="h2">Discard process?</Typography>
+          </Dialog.Title>
+        </Dialog.Header>
+        <Dialog.CustomContent style={{ padding: "0 40px", minHeight: 0 }}>
+          <Typography>
+            The process and all entered information will be permanently
+            deleted.
+          </Typography>
+          <Typography>This action cannot be undone.</Typography>
+        </Dialog.CustomContent>
+        <Dialog.Actions
           style={{
             display: "flex",
-            flexDirection: "column",
-            gap: 32,
-            minWidth: 300,
-            width: "max(50vw, 400px)",
+            justifyContent: "space-between",
+            borderTop: "1px solid #dcdcdc",
+            width: "stretch",
+            padding: "16px 40px",
           }}
         >
-          <Dialog.Header style={{ padding: 0 }}>
-            <Dialog.Title style={{ padding: "24px 40px" }}>
-              <Typography variant="h2">Discard process?</Typography>
-            </Dialog.Title>
-          </Dialog.Header>
-          <Dialog.CustomContent style={{ padding: "0 40px" }}>
-            <Typography>
-              The process and all entered information will be permanently
-              deleted.
-            </Typography>
-            <Typography>This action cannot be undone.</Typography>
-          </Dialog.CustomContent>
-          <Dialog.Actions
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              borderTop: "1px solid #dcdcdc",
-              width: "stretch",
-              padding: "16px 40px",
-            }}
-          >
-            <Button onClick={() => setShowDiscardConfirmation(false)}>
-              Go Back
-            </Button>
-            <Button variant="outlined" color="danger" onClick={onDiscard}>
-              Discard Process
-            </Button>
-          </Dialog.Actions>
-        </Dialog>
-      )}
+          <Button onClick={() => setShowDiscardConfirmation(false)}>
+            Go Back
+          </Button>
+          <Button variant="outlined" color="danger" onClick={onDiscard}>
+            Discard Process
+          </Button>
+        </Dialog.Actions>
+      </Dialog>
       <Scrim
         open={!showDiscardConfirmation && showInitialRenameScrim}
         onWheel={(e) => e.stopPropagation()}
@@ -816,7 +812,6 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
             )
               return;
             await updateProjectName(newName);
-            // console.log(e.target.value)
           }}
         />
       )}
