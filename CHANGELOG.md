@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.16.0](https://github.com/equinor/flyt/compare/v2.15.0...v2.16.0) (2026-05-27)
+
+
+### Features
+
+* added individual process pqir powerbi urls ([#1105](https://github.com/equinor/flyt/issues/1105)) ([e728961](https://github.com/equinor/flyt/commit/e7289614b8c8389f6a50fb10c7baf6539e01680b))
+* initial guiding - mandatory guiding ([#1106](https://github.com/equinor/flyt/issues/1106)) ([1bd53da](https://github.com/equinor/flyt/commit/1bd53da846603a07b228697983eceb40c497146a))
+
+
+### Bug Fixes
+
+* resolved radix vulnerabilities ([#1096](https://github.com/equinor/flyt/issues/1096)) ([9c7c3e9](https://github.com/equinor/flyt/commit/9c7c3e9def4d3238866439f39784ec0617344bc7))
+
+
+### Reverts
+
+* "fix: resolved radix vulnerabilities" ([#1103](https://github.com/equinor/flyt/issues/1103)) ([c4b5fa6](https://github.com/equinor/flyt/commit/c4b5fa63d8113982a6acef8d94f12d0e39cfe423))
+
 ## [2.15.0](https://github.com/equinor/flyt/compare/v2.14.0...v2.15.0) (2026-04-28)
 
 
