@@ -1,8 +1,10 @@
-import { Node, Edge } from "@xyflow/react";
+import type { Node, Edge } from "@xyflow/react";
 import dagre from "@dagrejs/dagre";
-import { NodeDataCommon, NodeDataFull } from "types/NodeData";
+import type { NodeDataCommon, NodeDataFull } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
 import { getEdgeOrder } from "./getEdgeOrder";
+import { getQIPRContainerWidth } from "./getQIPRContainerWidth";
+import { NodeDataApi } from "@/types/NodeDataApi";
 
 type Options = {
   rankdir?: string;
@@ -60,7 +62,11 @@ const getColumnMargin = (nodes: Node<NodeDataFull>[]) => {
   let highestPosX = 0;
   nodes.forEach((n) => {
     const { x } = n.position;
-    const occupiedSpace = x + (n.width ?? 175.5) + 35; //175.5 is default width of node, 35 is half of nodesep
+    const occupiedSpace =
+      x +
+      (n.width ?? 175.5) +
+      getQIPRContainerWidth((n.data as NodeDataApi)?.tasks ?? []) +
+      70; //175.5 is default width of node, 70 is nodesep
     if (occupiedSpace > highestPosX) {
       highestPosX = occupiedSpace;
     }

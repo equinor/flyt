@@ -1,4 +1,5 @@
-import { Graph } from "@/types/Graph";
+import { Scrim } from "@equinor/eds-core-react";
+import type { Graph } from "@/types/Graph";
 import { CanvasButtons } from "components/CanvasButtons";
 import { ManageLabelBox } from "components/Labels/ManageLabelBox";
 import { useState } from "react";
@@ -27,11 +28,17 @@ const Canvas = ({
         userCanEdit={userCanEdit}
         handleClickLabel={() => setVisibleLabelScrim(true)}
       />
-      <ManageLabelBox
-        handleClose={() => setVisibleLabelScrim(false)}
-        isVisible={visibleLabelScrim}
-        process={project}
-      />
+      <Scrim
+        open={visibleLabelScrim}
+        onClose={() => setVisibleLabelScrim(false)}
+        isDismissable
+      >
+        <ManageLabelBox
+          handleClose={() => setVisibleLabelScrim(false)}
+          isVisible={visibleLabelScrim}
+          process={project}
+        />
+      </Scrim>
       {/* Note: Current and To Be Toggle button is hidden as To Be function is not fully developed. */}
       {/* <ToBeToggle />
       <ResetProcessButton /> */}
