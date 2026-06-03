@@ -1,7 +1,7 @@
 import { canDeleteNode } from "@/utils/canDeleteNode";
 import { Button, Icon } from "@equinor/eds-core-react";
 import { delete_forever } from "@equinor/eds-icons";
-import { Node } from "reactflow";
+import { Node } from "@xyflow/react";
 
 type NodeDelete = {
   data: Node["data"];

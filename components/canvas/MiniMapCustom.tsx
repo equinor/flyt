@@ -1,4 +1,4 @@
-import { MiniMap, MiniMapNodeProps, Node, useReactFlow } from "reactflow";
+import { MiniMap, MiniMapNodeProps, Node, useReactFlow } from "@xyflow/react";
 import { NodeTypes } from "@/types/NodeTypes";
 import colors from "../../theme/colors";
 import styles from "./MiniMapCustom.module.scss";

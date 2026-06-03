@@ -1,4 +1,4 @@
-import { Node } from "reactflow";
+import { Node } from "@xyflow/react";
 
 /**
  * Make sure selected node has `selected` set to `true`

@@ -1,4 +1,4 @@
-import { useReactFlow } from "reactflow";
+import { useReactFlow } from "@xyflow/react";
 import { useSelectedNodeForPQIRid } from "./useSelectedNodeForPQIRid";
 
 export const useSelectedNodeForPQIR = () => {

@@ -1,13 +1,15 @@
 import { useEffect } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import { ReactFlowState, useReactFlow, useStore } from "reactflow";
+import { useConnection, useReactFlow, Node } from "@xyflow/react";
 import { useStoreDispatch } from "@/hooks/storeHooks";
 import { mergeVertices } from "@/services/graphApi";
 import { notifyOthers } from "@/services/notifyOthers";
 import { unknownErrorToString } from "@/utils/isError";
 import { useUserAccount } from "./useUserAccount";
 import { useProjectId } from "@/hooks/useProjectId";
-import { NodeDataCommon } from "@/types/NodeData";
+import { NodeDataFull } from "@/types/NodeData";
+import { NodeTypes } from "@/types/NodeTypes";
+import { EdgeLabel } from "../EdgeLabel";
 
 export type NodeMergeParams = {
   sourceId: string;
@@ -15,22 +17,14 @@ export type NodeMergeParams = {
 };
 
 export const useNodeMerge = () => {
-  const { getNodes, setNodes } = useReactFlow<NodeDataCommon>();
+  const { getNodes, setNodes } = useReactFlow<Node<NodeDataFull>>();
   const { projectId } = useProjectId();
-  const connectionNodeIdSelector = (state: ReactFlowState) =>
-    state.connectionNodeId;
-  const connectionNodeId = useStore(connectionNodeIdSelector);
+  const connectionNodeId = useConnection(
+    (connection) => connection.fromHandle?.nodeId ?? null
+  );
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
   const account = useUserAccount();
-
-  useEffect(() => {
-    if (connectionNodeId) {
-      initMerge(connectionNodeId);
-    } else {
-      cancelMerge();
-    }
-  }, [connectionNodeId]);
 
   const mutate = useMutation(
     ({ sourceId, targetId }: NodeMergeParams) => {
@@ -38,7 +32,11 @@ export const useNodeMerge = () => {
         throw new Error("Could not connect nodes");
       }
       return mergeVertices(
-        { fromVertexId: sourceId, toVertexId: targetId },
+        {
+          fromVertexId: sourceId,
+          toVertexId: targetId,
+          label: "ConnectedLineEdge",
+        },
         projectId
       );
     },
@@ -56,30 +54,38 @@ export const useNodeMerge = () => {
   const initMerge = (nodeId: string) => {
     const sourceNode = getNodes().find((node) => node.id === nodeId);
     setNodes((nodes) =>
-      nodes.map((node) => {
-        node.data = {
+      nodes.map((node) => ({
+        ...node,
+        data: {
           ...node.data,
           mergeOption:
-            sourceNode &&
+            !!sourceNode &&
             sourceNode.id !== node.id &&
-            node.data.column?.id == sourceNode?.data?.column?.id &&
+            node.data.column?.id === sourceNode.data.column?.id &&
             !sourceNode.data.children.find((childId) => childId === node.id) &&
             !sourceNode.data.parents.find((parentId) => parentId === node.id),
-        };
-        node.data.merging = true;
-        return node;
-      })
+          merging: true,
+        },
+      }))
     );
   };
 
   const cancelMerge = () => {
     setNodes((nodes) =>
-      nodes.map((node) => {
-        node.data = { ...node.data, mergeOption: false, merging: false };
-        return node;
-      })
+      nodes.map((node) => ({
+        ...node,
+        data: { ...node.data, mergeOption: false, merging: false },
+      }))
     );
   };
+
+  useEffect(() => {
+    if (connectionNodeId) {
+      initMerge(connectionNodeId);
+    } else {
+      cancelMerge();
+    }
+  }, [connectionNodeId]);
 
   return { mutate, merging: !!connectionNodeId };
 };
