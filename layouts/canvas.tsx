@@ -29,7 +29,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useStoreDispatch, useStoreState } from "@/hooks/storeHooks";
 
 import { AccessBox } from "@/components/AccessBox";
-import { MandatoryGuide } from "@/components/MandatoryGuide";
+import { MandatoryGuide } from "@/layouts/MandatoryGuide";
 import Head from "next/head";
 import { Heart } from "components/Heart";
 import { HomeButton } from "./homeButton";

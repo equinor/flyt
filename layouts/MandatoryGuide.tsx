@@ -371,7 +371,7 @@ export function MandatoryGuide({
             border: "1px solid #dcdcdc",
           }}
         >
-          <Dialog.Title style={{ padding: "24px 40px" }}>
+          <Dialog.Title style={{ padding: "24px 24px" }}>
             <Typography variant="h2">Discard process?</Typography>
           </Dialog.Title>
         </Dialog.Header>
