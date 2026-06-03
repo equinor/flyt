@@ -1,6 +1,12 @@
-import { NodeDataCommon } from "@/types/NodeData";
-import { Node } from "reactflow";
-import { RefObject, useCallback, useEffect, useState, MouseEvent } from "react";
+import type { NodeDataCommon, NodeDataFull } from "@/types/NodeData";
+import { type Node } from "@xyflow/react";
+import {
+  type RefObject,
+  useCallback,
+  useEffect,
+  useState,
+  type MouseEvent as ReactMouseEvent,
+} from "react";
 
 type Position = {
   top?: number;
@@ -18,7 +24,7 @@ export const useContextMenu = (ref: RefObject<HTMLDivElement>) => {
   const [menuData, setMenuData] = useState<MenuData | null>(null);
   let pane: DOMRect | undefined = undefined;
 
-  const getPosition = (event: MouseEvent): Position => ({
+  const getPosition = (event: ReactMouseEvent | MouseEvent): Position => ({
     top:
       pane && event.clientY < pane.height ? event.clientY - pane.y : undefined,
     left: pane && event.clientX < pane.width ? event.clientX : undefined,
@@ -33,7 +39,7 @@ export const useContextMenu = (ref: RefObject<HTMLDivElement>) => {
   });
 
   const onNodeContextMenu = useCallback(
-    (event: MouseEvent, node: Node<NodeDataCommon>) => {
+    (event: ReactMouseEvent, node: Node<NodeDataFull>) => {
       event.preventDefault();
       if (pane) {
         setMenuData({
@@ -46,7 +52,7 @@ export const useContextMenu = (ref: RefObject<HTMLDivElement>) => {
   );
 
   const onPaneContextMenu = useCallback(
-    (event: MouseEvent) => {
+    (event: ReactMouseEvent | MouseEvent) => {
       event.preventDefault();
       if (pane) {
         setMenuData({

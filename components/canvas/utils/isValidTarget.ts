@@ -1,6 +1,6 @@
 import { NodeDataFull, NodeDataCommon } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
-import { Node } from "reactflow";
+import { Node } from "@xyflow/react";
 import { targetIsInSubtree } from "./targetIsInSubtree";
 import { getNodeValidPositions } from "./nodeValidityHelper";
 

@@ -1,9 +1,9 @@
 import { formatDateTimeString } from "@/utils/formatUpdated";
 import { getProjectName } from "@/utils/getProjectName";
 import { useEffect, useState } from "react";
-import { Connection, NodeProps, Position, useStore } from "reactflow";
+import { type Connection, type NodeProps, Position, useConnection, type Node } from "@xyflow/react";
 import colors from "theme/colors";
-import { NodeDataCommon } from "types/NodeData";
+import type { NodeDataCommon } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
 import { ChoiceButton } from "./ChoiceButton";
 import { MergeButton } from "./MergeButton";
@@ -32,7 +32,7 @@ export const LinkedProcessNode = ({
   data,
   selected,
   dragging,
-}: NodeProps<NodeDataCommon>) => {
+}: NodeProps<Node<NodeDataCommon>>) => {
   const {
     id,
     linkedProjectData,
@@ -53,7 +53,7 @@ export const LinkedProcessNode = ({
   } = data;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
-  const connectionNodeId = useStore((state) => state.connectionNodeId);
+  const connectionNodeId = useConnection(c => c.fromNode?.id);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
   const ref = useNodeRef();
 

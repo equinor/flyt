@@ -412,15 +412,21 @@ function MandatoryInfoBox({
           gap: 32,
         }}
       >
-        <Dialog.Header style={{ padding: 0, display: "flex", alignItems: "center", border: "1px solid #dcdcdc" }}>
+        <Dialog.Header
+          style={{
+            padding: 0,
+            display: "flex",
+            alignItems: "center",
+            border: "1px solid #dcdcdc",
+          }}
+        >
           <Dialog.Title style={{ padding: "24px 40px" }}>
             <Typography variant="h2">Discard process?</Typography>
           </Dialog.Title>
         </Dialog.Header>
         <Dialog.CustomContent style={{ padding: "0 40px", minHeight: 0 }}>
           <Typography>
-            The process and all entered information will be permanently
-            deleted.
+            The process and all entered information will be permanently deleted.
           </Typography>
           <Typography>This action cannot be undone.</Typography>
         </Dialog.CustomContent>

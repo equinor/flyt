@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Handle, NodeProps, Position } from "reactflow";
+import { Handle, NodeProps, Position, Node } from "@xyflow/react";
 import colors from "theme/colors";
 import { NodeDataCommon } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
@@ -23,7 +23,7 @@ export const GenericNode = ({
   data,
   dragging,
   selected,
-}: NodeProps<NodeDataCommon>) => {
+}: NodeProps<Node<NodeDataCommon>>) => {
   const {
     id,
     description,
