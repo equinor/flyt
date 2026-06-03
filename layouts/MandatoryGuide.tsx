@@ -85,7 +85,7 @@ function AddNameStage({
           Discard
         </Button>
         <Button onClick={onNext} disabled={isNextDisabled}>
-          Next
+          Create
         </Button>
       </Card.Actions>
     </Card>
@@ -286,10 +286,8 @@ function AddLabelsStage({
           Discard
         </Button>
         <div style={{ display: "flex", gap: 8 }}>
-          <Button variant="outlined" onClick={onBack}>
-            Back
-          </Button>
-          <Button onClick={onFinish}>Finish</Button>
+          <Button variant="outlined" onClick={onBack}>Back</Button>
+          <Button onClick={onFinish}>Complete</Button>
         </div>
       </Card.Actions>
     </Card>
