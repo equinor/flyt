@@ -8,6 +8,8 @@ import type { Project } from "types/Project";
 import { FlowWrapper } from "./Flow";
 import { useAccess } from "./hooks/useAccess";
 import { useWebSocket } from "./hooks/useWebSocket";
+import { useOptionalGuideStage } from "hooks/useOptionalGuide";
+import { OptionalGuideProvider } from "./hooks/optionalGuideContext";
 
 type CanvasProps = {
   graph: Graph;
@@ -22,32 +24,50 @@ const Canvas = ({
   const [visibleLabelScrim, setVisibleLabelScrim] = useState(false);
   const { socketConnected, socketReason } = useWebSocket();
 
+  const {
+    currentStage,
+    moveToNextStage,
+    moveToPreviousStage,
+    skipCurrentGuide,
+    openStageFromNodeType,
+  } = useOptionalGuideStage(project.vsmProjectID.toString());
+
   return (
     <>
-      <CanvasButtons
-        userCanEdit={userCanEdit}
-        handleClickLabel={() => setVisibleLabelScrim(true)}
-      />
-      <Scrim
-        open={visibleLabelScrim}
-        onClose={() => setVisibleLabelScrim(false)}
-        isDismissable
+      <OptionalGuideProvider
+        value={{
+          currentStage,
+          moveToNextStage,
+          moveToPreviousStage,
+          skipCurrentGuide,
+          openStageFromNodeType,
+        }}
       >
-        <ManageLabelBox
-          handleClose={() => setVisibleLabelScrim(false)}
-          isVisible={visibleLabelScrim}
-          process={project}
+        <CanvasButtons
+          userCanEdit={userCanEdit}
+          handleClickLabel={() => setVisibleLabelScrim(true)}
         />
-      </Scrim>
-      {/* Note: Current and To Be Toggle button is hidden as To Be function is not fully developed. */}
-      {/* <ToBeToggle />
+        <Scrim
+          open={visibleLabelScrim}
+          onClose={() => setVisibleLabelScrim(false)}
+          isDismissable
+        >
+          <ManageLabelBox
+            handleClose={() => setVisibleLabelScrim(false)}
+            isVisible={visibleLabelScrim}
+            process={project}
+          />
+        </Scrim>
+        {/* Note: Current and To Be Toggle button is hidden as To Be function is not fully developed. */}
+        {/* <ToBeToggle />
       <ResetProcessButton /> */}
-      <FlowWrapper
-        apiNodes={apiNodes}
-        apiEdges={apiEdges}
-        userCanEdit={userCanEdit}
-        userEditCardStatus={userEditCardStatus}
-      />
+        <FlowWrapper
+          apiNodes={apiNodes}
+          apiEdges={apiEdges}
+          userCanEdit={userCanEdit}
+          userEditCardStatus={userEditCardStatus}
+        />
+      </OptionalGuideProvider>
     </>
   );
 };

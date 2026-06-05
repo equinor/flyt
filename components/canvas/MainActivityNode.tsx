@@ -28,6 +28,7 @@ import { WaitingButton } from "./WaitingButton";
 import { useNodeRef } from "./hooks/useNodeRef";
 import styles from "./Node.module.scss";
 import { NodeDelete } from "./NodeDelete";
+import { useOptionalGuideContext } from "./hooks/optionalGuideContext";
 
 export const MainActivityNode = ({
   data,

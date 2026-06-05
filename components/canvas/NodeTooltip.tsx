@@ -1,4 +1,4 @@
-import { NodeDataCommon } from "@/types/NodeData";
+import type { NodeDataCommon } from "@/types/NodeData";
 import React, {
   ReactNode,
   RefObject,
@@ -24,6 +24,43 @@ import { useProjectId } from "@/hooks/useProjectId";
 import { notifyOthers } from "@/services/notifyOthers";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useRouter } from "next/router";
+import { Button, Divider, Typography } from "@equinor/eds-core-react";
+import { useOptionalGuideContext } from "./hooks/optionalGuideContext";
+import {
+  type OptionalGuideStage,
+  toStageFromNodeType,
+} from "@/hooks/useOptionalGuide";
+
+const GUIDE_STAGE_TEXT: Record<
+  OptionalGuideStage,
+  { title: string; description: string }
+> = {
+  output: {
+    title: "Output",
+    description:
+      "What are the key deliverables or results of the process? List the output(s).",
+  },
+  customer: {
+    title: "Customer",
+    description:
+      "Who receives or benefits from the output of this process? Describe the customer(s).",
+  },
+  input: {
+    title: "Input",
+    description:
+      "What is needed for the process to start or continue? List the essential input(s).",
+  },
+  supplier: {
+    title: "Supplier",
+    description:
+      "Who or what provides the required inputs for this process? Describe the supplier(s).",
+  },
+  "main activity": {
+    title: "Main activity",
+    description:
+      "Describe the primary activity that transforms the input into the expected output.",
+  },
+};
 
 type NodeTooltipContainerProps = {
   children: ReactNode;
@@ -32,7 +69,6 @@ type NodeTooltipContainerProps = {
   isEditing?: boolean;
   nodeRef?: RefObject<HTMLDivElement>;
 };
-
 export const NodeTooltipContainer = ({
   children,
   isVisible,
@@ -161,6 +197,7 @@ export const NodeTooltip = ({
   const shouldDisplayEstimate = includeEstimate && estimate;
   const { isCardEditablebyUser, shortName, isCardHasNoAccess, selectedCard } =
     useUSerEditNode(nodeData.id, userEditCardStatus);
+
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
   const { projectId } = useProjectId();
@@ -168,6 +205,13 @@ export const NodeTooltip = ({
 
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
+
+  const {
+    currentStage,
+    moveToNextStage,
+    moveToPreviousStage,
+    skipCurrentGuide,
+  } = useOptionalGuideContext();
 
   const updateUserAccessDetails = useMutation(
     (card: Omit<CardAccess, "id">) => updateUserCardAccess(card),
@@ -303,6 +347,29 @@ export const NodeTooltip = ({
       isEditing={isEditing}
       nodeRef={nodeRef}
     >
+      {isEditing &&
+        isCardEditablebyUser &&
+        currentStage &&
+        currentStage.stage === toStageFromNodeType(nodeData.type) && (
+          <section
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              padding: "16px",
+            }}
+          >
+            <Typography variant="h4">{`Step ${currentStage.step}: ${
+              GUIDE_STAGE_TEXT[toStageFromNodeType(nodeData.type)!].title
+            }`}</Typography>
+            <Divider variant="small" />
+            <Typography variant="body_short">
+              {
+                GUIDE_STAGE_TEXT[toStageFromNodeType(nodeData.type)!]
+                  .description
+              }
+            </Typography>
+          </section>
+        )}
       {isEditing && !isCardEditablebyUser ? (
         <EditableNodeTooltipSection
           text={`${selectedCard?.userId} is editing`}
@@ -313,6 +380,40 @@ export const NodeTooltip = ({
       ) : (
         renderInput()
       )}
+      {isEditing &&
+        isCardEditablebyUser &&
+        currentStage &&
+        currentStage.stage === toStageFromNodeType(nodeData.type) && (
+          <section
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              padding: "16px",
+            }}
+          >
+            <div className={styles.guideIndicator}>
+              <div className={currentStage.step === 1 ? styles.active : ""} />
+              <div className={currentStage.step === 2 ? styles.active : ""} />
+              <div className={currentStage.step === 3 ? styles.active : ""} />
+              <div className={currentStage.step === 4 ? styles.active : ""} />
+              <div className={currentStage.step === 5 ? styles.active : ""} />
+            </div>
+            <div
+              style={{
+                display: "flex",
+                gap: "8px",
+                justifyContent: "space-between",
+              }}
+            >
+              <Button variant="ghost" onClick={skipCurrentGuide}>
+                Skip guiding
+              </Button>
+              <Button onClick={() => moveToNextStage()}>
+                {currentStage.step === 5 ? "Finish" : "Next"}
+              </Button>
+            </div>
+          </section>
+        )}
     </NodeTooltipContainer>
   );
 };

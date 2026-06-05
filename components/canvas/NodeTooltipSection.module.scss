@@ -3,4 +3,8 @@
   overflow: hidden;
   white-space: pre-wrap;
   overflow-wrap: break-word;
+
+  &:first-of-type {
+    border-top: none;
+  }
 }

@@ -18,14 +18,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import {
-  chevron_down,
-  close,
-  download,
-  share,
-  style,
-  tag,
-} from "@equinor/eds-icons";
+import { chevron_down, close, download, share, tag } from "@equinor/eds-icons";
 import {
   faveProject,
   getProject,
@@ -59,10 +52,7 @@ import { getProjectName } from "@/utils/getProjectName";
 import { accessRoles } from "@/types/AccessRoles";
 import { downloadCanvasAsPNG } from "@/utils/downloadCanvas";
 import { Project } from "@/types/Project";
-import {
-  ManageLabelBox,
-  AddLabelsSection,
-} from "@/components/Labels/ManageLabelBox";
+import { AddLabelsSection } from "@/components/Labels/ManageLabelBox";
 
 type MandatoryInfoStage = "addName" | "giveAccesses" | "addLabels";
 
@@ -412,15 +402,21 @@ function MandatoryInfoBox({
           gap: 32,
         }}
       >
-        <Dialog.Header style={{ padding: 0, display: "flex", alignItems: "center", border: "1px solid #dcdcdc" }}>
+        <Dialog.Header
+          style={{
+            padding: 0,
+            display: "flex",
+            alignItems: "center",
+            border: "1px solid #dcdcdc",
+          }}
+        >
           <Dialog.Title style={{ padding: "24px 40px" }}>
             <Typography variant="h2">Discard process?</Typography>
           </Dialog.Title>
         </Dialog.Header>
         <Dialog.CustomContent style={{ padding: "0 40px", minHeight: 0 }}>
           <Typography>
-            The process and all entered information will be permanently
-            deleted.
+            The process and all entered information will be permanently deleted.
           </Typography>
           <Typography>This action cannot be undone.</Typography>
         </Dialog.CustomContent>

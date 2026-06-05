@@ -80,6 +80,7 @@ export const useFlowState = (
       const updatedNodes = nodes.map((n) => ({
         ...n,
         selected: n.id === selectedNode?.id,
+        // zIndex: n.id === selectedNode?.id ? 2000 : 0,
       }));
       setNodes(updatedNodes);
     }
