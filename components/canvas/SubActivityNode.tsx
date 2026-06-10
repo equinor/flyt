@@ -1,7 +1,13 @@
 import { getNodeTypeName } from "@/utils/getNodeTypeName";
 import { formatDuration } from "@/utils/unitDefinitions";
 import { useEffect, useState } from "react";
-import { type Connection, type NodeProps, Position, useConnection, type Node } from "@xyflow/react";
+import {
+  type Connection,
+  type NodeProps,
+  Position,
+  useConnection,
+  type Node,
+} from "@xyflow/react";
 import colors from "theme/colors";
 import type { NodeDataCommon } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
@@ -58,7 +64,7 @@ export const SubActivityNode = ({
   } = data;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
-  const connectionNodeId = useConnection(c => c.fromNode?.id);
+  const connectionNodeId = useConnection((c) => c.fromNode?.id);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
   const isEditingNode = useIsEditingNode(selected);
 

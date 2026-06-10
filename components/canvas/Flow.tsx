@@ -110,7 +110,10 @@ const Flow = ({
       hoveredNode.data.type !== NodeTypes.linkedProcess &&
       hoveredNode.data.type !== NodeTypes.hidden;
 
-    if (canHavePQIR && ((hoveredNode as Node<NodeDataCommon>).data.tasks ?? []).length === 0) {
+    if (
+      canHavePQIR &&
+      ((hoveredNode as Node<NodeDataCommon>).data.tasks ?? []).length === 0
+    ) {
       const width = hoveredNode.measured?.width ?? hoveredNode.width ?? 140;
       const height = hoveredNode.measured?.height ?? hoveredNode.height ?? 140;
 
@@ -120,7 +123,11 @@ const Flow = ({
           type: "dimensions",
           setAttributes: "width",
           dimensions: {
-            width: width - getQIPRContainerWidth((hoveredNode as Node<NodeDataCommon>).data.tasks),
+            width:
+              width -
+              getQIPRContainerWidth(
+                (hoveredNode as Node<NodeDataCommon>).data.tasks
+              ),
             height: height,
           },
         },
@@ -142,7 +149,10 @@ const Flow = ({
       node.data.type !== NodeTypes.linkedProcess &&
       node.data.type !== NodeTypes.hidden;
 
-    if (canHavePQIR && ((node as Node<NodeDataCommon>).data.tasks ?? []).length === 0) {
+    if (
+      canHavePQIR &&
+      ((node as Node<NodeDataCommon>).data.tasks ?? []).length === 0
+    ) {
       const width = node.measured?.width ?? node.width ?? 140;
       const height = node.measured?.height ?? node.height ?? 140;
 
@@ -152,7 +162,9 @@ const Flow = ({
           type: "dimensions",
           setAttributes: "width",
           dimensions: {
-            width: width + getQIPRContainerWidth((node as Node<NodeDataCommon>).data.tasks),
+            width:
+              width +
+              getQIPRContainerWidth((node as Node<NodeDataCommon>).data.tasks),
             height: height,
           },
         },

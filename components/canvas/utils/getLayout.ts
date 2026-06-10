@@ -97,9 +97,9 @@ export const getLinkedProcessesLayout = (
   nodes: Node<NodeDataCommon>[],
   edges: Edge[],
   isHorizontalFlow = false
-) => {
+): Node<NodeDataCommon>[] => {
   return getLayout(nodes, edges, {
     rankdir: isHorizontalFlow ? "LR" : "TB",
     ranksep: 140,
-  });
+  }) as Node<NodeDataCommon>[];
 };

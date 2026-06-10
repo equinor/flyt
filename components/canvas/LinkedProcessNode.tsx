@@ -1,7 +1,13 @@
 import { formatDateTimeString } from "@/utils/formatUpdated";
 import { getProjectName } from "@/utils/getProjectName";
 import { useEffect, useState } from "react";
-import { type Connection, type NodeProps, Position, useConnection, type Node } from "@xyflow/react";
+import {
+  type Connection,
+  type NodeProps,
+  Position,
+  useConnection,
+  type Node,
+} from "@xyflow/react";
 import colors from "theme/colors";
 import type { NodeDataCommon } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
@@ -53,7 +59,7 @@ export const LinkedProcessNode = ({
   } = data;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
-  const connectionNodeId = useConnection(c => c.fromNode?.id);
+  const connectionNodeId = useConnection((c) => c.fromNode?.id);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
   const ref = useNodeRef();
 
