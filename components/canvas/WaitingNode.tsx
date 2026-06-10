@@ -59,7 +59,7 @@ export const WaitingNode = ({
   } = data;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
-  const connectionNodeId = useConnection(c => c.fromNode?.id);
+  const connectionNodeId = useConnection((c) => c.fromNode?.id);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
   const isEditingNode = useIsEditingNode(selected);
 

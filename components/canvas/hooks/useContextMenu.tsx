@@ -17,7 +17,7 @@ type Position = {
 
 export type MenuData = {
   position: Position;
-  node?: Node<NodeDataCommon>;
+  node?: Node<NodeDataFull>;
 };
 
 export const useContextMenu = (ref: RefObject<HTMLDivElement>) => {

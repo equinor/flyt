@@ -47,7 +47,6 @@ module.exports = removeImports({
       },
     ];
   },
-  optimizeFonts: false,
   async headers() {
     return [
       {

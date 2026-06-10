@@ -5,14 +5,14 @@ import {
 } from "@/services/graphApi";
 import { notifyOthers } from "@/services/notifyOthers";
 import type { NodeDataCommon, NodeDataFull } from "@/types/NodeData";
-import type { NodeTypes } from "@/types/NodeTypes";
+import { NodeTypes } from "@/types/NodeTypes";
 import { unknownErrorToString } from "@/utils/isError";
 import { MouseEvent, useEffect, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import {
   type Node,
   type OnNodeDrag,
-  type Position,
+  Position,
   useReactFlow,
 } from "@xyflow/react";
 import { useStoreDispatch } from "@/hooks/storeHooks";
@@ -22,14 +22,14 @@ import { useUserAccount } from "./useUserAccount";
 import { useProjectId } from "@/hooks/useProjectId";
 
 export const useNodeDrag = () => {
-  const [source, setSource] = useState<Node<NodeDataCommon> | undefined>(
+  const [source, setSource] = useState<Node<NodeDataFull> | undefined>(
     undefined
   );
-  const [target, setTarget] = useState<Node<NodeDataCommon> | undefined>(
+  const [target, setTarget] = useState<Node<NodeDataFull> | undefined>(
     undefined
   );
   const { setNodes, getNodes } = useReactFlow<Node<NodeDataFull>>();
-  const dragRef = useRef<Node<NodeDataCommon> | null>(null);
+  const dragRef = useRef<Node<NodeDataFull> | null>(null);
   const dispatch = useStoreDispatch();
   const account = useUserAccount();
   const queryClient = useQueryClient();
@@ -61,7 +61,7 @@ export const useNodeDrag = () => {
         },
       }))
     );
-    setSource(nodeDragging as Node<NodeDataCommon>);
+    setSource(nodeDragging);
   };
 
   const onNodeDrag: OnNodeDrag<Node<NodeDataFull>> = (_evt, node) => {
@@ -154,29 +154,35 @@ export const useNodeDrag = () => {
   );
 
   const includeChildren = (
-    source: Node<NodeDataCommon>,
-    target: Node<NodeDataCommon>
+    source: Node<NodeDataFull>,
+    target: Node<NodeDataFull>
   ) => {
-    if (target.data.children.length === 0) {
-      if (source?.data?.type === NodeTypes.choice) {
+    const sourceNode = source as Node<NodeDataCommon>;
+    const targetNode = target as Node<NodeDataCommon>;
+
+    if (targetNode.data.children.length === 0) {
+      if (sourceNode?.data?.type === NodeTypes.choice) {
         return true;
-      } else if (target.data.column?.id === source.data.column?.id) {
+      } else if (targetNode.data.column?.id === sourceNode.data.column?.id) {
         const nodes = getNodes();
-        return !targetIsInSubtree(source, target, nodes);
+        return !targetIsInSubtree(sourceNode, targetNode, nodes);
       }
     }
     return false;
   };
 
   const getPosition = (
-    source: Node<NodeDataCommon>,
-    target: Node<NodeDataCommon>
+    source: Node<NodeDataFull>,
+    target: Node<NodeDataFull>
   ) => {
+    const sourceNode = source as Node<NodeDataCommon>;
+    const targetNode = target as Node<NodeDataCommon>;
+
     if (
-      source.type === NodeTypes.mainActivity &&
-      target?.type === NodeTypes.mainActivity
+      sourceNode.type === NodeTypes.mainActivity &&
+      targetNode?.type === NodeTypes.mainActivity
     ) {
-      return (source.data?.order ?? 0) > (target.data?.order ?? 0)
+      return (sourceNode.data?.order ?? 0) > (targetNode.data?.order ?? 0)
         ? Position.Left
         : Position.Right;
     }
