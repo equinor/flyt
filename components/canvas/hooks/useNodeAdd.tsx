@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import { Position } from "@xyflow/react";
+import { Position } from "reactflow";
 import { NodeDataApiRequestBody } from "@/types/NodeDataApi";
 import { useStoreDispatch } from "@/hooks/storeHooks";
 import {

@@ -1,5 +1,5 @@
 import { NodeTypes } from "@/types/NodeTypes";
-import { Node, Position } from "@xyflow/react";
+import { Node, Position } from "reactflow";
 import { NodeDataApi } from "@/types/NodeDataApi";
 
 const createNode = (

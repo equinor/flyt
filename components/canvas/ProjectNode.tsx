@@ -1,5 +1,5 @@
 import { NodeDataCommon } from "@/types/NodeData";
-import { NodeProps, Node } from "@xyflow/react";
+import { NodeProps } from "reactflow";
 import { ProjectCard } from "../Card/ProjectCard";
 import { SourceHandle } from "./SourceHandle";
 import { TargetHandle } from "./TargetHandle";
@@ -9,7 +9,7 @@ export const ProjectNode = ({
   selected,
   sourcePosition,
   targetPosition,
-}: NodeProps<Node<NodeDataCommon>>) => (
+}: NodeProps<NodeDataCommon>) => (
   <>
     <div style={{ width: shapeWidth, height: shapeHeight }}>
       {linkedProjectData && (

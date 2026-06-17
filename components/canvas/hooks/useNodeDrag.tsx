@@ -4,17 +4,12 @@ import {
   moveVerticeRightOfTarget,
 } from "@/services/graphApi";
 import { notifyOthers } from "@/services/notifyOthers";
-import type { NodeDataCommon, NodeDataFull } from "@/types/NodeData";
-import type { NodeTypes } from "@/types/NodeTypes";
+import { NodeDataCommon } from "@/types/NodeData";
+import { NodeTypes } from "@/types/NodeTypes";
 import { unknownErrorToString } from "@/utils/isError";
 import { MouseEvent, useEffect, useRef, useState } from "react";
 import { useMutation, useQueryClient } from "react-query";
-import {
-  type Node,
-  type OnNodeDrag,
-  type Position,
-  useReactFlow,
-} from "@xyflow/react";
+import { Node, Position, useReactFlow } from "reactflow";
 import { useStoreDispatch } from "@/hooks/storeHooks";
 import { targetIsInSubtree } from "../utils/targetIsInSubtree";
 import { isValidTarget } from "../utils/isValidTarget";
@@ -28,7 +23,7 @@ export const useNodeDrag = () => {
   const [target, setTarget] = useState<Node<NodeDataCommon> | undefined>(
     undefined
   );
-  const { setNodes, getNodes } = useReactFlow<Node<NodeDataFull>>();
+  const { setNodes, getNodes } = useReactFlow<NodeDataCommon>();
   const dragRef = useRef<Node<NodeDataCommon> | null>(null);
   const dispatch = useStoreDispatch();
   const account = useUserAccount();
@@ -37,54 +32,51 @@ export const useNodeDrag = () => {
 
   useEffect(() => {
     setNodes((nodes) =>
-      nodes.map((node) => ({
-        ...node,
-        data: {
+      nodes.map((node) => {
+        node.data = {
           ...node.data,
           isDropTarget: node.id === target?.id,
-        },
-      }))
+        };
+        return node;
+      })
     );
-  }, [setNodes, target]);
+  }, [target]);
 
-  const onNodeDragStart: OnNodeDrag<Node<NodeDataFull>> = (
-    _evt,
-    nodeDragging
+  const onNodeDragStart = (
+    _evt: MouseEvent,
+    nodeDragging: Node<NodeDataCommon>
   ) => {
     dragRef.current = nodeDragging;
     setNodes((nodes) =>
-      nodes.map((node) => ({
-        ...node,
-        data: {
+      nodes.map((node) => {
+        node.data = {
           ...node.data,
           isValidDropTarget: isValidTarget(nodeDragging, node, getNodes()),
-        },
-      }))
+        };
+        return node;
+      })
     );
-    setSource(nodeDragging as Node<NodeDataCommon>);
+    setSource(nodeDragging);
   };
 
-  const onNodeDrag: OnNodeDrag<Node<NodeDataFull>> = (_evt, node) => {
-    const nodeWidth = node.measured?.width ?? node.width;
-    const nodeHeight = node.measured?.height ?? node.height;
-    if (!nodeWidth || !nodeHeight) return;
-
-    const centerX = node.position.x + nodeWidth / 2;
-    const centerY = node.position.y + nodeHeight / 2;
+  const onNodeDrag = (_evt: MouseEvent, node: Node<NodeDataCommon>) => {
+    if (!node.width || !node.height) return;
+    const centerX = node.position.x + node.width / 2;
+    const centerY = node.position.y + node.height / 2;
 
     const targetNode = getNodes().find(
       (n) =>
         centerX > n.position.x &&
-        centerX < n.position.x + (n.measured?.width ?? n.width ?? 0) &&
+        centerX < n.position.x + (node.width ?? 0) &&
         centerY > n.position.y &&
-        centerY < n.position.y + (n.measured?.height ?? n.height ?? 0) &&
+        centerY < n.position.y + (node.height ?? 0) &&
         n.id !== node.id
     );
 
     setTarget(targetNode);
   };
 
-  const onNodeDragStop: OnNodeDrag<Node<NodeDataFull>> = (_evt, node) => {
+  const onNodeDragStop = (_evt: MouseEvent, node: Node<NodeDataCommon>) => {
     if (isValidTarget(node, target, getNodes())) {
       moveNode.mutate({
         nodeId: node.id,
@@ -97,14 +89,11 @@ export const useNodeDrag = () => {
     }
     setNodes((nodes) =>
       nodes.map((n) => {
-        if (n.id === node.id && source) {
-          return source;
+        n.data = { ...n.data, isValidDropTarget: undefined };
+        if (n.id === node?.id && source) {
+          n = source;
         }
-
-        return {
-          ...n,
-          data: { ...n.data, isValidDropTarget: undefined },
-        };
+        return n;
       })
     );
   };

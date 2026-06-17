@@ -2,124 +2,142 @@
 
 ## [2.15.0](https://github.com/equinor/flyt/compare/v2.14.0...v2.15.0) (2026-04-28)
 
+
 ### Features
 
-- prevent users from editing same card at once ([#1080](https://github.com/equinor/flyt/issues/1080)) ([09df245](https://github.com/equinor/flyt/commit/09df2451a26455f1018753ec48a9b9d4c06596b0))
+* prevent users from editing same card at once ([#1080](https://github.com/equinor/flyt/issues/1080)) ([09df245](https://github.com/equinor/flyt/commit/09df2451a26455f1018753ec48a9b9d4c06596b0))
+
 
 ### Bug Fixes
 
-- lock card on edit mode ([#1092](https://github.com/equinor/flyt/issues/1092)) ([646269e](https://github.com/equinor/flyt/commit/646269e264a0aa9d0a61b4e6802a308fb1559874))
-- prevent locking a card when user don't have access ([#1091](https://github.com/equinor/flyt/issues/1091)) ([f27ddf3](https://github.com/equinor/flyt/commit/f27ddf3af5300a1a50376cdec84d595f7d29c3d1))
-- updated offline banner text ([#1072](https://github.com/equinor/flyt/issues/1072)) ([1c1bd45](https://github.com/equinor/flyt/commit/1c1bd4585d2ddbdd25e01d6fa3e57ab281e803b1))
+* lock card on edit mode ([#1092](https://github.com/equinor/flyt/issues/1092)) ([646269e](https://github.com/equinor/flyt/commit/646269e264a0aa9d0a61b4e6802a308fb1559874))
+* prevent locking a card when user don't have access ([#1091](https://github.com/equinor/flyt/issues/1091)) ([f27ddf3](https://github.com/equinor/flyt/commit/f27ddf3af5300a1a50376cdec84d595f7d29c3d1))
+* updated offline banner text ([#1072](https://github.com/equinor/flyt/issues/1072)) ([1c1bd45](https://github.com/equinor/flyt/commit/1c1bd4585d2ddbdd25e01d6fa3e57ab281e803b1))
 
 ## [2.14.0](https://github.com/equinor/flyt/compare/v2.13.2...v2.14.0) (2026-01-28)
 
+
 ### Features
 
-- offline online status banner ([#1052](https://github.com/equinor/flyt/issues/1052)) ([17e16f4](https://github.com/equinor/flyt/commit/17e16f48c518c90dc9269ae498932b1cd19d907e))
+* offline online status banner ([#1052](https://github.com/equinor/flyt/issues/1052)) ([17e16f4](https://github.com/equinor/flyt/commit/17e16f48c518c90dc9269ae498932b1cd19d907e))
+
 
 ### Bug Fixes
 
-- prevent back button overlap ([#1067](https://github.com/equinor/flyt/issues/1067)) ([ae6a89b](https://github.com/equinor/flyt/commit/ae6a89b32add9686761e6a0877690a681223857b))
+* prevent back button overlap ([#1067](https://github.com/equinor/flyt/issues/1067)) ([ae6a89b](https://github.com/equinor/flyt/commit/ae6a89b32add9686761e6a0877690a681223857b))
 
 ## [2.13.2](https://github.com/equinor/flyt/compare/v2.13.1...v2.13.2) (2026-01-07)
 
+
 ### Bug Fixes
 
-- implemented back button. ([#1062](https://github.com/equinor/flyt/issues/1062)) ([3b7b5b6](https://github.com/equinor/flyt/commit/3b7b5b614c46c29f8083e6fc37d0da101d5f7b95))
-- next is upgraded ([#1060](https://github.com/equinor/flyt/issues/1060)) ([5de7492](https://github.com/equinor/flyt/commit/5de7492f7845afff74d988ce4597ca05d7bea4b5))
+* implemented back button. ([#1062](https://github.com/equinor/flyt/issues/1062)) ([3b7b5b6](https://github.com/equinor/flyt/commit/3b7b5b614c46c29f8083e6fc37d0da101d5f7b95))
+* next is upgraded ([#1060](https://github.com/equinor/flyt/issues/1060)) ([5de7492](https://github.com/equinor/flyt/commit/5de7492f7845afff74d988ce4597ca05d7bea4b5))
+
 
 ### Reverts
 
-- "fix: implemented back button." ([#1063](https://github.com/equinor/flyt/issues/1063)) ([7546ee5](https://github.com/equinor/flyt/commit/7546ee5524d5e51ae7faa958599b602cbe9578a1))
+* "fix: implemented back button." ([#1063](https://github.com/equinor/flyt/issues/1063)) ([7546ee5](https://github.com/equinor/flyt/commit/7546ee5524d5e51ae7faa958599b602cbe9578a1))
 
 ## [2.13.1](https://github.com/equinor/flyt/compare/v2.13.0...v2.13.1) (2025-12-04)
 
+
 ### Bug Fixes
 
-- changed bg color and font ([#1049](https://github.com/equinor/flyt/issues/1049)) ([cb95b57](https://github.com/equinor/flyt/commit/cb95b570ca9ada6761d6a226acc5fcd426df6ae7))
-- upgraded versions ([#1055](https://github.com/equinor/flyt/issues/1055)) ([ddf0380](https://github.com/equinor/flyt/commit/ddf0380363116a10cc54e8f51aac4aa343fd21ad))
+* changed bg color and font ([#1049](https://github.com/equinor/flyt/issues/1049)) ([cb95b57](https://github.com/equinor/flyt/commit/cb95b570ca9ada6761d6a226acc5fcd426df6ae7))
+* upgraded versions ([#1055](https://github.com/equinor/flyt/issues/1055)) ([ddf0380](https://github.com/equinor/flyt/commit/ddf0380363116a10cc54e8f51aac4aa343fd21ad))
 
 ## [2.13.0](https://github.com/equinor/flyt/compare/v2.12.0...v2.13.0) (2025-11-05)
 
+
 ### Features
 
-- Enable Users to Download Current Canvas View (PNG) ([#1016](https://github.com/equinor/flyt/issues/1016)) ([dc4d09a](https://github.com/equinor/flyt/commit/dc4d09a5aed0d773576b359c42d9b3cd9537024f))
-- pqir visibility issue ([#1003](https://github.com/equinor/flyt/issues/1003)) ([ee5c2a6](https://github.com/equinor/flyt/commit/ee5c2a69f885caa02567688618d5e9db99fd274d))
-- UI Revamp - Add Solved, Remove, Delete at bottom in Create New PQIR ([#1014](https://github.com/equinor/flyt/issues/1014)) ([0aa6006](https://github.com/equinor/flyt/commit/0aa6006cdb7bececf6fa894280015a57392dcd17))
+* Enable Users to Download Current Canvas View (PNG) ([#1016](https://github.com/equinor/flyt/issues/1016)) ([dc4d09a](https://github.com/equinor/flyt/commit/dc4d09a5aed0d773576b359c42d9b3cd9537024f))
+* pqir visibility issue ([#1003](https://github.com/equinor/flyt/issues/1003)) ([ee5c2a6](https://github.com/equinor/flyt/commit/ee5c2a69f885caa02567688618d5e9db99fd274d))
+* UI Revamp - Add Solved, Remove, Delete at bottom in Create New PQIR ([#1014](https://github.com/equinor/flyt/issues/1014)) ([0aa6006](https://github.com/equinor/flyt/commit/0aa6006cdb7bececf6fa894280015a57392dcd17))
+
 
 ### Bug Fixes
 
-- disable copy, paste with non owned process ([#1025](https://github.com/equinor/flyt/issues/1025)) ([9e576a6](https://github.com/equinor/flyt/commit/9e576a64a7e1f1105f18ef01cfaa1729b045b57e))
+* disable copy, paste with non owned process ([#1025](https://github.com/equinor/flyt/issues/1025)) ([9e576a6](https://github.com/equinor/flyt/commit/9e576a64a7e1f1105f18ef01cfaa1729b045b57e))
 
 ## [2.12.0](https://github.com/equinor/flyt/compare/v2.11.0...v2.12.0) (2025-07-31)
 
+
 ### Features
 
-- add export option in category page ([#941](https://github.com/equinor/flyt/issues/941)) ([e3da3bd](https://github.com/equinor/flyt/commit/e3da3bdb258bad4e3b06e53d3862321107a9d08b))
-- Changed Stakeholder header to role and changed the export button ([#997](https://github.com/equinor/flyt/issues/997)) ([a68aefe](https://github.com/equinor/flyt/commit/a68aefe3f14448850ec111f121d60b58b9c4f8d2))
-- Labels Sorting in Project card and process page ([#995](https://github.com/equinor/flyt/issues/995)) ([0d9a463](https://github.com/equinor/flyt/commit/0d9a463b5379b5aa124cb58108484abfa51c8e94))
+* add export option in category page ([#941](https://github.com/equinor/flyt/issues/941)) ([e3da3bd](https://github.com/equinor/flyt/commit/e3da3bdb258bad4e3b06e53d3862321107a9d08b))
+* Changed Stakeholder header to role and changed the export button ([#997](https://github.com/equinor/flyt/issues/997)) ([a68aefe](https://github.com/equinor/flyt/commit/a68aefe3f14448850ec111f121d60b58b9c4f8d2))
+* Labels Sorting in Project card and process page ([#995](https://github.com/equinor/flyt/issues/995)) ([0d9a463](https://github.com/equinor/flyt/commit/0d9a463b5379b5aa124cb58108484abfa51c8e94))
+
 
 ### Bug Fixes
 
-- content wiped out when in another field ([#945](https://github.com/equinor/flyt/issues/945)) ([c1c7c56](https://github.com/equinor/flyt/commit/c1c7c56e2a4d3a3492380caa5f86f4d3a69fc0f6))
-- Snyk issues Upgrade packages next and socket.io ([#990](https://github.com/equinor/flyt/issues/990)) ([c3d3109](https://github.com/equinor/flyt/commit/c3d3109ef2ac82cdd013d214e69da06b9106bae5))
+* content wiped out when in another field ([#945](https://github.com/equinor/flyt/issues/945)) ([c1c7c56](https://github.com/equinor/flyt/commit/c1c7c56e2a4d3a3492380caa5f86f4d3a69fc0f6))
+* Snyk issues Upgrade packages next and socket.io ([#990](https://github.com/equinor/flyt/issues/990)) ([c3d3109](https://github.com/equinor/flyt/commit/c3d3109ef2ac82cdd013d214e69da06b9106bae5))
 
 ## [2.11.0](https://github.com/equinor/flyt/compare/v2.10.0...v2.11.0) (2025-05-19)
 
+
 ### Features
 
-- Include PQIR in copy and paste ([#927](https://github.com/equinor/flyt/issues/927)) ([00528eb](https://github.com/equinor/flyt/commit/00528eba1afba1453ef77ba688e8c3e2acb1cd07))
+* Include PQIR in copy and paste ([#927](https://github.com/equinor/flyt/issues/927)) ([00528eb](https://github.com/equinor/flyt/commit/00528eba1afba1453ef77ba688e8c3e2acb1cd07))
+
 
 ### Bug Fixes
 
-- preventing duplicate requests sharing same user ([#946](https://github.com/equinor/flyt/issues/946)) ([ff04128](https://github.com/equinor/flyt/commit/ff041288f894c094ceadf7f5c69e2ef329395b28))
-- Restructure of Process Hierarchy page cards to Linked Process card ([#926](https://github.com/equinor/flyt/issues/926)) ([2dcff54](https://github.com/equinor/flyt/commit/2dcff542ce1dc877c4bee1bdc7ca48677377f496))
-- User icon item click highlights wrong element ([#930](https://github.com/equinor/flyt/issues/930)) ([4443379](https://github.com/equinor/flyt/commit/4443379f8bbd39557d04e041cf0e79cdfd959538))
-- wrong order choice children ([#943](https://github.com/equinor/flyt/issues/943)) ([39542d1](https://github.com/equinor/flyt/commit/39542d1e758b837b29fa3a87e8a2aeb16c145dc8))
+* preventing duplicate requests sharing same user ([#946](https://github.com/equinor/flyt/issues/946)) ([ff04128](https://github.com/equinor/flyt/commit/ff041288f894c094ceadf7f5c69e2ef329395b28))
+* Restructure of Process Hierarchy page cards to Linked Process card ([#926](https://github.com/equinor/flyt/issues/926)) ([2dcff54](https://github.com/equinor/flyt/commit/2dcff542ce1dc877c4bee1bdc7ca48677377f496))
+* User icon item click highlights wrong element ([#930](https://github.com/equinor/flyt/issues/930)) ([4443379](https://github.com/equinor/flyt/commit/4443379f8bbd39557d04e041cf0e79cdfd959538))
+* wrong order choice children ([#943](https://github.com/equinor/flyt/issues/943)) ([39542d1](https://github.com/equinor/flyt/commit/39542d1e758b837b29fa3a87e8a2aeb16c145dc8))
 
 ## [2.10.0](https://github.com/equinor/flyt/compare/v2.9.0...v2.10.0) (2025-03-18)
 
+
 ### Features
 
-- All roles combined into Contributor role ([#897](https://github.com/equinor/flyt/issues/897)) ([4dae6e1](https://github.com/equinor/flyt/commit/4dae6e1b0908804e2a14f1e399a387eb365d75f6))
-- Hide Current/To Be toggle ([#882](https://github.com/equinor/flyt/issues/882)) ([9a96ffd](https://github.com/equinor/flyt/commit/9a96ffdebc38b29195fd78a65f907a447c1e839e))
-- Organized all labels into categories ([#900](https://github.com/equinor/flyt/issues/900)) ([ec78094](https://github.com/equinor/flyt/commit/ec78094038aacc07c29c7ba168588b5d0a016379))
-- Sorted labels alphabetically in each category ([#911](https://github.com/equinor/flyt/issues/911)) ([ae4d974](https://github.com/equinor/flyt/commit/ae4d974ca2c36811e5f2c28ab19e9640c8121486))
+* All roles combined into Contributor role ([#897](https://github.com/equinor/flyt/issues/897)) ([4dae6e1](https://github.com/equinor/flyt/commit/4dae6e1b0908804e2a14f1e399a387eb365d75f6))
+* Hide Current/To Be toggle ([#882](https://github.com/equinor/flyt/issues/882)) ([9a96ffd](https://github.com/equinor/flyt/commit/9a96ffdebc38b29195fd78a65f907a447c1e839e))
+* Organized all labels into categories ([#900](https://github.com/equinor/flyt/issues/900)) ([ec78094](https://github.com/equinor/flyt/commit/ec78094038aacc07c29c7ba168588b5d0a016379))
+* Sorted labels alphabetically in each category ([#911](https://github.com/equinor/flyt/issues/911)) ([ae4d974](https://github.com/equinor/flyt/commit/ae4d974ca2c36811e5f2c28ab19e9640c8121486))
+
 
 ### Bug Fixes
 
-- 833-user-dots-change-order ([#910](https://github.com/equinor/flyt/issues/910)) ([267f40b](https://github.com/equinor/flyt/commit/267f40b03841702f48b095bedf688141261a2795))
-- Category helper styles is fixed ([#904](https://github.com/equinor/flyt/issues/904)) ([39b2088](https://github.com/equinor/flyt/commit/39b2088a22a7bba8b68a63e15d3768a36202c5d5))
-- order pqir in sidebar and overlap of nodes with pqir ([#912](https://github.com/equinor/flyt/issues/912)) ([bbe55b6](https://github.com/equinor/flyt/commit/bbe55b6f4d3c0602c1a5484a488ffd92cf4ab20b))
-- order pqir in the sidebar ([#896](https://github.com/equinor/flyt/issues/896)) ([bb9815c](https://github.com/equinor/flyt/commit/bb9815c8e21a2163d8d572162a68ec74298823b7))
-- Rearrange the mainactivity to left ([#894](https://github.com/equinor/flyt/issues/894)) ([494d14c](https://github.com/equinor/flyt/commit/494d14cc9337d7403e9f0d4538b936d774bad91c))
-- rename popup ui styles updated ([#899](https://github.com/equinor/flyt/issues/899)) ([60fc61c](https://github.com/equinor/flyt/commit/60fc61c3af9841aa6d154821e409e18bc05954d9))
+* 833-user-dots-change-order ([#910](https://github.com/equinor/flyt/issues/910)) ([267f40b](https://github.com/equinor/flyt/commit/267f40b03841702f48b095bedf688141261a2795))
+* Category helper styles is fixed ([#904](https://github.com/equinor/flyt/issues/904)) ([39b2088](https://github.com/equinor/flyt/commit/39b2088a22a7bba8b68a63e15d3768a36202c5d5))
+* order pqir in sidebar and overlap of nodes with pqir ([#912](https://github.com/equinor/flyt/issues/912)) ([bbe55b6](https://github.com/equinor/flyt/commit/bbe55b6f4d3c0602c1a5484a488ffd92cf4ab20b))
+* order pqir in the sidebar ([#896](https://github.com/equinor/flyt/issues/896)) ([bb9815c](https://github.com/equinor/flyt/commit/bb9815c8e21a2163d8d572162a68ec74298823b7))
+* Rearrange the mainactivity to left ([#894](https://github.com/equinor/flyt/issues/894)) ([494d14c](https://github.com/equinor/flyt/commit/494d14cc9337d7403e9f0d4538b936d774bad91c))
+* rename popup ui styles updated ([#899](https://github.com/equinor/flyt/issues/899)) ([60fc61c](https://github.com/equinor/flyt/commit/60fc61c3af9841aa6d154821e409e18bc05954d9))
 
 ## [2.9.0](https://github.com/equinor/flyt/compare/v2.8.0...v2.9.0) (2025-02-07)
 
+
 ### Features
 
-- Added seconds as option in duration unit ([#858](https://github.com/equinor/flyt/issues/858)) ([64213af](https://github.com/equinor/flyt/commit/64213af341c0de85e4ffbc746f482ceabbc2c184))
-- All roles combined into Contributor role ([#877](https://github.com/equinor/flyt/issues/877)) ([88e6578](https://github.com/equinor/flyt/commit/88e6578582afa578d43b9b368b4ae6e94af40ed9))
-- delete card button ([#856](https://github.com/equinor/flyt/issues/856)) ([dbe0354](https://github.com/equinor/flyt/commit/dbe0354d77c389c363176b28691efe82e4f226bb))
-- display edit box and tooltip below the card when cropped ([#842](https://github.com/equinor/flyt/issues/842)) ([759d01c](https://github.com/equinor/flyt/commit/759d01c963ccc037d897961467f81b23ea7a61f0))
-- enable writing directly on cards ([#823](https://github.com/equinor/flyt/issues/823)) ([34aad3f](https://github.com/equinor/flyt/commit/34aad3f350cea798d17d6a7072386a4fef4a0186))
-- Redesign sidebar ([#839](https://github.com/equinor/flyt/issues/839)) ([9a39225](https://github.com/equinor/flyt/commit/9a3922508c4829387afb7044654a02908c025d38))
-- updated the linked process delete confirmation message. ([#872](https://github.com/equinor/flyt/issues/872)) ([a5c15d2](https://github.com/equinor/flyt/commit/a5c15d2c0894db8e3e5e07a9616ba2b962f9b5e4))
+* Added seconds as option in duration unit ([#858](https://github.com/equinor/flyt/issues/858)) ([64213af](https://github.com/equinor/flyt/commit/64213af341c0de85e4ffbc746f482ceabbc2c184))
+* All roles combined into Contributor role ([#877](https://github.com/equinor/flyt/issues/877)) ([88e6578](https://github.com/equinor/flyt/commit/88e6578582afa578d43b9b368b4ae6e94af40ed9))
+* delete card button ([#856](https://github.com/equinor/flyt/issues/856)) ([dbe0354](https://github.com/equinor/flyt/commit/dbe0354d77c389c363176b28691efe82e4f226bb))
+* display edit box and tooltip below the card when cropped ([#842](https://github.com/equinor/flyt/issues/842)) ([759d01c](https://github.com/equinor/flyt/commit/759d01c963ccc037d897961467f81b23ea7a61f0))
+* enable writing directly on cards ([#823](https://github.com/equinor/flyt/issues/823)) ([34aad3f](https://github.com/equinor/flyt/commit/34aad3f350cea798d17d6a7072386a4fef4a0186))
+* Redesign sidebar ([#839](https://github.com/equinor/flyt/issues/839)) ([9a39225](https://github.com/equinor/flyt/commit/9a3922508c4829387afb7044654a02908c025d38))
+* updated the linked process delete confirmation message. ([#872](https://github.com/equinor/flyt/issues/872)) ([a5c15d2](https://github.com/equinor/flyt/commit/a5c15d2c0894db8e3e5e07a9616ba2b962f9b5e4))
+
 
 ### Bug Fixes
 
-- Dragging cards sometimes cause crashes ([#852](https://github.com/equinor/flyt/issues/852)) ([5efa058](https://github.com/equinor/flyt/commit/5efa05835d62f85f75cfc3de375c41dbe1f58a3f))
-- Hidden nodes causes Flyt to crash ([#850](https://github.com/equinor/flyt/issues/850)) ([b237bc2](https://github.com/equinor/flyt/commit/b237bc24b63e42289180d29e9644d34e98070217))
-- Main activity can now be moved ([#838](https://github.com/equinor/flyt/issues/838)) ([591a405](https://github.com/equinor/flyt/commit/591a405b9859a906693de710bd5d992f5e3c9fee))
-- make seconds as choice in duration unit ([#866](https://github.com/equinor/flyt/issues/866)) ([0ba70d9](https://github.com/equinor/flyt/commit/0ba70d99e53b0602f4eae72419c865ca81e3f22f))
-- Redesign sidebar description ([#846](https://github.com/equinor/flyt/issues/846)) ([c499138](https://github.com/equinor/flyt/commit/c499138b7955d316604e3fef193f47a23496d50f))
-- Unable to delete edge bug ([#848](https://github.com/equinor/flyt/issues/848)) ([5f4d668](https://github.com/equinor/flyt/commit/5f4d668a506eea871d33d97ea4211e054164ecf2))
+* Dragging cards sometimes cause crashes ([#852](https://github.com/equinor/flyt/issues/852)) ([5efa058](https://github.com/equinor/flyt/commit/5efa05835d62f85f75cfc3de375c41dbe1f58a3f))
+* Hidden nodes causes Flyt to crash ([#850](https://github.com/equinor/flyt/issues/850)) ([b237bc2](https://github.com/equinor/flyt/commit/b237bc24b63e42289180d29e9644d34e98070217))
+* Main activity can now be moved ([#838](https://github.com/equinor/flyt/issues/838)) ([591a405](https://github.com/equinor/flyt/commit/591a405b9859a906693de710bd5d992f5e3c9fee))
+* make seconds as choice in duration unit ([#866](https://github.com/equinor/flyt/issues/866)) ([0ba70d9](https://github.com/equinor/flyt/commit/0ba70d99e53b0602f4eae72419c865ca81e3f22f))
+* Redesign sidebar description ([#846](https://github.com/equinor/flyt/issues/846)) ([c499138](https://github.com/equinor/flyt/commit/c499138b7955d316604e3fef193f47a23496d50f))
+* Unable to delete edge bug ([#848](https://github.com/equinor/flyt/issues/848)) ([5f4d668](https://github.com/equinor/flyt/commit/5f4d668a506eea871d33d97ea4211e054164ecf2))
+
 
 ### Reverts
 
-- "feat: Added seconds as option in duration unit" ([#865](https://github.com/equinor/flyt/issues/865)) ([3692194](https://github.com/equinor/flyt/commit/3692194f25a0341c4f33cdc547117f9963993b2e))
+* "feat: Added seconds as option in duration unit" ([#865](https://github.com/equinor/flyt/issues/865)) ([3692194](https://github.com/equinor/flyt/commit/3692194f25a0341c4f33cdc547117f9963993b2e))
 
 ## [2.8.0](https://github.com/equinor/flyt/compare/v2.7.0...v2.8.0) (2024-11-20)
 

@@ -9,7 +9,7 @@ import {
   useEdgesState,
   useNodesInitialized,
   useNodesState,
-} from "@xyflow/react";
+} from "reactflow";
 import { createEdges } from "../utils/createEdges";
 import { createHiddenNodes } from "../utils/createHiddenNodes";
 import { createNodes } from "../utils/createNodes";
@@ -28,10 +28,8 @@ export const useFlowState = (
   userEditCardStatus: CardAccess[],
   disabledNodeTypes?: NodeTypes[]
 ) => {
-  const [nodes, setNodes, onNodesChange] = useNodesState<Node<NodeDataFull>>(
-    []
-  );
-  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<NodeDataFull>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [selectedNode, setSelectedNode] = useState<
     Node<NodeDataCommon> | undefined
   >(undefined);
@@ -143,7 +141,7 @@ export const useFlowState = (
     setNodes(finalNodes);
     setEdges(finalEdges);
 
-    handleClickNode(selectedNode?.id);
+    selectedNode && handleClickNode(selectedNode.id);
   }, [apiNodes, apiEdges, userCanEdit, userEditCardStatus]);
 
   return {

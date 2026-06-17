@@ -1,10 +1,8 @@
-import type { Node, Edge } from "@xyflow/react";
-import dagre from "@dagrejs/dagre";
-import type { NodeDataCommon, NodeDataFull } from "types/NodeData";
+import { Node, Edge } from "reactflow";
+import dagre, { Node as DagreNode } from "dagre";
+import { NodeDataCommon, NodeDataFull } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
-import { getEdgeOrder } from "./getEdgeOrder";
-import { getQIPRContainerWidth } from "./getQIPRContainerWidth";
-import { NodeDataApi } from "@/types/NodeDataApi";
+import { CustomEdge, getEdgeOrder } from "./getEdgeOrder";
 
 type Options = {
   rankdir?: string;
@@ -13,13 +11,15 @@ type Options = {
 };
 
 const getLayout = (
-  nodes: Node<NodeDataCommon | NodeDataFull>[],
+  nodes: Node[],
   edges: Edge[],
   { rankdir = "TB", ranksep = 100, margin = 0 }: Options
-): Node<NodeDataCommon | NodeDataFull>[] => {
-  const dagreGraph = new dagre.graphlib.Graph({ directed: true });
-  dagreGraph.setDefaultEdgeLabel(() => ({}));
+) => {
+  const dagreGraph = new dagre.graphlib.Graph<DagreNode>({
+    directed: true,
+  });
 
+  dagreGraph.setDefaultEdgeLabel(() => ({}));
   dagreGraph.setGraph({
     nodesep: 70,
     edgesep: 0,
@@ -58,15 +58,11 @@ const getLayout = (
   });
 };
 
-const getColumnMargin = (nodes: Node<NodeDataFull>[]) => {
+const getColumnMargin = (nodes: Node[]) => {
   let highestPosX = 0;
   nodes.forEach((n) => {
     const { x } = n.position;
-    const occupiedSpace =
-      x +
-      (n.width ?? 175.5) +
-      getQIPRContainerWidth((n.data as NodeDataApi)?.tasks ?? []) +
-      70; //175.5 is default width of node, 70 is nodesep
+    const occupiedSpace = x + (n.width ?? 175.5) + 35; //175.5 is default width of node, 35 is half of nodesep
     if (occupiedSpace > highestPosX) {
       highestPosX = occupiedSpace;
     }

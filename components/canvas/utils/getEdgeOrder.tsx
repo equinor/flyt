@@ -1,4 +1,4 @@
-import { Edge, Node } from "@xyflow/react";
+import { Edge, Node } from "reactflow";
 
 export type CustomEdge = Edge & {
   order?: number | undefined;
