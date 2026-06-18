@@ -8,9 +8,9 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
 const powerBIMainUrl =
-  "https://app.powerbi.com/groups/cad7c965-c975-4e58-8cbb-d06ea30d8950/reports/bc52b0ff-fd14-4b85-8ddb-246d11f3dbb7/ReportSection0d40e3767db82b646971?experience=power-bi";
+  "https://app.powerbi.com/Redirect?action=OpenApp&appId=3f0b9d13-eb0a-4845-8868-15420556cfe9&ctid=3aa4a235-b6e2-48d5-9195-7fcf05b459b0";
 const powerBIProcessUrl =
-  "https://app.powerbi.com/groups/cad7c965-c975-4e58-8cbb-d06ea30d8950/reports/bc52b0ff-fd14-4b85-8ddb-246d11f3dbb7/605fbc579a888b483a53?experience=power-bi&filter=VSM/PkVsm eq";
+  "https://app.powerbi.com/groups/me/apps/3f0b9d13-eb0a-4845-8868-15420556cfe9/reports/bc52b0ff-fd14-4b85-8ddb-246d11f3dbb7/605fbc579a888b483a53?filter=VSM/PkVsm eq";
 
 export function RightTopBarSection(props: {
   isAuthenticated: boolean;
