@@ -3,6 +3,11 @@ kind: RadixApplication
 metadata:
   name: ${RADIX_NAME}
 spec:
+  build:
+    useBuildKit: true
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1001
   environments:
     - name: dev
       build:
