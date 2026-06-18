@@ -2,7 +2,7 @@ import { NodeDataApi } from "@/types/NodeDataApi";
 import { NodeTypes } from "@/types/NodeTypes";
 import { getQIPRContainerWidth } from "./getQIPRContainerWidth";
 import { Column, NodeDataCommon } from "@/types/NodeData";
-import { Node } from "@xyflow/react";
+import { Node } from "reactflow";
 import { nodeValidityMap } from "./nodeValidityHelper";
 import { CardAccess } from "@/types/CardAccess";
 
@@ -21,7 +21,7 @@ const createNode = (
   parent: NodeDataApi | null = null,
   column: Column | null = null,
   tempNodes: Node<NodeDataCommon>[] = []
-): Node<NodeDataCommon>[] => {
+): Node[] => {
   if (!node) return tempNodes;
 
   if (parent) {
@@ -77,9 +77,7 @@ const createNode = (
       },
       position: { x: 0, y: 0 },
       height: shapeSize.height,
-      width:
-        shapeSize.width +
-        (node.tasks.length > 0 ? getQIPRContainerWidth(node.tasks) : 0),
+      width: shapeSize.width + getQIPRContainerWidth(node.tasks),
       type: node.type,
       deletable: false,
     });

@@ -1,4 +1,4 @@
-import { EdgeTypes } from "@xyflow/react";
+import { EdgeTypes } from "reactflow";
 import { CustomEdge } from "./CustomEdge";
 
 export const edgeElementTypes: EdgeTypes = {

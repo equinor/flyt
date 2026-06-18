@@ -26,7 +26,7 @@ import { PQIRScrim } from "@/components/PQIRScrim";
 import { createPortal } from "react-dom";
 import { useProjectId } from "@/hooks/useProjectId";
 import { getTasksforSelectedNode } from "@/services/taskApi";
-import { useReactFlow } from "@xyflow/react";
+import { useReactFlow } from "reactflow";
 
 const MarkdownEditor = dynamic(() => import("components/MarkdownEditor"), {
   ssr: false,

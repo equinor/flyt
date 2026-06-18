@@ -2,20 +2,17 @@ import { edgeElementTypes } from "@/components/canvas/EdgeElementTypes";
 import { MiniMapCustom } from "@/components/canvas/MiniMapCustom";
 import { ZoomLevel } from "@/components/canvas/ZoomLevel";
 import { useStoreDispatch, useStoreState } from "@/hooks/storeHooks";
-import type { EdgeDataApi } from "@/types/EdgeDataApi";
-import type { NodeDataCommon, NodeDataFull } from "@/types/NodeData";
-import type { NodeDataApi } from "@/types/NodeDataApi";
+import { EdgeDataApi } from "@/types/EdgeDataApi";
+import { NodeDataApi } from "@/types/NodeDataApi";
 import { useEffect, useRef } from "react";
-import {
-  ReactFlow,
+import ReactFlow, {
   ControlButton,
   Controls,
-  type Edge,
-  type Node,
-  type NodeMouseHandler,
+  Node,
   ReactFlowProvider,
-} from "@xyflow/react";
-import "@xyflow/react/dist/style.css";
+} from "reactflow";
+import "reactflow/dist/style.css";
+import { NodeDataCommon } from "types/NodeData";
 import { DeleteNodeDialog } from "../DeleteNodeDialog";
 import { ScrimDelete } from "../ScrimDelete";
 import styles from "./Canvas.module.scss";
@@ -39,10 +36,7 @@ import { copyPasteNodeValidator } from "./utils/copyPasteValidators";
 import { handlePasteNode } from "./utils/handlePasteNode";
 import { useWebSocket } from "./hooks/useWebSocket";
 import NetworkToast from "../NetworkToast";
-import type { CardAccess } from "@/types/CardAccess";
-import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
-import { NodeTypes } from "@/types/NodeTypes";
-import { CanvasEdgeData } from "./utils/createEdges";
+import { CardAccess } from "@/types/CardAccess";
 
 type CanvasProps = {
   apiNodes: NodeDataApi[];
@@ -97,69 +91,6 @@ const Flow = ({
     copyPasteNodeValidator
   );
 
-  const onNodeMouseLeave: NodeMouseHandler<Node<NodeDataFull>> = (
-    _event,
-    hoveredNode
-  ) => {
-    if (menuData || hoveredNode.selected) {
-      return;
-    }
-
-    const canHavePQIR =
-      hoveredNode.data.type !== NodeTypes.choice &&
-      hoveredNode.data.type !== NodeTypes.linkedProcess &&
-      hoveredNode.data.type !== NodeTypes.hidden;
-
-    if (canHavePQIR && ((hoveredNode as Node<NodeDataCommon>).data.tasks ?? []).length === 0) {
-      const width = hoveredNode.measured?.width ?? hoveredNode.width ?? 140;
-      const height = hoveredNode.measured?.height ?? hoveredNode.height ?? 140;
-
-      onNodesChange([
-        {
-          id: hoveredNode.id,
-          type: "dimensions",
-          setAttributes: "width",
-          dimensions: {
-            width: width - getQIPRContainerWidth((hoveredNode as Node<NodeDataCommon>).data.tasks),
-            height: height,
-          },
-        },
-      ]);
-    }
-    setHoveredNode(undefined);
-  };
-
-  const onNodeMouseEnter: NodeMouseHandler<Node<NodeDataFull>> = (
-    _event,
-    node
-  ) => {
-    if (menuData || node.selected) {
-      return;
-    }
-
-    const canHavePQIR =
-      node.data.type !== NodeTypes.choice &&
-      node.data.type !== NodeTypes.linkedProcess &&
-      node.data.type !== NodeTypes.hidden;
-
-    if (canHavePQIR && ((node as Node<NodeDataCommon>).data.tasks ?? []).length === 0) {
-      const width = node.measured?.width ?? node.width ?? 140;
-      const height = node.measured?.height ?? node.height ?? 140;
-
-      onNodesChange([
-        {
-          id: node.id,
-          type: "dimensions",
-          setAttributes: "width",
-          dimensions: {
-            width: width + getQIPRContainerWidth((node as Node<NodeDataCommon>).data.tasks),
-            height: height,
-          },
-        },
-      ]);
-    }
-    setHoveredNode(node as Node<NodeDataCommon>);
-  };
   useEffect(() => {
     if (selectedNode?.data.linkedProjectData) {
       window.open(
@@ -232,10 +163,10 @@ const Flow = ({
       <SideBar
         onClose={() => setSelectedNodeForPQIRid(undefined)}
         userCanEdit={userCanEdit}
-        selectedNode={selectedNodeForPQIR?.data as NodeDataCommon}
+        selectedNode={selectedNodeForPQIR?.data}
       />
       <NetworkToast />
-      <ReactFlow<Node<NodeDataFull>, Edge<CanvasEdgeData>>
+      <ReactFlow
         nodes={nodes}
         edges={edges}
         nodeTypes={nodeElementTypes}
@@ -257,8 +188,12 @@ const Flow = ({
         selectNodesOnDrag={false}
         elevateEdgesOnSelect={true}
         edgesFocusable={userCanEdit}
-        onNodeMouseEnter={onNodeMouseEnter}
-        onNodeMouseLeave={onNodeMouseLeave}
+        onNodeMouseEnter={(_, node) => {
+          !menuData && setHoveredNode(node);
+        }}
+        onNodeMouseLeave={() => {
+          !menuData && setHoveredNode(undefined);
+        }}
         onEdgeMouseEnter={(_, edge) => handleSetSelectedEdge(edge)}
         onEdgeMouseLeave={() => handleSetSelectedEdge(undefined)}
         connectionRadius={100}
@@ -280,8 +215,8 @@ const Flow = ({
             copyToClipBoard={copyToClipboard}
             paste={paste}
             centerCanvas={centerCanvas}
-            onDelete={setNodeToBeDeleted}
-            onEditNode={setSelectedNode}
+            onDelete={(node) => setNodeToBeDeleted(node)}
+            onEditNode={(node) => setSelectedNode(node)}
             canvasRef={ref}
             userCanEdit={userCanEdit}
           />

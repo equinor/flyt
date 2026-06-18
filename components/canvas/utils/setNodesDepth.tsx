@@ -1,6 +1,6 @@
 import { NodeDataFull } from "@/types/NodeData";
 import { NodeTypes } from "@/types/NodeTypes";
-import { Node } from "@xyflow/react";
+import { Node } from "reactflow";
 
 type MergedNode = [Node<NodeDataFull>, number];
 type MergedNodesMap = Map<string, MergedNode>;

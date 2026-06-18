@@ -4,7 +4,7 @@ import {
   formatMinMaxTotalDurationShort,
 } from "@/utils/unitDefinitions";
 import { useEffect, useState } from "react";
-import { Handle, NodeProps, Position, Node } from "@xyflow/react";
+import { Handle, NodeProps, Position } from "reactflow";
 import colors from "theme/colors";
 import { NodeDataCommon } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
@@ -33,7 +33,7 @@ export const MainActivityNode = ({
   data,
   dragging,
   selected,
-}: NodeProps<Node<NodeDataCommon>>) => {
+}: NodeProps<NodeDataCommon>) => {
   const {
     description,
     type,

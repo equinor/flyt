@@ -97,7 +97,7 @@ export const moveVerticeLeftOfTarget = (
   ).then((r) => r.data);
 
 export const mergeVertices = (
-  data: { fromVertexId: string; toVertexId: string; label: string },
+  data: { fromVertexId: string; toVertexId: string },
   projectId: string
 ): Promise<unknown> =>
   BaseAPIServices.post(
