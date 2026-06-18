@@ -26,6 +26,10 @@ COPY --from=builder /opt/app/public ./public
 COPY --from=builder /opt/app/.next ./.next
 COPY --from=builder /opt/app/node_modules ./node_modules
 RUN rm -rf /usr/local/lib/node_modules/npm \
-USER 1001
+RUN groupadd -r appgroup && useradd -r -g appgroup appuser
+ 
+RUN chown -R appuser:appgroup /app
+ 
+USER appuser
 CMD ["node_modules/.bin/next", "start"]
 
