@@ -3,10 +3,29 @@ import styles from "../layouts/default.layout.module.scss";
 import { UserMenu } from "./AppHeader/UserMenu";
 import { bar_chart, comment_important, info_circle } from "@equinor/eds-icons";
 import { LinkIcon } from "./LinkIcon";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+
+const powerBIMainUrl =
+  "https://app.powerbi.com/Redirect?action=OpenApp&appId=3f0b9d13-eb0a-4845-8868-15420556cfe9&ctid=3aa4a235-b6e2-48d5-9195-7fcf05b459b0";
+const powerBIProcessUrl =
+  "https://app.powerbi.com/groups/me/apps/3f0b9d13-eb0a-4845-8868-15420556cfe9/reports/bc52b0ff-fd14-4b85-8ddb-246d11f3dbb7/605fbc579a888b483a53?filter=VSM/PkVsm eq";
 
 export function RightTopBarSection(props: {
   isAuthenticated: boolean;
 }): JSX.Element {
+  const router = useRouter();
+  const { id } = useParams();
+  const [powerBIUrl, setPowerBIUrl] = useState(powerBIMainUrl);
+
+  useEffect(() => {
+    if (router.pathname.includes("/process/")) {
+      const url = `${powerBIProcessUrl} ${id}`;
+      setPowerBIUrl(url);
+    }
+  }, [router]);
+
   return (
     <div
       style={{
@@ -17,7 +36,7 @@ export function RightTopBarSection(props: {
       <LinkIcon
         helpText="Open Power BI Dashboard"
         icon={bar_chart}
-        link="https://app.powerbi.com/Redirect?action=OpenApp&appId=3f0b9d13-eb0a-4845-8868-15420556cfe9&ctid=3aa4a235-b6e2-48d5-9195-7fcf05b459b0"
+        link={powerBIUrl}
         style={{ marginRight: 8 }}
       />
       <LinkIcon

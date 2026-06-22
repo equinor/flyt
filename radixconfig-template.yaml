@@ -3,6 +3,8 @@ kind: RadixApplication
 metadata:
   name: ${RADIX_NAME}
 spec:
+  build:
+    useBuildKit: true
   environments:
     - name: dev
       build:
