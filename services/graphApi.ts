@@ -97,7 +97,12 @@ export const moveVerticeLeftOfTarget = (
   ).then((r) => r.data);
 
 export const mergeVertices = (
-  data: { fromVertexId: string; toVertexId: string },
+  data: {
+    fromVertexId: string;
+    toVertexId: string;
+    label: string;
+    edgeValue: string;
+  },
   projectId: string
 ): Promise<unknown> =>
   BaseAPIServices.post(
@@ -109,12 +114,11 @@ export const patchEdge = (
   data: { EdgeValue?: string },
   projectId: string,
   edgeId: string
-) => {
+): Promise<unknown> =>
   BaseAPIServices.post(
     `${baseUrl}/graph/${projectId}/edges/${edgeId}`,
     data
   ).then((r) => r.data);
-};
 
 export const deleteEdge = (
   edgeId: string,
