@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Typography, Scrim, Checkbox } from "@equinor/eds-core-react";
 import useLocalStorage from "../hooks/useLocalStorage";
 import styles from "./InfoDisclaimer.module.scss";
-
+import colors from "../theme/colors";
 export const InfoDisclaimer = (): JSX.Element => {
   const [open, setOpen] = useState(false);
   const [dontShowAgain, setDontShowAgain] = useLocalStorage(
@@ -27,7 +27,7 @@ export const InfoDisclaimer = (): JSX.Element => {
     <Scrim open={open} onWheel={(e) => e.stopPropagation()}>
       <div className={styles.scrimWrapper}>
         <div className={styles.scrimContent}>
-          <Typography color="#000000" variant={"h1"}>
+          <Typography color={colors.BLACK} variant={"h1"}>
             Welcome to Flyt
           </Typography>
           <div className={styles.descriptionContainer}>
