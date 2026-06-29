@@ -16,6 +16,7 @@ export type NodeData = {
   mergeOption?: boolean;
   handleMerge?: (sourceId: string | null, targetId: string | null) => void;
   handleClickNode?: () => void;
+  handleNextClick?: (isSkipGuiding: boolean) => void;
   handleNodeDelete?: () => void;
   handleTooltipOnAccessRemove?: () => void;
   mergeable?: boolean;

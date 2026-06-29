@@ -53,7 +53,8 @@ export const useFlowState = (
   const shapeSize = { height: 140, width: 140 };
   const isEditingEdge = isEditingEdgeText || !!edgeToBeDeletedId;
 
-  const handleClickNode = (id?: string) => {
+  const handleClickNode = (id?: string, isDeselect?: boolean) => {
+    if (isDeselect) setSelectedNode(undefined);
     const node = tempNodes.find((n) => n.id === id);
     if (!node) return;
     setSelectedNode(node as Node<NodeDataCommon>);

@@ -37,6 +37,7 @@ import { handlePasteNode } from "./utils/handlePasteNode";
 import { useWebSocket } from "./hooks/useWebSocket";
 import NetworkToast from "../NetworkToast";
 import { CardAccess } from "@/types/CardAccess";
+import { useSearchParams } from "next/navigation";
 
 type CanvasProps = {
   apiNodes: NodeDataApi[];
@@ -75,13 +76,14 @@ const Flow = ({
   const { setSelectedNodeForPQIRid } = useSelectedNodeForPQIRid();
   const selectedNodeForPQIR = useSelectedNodeForPQIR();
   const dispatch = useStoreDispatch();
-
+  const searchParams = useSearchParams();
+  const isNewProcess = searchParams.get("isNew");
   const ref = useRef<HTMLDivElement>(null);
   const { menuData, onNodeContextMenu, onPaneContextMenu, closeContextMenu } =
     useContextMenu(ref);
   const anyNodeIsSelected = selectedNode !== undefined || !!selectedNodeForPQIR;
   const { socketConnected } = useWebSocket();
-
+  // console.log("**selectedNode", selectedNode);
   const { copyToClipboard, paste } = useCopyPaste(
     hoveredNode,
     (node: Node<NodeDataCommon>) =>
@@ -174,8 +176,10 @@ const Flow = ({
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onPaneClick={() => {
-          setSelectedNode(undefined);
-          setSelectedNodeForPQIRid(undefined);
+          if (!isNewProcess) {
+            setSelectedNode(undefined);
+            setSelectedNodeForPQIRid(undefined);
+          }
         }}
         onMoveStart={() => closeContextMenu()}
         minZoom={0.2}

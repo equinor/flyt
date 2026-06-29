@@ -9,7 +9,9 @@ export function NewProcessButton(): JSX.Element {
   const router = useRouter();
 
   const newProcessMutation = useMutation(() =>
-    createProject().then((value) => router.push(`/process/${value.data}`))
+    createProject().then((value) =>
+      router.push(`/process/${value.data}?&isNew=true`)
+    )
   );
 
   return (

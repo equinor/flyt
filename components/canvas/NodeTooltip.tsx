@@ -30,6 +30,7 @@ import {
   type OptionalGuideStage,
   toStageFromNodeType,
 } from "@/hooks/useOptionalGuide";
+import { useSearchParams } from "next/navigation";
 
 const GUIDE_STAGE_TEXT: Record<
   OptionalGuideStage,
@@ -182,21 +183,29 @@ export const NodeTooltip = ({
   duration,
   estimate,
   isHovering,
-  isEditing,
+  isEditing: isUserEditing,
   nodeData,
   nodeRef,
   userEditCardStatus,
   userCanEdit,
 }: NodeTooltipProps) => {
   const editingStyle = { minWidth: "300px" };
+  const { isCardEditablebyUser, shortName, isCardHasNoAccess, selectedCard } =
+    useUSerEditNode(nodeData.id, userEditCardStatus);
+  const skipped = false;
+  const searchParams = useSearchParams();
+  const isNewProcess =
+    (searchParams.get("isNew") as unknown as boolean) &&
+    !skipped &&
+    nodeData.id === selectedCard?.cardId;
+  console.log("**selectedCard", nodeData, selectedCard);
+  const isEditing = isUserEditing || isNewProcess;
   const tooltipStyle = isEditing ? editingStyle : undefined;
   const shouldDisplayDescription =
     includeDescription && (isEditing || description);
   const shouldDisplayRole = includeRole && (isEditing || role);
   const shouldDisplayDuration = includeDuration && (isEditing || duration);
   const shouldDisplayEstimate = includeEstimate && estimate;
-  const { isCardEditablebyUser, shortName, isCardHasNoAccess, selectedCard } =
-    useUSerEditNode(nodeData.id, userEditCardStatus);
 
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();

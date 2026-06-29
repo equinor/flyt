@@ -32,8 +32,6 @@ export const toStageFromNodeType = (
   nodeType: NodeTypes
 ): OptionalGuideStage | undefined => STAGE_BY_NODE_TYPE[nodeType];
 
-const;
-
 function initializeOptionalGuide(projectId: string): OptionalGuide {
   const storageKey = `guideStage:${projectId}`;
   const storedState = localStorage.getItem(storageKey);

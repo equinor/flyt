@@ -6,6 +6,21 @@ import { Node } from "reactflow";
 import { nodeValidityMap } from "./nodeValidityHelper";
 import { CardAccess } from "@/types/CardAccess";
 
+const getNextNodeType = (currentNodeType: NodeTypes) => {
+  switch (currentNodeType) {
+    case NodeTypes.output:
+      return NodeTypes.customer;
+    case NodeTypes.customer:
+      return NodeTypes.input;
+    case NodeTypes.input:
+      return NodeTypes.supplier;
+    case NodeTypes.supplier:
+      return NodeTypes.mainActivity;
+    default:
+      return NodeTypes.mainActivity;
+  }
+};
+
 const createNode = (
   node: NodeDataApi,
   nodes: NodeDataApi[],
@@ -14,7 +29,7 @@ const createNode = (
   userEditCardStatus: CardAccess[],
   merging: boolean,
   mergeNode: { mutate: (args: { sourceId: string; targetId: string }) => void },
-  handleClickNode: (id: string) => void,
+  handleClickNode: (id?: string, isDeselect?: boolean) => void,
   handleNodeDelete: (id: string) => void,
   handleTooltipOnAccessRemove: () => void,
   disabledNodeTypes?: NodeTypes[],
@@ -23,7 +38,7 @@ const createNode = (
   tempNodes: Node<NodeDataCommon>[] = []
 ): Node[] => {
   if (!node) return tempNodes;
-
+  let handleNextClick: (isSkipGuiding: boolean) => void = () => {};
   if (parent) {
     if (
       [
@@ -37,6 +52,17 @@ const createNode = (
       column = {
         id: node.id,
         firstNodeType: node.type,
+      };
+      handleNextClick = (isSkipGuiding: boolean) => {
+        if (isSkipGuiding) {
+          handleClickNode(undefined, true);
+          return;
+        }
+        const nextNodeType: NodeTypes = getNextNodeType(node.type);
+        const nextNodeId = nodes.find(
+          (node: NodeDataApi) => node.type === nextNodeType
+        )?.id;
+        handleClickNode(nextNodeId);
       };
     }
 
@@ -57,6 +83,8 @@ const createNode = (
       data: {
         ...node,
         handleClickNode: () => handleClickNode(node.id),
+        handleNextClick: (isSkipGuiding: boolean) =>
+          handleNextClick(isSkipGuiding),
         handleNodeDelete: () => handleNodeDelete(node.id),
         handleTooltipOnAccessRemove: () => handleTooltipOnAccessRemove(),
         handleMerge: (sourceId, targetId) =>
@@ -132,7 +160,7 @@ export const createNodes = (
   userEditCardStatus: CardAccess[],
   merging: boolean,
   mergeNode: { mutate: (args: { sourceId: string; targetId: string }) => void },
-  handleClickNode: (id: string) => void,
+  handleClickNode: (id?: string, isDeselect?: boolean) => void,
   handleNodeDelete: (id: string) => void,
   disabledNodeTypes: NodeTypes[] = [],
   handleTooltipOnAccessRemove: () => void

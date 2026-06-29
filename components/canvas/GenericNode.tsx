@@ -44,6 +44,7 @@ export const GenericNode = ({
   const [hoveringShape, setHoveringShape] = useState(false);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
   const isEditingNode = useIsEditingNode(selected);
+  // console.log("**selected", selected);
 
   const handleQIPRContainerOnClick = useQIPRContainerOnClick(data);
   const shouldDisplayQIPR = useShouldDisplayQIPR(tasks, hovering, selected);
