@@ -2,9 +2,11 @@ import { NodeTypes } from "@/types/NodeTypes";
 import { uid } from "@/utils/uuid";
 import { NodeDataFull, NodeDataHidden } from "@/types/NodeData";
 import { Node, Edge } from "@xyflow/react";
+
 type HiddenEdgeData = {
   hiddenNodeTree: string[];
 };
+
 export const createHiddenNodes = (
   tempNodes: Node<NodeDataFull>[],
   tempEdges: Edge[],
@@ -109,7 +111,10 @@ const createHiddenNode = (
   selectable: false,
 });
 
-const createHiddenEdge = (parentId: string, id: string) => ({
+const createHiddenEdge = (
+  parentId: string,
+  id: string
+): Edge<HiddenEdgeData> => ({
   id: `${parentId}=>${id}`,
   source: parentId,
   target: id,

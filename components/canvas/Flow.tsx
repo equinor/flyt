@@ -114,8 +114,7 @@ const Flow = ({
       canHavePQIR &&
       ((hoveredNode as Node<NodeDataCommon>).data.tasks ?? []).length === 0
     ) {
-      const width =
-        hoveredNode.measured?.width ?? hoveredNode.measured?.width ?? 140;
+      const width = hoveredNode.measured?.width ?? hoveredNode.width ?? 140;
       const height = hoveredNode.measured?.height ?? hoveredNode.height ?? 140;
 
       onNodesChange([

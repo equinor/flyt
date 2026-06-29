@@ -28,8 +28,6 @@ export const ProcessConnectionFormStepFlow = ({
           className={styles.flow}
           nodes={nodes}
           edges={edges}
-          fitView
-          fitViewOptions={{ padding: 0.2, maxZoom: 0.8 }}
           nodeTypes={nodeElementTypes}
           edgeTypes={edgeElementTypes}
           selectNodesOnDrag={false}

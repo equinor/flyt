@@ -1,7 +1,7 @@
 import { NodeDataApi } from "@/types/NodeDataApi";
 import { NodeTypes } from "@/types/NodeTypes";
 import { getQIPRContainerWidth } from "./getQIPRContainerWidth";
-import { Column, NodeDataCommon, NodeDataFull } from "@/types/NodeData";
+import { Column, NodeDataCommon } from "@/types/NodeData";
 import { Node } from "@xyflow/react";
 import { nodeValidityMap } from "./nodeValidityHelper";
 import { CardAccess } from "@/types/CardAccess";
@@ -20,8 +20,8 @@ const createNode = (
   disabledNodeTypes?: NodeTypes[],
   parent: NodeDataApi | null = null,
   column: Column | null = null,
-  tempNodes: Node<NodeDataFull>[] = []
-): Node<NodeDataFull>[] => {
+  tempNodes: Node<NodeDataCommon>[] = []
+): Node<NodeDataCommon>[] => {
   if (!node) return tempNodes;
 
   if (parent) {
@@ -46,24 +46,21 @@ const createNode = (
       const newData = duplicateNode.data;
       newData.parents?.push(parent.id);
       newData.parentTypes?.push(parent.type);
-
       tempNodes = tempNodes.map((tempNode) =>
         tempNode.id === node.id ? { ...tempNode, data: newData } : tempNode
       );
-
       return tempNodes;
     }
 
     tempNodes.push({
       id: node.id,
       data: {
-        ...(node as NodeDataCommon),
+        ...node,
         handleClickNode: () => handleClickNode(node.id),
         handleNodeDelete: () => handleNodeDelete(node.id),
-        handleTooltipOnAccessRemove: handleTooltipOnAccessRemove,
+        handleTooltipOnAccessRemove: () => handleTooltipOnAccessRemove(),
         handleMerge: (sourceId, targetId) =>
           sourceId && targetId && mergeNode.mutate({ sourceId, targetId }),
-
         mergeable:
           node.children?.length === 0 || node.type === NodeTypes.choice,
         merging,
@@ -76,29 +73,28 @@ const createNode = (
         column,
         shapeHeight: shapeSize.height,
         shapeWidth: shapeSize.width,
-
         disabled: disabledNodeTypes?.includes(node.type),
-      } as NodeDataFull,
+      },
       position: { x: 0, y: 0 },
       height: shapeSize.height,
-      width: shapeSize.width + getQIPRContainerWidth(node.tasks),
+      width:
+        shapeSize.width +
+        (node.tasks.length > 0 ? getQIPRContainerWidth(node.tasks) : 0),
       type: node.type,
       deletable: false,
     });
   } else {
     tempNodes.push({
       id: node.id,
-
       data: {
-        ...(node as NodeDataCommon),
+        ...node,
         deletable: nodeValidityMap[node.type].deletable,
         copyable: nodeValidityMap[node.type].copyable,
         parents: [],
         column,
         shapeHeight: shapeSize.height,
         shapeWidth: shapeSize.width,
-      } as NodeDataFull,
-
+      },
       position: { x: 0, y: 0 },
       height: shapeSize.height,
       width: shapeSize.width + getQIPRContainerWidth(node.tasks),
@@ -108,9 +104,8 @@ const createNode = (
   }
 
   node.children?.forEach((childId) => {
-    const childNode = nodes.find((n) => n.id === childId);
-
-    if (childNode) {
+    const childNode = nodes.find((node) => node.id === childId);
+    childNode &&
       createNode(
         childNode,
         nodes,
@@ -127,7 +122,6 @@ const createNode = (
         column,
         tempNodes
       );
-    }
   });
 
   return tempNodes;
@@ -144,12 +138,14 @@ export const createNodes = (
   handleNodeDelete: (id: string) => void,
   disabledNodeTypes: NodeTypes[] = [],
   handleTooltipOnAccessRemove: () => void
-): Node<NodeDataFull>[] => {
+) => {
   const root = apiNodes.find(
     (node: NodeDataApi) => node.type === NodeTypes.root
   );
 
-  if (!root) return [];
+  if (!root) {
+    return [];
+  }
 
   return createNode(
     root,
