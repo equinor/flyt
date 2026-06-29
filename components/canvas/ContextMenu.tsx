@@ -1,9 +1,9 @@
-import { NodeDataCommon } from "@/types/NodeData";
+import { NodeDataCommon, NodeDataFull } from "@/types/NodeData";
 import { getNodeTypeName } from "@/utils/getNodeTypeName";
 import { capitalizeFirstLetter } from "@/utils/stringHelpers";
 import { Menu } from "@equinor/eds-core-react";
 import { RefObject, useState } from "react";
-import { Node, Position } from "reactflow";
+import { Node, Position } from "@xyflow/react";
 import { MenuItemExandable } from "../MenuItemExandable";
 import styles from "./ContextMenu.module.scss";
 import type { MenuData } from "./hooks/useContextMenu";
@@ -36,6 +36,11 @@ export const ContextMenu = ({
   const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
   const modifierKey = getModifierKey();
+
+  const isNodeDataCommon = (
+    node: Node<NodeDataFull>
+  ): node is Node<NodeDataCommon> =>
+    "deletable" in node.data && "copyable" in node.data;
 
   const isReversedExpandDirection = (fullyExpandedWidth: number) => {
     const anchorOffsetLeft = anchorEl?.offsetLeft;
@@ -80,7 +85,7 @@ export const ContextMenu = ({
   };
 
   const renderNodeMenuItems = () => {
-    if (!node) return;
+    if (!node || !isNodeDataCommon(node)) return;
     const { deletable, copyable } = node.data;
     return (
       <>

@@ -3,8 +3,8 @@ import { NodeDataCommon } from "@/types/NodeData";
 import { NodeDataApi } from "@/types/NodeDataApi";
 import router from "next/router";
 import { MouseEvent } from "react";
-import ReactFlow, { Node, ReactFlowProvider } from "reactflow";
-import "reactflow/dist/style.css";
+import { ReactFlow, Node, ReactFlowProvider } from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
 import { edgeElementTypes } from "../EdgeElementTypes";
 import { nodeElementTypes } from "../NodeElementTypes";
 import { useCenterCanvas } from "../hooks/useCenterCanvas";
@@ -45,6 +45,8 @@ const ProcessesFlow = ({
     <ReactFlow
       nodes={nodes}
       edges={edges}
+      fitView
+      fitViewOptions={{ padding: 0.2, maxZoom: 0.8 }}
       nodeTypes={nodeElementTypes}
       edgeTypes={edgeElementTypes}
       elementsSelectable={false}
