@@ -1,8 +1,8 @@
+import { useEffect } from "react";
 import { NodeDataFull } from "@/types/NodeData";
 import { Typography } from "@equinor/eds-core-react";
-import { ReactFlow, Edge, Node } from "@xyflow/react";
+import { ReactFlow, Edge, Node, useReactFlow } from "@xyflow/react";
 import { edgeElementTypes } from "../EdgeElementTypes";
-import { useCenterCanvas } from "../hooks/useCenterCanvas";
 import { nodeElementTypes } from "../NodeElementTypes";
 import styles from "./ProcessConnectionForm.module.scss";
 import { CanvasTypeProvider } from "../hooks/useCanvasType";
@@ -16,7 +16,21 @@ export const ProcessConnectionFormStepFlow = ({
   nodes,
   edges,
 }: ProcessConnectionFormStepFlowProps) => {
-  useCenterCanvas();
+  const { fitView, getViewport, setViewport } = useReactFlow();
+  const viewport = getViewport();
+  setViewport({ ...viewport, y: 75 });
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      fitView({
+        padding: 0.3,
+        maxZoom: 0.6,
+        includeHiddenNodes: true,
+      });
+    }, 100);
+
+    return () => clearTimeout(timeout);
+  }, [nodes.length]);
 
   return (
     <>
@@ -30,8 +44,11 @@ export const ProcessConnectionFormStepFlow = ({
           edges={edges}
           nodeTypes={nodeElementTypes}
           edgeTypes={edgeElementTypes}
+          nodeOrigin={[0.5, 0.5]}
+          nodesDraggable={false}
+          zoomOnScroll={false}
+          panOnDrag={true}
           selectNodesOnDrag={false}
-          draggable={false}
         />
       </CanvasTypeProvider>
     </>
