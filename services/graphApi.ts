@@ -101,7 +101,7 @@ export const mergeVertices = (
     fromVertexId: string;
     toVertexId: string;
     label: string;
-    edgeValue?: string;
+    edgeValue: string;
   },
   projectId: string
 ): Promise<unknown> =>
