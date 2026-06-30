@@ -17,7 +17,6 @@ import {
   useState,
 } from "react";
 import { chevron_down, close, download, share } from "@equinor/eds-icons";
-import { chevron_down, close, download, share } from "@equinor/eds-icons";
 import {
   faveProject,
   getProject,

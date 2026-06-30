@@ -286,7 +286,9 @@ function AddLabelsStage({
           Discard
         </Button>
         <div style={{ display: "flex", gap: 8 }}>
-          <Button variant="outlined" onClick={onBack}>Back</Button>
+          <Button variant="outlined" onClick={onBack}>
+            Back
+          </Button>
           <Button onClick={onFinish}>Complete</Button>
         </div>
       </Card.Actions>
@@ -384,7 +386,7 @@ export function MandatoryGuide({
             display: "flex",
             justifyContent: "space-between",
             borderTop: "1px solid #dcdcdc",
-            width: "stretch",
+            width: "-webkit-fill-available",
             padding: "16px 40px",
           }}
         >
