@@ -1,14 +1,11 @@
 import { Button, Icon } from "@equinor/eds-core-react";
 import { close_circle_outlined } from "@equinor/eds-icons";
-import { BaseEdge, Edge, EdgeLabelRenderer, EdgeProps } from "@xyflow/react";
+import { BaseEdge, EdgeLabelRenderer, EdgeProps } from "reactflow";
 import styles from "./Edge.module.scss";
 import { getSvgStraightLineData } from "./drawSvgPath";
 import { EdgeLabel } from "./EdgeLabel";
 import colors from "@/theme/colors";
 import { useEffect, useState } from "react";
-import { CanvasEdgeData } from "./utils/createEdges";
-
-type CanvasEdge = Edge<CanvasEdgeData>;
 
 export const CustomEdge = ({
   id,
@@ -20,7 +17,7 @@ export const CustomEdge = ({
   selected,
   interactionWidth,
   data,
-}: EdgeProps<CanvasEdge>) => {
+}: EdgeProps) => {
   const points = [
     { x: sourceX, y: sourceY },
     { x: targetX, y: targetY },
@@ -32,10 +29,9 @@ export const CustomEdge = ({
   const [isEditingText, setIsEditingText] = useState(false);
 
   useEffect(() => {
-    data?.setIsEditingText?.(isEditingText);
-  }, [data, isEditingText]);
+    data?.setIsEditingText(isEditingText);
+  }, [isEditingText]);
 
-  // console.log({ id, selected });
   return (
     <>
       <BaseEdge
@@ -45,7 +41,7 @@ export const CustomEdge = ({
           stroke: `${
             selected
               ? colors.EQUINOR_PROMINENT
-              : data?.hovered
+              : data.hovered
               ? colors.EQUINOR_HOVER
               : colors.CANVAS_LINES
           }`,
@@ -71,7 +67,7 @@ export const CustomEdge = ({
             data?.userCanEdit &&
             data?.onDelete &&
             !isEditingText && (
-              <Button variant="ghost_icon" onClick={() => data.onDelete?.()}>
+              <Button variant="ghost_icon" onClick={() => data?.onDelete(id)}>
                 <Icon data={close_circle_outlined} size={24} />
               </Button>
             )}

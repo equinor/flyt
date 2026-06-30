@@ -11,6 +11,7 @@ import { SelectionInfo } from "types/SelectionInfo";
 import { URLPrompt } from "./URLPrompt";
 
 import colors from "theme/colors";
+import { useStoreActions, useStoreState } from "easy-peasy";
 
 Icon.add({ link });
 
@@ -42,8 +43,15 @@ export default function MarkdownEditor(props: {
   // The "text"-state is used for displaying the changing text instantly
   const [text, setText] = useState<string | undefined>(defaultText);
   const missingText = requireText && text?.length === 0;
+  const undoRedoSynced = useStoreState((s: any) => s.undoRedoSynced) as boolean;
+  const setUndoRedoSynced = useStoreActions((a: any) => a.setUndoRedoSynced);
 
   useEffect(() => {
+    if (undoRedoSynced) {
+      setText(defaultText);
+      setUndoRedoSynced(false);
+      return;
+    }
     if (lastUpdatedValue === defaultText) return;
     setText(defaultText);
   }, [defaultText]);

@@ -1,4 +1,4 @@
-import { Node } from "@xyflow/react";
+import { Node } from "reactflow";
 import { NodeDataFull } from "@/types/NodeData";
 
 export const targetIsInSubtree = (

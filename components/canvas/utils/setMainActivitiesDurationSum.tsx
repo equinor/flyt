@@ -1,5 +1,5 @@
 import { NodeTypes } from "@/types/NodeTypes";
-import { Node } from "@xyflow/react";
+import { Node } from "reactflow";
 import { timeDefinitions, getDurationInSeconds } from "@/utils/unitDefinitions";
 import { NodeDataCommon } from "@/types/NodeData";
 import { TimeDefinition } from "@/types/TimeDefinition";

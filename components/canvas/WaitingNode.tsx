@@ -2,12 +2,12 @@ import { formatDuration } from "@/utils/unitDefinitions";
 import { Icon, Typography } from "@equinor/eds-core-react";
 import { time as timeIcon } from "@equinor/eds-icons";
 import { useEffect, useState } from "react";
-import { Position, useConnection } from "@xyflow/react";
+import { Connection, Position, useStore } from "reactflow";
 
 import { getNodeTypeName } from "@/utils/getNodeTypeName";
-import type { Connection, NodeProps, Node } from "@xyflow/react";
+import { NodeProps } from "reactflow";
 import colors from "theme/colors";
-import type { NodeDataCommon } from "types/NodeData";
+import { NodeDataCommon } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
 import { ChoiceButton } from "./ChoiceButton";
 import { MergeButton } from "./MergeButton";
@@ -34,7 +34,7 @@ export const WaitingNode = ({
   data,
   dragging,
   selected,
-}: NodeProps<Node<NodeDataCommon>>) => {
+}: NodeProps<NodeDataCommon>) => {
   const {
     description,
     id,
@@ -59,7 +59,7 @@ export const WaitingNode = ({
   } = data;
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
-  const connectionNodeId = useConnection(c => c.fromNode?.id);
+  const connectionNodeId = useStore((state) => state.connectionNodeId);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
   const isEditingNode = useIsEditingNode(selected);
 

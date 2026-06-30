@@ -18,6 +18,7 @@ export const useNodeUpdate = (
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
   const [nodeInputData, setNodeInputData] = useState<UpdateNodeData>({});
+
   const [lastSentValues, setLastSentValues] = useState<UpdateNodeData>({});
   const { projectId } = useProjectId();
   const dispatch = useStoreDispatch();

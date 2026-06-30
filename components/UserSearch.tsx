@@ -96,7 +96,7 @@ export const UserSearch = ({
         <InfoNoEditAccess />
       )}
       <div className={styles.userList}>
-        <UserItems />
+        {<UserItems />}
         {usersSearched && usersSearched.length > 0 && (
           <div className={styles.separator} />
         )}

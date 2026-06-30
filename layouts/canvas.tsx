@@ -17,6 +17,7 @@ import {
   useState,
 } from "react";
 import { chevron_down, close, download, share } from "@equinor/eds-icons";
+import { chevron_down, close, download, share } from "@equinor/eds-icons";
 import {
   faveProject,
   getProject,
@@ -50,6 +51,7 @@ import { EditableTitle } from "components/EditableTitle";
 import { getProjectName } from "@/utils/getProjectName";
 import { accessRoles } from "@/types/AccessRoles";
 import { downloadCanvasAsPNG } from "@/utils/downloadCanvas";
+import { disableKeyboardUndoRedoShortcuts } from "@/utils/disableKeyboardUndoRedoShortcuts";
 
 export const CanvasLayout = ({ children }: { children: ReactNode }) => {
   const isAuthenticated = useIsAuthenticated();
@@ -167,6 +169,7 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     disableKeyboardZoomShortcuts();
     disableMouseWheelZoom();
+    disableKeyboardUndoRedoShortcuts();
   }, []);
 
   if (!isAuthenticated) {
@@ -209,20 +212,15 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
         });
   }
 
-  async function updateProjectName(name: string) {
+  function updateProjectName(name: string) {
     if (name === project?.name) return;
-
-    try {
-      await projectMutation.mutateAsync([
-        {
-          op: "replace",
-          path: "/Name",
-          value: name,
-        },
-      ]);
-    } catch (e) {
-      console.error("Failed to update project name", e);
-    }
+    projectMutation.mutate([
+      {
+        op: "replace",
+        path: "/Name",
+        value: name,
+      },
+    ]);
   }
 
   function handleDuplicate() {
@@ -259,7 +257,7 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
                 <EditableTitle
                   defaultText={projectName}
                   readOnly={!userCanEdit}
-                  onSubmit={updateProjectName}
+                  onSubmit={(text) => updateProjectName(text)}
                 />
               ) : (
                 <DotProgress size={32} color={"primary"} />
@@ -410,8 +408,8 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
               className={styles.renameInput}
               label={"Add title"}
               defaultValue={project?.name ?? undefined}
-              onChange={async (e: ChangeEvent<HTMLInputElement>) =>
-                await updateProjectName(e.target.value)
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                updateProjectName(e.target.value)
               }
               id={"vsmObjectDescription"}
             />

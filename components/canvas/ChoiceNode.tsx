@@ -1,6 +1,6 @@
 import { getNodeTypeName } from "@/utils/getNodeTypeName";
 import { useEffect, useState } from "react";
-import { type Connection, type NodeProps, Position, type Node, useConnection } from "@xyflow/react";
+import { Connection, NodeProps, Position, useStore } from "reactflow";
 import colors from "theme/colors";
 import { NodeDataCommon } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
@@ -26,7 +26,7 @@ export const ChoiceNode = ({
   data,
   dragging,
   selected,
-}: NodeProps<Node<NodeDataCommon>>) => {
+}: NodeProps<NodeDataCommon>) => {
   const {
     id,
     description,
@@ -50,7 +50,7 @@ export const ChoiceNode = ({
   const [hovering, setHovering] = useState(false);
   const [hoveringShape, setHoveringShape] = useState(false);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
-  const connectionNodeId = useConnection(c => c.fromNode?.id);
+  const connectionNodeId = useStore((state) => state.connectionNodeId);
   const lastChild = children[children?.length - 1];
   const isEditingNode = useIsEditingNode(selected);
   const ref = useNodeRef();

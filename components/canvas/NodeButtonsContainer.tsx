@@ -1,5 +1,5 @@
 import { useState, ReactNode } from "react";
-import { Position } from "@xyflow/react";
+import { Position } from "reactflow";
 import styles from "./NodeButtons.module.scss";
 import AddNodeButtonIcon from "../../public/NodeButtons/AddNodeButtonIcon.svg";
 
