@@ -37,7 +37,6 @@ import {
 } from "./hooks/useSelectedNodeForPQIRid";
 import { copyPasteNodeValidator } from "./utils/copyPasteValidators";
 import { handlePasteNode } from "./utils/handlePasteNode";
-import { useWebSocket } from "./hooks/useWebSocket";
 import NetworkToast from "../NetworkToast";
 import type { CardAccess } from "@/types/CardAccess";
 import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
