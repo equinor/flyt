@@ -86,7 +86,6 @@ const Flow = ({
   const { menuData, onNodeContextMenu, onPaneContextMenu, closeContextMenu } =
     useContextMenu(ref);
   const anyNodeIsSelected = selectedNode !== undefined || !!selectedNodeForPQIR;
-  const { socketConnected } = useWebSocket();
 
   const { copyToClipboard, paste } = useCopyPaste(
     hoveredNode,
@@ -96,45 +95,6 @@ const Flow = ({
     userCanEdit,
     copyPasteNodeValidator
   );
-
-  const onNodeMouseLeave: NodeMouseHandler<Node<NodeDataFull>> = (
-    _event,
-    hoveredNode
-  ) => {
-    if (menuData || hoveredNode.selected) {
-      return;
-    }
-
-    const canHavePQIR =
-      hoveredNode.data.type !== NodeTypes.choice &&
-      hoveredNode.data.type !== NodeTypes.linkedProcess &&
-      hoveredNode.data.type !== NodeTypes.hidden;
-
-    if (
-      canHavePQIR &&
-      ((hoveredNode as Node<NodeDataCommon>).data.tasks ?? []).length === 0
-    ) {
-      const width = hoveredNode.measured?.width ?? hoveredNode.width ?? 140;
-      const height = hoveredNode.measured?.height ?? hoveredNode.height ?? 140;
-
-      onNodesChange([
-        {
-          id: hoveredNode.id,
-          type: "dimensions",
-          setAttributes: "width",
-          dimensions: {
-            width:
-              width -
-              getQIPRContainerWidth(
-                (hoveredNode as Node<NodeDataCommon>).data.tasks
-              ),
-            height: height,
-          },
-        },
-      ]);
-    }
-    setHoveredNode(undefined);
-  };
 
   const onNodeMouseEnter: NodeMouseHandler<Node<NodeDataFull>> = (
     _event,
@@ -153,8 +113,8 @@ const Flow = ({
       canHavePQIR &&
       ((node as Node<NodeDataCommon>).data.tasks ?? []).length === 0
     ) {
-      const width = node.measured?.width ?? node.width ?? 140;
-      const height = node.measured?.height ?? node.height ?? 140;
+      const baseWidth = (node.data as NodeDataCommon).shapeWidth ?? 140;
+      const baseHeight = (node.data as NodeDataCommon).shapeHeight ?? 140;
 
       onNodesChange([
         {
@@ -163,9 +123,9 @@ const Flow = ({
           setAttributes: "width",
           dimensions: {
             width:
-              width +
-              getQIPRContainerWidth((node as Node<NodeDataCommon>).data.tasks),
-            height: height,
+              baseWidth +
+              getQIPRContainerWidth((node.data as NodeDataCommon).tasks),
+            height: baseHeight,
           },
         },
       ]);
@@ -270,7 +230,9 @@ const Flow = ({
         elevateEdgesOnSelect={true}
         edgesFocusable={userCanEdit}
         onNodeMouseEnter={onNodeMouseEnter}
-        onNodeMouseLeave={onNodeMouseLeave}
+        onNodeMouseLeave={() => {
+          !menuData && setHoveredNode(undefined);
+        }}
         onEdgeMouseEnter={(_, edge) => handleSetSelectedEdge(edge)}
         onEdgeMouseLeave={() => handleSetSelectedEdge(undefined)}
         connectionRadius={100}
