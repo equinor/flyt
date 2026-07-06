@@ -1,6 +1,6 @@
-import { NodeDataCommon } from "@/types/NodeData";
+import { NodeDataCommon, NodeDataFull } from "@/types/NodeData";
 import { NodeTypes } from "@/types/NodeTypes";
-import { Node, Position } from "reactflow";
+import { Node, Position } from "@xyflow/react";
 import { isChoiceChild, isGenericColumn } from "./nodeRelationsHelper";
 import { isKey } from "@/utils/isKey";
 
@@ -128,8 +128,9 @@ export const nodeValidityMap: NodeValidityMap = {
   },
 };
 
-export const getNodeValidPositions = (node: Node<NodeDataCommon>) => {
-  const { type, parentTypes, column } = node.data;
+export const getNodeValidPositions = (node: Node<NodeDataFull>) => {
+  const commonNode = node as Node<NodeDataCommon>;
+  const { type, parentTypes, column } = commonNode.data;
   let validPositions = nodeValidityMap[type].validPositions;
 
   if (isChoiceChild(parentTypes)) {
@@ -153,9 +154,7 @@ export const getNodeValidPositions = (node: Node<NodeDataCommon>) => {
   return validPositions;
 };
 
-export const getNodeValidPositionsContextMenu = (
-  node: Node<NodeDataCommon>
-) => {
+export const getNodeValidPositionsContextMenu = (node: Node<NodeDataFull>) => {
   const validPositions = getNodeValidPositions(node);
   for (const key in validPositions) {
     if (isKey(validPositions, key)) {

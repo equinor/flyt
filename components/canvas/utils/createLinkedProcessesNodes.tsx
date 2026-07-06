@@ -1,17 +1,22 @@
+import { NodeDataCommon } from "@/types/NodeData";
 import { NodeTypes } from "@/types/NodeTypes";
-import { Node, Position } from "reactflow";
+import { Node, Position } from "@xyflow/react";
 import { NodeDataApi } from "@/types/NodeDataApi";
 
 const createNode = (
   node: NodeDataApi,
   shapeSize: { height: number; width: number },
   isHorizontalFlow: boolean
-): Node => {
+): Node<NodeDataCommon> => {
   const { height, width } = shapeSize;
   return {
     id: node.id,
     data: {
       ...node,
+      parents: [],
+      column: null,
+      deletable: false,
+      copyable: false,
       shapeHeight: height,
       shapeWidth: width,
     },
@@ -30,4 +35,5 @@ export const createLinkedProcessesNodes = (
   apiNodes: NodeDataApi[],
   shapeSize: { height: number; width: number },
   isHorizontalFlow: boolean
-) => apiNodes.map((n) => createNode(n, shapeSize, isHorizontalFlow));
+): Node<NodeDataCommon>[] =>
+  apiNodes.map((n) => createNode(n, shapeSize, isHorizontalFlow));

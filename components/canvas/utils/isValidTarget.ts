@@ -1,33 +1,36 @@
 import { NodeDataFull, NodeDataCommon } from "types/NodeData";
 import { NodeTypes } from "types/NodeTypes";
-import { Node } from "reactflow";
+import { Node } from "@xyflow/react";
 import { targetIsInSubtree } from "./targetIsInSubtree";
 import { getNodeValidPositions } from "./nodeValidityHelper";
 
 export const isValidTarget = (
-  source: Node<NodeDataCommon> | undefined,
-  target: Node<NodeDataCommon> | undefined,
+  source: Node<NodeDataFull> | undefined,
+  target: Node<NodeDataFull> | undefined,
   nodes: Node<NodeDataFull>[],
   isDragAndDrop = true
 ): boolean => {
   if (!target || !source) return false;
-  const sourceType = source.type as NodeTypes;
+  const sourceNode = source as Node<NodeDataCommon>;
+  const targetNode = target as Node<NodeDataCommon>;
+  const sourceType = sourceNode.type as NodeTypes;
 
   if (isDragAndDrop) {
-    const targetIsParent = source?.data?.parents?.includes(target.id);
+    const targetIsParent = sourceNode?.data?.parents?.includes(targetNode.id);
     if (targetIsParent) {
       return false;
     }
 
     const targetIsInChoiceSubtree =
       sourceType === NodeTypes.choice &&
-      (target.data.children.length || targetIsInSubtree(source, target, nodes));
+      (targetNode.data.children.length ||
+        targetIsInSubtree(sourceNode, targetNode, nodes));
     if (targetIsInChoiceSubtree) {
       return false;
     }
   }
 
-  const targetsValidPositions = getNodeValidPositions(target);
+  const targetsValidPositions = getNodeValidPositions(targetNode);
 
   return !!targetsValidPositions?.bottom?.includes(sourceType);
 };
