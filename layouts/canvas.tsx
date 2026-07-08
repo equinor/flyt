@@ -29,6 +29,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useStoreDispatch, useStoreState } from "@/hooks/storeHooks";
 
 import { AccessBox } from "@/components/AccessBox";
+import { MandatoryGuide } from "./MandatoryGuide";
 import Head from "next/head";
 import { Heart } from "components/Heart";
 import { HomeButton } from "./homeButton";
@@ -368,6 +369,22 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
         </Scrim>
       )}
 
+      {project && (
+        <MandatoryGuide
+          project={project}
+          onDiscard={deleteVSM}
+          updateProjectName={async (newName: string) => {
+            newName = newName.trim();
+            if (
+              !newName ||
+              newName === project.name ||
+              newName.toLowerCase() === "untitled process"
+            )
+              return;
+            await updateProjectName(newName);
+          }}
+        />
+      )}
       <Scrim
         open={visibleRenameScrim}
         onClose={() => setVisibleRenameScrim(false)}

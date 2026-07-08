@@ -2,31 +2,28 @@
 
 ## [2.16.0](https://github.com/equinor/flyt/compare/v2.15.0...v2.16.0) (2026-06-22)
 
-
 ### Features
 
-* added individual process pqir powerbi urls ([#1105](https://github.com/equinor/flyt/issues/1105)) ([e728961](https://github.com/equinor/flyt/commit/e7289614b8c8389f6a50fb10c7baf6539e01680b))
-* initial guiding - mandatory guiding ([#1106](https://github.com/equinor/flyt/issues/1106)) ([1bd53da](https://github.com/equinor/flyt/commit/1bd53da846603a07b228697983eceb40c497146a))
-* Undo Redo buttons added in the process page ([#1006](https://github.com/equinor/flyt/issues/1006)) ([ca06c75](https://github.com/equinor/flyt/commit/ca06c754fa97134957346e99abb05be32ce4d89f))
-
+- added individual process pqir powerbi urls ([#1105](https://github.com/equinor/flyt/issues/1105)) ([e728961](https://github.com/equinor/flyt/commit/e7289614b8c8389f6a50fb10c7baf6539e01680b))
+- initial guiding - mandatory guiding ([#1106](https://github.com/equinor/flyt/issues/1106)) ([1bd53da](https://github.com/equinor/flyt/commit/1bd53da846603a07b228697983eceb40c497146a))
+- Undo Redo buttons added in the process page ([#1006](https://github.com/equinor/flyt/issues/1006)) ([ca06c75](https://github.com/equinor/flyt/commit/ca06c754fa97134957346e99abb05be32ce4d89f))
 
 ### Bug Fixes
 
-* Create appuser and appgroup in Dockerfile ([#1122](https://github.com/equinor/flyt/issues/1122)) ([630ef21](https://github.com/equinor/flyt/commit/630ef210b446c3fac0e79dcaa3cc2607099acc44))
-* Downgrade Node.js version in Dockerfile ([#1123](https://github.com/equinor/flyt/issues/1123)) ([0bd2376](https://github.com/equinor/flyt/commit/0bd237688d0b2d0f88a5b01989031cb7da424d93))
-* PowerBI Urls and Radix vulnerability fixes ([#1118](https://github.com/equinor/flyt/issues/1118)) ([24c734d](https://github.com/equinor/flyt/commit/24c734d948cf65efbed08e5a59a8f192125c7e88))
-* radix vulnerability ([#1108](https://github.com/equinor/flyt/issues/1108)) ([fa211bc](https://github.com/equinor/flyt/commit/fa211bc54d31b35cb23db27079ac7a14bcfc93ab))
-* remove non root user requirement from Dockerfile ([#1119](https://github.com/equinor/flyt/issues/1119)) ([ef22101](https://github.com/equinor/flyt/commit/ef221013ce5a48d9c8f97c2873ff710114eb63e0))
-* resolved radix vulnerabilities ([#1096](https://github.com/equinor/flyt/issues/1096)) ([9c7c3e9](https://github.com/equinor/flyt/commit/9c7c3e9def4d3238866439f39784ec0617344bc7))
-* runAsNon root config removed from radix yaml file ([#1121](https://github.com/equinor/flyt/issues/1121)) ([243a3d9](https://github.com/equinor/flyt/commit/243a3d9e6adb7d74dced18e4e16e152e3b571251))
-
+- Create appuser and appgroup in Dockerfile ([#1122](https://github.com/equinor/flyt/issues/1122)) ([630ef21](https://github.com/equinor/flyt/commit/630ef210b446c3fac0e79dcaa3cc2607099acc44))
+- Downgrade Node.js version in Dockerfile ([#1123](https://github.com/equinor/flyt/issues/1123)) ([0bd2376](https://github.com/equinor/flyt/commit/0bd237688d0b2d0f88a5b01989031cb7da424d93))
+- PowerBI Urls and Radix vulnerability fixes ([#1118](https://github.com/equinor/flyt/issues/1118)) ([24c734d](https://github.com/equinor/flyt/commit/24c734d948cf65efbed08e5a59a8f192125c7e88))
+- radix vulnerability ([#1108](https://github.com/equinor/flyt/issues/1108)) ([fa211bc](https://github.com/equinor/flyt/commit/fa211bc54d31b35cb23db27079ac7a14bcfc93ab))
+- remove non root user requirement from Dockerfile ([#1119](https://github.com/equinor/flyt/issues/1119)) ([ef22101](https://github.com/equinor/flyt/commit/ef221013ce5a48d9c8f97c2873ff710114eb63e0))
+- resolved radix vulnerabilities ([#1096](https://github.com/equinor/flyt/issues/1096)) ([9c7c3e9](https://github.com/equinor/flyt/commit/9c7c3e9def4d3238866439f39784ec0617344bc7))
+- runAsNon root config removed from radix yaml file ([#1121](https://github.com/equinor/flyt/issues/1121)) ([243a3d9](https://github.com/equinor/flyt/commit/243a3d9e6adb7d74dced18e4e16e152e3b571251))
 
 ### Reverts
 
-* "feat: initial guiding - mandatory guiding" ([#1117](https://github.com/equinor/flyt/issues/1117)) ([c848268](https://github.com/equinor/flyt/commit/c848268ee02df232750c9b05a0c7fbc61e8f9c6d))
-* "fix: radix vulnerability" ([#1116](https://github.com/equinor/flyt/issues/1116)) ([9dc8f0d](https://github.com/equinor/flyt/commit/9dc8f0d30a1f523fb07e365b3df121c5b50f0a06))
-* "fix: resolved radix vulnerabilities" ([#1103](https://github.com/equinor/flyt/issues/1103)) ([c4b5fa6](https://github.com/equinor/flyt/commit/c4b5fa63d8113982a6acef8d94f12d0e39cfe423))
-* "refactor: upgrade reactflow package" ([#1115](https://github.com/equinor/flyt/issues/1115)) ([3a886d2](https://github.com/equinor/flyt/commit/3a886d244905caf1773b782a5cb7352066bbfb00))
+- "feat: initial guiding - mandatory guiding" ([#1117](https://github.com/equinor/flyt/issues/1117)) ([c848268](https://github.com/equinor/flyt/commit/c848268ee02df232750c9b05a0c7fbc61e8f9c6d))
+- "fix: radix vulnerability" ([#1116](https://github.com/equinor/flyt/issues/1116)) ([9dc8f0d](https://github.com/equinor/flyt/commit/9dc8f0d30a1f523fb07e365b3df121c5b50f0a06))
+- "fix: resolved radix vulnerabilities" ([#1103](https://github.com/equinor/flyt/issues/1103)) ([c4b5fa6](https://github.com/equinor/flyt/commit/c4b5fa63d8113982a6acef8d94f12d0e39cfe423))
+- "refactor: upgrade reactflow package" ([#1115](https://github.com/equinor/flyt/issues/1115)) ([3a886d2](https://github.com/equinor/flyt/commit/3a886d244905caf1773b782a5cb7352066bbfb00))
 
 ## [2.15.0](https://github.com/equinor/flyt/compare/v2.14.0...v2.15.0) (2026-04-28)
 
