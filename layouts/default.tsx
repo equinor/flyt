@@ -7,6 +7,7 @@ import { RightTopBarSection } from "@/components/RightTopBarSection";
 import packageJson from "../package.json";
 import { ServiceMessageBanner } from "@/components/ServiceMessageBanner";
 import { ReactNode } from "react";
+import InfoDisclaimer from "@/components/InfoDisclaimer";
 
 export const DefaultLayout = ({ children }: { children: ReactNode }) => {
   const isAuthenticated = useIsAuthenticated();
@@ -50,7 +51,7 @@ export const DefaultLayout = ({ children }: { children: ReactNode }) => {
         <RightTopBarSection isAuthenticated={isAuthenticated} />
       </TopBar>
       <ServiceMessageBanner />
-
+      <InfoDisclaimer />
       {children}
     </>
   );

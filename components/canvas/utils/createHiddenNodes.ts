@@ -1,7 +1,11 @@
 import { NodeTypes } from "@/types/NodeTypes";
 import { uid } from "@/utils/uuid";
 import { NodeDataFull, NodeDataHidden } from "@/types/NodeData";
-import { Node, Edge } from "reactflow";
+import { Node, Edge } from "@xyflow/react";
+
+type HiddenEdgeData = {
+  hiddenNodeTree: string[];
+};
 
 export const createHiddenNodes = (
   tempNodes: Node<NodeDataFull>[],
@@ -31,11 +35,11 @@ export const createHiddenNodes = (
       }
 
       // Find and filter the edge we are replacing with hidden node
-      let originalEdge: Edge | null = null;
+      let originalEdge: Edge<HiddenEdgeData> | null = null;
       tempEdges = tempEdges.reduce((newEdges: Edge[], edge) => {
         if (edge.source === tempParentNode.id && edge.target === node.id) {
           if (!originalEdge) {
-            originalEdge = edge;
+            originalEdge = edge as Edge<HiddenEdgeData>;
             originalEdge.data = {
               hiddenNodeTree: [],
             };
@@ -50,7 +54,7 @@ export const createHiddenNodes = (
       let tempParentNodeId = tempParentNode.id;
       for (let i = tempParentNode.data.depth; i < depthDeepestNode; i++) {
         const id = uid();
-        const typedOriginalEdge = originalEdge as Edge | null;
+        const typedOriginalEdge = originalEdge as Edge<HiddenEdgeData> | null;
         typedOriginalEdge?.data?.hiddenNodeTree.push(id);
         hiddenNodes.push(createHiddenNode(id, tempParentNode, i, shapeSize));
 
@@ -107,7 +111,10 @@ const createHiddenNode = (
   selectable: false,
 });
 
-const createHiddenEdge = (parentId: string, id: string) => ({
+const createHiddenEdge = (
+  parentId: string,
+  id: string
+): Edge<HiddenEdgeData> => ({
   id: `${parentId}=>${id}`,
   source: parentId,
   target: id,

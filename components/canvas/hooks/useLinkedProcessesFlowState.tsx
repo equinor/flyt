@@ -1,7 +1,7 @@
-import { NodeDataFull } from "@/types/NodeData";
+import { NodeDataCommon } from "@/types/NodeData";
 import { NodeDataApi } from "@/types/NodeDataApi";
 import { useLayoutEffect } from "react";
-import { useEdgesState, useNodesState } from "reactflow";
+import { useEdgesState, useNodesState, Node, Edge } from "@xyflow/react";
 import { createLinkedProcessesEdges } from "../utils/createLinkedProcessesEdges";
 import { createLinkedProcessesNodes } from "../utils/createLinkedProcessesNodes";
 import { getLinkedProcessesLayout } from "../utils/getLayout";
@@ -14,8 +14,8 @@ export const useLinkedProcessesFlowState = (
   apiNodes: NodeDataApi[],
   isHorizontalFlow = false
 ) => {
-  const [nodes, setNodes] = useNodesState<NodeDataFull>([]);
-  const [edges, setEdges] = useEdgesState([]);
+  const [nodes, setNodes] = useNodesState<Node<NodeDataCommon>>([]);
+  const [edges, setEdges] = useEdgesState<Edge>([]);
   const shapeSize = isHorizontalFlow
     ? chainedProcessShapeSize
     : processhierarchyShapeSize;

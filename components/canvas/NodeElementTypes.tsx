@@ -5,7 +5,7 @@ import { ChoiceNode } from "./ChoiceNode";
 import { WaitingNode } from "./WaitingNode";
 import { RootNode } from "./RootNode";
 import { HiddenNode } from "./HiddenNode";
-import { NodeTypes } from "reactflow";
+import { NodeTypes } from "@xyflow/react";
 import { LinkedProcessNode } from "./LinkedProcessNode";
 import { ProjectNode } from "./ProjectNode";
 

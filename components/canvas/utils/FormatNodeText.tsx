@@ -9,16 +9,20 @@ export function FormatNodeText({
   const text = children.toString();
   // Pattern matching for Markdown hyperlink urls
   const pattern = /\[([^\]]+)]\(([^)]+)\)/g;
-  const result = [];
+  const result: React.ReactNode[] = [];
   let lastIndex = 0;
+  let keyIndex = 0;
 
   text.replace(pattern, (match, linkText, _, offset) => {
     if (lastIndex <= offset) {
-      result.push(<>{text.slice(lastIndex, offset)}</>);
+      result.push(
+        <span key={`text-${keyIndex++}`}>{text.slice(lastIndex, offset)}</span>
+      );
     }
 
     result.push(
       <Typography
+        key={`link-${keyIndex++}`}
         className={styles[typographyProps.className ?? ""]}
         style={{ cursor: "grab" }}
         link
@@ -31,7 +35,9 @@ export function FormatNodeText({
   });
 
   if (lastIndex < text.length) {
-    result.push(<>{text.slice(lastIndex)}</>);
+    result.push(
+      <span key={`text-${keyIndex++}`}>{text.slice(lastIndex)}</span>
+    );
   }
 
   return <Typography {...typographyProps}>{result}</Typography>;

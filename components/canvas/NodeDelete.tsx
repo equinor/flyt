@@ -1,10 +1,9 @@
 import { canDeleteNode } from "@/utils/canDeleteNode";
 import { Button, Icon } from "@equinor/eds-core-react";
 import { delete_forever } from "@equinor/eds-icons";
-import { Node } from "reactflow";
-
+import { NodeDataCommon } from "@/types/NodeData";
 type NodeDelete = {
-  data: Node["data"];
+  data: NodeDataCommon;
   userCanEdit?: boolean;
   handleNodeDelete?: () => void;
   title: string;
