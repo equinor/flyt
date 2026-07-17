@@ -29,7 +29,6 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useStoreDispatch, useStoreState } from "@/hooks/storeHooks";
 
 import { AccessBox } from "@/components/AccessBox";
-import { MandatoryGuide } from "./MandatoryGuide";
 import Head from "next/head";
 import { Heart } from "components/Heart";
 import { HomeButton } from "./homeButton";
@@ -50,8 +49,7 @@ import { EditableTitle } from "components/EditableTitle";
 import { getProjectName } from "@/utils/getProjectName";
 import { accessRoles } from "@/types/AccessRoles";
 import { downloadCanvasAsPNG } from "@/utils/downloadCanvas";
-import { disableKeyboardUndoRedoShortcuts } from "@/utils/disableKeyboardUndoRedoShortcuts";
-
+import { MandatoryInfoWizard } from "@/components/MandatoryInfoWizard";
 export const CanvasLayout = ({ children }: { children: ReactNode }) => {
   const isAuthenticated = useIsAuthenticated();
   const { projectId } = useProjectId();
@@ -168,7 +166,6 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     disableKeyboardZoomShortcuts();
     disableMouseWheelZoom();
-    disableKeyboardUndoRedoShortcuts();
   }, []);
 
   if (!isAuthenticated) {
@@ -211,15 +208,20 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
         });
   }
 
-  function updateProjectName(name: string) {
+  async function updateProjectName(name: string) {
     if (name === project?.name) return;
-    projectMutation.mutate([
-      {
-        op: "replace",
-        path: "/Name",
-        value: name,
-      },
-    ]);
+
+    try {
+      await projectMutation.mutateAsync([
+        {
+          op: "replace",
+          path: "/Name",
+          value: name,
+        },
+      ]);
+    } catch (e) {
+      console.error("Failed to update project name", e);
+    }
   }
 
   function handleDuplicate() {
@@ -256,7 +258,7 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
                 <EditableTitle
                   defaultText={projectName}
                   readOnly={!userCanEdit}
-                  onSubmit={(text) => updateProjectName(text)}
+                  onSubmit={updateProjectName}
                 />
               ) : (
                 <DotProgress size={32} color={"primary"} />
@@ -370,17 +372,20 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
       )}
 
       {project && (
-        <MandatoryGuide
+        <MandatoryInfoWizard
           project={project}
           onDiscard={deleteVSM}
           updateProjectName={async (newName: string) => {
             newName = newName.trim();
+
             if (
               !newName ||
               newName === project.name ||
               newName.toLowerCase() === "untitled process"
-            )
+            ) {
               return;
+            }
+
             await updateProjectName(newName);
           }}
         />
@@ -407,8 +412,8 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
               className={styles.renameInput}
               label={"Add title"}
               defaultValue={project?.name ?? undefined}
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                updateProjectName(e.target.value)
+              onChange={async (e: ChangeEvent<HTMLInputElement>) =>
+                await updateProjectName(e.target.value)
               }
               id={"vsmObjectDescription"}
             />
