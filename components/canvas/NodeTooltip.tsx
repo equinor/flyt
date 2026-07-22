@@ -320,15 +320,17 @@ export const NodeTooltip = ({
       nodeRef={nodeRef}
     >
       {shouldShowGuide && (
-        <section className={styles.section}>
-          <Typography variant="h5">{`Step ${currentStage.step}: 
+        <>
+          <section className={styles.section}>
+            <Typography variant="h5">{`Step ${currentStage.step}: ${
               GUIDE_STAGE_TEXT[guideStageForNode ?? "output"].title
             }`}</Typography>
-          <Divider variant="small" />
-          <Typography color="#637583" variant="body_short">
-            {GUIDE_STAGE_TEXT[guideStageForNode ?? "output"].description}
-          </Typography>
-        </section>
+            <Divider variant="small" />
+            <Typography color="#637583" variant="body_short">
+              {GUIDE_STAGE_TEXT[guideStageForNode ?? "output"].description}
+            </Typography>
+          </section>
+        </>
       )}
 
       {isEditing && !isCardEditablebyUser ? (
@@ -342,36 +344,40 @@ export const NodeTooltip = ({
         renderInput()
       )}
       {shouldShowGuide && (
-        <section className={styles.section}>
-          <div className={styles.guideIndicator}>
-            <div className={currentStage.step === 1 ? styles.active : ""} />
-            <div className={currentStage.step === 2 ? styles.active : ""} />
-            <div className={currentStage.step === 3 ? styles.active : ""} />
-            <div className={currentStage.step === 4 ? styles.active : ""} />
-            <div className={currentStage.step === 5 ? styles.active : ""} />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              gap: "8px",
-              justifyContent: "space-between",
-              marginTop: "5px",
-              marginBottom: "5px",
-            }}
-          >
-            <Button variant="ghost" onClick={skipCurrentGuide}>
-              Skip guiding
-            </Button>
-            <div className={styles.guideButtonContainer}>
-              {currentStage.step !== 1 && (
-                <Button onClick={() => moveToPreviousStage()}>{"Back"}</Button>
-              )}
-              <Button onClick={() => moveToNextStage()}>
-                {currentStage.step === 5 ? "Go to Mapping" : "Next"}
-              </Button>
+        <>
+          <section className={styles.section}>
+            <div className={styles.guideIndicator}>
+              <div className={currentStage.step === 1 ? styles.active : ""} />
+              <div className={currentStage.step === 2 ? styles.active : ""} />
+              <div className={currentStage.step === 3 ? styles.active : ""} />
+              <div className={currentStage.step === 4 ? styles.active : ""} />
+              <div className={currentStage.step === 5 ? styles.active : ""} />
             </div>
-          </div>
-        </section>
+            <div
+              style={{
+                display: "flex",
+                gap: "8px",
+                justifyContent: "space-between",
+                marginTop: "5px",
+                marginBottom: "5px",
+              }}
+            >
+              <Button variant="ghost" onClick={skipCurrentGuide}>
+                Skip guiding
+              </Button>
+              <div className={styles.guideButtonContainer}>
+                {currentStage.step !== 1 && (
+                  <Button onClick={() => moveToPreviousStage()}>
+                    {"Back"}
+                  </Button>
+                )}
+                <Button onClick={() => moveToNextStage()}>
+                  {currentStage.step === 5 ? "Go to Mapping" : "Next"}
+                </Button>
+              </div>
+            </div>
+          </section>
+        </>
       )}
     </NodeTooltipContainer>
   );
