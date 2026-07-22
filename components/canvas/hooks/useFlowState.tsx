@@ -20,13 +20,20 @@ import { getVSMLayout } from "../utils/getLayout";
 import { useNodeMerge } from "./useNodeMerge";
 import { tagSelectedNode } from "@/utils/tagSelectedNode";
 import { CardAccess } from "@/types/CardAccess";
+import {
+  OptionalGuideStage,
+  toStageFromNodeType,
+} from "@/hooks/useOptionalGuide";
 
 export const useFlowState = (
   apiNodes: NodeDataApi[],
   apiEdges: EdgeDataApi[],
   userCanEdit: boolean,
   userEditCardStatus: CardAccess[],
-  disabledNodeTypes?: NodeTypes[]
+  disabledNodeTypes?: NodeTypes[],
+  autoSelectNodeType?: NodeTypes,
+  onAutoSelectHandled?: () => void,
+  currentGuideStage?: OptionalGuideStage | undefined
 ) => {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node<NodeDataFull>>(
     []
@@ -57,7 +64,19 @@ export const useFlowState = (
 
   const handleClickNode = (id?: string) => {
     const node = tempNodes.find((n) => n.id === id);
+
     if (!node) return;
+
+    // Optional guide active
+    if (currentGuideStage) {
+      const clickedStage = toStageFromNodeType(node.data.type);
+
+      // Prevent selecting any node except
+      // the currently guided one
+      if (clickedStage !== currentGuideStage) {
+        return;
+      }
+    }
     setSelectedNode(node as Node<NodeDataCommon>);
   };
 
@@ -83,6 +102,7 @@ export const useFlowState = (
         ...n,
         selected: n.id === selectedNode?.id,
       }));
+
       setNodes(updatedNodes);
     }
   };
@@ -145,6 +165,21 @@ export const useFlowState = (
 
     handleClickNode(selectedNode?.id);
   }, [apiNodes, apiEdges, userCanEdit, userEditCardStatus]);
+
+  useEffect(() => {
+    if (!autoSelectNodeType || !nodesInitialized || nodes.length === 0) {
+      return;
+    }
+
+    const targetNode = nodes.find(
+      (node) => node.data.type === autoSelectNodeType
+    );
+
+    if (targetNode) {
+      setSelectedNode(targetNode as Node<NodeDataCommon>);
+      onAutoSelectHandled?.();
+    }
+  }, [autoSelectNodeType, nodes, nodesInitialized, onAutoSelectHandled]);
 
   return {
     nodes,
