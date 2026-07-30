@@ -231,6 +231,9 @@ const Flow = ({
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onPaneClick={() => {
+          if (currentGuideStage) {
+            return;
+          }
           setSelectedNode(undefined);
           setSelectedNodeForPQIRid(undefined);
         }}

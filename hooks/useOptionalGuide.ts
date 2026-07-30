@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { NodeTypes } from "@/types/NodeTypes";
-
+import { trackGuideEvent } from "@/services/guideAnalytics";
 export type OptionalGuideStage =
   | "output"
   | "customer"
@@ -233,7 +233,11 @@ export function useOptionalGuideStage(
 
   const skipCurrentGuide = () => {
     if (!currentStage) return;
-
+    trackGuideEvent("OptionalGuideSkipped", {
+      processId,
+      step: currentStage.step,
+      stage: currentStage.stage,
+    });
     localStorage.removeItem(`guideStage:${processId}`);
 
     setCurrentStage(undefined);
