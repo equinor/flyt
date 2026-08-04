@@ -110,7 +110,7 @@ export function MandatoryInfoWizard({
           <Typography>This action cannot be undone.</Typography>
         </Dialog.CustomContent>
 
-        <Dialog.Actions
+        <div
           style={{
             display: "flex",
             justifyContent: "space-between",
@@ -125,7 +125,7 @@ export function MandatoryInfoWizard({
           <Button variant="outlined" color="danger" onClick={onDiscard}>
             Discard Process
           </Button>
-        </Dialog.Actions>
+        </div>
       </Dialog>
 
       <Scrim
