@@ -45,7 +45,10 @@ export const UserItem = ({
           <Icon data={add} size={16} />
         </Button>
       );
-    } else {
+    }
+  };
+  const renderContributor = () => {
+    if (role === "Contributor") {
       return (
         <RoleSelect
           onChange={(selectedRole) => handleChange(selectedRole)}
@@ -59,13 +62,14 @@ export const UserItem = ({
   return (
     <div className={styles.userItem}>
       <div className={styles.userDotAndName}>
+        {renderRole()}
         <UserDot name={shortName} />
         <Chip>{shortName}</Chip>
         <Typography color={colors.EQUINOR_PROMINENT}>
           {fullName || ""}
         </Typography>
       </div>
-      {renderRole()}
+      {renderContributor()}
     </div>
   );
 };

@@ -12,7 +12,6 @@ import { notifyOthers } from "@/services/notifyOthers";
 import style from "./AccessBox.module.scss";
 import { unknownErrorToString } from "utils/isError";
 import { useStoreDispatch } from "hooks/storeHooks";
-import { userAccess } from "types/UserAccess";
 import { UserAccessSearch } from "types/UserAccessSearch";
 import { Project } from "@/types/Project";
 import { useProjectId } from "@/hooks/useProjectId";
@@ -27,20 +26,45 @@ export function AccessBox(props: {
 
   return (
     <div className={style.box}>
-      <TopSection title={"User access"} handleClose={props.handleClose} />
+      <TopSection
+        title={"User access"}
+        handleClose={props.handleClose}
+        vsmProjectID={props.project.vsmProjectID}
+      />
       <AddUserAccessSection project={props.project} isAdmin={props.isAdmin} />
-      <BottomSection vsmProjectID={props.project.vsmProjectID} />
     </div>
   );
 }
 
-export function TopSection(props: { title: string; handleClose: () => void }) {
+export function TopSection(props: {
+  title: string;
+  handleClose: () => void;
+  vsmProjectID: number;
+}) {
+  const [copySuccess, setCopySuccess] = useState("");
+
+  function copyToClipboard() {
+    navigator.clipboard
+      .writeText(`${window.location.origin}/process/${props.vsmProjectID}`)
+      .then(() => {
+        setCopySuccess("Copied to clipboard!");
+        setTimeout(() => {
+          setCopySuccess("");
+        }, 2000);
+      });
+  }
   return (
     <div className={style.topSection}>
       <Typography> {props.title}</Typography>
-      <Button variant={"ghost_icon"} onClick={props.handleClose}>
-        <Icon data={close} />
-      </Button>
+      <div className={style.topSectionButtons}>
+        <Button variant={"ghost"} onClick={copyToClipboard}>
+          <Icon data={link} />
+          {copySuccess || "Copy link"}
+        </Button>
+        <Button variant={"ghost_icon"} onClick={props.handleClose}>
+          <Icon data={close} />
+        </Button>
+      </div>
     </div>
   );
 }
@@ -142,29 +166,5 @@ export function AddUserAccessSection(props: {
       isAdmin={props.isAdmin}
       onAdd={(user) => handleSubmit(user)}
     />
-  );
-}
-
-function BottomSection(props: { vsmProjectID: number }) {
-  const [copySuccess, setCopySuccess] = useState("");
-
-  function copyToClipboard() {
-    navigator.clipboard
-      .writeText(`${window.location.origin}/process/${props.vsmProjectID}`)
-      .then(() => {
-        setCopySuccess("Copied to clipboard!");
-        setTimeout(() => {
-          setCopySuccess("");
-        }, 2000);
-      });
-  }
-
-  return (
-    <div className={style.bottomSection}>
-      <Button variant={"outlined"} onClick={copyToClipboard}>
-        <Icon data={link} />
-        {copySuccess || "Copy link"}
-      </Button>
-    </div>
   );
 }

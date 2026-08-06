@@ -1,10 +1,11 @@
+import { ChangeEvent, useRef, useState } from "react";
+import { useQuery } from "react-query";
+import { LinearProgress, Search, Typography } from "@equinor/eds-core-react";
+
 import { searchUser } from "@/services/userApi";
 import { userAccess } from "@/types/UserAccess";
 import { UserAccessSearch } from "@/types/UserAccessSearch";
 import { debounce } from "@/utils/debounce";
-import { LinearProgress, Search, Typography } from "@equinor/eds-core-react";
-import { ChangeEvent, useState } from "react";
-import { useQuery } from "react-query";
 import { UserItem } from "./UserItem";
 import styles from "./UserSearch.module.scss";
 import { accessRoles } from "@/types/AccessRoles";
@@ -25,16 +26,22 @@ export const UserSearch = ({
   onAdd,
 }: UserSearch) => {
   const [searchText, setSearchText] = useState("");
+  const [debounceSearchText, setDebounceSearchText] = useState("");
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const { data: usersSearched, isLoading: loadingUsers } = useQuery(
-    ["usersSearched", searchText],
-    () => searchUser(searchText),
+    ["usersSearched", debounceSearchText],
+    () => searchUser(debounceSearchText),
     {
-      enabled: searchText.trim() !== "",
+      enabled: debounceSearchText.trim() !== "",
     }
   );
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
-    debounce(() => setSearchText(e.target.value), 1000, "userSearch");
+    const value = e.target.value;
+    setSearchText(value);
+    debounce(() => setDebounceSearchText(e.target.value), 500, "userSearch");
   };
 
   const InfoNoEditAccess = () => (
@@ -63,6 +70,13 @@ export const UserSearch = ({
     );
   };
 
+  const addHandler = (user: UserAccessSearch) => {
+    onAdd(user);
+    setSearchText("");
+    setDebounceSearchText("");
+    inputRef.current?.focus();
+  };
+
   const SearchedUserItems = () =>
     usersSearched
       ?.filter(
@@ -78,28 +92,32 @@ export const UserSearch = ({
           shortName={user.shortName.toUpperCase()}
           fullName={user.displayName}
           disabled={!isAdmin}
-          onAdd={() => onAdd(user)}
+          onAdd={() => addHandler(user)}
         />
       ));
 
   return (
     <div className={styles.container}>
+      <Typography className={styles.sectionTitle}>User who can edit</Typography>
+      {<UserItems />}
+      <div className={styles.separator} />
+      <Typography className={[styles.sectionTitle, styles.marginTop].join(" ")}>
+        Add Contributor
+      </Typography>
       {isAdmin ? (
         <Search
+          ref={inputRef}
           className={styles.searchBar}
           disabled={!isAdmin}
           autoFocus
           type={"text"}
+          value={searchText}
           onChange={handleSearchChange}
         />
       ) : (
         <InfoNoEditAccess />
       )}
       <div className={styles.userList}>
-        {<UserItems />}
-        {usersSearched && usersSearched.length > 0 && (
-          <div className={styles.separator} />
-        )}
         {loadingUsers ? <LinearProgress /> : <SearchedUserItems />}
       </div>
     </div>
