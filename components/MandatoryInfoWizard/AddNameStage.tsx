@@ -69,7 +69,7 @@ export function AddNameStage({
         </Button>
 
         <Button onClick={onNext} disabled={isNextDisabled}>
-          Create
+          Next
         </Button>
       </Card.Actions>
     </Card>

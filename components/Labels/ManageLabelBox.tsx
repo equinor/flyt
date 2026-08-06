@@ -127,7 +127,7 @@ export function AddLabelsSection(props: {
     <>
       <Search
         aria-label="search"
-        placeholder="Search"
+        placeholder="Search labels"
         autoComplete="off"
         onChange={handleChange}
         autoFocus
