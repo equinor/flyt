@@ -8,19 +8,9 @@ import { add } from "@equinor/eds-icons";
 export function NewProcessButton(): JSX.Element {
   const router = useRouter();
 
-  const clearGuideStorage = () => {
-    Object.keys(localStorage)
-      .filter((key) => key.startsWith("guideStage:"))
-      .forEach((key) => localStorage.removeItem(key));
-  };
-
-  const newProcessMutation = useMutation(() => {
-    clearGuideStorage();
-
-    return createProject().then((value) =>
-      router.push(`/process/${value.data}`)
-    );
-  });
+  const newProcessMutation = useMutation(() =>
+    createProject().then((value) => router.push(`/process/${value.data}`))
+  );
 
   return (
     <button

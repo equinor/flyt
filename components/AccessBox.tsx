@@ -23,12 +23,29 @@ export function AccessBox(props: {
   handleClose: () => void;
   isAdmin: boolean;
 }): JSX.Element {
+  const { data: userAccesses, isLoading } = useQuery(
+    ["userAccesses", props.project.vsmProjectID],
+    () =>
+      BaseAPIServices.get(
+        `/api/v2.0/userAccess/${props.project.vsmProjectID}`
+      ).then((value) => {
+        return value.data;
+      }),
+    { enabled: !!(props.project && props.project.vsmProjectID) }
+  );
+
   if (!props.project) return <p>Missing project</p>;
+  const { vsmProjectID } = props.project;
 
   return (
     <div className={style.box}>
       <TopSection title={"User access"} handleClose={props.handleClose} />
-      <AddUserAccessSection project={props.project} isAdmin={props.isAdmin} />
+      <MiddleSection
+        users={userAccesses}
+        vsmId={vsmProjectID}
+        loading={isLoading}
+        isAdmin={props.isAdmin}
+      />
       <BottomSection vsmProjectID={props.project.vsmProjectID} />
     </div>
   );
@@ -45,8 +62,10 @@ export function TopSection(props: { title: string; handleClose: () => void }) {
   );
 }
 
-export function AddUserAccessSection(props: {
-  project: Project;
+function MiddleSection(props: {
+  users: userAccess[];
+  vsmId: number;
+  loading: boolean;
   isAdmin: boolean;
 }) {
   const dispatch = useStoreDispatch();
@@ -57,18 +76,6 @@ export function AddUserAccessSection(props: {
   const account = useAccount(accounts[0] || {});
 
   const { projectId } = useProjectId();
-
-  const { data: userAccesses, isLoading } = useQuery(
-    ["userAccesses", props.project.vsmProjectID],
-    () =>
-      BaseAPIServices.get(
-        `/api/v2.0/userAccess/${props.project.vsmProjectID}`
-      ).then((value) => {
-        return value.data;
-      }),
-    { enabled: !!(props.project && props.project.vsmProjectID) }
-  );
-
   const addUserMutation = useMutation(
     (newUser: {
       user: UserAccessSearch["shortName"];
@@ -120,13 +127,13 @@ export function AddUserAccessSection(props: {
     });
     addUserMutation.mutate({
       user: user.shortName,
-      vsmId: props.project.vsmProjectID,
+      vsmId: props.vsmId,
       role: accessRoles.Contributor,
       fullName: user.displayName,
     });
   };
 
-  if (isLoading) {
+  if (props.loading) {
     return <p>Loading...</p>;
   }
   return (
@@ -135,10 +142,10 @@ export function AddUserAccessSection(props: {
       onRemove={(user) =>
         removeUserMutation.mutate({
           accessId: user.accessId,
-          vsmId: props.project.vsmProjectID,
+          vsmId: props.vsmId,
         })
       }
-      users={userAccesses || []}
+      users={props.users}
       isAdmin={props.isAdmin}
       onAdd={(user) => handleSubmit(user)}
     />

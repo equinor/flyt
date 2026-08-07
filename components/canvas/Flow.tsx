@@ -42,16 +42,12 @@ import type { CardAccess } from "@/types/CardAccess";
 import { getQIPRContainerWidth } from "./utils/getQIPRContainerWidth";
 import { NodeTypes } from "@/types/NodeTypes";
 import { CanvasEdgeData } from "./utils/createEdges";
-import { type OptionalGuideStage } from "@/hooks/useOptionalGuide";
+
 type CanvasProps = {
   apiNodes: NodeDataApi[];
   apiEdges: EdgeDataApi[];
   userCanEdit: boolean;
   userEditCardStatus: CardAccess[];
-  autoSelectNodeType?: NodeTypes;
-  onAutoSelectHandled?: () => void;
-  isOptionalGuideActive?: boolean; // NEW
-  currentGuideStage?: OptionalGuideStage;
 };
 
 const Flow = ({
@@ -59,10 +55,6 @@ const Flow = ({
   apiEdges,
   userCanEdit,
   userEditCardStatus,
-  autoSelectNodeType,
-  onAutoSelectHandled,
-  isOptionalGuideActive,
-  currentGuideStage,
 }: CanvasProps) => {
   const {
     nodes,
@@ -78,16 +70,7 @@ const Flow = ({
     handleSetSelectedEdge,
     edgeToBeDeletedId,
     setEdgeToBeDeletedId,
-  } = useFlowState(
-    apiNodes,
-    apiEdges,
-    userCanEdit,
-    userEditCardStatus,
-    undefined,
-    autoSelectNodeType,
-    onAutoSelectHandled,
-    currentGuideStage
-  );
+  } = useFlowState(apiNodes, apiEdges, userCanEdit, userEditCardStatus);
   const { deletePQIR } = usePQIRMutations();
   const { addNode } = useNodeAdd();
   const { onNodeDragStart, onNodeDrag, onNodeDragStop } = useNodeDrag();
@@ -258,16 +241,12 @@ const Flow = ({
         preventScrolling={selectedNode && hoveredNode?.id !== selectedNode.id}
         ref={ref}
       >
-        {!isOptionalGuideActive && (
-          <>
-            <MiniMapCustom />
-            <Controls className={styles.controls} showInteractive={false}>
-              <ControlButton className={styles.zoomContainer}>
-                <ZoomLevel />
-              </ControlButton>
-            </Controls>
-          </>
-        )}
+        <MiniMapCustom />
+        <Controls className={styles.controls} showInteractive={false}>
+          <ControlButton className={styles.zoomContainer}>
+            <ZoomLevel />
+          </ControlButton>
+        </Controls>
         {menuData && (
           <ContextMenu
             menuData={menuData}
