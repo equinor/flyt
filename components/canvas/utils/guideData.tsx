@@ -11,21 +11,21 @@ export const GUIDE_STAGE_TEXT: Record<
   customer: {
     title: "Customer",
     description:
-      "Which role or system recieves the Output? List the customer(s).",
+      "Who receives or benefits from the output of this process? Describe the customer(s).",
   },
   input: {
     title: "Input",
     description:
-      "What triggers you to begin the process? List the input(s). (Eg. information, materials, tools, a weekly meeting.)",
+      "What is needed for the process to start or continue? List the essential input(s).",
   },
   supplier: {
     title: "Supplier",
     description:
-      "Who or what supplies the input? List the supplier(s).(E.g. collaborators, data systems, plans, requirements)",
+      "Who or what provides the required inputs for this process? Describe the supplier(s).",
   },
   "main activity": {
     title: "Main activity",
     description:
-      "Write one main activity in the process. More main activities can be added in the next step. One per card.",
+      "Describe the primary activity that transforms the input into the expected output.",
   },
 };

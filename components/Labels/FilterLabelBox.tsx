@@ -49,7 +49,7 @@ function SearchSection(props: { setSearchText: (searchText: string) => void }) {
     <div className={styles.searchSection}>
       <Search
         aria-label="search"
-        placeholder="Search"
+        placeholder="Search labels"
         autoComplete="off"
         className={styles.searchBar}
         onChange={(e) => {

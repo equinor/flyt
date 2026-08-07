@@ -8,7 +8,7 @@ export const RoleSelect = (props: {
   return (
     <select
       defaultValue={props.defaultValue}
-      className={props.disabled ? styles.roleSelectDisable : styles.roleSelect}
+      className={styles.roleSelect}
       id="AccessRoles"
       name="AccessRole"
       onChange={(event) => props.onChange(event.target.value)}
