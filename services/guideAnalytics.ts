@@ -2,12 +2,14 @@ import { appInsights } from "./appInsights";
 
 type AnalyticsPayload = {
   processId: string;
-  processName?: string;
-  canvasName?: string;
   step?: number;
   stage?: string;
 };
-
+export const GUIDE_EVENTS = {
+  NOT_STARTED: "OptionalGuideNotStarted",
+  COMPLETED: "OptionalGuideCompleted",
+  SKIPPED: "OptionalGuideSkipped",
+} as const;
 export const trackGuideEvent = (
   eventName: string,
   payload: AnalyticsPayload
@@ -18,12 +20,8 @@ export const trackGuideEvent = (
     },
     {
       processId: payload.processId,
-      processName: payload.processName ?? "",
-      canvasName: payload.canvasName ?? "",
       step: payload.step?.toString() ?? "",
       stage: payload.stage ?? "",
     }
   );
-
-  console.log("📊 Event Sent:", eventName, payload);
 };

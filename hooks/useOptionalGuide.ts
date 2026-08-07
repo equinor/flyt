@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { NodeTypes } from "@/types/NodeTypes";
-import { trackGuideEvent } from "@/services/guideAnalytics";
+import { GUIDE_EVENTS, trackGuideEvent } from "@/services/guideAnalytics";
 export type OptionalGuideStage =
   | "output"
   | "customer"
@@ -213,6 +213,9 @@ export function useOptionalGuideStage(
     markStageAsCompleted(processId, currentStage.stage);
 
     if (currentStage.step === 5) {
+      trackGuideEvent(GUIDE_EVENTS.COMPLETED, {
+        processId,
+      });
       localStorage.removeItem(`guideStage:${processId}`);
 
       setCurrentStage(undefined);
@@ -233,11 +236,17 @@ export function useOptionalGuideStage(
 
   const skipCurrentGuide = () => {
     if (!currentStage) return;
-    trackGuideEvent("OptionalGuideSkipped", {
-      processId,
-      step: currentStage.step,
-      stage: currentStage.stage,
-    });
+    if (currentStage.step === 1) {
+      trackGuideEvent(GUIDE_EVENTS.NOT_STARTED, {
+        processId,
+      });
+    } else {
+      trackGuideEvent(GUIDE_EVENTS.SKIPPED, {
+        processId,
+        step: currentStage.step,
+        stage: currentStage.stage,
+      });
+    }
     localStorage.removeItem(`guideStage:${processId}`);
 
     setCurrentStage(undefined);
