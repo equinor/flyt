@@ -12,7 +12,7 @@ import { URLPrompt } from "./URLPrompt";
 
 import colors from "theme/colors";
 import { useStoreActions, useStoreState } from "easy-peasy";
-import { useOptionalGuideContext } from "@/components/canvas/hooks/optionalGuideContext";
+
 Icon.add({ link });
 
 export default function MarkdownEditor(props: {
@@ -45,8 +45,7 @@ export default function MarkdownEditor(props: {
   const missingText = requireText && text?.length === 0;
   const undoRedoSynced = useStoreState((s: any) => s.undoRedoSynced) as boolean;
   const setUndoRedoSynced = useStoreActions((a: any) => a.setUndoRedoSynced);
-  const { currentStage } = useOptionalGuideContext();
-  const isGuideActive = !!currentStage;
+
   useEffect(() => {
     if (undoRedoSynced) {
       setText(defaultText);
@@ -150,7 +149,7 @@ export default function MarkdownEditor(props: {
             onChange={setAndPatchText}
             preview={editMode ? "edit" : "preview"}
             extraCommands={[]}
-            commands={isGuideActive ? [] : [markdownLink]}
+            commands={[markdownLink]}
             hideToolbar={!editMode}
             previewOptions={{
               rehypePlugins: [[rehypeSanitize]],

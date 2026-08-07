@@ -56,24 +56,14 @@
   border-radius: 4px;
 }
 
-.labelContainer[data-direction="column"] {
-  flex-direction: column;
-  height: 40vh;
-}
-
-.labelContainer[data-direction="row"] {
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
 @media (max-width: 1024px) {
-  .labelContainer:not([data-direction]) {
+  .labelContainer {
     flex-direction: column;
   }
 }
 
 @media (min-width: 1025px) {
-  .labelContainer:not([data-direction]) {
+  .labelContainer {
     flex-direction: row;
     flex-wrap: wrap;
   }
