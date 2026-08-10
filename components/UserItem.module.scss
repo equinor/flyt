@@ -21,3 +21,16 @@
   margin-left: 12;
   margin-right: 10px !important;
 }
+
+.highlighted {
+  animation: highlightBackground 2s ease-in-out;
+}
+
+@keyframes highlightBackground {
+  0% {
+    background-color: #deedee;
+  }
+  100% {
+    background-color: transparent;
+  }
+}

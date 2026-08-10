@@ -1,4 +1,4 @@
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useQuery } from "react-query";
 import { LinearProgress, Search, Typography } from "@equinor/eds-core-react";
 
@@ -27,6 +27,7 @@ export const UserSearch = ({
 }: UserSearch) => {
   const [searchText, setSearchText] = useState("");
   const [debounceSearchText, setDebounceSearchText] = useState("");
+  const [selectedUser, setSelectedUser] = useState<string | null>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -58,6 +59,7 @@ export const UserSearch = ({
       users &&
       users.map((user) => (
         <UserItem
+          selectedUser={selectedUser?.toUpperCase()}
           key={user.accessId}
           shortName={user.user}
           fullName={user.fullName}
@@ -70,7 +72,17 @@ export const UserSearch = ({
     );
   };
 
+  useEffect(() => {
+    if (selectedUser) {
+      const timer = setTimeout(() => {
+        setSelectedUser(null);
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [selectedUser]);
+
   const addHandler = (user: UserAccessSearch) => {
+    setSelectedUser(user.shortName);
     onAdd(user);
     setSearchText("");
     setDebounceSearchText("");
@@ -88,6 +100,7 @@ export const UserSearch = ({
       )
       .map((user) => (
         <UserItem
+          selectedUser={selectedUser?.toUpperCase()}
           key={user.shortName}
           shortName={user.shortName.toUpperCase()}
           fullName={user.displayName}

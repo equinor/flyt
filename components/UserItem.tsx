@@ -6,6 +6,7 @@ import { UserDot } from "./UserDot";
 import styles from "./UserItem.module.scss";
 
 type userItem = {
+  selectedUser?: string | null;
   shortName: string;
   fullName: string | null;
   role?: string;
@@ -16,6 +17,7 @@ type userItem = {
 };
 
 export const UserItem = ({
+  selectedUser,
   shortName,
   fullName,
   role,
@@ -60,7 +62,12 @@ export const UserItem = ({
   };
 
   return (
-    <div className={styles.userItem}>
+    <div
+      className={[
+        styles.userItem,
+        selectedUser === shortName ? styles.highlighted : "",
+      ].join(" ")}
+    >
       <div className={styles.userDotAndName}>
         {renderRole()}
         <UserDot name={shortName} />
