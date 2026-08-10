@@ -1,5 +1,25 @@
 # Changelog
 
+## [2.17.0](https://github.com/equinor/flyt/compare/v2.16.0...v2.17.0) (2026-08-07)
+
+
+### Features
+
+* add initial guiding implementation ([#1136](https://github.com/equinor/flyt/issues/1136)) ([cf85d94](https://github.com/equinor/flyt/commit/cf85d94710c39c0f66059352f15964efb25dc197))
+* added info sensitive disclaimer ([#1125](https://github.com/equinor/flyt/issues/1125)) ([6741491](https://github.com/equinor/flyt/commit/67414912c686772eeb36a362adb1688c9b095927))
+
+
+### Bug Fixes
+
+* Dockerfile updated to resolve radix vulnerabilities ([#1130](https://github.com/equinor/flyt/issues/1130)) ([fcafa65](https://github.com/equinor/flyt/commit/fcafa659a1cf1c71ed7e80af0c3f161e063a382c))
+* optional guiding issue fixes ([#1141](https://github.com/equinor/flyt/issues/1141)) ([2cd45a2](https://github.com/equinor/flyt/commit/2cd45a2344fc1a229b290de1a1cd9e4dc93821e4))
+
+
+### Reverts
+
+* pr "feat: add initial guiding implementation" ([#1144](https://github.com/equinor/flyt/issues/1144)) ([986bbb8](https://github.com/equinor/flyt/commit/986bbb83bea65d693d08ff6cb034329991a45813))
+* pr optional guiding issue fixes" ([#1143](https://github.com/equinor/flyt/issues/1143)) ([e09b98f](https://github.com/equinor/flyt/commit/e09b98fd560c4c3617a511a21ce609c0772317b1))
+
 ## [2.16.0](https://github.com/equinor/flyt/compare/v2.15.0...v2.16.0) (2026-06-22)
 
 
