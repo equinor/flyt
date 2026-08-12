@@ -1,21 +1,32 @@
-.roleSelect {
-  /* Navigation/Menu Title */
+@import "styles/_variables.scss";
 
-  font-family: Equinor, sans-serif;
-  font-size: 16px;
-  line-height: 16px;
-  /* identical to box height, or 100% */
-
+.container {
   display: flex;
   align-items: center;
-  letter-spacing: 0.2px;
+  justify-content: space-between;
+  gap: 12px;
+}
 
-  min-width: 110px;
-  border: 0;
-  background: transparent;
+.minimizeIcon {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 2px solid $equinor_PROMINENT;
+  cursor: pointer;
+  padding: 0px;
+  margin: 0px;
+}
 
-  // Replace the chevron with a green one
-  -webkit-appearance: none; // Hide the original chevron
-  background: url(/chevron_down.svg) no-repeat right; // Add svg chevron
-  background-position-x: 90px; // Adjust placement
+.container .roleText {
+  font-family: Equinor, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.roleSelectDisable {
+  pointer-events: none;
+  opacity: 0.5;
 }
