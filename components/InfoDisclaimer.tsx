@@ -11,12 +11,14 @@ export const InfoDisclaimer = (): JSX.Element => {
   );
 
   useEffect(() => {
-    if (!dontShowAgain) {
+    const dismissedForTab = sessionStorage.getItem("infoDisclaimerDismissed");
+    if (!dontShowAgain && !dismissedForTab) {
       setOpen(true);
     }
   }, [dontShowAgain]);
 
   const handleClose = () => {
+    sessionStorage.setItem("infoDisclaimerDismissed", "true");
     if (dontShowAgain) {
       setDontShowAgain(true);
     }
