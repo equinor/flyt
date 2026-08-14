@@ -3,20 +3,24 @@ import { Button, Typography, Scrim, Checkbox } from "@equinor/eds-core-react";
 import useLocalStorage from "../hooks/useLocalStorage";
 import styles from "./InfoDisclaimer.module.scss";
 import colors from "../theme/colors";
+import { useIsAuthenticated } from "@azure/msal-react";
 export const InfoDisclaimer = (): JSX.Element => {
   const [open, setOpen] = useState(false);
+  const isAuthenticated = useIsAuthenticated();
   const [dontShowAgain, setDontShowAgain] = useLocalStorage(
     "infoDisclaimer",
     false
   );
 
   useEffect(() => {
-    if (!dontShowAgain) {
+    const dismissedForTab = sessionStorage.getItem("infoDisclaimerDismissed");
+    if (isAuthenticated && !dontShowAgain && !dismissedForTab) {
       setOpen(true);
     }
   }, [dontShowAgain]);
 
   const handleClose = () => {
+    sessionStorage.setItem("infoDisclaimerDismissed", "true");
     if (dontShowAgain) {
       setDontShowAgain(true);
     }
