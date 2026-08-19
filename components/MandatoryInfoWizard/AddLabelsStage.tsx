@@ -104,7 +104,7 @@ export function AddLabelsStage({
             Back
           </Button>
 
-          <Button onClick={onFinish}>Finish</Button>
+          <Button onClick={onFinish}>Complete</Button>
         </div>
       </Card.Actions>
     </Card>
