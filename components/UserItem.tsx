@@ -6,6 +6,7 @@ import { UserDot } from "./UserDot";
 import styles from "./UserItem.module.scss";
 
 type userItem = {
+  selectedUser?: string | null;
   shortName: string;
   fullName: string | null;
   role?: string;
@@ -16,6 +17,7 @@ type userItem = {
 };
 
 export const UserItem = ({
+  selectedUser,
   shortName,
   fullName,
   role,
@@ -45,7 +47,11 @@ export const UserItem = ({
           <Icon data={add} size={16} />
         </Button>
       );
-    } else {
+    }
+  };
+
+  const renderContributor = () => {
+    if (role === "Contributor") {
       return (
         <RoleSelect
           onChange={(selectedRole) => handleChange(selectedRole)}
@@ -57,15 +63,21 @@ export const UserItem = ({
   };
 
   return (
-    <div className={styles.userItem}>
+    <div
+      className={[
+        styles.userItem,
+        selectedUser === shortName ? styles.highlighted : "",
+      ].join(" ")}
+    >
       <div className={styles.userDotAndName}>
+        {renderRole()}
         <UserDot name={shortName} />
         <Chip>{shortName}</Chip>
         <Typography color={colors.EQUINOR_PROMINENT}>
           {fullName || ""}
         </Typography>
       </div>
-      {renderRole()}
+      {renderContributor()}
     </div>
   );
 };
