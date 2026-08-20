@@ -14,6 +14,7 @@ export type AddNameStageProps = {
 export type GiveAccessStageProps = {
   project: Project;
   processName: string;
+  loading: boolean;
   onBack: () => void;
   onNext: () => void;
   onRequestDiscard: () => void;

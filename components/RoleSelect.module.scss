@@ -1,23 +1,32 @@
-%roleSelectBase {
-  font-family: Equinor, sans-serif;
-  font-size: 16px;
-  line-height: 16px;
+@import "styles/_variables.scss";
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.minimizeIcon {
+  width: 16px;
+  height: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
-  letter-spacing: 0.2px;
-  min-width: 110px;
-  border: 0;
-  background: transparent;
-  -webkit-appearance: none; // Hide the original chevron
+  border-radius: 50%;
+  border: 2px solid $equinor_PROMINENT;
+  cursor: pointer;
+  padding: 0px;
+  margin: 0px;
 }
-.roleSelect {
-  @extend %roleSelectBase;
-  background: url(/chevron_down.svg) no-repeat right;
-  background-position: 90px 25%;
+
+.container .roleText {
+  font-family: Equinor, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
 }
+
 .roleSelectDisable {
-  @extend %roleSelectBase;
-  background: url(/chevron_down_disable.svg) no-repeat right;
-  background-position: 90px 25%;
+  pointer-events: none;
+  opacity: 0.5;
 }

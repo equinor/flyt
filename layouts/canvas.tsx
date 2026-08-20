@@ -55,7 +55,7 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
   const { projectId } = useProjectId();
 
   const router = useRouter();
-  const { data: project } = useQuery(["project", projectId], () =>
+  const { data: project, isLoading } = useQuery(["project", projectId], () =>
     getProject(projectId)
   );
 
@@ -375,6 +375,7 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
         <MandatoryInfoWizard
           project={project}
           onDiscard={deleteVSM}
+          loading={isLoading}
           updateProjectName={async (newName: string) => {
             newName = newName.trim();
 

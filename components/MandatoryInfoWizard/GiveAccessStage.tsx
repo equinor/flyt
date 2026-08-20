@@ -9,6 +9,7 @@ export function GiveAccessStage({
   processName,
   onBack,
   onNext,
+  loading,
   onRequestDiscard,
 }: GiveAccessStageProps) {
   return (
@@ -78,7 +79,12 @@ export function GiveAccessStage({
             flexGrow: 1,
           }}
         >
-          <AddUserAccessSection project={project} isAdmin />
+          <AddUserAccessSection
+            users={project.userAccesses}
+            vsmId={project.vsmProjectID}
+            loading={loading}
+            isAdmin
+          />
         </div>
       </Card.Content>
 

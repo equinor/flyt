@@ -27,6 +27,13 @@
   padding: 16px;
 }
 
+.topSectionButtons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
 @keyframes fade-in {
   from {
     opacity: 0;
