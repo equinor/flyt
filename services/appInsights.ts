@@ -5,8 +5,8 @@ const appInsightsConnectionString =
   process.env.NEXT_PUBLIC_APPINSIGHTS_CONNECTION_STRING?.trim();
 
 if (!appInsightsConnectionString) {
-  throw new Error(
-    "NEXT_PUBLIC_APPINSIGHTS_CONNECTION_STRING is required in environment variables"
+  console.error(
+    "Application Insights connection string is not defined. Please set the NEXT_PUBLIC_APPINSIGHTS_CONNECTION_STRING environment variable."
   );
 }
 
