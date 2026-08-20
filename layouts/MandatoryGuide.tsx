@@ -98,11 +98,13 @@ type GiveAccessStageProps = {
   onBack: () => void;
   onNext: () => void;
   onRequestDiscard: () => void;
+  loading: boolean;
 };
 
 function GiveAccessStage({
   project,
   processName,
+  loading,
   onBack,
   onNext,
   onRequestDiscard,
@@ -168,7 +170,12 @@ function GiveAccessStage({
             flexGrow: 1,
           }}
         >
-          <AddUserAccessSection project={project} isAdmin={true} />
+          <AddUserAccessSection
+            users={project.userAccesses}
+            vsmId={project.vsmProjectID}
+            loading={loading}
+            isAdmin
+          />
         </div>
       </Card.Content>
       <Card.Actions
@@ -300,12 +307,14 @@ type MandatoryGuideProps = {
   onDiscard: () => void;
   updateProjectName: (name: string) => Promise<void>;
   project: Project;
+  loading: boolean;
 };
 
 export function MandatoryGuide({
   project,
   updateProjectName,
   onDiscard,
+  loading,
 }: MandatoryGuideProps) {
   const threshold = new Date();
   threshold.setMinutes(threshold.getMinutes() - 1);
@@ -416,6 +425,7 @@ export function MandatoryGuide({
           <GiveAccessStage
             project={project}
             processName={project.name ?? "Untitled Process"}
+            loading={loading}
             onBack={moveToPreviousStage}
             onNext={moveToNextStage}
             onRequestDiscard={() => setShowDiscardConfirmation(true)}

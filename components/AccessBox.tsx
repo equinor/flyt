@@ -41,7 +41,7 @@ export function AccessBox(props: {
         handleClose={props.handleClose}
         vsmProjectID={props.project.vsmProjectID}
       />
-      <MiddleSection
+      <AddUserAccessSection
         users={userAccesses}
         vsmId={vsmProjectID}
         loading={isLoading}
@@ -82,103 +82,11 @@ export function TopSection(props: {
     </div>
   );
 }
+
 export function AddUserAccessSection(props: {
-  project: Project;
-  isAdmin: boolean;
-}) {
-  const dispatch = useStoreDispatch();
-  const queryClient = useQueryClient();
-  const [isUserAddList, setisUserAddList] = useState<string[]>([]);
-  const { accounts } = useMsal();
-  const account = useAccount(accounts[0] || {});
-  const { projectId } = useProjectId();
-  const { data: userAccesses, isLoading } = useQuery(
-    ["userAccesses", props.project.vsmProjectID],
-    () =>
-      BaseAPIServices.get(
-        `/api/v2.0/userAccess/${props.project.vsmProjectID}`
-      ).then((value) => {
-        return value.data;
-      }),
-    { enabled: !!(props.project && props.project.vsmProjectID) }
-  );
-  const addUserMutation = useMutation(
-    (newUser: {
-      user: UserAccessSearch["shortName"];
-      vsmId: number;
-      role: string;
-      fullName: UserAccessSearch["displayName"];
-    }) => userApi.add(newUser),
-    {
-      onSuccess: (response) => {
-        const updatedUserList = isUserAddList.filter(
-          (id) => response.data.user !== id
-        );
-        setisUserAddList(updatedUserList);
-        void notifyOthers("Gave access to a new user", projectId, account);
-        void queryClient.invalidateQueries();
-      },
-      onError: (e: Error | null) =>
-        dispatch.setSnackMessage(unknownErrorToString(e)),
-    }
-  );
-  const removeUserMutation = useMutation(
-    (props: { accessId: number; vsmId: number }) => userApi.remove(props),
-    {
-      onSuccess: () => {
-        void notifyOthers("Removed access for user", projectId, account);
-        return queryClient.invalidateQueries();
-      },
-      onError: (e: Error | null) =>
-        dispatch.setSnackMessage(unknownErrorToString(e)),
-    }
-  );
-  const changeUserMutation = useMutation(
-    (props: { user: { accessId: number }; role: string }) =>
-      userApi.update(props),
-    {
-      onSuccess() {
-        void notifyOthers("Updated access for some user", projectId, account);
-        return queryClient.invalidateQueries("userAccesses");
-      },
-      onError: (e: Error | null) =>
-        dispatch.setSnackMessage(unknownErrorToString(e)),
-    }
-  );
-  const handleSubmit = (user: UserAccessSearch) => {
-    if (isUserAddList?.includes(user.email)) return;
-    setisUserAddList((prev) => {
-      return [...prev, user.email];
-    });
-    addUserMutation.mutate({
-      user: user.shortName,
-      vsmId: props.project.vsmProjectID,
-      role: accessRoles.Contributor,
-      fullName: user.displayName,
-    });
-  };
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-  return (
-    <UserSearch
-      onRoleChange={(user, role) => changeUserMutation.mutate({ user, role })}
-      onRemove={(user) =>
-        removeUserMutation.mutate({
-          accessId: user.accessId,
-          vsmId: props.project.vsmProjectID,
-        })
-      }
-      users={userAccesses || []}
-      isAdmin={props.isAdmin}
-      onAdd={(user) => handleSubmit(user)}
-    />
-  );
-}
-function MiddleSection(props: {
   users: userAccess[];
   vsmId: number;
-  loading: boolean;
+  loading?: boolean;
   isAdmin: boolean;
 }) {
   const dispatch = useStoreDispatch();
@@ -245,7 +153,7 @@ function MiddleSection(props: {
   };
 
   if (props.loading) {
-    return <p>Loading...</p>;
+    return <p style={{ paddingLeft: 10 }}>Loading...</p>;
   }
   return (
     <UserSearch

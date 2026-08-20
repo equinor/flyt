@@ -17,6 +17,7 @@ export type GiveAccessStageProps = {
   onBack: () => void;
   onNext: () => void;
   onRequestDiscard: () => void;
+  loading: boolean;
 };
 
 export type AddLabelsStageProps = {

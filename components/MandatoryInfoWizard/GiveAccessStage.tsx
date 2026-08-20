@@ -7,6 +7,7 @@ import { GiveAccessStageProps } from "./types";
 export function GiveAccessStage({
   project,
   processName,
+  loading,
   onBack,
   onNext,
   onRequestDiscard,
@@ -18,7 +19,7 @@ export function GiveAccessStage({
         display: "flex",
         flexDirection: "column",
         width: "60vw",
-        height: "80vh",
+        maxHeight: "90vh",
         gap: 20,
         padding: 0,
         borderRadius: 4,
@@ -78,7 +79,12 @@ export function GiveAccessStage({
             flexGrow: 1,
           }}
         >
-          <AddUserAccessSection project={project} isAdmin />
+          <AddUserAccessSection
+            users={project.userAccesses}
+            vsmId={project.vsmProjectID}
+            loading={loading}
+            isAdmin
+          />
         </div>
       </Card.Content>
 

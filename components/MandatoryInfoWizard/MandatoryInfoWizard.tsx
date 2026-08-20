@@ -13,12 +13,14 @@ type Props = {
   project: Project;
   onDiscard: () => void;
   updateProjectName: (name: string) => Promise<void>;
+  loading: boolean;
 };
 
 export function MandatoryInfoWizard({
   project,
   updateProjectName,
   onDiscard,
+  loading,
 }: Props) {
   const threshold = new Date();
   threshold.setMinutes(threshold.getMinutes() - 1);
@@ -146,6 +148,7 @@ export function MandatoryInfoWizard({
         {stage === "giveAccesses" && (
           <GiveAccessStage
             project={project}
+            loading={loading}
             processName={project.name ?? "Untitled Process"}
             onBack={moveBack}
             onNext={moveForward}
