@@ -1,3 +1,4 @@
+import { forwardRef, useRef } from "react";
 import colors from "@/theme/colors";
 import { Button, Chip, Icon, Typography } from "@equinor/eds-core-react";
 import { add } from "@equinor/eds-icons";
@@ -16,16 +17,17 @@ type userItem = {
   disabled: boolean;
 };
 
-export const UserItem = ({
-  selectedUser,
-  shortName,
-  fullName,
-  role,
-  onRoleChange,
-  onRemove,
-  onAdd,
-  disabled,
-}: userItem) => {
+export const UserItem = forwardRef<HTMLDivElement, userItem>((props, ref) => {
+  const {
+    selectedUser,
+    shortName,
+    fullName,
+    role,
+    onRoleChange,
+    onRemove,
+    onAdd,
+    disabled,
+  } = props;
   function handleChange(role: string) {
     if (role === "Remove" && onRemove) {
       onRemove();
@@ -61,13 +63,13 @@ export const UserItem = ({
       );
     }
   };
-
   return (
     <div
       className={[
         styles.userItem,
         selectedUser === shortName ? styles.highlighted : "",
       ].join(" ")}
+      ref={ref}
     >
       <div className={styles.userDotAndName}>
         {renderRole()}
@@ -80,4 +82,4 @@ export const UserItem = ({
       {renderContributor()}
     </div>
   );
-};
+});
