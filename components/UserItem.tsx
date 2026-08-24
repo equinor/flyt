@@ -84,3 +84,5 @@ export const UserItem = forwardRef<HTMLDivElement, userItem>((props, ref) => {
     </div>
   );
 });
+
+UserItem.displayName = "UserItem";
