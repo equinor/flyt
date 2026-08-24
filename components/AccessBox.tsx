@@ -158,7 +158,7 @@ function MiddleSection(props: {
   };
 
   if (props.loading) {
-    return <p>Loading...</p>;
+    return <p style={{ paddingLeft: 10 }}>Loading...</p>;
   }
   return (
     <UserSearch
