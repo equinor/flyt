@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState, useMemo } from "react";
 import { useQuery } from "react-query";
 import { LinearProgress, Search, Typography } from "@equinor/eds-core-react";
 
@@ -30,6 +30,7 @@ export const UserSearch = ({
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const targetIndexRef = useRef<HTMLDivElement | null>(null);
 
   const { data: usersSearched, isLoading: loadingUsers } = useQuery(
     ["usersSearched", debounceSearchText],
@@ -89,25 +90,46 @@ export const UserSearch = ({
     inputRef.current?.focus();
   };
 
-  const SearchedUserItems = () =>
-    usersSearched
-      ?.filter(
+  const filteredSearchResults = useMemo(
+    () =>
+      usersSearched?.filter(
         (userSearched) =>
           !users.some(
             (userWithRole) =>
               userWithRole.user.toLowerCase() === userSearched.shortName
           )
-      )
-      .map((user) => (
+      ),
+
+    [usersSearched, users]
+  );
+
+  const resultCount = filteredSearchResults?.length ?? 0;
+  const targetIndex = resultCount >= 4 ? 3 : resultCount - 1;
+
+  useEffect(() => {
+    if (resultCount >= 0) {
+      targetIndexRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }
+  }, [resultCount]);
+
+  const SearchedUserItems = () => (
+    <>
+      {filteredSearchResults?.map((user, index) => (
         <UserItem
           key={user.shortName}
+          ref={index === targetIndex ? targetIndexRef : null}
           selectedUser={selectedUser?.toUpperCase()}
           shortName={user.shortName.toUpperCase()}
           fullName={user.displayName}
           disabled={!isAdmin}
           onAdd={() => addHandler(user)}
         />
-      ));
+      ))}
+    </>
+  );
 
   return (
     <div className={styles.container}>
