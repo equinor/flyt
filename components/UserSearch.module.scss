@@ -4,7 +4,7 @@
   padding: 16px;
   display: flex;
   flex-direction: column;
-  overflow: auto;
+  overflow: scroll;
 }
 
 .userList {
@@ -12,8 +12,12 @@
   animation-duration: 0.5s;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
   padding-right: 1vw; /* add padding-right to make room for scrollbar */ /* subtract 1vw for the width of the scrollbar */
+}
+
+.container,
+.userList {
+  scroll-behavior: smooth;
 }
 
 .userList :hover {
