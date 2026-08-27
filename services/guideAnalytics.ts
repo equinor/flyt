@@ -14,7 +14,7 @@ export const trackGuideEvent = (
   eventName: string,
   payload: AnalyticsPayload
 ) => {
-  appInsights.trackEvent(
+  appInsights?.trackEvent(
     {
       name: eventName,
     },

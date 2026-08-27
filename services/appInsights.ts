@@ -10,14 +10,12 @@ if (!appInsightsConnectionString) {
   );
 }
 
-export const reactPlugin = new ReactPlugin();
-
+const reactPlugin = new ReactPlugin();
 export const appInsights = new ApplicationInsights({
   config: {
-    instrumentationKey: appInsightsConnectionString,
+    instrumentationKey: process.env.NEXT_PUBLIC_APPINSIGHTS_CONNECTION_STRING,
     extensions: [reactPlugin],
     enableAutoRouteTracking: true,
   },
 });
-
 appInsights.loadAppInsights();
