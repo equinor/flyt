@@ -2,7 +2,6 @@ import "../styles/globals.scss";
 
 import App, { AppContext } from "next/app";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { appInsights } from "@/services/appInsights";
 import { msalInstance } from "@/auth/msalHelpers";
 import { LayoutWrapper } from "@/layouts/LayoutWrapper";
 import { MsalProvider } from "@azure/msal-react";
