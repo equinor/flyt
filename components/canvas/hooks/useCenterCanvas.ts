@@ -20,7 +20,7 @@ export const useCenterCanvas = (
   const centerCanvas = useCallback(async () => {
     await fitView(fitViewOptions);
     const viewport = getViewport();
-    setViewport({ ...viewport, y: 75 });
+    setViewport({ ...viewport, y: 65 });
   }, [fitView, getViewport, setViewport, fitViewOptions]);
 
   useEffect(() => {
