@@ -10,7 +10,6 @@ import { useAccess } from "./hooks/useAccess";
 import { useOptionalGuideStage } from "hooks/useOptionalGuide";
 import { OptionalGuideProvider } from "./hooks/optionalGuideContext";
 import { NodeTypes } from "@/types/NodeTypes";
-
 type CanvasProps = {
   graph: Graph;
   project: Project;
@@ -56,7 +55,14 @@ const Canvas = ({
     };
   }, []);
   useEffect(() => {
-    if (!guideStarted || !currentStage) {
+    if (!currentStage) {
+      return;
+    }
+    setGuideStarted(true);
+  }, [currentStage]);
+
+  useEffect(() => {
+    if (!currentStage) {
       return;
     }
 
