@@ -2,7 +2,7 @@ import { ApplicationInsights } from "@microsoft/applicationinsights-web";
 import { ReactPlugin } from "@microsoft/applicationinsights-react-js";
 
 const appInsightsConnectionString =
-  process.env.NEXT_PUBLIC_APPINSIGHTS_CONNECTION_STRING?.trim();
+  process.env.NEXT_PUBLIC_APPINSIGHTS_CONNECTION_STRING;
 
 if (!appInsightsConnectionString) {
   console.error(
@@ -14,7 +14,7 @@ export const reactPlugin = new ReactPlugin();
 
 export const appInsights = new ApplicationInsights({
   config: {
-    connectionString: appInsightsConnectionString,
+    instrumentationKey: appInsightsConnectionString,
     extensions: [reactPlugin],
     enableAutoRouteTracking: true,
   },
