@@ -25,7 +25,6 @@ const getLayout = (
     edgesep: 0,
     ranksep: ranksep,
     marginx: margin,
-    keeporder: true,
     rankdir: rankdir,
   });
 
@@ -44,7 +43,7 @@ const getLayout = (
     dagreGraph.setEdge(edge.source, edge.target);
   });
 
-  dagre.layout(dagreGraph);
+  dagre.layout(dagreGraph, { disableOptimalOrderHeuristic: true });
 
   return nodes.map((node) => {
     if (node.width && node.height) {

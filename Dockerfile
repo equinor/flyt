@@ -3,7 +3,6 @@ FROM docker.io/node:24.14.1-alpine AS deps
 WORKDIR /opt/app
 COPY package.json yarn.lock ./
 COPY scripts scripts
-COPY patches ./patches
 ENV NODE_ENV=production
 RUN yarn install --frozen-lockfile
 
