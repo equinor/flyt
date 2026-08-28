@@ -36,6 +36,8 @@ module.exports = removeImports({
     ENVIRONMENT: process.env.ENVIRONMENT,
     SCOPE: process.env.SCOPE,
     RADIX_GIT_COMMIT_HASH: process.env.RADIX_GIT_COMMIT_HASH,
+    NEXT_PUBLIC_INSTRUMENTATION_KEY:
+      process.env.NEXT_PUBLIC_INSTRUMENTATION_KEY,
   },
   devIndicators: false,
   async redirects() {
