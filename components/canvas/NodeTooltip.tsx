@@ -314,7 +314,9 @@ export const NodeTooltip = ({
     isEditing && isCardEditablebyUser && currentStage && isGuideActiveForNode;
   return (
     <NodeTooltipContainer
-      isVisible={isHovering || isEditing || isGuideActiveForNode}
+      isVisible={
+        isGuideActiveForNode || (!currentStage && (isHovering || isEditing))
+      }
       style={tooltipStyle}
       isEditing={isEditing}
       nodeRef={nodeRef}
