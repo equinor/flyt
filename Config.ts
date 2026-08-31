@@ -21,3 +21,7 @@ export const loginRequest: { scopes: string[] } = {
 export const APIConfigs = {
   url: publicRuntimeConfig.API_BASEURL,
 };
+
+export const AppInsightsConfig = {
+  connectionString: publicRuntimeConfig.CONNECTION_STRING,
+};

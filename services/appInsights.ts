@@ -1,16 +1,15 @@
 import { ApplicationInsights } from "@microsoft/applicationinsights-web";
 import { ReactPlugin } from "@microsoft/applicationinsights-react-js";
-import getConfig from "next/config";
+import { AppInsightsConfig } from "@/Config";
 const reactPlugin = new ReactPlugin();
-const { publicRuntimeConfig } = getConfig();
-const connectionString = publicRuntimeConfig.CONNECTION_STRING;
+const key = AppInsightsConfig.connectionString;
 
 export const appInsights = new ApplicationInsights({
   config: {
-    connectionString,
+    connectionString: key,
     extensions: [reactPlugin],
     enableAutoRouteTracking: true,
   },
 });
-
+console.log("Connection String Exists:", !!key);
 appInsights?.loadAppInsights();
