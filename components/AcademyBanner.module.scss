@@ -1,0 +1,52 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 20px;
+  background-color: white;
+  height: 66px;
+  animation-name: drop-down;
+  animation-duration: 1s;
+  margin: 4px 0px;
+}
+
+.banner_right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.banner_right p {
+  font-family: "Equinor", sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 50px;
+  letter-spacing: 0px;
+  color: #000;
+}
+
+.banner_right span {
+  font-family: "Equinor", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 50px;
+  letter-spacing: 0px;
+  color: #000;
+}
+
+.logo {
+  width: 87px;
+  height: 40px;
+  margin-right: 4px;
+}
+
+.close {
+  cursor: pointer;
+}
+
+@keyframes drop-down {
+  from {
+    opacity: 0;
+    transform: translateY(-72px);
+  }
+}

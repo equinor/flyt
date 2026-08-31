@@ -2,8 +2,8 @@ import { useRouter } from "next/router";
 import { useMutation } from "react-query";
 import { createProject } from "../services/projectApi";
 import styles from "./NewProjectButton.module.scss";
-import { Icon } from "@equinor/eds-core-react";
-import { add } from "@equinor/eds-icons";
+import { Button, Icon } from "@equinor/eds-core-react";
+import { add_circle_filled } from "@equinor/eds-icons";
 
 export function NewProcessButton(): JSX.Element {
   const router = useRouter();
@@ -13,8 +13,11 @@ export function NewProcessButton(): JSX.Element {
   );
 
   return (
-    <button
-      className={styles.createCard}
+    <Button
+      as="button"
+      color="primary"
+      variant="outlined"
+      className={styles.processButton}
       onClick={() => newProcessMutation.mutate()}
       disabled={newProcessMutation.isLoading}
     >
@@ -22,10 +25,10 @@ export function NewProcessButton(): JSX.Element {
         <p>Creating new process...</p>
       ) : (
         <>
-          <Icon data={add} title="add" />
+          <Icon data={add_circle_filled} title="add" />
           <p>Create new</p>
         </>
       )}
-    </button>
+    </Button>
   );
 }
