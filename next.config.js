@@ -35,7 +35,7 @@ module.exports = removeImports({
     CLIENT_ID: process.env.CLIENT_ID,
     ENVIRONMENT: process.env.ENVIRONMENT,
     SCOPE: process.env.SCOPE,
-    INSTRUMENTATION_KEY: process.env.INSTRUMENTATION_KEY,
+    CONNECTION_STRING: process.env.NEXT_PUBLIC_CONNECTION_STRING,
     RADIX_GIT_COMMIT_HASH: process.env.RADIX_GIT_COMMIT_HASH,
   },
   devIndicators: false,

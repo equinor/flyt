@@ -3,17 +3,14 @@ import { ReactPlugin } from "@microsoft/applicationinsights-react-js";
 import getConfig from "next/config";
 const reactPlugin = new ReactPlugin();
 const { publicRuntimeConfig } = getConfig();
-const instrumentationKey = publicRuntimeConfig.INSTRUMENTATION_KEY;
+const connectionString = publicRuntimeConfig.CONNECTION_STRING;
 
-export const appInsights =
-  typeof window !== "undefined" && instrumentationKey
-    ? new ApplicationInsights({
-        config: {
-          instrumentationKey,
-          extensions: [reactPlugin],
-          enableAutoRouteTracking: true,
-        },
-      })
-    : undefined;
+export const appInsights = new ApplicationInsights({
+  config: {
+    connectionString,
+    extensions: [reactPlugin],
+    enableAutoRouteTracking: true,
+  },
+});
 
 appInsights?.loadAppInsights();

@@ -51,7 +51,7 @@ spec:
             CLIENT_ID: e6e2f3c4-d6bd-4d71-a00e-be0c16a703da
             ENVIRONMENT: DEV
             SCOPE: c001f24f-64a7-4f0c-bfe8-bf9c8e7aa74c/api.access
-            INSTRUMENTATION_KEY: fe5e08f6-3b9d-4513-8f9c-eedf1f931267
+            NEXT_PUBLIC_CONNECTION_STRING: InstrumentationKey=fe5e08f6-3b9d-4513-8f9c-eedf1f931267;IngestionEndpoint=https://northeurope-2.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/;ApplicationId=2025dc43-1ce3-4c5d-9c44-850f5a549c1e
         - environment: test
           variables:
             API_BASEURL: https://api-flyt-api-test.radix.equinor.com
@@ -60,7 +60,7 @@ spec:
             CLIENT_ID: b3e899bf-12af-4f63-8744-d1ef4edc30b5
             ENVIRONMENT: TEST
             SCOPE: cf7bf606-0fca-498d-9ec5-74d32a6ab4cf/api_access
-            INSTRUMENTATION_KEY: fe5e08f6-3b9d-4513-8f9c-eedf1f931267
+            NEXT_PUBLIC_CONNECTION_STRING: InstrumentationKey=fe5e08f6-3b9d-4513-8f9c-eedf1f931267;IngestionEndpoint=https://northeurope-2.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/;ApplicationId=2025dc43-1ce3-4c5d-9c44-850f5a549c1e
         - environment: qa
           variables:
             API_BASEURL: https://api-flyt-api-qa.radix.equinor.com
@@ -69,7 +69,7 @@ spec:
             CLIENT_ID: 7fe4fa03-733a-414d-8d32-0a9358b5eeb9
             ENVIRONMENT: QA
             SCOPE: b78f9306-406d-4fa8-98e5-001dcd933ff4/user_impersonation
-            INSTRUMENTATION_KEY: fe5e08f6-3b9d-4513-8f9c-eedf1f931267
+            NEXT_PUBLIC_CONNECTION_STRING: InstrumentationKey=fe5e08f6-3b9d-4513-8f9c-eedf1f931267;IngestionEndpoint=https://northeurope-2.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/;ApplicationId=2025dc43-1ce3-4c5d-9c44-850f5a549c1e
         - environment: prod
           variables:
             API_BASEURL: https://api-flyt-api-prod.radix.equinor.com
@@ -78,4 +78,4 @@ spec:
             CLIENT_ID: 7b6f1bd7-ecb7-4e9b-b8a4-7a0a0804760d
             ENVIRONMENT: PROD
             SCOPE: 93cb35f6-8dd4-4dc1-8f44-d2e8dbd4be48/user_impersonation
-            INSTRUMENTATION_KEY: b01f1bf9-4bf2-494f-bd3c-986517dc4dd1
+            NEXT_PUBLIC_CONNECTION_STRING: InstrumentationKey=b01f1bf9-4bf2-494f-bd3c-986517dc4dd1;IngestionEndpoint=https://northeurope-2.in.applicationinsights.azure.com/;LiveEndpoint=https://northeurope.livediagnostics.monitor.azure.com/;ApplicationId=4cb193b8-c19b-48c1-9733-dbcd9f4ea83c
