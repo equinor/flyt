@@ -11,7 +11,7 @@ import { Typography } from "@equinor/eds-core-react";
 import styles from "./FrontPage.module.scss";
 import { useInfiniteScroll } from "@/hooks/useInfiniteScroll";
 import { getQueryAllProcesses } from "@/components/canvas/utils/projectQueries";
-import { config } from "@/configApp";
+
 export default function AllProcesses() {
   const query = getQueryAllProcesses(35);
   useInfiniteScroll(query, 128);
@@ -31,12 +31,7 @@ export default function AllProcesses() {
               <SearchField />
             </div>
             <div className={styles.subHeader}>
-              <Typography variant="h3">
-                All processes +{" "}
-                {config.instrumentationKey
-                  ? "With Insights"
-                  : "Without Insights"}
-              </Typography>
+              <Typography variant="h3">All processes</Typography>
               <div className={styles.sortAndFilter}>
                 <FilterUserButton />
                 <FilterLabelButton />
