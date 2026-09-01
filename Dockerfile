@@ -6,6 +6,8 @@ COPY scripts scripts
 COPY patches ./patches
 ENV NODE_ENV=production
 ARG TARGET_ENVIRONMENTS
+ARG NEXT_PUBLIC_INSTRUMENTATION_KEY
+ENV NEXT_PUBLIC_INSTRUMENTATION_KEY=$NEXT_PUBLIC_INSTRUMENTATION_KEY
 RUN yarn install --frozen-lockfile
 
 FROM docker.io/node:24.14.1-alpine AS builder
@@ -13,9 +15,11 @@ ENV NODE_ENV=production
 WORKDIR /opt/app
 COPY . .
 COPY --from=deps /opt/app/node_modules ./node_modules
-RUN yarn use-${TARGET_ENVIRONMENTS}
 # Disable telemetry: https://nextjs.org/telemetry#how-do-i-opt-out
 ENV NEXT_TELEMETRY_DISABLED=1
+ARG NEXT_PUBLIC_INSTRUMENTATION_KEY
+ENV NEXT_PUBLIC_INSTRUMENTATION_KEY=$NEXT_PUBLIC_INSTRUMENTATION_KEY
+RUN yarn use-${TARGET_ENVIRONMENTS}
 RUN yarn build
 
 # Production image, copy all the files and run next
