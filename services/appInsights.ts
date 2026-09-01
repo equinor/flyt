@@ -1,8 +1,8 @@
 import { ApplicationInsights } from "@microsoft/applicationinsights-web";
 import { ReactPlugin } from "@microsoft/applicationinsights-react-js";
-import { AppInsightsConfig } from "@/Config";
+import { config } from "@/configApp";
 const reactPlugin = new ReactPlugin();
-const key = AppInsightsConfig.connectionString;
+const key = config.instrumentationKey;
 
 export const appInsights = key
   ? new ApplicationInsights({
