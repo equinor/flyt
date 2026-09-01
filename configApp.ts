@@ -24,4 +24,4 @@ const throwErrorIfUndefinedValues = <T extends object>(
   return obj as DeepRequired<T>;
 };
 
-export const config = throwErrorIfUndefinedValues(c, "config");
+export const config = c;
