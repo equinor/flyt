@@ -17,9 +17,11 @@ COPY . .
 COPY --from=deps /opt/app/node_modules ./node_modules
 # Disable telemetry: https://nextjs.org/telemetry#how-do-i-opt-out
 ENV NEXT_TELEMETRY_DISABLED=1
+RUN cp environment-variables/DEV.env .env
 ARG NEXT_PUBLIC_INSTRUMENTATION_KEY
 ENV NEXT_PUBLIC_INSTRUMENTATION_KEY=$NEXT_PUBLIC_INSTRUMENTATION_KEY
 RUN yarn use-${TARGET_ENVIRONMENTS}
+
 RUN yarn build
 
 # Production image, copy all the files and run next
