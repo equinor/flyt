@@ -1,6 +1,8 @@
 // @ts-check
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const removeImports = require("next-remove-imports")();
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { getAppInsightsConnectionString } = require("./appinsightsConfig.ts");
 
 const securityHeaders = [
   {
@@ -35,6 +37,9 @@ module.exports = removeImports({
     CLIENT_ID: process.env.CLIENT_ID,
     ENVIRONMENT: process.env.ENVIRONMENT,
     SCOPE: process.env.SCOPE,
+    INSTRUMENTATION_KEY: getAppInsightsConnectionString(
+      process.env.ENVIRONMENT
+    ),
     RADIX_GIT_COMMIT_HASH: process.env.RADIX_GIT_COMMIT_HASH,
   },
   devIndicators: false,
