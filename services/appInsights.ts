@@ -1,10 +1,11 @@
 import { ApplicationInsights } from "@microsoft/applicationinsights-web";
 import { ReactPlugin } from "@microsoft/applicationinsights-react-js";
-import getConfig from "next/config";
+import { getAppInsightsInstrumentationKey } from "@/appInsightConfig";
 
 const reactPlugin = new ReactPlugin();
-const { publicRuntimeConfig } = getConfig();
-const instrumentationKey = publicRuntimeConfig.INSTRUMENTATION_KEY;
+const instrumentationKey = getAppInsightsInstrumentationKey(
+  process.env.ENVIRONMENT
+);
 
 export const appInsights = instrumentationKey
   ? new ApplicationInsights({
