@@ -1,11 +1,9 @@
 import * as userApi from "../services/userApi";
-
 import { Button, Icon, Typography } from "@equinor/eds-core-react";
 import { useState } from "react";
 import { close, link } from "@equinor/eds-icons";
 import { useAccount, useMsal } from "@azure/msal-react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-
 import BaseAPIServices from "../services/BaseAPIServices";
 import { accessRoles } from "@/types/AccessRoles";
 import { notifyOthers } from "@/services/notifyOthers";
@@ -17,7 +15,6 @@ import { UserAccessSearch } from "types/UserAccessSearch";
 import { Project } from "@/types/Project";
 import { useProjectId } from "@/hooks/useProjectId";
 import { UserSearch } from "./UserSearch";
-
 export function AccessBox(props: {
   project: Project;
   handleClose: () => void;
@@ -44,7 +41,7 @@ export function AccessBox(props: {
         handleClose={props.handleClose}
         vsmProjectID={props.project.vsmProjectID}
       />
-      <MiddleSection
+      <AddUserAccessSection
         users={userAccesses}
         vsmId={vsmProjectID}
         loading={isLoading}
@@ -86,19 +83,17 @@ export function TopSection(props: {
   );
 }
 
-function MiddleSection(props: {
+export function AddUserAccessSection(props: {
   users: userAccess[];
   vsmId: number;
-  loading: boolean;
+  loading?: boolean;
   isAdmin: boolean;
 }) {
   const dispatch = useStoreDispatch();
   const queryClient = useQueryClient();
   const [isUserAddList, setisUserAddList] = useState<string[]>([]);
-
   const { accounts } = useMsal();
   const account = useAccount(accounts[0] || {});
-
   const { projectId } = useProjectId();
   const addUserMutation = useMutation(
     (newUser: {

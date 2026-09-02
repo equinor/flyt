@@ -20,16 +20,18 @@ export function ManageLabelBox(props: {
   isVisible: boolean;
   handleClose: () => void;
   process: Project;
+  withHorizontalCategories?: boolean;
 }) {
   if (!props.isVisible) return null;
 
   return (
-    <Scrim open onClose={props.handleClose} isDismissable>
-      <div className={styles.box} onWheel={(e) => e.stopPropagation()}>
-        <TopSection handleClose={props.handleClose} />
-        <AddSection process={props.process} />
-      </div>
-    </Scrim>
+    <div className={styles.box} onWheel={(e) => e.stopPropagation()}>
+      <TopSection handleClose={props.handleClose} />
+      <AddLabelsSection
+        process={props.process}
+        withHorizontalCategories={props.withHorizontalCategories}
+      />
+    </div>
   );
 }
 
@@ -44,7 +46,10 @@ function TopSection(props: { handleClose: () => void }) {
   );
 }
 
-function AddSection(props: { process: Project }) {
+export function AddLabelsSection(props: {
+  process: Project;
+  withHorizontalCategories?: boolean;
+}) {
   const [term, setTerm] = useState("");
   const [debouncedTerm, setDebouncedTerm] = useState("");
   const queryClient = useQueryClient();
@@ -122,14 +127,19 @@ function AddSection(props: { process: Project }) {
     <>
       <Search
         aria-label="search"
-        placeholder="Search labels"
+        placeholder="Search"
         autoComplete="off"
         onChange={handleChange}
         autoFocus
         value={term}
       />
       {error && <p>{unknownErrorToString(error)}</p>}
-      <div className={styles.labelContainer}>
+      <div
+        data-direction={
+          props.withHorizontalCategories ?? false ? "column" : "true"
+        }
+        className={styles.labelContainer}
+      >
         {categorisedLabels &&
           Object.keys(categorisedLabels).map((categoryName) => {
             return (

@@ -2,7 +2,6 @@ import styles from "./RoleSelect.module.scss";
 import { Icon, Tooltip, Typography } from "@equinor/eds-core-react";
 import { minimize } from "@equinor/eds-icons";
 import colors from "@/theme/colors";
-
 export const RoleSelect = (props: {
   onChange: (arg0: string) => void;
   defaultValue: string;
