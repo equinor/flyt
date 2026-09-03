@@ -6,11 +6,6 @@ export function SideNavBar(): JSX.Element {
   return (
     <div className={styles.elements}>
       <SideNavBarElement
-        icon={dashboard}
-        title="See all processes"
-        pathname="/processes"
-      />
-      <SideNavBarElement
         icon={person}
         title="See my processes"
         pathname="/processes/mine"
@@ -19,6 +14,11 @@ export function SideNavBar(): JSX.Element {
         icon={favorite_outlined}
         title="See my favourite processes"
         pathname="/processes/favourite"
+      />
+      <SideNavBarElement
+        icon={dashboard}
+        title="See all processes"
+        pathname="/processes"
       />
     </div>
   );

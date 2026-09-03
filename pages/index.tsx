@@ -6,7 +6,7 @@ import commonStyles from "../styles/common.module.scss";
 export default function DummyPage(): JSX.Element {
   const router = useRouter();
   useEffect(() => {
-    router.push("/processes?orderBy=modified");
+    router.push("/processes/mine?orderBy=modified");
   });
   return (
     <div className={commonStyles.main}>

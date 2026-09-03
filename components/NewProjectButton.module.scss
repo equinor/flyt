@@ -1,5 +1,11 @@
+.processButton {
+  height: 120px !important;
+  width: 100%;
+  margin-bottom: 16px !important;
+}
+
 .createCard {
-  color: #565656;
+  color: #007079;
 
   /* Heading/H6 */
   font-family: "Equinor", sans-serif;
@@ -12,7 +18,7 @@
 
   height: 100px;
   width: 100%;
-  border: 1px dashed #d5dbdd;
+  border: 1px solid #007079;
   border-radius: 4px;
 
   margin: 0 16px 16px 0;
