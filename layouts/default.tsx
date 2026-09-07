@@ -8,6 +8,7 @@ import packageJson from "../package.json";
 import { ServiceMessageBanner } from "@/components/ServiceMessageBanner";
 import { ReactNode } from "react";
 import InfoDisclaimer from "@/components/InfoDisclaimer";
+import AcademyBanner from "@/components/AcademyBanner";
 
 export const DefaultLayout = ({ children }: { children: ReactNode }) => {
   const isAuthenticated = useIsAuthenticated();
@@ -50,6 +51,7 @@ export const DefaultLayout = ({ children }: { children: ReactNode }) => {
         <div />
         <RightTopBarSection isAuthenticated={isAuthenticated} />
       </TopBar>
+      <AcademyBanner />
       <ServiceMessageBanner />
       <InfoDisclaimer />
       {children}

@@ -10,17 +10,27 @@
   font-family: Equinor, sans-serif;
   font-style: normal;
   font-weight: 500;
-  font-size: 16px;
+  font-size: 20px;
   line-height: 24px;
   margin: 0px 0px 4px 0px;
   /* identical to box height, or 150% */
 
-  letter-spacing: 0.2px;
+  letter-spacing: 0px;
 
   overflow-wrap: anywhere;
 
   /* Text + static icons/⚪️/Default */
 
+  color: $text-default;
+}
+
+.caption {
+  font-family: Equinor, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 0px;
   color: $text-default;
 }
 

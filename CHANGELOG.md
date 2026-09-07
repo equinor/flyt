@@ -2,12 +2,11 @@
 
 ## [2.17.1](https://github.com/equinor/flyt/compare/v2.17.0...v2.17.1) (2026-08-25)
 
-
 ### Bug Fixes
 
-* 1133 && 1134 - User Access Modal UI issues and Layout chnages ([#1146](https://github.com/equinor/flyt/issues/1146)) ([00ba973](https://github.com/equinor/flyt/commit/00ba97315eb924aee824c6fdb56b09ef4309a6ab))
-* info disclaimer session storage ([#1148](https://github.com/equinor/flyt/issues/1148)) ([0d27384](https://github.com/equinor/flyt/commit/0d27384d04c6a2b040d795334c6247ae10348f92))
-* User Access Modal Scrolling Issue [#1154](https://github.com/equinor/flyt/issues/1154) ([#1156](https://github.com/equinor/flyt/issues/1156)) ([d039983](https://github.com/equinor/flyt/commit/d0399831dbdde7125def88867a0b632d6149339f))
+- 1133 && 1134 - User Access Modal UI issues and Layout chnages ([#1146](https://github.com/equinor/flyt/issues/1146)) ([00ba973](https://github.com/equinor/flyt/commit/00ba97315eb924aee824c6fdb56b09ef4309a6ab))
+- info disclaimer session storage ([#1148](https://github.com/equinor/flyt/issues/1148)) ([0d27384](https://github.com/equinor/flyt/commit/0d27384d04c6a2b040d795334c6247ae10348f92))
+- User Access Modal Scrolling Issue [#1154](https://github.com/equinor/flyt/issues/1154) ([#1156](https://github.com/equinor/flyt/issues/1156)) ([d039983](https://github.com/equinor/flyt/commit/d0399831dbdde7125def88867a0b632d6149339f))
 
 ## [2.17.0](https://github.com/equinor/flyt/compare/v2.16.0...v2.17.0) (2026-08-07)
 

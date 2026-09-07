@@ -81,9 +81,11 @@ export const ProjectCard = ({
             disabled={readOnly}
           />
         </div>
-        <div className={`${styles.section} ${styles.labelSection}`}>
-          <Labels labels={project.labels} />
-        </div>
+        {project.labels.length > 0 && (
+          <div className={`${styles.section} ${styles.labelSection}`}>
+            <Labels labels={project.labels} />
+          </div>
+        )}
         <div className={`${styles.section} ${styles.bottomSection}`}>
           <UserDots
             userAccesses={project.userAccesses}
