@@ -18,7 +18,7 @@ import { QIPRContainer } from "./QIPRContainer";
 import { SourceHandle } from "./SourceHandle";
 import { getNodeHelperText } from "./utils/getNodeHelperText";
 import { useNodeRef } from "./hooks/useNodeRef";
-
+import { useOptionalGuideContext } from "./hooks/optionalGuideContext";
 export const GenericNode = ({
   data,
   dragging,
@@ -44,7 +44,7 @@ export const GenericNode = ({
   const [hoveringShape, setHoveringShape] = useState(false);
   const { addNode, isNodeButtonDisabled } = useNodeAdd();
   const isEditingNode = useIsEditingNode(selected);
-
+  const { currentStage } = useOptionalGuideContext();
   const handleQIPRContainerOnClick = useQIPRContainerOnClick(data);
   const shouldDisplayQIPR = useShouldDisplayQIPR(tasks, hovering, selected);
   const ref = useNodeRef();
@@ -63,7 +63,13 @@ export const GenericNode = ({
         : type === NodeTypes.output
         ? Position.Left
         : undefined;
-    if (userCanEdit && hovering && !merging && nodeButtonsPosition) {
+    if (
+      userCanEdit &&
+      hovering &&
+      !merging &&
+      nodeButtonsPosition &&
+      !currentStage
+    ) {
       return (
         <NodeButtonsContainer position={nodeButtonsPosition}>
           <MainActivityButton
@@ -79,7 +85,9 @@ export const GenericNode = ({
 
   return (
     <div
-      onMouseEnter={() => !disabled && !dragging && setHovering(true)}
+      onMouseEnter={() =>
+        !disabled && !dragging && !currentStage && setHovering(true)
+      }
       onMouseLeave={() => setHovering(false)}
       ref={ref}
     >

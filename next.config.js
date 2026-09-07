@@ -1,7 +1,6 @@
 // @ts-check
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const removeImports = require("next-remove-imports")();
-
 const securityHeaders = [
   {
     key: "Referrer-Policy",
