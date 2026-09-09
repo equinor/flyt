@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.18.0](https://github.com/equinor/flyt/compare/v2.17.1...v2.18.0) (2026-09-07)
+
+
+### Features
+
+* appinsights analytics ([#1157](https://github.com/equinor/flyt/issues/1157)) ([39e8cfe](https://github.com/equinor/flyt/commit/39e8cfec81f783edc81499c1bed3c3ccb82d6b02))
+* Feature/initial guiding final ([#1145](https://github.com/equinor/flyt/issues/1145)) ([b4c18e8](https://github.com/equinor/flyt/commit/b4c18e8965766640ff9d383abfe7a0ab80bbf2c3))
+* language page UI, flyt academy banner ([#1163](https://github.com/equinor/flyt/issues/1163)) ([166bfe5](https://github.com/equinor/flyt/commit/166bfe50c19a13cad1f1b77014915c2efe7b1192))
+
+
+### Bug Fixes
+
+* instrument changes removed from env variables and added from config ([#1166](https://github.com/equinor/flyt/issues/1166)) ([c6f65dc](https://github.com/equinor/flyt/commit/c6f65dcf9c02623fe08db86222320d90dfc127ce))
+* seperate instrument keys added ([#1171](https://github.com/equinor/flyt/issues/1171)) ([fb4fa0f](https://github.com/equinor/flyt/commit/fb4fa0ff0beeb96247c1482a32ab837c6886a6f5))
+* ui issues fix  ([#1164](https://github.com/equinor/flyt/issues/1164)) ([8a4950e](https://github.com/equinor/flyt/commit/8a4950e3832ee05aab01cbb49d5d002d122924bc))
+
 ## [2.17.1](https://github.com/equinor/flyt/compare/v2.17.0...v2.17.1) (2026-08-25)
 
 ### Bug Fixes
