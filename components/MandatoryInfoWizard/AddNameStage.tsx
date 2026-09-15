@@ -2,6 +2,7 @@ import { Button, Card, TextField, Typography } from "@equinor/eds-core-react";
 import { ChangeEvent } from "react";
 import { AddNameStageProps } from "./types";
 export function AddNameStage({
+  processName,
   onNameChange,
   onNext,
   onRequestDiscard,
@@ -43,6 +44,7 @@ export function AddNameStage({
         <TextField
           id="vsmObjectName"
           autoFocus
+          value={processName ?? ""}
           style={{
             width: "60%",
             minWidth: 300,

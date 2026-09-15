@@ -5,6 +5,7 @@ import { Project } from "@/types/Project";
 export type MandatoryInfoStage = "addName" | "giveAccesses" | "addLabels";
 
 export type AddNameStageProps = {
+  processName?: string;
   onNameChange: (name: string) => void;
   onNext: () => void;
   onRequestDiscard: () => void;
