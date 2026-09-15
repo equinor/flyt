@@ -136,6 +136,7 @@ export function MandatoryInfoWizard({
       >
         {stage === "addName" && (
           <AddNameStage
+            processName={newName}
             onNameChange={setNewName}
             onNext={moveForward}
             onRequestDiscard={() => setShowDiscardConfirmation(true)}
