@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.18.1](https://github.com/equinor/flyt/compare/v2.18.0...v2.18.1) (2026-09-23)
+
+
+### Bug Fixes
+
+* name consistent issue in addlabel stage ([#1178](https://github.com/equinor/flyt/issues/1178)) ([03a0fdd](https://github.com/equinor/flyt/commit/03a0fdd5f21f922e8a5a74ddceb701aa5854fd0b))
+* Remove patch related files from repo [#1149](https://github.com/equinor/flyt/issues/1149) ([#1179](https://github.com/equinor/flyt/issues/1179)) ([cf49ecc](https://github.com/equinor/flyt/commit/cf49ecc7615143b36bee81dc8697b30d03bdc622))
+
 ## [2.18.0](https://github.com/equinor/flyt/compare/v2.17.1...v2.18.0) (2026-09-07)
 
 
