@@ -100,10 +100,9 @@
   },
   "resolutions": {
     "nanoid": "^3.3.18",
-    "ws": "^8.21.0",
     "browserslist": "^4.28.7",
     "brace-expansion": "^2.1.4",
-    "**/brace-expansion": "^1.1.18",
+    "minimatch/brace-expansion": "^1.1.18",
     "socket.io-parser": "^4.2.7",
     "postcss": "^8.5.23",
     "js-yaml": "^4.3.2",
