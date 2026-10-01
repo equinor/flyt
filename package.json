@@ -98,16 +98,6 @@
     "ts-node": "^10.9.2",
     "typescript": "5.3.3"
   },
-  "resolutions": {
-    "nanoid": "^3.3.18",
-    "browserslist": "^4.28.7",
-    "brace-expansion": "^2.1.4",
-    "minimatch/brace-expansion": "^1.1.18",
-    "socket.io-parser": "^4.2.7",
-    "postcss": "^8.5.23",
-    "js-yaml": "^4.3.2",
-    "fast-uri": "^3.1.6"
-  },
   "lint-staged": {
     "*.{ts,js}": [
       "eslint --cache --fix"
