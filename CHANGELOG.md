@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.18.2](https://github.com/equinor/flyt/compare/v2.18.1...v2.18.2) (2026-09-30)
+
+
+### Bug Fixes
+
+* remove extra js-yaml version from package json ([#1194](https://github.com/equinor/flyt/issues/1194)) ([746e57c](https://github.com/equinor/flyt/commit/746e57c5eb13c473bdb20f0f643689688cafd866))
+* Security packages updated ([#1188](https://github.com/equinor/flyt/issues/1188)) ([06453f2](https://github.com/equinor/flyt/commit/06453f20ff9a89c5ce6e1b473602ffb3d5627b72))
+
 ## [2.18.1](https://github.com/equinor/flyt/compare/v2.18.0...v2.18.1) (2026-09-23)
 
 
