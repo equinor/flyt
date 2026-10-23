@@ -48,7 +48,7 @@
     "html-to-image": "1.11.11",
     "jsonwebtoken": "9.0.1",
     "moment": "2.29.4",
-    "next": "15.5.24",
+    "next": "15.5.28",
     "next-remove-imports": "1.0.11",
     "node-fetch": "2.6.12",
     "react": "^18.2.0",
