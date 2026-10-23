@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.18.3](https://github.com/equinor/flyt/compare/v2.18.2...v2.18.3) (2026-10-23)
+
+
+### Bug Fixes
+
+* ghas security and vulnerabilities fixes ([#1199](https://github.com/equinor/flyt/issues/1199)) ([07ae934](https://github.com/equinor/flyt/commit/07ae9346b646cbaf9ec0be618ac64eedc3120c90))
+* ghas vulnerabilities and security issues ([#1197](https://github.com/equinor/flyt/issues/1197)) ([575d3e8](https://github.com/equinor/flyt/commit/575d3e81ed52a11628d774d9c0594e24ed5a9efa))
+
 ## [2.18.2](https://github.com/equinor/flyt/compare/v2.18.1...v2.18.2) (2026-09-30)
 
 
