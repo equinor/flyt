@@ -41,7 +41,7 @@
     "@microsoft/applicationinsights-web": "^3.4.3",
     "@uiw/react-md-editor": "3.11.2",
     "@xyflow/react": "^12.11.1",
-    "axios": "^1.7.7",
+    "axios": "^1.20.0",
     "easy-peasy": "5.2.0",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
@@ -107,7 +107,11 @@
     "socket.io-parser": "^4.2.7",
     "postcss": "^8.5.23",
     "js-yaml": "^4.3.2",
-    "fast-uri": "^3.1.6"
+    "fast-uri": "^3.1.6",
+    "handlebars": "^4.7.10",
+    "source-map-js": "^1.2.2",
+    "follow-redirects": "^1.16.1",
+    "engine.io": "^6.6.10"
   },
   "lint-staged": {
     "*.{ts,js}": [
